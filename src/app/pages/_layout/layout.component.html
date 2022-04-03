@@ -14,9 +14,9 @@
         <div class="wrapper d-flex flex-column flex-row-fluid">
             <codx-header [ngClass]="headerCSSClasses" class="header align-items-stretch" [headerLeftBar]="headerLeftBar" #codxHeader>
             </codx-header>
-            <div class="content d-flex flex-column flex-column-fluid">
-                <div class="post d-flex flex-column-fluid">
-                    <codx-content [ngClass]="contentContainerClasses" id="kt_content_container"></codx-content>
+            <div class="d-flex flex-column flex-column-fluid">
+                <div class="d-flex flex-column-fluid">
+                    <codx-content class="my-5" [ngClass]="contentContainerClasses"></codx-content>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
  <!--begin:: ASIDE-->
  <ng-template #asideMenu>
   <ng-container *ngFor="let f of funcs$ | async" [ngSwitch]="f.separator">
-    <div class="menu-item" *ngSwitchCase='false'>
+    <div class="menu-item" *ngSwitchCase='!true'>
       <a class="menu-link" href="javascript:;" (click)="codxService.navigate(f.functionID)"
       [ngClass]="f.child?.length > 0?'':'without-sub'"
       [ngbTooltip]="f.comingSoon?'Coming soon':''" routerLinkActive="active">
