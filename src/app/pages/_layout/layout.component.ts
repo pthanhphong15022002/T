@@ -66,6 +66,12 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.imageViewer?.reloadImageWhenUpload();
   }
 
+  public contentResized(size: any){
+    // if(size){
+    //   console.log(JSON.stringify(size));
+    // }
+  }
+
   public funcs$: Observable<any> = of([
     {
       functionID: 'HR001',
