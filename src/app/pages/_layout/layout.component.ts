@@ -113,12 +113,26 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       separator: false,
       childs: []
     },{
-      functionID: '',
+      functionID: 'HR1',
       customName: 'Dịch vụ nhân sự',
       smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg', 
       comingSoon: true,
       separator: false,
-      childs: []
+      childs: [{
+        functionID: 'HR11',
+        customName: 'Dịch vụ nhân sự 1',
+        smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg', 
+        comingSoon: true,
+        separator: false,
+        childs: []
+      },{
+        functionID: 'HR12',
+        customName: 'Dịch vụ nhân sự 2',
+        smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg', 
+        comingSoon: true,
+        separator: false,
+        childs: []
+      }]
     },{
       functionID: 'FED201',
       customName: 'Ví nhân viên',
