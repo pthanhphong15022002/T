@@ -12,12 +12,6 @@ export const routes: Routes = [
           import('./modules/auth/auth.module').then((m) => m.AuthModule),
       },
       {
-        path: 'design',
-        loadChildren: () =>
-          import('./modules/designui/designui.module').then((m) => m.DesignUIModule),
-
-      },
-      {
         path: 'error',
         loadChildren: () =>
           import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
@@ -27,6 +21,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () =>
           import('./pages/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'chatting',
+        loadChildren: () =>
+          import('./modules/chatting/_layout/layout.modules').then((m) => m.LayoutModule),
       },
       { path: '**', redirectTo: 'error/404' }
     ]
