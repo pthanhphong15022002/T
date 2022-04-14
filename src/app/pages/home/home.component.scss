@@ -1,0 +1,21 @@
+.symbol-light{position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: rgb(20 20 20 / 36%);
+    border-radius: 3px;}
+    .symbol-column{
+        flex-direction: column!important;
+    width: 100%;
+    }
+    
+    @media (min-width: 992px) {
+        .symbol-floating {
+          position: fixed;
+          top: 40px;
+          bottom: 40px;
+          right: 0;
+          z-index: 98;
+          width: 140px;
+        }     
+       
+      }
