@@ -8,7 +8,7 @@
     <div class="d-flex flex-column flex-row-fluid">
 
         <div class="d-flex flex-row flex-column-fluid">
-            <div class="d-flex flex-row-fluid bg-dark flex-center">
+            <div class="d-flex flex-row-fluid flex-center">
                 <span class="text-white">Fluid Width</span>
             </div>
 
@@ -267,7 +267,230 @@
         <div class="symbol symbol-circle symbol-50px">
             <img src="./assets/themes/sys/default/light/img/user_M1.svg" alt="" />
         </div>
-        <div _ngcontent-ibe-c1192="" class="symbol symbol-50 symbol-circle symbol-light"><span _ngcontent-ibe-c1192=""
+        <div class="symbol symbol-50 symbol-circle symbol-light symbol-more"><span
                 class="symbol-label font-weight-bold">5+</span></div>
+        <button mat-fab color="primary">Primary</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl- col-lg-4 col-md-6 col-sm-6">
+        <h2>Chatting_Alert</h2>
+        <div style="width: 400px;" class="card chat-box card card-custom">
+
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-5 mt-2">
+                    <div class="font-size-h4 text-dark font-weight-bold">Chatting</div>
+                    <div class="d-flex">
+                        <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-playlist_add_check  icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-open_in_new icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="input-icon ">
+                        <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-search">
+                        <span><i class="icon-search icon-20"></i></span>
+                    </div>
+                </div>
+                <div class="chat-list m-1" style="max-height:445px; overflow-y: auto;">
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user3.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">you
+                                <div class="text-dark font-weight-bold"> Lê Phạm Hoài Thương </div>
+                                <div class="text-dark-50">1 day</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span
+                                    class="icon-local_offer text-success icon-16 mr-2"></span><span
+                                    class="text-dark-50">Cám ơn
+                                    Hảo nha!</span></div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user3.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark font-weight-bold"> Lê Phạm Hoài Thương </div>
+                                <div class="text-dark-50">1 day</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span
+                                    class="icon-local_offer text-danger icon-16 mr-2"></span><span
+                                    class="text-primary">Phác
+                                    thảo
+                                    lại userprofile</span></div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle online"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user3.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark font-weight-bold">Nguyễn Thị Thu Hà </div>
+                                <div class="text-dark-50">3 tuần</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span class="text-dark-50 mr-2"> Bạn:</span><span
+                                    class="text-dark-50">Dạ em cảm ơn chị ạ</span></div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user6.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark font-weight-bold">Trẩn Quốc Hoàn</div>
+                                <div class="text-dark-50">5 Th 7</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span class="text-dark-50 mr-2"> Bạn:</span><span
+                                    class="text-dark-50"> Mua ly rau má</span></div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user5.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark font-weight-bold">Nguyễn Thị Bích Vân</div>
+                                <div class="text-dark-50">5 Th 7</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span class="text-primary"> Phác thảo lại
+                                    userprofile</span>
+                            </div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle online"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card pb-4">
+                        <div class="symbol symbol-50 symbol-circle mr-4"><img alt="Pic"
+                                src="../../../assets/demos/user/user9.jpg"></div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-dark font-weight-bold">Nguyễn Thị Lợi</div>
+                                <div class="text-dark-50">1 năm</div>
+                            </div>
+                            <div class="d-flex align-items-center"><span class="text-dark-50 mr-2"> Bạn:</span><span
+                                    class="text-dark-50">Em gửi chị</span></div>
+                        </div>
+                        <div class="ml-3"><span class="status-circle"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xl- col-lg-4 col-md-6 col-sm-6">
+        <h2>Chatting_Search</h2>
+        <div style="width: 400px;" class="card chat-box card card-custom">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-5 mt-2">
+                    <div class="font-size-h4 text-dark font-weight-bold">Chatting</div>
+                    <div class="d-flex">
+                        <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-playlist_add_check  icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-open_in_new icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex">
+                        <span class="icon-arrow_back icon-24 text-dark-75 text-hover-primary mr-3"></span>
+                    </div>
+                    <div class="input-icon w-100 ">
+                        <input type="text" placeholder="Tìm kiếm..." class="form-control form-control-search">
+                        <span><i class="icon-search icon-20"></i></span>
+                    </div>
+                </div>
+                <div class="chat-list m-1" style="max-height:445px; overflow-y: auto;">
+                    <div class="text-center"><img
+                            src="../../../../assets/themes/default/light/sys/Search-engines-amico.svg"
+                            style="max-width: 200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl- col-lg-4 col-md-6 col-sm-6">
+        <h2>Chatting_SearchResult</h2>
+        <div style="width: 400px;" class="card chat-box card card-custom">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-5 mt-2">
+                    <div class="font-size-h4 text-dark font-weight-bold">Chatting</div>
+                    <div class="d-flex">
+                        <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-playlist_add_check  icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                        <span class="icon-open_in_new icon-24 text-dark-75 text-hover-primary ml-3"></span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-5">
+                    <div class="d-flex">
+                        <span class="icon-arrow_back icon-24 text-dark-75 text-hover-primary mr-3"></span>
+                    </div>
+                    <div class="input-icon w-100 ">
+                        <input type="text" placeholder="Hà" class="form-control form-control-search">
+                        <span><i class="icon-search icon-20"></i></span>
+                    </div>
+                </div>
+                <div class="chat-list m-1" style="max-height:445px; overflow-y: auto;">
+                    <h6 class="text-dark-50 mt-6">User</h6>
+                    <div class="d-flex align-items-center user-card py-2">
+                        <div class="symbol symbol-40 symbol-circle mr-4">
+                            <img alt="Pic" src="../../../assets/demos/user/user3.jpg">
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark font-weight-bold">Lê Phạm Hoài
+                                Thương</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card py-2">
+                        <div class="symbol symbol-40 symbol-circle mr-4">
+                            <img alt="Pic" src="../../../assets/demos/user/user3.jpg">
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark font-weight-bold">Lê Phạm Hoài
+                                Thương</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center user-card py-2">
+                        <div class="symbol symbol-40 symbol-circle mr-4">
+                            <img alt="Pic" src="../../../assets/demos/user/user3.jpg">
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark font-weight-bold">Lê Phạm Hoài
+                                Thương</div>
+                        </div>
+                    </div>
+                    <h6 class="text-dark-50 mt-6">Chat group</h6>
+                    <div class="chat-group">
+                        <div class="d-flex align-items-start user-card py-2">
+                            <div class="symbol symbol-40 symbol-circle mr-4">
+                                <img alt="Pic" src="../../../assets/themes/default/light/chat/Group-green.svg">
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                                <div class="text-dark font-weight-bold">ERM team</div>
+                                <div class="text-dark-50">You and 12 others</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start user-card py-2">
+                            <div class="symbol symbol-40 symbol-circle mr-4">
+                                <img alt="Pic" src="../../../assets/themes/default/light/chat/Group-orange.svg">
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                                <div class="text-dark font-weight-bold">Hội chờ lương mua trà sữa</div>
+                                <div class="text-dark-50">You and 5 others</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
