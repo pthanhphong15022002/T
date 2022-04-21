@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, AuthStore } from 'codx-core';
 
 @Component({
   selector: 'codx-chat-box',
@@ -18,24 +18,30 @@ export class ChatBoxComponent implements OnInit {
 
   @Output() public close = new EventEmitter();
   @Output() public minimize = new EventEmitter();
+  @Output() public groupIdChange = new EventEmitter();
   chatHistory: any;
   historyData: any[] = [];
   message: string;
   groupType: any;
+  user: any;
 
   constructor(
     private api: ApiHttpService, 
     private element: ElementRef,
-    private signalRService: SignalRService) {
+    private signalRService: SignalRService,
+    authStore: AuthStore) {
     this.element.nativeElement;
     this.chatHistory = {
       page: 1,
       pageSize: 50,
       isFull: false,
     };
+    this.user = authStore.get();
   }
 
   ngOnInit(): void {
+    this.senderId = this.user.userID;
+    this.senderName = this.user.userName;
     // load lich su chat
     //this.loadHistory();
   }
@@ -80,6 +86,7 @@ export class ChatBoxComponent implements OnInit {
       if(!this.groupId){
         this.groupId = resp[1].groupID;
         this.groupType = resp[1].groupType;
+        this.groupIdChange.emit(this.groupId)
       }
       if(this.groupType == "1"){
         this.signalRService.sendData(resp[0], "SendMessageToUser");
