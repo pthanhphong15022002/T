@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
+import { AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Post } from 'src/shared/models/post';
 
@@ -12,8 +13,11 @@ export class SignalRService {
   signalData = new EventEmitter<Post>();
   userConnect = new EventEmitter<any>();
   signalObject = new EventEmitter<any>();
+  signalChat = new EventEmitter<any>();
 
-  constructor() {
+  constructor(
+    private authStore: AuthStore
+  ) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -22,6 +26,7 @@ export class SignalRService {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/serverHub', {
         skipNegotiation: true,
+        accessTokenFactory: () => this.authStore.get().token,
         transport: signalR.HttpTransportType.WebSockets
       })
       .build();
@@ -50,12 +55,16 @@ export class SignalRService {
     this.hubConnection.on('VotePost', (obj) => {
       this.signalObject.emit(obj);
     });
+
+    this.hubConnection.on('ChatMessage', (obj)=>{
+      this.signalChat.emit(obj);
+    });
   }
   //#endregion
 
   //#region Post to server
-  sendData(message) {
-    this.hubConnection.invoke('NewMessage', message);
+  sendData(message, func = 'NewMessage') {
+    this.hubConnection.invoke(func, message);
   }
   //#endregion
 }

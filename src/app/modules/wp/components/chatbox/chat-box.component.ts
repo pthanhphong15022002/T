@@ -1,22 +1,32 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
 import { ApiHttpService } from 'codx-core';
 
 @Component({
-  selector: 'chat-box',
+  selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss'],
 })
 export class ChatBoxComponent implements OnInit {
-  public receiverId: string = ''; // user ID cua nguoi nhan
-  public groupId: string = ''; // grp id cua nhom
-  private senderId: string = ''; // user id cua nguoi gui
+  @Input() public receiverId: string = ''; // user ID cua nguoi nhan
+  @Input() public groupId: string = ''; // grp id cua nhom
+  @Input() public senderId: string = ''; // user id cua nguoi gui
 
+  private receiverName = "Nguyễn Văn A";
+  private senderName = "Nguyễn Thị B";
+
+  @Output() public close = new EventEmitter();
+  @Output() public minimize = new EventEmitter();
   chatHistory: any;
   historyData: any[] = [];
   message: string;
+  groupType: any;
 
-  constructor(private api: ApiHttpService, private element: ElementRef) {
+  constructor(
+    private api: ApiHttpService, 
+    private element: ElementRef,
+    private signalRService: SignalRService) {
     this.element.nativeElement;
     this.chatHistory = {
       page: 1,
@@ -27,12 +37,14 @@ export class ChatBoxComponent implements OnInit {
 
   ngOnInit(): void {
     // load lich su chat
-    this.loadHistory();
+    //this.loadHistory();
   }
 
   //Load lịch sử tin nhắn
   loadHistory() {
-    this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessageAsync');
+    this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessageAsync').subscribe((res)=>{
+
+    });
   }
 
   onScroll(event: any) {
@@ -52,10 +64,36 @@ export class ChatBoxComponent implements OnInit {
     }
     //Gọi service gửi tin nhắn
     this.api.exec<Post>('ERM.Business.WP', 'ChatBusiness', 'SendMessageAsync', {
-      from: this.senderId,
-      to: this.receiverId,
+      senderId: this.senderId,
+      receiverId: this.receiverId,
       groupId: this.groupId,
       message: this.message,
+      messageType: "1",
+      senderName: this.senderName,
+      receiverName: this.receiverName
+    }).subscribe((resp : any)=>{
+      if(!resp) 
+      {
+        //Xử lý gửi tin nhắn không thành công
+        return;
+      }
+      if(!this.groupId){
+        this.groupId = resp[1].groupID;
+        this.groupType = resp[1].groupType;
+      }
+      if(this.groupType == "1"){
+        this.signalRService.sendData(resp[0], "SendMessageToUser");
+      }else{
+        this.signalRService.sendData(resp[0], "SendMessageToGroup");
+      }
     });
+  }
+
+  onClose(event: any){
+    this.close.emit(event);
+  }
+
+  onMinimize(event: any){
+    this.minimize.emit(event);
   }
 }
