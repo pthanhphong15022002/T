@@ -16,6 +16,7 @@ import localeFr from '@angular/common/locales/vi';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
+import { FedComponent } from './modules/fed/fed/fed.component';
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
@@ -61,6 +62,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
     declarations: [
         AppComponent,
+        FedComponent,
         //ReportComponent,
     ],
     imports: [
