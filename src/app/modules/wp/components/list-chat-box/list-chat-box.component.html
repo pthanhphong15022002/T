@@ -3,7 +3,7 @@
         <div #chatBoxWrap id="chat-boxes-wrap">
             <ng-container *ngFor="let item of listChatBoxes; let i = index">
                 <codx-chat-box 
-                    [receiverId]="item.colapId" 
+                    [receiverId]="item.colabId" 
                     [groupId]="item.groupId" 
                     [senderId]="item.ownerId"
                     (close)="onChatBoxClose(item)"
@@ -18,8 +18,8 @@
                     <ng-container *ngFor="let item of listStack; let i = index; trackBy: listStackTrackBy">
                         <div class="symbol symbol-circle symbol-50px menu-item" data-bs-toggle="tooltip" data-bs-placement="left"
                             title="Nguyễn Văn A" *ngIf="i < numberShowStack" (click)="stackItemSelected(i)">
-                            <codx-img   [objectId]="item.colapId"
-                                        [objectName]="item.colapName" 
+                            <codx-img   [objectId]="item.colabId"
+                                        [objectName]="item.colabName" 
                                         objectType="AD_Users"
                                         class="symbol symbol-30 symbol-circle mr-3">
                             </codx-img>
