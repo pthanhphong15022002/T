@@ -26,7 +26,7 @@ export class ChatBoxComponent implements OnInit {
   user: any;
 
   constructor(
-    private api: ApiHttpService, 
+    private api: ApiHttpService,
     private element: ElementRef,
     private signalRService: SignalRService,
     authStore: AuthStore) {
@@ -42,14 +42,19 @@ export class ChatBoxComponent implements OnInit {
   ngOnInit(): void {
     this.senderId = this.user.userID;
     this.senderName = this.user.userName;
-    // load lich su chat
-    //this.loadHistory();
+    this.loadGroupInformation();
+  }
+
+  loadGroupInformation(){
+    this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'GetGroupInfomationAsync').subscribe((res)=>{
+      console.log(res);
+    });
   }
 
   //Load lịch sử tin nhắn
   loadHistory() {
     this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessageAsync').subscribe((res)=>{
-
+      console.log(res)
     });
   }
 
@@ -78,7 +83,7 @@ export class ChatBoxComponent implements OnInit {
       senderName: this.senderName,
       receiverName: this.receiverName
     }).subscribe((resp : any)=>{
-      if(!resp) 
+      if(!resp)
       {
         //Xử lý gửi tin nhắn không thành công
         return;
