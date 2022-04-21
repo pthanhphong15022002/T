@@ -1,0 +1,98 @@
+.flex-root {
+    background-color: #C9C9D4;
+}
+.aside {
+    display: flex;
+    box-shadow: 0px 0px 80px 50px rgba(206, 213, 225, 0.12);
+    background-color: #ffffff;
+  }
+  .aside .aside-primary {
+    flex-shrink: 0;
+  }
+  .aside-secondary-enabled .aside .aside-primary {
+    border-right: 1px solid transparent;
+  }
+  .aside-secondary-enabled:not([data-kt-aside-minimize=on]) .aside .aside-primary {
+    border-right-color: #EFF2F5;
+  }
+  .aside .aside-secondary {
+    overflow: hidden;
+  }
+  .aside .aside-secondary .aside-workspace {
+    width: 325px;
+    flex-shrink: 0;
+  }
+  @media (min-width: 992px) {
+  .header{
+    background: white; height: 60px;
+  }
+}
+  @media (min-width: 992px) {
+    .aside {
+      transition: width 0.3s ease;
+      width: 100px;
+    }
+    .aside .aside-primary {
+      width: 100px;
+    }
+    .aside .aside-secondary .aside-workspace {
+      width: 325px;
+      flex-shrink: 0;
+    }
+    .aside-fixed .aside {
+      position: fixed;
+      top: 65px;
+      bottom: 0;
+      left: 0;
+      z-index: 98;
+    }
+    .aside-static .aside {
+      position: relative;
+      z-index: 1;
+    }
+    .aside-secondary-enabled .aside {
+      width: 425px;
+    }
+    .aside-secondary-disabled .aside {
+      width: 100px;
+    }
+    .aside-secondary-disabled .aside .aside-primary {
+      border-right: 0;
+    }
+    [data-kt-aside-minimize=on] .aside {
+      width: 100px;
+      transition: width 0.3s ease;
+    }
+  }
+  @media (max-width: 991.98px) {
+    .aside {
+      display: none;
+      width: 300px;
+    }
+    .aside .aside-primary {
+      width: 70px;
+    }
+    .aside .aside-secondary .aside-workspace {
+      width: 230px;
+      flex-shrink: 0;
+    }
+    .aside-secondary-enabled .aside {
+      width: 300px;
+    }
+    .aside-secondary-disabled .aside {
+      width: 70px;
+    }
+    .aside-secondary-disabled .aside .aside-primary {
+      border-right: 0;
+    }
+  }
+  @media (min-width: 992px) {
+    .content {
+      padding: 0;
+    }
+  }
+  @media (max-width: 991.98px) {
+    .content {
+      padding: 15px 0;
+    }
+  }
