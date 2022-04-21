@@ -27,6 +27,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./modules/chatting/_layout/layout.modules').then((m) => m.LayoutModule),
       },
+      {
+        path: 'wp',
+        loadChildren: () =>
+          import('./modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

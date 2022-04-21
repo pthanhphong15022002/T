@@ -15,6 +15,11 @@ import { InlineSVGModule } from 'ng-inline-svg';
         path: '',
         component: HomeComponent,
       },
+      {
+        path: 'wp',
+        loadChildren: () =>
+          import('../../modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
     ]),
     InlineSVGModule,
   ],
