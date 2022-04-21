@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
+import { AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Post } from 'src/shared/models/post';
 
@@ -14,7 +15,9 @@ export class SignalRService {
   signalObject = new EventEmitter<any>();
   signalChat = new EventEmitter<any>();
 
-  constructor() {
+  constructor(
+    private authStore: AuthStore
+  ) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -23,6 +26,7 @@ export class SignalRService {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/serverHub', {
         skipNegotiation: true,
+        accessTokenFactory: () => this.authStore.get().token,
         transport: signalR.HttpTransportType.WebSockets
       })
       .build();
