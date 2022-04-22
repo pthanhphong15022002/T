@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { SignalRService } from '@core/services/signalr/signalr.service';
 import { AuthStore, DataRequest } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
@@ -10,7 +10,7 @@ import { ChatService } from '../chat.service';
     styleUrls:['./chat-list.component.scss']
 })
 
-export class ChatListComponent implements OnInit {
+export class ChatListComponent implements OnInit, AfterViewInit {
     @ViewChild('historyListEle') historyListObj:any;
     @ViewChild('searchListEle') searchListObj:any;
     user:any;
@@ -20,6 +20,15 @@ export class ChatListComponent implements OnInit {
         authStore: AuthStore
     ) { 
         this.user = authStore.get();
+    }
+    ngAfterViewInit(): void {
+        debugger
+        if(this.historyListObj){
+            this.historyListObj.SearchText = this.user.userID;
+            this.historyListObj.options.page = 1;
+            this.historyListObj.options.pageLoading = true;
+            this.historyListObj.loadData();
+        }
     }
     
     toolbarButtonMarginClass = 'ms-1 ms-lg-3';
@@ -42,7 +51,7 @@ export class ChatListComponent implements OnInit {
             };
             this.openChatBox(data);
         });
-
+        this.getChatHistory();
         this.getNumberMessageNotRead();
     }
 

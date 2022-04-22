@@ -49,9 +49,13 @@
                             title=""
                             groupBy="buid"
                             [funcId]="'AD006'"
-                            formName="Users"
+                            formName="Chat"
                             entityName="AD_Users"
                             gridViewName="'grvUsers'"
+                            method="GetChatHistoryAsync"
+                            service="WP"
+                            assemblyName="WP"
+                            className="ChatBusiness"
                         ></codx-listview>
                         <!-- End list history -->
 
@@ -107,9 +111,8 @@
                             assemblyName="WP"
                             className="ChatBusiness"
                         ></codx-listview>
-
                         <ng-template #searchItemTemplate let-data>
-                            <ng-container *ngIf="data.type == 'user'">
+                            <ng-container *ngIf="data.type == 'user' && data.userID != user.userID">
                                 <div class="d-flex flex-stack py-2" (click)="openChatBox(data)">
                                     <div class="d-flex align-items-center">
                                         <div class="symbol symbol-35px symbol-circle">
