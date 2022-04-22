@@ -16,7 +16,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     user:any;
     constructor(
         private chatService : ChatService,
-        private signalService: SignalRService,
         authStore: AuthStore
     ) { 
         this.user = authStore.get();
@@ -37,7 +36,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     isFiltering = false;
 
     ngOnInit() {
-        this.signalService.signalChat.subscribe((mesInfo:any)=>{
+        this.chatService.receiveMessage.subscribe((mesInfo:any)=>{
             // Thông tin của box
             // Lúc nào sender của box cũng phải là current user
             // Người còn lại sẽ là userId và userName
@@ -51,6 +50,12 @@ export class ChatListComponent implements OnInit, AfterViewInit {
             };
             this.openChatBox(data);
         });
+
+        this.chatService.readMessage.subscribe((data)=>{
+            let groupId = data.groupId;
+            // cập nhật danh sách not read
+        });
+        
         this.getChatHistory();
         this.getNumberMessageNotRead();
     }
@@ -69,6 +74,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
             this.searchListObj.SearchText = event;
             this.searchListObj.options.page = 1;
             this.searchListObj.options.pageLoading = true;
+            this.searchListObj.options['dataValue'] = this.user.userID;
             this.searchListObj.loadData();
         }
     }
