@@ -72,6 +72,11 @@ const routes: Routes = [
             },
         ],
     },
+    {
+        path: 'wp',
+        loadChildren: () =>
+          import('../modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
 ];
 
 @NgModule({

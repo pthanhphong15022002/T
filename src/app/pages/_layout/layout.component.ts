@@ -88,7 +88,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       separator: false,
       childs: []
     },{
-      functionID: '',
+      functionID: 'WPT02',
       customName: 'Tin tức - Sự kiện',
       smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg', 
       comingSoon: true,
