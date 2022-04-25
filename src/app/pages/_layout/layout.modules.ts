@@ -17,6 +17,7 @@ import { ChatListComponent } from '@modules/wp/components/chat-list/chat-list.co
 import { ListChatBoxComponent } from '@modules/wp/components/list-chat-box/list-chat-box.component';
 import { FormsModule } from '@angular/forms';
 import { ChatBoxComponent } from '@modules/wp/components/chatbox/chat-box.component';
+import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,8 @@ import { ChatBoxComponent } from '@modules/wp/components/chatbox/chat-box.compon
         UserInnerComponent,
         ChatListComponent,
         ListChatBoxComponent,
-        ChatBoxComponent
+        ChatBoxComponent,
+        CreateGroupComponent
     ],
     imports: [
         CommonModule,
