@@ -24,6 +24,11 @@ import { environment } from 'src/environments/environment';
         path: '',
         component: HomeComponent,
       },
+      {
+        path: 'wp',
+        loadChildren: () =>
+          import('../../modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
     ]),
     InlineSVGModule,
   ],
