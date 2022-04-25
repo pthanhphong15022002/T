@@ -15,8 +15,8 @@ import { UserInnerComponent } from "./dropdown-inner/user-inner/user-inner.compo
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChatListComponent } from '@modules/wp/components/chat-list/chat-list.component';
 import { ListChatBoxComponent } from '@modules/wp/components/list-chat-box/list-chat-box.component';
-import { ChatBoxComponent } from '@modules/wp/components/chatbox/chat-box.component';
 import { FormsModule } from '@angular/forms';
+import { ChatBoxComponent } from '@modules/wp/components/chatbox/chat-box.component';
 
 @NgModule({
     declarations: [
