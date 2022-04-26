@@ -1,8 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { SignalRService } from '@core/services/signalr/signalr.service';
-import { AuthStore, DataRequest } from 'codx-core';
+import { AuthStore, CallFuncService, DataRequest } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
 import { ChatService } from '../chat.service';
+import { CreateGroupComponent } from '../create-group/create-group.component';
 
 @Component({
     selector: 'codx-chat-list',
@@ -13,15 +14,16 @@ import { ChatService } from '../chat.service';
 export class ChatListComponent implements OnInit, AfterViewInit {
     @ViewChild('historyListEle') historyListObj:any;
     @ViewChild('searchListEle') searchListObj:any;
+    @ViewChild('searchbar') searchbar: any;
     user:any;
     constructor(
         private chatService : ChatService,
-        authStore: AuthStore
+        authStore: AuthStore,
+        private callfc: CallFuncService
     ) { 
         this.user = authStore.get();
     }
     ngAfterViewInit(): void {
-        debugger
         if(this.historyListObj){
             this.historyListObj.SearchText = this.user.userID;
             this.historyListObj.options.page = 1;
@@ -34,6 +36,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     toolbarButtonHeightClass = 'w-30px h-30px w-md-40px h-md-40px';
     toolbarButtonIconSizeClass = 'svg-icon-1';
     isFiltering = false;
+    filterValue = undefined;
 
     ngOnInit() {
         this.chatService.receiveMessage.subscribe((mesInfo:any)=>{
@@ -69,6 +72,10 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     }
 
     doFilter(event:any){
+        if(event == ''){
+            this.isFiltering = false;
+            return;
+        }
         this.isFiltering = true;
         if(this.searchListObj){
             this.searchListObj.SearchText = event;
@@ -103,5 +110,26 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
     getNumberMessageNotRead(){
 
+    }
+
+    openChange(event: any){
+        if(event == false){
+            this.isFiltering = false;
+            this.searchbar.onClear();
+        }
+    }
+
+    historyItemClicked(data){
+        this.openChatBox({
+            userID: data.colabId,
+            userName: data.colabName,
+            groupId: data.groupID,
+            groupType: data.groupType,
+            message: data
+        });
+    }
+
+    openCreategroupForm(){
+        this.callfc.openForm(CreateGroupComponent, "Tạo nhóm chat", 800, 600);
     }
 }

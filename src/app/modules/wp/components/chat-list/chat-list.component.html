@@ -1,4 +1,4 @@
-<div ngbDropdown class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">
+<div ngbDropdown class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" (openChange)="openChange($event)">
     <span [inlineSVG]="'./assets/media/icons/duotune/communication/com012.svg'" class="svg-icon"
         [ngClass]="toolbarButtonIconSizeClass" ngbDropdownToggle>
     </span>
@@ -17,7 +17,7 @@
                 </div>
                 <div class="card-toolbar">
                     <div class="me-2">
-                        <button class="btn btn-sm btn-icon btn-active-light-primary">
+                        <button class="btn btn-sm btn-icon btn-active-light-primary" (click)="openCreategroupForm()">
                             <span class="icon-group_add icon-24 text-dark-75 text-hover-primary"></span>
                         </button>
                     </div>
@@ -32,7 +32,7 @@
 
             <div class="card-body pt-0">
                 <!--begin::Form search-->
-                <codx-searchbar [width]="300" (searchEvent)="doFilter($event)"></codx-searchbar>
+                <codx-searchbar #searchbar [width]="300" (searchEvent)="doFilter($event)"></codx-searchbar>
                 <!--end::Form search-->
 
                 <!--Begin show history -->
@@ -61,24 +61,65 @@
 
                         <!-- Item template -->
                         <ng-template #historyItemTemplate let-data>
-                            <div class="d-flex flex-stack py-2 Unread">
+                            <div class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead" (click)="historyItemClicked(data)">
                                 <div class="d-flex align-items-center">
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <img alt="Pic" src="../../../assets/themes/wp/default/light/img/user_F4.svg">
-                                    </div>
+                                    <ng-container *ngIf="data.groupType == '1'">
+                                        <codx-img   [objectId]="data.colabId"
+                                                    [objectName]="data.colabName" 
+                                                    objectType="AD_Users"
+                                                    class="symbol symbol-30 symbol-circle mr-3" >
+                                        </codx-img>
+                                    </ng-container>
+                                    
+                                    <ng-container *ngIf="data.groupType == '2'">
+                                        <div class="symbol symbol-35px symbol-circle" >
+                                            <img alt="Pic" [src]="data.picture">
+                                        </div>
+                                    </ng-container>
+                                    
                                     <div class="ms-5">
                                         <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
-                                            Lê Phạm Hoài Thương </a>
+                                            {{data.groupName}} </a>
                                         <div class="fw-bold text-primary">
-                                            <span class="icon-local_offer text-success icon-16 me-2"></span>
-                                            <span class="me-2">Bạn:</span><span>Dạ em cảm ơn chị ạ</span>
+                                            <span class="me-2"></span><span>{{data.message}}</span>
                                         </div>
                                     </div>
                                 </div>
         
                                 <div class="d-flex flex-column align-items-end ms-2">
-                                    <span class="text-muted fs-7 mb-1">1 tuần</span>
+                                    <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
                                     <span class="badge badge-primary badge-circle w-10px h-10px me-1"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-stack py-2 read" *ngIf="data.isRead" (click)="historyItemClicked(data)">
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngIf="data.groupType == '1'">
+                                        <codx-img   [objectId]="data.colabId"
+                                                    [objectName]="data.colabName" 
+                                                    objectType="AD_Users"
+                                                    class="symbol symbol-30 symbol-circle mr-3" >
+                                        </codx-img>
+                                    </ng-container>
+                                    
+                                    <ng-container *ngIf="data.groupType == '2'">
+                                        <div class="symbol symbol-35px symbol-circle" >
+                                            <img alt="Pic" [src]="data.picture">
+                                        </div>
+                                    </ng-container>
+                                    <div class="ms-5">
+                                        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                                            {{data.groupName}} </a>
+                                        <div class="fw-bold text-gray-400">
+                                            <span class="icon-local_offer text-success icon-16 me-2"></span>
+                                            <span class=" me-2">{{data.message}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="d-flex flex-column align-items-end ms-2">
+                                    <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+                                    <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
                                 </div>
                             </div>
                         </ng-template>
