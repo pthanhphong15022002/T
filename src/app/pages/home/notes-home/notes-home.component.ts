@@ -1,36 +1,62 @@
+import { StatusNote } from './../../../modules/wp/model/enum/enum';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Notes } from './../../../modules/wp/model/notes';
 import { ApiHttpService } from 'codx-core';
-import { Component, ViewEncapsulation, OnInit, Input } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, Input, ElementRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ChangedEventArgs } from '@syncfusion/ej2-calendars';
 import { addClass } from '@syncfusion/ej2-base';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NoteGoal, Notes } from '@modules/wp/model/notes.model';
+import { Console } from 'console';
 @Component({
   selector: 'app-notes-home',
   templateUrl: './notes-home.component.html',
   styleUrls: ['./notes-home.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class NotesHomeComponent implements OnInit {
+export class NotesHomeComponent implements OnInit, AfterViewInit {
   @Input() dataAdd = new Notes();
   data: any;
   message: any;
+  listNote: any[] = [];
+  indexEditNote = -1;
+  contentNoteEdit = "";
+  noteAddText: any;
+  check: any;
+  disabled: boolean = true;
+  isUpdate = false;
+  type: any;
+  lock = false;
+  getDate = {};
+  getMonth: any;
+  getYear: any;
+  isCalendar = false;
+  count = 0;
+  num = 0;
+
+  STATUS_NOTE = StatusNote;
+
+  @ViewChild("txtNoteEdit") txtNoteEdit: ElementRef;
+  @ViewChild('listview') lstView: any;
   constructor(
     private api: ApiHttpService,
     private modalService: NgbModal,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
-    this.onGetListNote()
+    //this.onGetListNote()
+  }
+  ngAfterViewInit() {
+
   }
 
   ngOnInit(): void {
+
   }
 
   onLoad(args): void {
+    console.log("CHECK DATE", this.getDate)
     let span: HTMLElement;
-    //defines the custom HTML element to be added.
     span = document.createElement('span');
-    //Use "e-icons" class name to load Essential JS 2 built-in icons.
-    if (args.date.getDate() === 29) {
+    if (args.date.getDate() === this.getDate && args.date.getMonth() === this.getMonth && args.date.getFullYear() === this.getYear) {
       let span: HTMLElement;
       span = document.createElement('span');
       span.setAttribute('class', 'e-icons blue');
@@ -45,11 +71,11 @@ export class NotesHomeComponent implements OnInit {
       span = document.createElement('span');
       span.setAttribute('class', 'e-icons red');
       addClass([args.element], ['special', 'e-day', 'farewell']);
-       args.element.firstElementChild.setAttribute('title', 'Farewell !');
+      args.element.firstElementChild.setAttribute('title', 'Farewell !');
       args.element.setAttribute('title', 'Farewell !');
       args.element.setAttribute('data-val', 'Farewell!');
       args.element.appendChild(span);
-  }
+    }
   }
   onValueChange(args: any) {
     let title: string = '';
@@ -61,47 +87,71 @@ export class NotesHomeComponent implements OnInit {
     (document.getElementById('selected')).textContent = 'Selected Value: ' + args.value.toLocaleDateString() + title;
   }
 
-  onGetListNote() {
-    let i = 0;
-    this.api
-    .exec<any>("ERM.Business.WP", "NotesBusiness", "GetListAsync")
-    .subscribe((res) => {
-      this.data = res;
-      for(i; i <= res.length; i++)
-      {
-        //console.log("CHECK get date", res[i].createdOn)
-        var date = "2022-04-22T02:12:18.256Z";
-        console.log("CHECK date", date)
-      }
-      console.log("CHECK list note", res);
-    });
+  onGetListNote(item) {
+    var date = item.createdOn;
+    var dateParse = new Date(Date.parse(date));
+    this.getDate = dateParse.getDate();
+    console.log("CHECK DATEEEE", this.getDate)
+    this.getMonth = dateParse.getMonth();
+    this.getYear = dateParse.getFullYear();
   }
 
   openFormAddNote(content) {
     this.modalService.open(content, { centered: true });
   }
 
-  valueChange(e) {
-    this.message = e.data;
-    console.log("CHECK valueChange", e.data);
+  valueChange(e, item = null) {
+    if (e) {
+      var field = e.field;
+      if (field == "textarea")
+        this.message = e.data;
+      else if (item) {
+        this.message = "";
+        item[field] = e.data;
+      }
+    }
+
   }
 
   onCreateNote() {
-    this.dataAdd.memo = this.message,
-    console.log("CHECK this.data", this.dataAdd);
-    this.api
-    .exec<any>("ERM.Business.WP", "NotesBusiness", "CreateNoteAsync", this.dataAdd)
-    .subscribe((res) => {
-      console.log("CHECK add note", res);
-    });
+    if (this.type == "check" || this.type == "list") {
+      this.dataAdd.memo = null;
+      this.dataAdd.checkList = this.listNote;
+      this.dataAdd.checkList.shift();
+
+    } else {
+      this.dataAdd.checkList = null;
+      this.dataAdd.memo = this.message
+    }
+    console.log("CHECK this.dataAdd", this.dataAdd)
+    if (this.dataAdd.checkList != null && this.dataAdd.memo != undefined) {
+      this.api
+        .exec<any>("ERM.Business.WP", "NotesBusiness", "CreateNoteAsync", this.dataAdd)
+        .subscribe((res) => {
+        });
+    }
+    this.listNote = [];
   }
 
   onDeleteNote(recID) {
     this.api
-    .exec<any>("ERM.Business.WP", "NotesBusiness", "DeleteNoteAsync", recID)
-    .subscribe((res) => {
-      console.log("CHECK delete note", res);
-    });
+      .exec<any>("ERM.Business.WP", "NotesBusiness", "DeleteNoteAsync", recID)
+      .subscribe((res) => {
+      });
+  }
+  onType(type) {
+    this.type = type;
+    this.listNote = [];
+    if (type == "list" || type == "check") {
+      var todoCheck = { "status": type != "check" ? null : 0, "listNote": "" };
+      this.listNote.push(todoCheck);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
+  onUpdateNote(item: NoteGoal) {
+    var dt = { "status": item.status, "listNote": item.listNote };
+    this.listNote.push(Object.assign({}, dt));
+    this.changeDetectorRef.detectChanges();
+  }
 }

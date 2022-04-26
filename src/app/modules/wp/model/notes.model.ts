@@ -6,7 +6,7 @@ export class Notes {
     noteType: string;
     memo: string;
     pictures: object;
-    checkList: object;
+    checkList: any[];
     isPin: boolean;
     showCalendar: boolean;
     createdOn: string;
