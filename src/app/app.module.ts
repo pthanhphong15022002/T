@@ -17,6 +17,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { FedComponent } from './modules/fed/fed/fed.component';
+import { TmComponent } from './modules/tm/tm.component';
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
@@ -63,6 +64,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     declarations: [
         AppComponent,
         FedComponent,
+        TmComponent,
         //ReportComponent,
     ],
     imports: [
