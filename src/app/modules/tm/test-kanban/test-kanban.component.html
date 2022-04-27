@@ -1,0 +1,65 @@
+<div class="row">
+  <codx-kanban #kanban primaryKey="Id" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
+    [cardTemplate]="cardTemplate" [dataSource]="dataSource" [popupTemplate]="content" [swimlanes]="swimlaneSettings"
+    [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')" (onDrag)="onDataDrag($event)">
+  </codx-kanban>
+  <input type="checkbox" [(ngModel)]="showSumary">
+  <button class="btn btn-sm btn-success" (click)="openPopup($event)">
+    Thêm
+  </button>
+</div>
+
+<ng-template #cardTemplate let-data>
+  <div class='card-template'>
+    <div class='e-card-header'>
+      <div class='e-card-header-caption'>
+        <div class='e-card-header-title e-tooltip-text'>{{data.Description}}</div>
+      </div>
+    </div>
+    <div class='e-card-content e-tooltip-text' *ngIf="showSumary">
+      <div class='d-flex'>
+        <button (click)="clickme()">Click me</button>
+      </div>
+      <div class='e-text'>{{data.Summary}}</div>
+    </div>
+
+    <div class='e-card-custom-footer'>
+      <div class="e-card-tag-field e-tooltip-text" *ngFor="let tag of data.Tags.split(',');">{{tag}}</div>
+      <div class='e-card-avatar'>{{getString(data.Assignee)}}</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #columTemplate let-data>
+  <div class="header-template-wrap">
+    <div class="header-icon e-icons {{data.keyField}}"></div>
+    <div class="header-text">{{data.headerText}}</div>
+  </div>
+</ng-template>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Drag & Drop</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Bạn chắc chắn với hành động này không ?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="submit($event,modal)">Đồng ý</button>
+  </div>
+</ng-template>
+
+<ng-template #popupAdd let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">View</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <input type="text" [(ngModel)]="Sumary" placeholder="Nhập nội dung">
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">Đồng ý</button>
+  </div>
+</ng-template>
