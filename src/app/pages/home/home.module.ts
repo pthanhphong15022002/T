@@ -4,16 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { NotesHomeComponent } from './notes-home/notes-home.component';
-import { AddNoteComponent } from './notes-home/add-note/add-note.component';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    NotesHomeComponent,
-    AddNoteComponent
   ],
   imports: [
     CommonModule,
