@@ -1,15 +1,20 @@
+import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { CodxCoreModule } from 'codx-core';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     CommonModule,
+    CalendarModule,
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild([
       {
         path: '',
