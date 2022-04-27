@@ -32,6 +32,18 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./modules/chatting/_layout/layout.modules').then((m) => m.LayoutModule),
       },
+      {
+        path: 'wp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'tm',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/tm/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },
