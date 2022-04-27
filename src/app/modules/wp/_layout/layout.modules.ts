@@ -11,11 +11,6 @@ import { HomeComponent } from '../home/home.component';
   declarations: [
     LayoutComponent,
     HomeComponent
-    // MessengerDrawerComponent,
-    // ChatInnerComponent,
-    // NotifyDrawerComponent,
-    // QuickLinksInnerComponent,
-    // UserInnerComponent,
   ],
   imports: [
     // CommonModule,
