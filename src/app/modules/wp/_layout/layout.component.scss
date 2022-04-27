@@ -1,0 +1,23 @@
+:host {
+  height: 100%;
+  margin: 0;
+
+  .flex-root {
+    height: 100%;
+  }
+}
+
+.page-loaded {
+  codx-layout {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+}
+
+.menu{
+  list-style: none;
+}
+.menu-item{
+  display: inline;
+  padding-left: 20px;
+}

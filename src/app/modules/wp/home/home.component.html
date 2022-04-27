@@ -1,0 +1,81 @@
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<div>
+  <div class="news">
+    <p class="title">Tin mới nhất</p>
+    <div class="news-container">
+      <codx-listview 
+        [itemTemplate]="listNews" 
+        title=""
+        [funcId]="functionID"
+        [entityName]="entityName"
+        [gridViewName]="gridViewName"
+        predicate= "Category != @0 && ApproveStatus = @1"
+        [dataValue]="datavalue"
+        dataObj="listView"
+        
+        page = "1"
+        predicates="NewsType = @0"
+        dataValues="1"
+        pageSize="4"
+        method="GetListNewsAsync"
+        service="WP"
+        assemblyName="ERM.Business.WP"
+        className="NewsBusiness"
+      ></codx-listview>
+    </div>
+    <div class="news-slider">
+        <ngb-carousel *ngIf="listSlider">
+          <ng-template ngbSlide *ngFor="let list of listSlider">
+              <div *ngFor="let item of list" class="slider-item">
+                <codx-img [funcId]="functionID" [objectId]="item.recID" objectType="WP_News"></codx-img>
+                <p>{{item.subject}}</p>
+                <p>{{item.subContent}}</p>
+                <p>{{item.createdOn | fmDT}}</p>
+              </div>  
+          </ng-template>
+        </ngb-carousel>
+    </div>  
+  </div>
+  <div class="private-news">
+    <div class="title">Tin nội bộ</div>
+      
+  </div>
+  <div class="policys">
+    <div class="title">Quy định & Chính sách</div>
+      
+  </div>
+  <div class="differentsNews">
+    <div class="title">Tin tức khác</div>
+      
+  </div>
+</div>
+
+<ng-template #listNews let-item>
+  <div class="news-hot" *ngIf="item.index == 0;else list">
+    <codx-img  [funcId]="functionID" [objectId]="item.recID" objectType="WP_News" width="500"></codx-img>
+    <p>{{item.subject}}</p>
+    <p>{{item.subContent}}</p>
+    <p>{{item.createdOn | fmDT}}</p>
+  </div>
+  <ng-template #list>
+    <div class="list-news" >
+      <div class="list-news-item">
+        <codx-img [funcId]="functionID" [objectId]="item.recID" [recId]="item.recID" width="100"></codx-img>
+        <p>{{item.subject}}</p>
+        <p>{{item.subContent}}</p>
+        <p>{{item.createdOn | fmDT}}</p>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #listGroup>
+  <div></div>
+</ng-template>
+
+

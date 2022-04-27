@@ -40,6 +40,16 @@
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
                 "output": "assets/media"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/codx-core/assets/styles",
+                "output": "assets/styles"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/codx-core/assets/fonts",
+                "output": "assets/fonts"
               }
             ],
             "styles": [

@@ -1,0 +1,79 @@
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ApiHttpService, AuthService, CacheService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, TenantStore, UserModel } from 'codx-core';
+import { Observable, of } from 'rxjs';
+
+@Component({
+  selector: 'codx-layout',
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss'],
+})
+export class LayoutComponent implements OnInit, AfterViewInit {
+  // Public variables
+  contentContainerClasses = '';
+  headerCSSClasses: string;
+  headerHTMLAttributes: any = {};
+  toolbarButtonMarginClass = 'ms-1 ms-lg-3';
+  toolbarButtonHeightClass = 'w-30px h-30px w-md-40px h-md-40px';
+  toolbarUserAvatarHeightClass = 'symbol-30px symbol-md-40px';
+  toolbarButtonIconSizeClass = 'svg-icon-1';
+  headerLeft: string = 'menu';
+  asideDisplay: boolean;
+  asideCSSClasses: string;
+  @ViewChild('codxHeader', { static: true }) codxHeader: ElementRef;
+  @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
+  user: UserModel | null = null;
+
+  valueList: [];
+
+  constructor(
+    private initService: LayoutInitService,
+    private layout: LayoutService,
+    private auth: AuthService,
+    public codxService: CodxService,
+    private cache: CacheService,
+    private api:ApiHttpService,
+    private tenantStore: TenantStore,
+  ) {
+    this.cache.valueList('L1492').subscribe((value) => { this.valueList = value.datas; console.log('ValueList: ',this.valueList); });
+    this.layout.initConfig();
+    var cfg = this.layout.getConfig();
+    cfg.aside.display = true;
+    cfg.aside.fixed = false;
+    cfg.aside.theme='light';
+    cfg.toolbar.display = false;
+    cfg.pageTitle.breadCrumbs = false;
+    this.initService.init();
+  }
+
+  ngOnInit(): void {
+    // build view by layout config settings
+    this.asideDisplay = this.layout.getProp('aside.display') as boolean;
+    this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
+    this.contentContainerClasses = this.layout.getStringCSSClasses('contentContainer');
+    this.headerCSSClasses = this.layout.getStringCSSClasses('header');
+    this.layout.getProp;
+    this.user = this.auth.userValue;
+   
+  }
+
+  ngAfterViewInit(): void {
+    if (this.codxHeader) {
+      for (const key in this.headerHTMLAttributes) {
+        if (this.headerHTMLAttributes.hasOwnProperty(key)) {
+          this.codxHeader.nativeElement.attributes[key] =
+            this.headerHTMLAttributes[key];
+        }
+      }
+    }
+  }
+
+  public reloadAvatar(data: any): void {
+    this.imageViewer?.reloadImageWhenUpload();
+  }
+
+  public contentResized(size: any){
+    // if(size){
+    //   console.log(JSON.stringify(size));
+    // }
+  }
+}

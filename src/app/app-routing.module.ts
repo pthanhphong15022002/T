@@ -12,6 +12,11 @@ export const routes: Routes = [
           import('./modules/auth/auth.module').then((m) => m.AuthModule),
       },
       {
+        path: 'test',
+        loadChildren: () =>
+          import('./modules/tm/test/test.module').then((m) => m.TestModule),
+      },
+      {
         path: 'error',
         loadChildren: () =>
           import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
@@ -26,6 +31,18 @@ export const routes: Routes = [
         path: 'chatting',
         loadChildren: () =>
           import('./modules/chatting/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'wp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/wp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'tm',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/tm/_layout/layout.modules').then((m) => m.LayoutModule),
       },
       { path: '**', redirectTo: 'error/404' }
     ]
