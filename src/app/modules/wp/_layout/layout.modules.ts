@@ -13,12 +13,8 @@ import { HomeComponent } from '../home/home.component';
     HomeComponent
   ],
   imports: [
-    // CommonModule,
     InlineSVGModule,
-    // NgbModule,
-    // ERMModule,
     WPRoutingModule,
-    // CodxCoreModule.forRoot({ environment }),
     SharedModule,
   ],
   exports: [RouterModule],
