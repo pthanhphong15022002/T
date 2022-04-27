@@ -6,6 +6,8 @@
       </codx-header>
       <div class="d-flex flex-column flex-column-fluid">
         <div class="d-flex flex-column-fluid">
+          <codx-content class="my-5" [ngClass]="contentContainerClasses" (resizedEvent)="contentResized($event)">
+          </codx-content>
         </div>
       </div>
     </div>
