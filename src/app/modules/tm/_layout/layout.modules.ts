@@ -1,10 +1,8 @@
+import { TmModule } from '../tm-routing.module';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { InlineSVGModule } from "ng-inline-svg";
-import { WPRoutingModule } from "../wp-routing.module";
-import { LayoutComponent } from "./layout.component";
-
+import { LayoutComponent } from './layout.component';
 
 @NgModule({
   declarations: [
@@ -14,15 +12,19 @@ import { LayoutComponent } from "./layout.component";
     // NotifyDrawerComponent,
     // QuickLinksInnerComponent,
     // UserInnerComponent,
+    // ChatListComponent,
+    // ListChatBoxComponent,
+    // ChatBoxComponent
   ],
   imports: [
     // CommonModule,
-    InlineSVGModule,
+    // InlineSVGModule,
     // NgbModule,
     // ERMModule,
-    WPRoutingModule,
     // CodxCoreModule.forRoot({ environment }),
-    SharedModule,
+    TmModule,
+    // FormsModule
+    SharedModule
   ],
   exports: [RouterModule],
 })
