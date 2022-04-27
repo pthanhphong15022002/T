@@ -1,12 +1,13 @@
-import { StatusNote } from './../../../modules/wp/model/enum/enum';
+
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApiHttpService } from 'codx-core';
 import { Component, ViewEncapsulation, OnInit, Input, ElementRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ChangedEventArgs } from '@syncfusion/ej2-calendars';
 import { addClass } from '@syncfusion/ej2-base';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NoteGoal, Notes } from '@modules/wp/model/notes.model';
 import { Console } from 'console';
+import { StatusNote } from '@shared/models/enum/enum';
+import { NoteGoal, Notes } from '@shared/models/notes.model';
 @Component({
   selector: 'app-notes-home',
   templateUrl: './notes-home.component.html',

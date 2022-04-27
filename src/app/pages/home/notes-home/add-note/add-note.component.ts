@@ -1,7 +1,7 @@
 import { ApiHttpService } from 'codx-core';
 import { Component, ViewEncapsulation, OnInit, Input, ElementRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NoteGoal, Notes } from '@modules/wp/model/notes.model';
+import { NoteGoal, Notes } from '@shared/models/notes.model';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',

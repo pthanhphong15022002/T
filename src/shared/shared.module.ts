@@ -18,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { CoreModule } from '@core/core.module';
+import { CreateGroupComponent } from './layout/components/create-group/create-group.component';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -27,7 +28,8 @@ const T_Component: Type<any>[] = [
   ChatListComponent,
   ListChatBoxComponent,
   ChatBoxComponent,
-  QuickLinksInnerComponent
+  QuickLinksInnerComponent,
+  CreateGroupComponent
 ]
 
 const T_Moudule: Type<any>[] = [
