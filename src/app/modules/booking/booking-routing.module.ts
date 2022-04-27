@@ -16,10 +16,6 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
-        path: 'subhome',
-        component: HomeComponent
-      },
-      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
@@ -39,4 +35,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class TmModule { }
+export class BookingModule { }

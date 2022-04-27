@@ -1,4 +1,4 @@
-import { TmModule } from '../booking-routing.module';
+import { BookingModule } from '../booking-routing.module';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
@@ -22,7 +22,7 @@ import { LayoutComponent } from './layout.component';
     // NgbModule,
     // ERMModule,
     // CodxCoreModule.forRoot({ environment }),
-    TmModule,
+    BookingModule,
     // FormsModule
     SharedModule
   ],
