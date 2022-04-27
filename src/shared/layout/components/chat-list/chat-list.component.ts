@@ -4,6 +4,7 @@ import { CreateGroupComponent } from '@modules/wp/components/create-group/create
 import { AuthStore, CallFuncService, DataRequest } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
 import { ChatService } from '../chat.service';
+//import { CreateGroupComponent } from '../create-group/create-group.component';
 
 @Component({
   selector: 'codx-chat-list',
