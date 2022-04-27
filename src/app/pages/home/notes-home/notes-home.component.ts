@@ -49,11 +49,10 @@ export class NotesHomeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
+    console.log("CHECK listView", this.lstView);
   }
 
   onLoad(args): void {
-    console.log("CHECK DATE", this.getDate)
     let span: HTMLElement;
     span = document.createElement('span');
     if (args.date.getDate() === this.getDate && args.date.getMonth() === this.getMonth && args.date.getFullYear() === this.getYear) {
@@ -91,7 +90,6 @@ export class NotesHomeComponent implements OnInit, AfterViewInit {
     var date = item.createdOn;
     var dateParse = new Date(Date.parse(date));
     this.getDate = dateParse.getDate();
-    console.log("CHECK DATEEEE", this.getDate)
     this.getMonth = dateParse.getMonth();
     this.getYear = dateParse.getFullYear();
   }
