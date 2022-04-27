@@ -6,7 +6,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { ProfileOverviewComponent } from './personal/profile-overview/profile-overview.component';
 
 const routes: Routes = [
-    {
+  {
         path: '',
         component: LayoutComponent,
         children: [
@@ -36,7 +36,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+  declarations: [HomeComponent],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class WPRoutingModule { }

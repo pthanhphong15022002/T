@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { CodxCoreModule } from 'codx-core';
+import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
+
 
 const routes: Routes = [
   {
@@ -10,6 +13,10 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
+        component: HomeComponent,
+      },
+      {
+        path: 'subhome',
         component: HomeComponent
       },
       {
@@ -26,7 +33,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  declarations: [HomeComponent],
+  imports: [RouterModule.forChild(routes),
+  CodxCoreModule.forRoot({ environment }),
+  ],
   exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class TmModule { }
