@@ -9,7 +9,6 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('kanban') kanban: TemplateRef<any>;
 
   constructor() { }
 
@@ -17,12 +16,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     id: '1',
     type: 'content',
     active: false
-  },
-  {
-    id: '2',
-    type: 'kanban',
-    active: false
   }];
+
   ngOnInit(): void {
   }
 
@@ -33,15 +28,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       active: false,
       model: {
         panelLeftRef: this.panelLeftRef,
-        sideBarLeftRef: this.asideLeft,
-      }
-    },
-    {
-      id: '2',
-      type: 'kanban',
-      active: false,
-      model: {
-        panelLeftRef: this.kanban,
         sideBarLeftRef: this.asideLeft,
       }
     }];

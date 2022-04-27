@@ -44,6 +44,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./modules/tm/_layout/layout.modules').then((m) => m.LayoutModule),
       },
+      {
+        path: 'booking',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/booking/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

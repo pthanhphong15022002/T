@@ -1,12 +1,10 @@
-import { TestKanbanComponent } from './test-kanban/test-kanban.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
-import { TmComponent } from './tm.component';
-import { FormsModule } from '@angular/forms';
+
 
 const routes: Routes = [
   {
@@ -14,15 +12,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: '',
-        component: TmComponent,
-      },
-      {
         path: 'home',
-        component: HomeComponent,
-      },
-      {
-        path: 'subhome',
         component: HomeComponent,
       },
       {
@@ -39,12 +29,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent],
-  imports: [
-    RouterModule.forChild(routes),
-    FormsModule,
-    CodxCoreModule.forRoot({ environment }),
+  declarations: [HomeComponent],
+  imports: [RouterModule.forChild(routes),
+  CodxCoreModule.forRoot({ environment }),
   ],
   exports: [RouterModule],
 })
-export class TmModule {}
+export class BookingModule { }
