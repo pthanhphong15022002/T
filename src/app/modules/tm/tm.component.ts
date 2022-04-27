@@ -16,6 +16,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '1',
+      active:false,
       model: {
         service: 'TM',
         assemblyName: 'TM',
@@ -32,6 +33,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       type: 'listdetail',
       icon: '',
       text: '',
+      active:false,
       id: '2',
       model: {
         service: 'TM',
