@@ -6,7 +6,6 @@ import { ERMModule } from "@shared/erm.module";
 import { CodxCoreModule } from "codx-core";
 import { InlineSVGModule } from "ng-inline-svg";
 import { environment } from "src/environments/environment";
-import { HomeComponent } from "../home/home.component";
 import { WPRoutingModule } from "../wp-routing.module";
 import { ChatInnerComponent } from "./drawers/messenger-drawer/chat-inner/chat-inner.component";
 import { MessengerDrawerComponent } from "./drawers/messenger-drawer/messenger-drawer.component";
@@ -23,8 +22,7 @@ import { LayoutComponent } from "./layout.component";
         ChatInnerComponent,
         NotifyDrawerComponent,
         QuickLinksInnerComponent,
-        UserInnerComponent,
-        HomeComponent
+        UserInnerComponent
     ],
     imports: [
         CommonModule,

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { AuthService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, UserModel } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, TenantStore, UserModel } from 'codx-core';
 import { Observable, of } from 'rxjs';
 
 @Component({
@@ -23,12 +23,18 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   user: UserModel | null = null;
 
+  valueList: [];
+
   constructor(
     private initService: LayoutInitService,
     private layout: LayoutService,
     private auth: AuthService,
-    public codxService: CodxService
+    public codxService: CodxService,
+    private cache: CacheService,
+    private api:ApiHttpService,
+    private tenantStore: TenantStore,
   ) {
+    this.cache.valueList('L1492').subscribe((value) => { this.valueList = value.datas; console.log('ValueList: ',this.valueList); });
     this.layout.initConfig();
     var cfg = this.layout.getConfig();
     cfg.aside.display = true;
@@ -36,7 +42,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     cfg.aside.theme='light';
     cfg.toolbar.display = false;
     cfg.pageTitle.breadCrumbs = false;
-    
     this.initService.init();
   }
 
@@ -47,8 +52,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.contentContainerClasses = this.layout.getStringCSSClasses('contentContainer');
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.layout.getProp;
-    this.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
+   
   }
 
   ngAfterViewInit(): void {

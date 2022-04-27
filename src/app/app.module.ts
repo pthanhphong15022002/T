@@ -6,7 +6,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxUiLoaderModule, SPINNER, NgxUiLoaderConfig, NgxUiLoaderRouterModule, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routes } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AuthService, CodxCoreModule } from 'codx-core';
@@ -61,11 +61,11 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
     declarations: [
         AppComponent,
-        //ReportComponent,
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+
 
         HttpClientModule,
         ClipboardModule,
