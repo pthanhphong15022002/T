@@ -17,6 +17,7 @@ import { ERMModule } from './erm.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
+import { CoreModule } from '@core/core.module';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -30,6 +31,7 @@ const T_Component: Type<any>[] = [
 ]
 
 const T_Moudule: Type<any>[] = [
+  CoreModule,
   CommonModule,
   MomentModule,
   NgxSkeletonLoaderModule,

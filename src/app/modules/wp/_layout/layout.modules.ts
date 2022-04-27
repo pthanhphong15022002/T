@@ -4,11 +4,13 @@ import { RouterModule } from "@angular/router";
 import { InlineSVGModule } from "ng-inline-svg";
 import { WPRoutingModule } from "../wp-routing.module";
 import { LayoutComponent } from "./layout.component";
+import { HomeComponent } from '../home/home.component';
 
 
 @NgModule({
   declarations: [
     LayoutComponent,
+    HomeComponent
     // MessengerDrawerComponent,
     // ChatInnerComponent,
     // NotifyDrawerComponent,
