@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { HomeComponent } from '@pages/home/home.component';
 import { DataRequest } from '@shared/models/data.request';
 import { ApiHttpService, AuthStore, CodxListviewComponent, ImageviewersComponent } from 'codx-core';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import * as moment from "moment";
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
@@ -28,11 +30,10 @@ export class ViewListDetailsComponent implements OnInit {
   yesterday = '';
   lstItems = [];
   dataObj = { view: "listDetails", viewBoardID: "" };
-  
-  // @ViewChild("listview") listview!: CodxListviewComponent;
   gridView: any;
 
 
+  @Input('viewBase') viewBase: ViewBaseComponent;
   constructor(
     private tmSv: TmService,
     // private mainService: MainService,
@@ -43,18 +44,13 @@ export class ViewListDetailsComponent implements OnInit {
     private dt: ChangeDetectorRef,
     injector: Injector
   ) {
-    // super(
-    //   {
-
-    //   } as ModelPage,
-    //   injector
-    // )
     this.user = this.authStore.get();
   }
 
   ngOnInit(): void {
     this.dateNow = this.formatDateLocal(this.today)
     this.yesterday = this.formatDateLocal(this.getYesterday());
+    console.log(this.viewBase)
     this.loadData();
   }
 

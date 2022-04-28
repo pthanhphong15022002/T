@@ -5,6 +5,7 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 
 @Component({
@@ -13,7 +14,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') view: TemplateRef<any>;
+  @ViewChild('view') viewBase: ViewBaseComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     active: false
   }];
   ngOnInit(): void {
+    console.log(this.viewBase)
   }
 
   ngAfterViewInit(): void {
