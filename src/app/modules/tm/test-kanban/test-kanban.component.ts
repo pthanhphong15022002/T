@@ -1,6 +1,12 @@
 import { TmService } from './../tm.service';
 import { ContextMenuModel } from '@syncfusion/ej2-angular-navigations';
-import { Component, OnInit, Injector, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Injector,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
@@ -10,6 +16,8 @@ import {
 import { CoDxKanbanComponent, AuthStore } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
+import { VIEW_ACTIVE } from '@shared/constant/enum';
+import { KanbanSetting } from '../models/settings.model';
 
 @Component({
   selector: 'app-test-kanban',
@@ -17,8 +25,8 @@ import { DataSv } from '../models/task.model';
   styleUrls: ['./test-kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
-  //dataSource = cardData;
-  dataSource: any;
+  dataSource = cardData;
+  //dataSource: any;
   data: any;
   setCalendar = true;
   mode: string;
@@ -35,12 +43,15 @@ export class TestKanbanComponent implements OnInit {
   showSumary = false;
   Sumary: string = '';
 
+  kanbanSetting = new KanbanSetting();
+
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
   constructor(
     private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
+    private df: ChangeDetectorRef
   ) {
     this.user = this.authStore.get();
   }
@@ -63,8 +74,7 @@ export class TestKanbanComponent implements OnInit {
     this.getData();
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   public cardSettings: CardSettingsModel = {
     headerField: 'Description',
@@ -137,6 +147,7 @@ export class TestKanbanComponent implements OnInit {
   }
 
   getData() {
+    debugger;
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
@@ -156,7 +167,7 @@ export class TestKanbanComponent implements OnInit {
     let dataObj = { view: this.view, viewBoardID: '' };
 
     model.dataObj = JSON.stringify(dataObj);
-    
+
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.dataSource = res[0];
