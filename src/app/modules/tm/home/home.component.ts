@@ -11,6 +11,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
+  @ViewChild('listTasks') listTasks: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+
+
 
   constructor() { }
 
@@ -27,6 +31,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     id: '3',
     type: 'listdetail',
     text:'List-details',
+    active: true
+  },
+  {
+    id: '4',
+    type: 'list',
+    text:'List-tasks',
     active: true
   }];
   ngOnInit(): void {
@@ -58,6 +68,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
+      }
+    },{
+      id: '4',
+      type: 'list',
+      text:'List-task',
+      active: true,
+      model: {
+        panelLeftRef: this.listTasks,
+        sideBarLeftRef: this.asideLeft,
+        itemTemplate: this.itemTemplate,
       }
     }];
   }
