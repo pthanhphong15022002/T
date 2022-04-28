@@ -149,13 +149,14 @@ export class TestKanbanComponent implements OnInit {
     model.filter = {
       logic: 'and',
       filters: [
-        // { operator: 'gte', field: fied, value: this.fromDate },
-        // { operator: 'lte', field: fied, value: this.toDate },
+        { operator: 'gte', field: fied, value: this.fromDate },
+        { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    // let dataObj = { view: this.view, viewBoardID: '' };
+    let dataObj = { view: this.view, viewBoardID: '' };
 
-    // model.dataObj = JSON.stringify(dataObj);
+    model.dataObj = JSON.stringify(dataObj);
+    
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.dataSource = res[0];
