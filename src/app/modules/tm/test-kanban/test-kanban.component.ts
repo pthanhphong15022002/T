@@ -1,12 +1,15 @@
+import { TmService } from './../tm.service';
 import { ContextMenuModel } from '@syncfusion/ej2-angular-navigations';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
   DialogSettingsModel,
   SwimlaneSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
-import { CoDxKanbanComponent } from 'codx-core';
+import { CoDxKanbanComponent, AuthStore } from 'codx-core';
+import { DataRequest } from '@shared/models/data.request';
+import { DataSv } from '../models/task.model';
 
 @Component({
   selector: 'app-test-kanban',
@@ -14,13 +17,33 @@ import { CoDxKanbanComponent } from 'codx-core';
   styleUrls: ['./test-kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
-  dataSource = cardData;
+  //dataSource = cardData;
+  dataSource: any;
+  data: any;
+  setCalendar = true;
+  mode: string;
+  view: string;
+  isAdd = false;
+  functionList: any;
+  fromDate: any;
+  toDate: any;
+  configParam = null;
+  gridView: any;
+  grvSetup: any;
+  user: any;
   item: any;
   showSumary = false;
   Sumary: string = '';
+
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
-  constructor(private modalService: NgbModal) {}
+  constructor(
+    private modalService: NgbModal,
+    private tmSv: TmService,
+    private authStore: AuthStore,
+  ) {
+    this.user = this.authStore.get();
+  }
   public swimlaneSettings: SwimlaneSettingsModel = {
     keyField: 'Assignee',
     showEmptyRow: false,
@@ -33,7 +56,15 @@ export class TestKanbanComponent implements OnInit {
     { headerText: 'Xong', keyField: '4', allowToggle: true },
   ];
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.tmSv.myTaskComponent) {
+      this.tmSv.myTaskComponent = false;
+    }
+    this.getData();
+  }
+
+  ngAfterViewInit() {
+  }
 
   public cardSettings: CardSettingsModel = {
     headerField: 'Description',
@@ -103,6 +134,34 @@ export class TestKanbanComponent implements OnInit {
       t.kanban.itemUpdate = t.item;
       modal.close(true);
     }, 1000);
+  }
+
+  getData() {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.predicate = 'Owner=@0';
+    model.page = 1;
+    model.pageSize = 100;
+    model.dataValue = this.user.userID;
+    model.filter = {
+      logic: 'and',
+      filters: [
+        // { operator: 'gte', field: fied, value: this.fromDate },
+        // { operator: 'lte', field: fied, value: this.toDate },
+      ],
+    };
+    // let dataObj = { view: this.view, viewBoardID: '' };
+
+    // model.dataObj = JSON.stringify(dataObj);
+    this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
+      if (res && res.length) {
+        this.dataSource = res[0];
+        this.tmSv.setChangeData(new DataSv(res[0], this.view));
+      }
+    });
   }
 }
 export let cardData: Object[] = [

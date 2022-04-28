@@ -1,0 +1,25 @@
+export class TaskRemind {
+    taskOutOfDate: number = 0;
+    taskUncompelete: number = 0;
+    taskPrioritized: number = 0;
+    taskPrioritizedUnFinish: number = 0;
+    rateDoneOnTime: number = 0;
+    totalTaskInWeek: number = 0;
+    tasks: Array<RemiderOnDay> = [];
+    rateDoneAllTime: number = 0;
+}
+export class ChartTaskRemind {
+    rateDoneOnTime: number = 0;
+    totalTaskInWeek: number = 0;
+}
+export class BarChart {
+    barChart: any;
+    lineChart: any;
+}
+export class RemiderOnDay {
+    taskName: string;
+    createdBy: string;
+    status: string;
+    priority: string;
+    userName: string;
+}

@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
 import { FormsModule } from '@angular/forms';
+import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
 
 const routes: Routes = [
   {
@@ -39,7 +40,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
