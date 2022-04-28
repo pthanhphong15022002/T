@@ -49,6 +49,10 @@ export class TmService {
     loadTaskByAuthen(data) {
       return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetListDetailTasksAsync', [data]);
     }
+
+    loadColumnsKanban(data){
+      return this.execTM(APICONSTANT.BUSINESS.TM.Task,'GetColumnsKanbanAsync', data)
+    }
   
     addTask(data) {
       return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddTaskAsync', data);
