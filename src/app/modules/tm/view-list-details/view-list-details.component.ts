@@ -55,7 +55,12 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    
+    this.lstItems = [];
+       this.data.forEach(dt => {
+          dt.mytasks.forEach(e => {
+            this.lstItems.push(e)
+          })
+        });
   }
   loadData(){
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -86,13 +91,14 @@ export class ViewListDetailsComponent implements OnInit {
       (res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.lstItems = [];
-        this.data.forEach(dt => {
-          dt.mytasks.forEach(e => {
-            this.lstItems.push(e)
-          })
-        });
-        this.itemSelected = this.lstItems[0];
+        // this.lstItems = [];
+        // this.data.forEach(dt => {
+        //   dt.mytasks.forEach(e => {
+        //     this.lstItems.push(e)
+        //   })
+        // });
+        // this.itemSelected = this.lstItems[0];
+        this.itemSelected = res[0].mytasks[0] ;
       }else{
         this.data=[] ;
       }
