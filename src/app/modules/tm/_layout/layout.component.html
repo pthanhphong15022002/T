@@ -9,12 +9,8 @@
       <codx-header [ngClass]="headerCSSClasses" [headerBar]="" class="header align-items-stretch"
         [headerRightBar]="headerRightBar" #codxHeader>
       </codx-header>
-      <div class="d-flex flex-column flex-column-fluid">
-        <div class="content d-flex flex-column-fluid">
-          <codx-wrapper (resizedEvent)="contentResized($event)">
-          </codx-wrapper>
-        </div>
-      </div>
+      <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
+      </codx-wrapper>
     </div>
   </div>
 </div>
