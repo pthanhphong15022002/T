@@ -5,6 +5,7 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 
 @Component({
@@ -13,6 +14,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChild('view') viewBase: ViewBaseComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
@@ -20,9 +22,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
 
-
-
-  constructor() {}
+  constructor() { }
 
   views: Array<ViewModel> = [{
     id: '1',
@@ -36,19 +36,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }, {
     id: '3',
     type: 'listdetail',
-    text:'List-details',
+    text: 'List-details',
     active: true
   },
   {
     id: '4',
     type: 'list',
-    text:'List-tasks',
+    text: 'List-tasks',
     active: false
   }];
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
+    console.log(this.viewBase);
     this.views = [{
       id: '1',
       type: 'content',
@@ -73,10 +74,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         sideBarLeftRef: this.asideLeft,
  //       itemTemplate: this.itemTemplate,
       }
-    },{
+    }, {
       id: '4',
       type: 'list',
-      text:'List-task',
+      text: 'List-task',
       active: false,
       model: {
         panelLeftRef: this.listTasks,
