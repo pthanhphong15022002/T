@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { SignalRService } from '@core/services/signalr/signalr.service';
+// import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 import { AuthStore, CallFuncService, DataRequest } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
 import { ChatService } from '../chat.service';
 import { CreateGroupComponent } from '../create-group/create-group.component';
-//import { CreateGroupComponent } from '../create-group/create-group.component';
 
 @Component({
   selector: 'codx-chat-list',

@@ -58,14 +58,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '2',
       type: 'kanban',
       active: false,
+      model: {
+        panelLeftRef: this.kanban,
+        sideBarLeftRef: this.asideLeft,
+      }
     },
     {
       id: '3',
       type: 'listdetail',
       text: 'List-details',
-      active: true,
+      active: false,
       model: {
-        panelLeftRef: this.listDetails,
+        panelRightRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
  //       itemTemplate: this.itemTemplate,
       }
