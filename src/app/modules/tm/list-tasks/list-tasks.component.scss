@@ -1,0 +1,17 @@
+.dropdown-customv2:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-customv2 > .dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}
+
+
+
+.tool-tip{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
