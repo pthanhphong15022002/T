@@ -33,8 +33,8 @@ export class TestKanbanComponent implements OnInit {
   view: string;
   isAdd = false;
   functionList: any;
-  fromDate: any;
-  toDate: any;
+  fromDate = new Date(2021, 3);
+  toDate = new Date(2022, 4);
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -147,7 +147,6 @@ export class TestKanbanComponent implements OnInit {
   }
 
   getData() {
-    debugger;
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
@@ -175,7 +174,12 @@ export class TestKanbanComponent implements OnInit {
       }
     });
   }
+  
+  getColumnKanban() {
+    this.tmSv.loadColumnsKanban(this.data).subscribe((res) => {});
+  }
 }
+
 export let cardData: Object[] = [
   {
     Id: 'Task 1',
