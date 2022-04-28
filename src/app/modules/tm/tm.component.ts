@@ -28,25 +28,8 @@ export class TmComponent implements OnInit, AfterViewInit {
         sideBarRightRef: null,
         itemTemplate: this.itemTemplate
       }
-    },
-    {
-      type: 'listdetail',
-      icon: '',
-      text: '',
-      active:false,
-      id: '2',
-      model: {
-        service: 'TM',
-        assemblyName: 'TM',
-        method: 'TaskBusiness',
-        className: 'GetListDetailTasksAsync',
-        panelLeftRef: this.panelLeft,
-        panelRightRef: null,
-        sideBarLeftRef: null,
-        sideBarRightRef: null,
-        itemTemplate: this.itemTemplate
-      }
-    }]
+    }
+  ]
   }
   views: Array<ViewModel> = [
   ];

@@ -8,6 +8,8 @@ import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
 import { FormsModule } from '@angular/forms';
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
+import { CommonModule } from '@angular/common';
+
 
 const routes: Routes = [
   {
@@ -45,6 +47,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     CodxCoreModule.forRoot({ environment }),
+    CommonModule,
   ],
   exports: [RouterModule],
 })

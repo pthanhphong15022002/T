@@ -1,7 +1,12 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { DataRequest } from '@shared/models/data.request';
 import { ApiHttpService, AuthStore, CodxListviewComponent, ImageviewersComponent } from 'codx-core';
 import * as moment from "moment";
+import { ActionTypeOnTask } from '../models/enum/enum';
+import { DataSv } from '../models/task.model';
 import { TmService } from '../tm.service';
+
+
 
 @Component({
   selector: 'app-view-list-details',
@@ -24,8 +29,8 @@ export class ViewListDetailsComponent implements OnInit {
   lstItems = [];
   dataObj = { view: "listDetails", viewBoardID: "" };
   
-  @ViewChild("listview") listview!: CodxListviewComponent;
-  @ViewChild("imageviewers") imageviewers!: ImageviewersComponent;
+  // @ViewChild("listview") listview!: CodxListviewComponent;
+  gridView: any;
 
 
   constructor(
@@ -33,7 +38,7 @@ export class ViewListDetailsComponent implements OnInit {
     // private mainService: MainService,
     // private changeDetectorRef: ChangeDetectorRef,
     // private confirmationDialogService: ConfirmationDialogService,
-    // private api: ApiHttpService,
+    private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
     injector: Injector
@@ -48,6 +53,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dateNow = this.formatDateLocal(this.today)
+    this.yesterday = this.formatDateLocal(this.getYesterday());
     this.loadData();
   }
 
@@ -55,30 +62,142 @@ export class ViewListDetailsComponent implements OnInit {
     
   }
   loadData(){
+    let fied = this.gridView?.dateControl || 'DueDate';
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.predicate = '';
+    model.funcID = 'TM003';// cho mac dinh
+    model.page = 1;
+    model.pageSize = 100;
+    // model.dataValue = this.user.userID;
+   // set max dinh
+    this.fromDate =moment("3/31/2022").toDate();
+    this.toDate = moment("4/30/2022").toDate();
+    model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filee
+        { operator: 'lte', field: fied, value:  this.toDate },
+      ],
+    };
+    // let dataObj = { view: this.view, viewBoardID: '' };
+
+    model.dataObj =  "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
     const t = this;
-    t.tmSv.isChangeData.subscribe((res) => {
-      if (res) {
-        if (res.data.length) {
-          //  if (this.modelPage.functionID == 'TM001') {
-          //   this.data = res.data.filter((x) => x.userID == t.user.userID);
-          //   if (this.data.length) {
-          //     t.data = this.data;
-          //     t.dt.detectChanges();
-          //   }
-          // }
-          // else 
-          t.data = res.data;
-        }
-        else t.data = [];
+    t.tmSv.loadTaskByAuthen(model).subscribe(
+      (res) => {
+      if (res && res.length) {
+        this.data = res[0];
+        this.lstItems = [];
+        this.data.forEach(dt => {
+          dt.mytasks.forEach(e => {
+            this.lstItems.push(e)
+          })
+        });
+        this.itemSelected = this.lstItems[0];
+      }else{
+        this.data=[] ;
       }
-      this.lstItems = [];
-      this.data.forEach(dt => {
-        dt.mytasks.forEach(e => {
-          this.lstItems.push(e)
-        })
-      });
-      this.itemSelected = this.lstItems[0];
+     
       t.dt.detectChanges();
-    });
+        });
   }
+
+
+
+  clickItem(item) {
+    this.getOneItem(item.id)
+
+  }
+  getOneItem(id) {
+    var itemDefault = this.lstItems.find((item) => item.id == id);
+    if (itemDefault != null) {
+      this.itemSelected = itemDefault;
+    } else {
+      this.itemSelected = this.lstItems[0];
+    }
+    this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [this.itemSelected?.id]).subscribe(res => {
+
+      if (res && res.msgBodyData[0]?.length > 0) {
+        let objectId = res.msgBodyData[0][0].owner;
+        let objectState = res.msgBodyData[0][0].status;
+        for (let i = 1; i < res.msgBodyData[0]?.length; i++) {
+          objectId += ";" + res.msgBodyData[0][i].owner;
+          objectState += ";" + res.msgBodyData[0][i].status;
+        };
+        this.objectAssign = objectId;
+        this.objectState = objectState;
+      }
+    })
+
+  }
+
+  onChangeStatusTask(data) {
+    if (data.actionType == ActionTypeOnTask.ChangeStatus) {
+      this.tmSv.onChangeStatusTask(data.data.taskID, data.value);
+    }
+  }
+
+  getByParentID(task) {
+    let objectId = "";
+    let objectState = "";
+    if (task != null) {
+      this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [task?.id]).subscribe(res => {
+        if (res && res.msgBodyData[0]?.length > 0) {
+          res.msgBodyData[0].forEach(element => {
+            objectId += ";" + element.owner;
+            objectState += ";" + element.status;
+          })
+        }
+      })
+    }
+    this.objectAssign = objectId;
+    return objectState;
+  }
+  formatDateLocal(date: Date): string {
+    var month = '';
+    var day = '';
+    if (date.getMonth() + 1 < 10) {
+      month = '0' + (date.getMonth() + 1);
+    }
+    if (date.getDate() < 10) {
+      day = '0' + date.getDate()
+    } else {
+      day = date.getDate().toString();
+    }
+    return day + '/' + month + '/' + date.getFullYear();
+  }
+
+  getYesterday(): Date {
+    var date = new Date(this.today);
+    date.setDate(date.getDate() - 1);
+    return date;
+  }
+
+  formatDateCreatedOn(day: string): string {
+    var year = day.substring(0, 4);
+    var mm = day.substring(5, 7);
+    var dd = day.substring(8, 10)
+    return dd + "/" + mm + "/" + year
+  }
+  // getValueCMParameter() {
+  //   const perdicate =
+  //     "FieldName=@0 or FieldName=@1 or FieldName=@2 or FieldName=@3";
+  //   const fieldName =
+  //     "ProjectControl;LocationControl;UpdateControl;PlanControl";
+  //   this.tmSv
+  //     .getValueCMParameter(
+  //       `FormName = 'TM_Parameters' AND (${perdicate})`,
+  //       fieldName
+  //     )
+  //     .subscribe((result) => {
+  //       this.configParam = this.mainService.convertListToObject(
+  //         result as [],
+  //         "fieldName",
+  //         "fieldValue"
+  //       );
+  //     });
+  // }
 }

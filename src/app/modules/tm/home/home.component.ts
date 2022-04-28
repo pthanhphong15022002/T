@@ -13,6 +13,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChild('view') view: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
@@ -35,7 +36,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     active: false
   }, {
     id: '3',
-    type: 'listdetail',
+    type: 'content',
+    icon: 'icon-chrome_reader_mode1',
     text:'List-details',
     active: true
   },
@@ -65,11 +67,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '3',
-      type: 'listdetail',
+      type: 'content',
+      icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
       model: {
-        panelRightRef: this.listDetails,
+        panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
       }
     },{
