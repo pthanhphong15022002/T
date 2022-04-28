@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('kanban') kanban: TemplateRef<any>;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
 
   constructor() { }
 
@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelRightRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
+ //       itemTemplate: this.itemTemplate,
       }
     }, {
       id: '4',

@@ -1,0 +1,16 @@
+<codx-listview [itemTemplate]="templateTask" #listview title="List task" [funcId]="" entityName="TM_Tasks"
+        gridViewName="'grvTasks'" service="TM" assemblyName="ERM.Business.TM" 
+        className="TaskBusiness" method="GetListDetailTasksAsync" type="listview" [data]="resourceViewList">
+</codx-listview>
+
+<ng-template #templateTask let-item>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    
+                </td>
+            </tr>
+        </table>
+    </div>
+</ng-template>

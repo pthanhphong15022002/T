@@ -8,9 +8,10 @@ import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
 import { FormsModule } from '@angular/forms';
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
+import { ListTasksComponent } from './list-tasks/list-tasks.component';
 
 const routes: Routes = [
-  {
+  { 
     path: '',
     component: LayoutComponent,
     children: [
@@ -40,7 +41,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
