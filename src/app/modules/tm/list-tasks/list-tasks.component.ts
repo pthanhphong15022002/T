@@ -1,8 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 import * as moment from 'moment';
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { TmService } from '../tm.service';
+import { DataRequest } from '@shared/models/data.request';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
+
 
 declare var _;
 
@@ -14,6 +17,14 @@ declare var _;
 })
 export class ListTasksComponent implements OnInit {
   @Input() data: any = [];
+  @Input('viewBase') viewBase: ViewBaseComponent;
+
+  moment = moment().locale("en");
+  today: Date = new Date();
+  fromDate: Date = moment(this.today).startOf("day").toDate();
+  toDate: Date = moment(this.today).endOf("day").toDate();
+  gridView: any;
+  
 
   resourceViewList: any;
   columnGroupby = "createdOn";
@@ -25,12 +36,13 @@ export class ListTasksComponent implements OnInit {
   endOfMonth = moment().endOf('month');
   startOfLastWeek = moment().startOf('week');
   endOfLastWeek = moment().endOf('week');
-  constructor(private tmSv: TmService, private api: ApiHttpService) { }
+  constructor(private tmSv: TmService, private api: ApiHttpService, private dt: ChangeDetectorRef,
+    ) { }
 
   ngOnInit(): void {
-    if (this.data) {
-      this.loadData(this.data);
-    }
+    // if (this.data) {
+      this.loadData();
+    // }
   }
 
   groupByData(resource) {
@@ -90,13 +102,48 @@ export class ListTasksComponent implements OnInit {
       this.tmSv.onChangeStatusTask(data.data.taskID, data.value)
     }
   }
-  loadData(data){
-    this.tmSv.loadTaskByAuthen(data).subscribe((res)=>{
-            if(res && res.length){
-              console.log(res);
-              this.data = res[0];
-            }
-        //this.users = resp[0];
-    })
+  loadData(){
+
+    let fied = this.gridView?.dateControl || 'DueDate';
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.predicate = '';
+    model.funcID = this.viewBase.funcID ;
+    model.page = 1;
+    model.pageSize = 100;
+    // model.dataValue = this.user.userID;
+   // set max dinh
+    this.fromDate =moment("3/31/2022").toDate();
+    this.toDate = moment("4/30/2022").toDate();
+    model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value:  this.toDate },
+      ],
+    };
+    // let dataObj = { view: this.view, viewBoardID: '' };
+
+    model.dataObj =  "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
+    const t = this;
+    t.tmSv.loadTaskByAuthen(model).subscribe(
+      (res) => {
+      if (res && res.length) {
+        this.data = res[1];
+      }else{
+        this.data=[] ;
+      }
+      this.groupByData(this.data)
+      t.dt.detectChanges();
+      });
+    // this.tmSv.loadTaskByAuthen(data).subscribe((res)=>{
+    //         if(res && res.length){
+    //           console.log(res);
+    //           this.data = res[0];
+    //         }
+    //     //this.users = resp[0];
+    // })
 }
 }

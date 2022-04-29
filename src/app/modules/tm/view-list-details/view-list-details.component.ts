@@ -50,17 +50,10 @@ export class ViewListDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.dateNow = this.formatDateLocal(this.today)
     this.yesterday = this.formatDateLocal(this.getYesterday());
-    console.log(this.viewBase)
     this.loadData();
   }
 
   ngAfterViewInit(): void {
-    this.lstItems = [];
-       this.data.forEach(dt => {
-          dt.mytasks.forEach(e => {
-            this.lstItems.push(e)
-          })
-        });
   }
   loadData(){
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -69,7 +62,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = 'TM003';// cho mac dinh
+    model.funcID = this.viewBase.funcID ;
     model.page = 1;
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
@@ -79,7 +72,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filee
+        { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filter
         { operator: 'lte', field: fied, value:  this.toDate },
       ],
     };
@@ -87,24 +80,19 @@ export class ViewListDetailsComponent implements OnInit {
 
     model.dataObj =  "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
     const t = this;
+    this.lstItems = [];
     t.tmSv.loadTaskByAuthen(model).subscribe(
       (res) => {
       if (res && res.length) {
         this.data = res[0];
-        // this.lstItems = [];
-        // this.data.forEach(dt => {
-        //   dt.mytasks.forEach(e => {
-        //     this.lstItems.push(e)
-        //   })
-        // });
-        // this.itemSelected = this.lstItems[0];
-        this.itemSelected = res[0].mytasks[0] ;
+        this.lstItems= res[1]
+       this.itemSelected = res[1][0] ;  
       }else{
         this.data=[] ;
       }
      
       t.dt.detectChanges();
-        });
+      });
   }
 
 

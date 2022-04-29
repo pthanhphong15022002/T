@@ -28,6 +28,6 @@
   <app-view-list-details [viewBase]="viewBase"></app-view-list-details>
 </ng-template>
 
-<ng-template #itemTemplate let-data>
-  <app-list-tasks></app-list-tasks>
+<ng-template #listTasks let-data>
+  <app-list-tasks [viewBase]="viewBase"></app-list-tasks>
 </ng-template>

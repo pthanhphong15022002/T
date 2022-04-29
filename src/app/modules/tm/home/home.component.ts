@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   },
   {
     id: '4',
-    type: 'list',
+    type: 'kanban',
     text: 'List-tasks',
     active: false
   }];
@@ -71,20 +71,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
       }
     }, {
       id: '4',
-      type: 'list',
+      type: 'kanban',
       text: 'List-task',
       active: false,
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
-        itemTemplate: this.itemTemplate,
+        // itemTemplate: this.itemTemplate,
       }
     }];
   }
