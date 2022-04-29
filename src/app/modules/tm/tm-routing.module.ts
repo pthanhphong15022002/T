@@ -1,5 +1,5 @@
 import { TestKanbanComponent } from './test-kanban/test-kanban.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { CodxCoreModule } from 'codx-core';
@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
 import { CommonModule } from '@angular/common';
 import { ListTasksComponent } from './list-tasks/list-tasks.component';
+import { SharedModule } from '@shared/shared.module';
 
 const routes: Routes = [
   { 
@@ -48,7 +49,9 @@ const routes: Routes = [
     FormsModule,
     CodxCoreModule.forRoot({ environment }),
     CommonModule,
+    SharedModule
   ],
   exports: [RouterModule],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TmModule {}
