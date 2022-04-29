@@ -64,7 +64,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = this.viewBase.funcID ;
+    model.funcID = "TM003"//this.viewBase.funcID ;
     model.page = 1;
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
@@ -97,7 +97,9 @@ export class ViewListDetailsComponent implements OnInit {
       });
   }
 
-
+  trackByFn(index: number, item): string {
+    return item.taskID;
+  }
 
   clickItem(item) {
     this.getOneItem(item.id)
