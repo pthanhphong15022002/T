@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { HomeComponent } from '@pages/home/home.component';
+import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
 import { ApiHttpService, AuthStore, CodxListviewComponent, ImageviewersComponent } from 'codx-core';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
@@ -34,6 +35,7 @@ export class ViewListDetailsComponent implements OnInit {
 
 
   @Input('viewBase') viewBase: ViewBaseComponent;
+  
   constructor(
     private tmSv: TmService,
     // private mainService: MainService,
@@ -62,7 +64,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = this.viewBase.funcID ;
+    model.funcID = "TM003"//this.viewBase.funcID ;
     model.page = 1;
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
@@ -95,7 +97,9 @@ export class ViewListDetailsComponent implements OnInit {
       });
   }
 
-
+  trackByFn(index: number, item): string {
+    return item.taskID;
+  }
 
   clickItem(item) {
     this.getOneItem(item.id)

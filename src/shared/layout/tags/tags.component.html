@@ -1,0 +1,91 @@
+<div class="d-flex align-items-top mb-3" id="Tags">
+    <div class="f-left">
+        <ng-container *ngIf="editMode">
+            <div class="tagitem tag-add label label-xxs label-inline mr-2" container="body" 
+            ="false"
+                triggers="manual" #p="ngbPopover" (click)="open(p)" placement="bottom" [ngbPopover]="popContent"
+                [popoverTitle]="popTitle">
+                <a class="text-primary">tags</a>
+                <span class="icon-add icon-14"></span>
+            </div>
+        </ng-container>
+        <div *ngFor="let tag of data; let index = index;trackBy:trackByFn"
+            class="tagitem label label-xxs label-inline mr-2" [style.color]="getContrastYIQ(tag)"
+            [style.backgroundColor]="tag.color || '#ffffffff'">
+            <a [style.color]="getContrastYIQ(tag)">{{tag.tagName}}</a>
+            <a class="text-dark text-hover-danger ml-2 pt-1" *ngIf="editMode" (click)="chooseTag(tag)">
+                <span class="icon-close icon-14"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #popContent>
+    <div *ngIf="!editItem">
+        <div class="d-flex align-items-center justify-content-between"
+            *ngFor="let item of tagsData | filter : searchField : 'tagName': '':''; let index = index">
+            <div class="d-flex user-item tagitem label label-xs label-pill label-inline mt-1 flex-wrap"
+                style="width: 100%;" (click)="chooseTag(item)" [style.color]="getContrastYIQ(item)"
+                [style.backgroundColor]="item.color || '#ffffffff'">
+                <div class="d-flex justify-content-between">
+                    {{item.tagName}}
+                    <span class="icon-20" [class.icon-check]="lstRecID.includes(item.recID)"> </span>
+                </div>
+            </div>
+            <a class="btn btn-xs btn-icon btn-hover-primary min-w-30px" id="kt_demo_panel_close">
+                <span (click)="editTag(item)" class="icon-edit icon-16"></span>
+            </a>
+        </div>
+        <div class="d-flex flex-grow-1">
+            <div class="d-flex user-item tagitem label label-xs label-pill label-inline mt-1 flex-wrap"
+                style="width: 100%;" (click)="addTag()">
+                Thêm tag
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editItem">
+        <div class="flex-grow-1">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mb-2">
+                        <input class="form-control" [style.color]="getContrastYIQ(this.editItem)"
+                            [style.background]="editItem.color" [(ngModel)]="editItem.tagName" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <codx-colorpicker [value]="editItem.color" (onChange)="handleChange($event)"></codx-colorpicker>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editItem.entityName"
+                            (click)="deleteTag(editItem)">
+                            <span class="icon-delete icon-20"></span>
+                        </a>
+                        <a class="btn btn-xs btn-icon btn-light btn-hover-primary ml-2" (click)="saveTag()">
+                            <span class="icon-save icon-20"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+<ng-template #popTitle>
+    <div class="d-flex align-items-center justify-content-between">
+        <a *ngIf="editItem" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
+            <span (click)="editItem=null" class="icon-arrow_back icon-16"></span>
+        </a>
+        <div class="text-dark ml-2 d-flex flex-grow-1">Tags</div>
+
+        <a class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
+            <span (click)="close()" class="icon-close icon-16"></span>
+        </a>
+    </div>
+    <div class="mt-2" *ngIf="!editItem">
+        <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiễm" />
+    </div>
+</ng-template>
