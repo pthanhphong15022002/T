@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
 import { CommonModule } from '@angular/common';
 import { ListTasksComponent } from './list-tasks/list-tasks.component';
+import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 
 const routes: Routes = [
   { 
@@ -42,7 +43,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
