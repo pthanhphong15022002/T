@@ -34,7 +34,7 @@ export class TestKanbanComponent implements OnInit {
   item: any;
   showSumary = false;
   Sumary: string = '';
-  columns:any = [];
+  columns: any = [];
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -162,25 +162,25 @@ export class TestKanbanComponent implements OnInit {
 
   getColumnKanban() {
     let kanbanSetting = new KanbanSetting();
-    kanbanSetting.BreakDateBy = "1",
-    kanbanSetting.ColumnField = "Status",
-    kanbanSetting.ColumnMenu = false,
-    kanbanSetting.ColumnToolbars =  false,
-    kanbanSetting.IsChangeColumn = true,
-    kanbanSetting.CountObjects = true,
-    kanbanSetting.DragColumn = false,
-    kanbanSetting.DragSwimlanes = true,
-    kanbanSetting.DateType = "w",
-    kanbanSetting.ProcessBar = true,
-    kanbanSetting.Tags = true,
-    kanbanSetting.Resources = true,
-    kanbanSetting.SwimlanesControl = false,
-    kanbanSetting.IsChangeSwimlanes = false,
-    kanbanSetting.SwimlanesField = "Owner",
-    kanbanSetting.FormName = "Tasks",
-    kanbanSetting.GrvName = "grvTasks"
+    kanbanSetting.BreakDateBy = '1';
+    kanbanSetting.ColumnField = 'Status'; //DueDate
+    kanbanSetting.ColumnMenu = false;
+    kanbanSetting.ColumnToolbars = false;
+    kanbanSetting.IsChangeColumn = true;
+    kanbanSetting.CountObjects = true;
+    kanbanSetting.DragColumn = false;
+    kanbanSetting.DragSwimlanes = true;
+    kanbanSetting.DateType = 'w';
+    kanbanSetting.ProcessBar = true;
+    kanbanSetting.Tags = true;
+    kanbanSetting.Resources = true;
+    kanbanSetting.SwimlanesControl = false;
+    kanbanSetting.IsChangeSwimlanes = false;
+    kanbanSetting.SwimlanesField = 'Owner';
+    kanbanSetting.FormName = 'Tasks';
+    kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
-      this.columns = res.column;  
+      this.columns = res.column;
     });
   }
 }
