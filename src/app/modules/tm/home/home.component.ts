@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
-
+  i = 0;
   constructor() { }
 
   views: Array<ViewModel> = [{
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     id: '3',
     type: 'content',
     icon: 'icon-chrome_reader_mode1',
-    text:'List-details',
+    text: 'List-details',
     active: true
   },
   {
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
- //       itemTemplate: this.itemTemplate,
+        //       itemTemplate: this.itemTemplate,
       }
     }, {
       id: '4',
@@ -83,9 +83,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
       text: 'List-task',
       active: false,
       model: {
-        panelLeftRef: this.listTasks,
-        sideBarLeftRef: this.asideLeft,
-        itemTemplate: this.itemTemplate,
+        // panelLeftRef: this.listTasks,
+        // sideBarLeftRef: this.asideLeft,
+        //itemTemplate: this.itemTemplate,
       }
     }];
   }
