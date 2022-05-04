@@ -34,6 +34,7 @@ export class TestKanbanComponent implements OnInit {
   item: any;
   showSumary = false;
   Sumary: string = '';
+  columns:any = [];
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -49,13 +50,6 @@ export class TestKanbanComponent implements OnInit {
     keyField: 'Assignee',
     showEmptyRow: false,
   };
-
-  public columns = [
-    { headerText: 'Đang làm', keyField: '1', allowToggle: true },
-    { headerText: 'Làm được 10%', keyField: '2', allowToggle: true },
-    { headerText: 'Review', keyField: '3', allowToggle: true },
-    { headerText: 'Xong', keyField: '4', allowToggle: true },
-  ];
 
   ngOnInit() {
     if (this.tmSv.myTaskComponent) {
@@ -186,7 +180,7 @@ export class TestKanbanComponent implements OnInit {
     kanbanSetting.FormName = "Tasks",
     kanbanSetting.GrvName = "grvTasks"
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
-      console.log(res)
+      this.columns = res.column;  
     });
   }
 }
