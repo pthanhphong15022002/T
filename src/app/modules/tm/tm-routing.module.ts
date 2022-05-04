@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { SharedModule } from '@shared/shared.module';
 import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 const routes: Routes = [
   { 
@@ -44,7 +45,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

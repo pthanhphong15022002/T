@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('kanban') kanban: TemplateRef<any>;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
+  @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
 
   constructor() { }
@@ -88,6 +89,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
         sideBarLeftRef: this.asideLeft,
         // itemTemplate: this.itemTemplate,
       }
-    }];
+    },
+    {
+      id: '5',
+      type: 'schedule',
+      text: 'schedule',
+      active: false,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarLeftRef: this.asideLeft,
+        // itemTemplate: this.itemTemplate,
+      }
+    },
+  ];
   }
 }

@@ -19,20 +19,19 @@
       </a> -->
     </div>
     <div id="List-{{item.createdOn.replaceAll('/','')}}" class="collapse show">
-      <table class="table-action-menu" style="width: 100%;">
+      <table class="table w-100 table-action-menu">
         <tbody>
-          <tr *ngFor="let item of item.mytasks;">
-            <td class="pl-0 pr-0 w-0">
-              <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
-                            </more-funtion> -->
-            </td>
+          <tr *ngFor="let item of item.mytasks;trackBy:trackByFn">
+            <!-- <td class="pl-0 pr-0 w-0">
+              <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
+              </more-funtion>
+            </td> -->
             <td class="w-250px">
               <div>
                 <div class="text-dark font-weight-bold">
                   {{item?.taskName}}
                 </div>
               </div>
-
             </td>
             <td class="w-30px">
               <span [class]="item?.priority|vll:'L0186':'icon'|async"
