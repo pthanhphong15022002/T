@@ -180,8 +180,8 @@ export class TestKanbanComponent implements OnInit {
     kanbanSetting.ProcessBar = true,
     kanbanSetting.Tags = true,
     kanbanSetting.Resources = true,
-    kanbanSetting.SwimlanesControl = true,
-    kanbanSetting.IsChangeSwimlanes = true,
+    kanbanSetting.SwimlanesControl = false,
+    kanbanSetting.IsChangeSwimlanes = false,
     kanbanSetting.SwimlanesField = "Owner",
     kanbanSetting.FormName = "Tasks",
     kanbanSetting.GrvName = "grvTasks"
