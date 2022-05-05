@@ -1,4 +1,4 @@
-import { TmService } from './../tm.service';
+import { TmService } from '../tm.service';
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -12,9 +12,9 @@ import { DataSv } from '../models/task.model';
 import { KanbanSetting } from '../models/settings.model';
 
 @Component({
-  selector: 'app-test-kanban',
-  templateUrl: './test-kanban.component.html',
-  styleUrls: ['./test-kanban.component.scss'],
+  selector: 'app-kanban',
+  templateUrl: './kanban.component.html',
+  styleUrls: ['./kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
   //dataSource = cardData;
