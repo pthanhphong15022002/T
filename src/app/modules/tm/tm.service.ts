@@ -45,7 +45,8 @@ export class TmService {
     loadTask(calendar, fromeDate, toDate, view, modeView) {
       return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetMyTasksAsync', ['TM001', 'grvTasks', calendar, fromeDate, toDate, view, modeView]);
     }
-  
+    
+    
     loadTaskByAuthen(data) {
       return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetListDetailTasksAsync', [data]);
     }
