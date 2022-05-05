@@ -1,4 +1,4 @@
-import { TestKanbanComponent } from './test-kanban/test-kanban.component';
+import { TestKanbanComponent } from './kanban/kanban.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';

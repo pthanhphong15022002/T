@@ -13,9 +13,9 @@ import { KanbanSetting } from '../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
-  selector: 'app-test-kanban',
-  templateUrl: './test-kanban.component.html',
-  styleUrls: ['./test-kanban.component.scss'],
+  selector: 'app-kanban',
+  templateUrl: './kanban.component.html',
+  styleUrls: ['./kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
@@ -36,6 +36,7 @@ export class TestKanbanComponent implements OnInit {
   item: any;
   showSumary = false;
   Sumary: string = '';
+  columns: any = [];
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -52,13 +53,6 @@ export class TestKanbanComponent implements OnInit {
     keyField: 'Assignee',
     showEmptyRow: false,
   };
-
-  public columns = [
-    { headerText: 'Đang làm', keyField: '1', allowToggle: true },
-    { headerText: 'Làm được 10%', keyField: '2', allowToggle: true },
-    { headerText: 'Review', keyField: '3', allowToggle: true },
-    { headerText: 'Xong', keyField: '4', allowToggle: true },
-  ];
 
   ngOnInit() {
     this.cache.viewSettings("TM001").subscribe(res => {
@@ -192,7 +186,7 @@ export class TestKanbanComponent implements OnInit {
     kanbanSetting.FormName = "Tasks";
     kanbanSetting.GrvName = "grvTasks";
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
-      console.log(res)
+      this.columns = res.column;
     });
   }
 }
