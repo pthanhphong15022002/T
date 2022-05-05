@@ -40,30 +40,34 @@ export class HomeComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  constructor(private cf: ChangeDetectorRef) { }
+  constructor(private cf: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.buttons = [{
-      id: '1',
-      icon: 'icon-list-checkbox',
-      text: 'button 1',
-    },
-    {
-      id: '2',
-      icon: 'icon-list-checkbox',
-      text: 'button 2',
-    }]
+    this.buttons = [
+      {
+        id: '1',
+        icon: 'icon-list-checkbox',
+        text: 'button 1',
+      },
+      {
+        id: '2',
+        icon: 'icon-list-checkbox',
+        text: 'button 2',
+      },
+    ];
 
-    this.moreFunc = [{
-      id: '1',
-      icon: 'icon-list-checkbox',
-      text: 'more 1',
-    },
-    {
-      id: '2',
-      icon: 'icon-list-checkbox',
-      text: 'more 2',
-    }]
+    this.moreFunc = [
+      {
+        id: '1',
+        icon: 'icon-list-checkbox',
+        text: 'more 1',
+      },
+      {
+        id: '2',
+        icon: 'icon-list-checkbox',
+        text: 'more 2',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {

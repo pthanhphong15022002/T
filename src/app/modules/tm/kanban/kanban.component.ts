@@ -1,5 +1,11 @@
 import { TmService } from './../tm.service';
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  Input,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
@@ -11,6 +17,7 @@ import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
 import { KanbanSetting } from '../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-kanban',
@@ -19,16 +26,17 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  //dataSource = cardData;
-  dataSource: any;
+  dataSource = cardData;
+  //dataSource: any;
   data: any;
   setCalendar = true;
   mode: string;
   view: string;
   isAdd = false;
-  functionList: any;
-  fromDate = new Date(2022, 4, 1);
-  toDate = new Date(2022, 5, 3);
+  moment = moment().locale("en");
+  today: Date = new Date();
+  fromDate: Date = moment(this.today).startOf("day").toDate();
+  toDate: Date = moment(this.today).endOf("day").toDate();
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -37,6 +45,7 @@ export class TestKanbanComponent implements OnInit {
   showSumary = false;
   Sumary: string = '';
   columns: any = [];
+  settings: any;
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -55,17 +64,17 @@ export class TestKanbanComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.cache.viewSettings("TM001").subscribe(res => {
-      console.log(res);
-    })
+    this.cache.viewSettings('TM001').subscribe((res) => {
+      this.settings = JSON.parse(res[0].settings);
+      this.getColumnKanban();
+    });
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
     this.getData();
-    this.getColumnKanban();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   public cardSettings: CardSettingsModel = {
     headerField: 'Description',
@@ -138,7 +147,8 @@ export class TestKanbanComponent implements OnInit {
   }
 
   getData() {
-    let fied = this.gridView?.dateControl || 'DueDate';
+    debugger;
+    let field = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
@@ -150,8 +160,8 @@ export class TestKanbanComponent implements OnInit {
     model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.fromDate },
-        { operator: 'lte', field: fied, value: this.toDate },
+        { operator: 'gte', field: field, value: this.fromDate },
+        { operator: 'lte', field: field, value: this.toDate },
       ],
     };
     let dataObj = { view: this.view, viewBoardID: '' };
@@ -168,23 +178,36 @@ export class TestKanbanComponent implements OnInit {
 
   getColumnKanban() {
     let kanbanSetting = new KanbanSetting();
-    kanbanSetting.BreakDateBy = "1";
-    kanbanSetting.ColumnField = "Status";
-    kanbanSetting.ColumnMenu = false;
-    kanbanSetting.ColumnToolbars = false;
+    const {
+      ColumnMenu,
+      ColumnToolbars,
+      CountObjects,
+      DragColumn,
+      DragSwimlanes,
+      DateType,
+      ProcessBar,
+      Tags,
+      Resources,
+      SwimlanesControl,
+      SwimlanesField,
+    } = this.settings;
+    kanbanSetting.BreakDateBy = '1';
+    kanbanSetting.ColumnField = 'Status';
+    kanbanSetting.ColumnMenu = JSON.parse(ColumnMenu);
+    kanbanSetting.ColumnToolbars = JSON.parse(ColumnToolbars);
     kanbanSetting.IsChangeColumn = true;
-    kanbanSetting.CountObjects = true;
-    kanbanSetting.DragColumn = false;
-    kanbanSetting.DragSwimlanes = true;
-    kanbanSetting.DateType = "w";
-    kanbanSetting.ProcessBar = true;
-    kanbanSetting.Tags = true;
-    kanbanSetting.Resources = true;
-    kanbanSetting.SwimlanesControl = true;
+    kanbanSetting.CountObjects = JSON.parse(CountObjects);
+    kanbanSetting.DragColumn = JSON.parse(DragColumn);
+    kanbanSetting.DragSwimlanes = JSON.parse(DragSwimlanes);
+    kanbanSetting.DateType = DateType;
+    kanbanSetting.ProcessBar = JSON.parse(ProcessBar);
+    kanbanSetting.Tags = JSON.parse(Tags);
+    kanbanSetting.Resources = JSON.parse(Resources);
+    kanbanSetting.SwimlanesControl = JSON.parse(SwimlanesControl);
     kanbanSetting.IsChangeSwimlanes = true;
-    kanbanSetting.SwimlanesField = "Owner";
-    kanbanSetting.FormName = "Tasks";
-    kanbanSetting.GrvName = "grvTasks";
+    kanbanSetting.SwimlanesField = SwimlanesField;
+    kanbanSetting.FormName = 'Tasks';
+    kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
       this.columns = res.column;
     });
@@ -206,11 +229,11 @@ export let cardData: Object[] = [
   {
     Id: 'Task 2',
     Description: 'Task - 29002',
-    Status: '2',
+    Status: '1',
     Summary: 'Add responsive support to applicaton',
     Priority: 'Low',
     Tags: 'Story, Kanban',
-    RankId: 1,
+    RankId: 2,
     Assignee: 'Andrew Fuller',
   },
   {
@@ -226,11 +249,11 @@ export let cardData: Object[] = [
   {
     Id: 'Task 4',
     Description: 'Task - 29004',
-    Status: '4',
+    Status: '1',
     Summary: 'Fix the issues reported in the IE browser.',
     Priority: 'High',
     Tags: 'Bug, Customer',
-    RankId: 3,
+    RankId: 1,
     Assignee: 'Andrew Fuller',
   },
   {
