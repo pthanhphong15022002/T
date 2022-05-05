@@ -32,6 +32,8 @@ export class ViewListDetailsComponent implements OnInit {
   lstItems = [];
   dataObj = { view: "listDetails", viewBoardID: "" };
   gridView: any;
+  listUserTask =[] ;
+  listNode =[] ;
 
 
   @Input('viewBase') viewBase: ViewBaseComponent;
@@ -69,8 +71,8 @@ export class ViewListDetailsComponent implements OnInit {
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
    // set max dinh
-    this.fromDate =moment("3/31/2022").toDate();
-    this.toDate = moment("4/30/2022").toDate();
+    this.fromDate =moment("4/15/2022").toDate();
+    this.toDate = moment("5/15/2022").toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -89,6 +91,23 @@ export class ViewListDetailsComponent implements OnInit {
         this.data = res[0];
         this.lstItems= res[1]
        this.itemSelected = res[1][0] ;  
+       this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [this.itemSelected?.id]).subscribe(res => {
+        if (res && res.length > 0) {
+          let objectId = res[0].owner;
+          let objectState = res[0].status;
+          for (let i = 1; i < res?.length; i++) {
+            objectId += ";" + res[i].owner;
+            objectState += ";" + res[i].status;
+          };
+          this.objectAssign = objectId;
+          this.objectState = objectState;
+        }
+      }) ;
+
+      if(this.itemSelected?.category !="1"){
+        this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListTasksTreeAsync", this.itemSelected?.id).subscribe(res=>{
+          this.listNode = res;
+      })}
       }else{
         this.data=[] ;
       }
@@ -112,20 +131,24 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.lstItems[0];
     }
-    this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [this.itemSelected?.id]).subscribe(res => {
 
-      if (res && res.msgBodyData[0]?.length > 0) {
-        let objectId = res.msgBodyData[0][0].owner;
-        let objectState = res.msgBodyData[0][0].status;
-        for (let i = 1; i < res.msgBodyData[0]?.length; i++) {
-          objectId += ";" + res.msgBodyData[0][i].owner;
-          objectState += ";" + res.msgBodyData[0][i].status;
+    this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [this.itemSelected?.id]).subscribe(res => {
+      if (res && res.length > 0) {
+        let objectId = res[0].owner;
+        let objectState = res[0].status;
+        for (let i = 1; i < res?.length; i++) {
+          objectId += ";" + res[i].owner;
+          objectState += ";" + res[i].status;
         };
         this.objectAssign = objectId;
         this.objectState = objectState;
       }
-    })
-
+    });
+    console.log(this.itemSelected)
+    if(this.itemSelected?.category !="1"){
+      this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListTasksTreeAsync", this.itemSelected?.id).subscribe(res=>{
+        this.listNode = res;
+    })}
   }
 
   onChangeStatusTask(data) {
@@ -138,9 +161,9 @@ export class ViewListDetailsComponent implements OnInit {
     let objectId = "";
     let objectState = "";
     if (task != null) {
-      this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [task?.id]).subscribe(res => {
-        if (res && res.msgBodyData[0]?.length > 0) {
-          res.msgBodyData[0].forEach(element => {
+      this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [task?.id]).subscribe(res => {
+        if (res && res?.length > 0) {
+          res.forEach(element => {
             objectId += ";" + element.owner;
             objectState += ";" + element.status;
           })
