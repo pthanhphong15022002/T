@@ -1,4 +1,5 @@
-<codx-views #view funcID="TM001" entityName="AD_Users" [views]="views"> </codx-views>
+<codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"> </codx-views>
 
 <ng-template #panelLeftRef>
   <div class="p-2 container">
@@ -21,7 +22,7 @@
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
 
 <ng-template #kanban>
-  <app-test-kanban></app-test-kanban>
+  <app-kanban [viewBase]="viewBase"></app-kanban>
 </ng-template>
 
 <ng-template #listDetails>

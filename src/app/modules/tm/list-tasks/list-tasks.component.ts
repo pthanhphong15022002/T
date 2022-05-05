@@ -20,14 +20,14 @@ export class ListTasksComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
 
   user: any;
-  i=0;
+  i = 0;
 
   moment = moment().locale("en");
   today: Date = new Date();
   fromDate: Date = moment(this.today).startOf("day").toDate();
   toDate: Date = moment(this.today).endOf("day").toDate();
   gridView: any;
-  
+
 
   resourceViewList: any;
   columnGroupby = "createdOn";
@@ -41,23 +41,23 @@ export class ListTasksComponent implements OnInit {
   endOfLastWeek = moment().endOf('week');
 
   dataObj = { view: "listTasks", viewBoardID: "" };
-  
+
   popoverList: any;
   popoverDetail: any;
   imployeeInfo: any = {};
   listEmpInfo = [];
   lstTaskbyParent = [];
 
-  constructor(private tmSv: TmService, 
-    private api: ApiHttpService, 
+  constructor(private tmSv: TmService,
+    private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     injector: Injector,
-  //  private confirmationDialogService: ConfirmationDialogService,
+    //  private confirmationDialogService: ConfirmationDialogService,
 
-    ) { 
-      this.user = this.authStore.get();
-    }
+  ) {
+    this.user = this.authStore.get();
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -75,55 +75,55 @@ export class ListTasksComponent implements OnInit {
     // });
   }
 
-  groupByData(resource) {
-    let handle = resource.map((item: any) => {
-      return {
-        owner: item.owner,
-        userName: item.userName,
-        startDate: item.startDate,
-        endDate: item.endDate,
-        dueDate: item.dueDate,
-        taskID: item.taskID,
-        id: item.taskID,
-        taskName: item.taskName,
-        memo: item.memo,
-        memo2: item.memo2,
-        backgroundColor: item.backgroundColor,
-        createdOnDate: item.createdOn,
-        status: item.status,
-        priority: item.priority,
-        write: item.write,
-        delete: item.delete,
-        comments: item.comments,
-        attachments: item.attachments,
-        todo: item.todo,
-        assignTo: item.assignTo,
-        category: item.category,
-        groupBy: this.handleTime(item[this.columnGroupby])
-      }
-    });
-    let dataGroup = _.groupBy(handle, 'groupBy');
-    dataGroup = _.orderBy(dataGroup, ['groupBy'], ['asc']);
-    this.resourceViewList = Object.entries(dataGroup);
-  }
+  // groupByData(resource) {
+  //   let handle = resource.map((item: any) => {
+  //     return {
+  //       owner: item.owner,
+  //       userName: item.userName,
+  //       startDate: item.startDate,
+  //       endDate: item.endDate,
+  //       dueDate: item.dueDate,
+  //       taskID: item.taskID,
+  //       id: item.taskID,
+  //       taskName: item.taskName,
+  //       memo: item.memo,
+  //       memo2: item.memo2,
+  //       backgroundColor: item.backgroundColor,
+  //       createdOnDate: item.createdOn,
+  //       status: item.status,
+  //       priority: item.priority,
+  //       write: item.write,
+  //       delete: item.delete,
+  //       comments: item.comments,
+  //       attachments: item.attachments,
+  //       todo: item.todo,
+  //       assignTo: item.assignTo,
+  //       category: item.category,
+  //       groupBy: this.handleTime(item[this.columnGroupby])
+  //     }
+  //   });
+  //   let dataGroup = _.groupBy(handle, 'groupBy');
+  //   dataGroup = _.orderBy(dataGroup, ['groupBy'], ['asc']);
+  //   this.resourceViewList = Object.entries(dataGroup);
+  // }
 
-  handleTime(dateInput) {
-    let date = moment(dateInput);
-    //0;Hôm nay;1;Hôm qua;2;Tuần trước;3;Tháng trước;4;Cũ hơn
-    if (date.isBetween(this.startOfToDay, this.endOfToDay)) {
-      return '0';
-    }
-    if (date.isBetween(this.startOfYesterday, this.endOfYesterday)) {
-      return '1';
-    }
-    if (date.isBetween(this.startOfLastWeek, this.endOfLastWeek)) {
-      return '2';
-    }
-    if (date.isBetween(this.startOfMonth, this.endOfMonth)) {
-      return '3';
-    }
-    return '4';
-  }
+  // handleTime(dateInput) {
+  //   let date = moment(dateInput);
+  //   //0;Hôm nay;1;Hôm qua;2;Tuần trước;3;Tháng trước;4;Cũ hơn
+  //   if (date.isBetween(this.startOfToDay, this.endOfToDay)) {
+  //     return '0';
+  //   }
+  //   if (date.isBetween(this.startOfYesterday, this.endOfYesterday)) {
+  //     return '1';
+  //   }
+  //   if (date.isBetween(this.startOfLastWeek, this.endOfLastWeek)) {
+  //     return '2';
+  //   }
+  //   if (date.isBetween(this.startOfMonth, this.endOfMonth)) {
+  //     return '3';
+  //   }
+  //   return '4';
+  // }
 
   trackByFn(index: number, item): string {
     return item.taskID;
@@ -152,40 +152,40 @@ export class ListTasksComponent implements OnInit {
     return html;
   }
 
-  loadData(){
+  loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID =  "TM003"//this.viewBase.funcID ;
+    model.funcID = "TM003"//this.viewBase.funcID ;
     model.page = 1;
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
-   // set max dinh
-    this.fromDate =moment("3/31/2022").toDate();
+    // set max dinh
+    this.fromDate = moment("3/31/2022").toDate();
     this.toDate = moment("4/30/2022").toDate();
     model.filter = {
       logic: 'and',
       filters: [
         { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value:  this.toDate },
+        { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
     // let dataObj = { view: this.view, viewBoardID: '' };
 
-    model.dataObj =  "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
+    model.dataObj = "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
     const t = this;
     t.tmSv.loadTaskByAuthen(model).subscribe(
       (res) => {
-      if (res && res.length) {
-        this.data = res[0];
-      }else{
-        this.data=[] ;
-      }
-      
-      t.dt.detectChanges();
+        if (res && res.length) {
+          this.data = res[0];
+        } else {
+          this.data = [];
+        }
+
+        t.dt.detectChanges();
       });
     // this.tmSv.loadTaskByAuthen(data).subscribe((res)=>{
     //         if(res && res.length){
@@ -194,8 +194,8 @@ export class ListTasksComponent implements OnInit {
     //         }
     //     //this.users = resp[0];
     // })
-    
-}
+
+  }
   PopoverDetail(p: any, emp) {
     if (emp != null) {
       this.popoverList?.close();

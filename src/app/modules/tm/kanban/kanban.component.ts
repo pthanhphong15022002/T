@@ -1,22 +1,24 @@
 import { TmService } from './../tm.service';
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
   DialogSettingsModel,
   SwimlaneSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
-import { CoDxKanbanComponent, AuthStore } from 'codx-core';
+import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
 import { KanbanSetting } from '../models/settings.model';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
-  selector: 'app-test-kanban',
-  templateUrl: './test-kanban.component.html',
-  styleUrls: ['./test-kanban.component.scss'],
+  selector: 'app-kanban',
+  templateUrl: './kanban.component.html',
+  styleUrls: ['./kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
+  @Input('viewBase') viewBase: ViewBaseComponent;
   //dataSource = cardData;
   dataSource: any;
   data: any;
@@ -42,7 +44,8 @@ export class TestKanbanComponent implements OnInit {
     private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
-    private df: ChangeDetectorRef
+    private df: ChangeDetectorRef,
+    private cache: CacheService
   ) {
     this.user = this.authStore.get();
   }
@@ -52,6 +55,9 @@ export class TestKanbanComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.cache.viewSettings("TM001").subscribe(res => {
+      console.log(res);
+    })
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
@@ -59,7 +65,7 @@ export class TestKanbanComponent implements OnInit {
     this.getColumnKanban();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public cardSettings: CardSettingsModel = {
     headerField: 'Description',
@@ -162,23 +168,23 @@ export class TestKanbanComponent implements OnInit {
 
   getColumnKanban() {
     let kanbanSetting = new KanbanSetting();
-    kanbanSetting.BreakDateBy = '1';
-    kanbanSetting.ColumnField = 'Status'; //DueDate
+    kanbanSetting.BreakDateBy = "1";
+    kanbanSetting.ColumnField = "Status";
     kanbanSetting.ColumnMenu = false;
     kanbanSetting.ColumnToolbars = false;
     kanbanSetting.IsChangeColumn = true;
     kanbanSetting.CountObjects = true;
     kanbanSetting.DragColumn = false;
     kanbanSetting.DragSwimlanes = true;
-    kanbanSetting.DateType = 'w';
+    kanbanSetting.DateType = "w";
     kanbanSetting.ProcessBar = true;
     kanbanSetting.Tags = true;
     kanbanSetting.Resources = true;
-    kanbanSetting.SwimlanesControl = false;
-    kanbanSetting.IsChangeSwimlanes = false;
-    kanbanSetting.SwimlanesField = 'Owner';
-    kanbanSetting.FormName = 'Tasks';
-    kanbanSetting.GrvName = 'grvTasks';
+    kanbanSetting.SwimlanesControl = true;
+    kanbanSetting.IsChangeSwimlanes = true;
+    kanbanSetting.SwimlanesField = "Owner";
+    kanbanSetting.FormName = "Tasks";
+    kanbanSetting.GrvName = "grvTasks";
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
       this.columns = res.column;
     });

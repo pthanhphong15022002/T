@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="w-100 d-flex flex-column" id="erm_content" >
+    <div class="w-100 d-flex flex-column" id="erm_content">
       <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
       <div class="container" *ngIf="itemSelected?.taskID">
         <div class="task-info mt-2">
@@ -22,7 +22,7 @@
             <div class="symbol symbol-40 symbol-circle mr-4">
               <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="itemSelected?.createdBy"
                 objectType="AD_Users">
-            </codx-img >
+              </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex justify-content-between">
@@ -66,7 +66,8 @@
           <div class="d-flex mt-1">
             <div class="d-flex mr-6">
               <span class="font-weight-bold mr-1">Ngày hết hạn:</span>
-              <span [ngClass]="itemSelected?.dueDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.dueDate | date: 'dd/MM/yyyy'}}</span>
+              <span [ngClass]="itemSelected?.dueDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.dueDate | date:
+                'dd/MM/yyyy'}}</span>
             </div>
             <div class="d-flex align-items-center text-dark-75 mr-6">
               <span class="font-weight-bold mr-1">Ưu tiên:</span>
@@ -75,7 +76,7 @@
                   [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"></span>
               </span>
               <span class="text-dark-75">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
-             
+
             </div>
             <div class="d-flex">
               <span class="font-weight-bold mr-1">Nhóm công việc:</span>
@@ -85,11 +86,13 @@
           <div class="d-flex mt-1">
             <div class="d-flex mr-6">
               <span class="font-weight-bold mr-1">Ngày bắt đầu:</span>
-              <span [ngClass]="itemSelected?.startDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.startDate | date: 'dd/MM/yyyy'}}</span>
+              <span [ngClass]="itemSelected?.startDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.startDate |
+                date: 'dd/MM/yyyy'}}</span>
             </div>
             <div class="d-flex align-items-center text-dark-75 mr-6">
               <span class="font-weight-bold mr-1">Ngày kết thúc:</span>
-              <span [ngClass]="itemSelected?.endDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.endDate | date: 'dd/MM/yyyy' }}</span>
+              <span [ngClass]="itemSelected?.endDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.endDate | date:
+                'dd/MM/yyyy' }}</span>
               <!-- icon-flag -->
             </div>
             <div class="d-flex">
@@ -154,7 +157,7 @@
         <div class="card-toolbar">
           <ul class="nav nav-tabs nav-tabs-line">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#tab_his">
+              <a class="nav-link" data-toggle="tab" href="#tab_his">
                 <span class="nav-text">Lịch sử</span>
               </a>
             </li>
@@ -169,7 +172,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab_ref">
+              <a class="nav-link active" data-toggle="tab" href="#tab_ref">
                 <span class="nav-text">Tham chiếu</span><span class="ml-1">(3)</span>
               </a>
             </li>
@@ -185,11 +188,11 @@
             </li>
           </ul>
         </div>
-        <!--end::Container-->
+        <!--end::Container collapse-->
       </div>
-      <div id="controlView" class="master-more mt-6 container collapse" *ngIf="itemSelected?.taskID">
+      <div id="controlView" class="master-more mt-6 container " *ngIf="itemSelected?.taskID">
         <div class="tab-content mt-3">
-          <div class="tab-pane pt-2 fade show active" id="tab_his" role="tabpanel">
+          <div class="tab-pane pt-2 fade " id="tab_his" role="tabpanel">
             <div class="tab_container">
               <div class="his-group primary-group">
                 <span class="label label-sm label-primary label-inline mb-5">
@@ -461,9 +464,9 @@
           <div class="tab-pane pt-3 fade" id="tab_att" role="tabpanel">
             <div class="tab_container">
               <div class="tab_body">
-                <!-- <app-attachment [entityName]="'TM_Tasks'"
+                <app-attachment [entityName]="'TM_Tasks'"
                   [objectId]="itemSelected?.taskID + ';' + itemSelected?.parentID" [isFooter]="false">
-                </app-attachment> -->
+                </app-attachment>
                 <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
                   <img alt="" class="max-h-35px mr-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
@@ -485,226 +488,14 @@
               </div>
             </div>
           </div>
-
-          <div class="tab-pane pt-3 fade" id="tab_ref" role="tabpanel">
+          <!-- trew view ///////////////////////////////////////////////////////////////////////////-->
+          <div class="tab-pane pt-3 fade show active" id="tab_ref" role="tabpanel">
             <div class="tab_container">
               <div class="tab_body">
-                <!-- <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode" entityName="TM_Tasks"
-                  service="TM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false idField="taskID"
-                  parentIdField="parentID" (selectionChange)="onSelectionChanged($event)" [autoLoad]="false"
-                  [isOutput]="true" [isLoadChild]="false">
-                </codx-treeview> -->
-
-
-
-
-
-
-
-                <div class="list-group p-0 mt-5">
-                  <div class="d-flex align-items-center justify-content-between list-title">
-                    <div class="d-flex flex-wrap align-items-top">
-                      <span class="icon-18  icon-add_box mr-2 align-items-start"></span>
-                      <!--begin::Symbol-->
-                      <div class="symbol symbol-40 symbol-circle mr-4 ">
-                        <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                      </div>
-                      <!--end::Symbol-->
-                      <!--begin::Title-->
-                      <div class="d-flex flex-column align-items-cente mr-2  w-50">
-                        <div class="text-dark font-weight-bold font-size-h6">
-                          Phan Đăng Vui
-                        </div>
-                        <div class="text-dark-50">Nhân viên Desiner | HR Executive</div>
-                        <div class="text-dark">CRM_DVSC Digipro_Cập nhật tình trạng
-                          case. Cho phép hiển thị nhiều dòng, cho phép cập nhật tình trạng
-                        </div>
-                      </div>
-                      <!--end::Title-->
-                      <!--begin::Section-->
-                      <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
-                        <!--begin::Label-->
-                        <div class="mr-6">
-                          <span class="icon-16  icon-person mr-1 text-primary "></span>
-                          <span class="text-dark-75 font-weight-bolder">3</span>
-                        </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
-                        <div class="mr-6">
-                          <span class="icon-16   icon-message mr-1 text-primary "></span>
-                          <span class="text-dark-75 font-weight-bolder">3</span>
-                        </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
-                        <div class="mr-6">
-                          <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
-                          <span class="text-dark-75 font-weight-bolder">3</span>
-                        </div>
-                        <!--end::Label-->
-                        <!--begin::Btn-->
-                        <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
-                          thực hiện</span>
-                        <!--end::Btn-->
-                      </div>
-                      <!--end::Section-->
-                    </div>
-                  </div>
-                  <div class="list-content  pl-12">
-                    <div class="d-flex align-items-start justify-content-between ">
-                      <div class="d-flex flex-wrap align-items-top mt-5">
-                        <span class="icon-18  icon-add_box mr-2 align-items-start"></span>
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-circle mr-4 ">
-                          <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Title-->
-                        <div class="d-flex flex-column align-items-cente mr-2  w-50">
-                          <div class="text-dark font-weight-bold font-size-h6">
-                            Phan Đăng Vui
-                          </div>
-                          <div class="text-dark-50">Nhân viên Desiner | HR Executive</div>
-                          <div class="text-dark">CRM_DVSC Digipro_Cập nhật tình trạng
-                            case. Cho phép hiển thị nhiều dòng, cho phép cập nhật tình trạng
-                          </div>
-                        </div>
-                        <!--end::Title-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
-                          <!--begin::Label-->
-                          <div class="mr-6">
-                            <span class="icon-16  icon-person mr-1 text-primary "></span>
-                            <span class="text-dark-75 font-weight-bolder">3</span>
-                          </div>
-                          <!--end::Label-->
-                          <!--begin::Label-->
-                          <div class="mr-6">
-                            <span class="icon-16   icon-message mr-1 text-primary "></span>
-                            <span class="text-dark-75 font-weight-bolder">3</span>
-                          </div>
-                          <!--end::Label-->
-                          <!--begin::Label-->
-                          <div class="mr-6">
-                            <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
-                            <span class="text-dark-75 font-weight-bolder">3</span>
-                          </div>
-                          <!--end::Label-->
-                          <!--begin::Btn-->
-                          <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
-                            thực hiện</span>
-                          <!--end::Btn-->
-                        </div>
-                        <!--end::Section-->
-                      </div>
-                    </div>
-                    <div class="list-group p-0 mt-5">
-                      <div class="d-flex align-items-center justify-content-between list-title">
-                        <div class="d-flex flex-wrap align-items-top mt-5">
-                          <span class="icon-18  icon-add_box mr-2 align-items-start"></span>
-                          <!--begin::Symbol-->
-                          <div class="symbol symbol-40 symbol-circle mr-4 ">
-                            <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                          </div>
-                          <!--end::Symbol-->
-                          <!--begin::Title-->
-                          <div class="d-flex flex-column align-items-cente mr-2  w-50">
-                            <div class="text-dark font-weight-bold font-size-h6">
-                              Phan Đăng Vui
-                            </div>
-                            <div class="text-dark-50">Nhân viên Desiner | HR Executive</div>
-                            <div class="text-dark">CRM_DVSC Digipro_Cập nhật tình trạng
-                              case. Cho phép hiển thị nhiều dòng, cho phép cập nhật tình
-                              trạng
-                            </div>
-                          </div>
-                          <!--end::Title-->
-                          <!--begin::Section-->
-                          <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
-                            <!--begin::Label-->
-                            <div class="mr-6">
-                              <span class="icon-16  icon-person mr-1 text-primary "></span>
-                              <span class="text-dark-75 font-weight-bolder">3</span>
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Label-->
-                            <div class="mr-6">
-                              <span class="icon-16   icon-message mr-1 text-primary "></span>
-                              <span class="text-dark-75 font-weight-bolder">3</span>
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Label-->
-                            <div class="mr-6">
-                              <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
-                              <span class="text-dark-75 font-weight-bolder">3</span>
-                            </div>
-                            <!--end::Label-->
-                            <!--begin::Btn-->
-                            <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
-                              thực hiện</span>
-                            <!--end::Btn-->
-                          </div>
-                          <!--end::Section-->
-                        </div>
-                      </div>
-                      <div class="list-content  pl-12">
-                        <div class="d-flex align-items-start justify-content-between ">
-                          <div class="d-flex flex-wrap align-items-top mt-5">
-                            <span class="icon-18  icon-add_box mr-2 align-items-start"></span>
-                            <!--begin::Symbol-->
-                            <div class="symbol symbol-40 symbol-circle mr-4 ">
-                              <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
-                            </div>
-                            <!--end::Symbol-->
-                            <!--begin::Title-->
-                            <div class="d-flex flex-column align-items-cente mr-2  w-50">
-                              <div class="text-dark font-weight-bold font-size-h6">
-                                Nguyễn Thị Lợi
-                              </div>
-                              <div class="text-dark-50">Nhân viên Desiner | HR Executive
-                              </div>
-                              <div class="text-dark">CRM_DVSC Digipro_Cập nhật tình trạng
-                                case. Cho phép hiển thị nhiều dòng, cho phép cập nhật
-                                tình trạng
-                              </div>
-                            </div>
-                            <!--end::Title-->
-                            <!--begin::Section-->
-                            <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
-                              <!--begin::Label-->
-                              <div class="mr-6">
-                                <span class="icon-16  icon-person mr-1 text-primary "></span>
-                                <span class="text-dark-75 font-weight-bolder">3</span>
-                              </div>
-                              <!--end::Label-->
-                              <!--begin::Label-->
-                              <div class="mr-6">
-                                <span class="icon-16   icon-message mr-1 text-primary "></span>
-                                <span class="text-dark-75 font-weight-bolder">3</span>
-                              </div>
-                              <!--end::Label-->
-                              <!--begin::Label-->
-                              <div class="mr-6">
-                                <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
-                                <span class="text-dark-75 font-weight-bolder">3</span>
-                              </div>
-                              <!--end::Label-->
-                              <!--begin::Btn-->
-                              <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
-                                thực hiện</span>
-                              <!--end::Btn-->
-                            </div>
-                            <!--end::Section-->
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
+                <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode" [enableCheck]=false
+                  idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+                </codx-treeview>
               </div>
-
             </div>
           </div>
           <div class="tab-pane pt-3 fade" id="tab_his_review" role="tabpanel">
@@ -745,47 +536,6 @@
               </div>
             </div>
           </div>
-
-          
-      <!--menu -->
-      <div class="bg-white py-4 d-flex flex-lg-column">
-        <!--begin::Container-->
-        <div class="card-toolbar">
-          <ul class="nav nav-tabs nav-tabs-line">
-            <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#tab_his">
-                <span class="nav-text">Lịch sử</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab_att">
-                <span class="nav-text">Đính kèm</span><span class="ml-1">(3)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab_com">
-                <span class="nav-text">Bình luận</span><span class="ml-1">(3)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab_ref">
-                <span class="nav-text">Tham chiếu</span><span class="ml-1">(3)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab_his_review">
-                <span class="nav-text">Lịch sử xét duyệt</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" style="float: right;cursor: pointer;" href="#controlView" data-toggle="collapse">
-                <i class="icon-keyboard_arrow_down icon-16 nav-text"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <!--end::Container-->
-      </div>
         </div>
       </div>
     </div>
@@ -804,7 +554,7 @@
   <div id="List-{{item.createdOn.replaceAll('/','')}}" class="collapse show">
     <table class="table-action-menu" style="width: 100%;">
       <tbody>
-        <tr *ngFor="let item of item.mytasks;">
+        <tr *ngFor="let item of item.mytasks ;trackBy:trackByFn">
           <td>
             <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
             item?.taskID == itemSelected?.taskID ? 'yellow' : ''
@@ -858,7 +608,62 @@
   </div>
 </ng-template>
 <ng-template #templateloading let-data>
-  <!-- <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-      <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-      <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader> -->
+  <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
+  <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
+  <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
 </ng-template>
+
+
+<ng-template #templatetree let-data>
+  <div class="list-group p-0 mt-5">
+    <div class="d-flex align-items-center justify-content-between list-title">
+      <div class="d-flex flex-wrap align-items-top">
+        <span class="icon-18  icon-add_box mr-2 align-items-start" *ngIf="data.items.length >0"></span>
+        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data?.owner" objectType="AD_Users">
+        </codx-img>
+        <!--end::Symbol-->
+        <!--begin::Title-->
+        <div class="d-flex flex-column align-items-cente mr-2  w-50">
+          <div class="text-dark font-weight-bold font-size-h6">
+            {{data?.userName}}
+          </div>
+          <div class="text-dark-50">{{data.positionName}}</div>
+          <div class="text-dark" *ngIf="data?.category == '1' || data?.category == '3'">{{data.taskName}}
+          </div>
+          <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
+          </div>
+        </div>
+        <!--end::Title-->
+        <!--begin::Section-->
+        <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
+          <!--begin::Label-->
+          <div class="mr-6">
+            <span class="icon-16  icon-person mr-1 text-primary "></span>
+            <span class="text-dark-75 font-weight-bolder">{{data.items.length}}</span>
+          </div>
+          <!--end::Label-->
+          <!--begin::Label-->
+          <div class="mr-6" >
+            <span class="icon-16 icon-message mr-1 text-primary "></span>
+            <span class="text-dark-75 font-weight-bolder">{{data.comments}}</span>
+          </div>
+          <!--end::Label-->
+          <!--begin::Label-->
+          <div class="mr-6">
+            <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
+            <span class="text-dark-75 font-weight-bolder">3</span>
+          </div>
+          <!--end::Label-->
+          <!--begin::Btn-->
+          <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
+            thực hiện</span>
+          <!--end::Btn-->
+        </div>
+        <!--end::Section-->
+      </div>
+    </div>
+  
+  </div>
+</ng-template>
+
+
