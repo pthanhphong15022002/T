@@ -1,0 +1,15 @@
+<codx-schedule height="650px" #schedule [eventTemplate]="eventTemplate" [templateResourceHeader]="resourceHeader"
+[cellFooterTemplate]="cellFooter1" [dataSource]="" [resourceDataSource]="" [resourceField]="" [StartDate]="fromDate" [EndDate]="toDate" 
+[viewPreset]="viewPreset" [minHeight]="minHeight" (onEventClick)="onCellDblClickScheduler($event)" [eventEditFeature]="false" [readOnly]="true">
+</codx-schedule>
+<ng-template #eventTemplate let-data>
+    <div>
+        
+    </div>
+</ng-template>
+<ng-template #resourceHeader let-data>
+    
+</ng-template>
+<ng-template #cellFooter1 let-data>
+    
+</ng-template>

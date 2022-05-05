@@ -1,40 +1,34 @@
 import { TmService } from './../tm.service';
-import { ContextMenuModel } from '@syncfusion/ej2-angular-navigations';
-import {
-  Component,
-  OnInit,
-  Injector,
-  ViewChild,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
   DialogSettingsModel,
   SwimlaneSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
-import { CoDxKanbanComponent, AuthStore } from 'codx-core';
+import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
-import { VIEW_ACTIVE } from '@shared/constant/enum';
 import { KanbanSetting } from '../models/settings.model';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
-  selector: 'app-test-kanban',
-  templateUrl: './test-kanban.component.html',
-  styleUrls: ['./test-kanban.component.scss'],
+  selector: 'app-kanban',
+  templateUrl: './kanban.component.html',
+  styleUrls: ['./kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
-  dataSource = cardData;
-  //dataSource: any;
+  @Input('viewBase') viewBase: ViewBaseComponent;
+  //dataSource = cardData;
+  dataSource: any;
   data: any;
   setCalendar = true;
   mode: string;
   view: string;
   isAdd = false;
   functionList: any;
-  fromDate = new Date(2021, 3);
-  toDate = new Date(2022, 4);
+  fromDate = new Date(2022, 4, 1);
+  toDate = new Date(2022, 5, 3);
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -42,8 +36,7 @@ export class TestKanbanComponent implements OnInit {
   item: any;
   showSumary = false;
   Sumary: string = '';
-
-  kanbanSetting = new KanbanSetting();
+  columns: any = [];
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -51,7 +44,8 @@ export class TestKanbanComponent implements OnInit {
     private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
-    private df: ChangeDetectorRef
+    private df: ChangeDetectorRef,
+    private cache: CacheService
   ) {
     this.user = this.authStore.get();
   }
@@ -60,21 +54,18 @@ export class TestKanbanComponent implements OnInit {
     showEmptyRow: false,
   };
 
-  public columns = [
-    { headerText: 'Đang làm', keyField: '1', allowToggle: true },
-    { headerText: 'Làm được 10%', keyField: '2', allowToggle: true },
-    { headerText: 'Review', keyField: '3', allowToggle: true },
-    { headerText: 'Xong', keyField: '4', allowToggle: true },
-  ];
-
   ngOnInit() {
+    this.cache.viewSettings("TM001").subscribe(res => {
+      console.log(res);
+    })
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
     this.getData();
+    this.getColumnKanban();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public cardSettings: CardSettingsModel = {
     headerField: 'Description',
@@ -174,9 +165,29 @@ export class TestKanbanComponent implements OnInit {
       }
     });
   }
-  
+
   getColumnKanban() {
-    this.tmSv.loadColumnsKanban(this.data).subscribe((res) => {});
+    let kanbanSetting = new KanbanSetting();
+    kanbanSetting.BreakDateBy = "1";
+    kanbanSetting.ColumnField = "Status";
+    kanbanSetting.ColumnMenu = false;
+    kanbanSetting.ColumnToolbars = false;
+    kanbanSetting.IsChangeColumn = true;
+    kanbanSetting.CountObjects = true;
+    kanbanSetting.DragColumn = false;
+    kanbanSetting.DragSwimlanes = true;
+    kanbanSetting.DateType = "w";
+    kanbanSetting.ProcessBar = true;
+    kanbanSetting.Tags = true;
+    kanbanSetting.Resources = true;
+    kanbanSetting.SwimlanesControl = true;
+    kanbanSetting.IsChangeSwimlanes = true;
+    kanbanSetting.SwimlanesField = "Owner";
+    kanbanSetting.FormName = "Tasks";
+    kanbanSetting.GrvName = "grvTasks";
+    this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
+      this.columns = res.column;
+    });
   }
 }
 
