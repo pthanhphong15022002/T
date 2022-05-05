@@ -40,14 +40,14 @@
             </div>
             <div class="col-6">
               <label>Ưu tiên:</label>
-              <codx-input type="select" [disabled]="readOnly" [crrValue]="task.priority" refValue="L0186"
+             <codx-input  type="valuelist" [disabled]="readOnly" [crrValue]="task.priority" refValue="L0186"
                 field="priority" (valueChange)="changeVLL($event)">
-              </codx-input>
+              </codx-input  >
             </div>
           </div>
           <div class="form-group">
             <label>Nhóm công việc:</label>
-            <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm task"
+            <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc"
               ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID"
               (valueChange)="cbxChange($event)" [value]="task.taskGroupID">
             </codx-combobox>
@@ -67,7 +67,7 @@
             <div class="text-primary font-weight-bold my-4">Tham chiếu</div>
             <div class="form-group">
               <label>Dự án:</label>
-              <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Nhóm task"
+              <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
                 ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
                 [disabled]="readOnly" [value]="task.projectID">
               </codx-combobox>
@@ -75,13 +75,13 @@
             <div class="form-group">
               <label>Tham chiếu:</label>
               <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
-                style="border: none" placeholder="Nhóm task" ngDefaultControl refValue="" [disabled]="readOnly"
+                style="border: none" placeholder="Tham chiếu" ngDefaultControl refValue="" [disabled]="readOnly"
                 loadFull="true" field="refNo" (valueChange)="cbxChange($event)"></codx-combobox>
             </div>
             <div class="form-group">
               <label>Bước qui trình:</label>
               <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
-                placeholder="Nhóm task" ngDefaultControl refValue="" loadFull="true" field="activityID"
+                placeholder="Bước qui trình" ngDefaultControl refValue="" loadFull="true" field="activityID"
                 [disabled]="readOnly" (valueChange)="cbxChange($event)">
               </codx-combobox>
             </div>
@@ -92,19 +92,19 @@
             <div class="form-group row">
               <div class="col-6">
                 <label>Ngày bắt đầu:</label>
-                <codx-input type="datetime" class="test-datetime" field="startDate" placeholder="datetime"
-                  [crrValue]="task.startDate" dataformat="d" (valueChange)="changeTime($event)">
+                <codx-input type="datetime" class="test-datetime" field="startDate" placeholder="datetime" 
+                  [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
                 </codx-input>
-                <codx-input datatype="datetime" [disabled]="readOnly" (valueChange)="changeTime($event)"
-                  [value]="task.startDate" field="startDate" dataformat="D"></codx-input>
+                <!-- <codx-input datatype="datetime" [disabled]="readOnly" (valueChange)="changeTime($event)"
+                  [value]="task.startDate" field="startDate" dataformat="D"></codx-input> -->
               </div>
               <div class="col-6">
                 <label>Ngày kết thúc:</label>
-                <codx-input type="datetime" class="test-datetime" field="endDate" placeholder="datetime"
-                  [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
+                <codx-input type="datetime" class="test-datetime" field="endDate" placeholder="datetime" 
+                  [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
                 </codx-input>
-                <codx-datetime datatype="datetime" [disabled]="readOnly" (valueChange)="changeTime($event)"
-                  [value]="task.endDate" field="endDate" dataformat="D"></codx-datetime>
+                <!-- <codx-datetime datatype="datetime" [disabled]="readOnly" (valueChange)="changeTime($event)"
+                  [value]="task.endDate" field="endDate" dataformat="D"></codx-datetime> -->
               </div>
             </div>
             <div class="form-group row">
@@ -188,9 +188,9 @@
             </div>
 
 
-            <!-- <app-selectuser *ngIf="task?.category == '2' ? false : true" (valueChange)="valueChangeUser($event)"
+            <app-selectuser *ngIf="task?.category == '2' ? false : true" (valueChange)="valueChangeUser($event)"
               [valueSeleteds]="task.assignTo">
-            </app-selectuser> -->
+            </app-selectuser>
             
             <div class="d-flex flex-column">
               <div class="d-flex flex-grow-1 align-items-center justify-content-between my-4">
@@ -202,9 +202,9 @@
                 </div>
               </div>
               <div class="d-flex align-items-center file-item">
-                <app-attachment #attachment [entityName]="'TM_Tasks'" [objectId]="task?.taskID + ';' + task?.parentID"
+                <!-- <app-attachment #attachment [entityName]="'TM_Tasks'" [objectId]="task?.taskID + ';' + task?.parentID"
                   [isTabAttachment]="false" [isFooter]="false">
-                </app-attachment>
+                </app-attachment> -->
               </div>
             </div>
           </div>

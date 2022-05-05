@@ -212,9 +212,9 @@ export class TaskInfoComponent implements OnInit {
   }
 
   SaveData(id) {
-    this.task.taskType = this.param['TaskType'];
-    if (id) this.updateTask();
-    else this.addTask();
+    // this.task.taskType = this.param['TaskType'];
+    // if (id) this.updateTask();
+    // else this.addTask();
     this.sidebar.hide();
   }
 
