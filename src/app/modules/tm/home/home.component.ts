@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('kanban') kanban: TemplateRef<any>;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
+  @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
   i = 0;
   constructor() { }
@@ -35,14 +36,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     active: false
   }, {
     id: '3',
-    type: 'content',
+    type: 'kanban',
     icon: 'icon-chrome_reader_mode1',
     text: 'List-details',
     active: true
   },
   {
     id: '4',
-    type: 'list',
+    type: 'kanban',
+    icon: 'icon-format_list_bulleted',
     text: 'List-tasks',
     active: false
   }];
@@ -68,10 +70,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '3',
-      type: 'content',
+      type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
@@ -79,14 +81,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     }, {
       id: '4',
-      type: 'list',
+      type: 'kanban',
+      icon: 'icon-format_list_bulleted',
       text: 'List-task',
       active: false,
       model: {
-        // panelLeftRef: this.listTasks,
-        // sideBarLeftRef: this.asideLeft,
-        //itemTemplate: this.itemTemplate,
+        panelLeftRef: this.listTasks,
+        sideBarLeftRef: this.asideLeft,
+        // itemTemplate: this.itemTemplate,
       }
-    }];
+    },
+    {
+      id: '5',
+      type: 'schedule',
+      text: 'schedule',
+      active: false,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarLeftRef: this.asideLeft,
+        // itemTemplate: this.itemTemplate,
+      }
+    },
+    ];
   }
 }

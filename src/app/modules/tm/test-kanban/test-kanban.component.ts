@@ -1,12 +1,5 @@
 import { TmService } from './../tm.service';
-import { ContextMenuModel } from '@syncfusion/ej2-angular-navigations';
-import {
-  Component,
-  OnInit,
-  Injector,
-  ViewChild,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
@@ -16,7 +9,6 @@ import {
 import { CoDxKanbanComponent, AuthStore } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
-import { VIEW_ACTIVE } from '@shared/constant/enum';
 import { KanbanSetting } from '../models/settings.model';
 
 @Component({
@@ -25,16 +17,16 @@ import { KanbanSetting } from '../models/settings.model';
   styleUrls: ['./test-kanban.component.scss'],
 })
 export class TestKanbanComponent implements OnInit {
-  dataSource = cardData;
-  //dataSource: any;
+  //dataSource = cardData;
+  dataSource: any;
   data: any;
   setCalendar = true;
   mode: string;
   view: string;
   isAdd = false;
   functionList: any;
-  fromDate = new Date(2021, 3);
-  toDate = new Date(2022, 4);
+  fromDate = new Date(2022, 4, 1);
+  toDate = new Date(2022, 5, 3);
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -42,8 +34,6 @@ export class TestKanbanComponent implements OnInit {
   item: any;
   showSumary = false;
   Sumary: string = '';
-
-  kanbanSetting = new KanbanSetting();
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -72,6 +62,7 @@ export class TestKanbanComponent implements OnInit {
       this.tmSv.myTaskComponent = false;
     }
     this.getData();
+    this.getColumnKanban();
   }
 
   ngAfterViewInit() {}
@@ -174,9 +165,29 @@ export class TestKanbanComponent implements OnInit {
       }
     });
   }
-  
+
   getColumnKanban() {
-    this.tmSv.loadColumnsKanban(this.data).subscribe((res) => {});
+    let kanbanSetting = new KanbanSetting();
+    kanbanSetting.BreakDateBy = "1",
+    kanbanSetting.ColumnField = "Status",
+    kanbanSetting.ColumnMenu = false,
+    kanbanSetting.ColumnToolbars =  false,
+    kanbanSetting.IsChangeColumn = true,
+    kanbanSetting.CountObjects = true,
+    kanbanSetting.DragColumn = false,
+    kanbanSetting.DragSwimlanes = true,
+    kanbanSetting.DateType = "w",
+    kanbanSetting.ProcessBar = true,
+    kanbanSetting.Tags = true,
+    kanbanSetting.Resources = true,
+    kanbanSetting.SwimlanesControl = false,
+    kanbanSetting.IsChangeSwimlanes = false,
+    kanbanSetting.SwimlanesField = "Owner",
+    kanbanSetting.FormName = "Tasks",
+    kanbanSetting.GrvName = "grvTasks"
+    this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
+      console.log(res)
+    });
   }
 }
 

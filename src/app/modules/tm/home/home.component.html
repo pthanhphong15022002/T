@@ -28,7 +28,10 @@
   <app-view-list-details [viewBase]="viewBase"></app-view-list-details>
 </ng-template>
 
-<ng-template #itemTemplate>
-  <span [attr.dt]="i+1">{{i}}</span>
-  <!-- <app-list-tasks></app-list-tasks> -->
+<ng-template #listTasks let-data>
+  <app-list-tasks [viewBase]="viewBase"></app-list-tasks>
+</ng-template>
+
+<ng-template #schedule let-data>
+  <app-schedule [viewBase]="viewBase"></app-schedule>
 </ng-template>
