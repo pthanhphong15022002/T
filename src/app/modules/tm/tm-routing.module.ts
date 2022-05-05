@@ -13,6 +13,9 @@ import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { SharedModule } from '@shared/shared.module';
 import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { SidebarModule } from '@syncfusion/ej2-angular-navigations';
+import { TaskInfoComponent } from './controls/task-info/task-info.component';
+
 
 const routes: Routes = [
   { 
@@ -45,13 +48,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent,TaskInfoComponent ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
     CodxCoreModule.forRoot({ environment }),
     CommonModule,
-    SharedModule
+    SharedModule,
+    SidebarModule
   ],
   exports: [RouterModule],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]

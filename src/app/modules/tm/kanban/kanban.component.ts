@@ -17,7 +17,6 @@ import { DataRequest } from '@shared/models/data.request';
 import { DataSv } from '../models/task.model';
 import { KanbanSetting } from '../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
-import moment from 'moment';
 
 @Component({
   selector: 'app-kanban',
@@ -26,17 +25,15 @@ import moment from 'moment';
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  dataSource = cardData;
-  //dataSource: any;
+  //dataSource = cardData;
+  dataSource: any;
   data: any;
   setCalendar = true;
   mode: string;
   view: string;
   isAdd = false;
-  moment = moment().locale("en");
-  today: Date = new Date();
-  fromDate: Date = moment(this.today).startOf("day").toDate();
-  toDate: Date = moment(this.today).endOf("day").toDate();
+  fromDate: Date = new Date(2022, 4, 1);
+  toDate: Date = new Date(2022, 5, 31);
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -147,7 +144,6 @@ export class TestKanbanComponent implements OnInit {
   }
 
   getData() {
-    debugger;
     let field = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
@@ -172,6 +168,7 @@ export class TestKanbanComponent implements OnInit {
       if (res && res.length) {
         this.dataSource = res[0];
         this.tmSv.setChangeData(new DataSv(res[0], this.view));
+        console.log(this.dataSource);
       }
     });
   }
