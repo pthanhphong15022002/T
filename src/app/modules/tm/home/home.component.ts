@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild("task-info") taskInfo: TaskInfoComponent;
   public showBackdrop: boolean = true;
   public type: string = 'Push';
-  public width: string = '600px';
+  public width: string = '550px';
   public closeOnDocumentClick: boolean = true;
 
 
@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: true,
+      active: false,
       model: {
         panelLeftRef: this.chart,
         //  sideBarRightRef: this.sidebarRight

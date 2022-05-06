@@ -3,8 +3,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ChangeDetectorRef,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -50,13 +50,13 @@ export class TestKanbanComponent implements OnInit {
     private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
-    private df: ChangeDetectorRef,
-    private cache: CacheService
+    private cache: CacheService,
+    private cr: ChangeDetectorRef
   ) {
     this.user = this.authStore.get();
   }
   public swimlaneSettings: SwimlaneSettingsModel = {
-    keyField: 'Assignee',
+    keyField: 'userName',
     showEmptyRow: false,
   };
 
@@ -173,6 +173,7 @@ export class TestKanbanComponent implements OnInit {
         this.kanban.refresh();
         this.tmSv.setChangeData(new DataSv(res[0], this.view));
         console.log(this.dataSource);
+        this.cr.detectChanges();
       }
     });
   }
@@ -214,7 +215,7 @@ export class TestKanbanComponent implements OnInit {
 
         this.columns = res.column;
         // this.kanban.columns = res.column
-        this.df.detectChanges();
+        this.cr.detectChanges();
       }
     });
   }
