@@ -16,7 +16,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '1',
-      active:false,
+      active: false,
       model: {
         service: 'TM',
         assemblyName: 'TM',
@@ -26,7 +26,9 @@ export class TmComponent implements OnInit, AfterViewInit {
         panelRightRef: null,
         sideBarLeftRef: null,
         sideBarRightRef: null,
-        itemTemplate: this.itemTemplate
+        itemTemplate: this.itemTemplate,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
       }
     },
     {
@@ -34,7 +36,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '2',
-      active:false,
+      active: false,
       model: {
         service: 'TM',
         assemblyName: 'TM',
@@ -44,10 +46,12 @@ export class TmComponent implements OnInit, AfterViewInit {
         panelRightRef: null,
         sideBarLeftRef: null,
         sideBarRightRef: null,
-        itemTemplate: this.itemTemplate
+        itemTemplate: this.itemTemplate,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
       }
     }
-  ]
+    ]
   }
   views: Array<ViewModel> = [
   ];

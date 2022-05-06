@@ -53,7 +53,7 @@ export class TaskInfoComponent implements OnInit {
     taskName: false,
   };
   @Input('sidebar') sidebar: SidebarComponent;
- 
+
   @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -77,9 +77,9 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID ="TM003" //dung test 
+    this.functionID = "TM003" //dung test
 
-     //this.getParam(); //bật tắt set param
+    //this.getParam(); //bật tắt set param
     this.openTask();
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
     //   if (res) t.grvSetup = res;
@@ -217,8 +217,8 @@ export class TaskInfoComponent implements OnInit {
   SaveData(id) {
     // this.task.taskType = this.param['TaskType'];
     // this.task.taskType = "0"
-    if (id) this.updateTask() ;else
-     this.addTask();
+    if (id) this.updateTask(); else
+      this.addTask();
     this.sidebar.hide();
   }
 
@@ -413,7 +413,7 @@ export class TaskInfoComponent implements OnInit {
     if (data.field == 'projectID') this.task.projectID = data.data.ProjectID;
   }
 
-  loadTodoByGroup() {}
+  loadTodoByGroup() { }
 
   openTask(): void {
     this.readOnly = false;
@@ -427,10 +427,10 @@ export class TaskInfoComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (!this.param)
       this.getParam(function (o) {
-        if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
+        //   if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
       });
     else {
-      this.panelTask?.nativeElement.classList.add("offcanvas-on");
+      //  this.panelTask?.nativeElement.classList.add("offcanvas-on");
     }
   }
 
@@ -481,15 +481,15 @@ export class TaskInfoComponent implements OnInit {
   }
 
   extendShow() {
-     this.panelTask.nativeElement.classList.toggle("extend-show");
+    this.panelTask.nativeElement.classList.toggle("extend-show");
   }
 
   closeTask(): void {
     if (this.tagsComponent.isOpen) this.tagsComponent.close();
 
-     this.required.taskName = false;
-     this.disableAddToDo = true;
-   // this.panelTask.nativeElement.classList.remove("extend-show");
+    this.required.taskName = false;
+    this.disableAddToDo = true;
+    // this.panelTask.nativeElement.classList.remove("extend-show");
     // this.panelTask.nativeElement.classList.remove("offcanvas-on");
     this.tmSv.showPanel.next(null);
     this.sidebar.hide();
@@ -528,7 +528,7 @@ export class TaskInfoComponent implements OnInit {
 
   public onCreated(args: any) {
     this.sidebar.element.style.visibility = '';
-    this.sidebar.position ="Right";
+    this.sidebar.position = "Right";
   }
   closeClick(): void {
     this.sidebar.hide();

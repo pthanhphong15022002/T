@@ -117,10 +117,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.chart,
-        //  sideBarRightRef: this.sidebarRight
+        sideBarRightRef: this.sidebarRight,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
       }
     },
     {
@@ -128,6 +130,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       active: false,
       model: {
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px',
         panelLeftRef: this.kanban,
       }
     },
@@ -140,6 +144,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
         //       itemTemplate: this.itemTemplate,
       }
     },
@@ -152,6 +158,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
         // itemTemplate: this.itemTemplate,
       }
     },
@@ -163,6 +171,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
         // itemTemplate: this.itemTemplate,
       }
     },

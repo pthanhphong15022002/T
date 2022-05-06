@@ -25,8 +25,8 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  dataSource = cardData;
-  //dataSource: any = [];
+  // dataSource = cardData;
+  dataSource: any = [];
   data: any;
   setCalendar = true;
   mode: string;
@@ -170,7 +170,6 @@ export class TestKanbanComponent implements OnInit {
       if (res && res.length) {
         this.dataSource = res[1];
         this.kanban.dataSource = res[1];
-        this.kanban.refresh();
         this.tmSv.setChangeData(new DataSv(res[0], this.view));
         console.log(this.dataSource);
         this.cr.detectChanges();
