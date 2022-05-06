@@ -81,8 +81,8 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     this.functionID =  "TM001"//this.viewBase.funcID//dung test 
 
-     //this.getParam(); //bật tắt set param
-    this.openTask();
+     this.getParam(); //bật tắt set param
+     this.openTask();
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
     //   if (res) t.grvSetup = res;
     // });
@@ -217,8 +217,8 @@ export class TaskInfoComponent implements OnInit {
   }
 
   SaveData(id) {
-    // this.task.taskType = this.param['TaskType'];
-    // this.task.taskType = "0"
+    this.task.assignTo ="PMNHI" ; //tesst thu
+    this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask() ;else
      this.addTask();
     this.sidebar.hide();
@@ -231,42 +231,42 @@ export class TaskInfoComponent implements OnInit {
         if (res) {
 
           this.notiService.notify(res.message);
-          // if (res.data) {
-          //   var dataPriority = res.data[0];
-          //   if (dataPriority.priority == '1') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#66a3ff';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   } else if (dataPriority.priority == '2') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#ffd11a';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   } else if (dataPriority.priority == '3') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#ff6600';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   }
+          if (res.data) {
+            var dataPriority = res.data[0];
+            if (dataPriority.priority == '1') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#66a3ff';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            } else if (dataPriority.priority == '2') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#ffd11a';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            } else if (dataPriority.priority == '3') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#ff6600';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            }
           //   let obj = this.tmSv.changeData.value;
           //   let array = res.data.concat(obj.data);
           //   obj.data = array;
           //   obj.view = this.view;
           //   this.tmSv.setChangeData(obj);
-          // }
-          // this.listTodo = [];
-          // this.listUser = [];
-          // this.task = new TM_Tasks();
+           }
+          this.listTodo = [];
+          this.listUser = [];
+          this.task = new TM_Tasks();
           // if (isCloseFormTask) {
           //   this.closeTask();
           // } else {
