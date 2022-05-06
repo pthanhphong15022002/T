@@ -7,23 +7,9 @@ import { LayoutComponent } from './layout.component';
 @NgModule({
   declarations: [
     LayoutComponent,
-    // MessengerDrawerComponent,
-    // ChatInnerComponent,
-    // NotifyDrawerComponent,
-    // QuickLinksInnerComponent,
-    // UserInnerComponent,
-    // ChatListComponent,
-    // ListChatBoxComponent,
-    // ChatBoxComponent
   ],
   imports: [
-    // CommonModule,
-    // InlineSVGModule,
-    // NgbModule,
-    // ERMModule,
-    // CodxCoreModule.forRoot({ environment }),
     TmModule,
-    // FormsModule
     SharedModule
   ],
   exports: [RouterModule],

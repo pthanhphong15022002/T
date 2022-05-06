@@ -1,10 +1,17 @@
 <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
-
+<div class="p-2 container">
+  <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' align='center' id='chartcontainer'
+    [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title' [tooltip]='tooltip'
+    (axisLabelRender)='labelRender($event)' (load)='load($event)'>
+    <e-series-collection>
+      <e-series [dataSource]='data' type='Column' xName='x' yName='y' fill='#1e90ff' name='England' width=2
+        [marker]='marker'> </e-series>
+    </e-series-collection>
+  </ejs-chart>
+</div>
 <ng-template #panelLeftRef>
-  <div class="p-2 container">
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  </div>
+
 </ng-template>
 
 <ng-template #asideLeft>

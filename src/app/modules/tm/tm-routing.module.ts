@@ -13,9 +13,11 @@ import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { SharedModule } from '@shared/shared.module';
 import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { ChartAllModule, ChartModule } from '@syncfusion/ej2-angular-charts';
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 const routes: Routes = [
-  { 
+  {
     path: '',
     component: LayoutComponent,
     children: [
@@ -45,15 +47,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent],
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent, ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent,],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
     CodxCoreModule.forRoot({ environment }),
     CommonModule,
-    SharedModule
+    SharedModule,
+    ChartAllModule,
+    DatePickerModule
   ],
   exports: [RouterModule],
-  schemas:[CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class TmModule {}
+export class TmModule { }

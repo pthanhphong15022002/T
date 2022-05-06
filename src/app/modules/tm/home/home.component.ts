@@ -6,8 +6,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
+import { ChartTheme, IAxisLabelRenderEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
+import { Browser } from '@syncfusion/ej2-base';
+import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 
 @Component({
@@ -16,7 +18,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') viewBase: ViewBaseComponent;
+  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
@@ -29,19 +31,65 @@ export class HomeComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
+  // Chart
+  public data: Object[] = [
+    { x: new Date(2005, 0, 1), y: 21 }, { x: new Date(2006, 0, 1), y: 24 },
+    { x: new Date(2007, 0, 1), y: 36 }, { x: new Date(2008, 0, 1), y: 38 },
+    { x: new Date(2009, 0, 1), y: 54 }, { x: new Date(2010, 0, 1), y: 57 },
+    { x: new Date(2011, 0, 1), y: 70 }
+  ];
+  public primaryXAxis: Object = {
+    valueType: 'DateTime',
+    labelFormat: 'y',
+    intervalType: 'Years',
+    edgeLabelPlacement: 'Shift',
+    rangePadding: 'None',
+    majorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    lineStyle: { width: 0 },
+    labelStyle: {
+      color: 'transparent'
+    }
+  };
+
+  //Initializing Primary Y Axis
+  public primaryYAxis: Object = {
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 0 },
+    labelStyle: {
+      color: 'transparent'
+    }
+  };
+  public chartArea: Object = {
+    border: {
+      width: 0
+    }
+  };
+  public width: string = Browser.isDevice ? '100%' : '60%';
+  public marker: Object = {
+    visible: true,
+    height: 10,
+    width: 10
+  };
+  public tooltip: Object = {
+    enable: true
+  };
+  public title: string = 'Inflation - Consumer Price';
+
   constructor(private cf: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.buttons = [{
-      id: '1',
-      icon: 'icon-list-checkbox',
-      text: 'button 1',
-    },
-    {
-      id: '2',
-      icon: 'icon-list-checkbox',
-      text: 'button 2',
-    }]
+    // this.buttons = [{
+    //   id: '1',
+    //   icon: 'icon-list-checkbox',
+    //   text: 'button 1',
+    // },
+    // {
+    //   id: '2',
+    //   icon: 'icon-list-checkbox',
+    //   text: 'button 2',
+    // }]
 
     this.moreFunc = [{
       id: '1',
@@ -111,6 +159,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     ];
     this.cf.detectChanges();
   }
+
+  public labelRender(args: IAxisLabelRenderEventArgs): void {
+    if (args.axis.orientation === 'Horizontal') {
+      args.cancel = args.value === 15 || args.value === 21;
+    }
+  };
+
+  load(args: ILoadedEventArgs): void {
+    let selectedTheme: string = location.hash.split('/')[1];
+    selectedTheme = selectedTheme ? selectedTheme : 'Material';
+    args.chart.theme = <ChartTheme>(selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(/-dark/i, "Dark");
+  };
 
   click(evt: any) {
     console.log(evt);
