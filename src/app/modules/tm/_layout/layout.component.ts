@@ -32,9 +32,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.layout.initConfig();
     var cfg = this.layout.getConfig();
     cfg.aside.display = true;
-    cfg.aside.fixed = false;
+    cfg.aside.fixed = true;
     cfg.aside.theme = 'light';
     cfg.toolbar.display = true;
+    cfg.header.left = 'menu';
     cfg.pageTitle.breadCrumbs = false;
 
     this.initService.init();
@@ -74,83 +75,26 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   public funcs$: Observable<any> = of([
     {
-      functionID: 'HR001',
-      customName: 'Sơ đồ tổ chức',
-      smallIcon: 'assets/Icons_Final/HR001_Orgchart.svg',
+      functionID: 'TM002',
+      customName: 'Dashboard',
+      smallIcon: 'icon-person icon-18',
       comingSoon: false,
       separator: false,
       childs: []
     }, {
-      functionID: 'HR003',
-      customName: 'Danh bạ nhân viên',
-      smallIcon: 'assets/Icons_Final/P006_Hosonhanvien.svg',
+      functionID: 'TM003',
+      customName: 'Công việc nhóm',
+      smallIcon: 'icon-groups icon-18',
       comingSoon: false,
       separator: false,
       childs: []
     }, {
-      functionID: 'WPT02',
-      customName: 'Tin tức - Sự kiện',
-      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-      comingSoon: true,
-      separator: false,
-      childs: []
-    }, {
-      functionID: 'DM',
-      customName: 'Quản lý tài liệu',
-      smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
+      functionID: 'TM004',
+      customName: 'View board',
+      smallIcon: 'icon-style icon-18',
       comingSoon: false,
       separator: false,
       childs: []
-    }, {
-      functionID: '-',
-      customName: 'Dịch vụ nhân viên',
-      separator: true
-    }, {
-      functionID: 'POR004',
-      customName: 'Hồ sơ nhân viên',
-      smallIcon: 'assets/Icons_Final/P_People.svg',
-      comingSoon: false,
-      separator: false,
-      childs: []
-    }, {
-      functionID: 'HR1',
-      customName: 'Dịch vụ nhân sự',
-      smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg',
-      comingSoon: true,
-      separator: false,
-      childs: [{
-        functionID: 'HR11',
-        customName: 'Dịch vụ nhân sự 1',
-        smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg',
-        comingSoon: true,
-        separator: false,
-        childs: []
-      }, {
-        functionID: 'HR12',
-        customName: 'Dịch vụ nhân sự 2',
-        smallIcon: 'assets/Icons_Final/P015_Phanhoi360o.svg',
-        comingSoon: true,
-        separator: false,
-        childs: []
-      }]
-    }, {
-      functionID: 'FED201',
-      customName: 'Ví nhân viên',
-      smallIcon: 'assets/Icons_Final/P014_Vithuongnhanvien.svg',
-      comingSoon: false,
-      separator: false,
-      childs: []
-    }, {
-      functionID: 'POR007',
-      customName: 'Lịch nhân viên',
-      smallIcon: 'assets/Icons_Final/CM005_Quanlysukien.svg',
-      comingSoon: false,
-      separator: false,
-      childs: []
-    }, {
-      functionID: '-',
-      customName: 'Ứng dụng',
-      separator: true
-    },
-  ]);
+    }]
+  );
 }

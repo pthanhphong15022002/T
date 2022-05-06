@@ -1,43 +1,20 @@
 <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
-<<<<<<< HEAD
-<div class="p-2 container">
-  <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' align='center' id='chartcontainer'
-    [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title' [tooltip]='tooltip'
-    (axisLabelRender)='labelRender($event)' (load)='load($event)'>
-    <e-series-collection>
-      <e-series [dataSource]='data' type='Column' xName='x' yName='y' fill='#1e90ff' name='England' width=2
-        [marker]='marker'> </e-series>
-    </e-series-collection>
-  </ejs-chart>
-</div>
-<ng-template #panelLeftRef>
-=======
 
-<ejs-sidebar id="default-sidebar" #sidebar (created)="onCreated($event)" style="visibility: hidden;position: right;padding: 20px;"
-  [width]="width" [showBackdrop]="showBackdrop" >
-  <app-task-info [sidebar] = "sidebar" ></app-task-info>
-</ejs-sidebar>
-
-<ng-template #panelLeftRef>
+<ng-template #chart>
   <div class="p-2 container">
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' id='chartcontainer'
+      [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title' [tooltip]='tooltip'>
+      <e-series-collection>
+        <e-series [dataSource]='data' type='Column' xName='x' yName='y' fill='#1e90ff' name='England' width=2
+          [marker]='marker'> </e-series>
+      </e-series-collection>
+    </ejs-chart>
   </div>
-
->>>>>>> 64c5fdd61ff5854d1f5cdb0b9f6522283fa2f16c
-
 </ng-template>
 
-<ng-template #asideLeft>
-  <div class="p-2 container">
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </div>
+<ng-template #sidebarRight>
+  <app-task-info></app-task-info>
 </ng-template>
 
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->

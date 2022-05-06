@@ -25,8 +25,8 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  //dataSource = cardData;
-  dataSource: any;
+  dataSource = cardData;
+  //dataSource: any = [];
   data: any;
   setCalendar = true;
   mode: string;
@@ -62,19 +62,21 @@ export class TestKanbanComponent implements OnInit {
 
   ngOnInit() {
     this.cache.viewSettings('TM001').subscribe((res) => {
-      this.settings = JSON.parse(res[0].settings);
-      this.getColumnKanban();
+      if (res) {
+        this.settings = JSON.parse(res[0].settings);
+        this.getColumnKanban();
+      }
     });
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
-    this.getData();
+    //this.getData();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public cardSettings: CardSettingsModel = {
-    headerField: 'Description',
+    headerField: 'taskID',
     template: '#cardTemplate',
     selectionType: 'Multiple',
   };
@@ -166,7 +168,9 @@ export class TestKanbanComponent implements OnInit {
 
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
-        this.dataSource = res[0];
+        this.dataSource = res[1];
+        this.kanban.dataSource = res[1];
+        this.kanban.refresh();
         this.tmSv.setChangeData(new DataSv(res[0], this.view));
         console.log(this.dataSource);
       }
@@ -206,111 +210,45 @@ export class TestKanbanComponent implements OnInit {
     kanbanSetting.FormName = 'Tasks';
     kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
-      this.columns = res.column;
+      if (res) {
+
+        this.columns = res.column;
+        // this.kanban.columns = res.column
+        this.df.detectChanges();
+      }
     });
   }
 }
 
 export let cardData: Object[] = [
   {
-    Id: 'Task 1',
-    Description: 'Task - 29001',
-    Status: '1',
-    Summary:
+    id: 'Task 1',
+    userName: 'Task - 29001',
+    status: '1',
+    memo:
       'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    Priority: 'High',
-    Tags: 'Bug, Release Bug',
-    RankId: 1,
-    Assignee: 'Nancy Davloio',
+    priority: 'High',
   },
   {
-    Id: 'Task 2',
-    Description: 'Task - 29002',
-    Status: '1',
-    Summary: 'Add responsive support to applicaton',
-    Priority: 'Low',
-    Tags: 'Story, Kanban',
-    RankId: 2,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 3',
-    Description: 'Task - 29003',
-    Status: '3',
-    Summary: 'Show the retrived data from the server in grid control.',
-    Priority: 'High',
-    Tags: 'Bug, Breaking Issue',
-    RankId: 2,
-    Assignee: 'Janet Leverling',
-  },
-  {
-    Id: 'Task 4',
-    Description: 'Task - 29004',
-    Status: '1',
-    Summary: 'Fix the issues reported in the IE browser.',
-    Priority: 'High',
-    Tags: 'Bug, Customer',
-    RankId: 1,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 5',
-    Description: 'Task - 29005',
-    Status: '1',
-    Summary: 'Improve application performance.',
-    Priority: 'Normal',
-    Tags: 'Story, Kanban',
-    RankId: 1,
-    Assignee: 'Steven walker',
-  },
-  {
-    Id: 'Task 6',
-    Description: 'Task - 29009',
-    Status: '2',
-    Summary: 'API Improvements.',
-    Priority: 'Critical',
-    Tags: 'Bug, Customer',
-    RankId: 2,
-    Assignee: 'Nancy Davloio',
-  },
-  {
-    Id: 'Task 7',
-    Description: 'Task - 29010',
-    Status: '3',
-    Summary: "Fix cannot open user's default database sql error.",
-    Priority: 'High',
-    Tags: 'Bug, Internal',
-    RankId: 8,
-    Assignee: 'Margaret hamilt',
-  },
-  {
-    Id: 'Task 8',
-    Description: 'Task - 29015',
-    Status: '4',
-    Summary: 'Fix the filtering issues reported in safari.',
-    Priority: 'Critical',
-    Tags: 'Bug, Breaking Issue',
-    RankId: 4,
-    Assignee: 'Margaret hamilt',
-  },
-  {
-    Id: 'Task 9',
-    Description: 'Task - 29016',
-    Status: '1',
-    Summary: 'Fix the issues reported in IE browser.',
-    Priority: 'High',
-    Tags: 'Bug, Customer',
-    RankId: 3,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 10',
-    Description: 'Task - 29017',
-    Status: '2',
-    Summary: 'Enhance editing functionality.',
-    Priority: 'Normal',
-    Tags: 'Story, Kanban',
-    RankId: 4,
-    Assignee: 'Janet Leverling',
+    id: 'Task 2',
+    userName: 'Task - 29001',
+    status: '2',
+    memo:
+      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
+    priority: 'High',
+  }, {
+    id: 'Task 3',
+    userName: 'Task - 29001',
+    status: '3',
+    memo:
+      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
+    priority: 'High',
+  }, {
+    id: 'Task 4',
+    userName: 'Task - 29001',
+    status: '4',
+    memo:
+      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
+    priority: 'High',
   },
 ];

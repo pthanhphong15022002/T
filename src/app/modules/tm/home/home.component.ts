@@ -7,7 +7,6 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ChartTheme, IAxisLabelRenderEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
-import { Browser } from '@syncfusion/ej2-base';
 import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
@@ -20,13 +19,15 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
+  @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
+
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
   @ViewChild("task-info") taskInfo: TaskInfoComponent;
   public showBackdrop: boolean = true;
@@ -118,7 +119,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'content',
       active: true,
       model: {
-        panelLeftRef: this.panelLeftRef
+        panelLeftRef: this.chart,
+        //  sideBarRightRef: this.sidebarRight
       }
     },
     {
@@ -180,11 +182,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     args.chart.theme = <ChartTheme>(selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(/-dark/i, "Dark");
   };
 
-  // click(evt: any) {
-  //   console.log(evt);
-  //   // alert("bắt sự kiện click")
-  //   this.sidebar.show();
-  // }
+  click(evt: any) {
+    console.log(evt);
+    // alert("bắt sự kiện click")
+    this.viewBase.currentView.openSidebarRight();
+  }
 
   // public onCreated(args: any) {
   //   this.sidebar.element.style.visibility = '';
