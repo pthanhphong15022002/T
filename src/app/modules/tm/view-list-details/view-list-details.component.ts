@@ -34,6 +34,7 @@ export class ViewListDetailsComponent implements OnInit {
   gridView: any;
   listUserTask =[] ;
   listNode =[] ;
+  isFinishLoad = false ;
 
 
   @Input('viewBase') viewBase: ViewBaseComponent;
@@ -107,6 +108,7 @@ export class ViewListDetailsComponent implements OnInit {
       if(this.itemSelected?.category !="1"){
         this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListTasksTreeAsync", this.itemSelected?.id).subscribe(res=>{
           this.listNode = res;
+          this.isFinishLoad = true ;
       })}
       }else{
         this.data=[] ;

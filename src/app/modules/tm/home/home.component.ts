@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('sidebar') sidebar: SidebarComponent;
   public showBackdrop: boolean = true;
   public type: string = 'Push';
-  public width: string = '600px';
+  public width: string = '550px';
   public closeOnDocumentClick: boolean = true;
  
 
@@ -128,8 +128,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   click(evt: any) {
     console.log(evt);
-    // alert("bắt sự kiện click")
     this.sidebar.show();
+
   }
 
   public onCreated(args: any) {
