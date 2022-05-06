@@ -50,43 +50,57 @@ export class ScheduleComponent implements OnInit {
   constructor(private tmSv: TmService,
     private api: ApiHttpService,
     private auStore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef, ) {
       this.user = this.auStore.get();
- //   this.getHeightContain();
+ //  this.getHeightContain();
   }
   
-  // getHeightContain(callback = null) {
-  //   var hContainer = $("#kt_wrapper").height();
-  //   if (hContainer && hContainer > 0) this.height = hContainer - 70;
+  getHeightContain(callback = null) {
+    var hContainer = $("#kt_wrapper").height();
+    if (hContainer && hContainer > 0) this.height = hContainer - 70;
 
-  //   if (typeof callback === "function") return callback(true);
-  // }
+    if (typeof callback === "function") return callback(true);
+  }
 
   ngOnInit(): void {
-    this.api.execSv('TM', 'TM', 'TaskBusiness', 'GetListScheduleAsync',[this.fromDate, this.toDate]).subscribe((res) => {
-      if (res) {
-        this.dataSource = res[0];
-        console.log(this.dataSource);
-        this.resourceDataSource = res[1];
-        console.log(this.resourceDataSource);
-      }else{
-        this.dataSource=[] ;
-      }  
-    });
+    // this.api.execSv('TM', 'TM', 'TaskBusiness', 'GetListScheduleAsync',[this.fromDate, this.toDate]).subscribe((res) => {
+    //   if (res) {
+    //     this.dataSource = res[0];
+    //     console.log(this.dataSource);
+    //     this.resourceDataSource = res[1];
+    //     console.log(this.resourceDataSource);
+    //   }else{
+    //     this.dataSource=[] ;
+    //   }  
+    // });
 
-    this.tmSv.changeData.subscribe((result) => {
-      if (result) {
-        let data = result.data as Array<any>;
-        this.resources = [];
-        //if(this.viewListDetails) this.viewListDetails.detectChanges();
-        this.resources = data;
-        // if(this.viewListDetails) this.viewListDetails.detectChanges();
+    // this.tmSv.changeData.subscribe((result) => {
+    //   if (result) {
+    //     let data = result.data as Array<any>;
+    //     this.resources = [];
+    //     //if(this.viewListDetails) this.viewListDetails.detectChanges();
+    //     this.resources = data;
+    //     // if(this.viewListDetails) this.viewListDetails.detectChanges();
 
-        this.handleDataSchedule(data);
-        this.changeDetectorRef.detectChanges();
-      }
-    })
+    //     this.handleDataSchedule(data);
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
+    this.loadData();
   }
+
+  loadData(){
+    this.api.callSv('TM','TM','TaskBusiness','GetListScheduleAsync', [this.fromDate, this.toDate]).subscribe((res)=>{
+      if (res) {
+        this.events=res[0];
+        this.dataSource=res[1];
+      }else{
+        this.events=[];
+        this.dataSource=[];
+      }
+      this.changeDetectorRef.detectChanges();
+    });
+  };
 
 
   handleDataSchedule(listTask) {
