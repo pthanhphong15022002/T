@@ -25,6 +25,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 declare var _, $: any;
 @Component({
@@ -53,7 +54,7 @@ export class TaskInfoComponent implements OnInit {
     taskName: false,
   };
   @Input('sidebar') sidebar: SidebarComponent;
- 
+  @Input('viewBase') viewBase: ViewBaseComponent;
   @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -73,11 +74,12 @@ export class TaskInfoComponent implements OnInit {
     private notiService: NotificationsService // private confirmationDialogService: ConfirmationDialogService
   ) {
     this.user = this.authStore.get();
+
   }
 
   ngOnInit(): void {
     const t = this;
-    this.functionID ="TM003" //dung test 
+    this.functionID =  "TM001"//this.viewBase.funcID//dung test 
 
      //this.getParam(); //bật tắt set param
     this.openTask();
@@ -425,13 +427,13 @@ export class TaskInfoComponent implements OnInit {
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
-      });
-    else {
-      this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    }
+    // if (!this.param)
+    //   this.getParam(function (o) {
+    //     if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
+    //   });
+    // else {
+    //   this.panelTask?.nativeElement.classList.add("offcanvas-on");
+    // }
   }
 
   valueChangeUser(event) {
@@ -485,15 +487,23 @@ export class TaskInfoComponent implements OnInit {
   }
 
   closeTask(): void {
-    if (this.tagsComponent.isOpen) this.tagsComponent.close();
-
-     this.required.taskName = false;
-     this.disableAddToDo = true;
-   // this.panelTask.nativeElement.classList.remove("extend-show");
-    // this.panelTask.nativeElement.classList.remove("offcanvas-on");
-    this.tmSv.showPanel.next(null);
+    // if (this.tagsComponent.isOpen) this.tagsComponent.close();
+    this.resetTask()
     this.sidebar.hide();
   }
+  resetTask(){
+    this.required.taskName = false;
+    this.disableAddToDo = true;
+    this.readOnly = false;
+    this.task = new TM_Tasks();
+    this.listTodo = [];
+    this.listUser = [];
+    this.task.status = "1";
+    this.task.dueDate = moment(new Date())
+      .set({ hour: 23, minute: 59, second: 59 })
+      .toDate();
+  }
+
 
   valueChangeTags(tags: string) {
     console.log('tags', tags);

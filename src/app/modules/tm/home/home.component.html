@@ -1,9 +1,9 @@
 <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
 
-<ejs-sidebar id="default-sidebar" #sidebar (created)="onCreated($event)" style="visibility: hidden;position: right;"
+<ejs-sidebar id="default-sidebar" #sidebar (created)="onCreated($event)" style="visibility:hidden;" 
   [width]="width" [showBackdrop]="showBackdrop" >
-  <app-task-info [sidebar] = "sidebar" ></app-task-info>
+  <app-task-info [sidebar] = "sidebar" [viewBase]="viewBase"></app-task-info>
 </ejs-sidebar>
 
 <ng-template #panelLeftRef>
