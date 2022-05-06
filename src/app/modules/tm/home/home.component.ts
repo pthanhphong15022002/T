@@ -26,9 +26,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
-  // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
-  @ViewChild("task-info") taskInfo : TaskInfoComponent;
-
   @ViewChild('sidebar') sidebar: SidebarComponent;
   public showBackdrop: boolean = true;
   public type: string = 'Push';
@@ -40,7 +37,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  constructor(private cf: ChangeDetectorRef) {}
+  constructor(private cf: ChangeDetectorRef ,) {}
 
   ngOnInit(): void {
     this.buttons = [
@@ -133,7 +130,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public onCreated(args: any) {
-    this.sidebar.element.style.visibility = '';
+    console.log(this.viewBase);
+    this.sidebar.hide();
     this.sidebar.position ="Right";
   }
   closeClick(): void {
