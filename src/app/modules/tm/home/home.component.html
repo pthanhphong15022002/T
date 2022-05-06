@@ -1,5 +1,6 @@
 <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
+<<<<<<< HEAD
 <div class="p-2 container">
   <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' align='center' id='chartcontainer'
     [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis' [title]='title' [tooltip]='tooltip'
@@ -11,6 +12,19 @@
   </ejs-chart>
 </div>
 <ng-template #panelLeftRef>
+=======
+
+<ejs-sidebar id="default-sidebar" #sidebar (created)="onCreated($event)" style="visibility: hidden;position: right;padding: 20px;"
+  [width]="width" [showBackdrop]="showBackdrop" >
+  <app-task-info [sidebar] = "sidebar" ></app-task-info>
+</ejs-sidebar>
+
+<ng-template #panelLeftRef>
+  <div class="p-2 container">
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  </div>
+
+>>>>>>> 64c5fdd61ff5854d1f5cdb0b9f6522283fa2f16c
 
 </ng-template>
 

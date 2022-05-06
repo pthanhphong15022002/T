@@ -1,6 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore } from 'codx-core';
+import { AuthStore, ApiHttpService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
@@ -19,6 +20,8 @@ export class ScheduleComponent implements OnInit {
   height: number;
   events = [];
   resources: any;
+  dataSource:any;
+  resourceDataSource: any;
   columns = [
     {
       text: 'Tên thành viên', field: 'name', width: 200, htmlEncode: false,
@@ -45,6 +48,7 @@ export class ScheduleComponent implements OnInit {
     headerZoom: false
   };
   constructor(private tmSv: TmService,
+    private api: ApiHttpService,
     private auStore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef) {
       this.user = this.auStore.get();
@@ -59,6 +63,17 @@ export class ScheduleComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+    this.api.execSv('TM', 'TM', 'TaskBusiness', 'GetListScheduleAsync',[this.fromDate, this.toDate]).subscribe((res) => {
+      if (res) {
+        this.dataSource = res[0];
+        console.log(this.dataSource);
+        this.resourceDataSource = res[1];
+        console.log(this.resourceDataSource);
+      }else{
+        this.dataSource=[] ;
+      }  
+    });
+
     this.tmSv.changeData.subscribe((result) => {
       if (result) {
         let data = result.data as Array<any>;
@@ -72,6 +87,7 @@ export class ScheduleComponent implements OnInit {
       }
     })
   }
+
 
   handleDataSchedule(listTask) {
     if (listTask?.length == 0) {
@@ -106,6 +122,8 @@ export class ScheduleComponent implements OnInit {
       });
     }
   }
+
+  
 
   onCellDblClickScheduler(data) {
     let taskID = data.event.eventRecord.data.id;

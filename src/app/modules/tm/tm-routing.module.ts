@@ -13,8 +13,14 @@ import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { SharedModule } from '@shared/shared.module';
 import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+<<<<<<< HEAD
 import { ChartAllModule, ChartModule } from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
+=======
+import { SidebarModule } from '@syncfusion/ej2-angular-navigations';
+import { TaskInfoComponent } from './controls/task-info/task-info.component';
+
+>>>>>>> 64c5fdd61ff5854d1f5cdb0b9f6522283fa2f16c
 
 const routes: Routes = [
   {
@@ -47,15 +53,23 @@ const routes: Routes = [
 ];
 
 @NgModule({
+<<<<<<< HEAD
   declarations: [HomeComponent, TestKanbanComponent, TmComponent, ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent,],
+=======
+  declarations: [HomeComponent, TestKanbanComponent, TmComponent,ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent,TaskInfoComponent ],
+>>>>>>> 64c5fdd61ff5854d1f5cdb0b9f6522283fa2f16c
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
     CodxCoreModule.forRoot({ environment }),
     CommonModule,
     SharedModule,
+<<<<<<< HEAD
     ChartAllModule,
     DatePickerModule
+=======
+    SidebarModule
+>>>>>>> 64c5fdd61ff5854d1f5cdb0b9f6522283fa2f16c
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -11,6 +11,7 @@ import { Browser } from '@syncfusion/ej2-base';
 import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
+  // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
+  @ViewChild("task-info") taskInfo: TaskInfoComponent;
+  public showBackdrop: boolean = true;
+  public type: string = 'Push';
+  public width: string = '600px';
+  public closeOnDocumentClick: boolean = true;
+
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
@@ -66,7 +74,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       width: 0
     }
   };
-  public width: string = Browser.isDevice ? '100%' : '60%';
   public marker: Object = {
     visible: true,
     height: 10,
@@ -91,16 +98,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //   text: 'button 2',
     // }]
 
-    this.moreFunc = [{
-      id: '1',
-      icon: 'icon-list-checkbox',
-      text: 'more 1',
-    },
-    {
-      id: '2',
-      icon: 'icon-list-checkbox',
-      text: 'more 2',
-    }]
+    this.moreFunc = [
+      {
+        id: '1',
+        icon: 'icon-list-checkbox',
+        text: 'more 1',
+      },
+      {
+        id: '2',
+        icon: 'icon-list-checkbox',
+        text: 'more 2',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -118,12 +127,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
       active: false,
       model: {
         panelLeftRef: this.kanban,
-        sideBarLeftRef: this.asideLeft,
       }
     },
     {
       id: '3',
-      type: 'listdetail',
+      type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
@@ -137,7 +145,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '4',
       type: 'list',
       icon: 'icon-format_list_bulleted',
-      text: 'List-task',
+      text: 'List-tasks',
       active: false,
       model: {
         panelLeftRef: this.listTasks,
@@ -172,7 +180,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     args.chart.theme = <ChartTheme>(selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(/-dark/i, "Dark");
   };
 
-  click(evt: any) {
-    console.log(evt);
-  }
+  // click(evt: any) {
+  //   console.log(evt);
+  //   // alert("bắt sự kiện click")
+  //   this.sidebar.show();
+  // }
+
+  // public onCreated(args: any) {
+  //   this.sidebar.element.style.visibility = '';
+  //   this.sidebar.position ="Right";
+  // }
+  // closeClick(): void {
+  //   this.sidebar.hide();
+  // }
 }
