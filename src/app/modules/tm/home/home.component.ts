@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: true,
+      active: false,
       model: {
         panelLeftRef: this.panelLeftRef
       }
