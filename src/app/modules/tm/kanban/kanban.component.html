@@ -1,6 +1,6 @@
 <div class="row">
   <codx-kanban #kanban primaryKey="Id" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
-    [cardTemplate]="cardTemplate" [dataSource]="dataSource" [popupTemplate]="content" [swimlanes]="swimlaneSettings"
+    [cardTemplate]="cardTemplate" [popupTemplate]="content" [swimlanes]="swimlaneSettings"
     [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')" (onDrag)="onDataDrag($event)">
   </codx-kanban>
   <input type="checkbox" [(ngModel)]="showSumary">
@@ -12,19 +12,19 @@
   <div class='card-template'>
     <div class='e-card-header'>
       <div class='e-card-header-caption'>
-        <div class='e-card-header-title e-tooltip-text'>{{data.Description}}</div>
+        <div class='e-card-header-title e-tooltip-text'>{{data.memo}}</div>
       </div>
     </div>
     <div class='e-card-content e-tooltip-text' *ngIf="showSumary">
       <div class='d-flex'>
         <button (click)="clickme()">Click me</button>
       </div>
-      <div class='e-text'>{{data.Summary}}</div>
+      <div class='e-text'>{{data.status}}</div>
     </div>
 
     <div class='e-card-custom-footer'>
       <div class="e-card-tag-field e-tooltip-text" *ngFor="let tag of data.Tags.split(',');">{{tag}}</div>
-      <div class='e-card-avatar'>{{getString(data.Assignee)}}</div>
+      <div class='e-card-avatar'>{{getString(data.userName)}}</div>
     </div>
   </div>
 </ng-template>

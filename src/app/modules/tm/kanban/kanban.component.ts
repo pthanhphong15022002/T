@@ -3,8 +3,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ChangeDetectorRef,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -25,9 +25,7 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  //dataSource = cardData;
-  dataSource: any;
-  data: any;
+  dataSource = [];
   setCalendar = true;
   mode: string;
   view: string;
@@ -50,13 +48,13 @@ export class TestKanbanComponent implements OnInit {
     private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
-    private df: ChangeDetectorRef,
-    private cache: CacheService
+    private cache: CacheService,
+    private cr:ChangeDetectorRef
   ) {
     this.user = this.authStore.get();
   }
   public swimlaneSettings: SwimlaneSettingsModel = {
-    keyField: 'Assignee',
+    keyField: 'userName',
     showEmptyRow: false,
   };
 
@@ -74,7 +72,7 @@ export class TestKanbanComponent implements OnInit {
   ngAfterViewInit() {}
 
   public cardSettings: CardSettingsModel = {
-    headerField: 'Description',
+    headerField: 'userName',
     template: '#cardTemplate',
     selectionType: 'Multiple',
   };
@@ -169,6 +167,7 @@ export class TestKanbanComponent implements OnInit {
         this.dataSource = res[0];
         this.tmSv.setChangeData(new DataSv(res[0], this.view));
         console.log(this.dataSource);
+        this.cr.detectChanges();
       }
     });
   }
@@ -211,106 +210,106 @@ export class TestKanbanComponent implements OnInit {
   }
 }
 
-export let cardData: Object[] = [
-  {
-    Id: 'Task 1',
-    Description: 'Task - 29001',
-    Status: '1',
-    Summary:
-      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    Priority: 'High',
-    Tags: 'Bug, Release Bug',
-    RankId: 1,
-    Assignee: 'Nancy Davloio',
-  },
-  {
-    Id: 'Task 2',
-    Description: 'Task - 29002',
-    Status: '1',
-    Summary: 'Add responsive support to applicaton',
-    Priority: 'Low',
-    Tags: 'Story, Kanban',
-    RankId: 2,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 3',
-    Description: 'Task - 29003',
-    Status: '3',
-    Summary: 'Show the retrived data from the server in grid control.',
-    Priority: 'High',
-    Tags: 'Bug, Breaking Issue',
-    RankId: 2,
-    Assignee: 'Janet Leverling',
-  },
-  {
-    Id: 'Task 4',
-    Description: 'Task - 29004',
-    Status: '1',
-    Summary: 'Fix the issues reported in the IE browser.',
-    Priority: 'High',
-    Tags: 'Bug, Customer',
-    RankId: 1,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 5',
-    Description: 'Task - 29005',
-    Status: '1',
-    Summary: 'Improve application performance.',
-    Priority: 'Normal',
-    Tags: 'Story, Kanban',
-    RankId: 1,
-    Assignee: 'Steven walker',
-  },
-  {
-    Id: 'Task 6',
-    Description: 'Task - 29009',
-    Status: '2',
-    Summary: 'API Improvements.',
-    Priority: 'Critical',
-    Tags: 'Bug, Customer',
-    RankId: 2,
-    Assignee: 'Nancy Davloio',
-  },
-  {
-    Id: 'Task 7',
-    Description: 'Task - 29010',
-    Status: '3',
-    Summary: "Fix cannot open user's default database sql error.",
-    Priority: 'High',
-    Tags: 'Bug, Internal',
-    RankId: 8,
-    Assignee: 'Margaret hamilt',
-  },
-  {
-    Id: 'Task 8',
-    Description: 'Task - 29015',
-    Status: '4',
-    Summary: 'Fix the filtering issues reported in safari.',
-    Priority: 'Critical',
-    Tags: 'Bug, Breaking Issue',
-    RankId: 4,
-    Assignee: 'Margaret hamilt',
-  },
-  {
-    Id: 'Task 9',
-    Description: 'Task - 29016',
-    Status: '1',
-    Summary: 'Fix the issues reported in IE browser.',
-    Priority: 'High',
-    Tags: 'Bug, Customer',
-    RankId: 3,
-    Assignee: 'Andrew Fuller',
-  },
-  {
-    Id: 'Task 10',
-    Description: 'Task - 29017',
-    Status: '2',
-    Summary: 'Enhance editing functionality.',
-    Priority: 'Normal',
-    Tags: 'Story, Kanban',
-    RankId: 4,
-    Assignee: 'Janet Leverling',
-  },
-];
+// export let cardData: Object[] = [
+//   {
+//     Id: 'Task 1',
+//     Description: 'Task - 29001',
+//     Status: '1',
+//     Summary:
+//       'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
+//     Priority: 'High',
+//     Tags: 'Bug, Release Bug',
+//     RankId: 1,
+//     Assignee: 'Nancy Davloio',
+//   },
+//   {
+//     Id: 'Task 2',
+//     Description: 'Task - 29002',
+//     Status: '1',
+//     Summary: 'Add responsive support to applicaton',
+//     Priority: 'Low',
+//     Tags: 'Story, Kanban',
+//     RankId: 2,
+//     Assignee: 'Andrew Fuller',
+//   },
+//   {
+//     Id: 'Task 3',
+//     Description: 'Task - 29003',
+//     Status: '3',
+//     Summary: 'Show the retrived data from the server in grid control.',
+//     Priority: 'High',
+//     Tags: 'Bug, Breaking Issue',
+//     RankId: 2,
+//     Assignee: 'Janet Leverling',
+//   },
+//   {
+//     Id: 'Task 4',
+//     Description: 'Task - 29004',
+//     Status: '1',
+//     Summary: 'Fix the issues reported in the IE browser.',
+//     Priority: 'High',
+//     Tags: 'Bug, Customer',
+//     RankId: 1,
+//     Assignee: 'Andrew Fuller',
+//   },
+//   {
+//     Id: 'Task 5',
+//     Description: 'Task - 29005',
+//     Status: '1',
+//     Summary: 'Improve application performance.',
+//     Priority: 'Normal',
+//     Tags: 'Story, Kanban',
+//     RankId: 1,
+//     Assignee: 'Steven walker',
+//   },
+//   {
+//     Id: 'Task 6',
+//     Description: 'Task - 29009',
+//     Status: '2',
+//     Summary: 'API Improvements.',
+//     Priority: 'Critical',
+//     Tags: 'Bug, Customer',
+//     RankId: 2,
+//     Assignee: 'Nancy Davloio',
+//   },
+//   {
+//     Id: 'Task 7',
+//     Description: 'Task - 29010',
+//     Status: '3',
+//     Summary: "Fix cannot open user's default database sql error.",
+//     Priority: 'High',
+//     Tags: 'Bug, Internal',
+//     RankId: 8,
+//     Assignee: 'Margaret hamilt',
+//   },
+//   {
+//     Id: 'Task 8',
+//     Description: 'Task - 29015',
+//     Status: '4',
+//     Summary: 'Fix the filtering issues reported in safari.',
+//     Priority: 'Critical',
+//     Tags: 'Bug, Breaking Issue',
+//     RankId: 4,
+//     Assignee: 'Margaret hamilt',
+//   },
+//   {
+//     Id: 'Task 9',
+//     Description: 'Task - 29016',
+//     Status: '1',
+//     Summary: 'Fix the issues reported in IE browser.',
+//     Priority: 'High',
+//     Tags: 'Bug, Customer',
+//     RankId: 3,
+//     Assignee: 'Andrew Fuller',
+//   },
+//   {
+//     Id: 'Task 10',
+//     Description: 'Task - 29017',
+//     Status: '2',
+//     Summary: 'Enhance editing functionality.',
+//     Priority: 'Normal',
+//     Tags: 'Story, Kanban',
+//     RankId: 4,
+//     Assignee: 'Janet Leverling',
+//   },
+// ];
