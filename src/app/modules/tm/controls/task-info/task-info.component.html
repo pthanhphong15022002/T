@@ -4,12 +4,12 @@
       <div class="card-title">
         <h2 class="m-0">Tạo mới công việc</h2>
       </div>
-      <!-- <div class="card-toolbar">
+      <div class="card-toolbar">
         <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
-          id="kt_engage_demos_close" (click)="closeTask()">
-          <span class="icon-close icon-18" ></span>
+          id="kt_engage_demos_close" (click)="closePanel()">
+          <span class="icon-close icon-18"></span>
         </button>
-      </div> -->
+      </div>
       <div class="btn-extand mt-2 d-flex justify-content-end">
         <a class="text-dark-75 text-hover-primary d-flex align-items-center" (click)="extendShow()">
           <span class="mr-2 text-dark">Mở rộng</span>
@@ -75,8 +75,7 @@
       <div class="form-group mt-3">
         <div class="d-flex align-items-center justify-content-between">
           <label>Mô tả công việc</label>
-          <span class="icon-open_in_new icon-20 text-gray-500" 
-            (click)="openEditor(expandEditor)"></span>
+          <span class="icon-open_in_new icon-20 text-gray-500" (click)="openEditor(expandEditor)"></span>
         </div>
         <!-- <codx-input type="textarea" field="textarea" placeholder="">
         </codx-input> -->
@@ -105,7 +104,7 @@
           style="border: none" placeholder="Tham chiếu" ngDefaultControl refValue="" [disabled]="readOnly"
           loadFull="true" field="refNo" (valueChange)="cbxChange($event)"></codx-combobox>
       </div>
-      <div class="form-group mt-3"  *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
+      <div class="form-group mt-3" *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
         <label>Bước qui trình</label>
         <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
         <label>Bước qui trình:</label>
@@ -115,32 +114,32 @@
         </codx-combobox>
       </div>
       <ng-container *ngIf="param?.PlanControl !='0'|| param?.PlanControl == null ">
-      <div class="d-flex align-items-center mt-4">
-        <span class="icon-calendar_customize icon-16 me-2 text-primary"></span>
-        <div class="fw-bold fs-6 text-primary">Kế hoạch</div>
-      </div>
-      <div class="form-group row mt-3">
-        <div class="col-6">
-          <label>Ngày bắt đầu</label>
-          <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-            placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
-          </codx-input>
+        <div class="d-flex align-items-center mt-4">
+          <span class="icon-calendar_customize icon-16 me-2 text-primary"></span>
+          <div class="fw-bold fs-6 text-primary">Kế hoạch</div>
         </div>
-        <div class="col-6">
-          <label>Ngày kết thúc</label>
-          <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate" placeholder="datetime"
-            [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
-          </codx-input>
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <label>Ngày bắt đầu</label>
+            <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
+              placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
+            </codx-input>
+          </div>
+          <div class="col-6">
+            <label>Ngày kết thúc</label>
+            <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
+              placeholder="datetime" [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
+            </codx-input>
+          </div>
         </div>
-      </div>
-      <div class="form-group row mt-3">
-        <div class="col-6">
-          <label>Số giờ thực hiện</label>
-          <!-- <input type="text" class="form-control" placeholder="" /> -->
-          <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <label>Số giờ thực hiện</label>
+            <!-- <input type="text" class="form-control" placeholder="" /> -->
+            <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
+          </div>
         </div>
-      </div>
-    </ng-container>
+      </ng-container>
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex align-items-center">
           <span class="icon-playlist_add_check icon-16 me-2 text-primary"></span>
@@ -150,75 +149,72 @@
           <i class="icon-add fs-5 me-1"></i>Add todo list
         </button> -->
       </div>
-        <div>
-          <ng-container *ngFor="let item of listTodo; index as i">
-            <div
-              class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item"
-              (click)="editTodo(i, item.text)">
-              <div class="checkbox-list">
-                <div class="d-flex flex-column flex-grow-1 w-100">
-                  <div class="flex" *ngIf="i != indexEditTodo">
-                    <div class="">
-                      <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
-                        [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
-                        (change)="updateStatusTodoList(i)">
-                    </div>
-                    <div class="" style="
-                    margin-top: 4px; margin-left: 12px;">
-                      {{ item.text }}
-                    </div>
+      <div>
+        <ng-container *ngFor="let item of listTodo; index as i">
+          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item"
+            (click)="editTodo(i, item.text)">
+            <div class="checkbox-list">
+              <div class="d-flex flex-column flex-grow-1 w-100">
+                <div class="flex" *ngIf="i != indexEditTodo">
+                  <div class="">
+                    <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
+                      [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
+                      (change)="updateStatusTodoList(i)">
                   </div>
-
-                  <div *ngIf="i == indexEditTodo">
-                    <div class="flex">
-                      <div class="">
-                        <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
-                      </div>
-                      <div class="">
-                        <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
-                          [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"
-                          (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
-                          placeholder="Add to do list..." />
-                      </div>
-                    </div>
+                  <div class="" style="
+                    margin-top: 4px; margin-left: 12px;">
+                    {{ item.text }}
                   </div>
                 </div>
-              </div>
-              <div *ngIf="!readOnly" class="div-action-menu">
-                <div class="action-menu d-flex">
-                  <div class="action-content d-flex align-items-center">
-                    <a class="action-item" (click)="onDeleteTodo(i)">
-                      <div class="d-flex align-items-center btn-tooltip">
-                        <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-                        <span class="tooltiptext">Delete</span>
-                      </div>
-                    </a>
+
+                <div *ngIf="i == indexEditTodo">
+                  <div class="flex">
+                    <div class="">
+                      <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
+                    </div>
+                    <div class="">
+                      <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus [value]="contentTodoEdit"
+                        (blur)="updateTodoList(txtTodoEdit.value)" (keydown.enter)="updateTodoList(txtTodoEdit.value)"
+                        class="form-control" placeholder="Add to do list..." />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </ng-container>
-          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
-            <div class="checkbox-list">
-              <div class="d-flex flex-column flex-grow-1 w-100">
-                <div class="row">
-                  <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
-                height: 14px;
-                width: 14px;
-                margin-top: 5px" class="col-md-4">
-                  <input name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1 (blur)="onAddToDo()"
-                    placeholder="Add to do list..." (keydown.enter)="onAddToDo()" type="text" class="col-md-8"
-                    style="margin-left: -17px;
-                    border-width: thin;
-                    border-style: none;
-                    margin-top: 3px;
-                    outline: none;" />
+            <div *ngIf="!readOnly" class="div-action-menu">
+              <div class="action-menu d-flex">
+                <div class="action-content d-flex align-items-center">
+                  <a class="action-item" (click)="onDeleteTodo(i)">
+                    <div class="d-flex align-items-center btn-tooltip">
+                      <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+                      <span class="tooltiptext">Delete</span>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
+        </ng-container>
+        <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+          <div class="checkbox-list">
+            <div class="d-flex flex-column flex-grow-1 w-100">
+              <div class="row">
+                <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
+                height: 14px;
+                width: 14px;
+                margin-top: 5px" class="col-md-4">
+                <input name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1 (blur)="onAddToDo()"
+                  placeholder="Add to do list..." (keydown.enter)="onAddToDo()" type="text" class="col-md-8" style="margin-left: -17px;
+                    border-width: thin;
+                    border-style: none;
+                    margin-top: 3px;
+                    outline: none;" />
+              </div>
+            </div>
+          </div>
         </div>
-      
+      </div>
+
       <!-- <div class="checkbox-list mt-2 ms-6 text-dark d-flex flex-column">
         <codx-input #checkbox type="checkbox" label="Thiết kế" [checked]="false" labelPosition="After"
           [disabled]="false" class="test-check me-6">
@@ -238,7 +234,7 @@
         <button type="button" class="btn btn-sm btn-light-primary">
           <i class="icon-person_add_alt fs-5 me-1"></i>Add user
         </button>
-               <!-- <app-selectuser *ngIf="task?.category == '2' ? false : true" (valueChange)="valueChangeUser($event)"
+        <!-- <app-selectuser *ngIf="task?.category == '2' ? false : true" (valueChange)="valueChangeUser($event)"
               [valueSeleteds]="task.assignTo">
             </app-selectuser> -->
       </div>
@@ -285,7 +281,8 @@
           <span class="icon-attach icon-16 me-2 text-primary"></span>
           <div class="fw-bold fs-6 text-primary">Tài liệu đính kèm</div>
         </div>
-        <button type="button" class="btn btn-sm btn-light-primary" *ngIf="!readOnly" appDragDropFileUpload  (click)="clickOpenFormAttach(task.taskID)">
+        <button type="button" class="btn btn-sm btn-light-primary" *ngIf="!readOnly" appDragDropFileUpload
+          (click)="clickOpenFormAttach(task.taskID)">
           <i class="icon-note_add fs-5 me-1"></i>Add file
         </button>
       </div>
@@ -300,10 +297,10 @@
           </div>
         </div>
         <div class="d-flex align-items-center file-item"> -->
-          <!-- <app-attachment #attachment [entityName]="'TM_Tasks'" [objectId]="task?.taskID + ';' + task?.parentID"
+      <!-- <app-attachment #attachment [entityName]="'TM_Tasks'" [objectId]="task?.taskID + ';' + task?.parentID"
             [isTabAttachment]="false" [isFooter]="false">
           </app-attachment> -->
-        <!-- </div>
+      <!-- </div>
       </div> -->
       <div class="d-flex align-items-center file-item mt-5">
         <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>

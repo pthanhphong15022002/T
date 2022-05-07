@@ -7,8 +7,7 @@ import { LayoutService } from 'codx-core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(router: Router,
-    private layout: LayoutService,) { }
+  constructor(router: Router) { }
 
   ngOnInit(): void {
   }

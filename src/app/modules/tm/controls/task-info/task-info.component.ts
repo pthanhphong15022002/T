@@ -23,9 +23,9 @@ import {
   AuthStore,
   CacheService,
   NotificationsService,
+  ViewsComponent,
 } from 'codx-core';
 import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 declare var _, $: any;
 @Component({
@@ -53,7 +53,8 @@ export class TaskInfoComponent implements OnInit {
   required = {
     taskName: false,
   };
-  @Input('sidebar') sidebar: SidebarComponent;
+  @Input('viewBase') viewBase: ViewsComponent;
+
   @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -68,8 +69,6 @@ export class TaskInfoComponent implements OnInit {
     private authStore: AuthStore,
     private tmSv: TmService,
     private cache: CacheService,
-    // private fileSv: FilesService,
-    // private dMService: DMService,
     private notiService: NotificationsService // private confirmationDialogService: ConfirmationDialogService
   ) {
     this.user = this.authStore.get();
@@ -220,7 +219,7 @@ export class TaskInfoComponent implements OnInit {
     this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask(); else
       this.addTask();
-    this.sidebar.hide();
+    this.viewBase.currentView.closeSidebarRight();
   }
 
   addTask(isCloseFormTask: boolean = true) {
@@ -495,7 +494,7 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv.showPanel.next(null);
     // if (this.tagsComponent.isOpen) this.tagsComponent.close();
     this.resetTask()
-    this.sidebar.hide();
+    this.closePanel();
   }
   resetTask() {
     this.required.taskName = false;
@@ -541,16 +540,7 @@ export class TaskInfoComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-
-  public onCreated(args: any) {
-    this.sidebar.element.style.visibility = '';
-    this.sidebar.position = "Right";
-  }
-  closeClick(): void {
-    this.sidebar.hide();
-  }
-
-  toggleClick(): void {
-    this.sidebar.show();
+  closePanel() {
+    this.viewBase.currentView.closeSidebarRight();
   }
 }
