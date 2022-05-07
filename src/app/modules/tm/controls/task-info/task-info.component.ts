@@ -77,9 +77,9 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = "TM003" //dung test
+    this.functionID = "TM001" //dung test
 
-    //this.getParam(); //bật tắt set param
+    this.getParam(); //bật tắt set param
     this.openTask();
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
     //   if (res) t.grvSetup = res;
@@ -485,14 +485,10 @@ export class TaskInfoComponent implements OnInit {
   }
 
   closeTask(): void {
-    if (this.tagsComponent.isOpen) this.tagsComponent.close();
+    // if (this.tagsComponent.isOpen) this.tagsComponent.close();
 
     this.required.taskName = false;
     this.disableAddToDo = true;
-    // this.panelTask.nativeElement.classList.remove("extend-show");
-    // this.panelTask.nativeElement.classList.remove("offcanvas-on");
-    this.tmSv.showPanel.next(null);
-    // if (this.tagsComponent.isOpen) this.tagsComponent.close();
     this.resetTask()
     this.closePanel();
   }

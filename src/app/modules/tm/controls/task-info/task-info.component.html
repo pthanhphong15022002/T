@@ -6,7 +6,7 @@
       </div>
       <div class="card-toolbar">
         <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
-          id="kt_engage_demos_close" (click)="closePanel()">
+          id="kt_engage_demos_close" (click)="closeTask()">
           <span class="icon-close icon-18"></span>
         </button>
       </div>
@@ -107,7 +107,6 @@
       <div class="form-group mt-3" *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
         <label>Bước qui trình</label>
         <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
-        <label>Bước qui trình:</label>
         <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
           placeholder="Bước qui trình" ngDefaultControl refValue="" loadFull="true" field="activityID"
           [disabled]="readOnly" (valueChange)="cbxChange($event)">
@@ -122,13 +121,13 @@
           <div class="col-6">
             <label>Ngày bắt đầu</label>
             <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-              placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.startDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
           <div class="col-6">
             <label>Ngày kết thúc</label>
             <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-              placeholder="datetime" [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
         </div>
