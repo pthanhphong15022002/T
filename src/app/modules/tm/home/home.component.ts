@@ -197,12 +197,4 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // alert("bắt sự kiện click")
     this.viewBase.currentView.openSidebarRight();
   }
-
-  // public onCreated(args: any) {
-  //   this.sidebar.element.style.visibility = '';
-  //   this.sidebar.position ="Right";
-  // }
-  // closeClick(): void {
-  //   this.sidebar.hide();
-  // }
 }

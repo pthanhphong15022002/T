@@ -25,6 +25,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 declare var _, $: any;
 @Component({
@@ -53,7 +54,6 @@ export class TaskInfoComponent implements OnInit {
     taskName: false,
   };
   @Input('sidebar') sidebar: SidebarComponent;
-
   @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -73,6 +73,7 @@ export class TaskInfoComponent implements OnInit {
     private notiService: NotificationsService // private confirmationDialogService: ConfirmationDialogService
   ) {
     this.user = this.authStore.get();
+
   }
 
   ngOnInit(): void {
@@ -215,8 +216,8 @@ export class TaskInfoComponent implements OnInit {
   }
 
   SaveData(id) {
-    // this.task.taskType = this.param['TaskType'];
-    // this.task.taskType = "0"
+    this.task.assignTo = "PMNHI"; //tesst thu
+    this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask(); else
       this.addTask();
     this.sidebar.hide();
@@ -229,42 +230,42 @@ export class TaskInfoComponent implements OnInit {
         if (res) {
 
           this.notiService.notify(res.message);
-          // if (res.data) {
-          //   var dataPriority = res.data[0];
-          //   if (dataPriority.priority == '1') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#66a3ff';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   } else if (dataPriority.priority == '2') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#ffd11a';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   } else if (dataPriority.priority == '3') {
-          //     if (
-          //       dataPriority.priorityColor == null &&
-          //       dataPriority.priorityIcon == null
-          //     ) {
-          //       dataPriority.priorityColor = '#ff6600';
-          //       dataPriority.priorityIcon = 'fa fa-flag-o';
-          //     }
-          //   }
-          //   let obj = this.tmSv.changeData.value;
-          //   let array = res.data.concat(obj.data);
-          //   obj.data = array;
-          //   obj.view = this.view;
-          //   this.tmSv.setChangeData(obj);
-          // }
-          // this.listTodo = [];
-          // this.listUser = [];
-          // this.task = new TM_Tasks();
+          if (res.data) {
+            var dataPriority = res.data[0];
+            if (dataPriority.priority == '1') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#66a3ff';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            } else if (dataPriority.priority == '2') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#ffd11a';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            } else if (dataPriority.priority == '3') {
+              if (
+                dataPriority.priorityColor == null &&
+                dataPriority.priorityIcon == null
+              ) {
+                dataPriority.priorityColor = '#ff6600';
+                dataPriority.priorityIcon = 'fa fa-flag-o';
+              }
+            }
+            //   let obj = this.tmSv.changeData.value;
+            //   let array = res.data.concat(obj.data);
+            //   obj.data = array;
+            //   obj.view = this.view;
+            //   this.tmSv.setChangeData(obj);
+          }
+          this.listTodo = [];
+          this.listUser = [];
+          this.task = new TM_Tasks();
           // if (isCloseFormTask) {
           //   this.closeTask();
           // } else {
@@ -425,13 +426,13 @@ export class TaskInfoComponent implements OnInit {
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        //   if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
-      });
-    else {
-      //  this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    }
+    // if (!this.param)
+    //   this.getParam(function (o) {
+    //     if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
+    //   });
+    // else {
+    //   this.panelTask?.nativeElement.classList.add("offcanvas-on");
+    // }
   }
 
   valueChangeUser(event) {
@@ -492,8 +493,23 @@ export class TaskInfoComponent implements OnInit {
     // this.panelTask.nativeElement.classList.remove("extend-show");
     // this.panelTask.nativeElement.classList.remove("offcanvas-on");
     this.tmSv.showPanel.next(null);
+    // if (this.tagsComponent.isOpen) this.tagsComponent.close();
+    this.resetTask()
     this.sidebar.hide();
   }
+  resetTask() {
+    this.required.taskName = false;
+    this.disableAddToDo = true;
+    this.readOnly = false;
+    this.task = new TM_Tasks();
+    this.listTodo = [];
+    this.listUser = [];
+    this.task.status = "1";
+    this.task.dueDate = moment(new Date())
+      .set({ hour: 23, minute: 59, second: 59 })
+      .toDate();
+  }
+
 
   valueChangeTags(tags: string) {
     console.log('tags', tags);
