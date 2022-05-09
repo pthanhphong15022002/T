@@ -70,7 +70,7 @@ export class TestKanbanComponent implements OnInit {
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
-    //this.getData();
+    this.getData();
   }
 
   ngAfterViewInit() { }
@@ -169,8 +169,8 @@ export class TestKanbanComponent implements OnInit {
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.dataSource = res[1];
-        this.kanban.dataSource = res[1];
-        this.tmSv.setChangeData(new DataSv(res[0], this.view));
+        this.kanban.setDataSource(res[1]);
+        //  this.tmSv.setChangeData(new DataSv(res[0], this.view));
         console.log(this.dataSource);
         this.cr.detectChanges();
       }

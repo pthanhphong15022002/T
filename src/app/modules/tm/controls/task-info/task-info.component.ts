@@ -55,7 +55,6 @@ export class TaskInfoComponent implements OnInit {
   };
   @Input('viewBase') viewBase: ViewsComponent;
 
-  @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('panelTask') panelTask;
@@ -78,7 +77,7 @@ export class TaskInfoComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = "TM003" //dung test
-
+    console.log('abc123');
     //this.getParam(); //bật tắt set param
     this.openTask();
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
@@ -416,6 +415,7 @@ export class TaskInfoComponent implements OnInit {
   loadTodoByGroup() { }
 
   openTask(): void {
+    const t = this;
     this.readOnly = false;
     this.task = new TM_Tasks();
     this.listTodo = [];
@@ -425,13 +425,13 @@ export class TaskInfoComponent implements OnInit {
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    // if (!this.param)
-    //   this.getParam(function (o) {
-    //     if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    //   });
-    // else {
-    //   this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    // }
+    if (!this.param)
+      this.getParam(function (o) {
+        if (o) t.showPanel();
+      });
+    else {
+      t.closePanel();
+    }
   }
 
   valueChangeUser(event) {
@@ -451,7 +451,7 @@ export class TaskInfoComponent implements OnInit {
         t.listUser = res[1] || [];
         t.listTodo = res[2];
         t.changeDetectorRef.detectChanges();
-        // t.panelTask?.nativeElement.classList.add("offcanvas-on");
+        this.showPanel();
       }
     });
   }
@@ -539,6 +539,9 @@ export class TaskInfoComponent implements OnInit {
     } else this.required.taskName = false;
 
     console.log('task required', this.required.taskName);
+  }
+  showPanel() {
+    this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
     this.viewBase.currentView.closeSidebarRight();

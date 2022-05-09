@@ -13,7 +13,7 @@ import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { SharedModule } from '@shared/shared.module';
 import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TaskInfoComponent } from './controls/task-info/task-info.component';
 
@@ -56,6 +56,7 @@ const routes: Routes = [
     CommonModule,
     SharedModule,
     ChartAllModule,
+    AccumulationChartAllModule,
     DatePickerModule
   ],
   exports: [RouterModule],
