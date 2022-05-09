@@ -655,8 +655,15 @@
           </div>
           <!--end::Label-->
           <!--begin::Btn-->
-          <span class="label label-xl label-light-success label-inline px-3 py-5 min-w-45px">Đang
-            thực hiện</span>
+          <span class="label  px-3 py-5 min-w-45px" [style.border-color]="
+          (data?.status | vll: 'L0614':'color' | async) +
+          '30'
+        " [style.background-color]="
+          (data?.status | vll: 'L0614':'color' | async) +
+          '30'
+        " [style.color]=" 
+          data?.status | vll: 'L0614':'color' | async
+        " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}</span>
           <!--end::Btn-->
         </div>
         <!--end::Section-->
