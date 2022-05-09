@@ -6,7 +6,7 @@
       </div>
       <div class="card-toolbar">
         <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
-          id="kt_engage_demos_close" (click)="closePanel()">
+          id="kt_engage_demos_close" (click)="closeTask()">
           <span class="icon-close icon-18"></span>
         </button>
       </div>
@@ -75,11 +75,17 @@
       <div class="form-group mt-3">
         <div class="d-flex align-items-center justify-content-between">
           <label>Mô tả công việc</label>
-          <span class="icon-open_in_new icon-20 text-gray-500" (click)="openEditor(expandEditor)"></span>
+          <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span>
         </div>
         <!-- <codx-input type="textarea" field="textarea" placeholder="">
         </codx-input> -->
         <textarea [readonly]="readOnly" [(ngModel)]="task.memo" class="form-control" rows="2"></textarea>
+        <input *ngIf="openMemo2" name="txtMemo2" matInput [(ngModel)]="task.memo2" 
+        placeholder="Ghi chú phân công..." (keydown.enter)="onAddToDo()" type="text" class="col-md-8" style="margin-left: -17px;
+          border-width: thin;
+          border-style: none;
+          margin-top: 3px;
+          outline: none;" />
       </div>
       <div class="form-group mt-3" *ngIf="param?.Location != '0'">
         <label>Địa điểm</label>
@@ -107,7 +113,6 @@
       <div class="form-group mt-3" *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
         <label>Bước qui trình</label>
         <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
-        <label>Bước qui trình:</label>
         <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
           placeholder="Bước qui trình" ngDefaultControl refValue="" loadFull="true" field="activityID"
           [disabled]="readOnly" (valueChange)="cbxChange($event)">
@@ -121,14 +126,14 @@
         <div class="form-group row mt-3">
           <div class="col-6">
             <label>Ngày bắt đầu</label>
-            <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-              placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
+            <codx-input name="startDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
+              placeholder="datetime" [crrValue]="task.startDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
           <div class="col-6">
             <label>Ngày kết thúc</label>
-            <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-              placeholder="datetime" [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
+            <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
+              placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
         </div>
@@ -371,6 +376,32 @@
   <div class="modal-footer">
     <button type="button" id="btnSave" name="btnSave" class="btn btn-primary" (click)="modal.dismiss('Cross click')">
       Đóng
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #messageError let-modal>
+  <div class="modal-header">
+    <div class="task-header border-bottom p-3">
+      <div class="text-dark font-weight-bold font-size-h6 mb-1">
+          Cảnh Báo !!
+      </div>
+    </div>
+    <!-- <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+    </button> -->
+  </div>
+  <div class="modal-body">
+    <div class="form-group mt-3">
+    <span>{{message}}</span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <!-- <button type="button" *ngIf="isCheckTime" class="btn btn-primary" (click)="confirmTime(modal)">
+      Đồng ý
+    </button> -->
+    <button type="button" class="btn btn-primary" (click)="modal.dismiss('Cross click')">
+      Cance
     </button>
   </div>
 </ng-template>

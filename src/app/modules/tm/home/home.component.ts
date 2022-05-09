@@ -148,7 +148,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
-        //       itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     {
@@ -160,7 +161,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
-        // itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     {
@@ -171,7 +173,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
-        // itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     ];
