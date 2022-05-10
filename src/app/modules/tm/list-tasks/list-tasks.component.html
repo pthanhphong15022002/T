@@ -22,7 +22,7 @@
       <table class="table w-100 table-action-menu">
         <tbody>
           <tr *ngFor="let item of item.mytasks;trackBy:trackByFn">
-            <!-- <td class="pl-0 pr-0 w-0">
+            <!-- <td class="ps-0 pe-0 w-0">
               <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
               </more-funtion>
             </td> -->
@@ -47,10 +47,10 @@
             </td>
             <td>
               <div class="w-150px ">
-                <div class="dropdown ml-2" [class.dropdown-customv2]="item.memo" placement="bottom">
+                <div class="dropdown ms-2" [class.dropdown-customv2]="item.memo" placement="bottom">
                   <button [disabled]="!item?.memo" class="btn" type="button" id="dropdownShowDescription"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="icon-assignment icon-16 text-dark-50 mr-1"></span>
+                    <span class="icon-assignment icon-16 text-dark-50 me-1"></span>
                     <span *ngIf="item?.memo" [innerHTML]="item?.memo" class="task-des"></span>
                     <span *ngIf="!item?.memo" class="task-des">Mô tả công
                       việc</span>
@@ -67,11 +67,11 @@
                 <div class="symbol-group symbol-hover justify-content-end"
                   *ngIf="item?.category == '3' || item?.category == '4'">
                   <codx-imgs popoverClass="userPopoverClass" placement="bottom"
-                    class="symbol symbol-30 symbol-circle ml-1" [objectId]="item?.assignTo" objectName="AD_Users"
+                    class="symbol symbol-30px symbol-circle ms-1" [objectId]="item?.assignTo" objectName="AD_Users"
                     [numberImages]="4">
                   </codx-imgs>
                 </div>
-                <!-- <lv-image-viewer class="symbol symbol-24 symbol-circle mr-1" [objectId]="item.owner"
+                <!-- <lv-image-viewer class="symbol symbol-24 symbol-circle me-1" [objectId]="item.owner"
                                     objectType="AD_Users">
                                 </lv-image-viewer>
                                 <div class="text-dark font-size-lg">{{item.userName}}</div> -->
@@ -79,7 +79,7 @@
             </td>
             <td>
               <div class="d-flex align-items-center">
-                <div class="text-dark font-weight-bold font-size-sm mr-1">
+                <div class="text-dark font-weight-bold font-size-sm me-1">
                   Ngày hết hạn:
                 </div>
                 <div class="text-dark-50 font-size-sm">
@@ -89,13 +89,13 @@
             </td>
             <td>
               <div class="d-flex align-items-center w-100px">
-                <div class="d-flex align-items-center mr-3 {{item.comments  ? 'text-success' : 'text-dark-50'}}">
+                <div class="d-flex align-items-center me-3 {{item.comments  ? 'text-success' : 'text-dark-50'}}">
                   <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
-                  <span class="ml-1"> {{item.comments}}</span>
+                  <span class="ms-1"> {{item.comments}}</span>
                 </div>
-                <div class="d-flex align-items-center mr-3 {{item.todo ? 'text-success' : 'text-dark-50'}}">
+                <div class="d-flex align-items-center me-3 {{item.todo ? 'text-success' : 'text-dark-50'}}">
                   <span class="text-hover-primary icon-check-correct icon-16"></span>
-                  <span class="ml-1">
+                  <span class="ms-1">
                     {{item.todo}}</span>
                 </div>
                 <div class="d-flex align-items-center {{item.attachments ? 'text-success' : 'text-dark-50'}}">
@@ -119,10 +119,8 @@
       <div class="result-title text-dark font-size-h5 mb-5 mt-3">Phân công cho</div>
       <div *ngFor="let item of lstTaskbyParent" class="task-list p10 full">
         <div class="d-flex align-items-start user-card p-3">
-          <div class="symbol symbol-30 symbol-circle mr-3">
-            <codx-imgs class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.owner" objectType="AD_Users"
-              width="40">
-            </codx-imgs>
+          <div class="symbol symbol-30px symbol-circle me-3">
+            <codx-imgs [objectId]="item?.owner" objectType="AD_Users"></codx-imgs>
           </div>
           <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold">{{item?.ownerName}}</div>
@@ -131,11 +129,11 @@
               {{item?.memo2}}
             </div>
             <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center mr-2">
+              <div class="d-flex align-items-center me-2">
                 <span class="icon-access_time icon-16 text-muted"></span>
                 <span class="text-muted">{{item?.dueDate | date:'dd/MM/yyyy'}}</span>
               </div>
-              <div class="label label-xxs label-pill label-inline label-light-danger mr-2 label-status"
+              <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
                 [style.border-color]="(item?.status | vll: 'L0614':'color' | async) + '30'"
                 [style.background-color]="(item?.status | vll: 'L0614':'color' | async) + '30'"
                 [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">{{
@@ -157,7 +155,7 @@
         <div class="text-dark-75 font-size-md">
           {{popoverDetail?.memo}}
           <div class="d-flex align-items-center mt-2">
-            <div class="d-flex align-items-center mr-2">
+            <div class="d-flex align-items-center me-2">
               <span class="icon-create icon-18 text-dark-50"></span>
               <span class="text-dark-50 text-italic"> {{popoverDetail?.memo2}}
               </span>
