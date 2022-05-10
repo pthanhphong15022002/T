@@ -22,7 +22,7 @@ export class TagsService implements OnDestroy {
    deleteTags(item: any): Observable<any> {
       return this.api.exec<any[]>("BS", "TagsBusiness", "DeleteTagsAsync", item);
    }
-   getTagsChoose(entityName: string, guids:string ): Observable<any> {
-      return this.api.exec<any[]>("BS", "TagsBusiness", "GetTagsByIDAsync", [entityName,guids]);
+   getTagsChoose(entityName: string, guids: string): Observable<any> {
+      return this.api.exec<any[]>("BS", "TagsBusiness", "GetTagsByIDAsync", [entityName, guids]);
    }
 }
