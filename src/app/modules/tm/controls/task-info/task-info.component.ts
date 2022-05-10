@@ -63,7 +63,6 @@ export class TaskInfoComponent implements OnInit {
   openMemo2 = false;
   @Input('viewBase') viewBase: ViewsComponent;
 
-  @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
@@ -486,9 +485,10 @@ export class TaskInfoComponent implements OnInit {
     if (data.field == 'projectID') this.task.projectID = data.data.ProjectID;
   }
 
-  loadTodoByGroup() {}
+  loadTodoByGroup() { }
 
   openTask(): void {
+    const t =this
     this.task.estimated = 0 ;
     this.readOnly = false;
     this.task = new TM_Tasks();
@@ -500,6 +500,13 @@ export class TaskInfoComponent implements OnInit {
       .toDate();
     this.task.estimated = 0,'hours';
     this.changeDetectorRef.detectChanges();
+    if (!this.param)
+      this.getParam(function (o) {
+        if (o) t.showPanel();
+      });
+    else {
+      t.closePanel();
+    }
   }
 
   valueChangeUser(event) {
@@ -525,6 +532,7 @@ export class TaskInfoComponent implements OnInit {
         t.listUser = res[1] || [];
         t.listTodo = res[2];
         t.changeDetectorRef.detectChanges();
+        this.showPanel();
       }
     });
   }
@@ -609,6 +617,9 @@ export class TaskInfoComponent implements OnInit {
     } else this.required.taskName = false;
 
     console.log('task required', this.required.taskName);
+  }
+  showPanel() {
+    this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
     this.viewBase.currentView.closeSidebarRight();
