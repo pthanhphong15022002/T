@@ -6,7 +6,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ChartTheme, IAxisLabelRenderEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
+import { AccPoints, AccumulationChart, AccumulationChartComponent, ChartTheme, IAccAnimationCompleteEventArgs, IAccTextRenderEventArgs, IAxisLabelRenderEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
 import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
@@ -40,12 +40,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  // Chart
+  // Chart bar
   public data: Object[] = [
-    { x: new Date(2005, 0, 1), y: 21 }, { x: new Date(2006, 0, 1), y: 24 },
-    { x: new Date(2007, 0, 1), y: 36 }, { x: new Date(2008, 0, 1), y: 38 },
-    { x: new Date(2009, 0, 1), y: 54 }, { x: new Date(2010, 0, 1), y: 57 },
-    { x: new Date(2011, 0, 1), y: 70 }
+    { x: new Date(2005, 0, 1), y: 21 },
+    //{ x: new Date(2006, 0, 1), y: 24 },
+    // { x: new Date(2007, 0, 1), y: 36 }, { x: new Date(2008, 0, 1), y: 38 },
+    // { x: new Date(2009, 0, 1), y: 54 }, { x: new Date(2010, 0, 1), y: 57 },
+    // { x: new Date(2011, 0, 1), y: 70 }
   ];
   public primaryXAxis: Object = {
     valueType: 'DateTime',
@@ -84,6 +85,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     enable: true
   };
   public title: string = 'Inflation - Consumer Price';
+  public legendSettingsBar: Object = {
+    visible: false,
+  };
+  //End chart bar
+
 
   constructor(private cf: ChangeDetectorRef) { }
 
@@ -142,7 +148,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listDetails,
         sideBarLeftRef: this.asideLeft,
-        //       itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     {
@@ -154,7 +161,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
-        // itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     {
@@ -165,10 +173,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
-        // itemTemplate: this.itemTemplate,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
       }
     },
     ];
+    console.log(this.viewBase?.funcID);
     this.cf.detectChanges();
   }
 
@@ -189,4 +199,74 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // alert("bắt sự kiện click")
     this.viewBase.currentView.openSidebarRight();
   }
+
+
+  //Donut
+  public pie: AccumulationChartComponent | AccumulationChart;
+  public execute = false;
+  public count = 0;
+  public startAngle: number = 0;
+  public endAngle: number = 360;
+  public data2: Object[] = [
+    { 'x': 'Net-tution', y: 21, text: '21%' },
+    { 'x': 'Private Gifts', y: 8, text: '8%' },
+    { 'x': 'All Other', y: 9, text: '9%' },
+    { 'x': 'Local Revenue', y: 4, text: '4%' },
+    { 'x': 'State Revenue', y: 21, text: '21%' },
+    { 'x': 'Federal Revenue', y: 16, text: '16%' },
+    { 'x': 'Self-supporting Operations', y: 21, text: '21%' }
+  ];
+  public titleDonut: string = 'Education Institutional Revenue';
+  public legendSettings: Object = {
+    visible: true,
+    toggleVisibility: false,
+    position: 'Right',
+    height: '28%',
+    width: '50%',
+    textWrap: 'Wrap',
+    maximumLabelWidth: 100,
+  };
+  //Initializing Datalabel
+  public dataLabel: Object = {
+    visible: true, position: 'Inside',
+    name: '${point.y}',
+    font: {
+      color: 'white',
+      fontWeight: 'Bold',
+      size: '14px'
+    }
+  };
+
+  public onAnimationComplete(args: IAccAnimationCompleteEventArgs): void {
+    let centerTitle: HTMLDivElement = document.getElementById('center_title') as HTMLDivElement;
+    console.log('centerTitle: ', centerTitle);
+    centerTitle.style.fontSize = this.getFontSize(args.accumulation.initialClipRect.width);
+    let rect: ClientRect = centerTitle.getBoundingClientRect();
+    centerTitle.style.top = (args.accumulation.origin.y + args.accumulation.element.offsetTop - (rect.height / 2)) + 'px';
+    centerTitle.style.left = (args.accumulation.origin.x + args.accumulation.element.offsetLeft - (rect.width / 2)) + 'px';
+    centerTitle.style.visibility = 'visible';
+    let points: AccPoints[] = args.accumulation.visibleSeries[0].points;
+    for (let point of points) {
+      if (point.labelPosition === 'Outside' && point.labelVisible) {
+        let label: Element = document.getElementById('donut-container_datalabel_Series_0_text_' + point.index);
+        label.setAttribute('fill', 'black');
+      }
+    }
+  };
+
+  public onTextRender(args: IAccTextRenderEventArgs): void {
+    // args.series.dataLabel.font.size = this.getFontSize(this.pie.initialClipRect.width);
+    // args.text = args.text + '%';
+  }
+
+  public getFontSize(width: number): string {
+    if (width > 300) {
+      return '13px';
+    } else if (width > 250) {
+      return '8px';
+    } else {
+      return '6px';
+    }
+  };
+  //End donut
 }

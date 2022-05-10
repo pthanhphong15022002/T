@@ -71,9 +71,8 @@ export class TmService {
       return this.api.execSv("SYS", "CM", "ParametersBusiness", "GetByPredicate", [predicate, dataValue]);
     }
   
-  
-  
-    setStatusTask(id: string, status: string, datacomplete: string, hour: string, comment: string) {
+
+    setStatusTask(id: string, status: string, datacomplete: Date, hour: string, comment: string) {
       return this.api.execSv<any>("TM", "TM", "TaskBusiness", "SetStatusTaskAsync", [id, status, datacomplete, hour, comment]);
     }
   

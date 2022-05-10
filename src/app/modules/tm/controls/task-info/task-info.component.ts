@@ -53,12 +53,15 @@ export class TaskInfoComponent implements OnInit {
   required = {
     taskName: false,
   };
+  message: string = '';
+  isConfirm = false;
+  isCheckTime = true;
+  openMemo2 = false;
   @Input('viewBase') viewBase: ViewsComponent;
 
-  @ViewChild('contentPopup') contentPopup;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
-  @ViewChild('panelTask') panelTask;
+  @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
   // @ViewChild("attachment") attachmentComponent: AttachmentComponent;
   @ViewChild('tags') tagsComponent: TagsComponent;
@@ -69,15 +72,14 @@ export class TaskInfoComponent implements OnInit {
     private authStore: AuthStore,
     private tmSv: TmService,
     private cache: CacheService,
-    private notiService: NotificationsService // private confirmationDialogService: ConfirmationDialogService
+    private notiService: NotificationsService //private callfc: CallFuncService
   ) {
     this.user = this.authStore.get();
-
   }
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = "TM001" //dung test
+    this.functionID = 'TM001'; //dung test
 
     this.getParam(); //bật tắt set param
     this.openTask();
@@ -215,10 +217,12 @@ export class TaskInfoComponent implements OnInit {
   }
 
   SaveData(id) {
-    this.task.assignTo = "PMNHI"; //tesst thu
+    this.checkLogicTime();
+    if (!this.isConfirm || this.isCheckTime) return;
+    this.task.assignTo = 'PMNHI'; //tesst thu
     this.task.taskType = this.param['TaskType'];
-    if (id) this.updateTask(); else
-      this.addTask();
+    if (id) this.updateTask();
+    else this.addTask();
     this.viewBase.currentView.closeSidebarRight();
   }
 
@@ -227,7 +231,6 @@ export class TaskInfoComponent implements OnInit {
       .addTask([this.task, this.listTodo, this.functionID])
       .subscribe((res) => {
         if (res) {
-
           this.notiService.notify(res.message);
           if (res.data) {
             var dataPriority = res.data[0];
@@ -341,21 +344,11 @@ export class TaskInfoComponent implements OnInit {
       });
   }
 
-  openEditor(content) {
-    this.modalService
-      .open(content, {
-        ariaLabelledBy: 'modal-basic-title',
-        size: 'md',
-        windowClass: 'custom-class',
-      })
-      .result.then(
-        (result) => {
-          console.log(`Closed with: ${result}`);
-        },
-        (reason) => {
-          // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        }
-      );
+  openInputMemo2() {
+    this.openMemo2 = !this.openMemo2;
+    if (this.openMemo2) {
+      $('txtMemo2').focus();
+    }
   }
 
   openDialogFolder(content, size: string = '') {
@@ -390,7 +383,10 @@ export class TaskInfoComponent implements OnInit {
     if (!data.field) return;
     this.task[data.field] = data.data;
     if (data.field == 'startDate') {
-      this.task.endDate = moment(new Date(data.data)).add(1, 'hours').toDate();
+      if (!this.task.endDate)
+        this.task.endDate = moment(new Date(data.data))
+          .add(1, 'hours')
+          .toDate();
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate)
@@ -399,6 +395,56 @@ export class TaskInfoComponent implements OnInit {
           'hours'
         );
     }
+  }
+
+  checkLogicTime() {
+    if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
+      this.message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
+      this.isCheckTime = false;
+      //  this.openMessageError(this.messageError) ;
+      this.notiService.notify(this.message);
+      // this.notiService.alert("Cảnh báo !!",this.message);
+      // this.notiService.alertCode("TM002")
+      return;
+    }
+    if (
+      this.task.dueDate.getDate() < this.task.startDate.getDate() ||
+      (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
+        !this.isConfirm)
+    ) {
+      this.message = 'Lỗi ngày thực hiện ??';
+      if (confirm(this.message)) {
+        this.isConfirm = true;
+      } else {
+        if (this.task.dueDate.getDate() < this.task.startDate.getDate())
+          $('#startDate').focus();
+        else $('#endDate').focus();
+      }
+
+      //  this.openMessageError(this.messageError) ;
+    }
+  }
+
+  // confirmTime(modal){
+  //   this.isConfirm = true ;
+  //   modal.dismiss() ;
+  // }
+
+  openMessageError(content) {
+    this.modalService
+      .open(content, {
+        ariaLabelledBy: 'modal-basic-title',
+        size: 'md',
+        windowClass: 'custom-class',
+      })
+      .result.then(
+        (result) => {
+          console.log(`Closed with: ${result}`);
+        },
+        (reason) => {
+          // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
   }
 
   changeVLL(data) {
@@ -416,22 +462,23 @@ export class TaskInfoComponent implements OnInit {
   loadTodoByGroup() { }
 
   openTask(): void {
+    const t = this;
     this.readOnly = false;
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.listUser = [];
-    this.task.status = "1";
+    this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    // if (!this.param)
-    //   this.getParam(function (o) {
-    //     if (o) this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    //   });
-    // else {
-    //   this.panelTask?.nativeElement.classList.add("offcanvas-on");
-    // }
+    if (!this.param)
+      this.getParam(function (o) {
+        if (o) t.showPanel();
+      });
+    else {
+      t.closePanel();
+    }
   }
 
   valueChangeUser(event) {
@@ -443,7 +490,7 @@ export class TaskInfoComponent implements OnInit {
   openInfo(id, action) {
     const t = this;
     t.task = new TM_Tasks();
-    t.readOnly = action === "edit" ? false : true;
+    t.readOnly = action === 'edit' ? false : true;
     t.disableAddToDo = true;
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
@@ -451,7 +498,7 @@ export class TaskInfoComponent implements OnInit {
         t.listUser = res[1] || [];
         t.listTodo = res[2];
         t.changeDetectorRef.detectChanges();
-        // t.panelTask?.nativeElement.classList.add("offcanvas-on");
+        this.showPanel();
       }
     });
   }
@@ -481,7 +528,7 @@ export class TaskInfoComponent implements OnInit {
   }
 
   extendShow() {
-    this.panelTask.nativeElement.classList.toggle("extend-show");
+    // this.panelTask.nativeElement.classList.toggle('extend-show');
   }
 
   closeTask(): void {
@@ -489,7 +536,7 @@ export class TaskInfoComponent implements OnInit {
 
     this.required.taskName = false;
     this.disableAddToDo = true;
-    this.resetTask()
+    this.resetTask();
     this.closePanel();
   }
   resetTask() {
@@ -499,12 +546,11 @@ export class TaskInfoComponent implements OnInit {
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.listUser = [];
-    this.task.status = "1";
+    this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
   }
-
 
   valueChangeTags(tags: string) {
     console.log('tags', tags);
@@ -535,6 +581,9 @@ export class TaskInfoComponent implements OnInit {
     } else this.required.taskName = false;
 
     console.log('task required', this.required.taskName);
+  }
+  showPanel() {
+    this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
     this.viewBase.currentView.closeSidebarRight();
