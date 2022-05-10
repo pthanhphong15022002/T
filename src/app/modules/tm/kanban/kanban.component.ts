@@ -25,7 +25,6 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class TestKanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
-  // dataSource = cardData;
   dataSource: any = [];
   data: any;
   setCalendar = true;
@@ -38,7 +37,7 @@ export class TestKanbanComponent implements OnInit {
   gridView: any;
   grvSetup: any;
   user: any;
-  item: any;
+  item: any = {};
   showSumary = false;
   Sumary: string = '';
   columns: any = [];
@@ -73,7 +72,7 @@ export class TestKanbanComponent implements OnInit {
     this.getData();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   public cardSettings: CardSettingsModel = {
     headerField: 'taskID',
@@ -95,9 +94,11 @@ export class TestKanbanComponent implements OnInit {
     enable: true,
     menuItem: [],
   };
+  
   clickme() {
     console.log('aloooo');
   }
+  
   public getString(assignee: any) {
     return assignee
       .match(/\b(\w)/g)
@@ -132,17 +133,19 @@ export class TestKanbanComponent implements OnInit {
   }
 
   onDataDrag(evt: any) {
-    console.log(evt);
     this.item = evt;
+
   }
 
   submit(e: any, modal: any) {
-    let t = this;
-    setTimeout(function () {
-      t.item.Summary = 'halo con cá rô 1234';
-      t.kanban.itemUpdate = t.item;
-      modal.close(true);
-    }, 1000);
+    const completed = new Date(2022, 5, 9, 12, 0, 0);
+    const { id, status, comment } = this.item;
+    this.tmSv
+      .setStatusTask(id, status, completed, '8', comment)
+      .subscribe((res) => {
+        console.log(res);
+      });
+    modal.close(true);
   }
 
   getData() {
@@ -211,7 +214,6 @@ export class TestKanbanComponent implements OnInit {
     kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
       if (res) {
-
         this.columns = res.column;
         // this.kanban.columns = res.column
         this.cr.detectChanges();
@@ -219,36 +221,3 @@ export class TestKanbanComponent implements OnInit {
     });
   }
 }
-
-export let cardData: Object[] = [
-  {
-    id: 'Task 1',
-    userName: 'Task - 29001',
-    status: '1',
-    memo:
-      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    priority: 'High',
-  },
-  {
-    id: 'Task 2',
-    userName: 'Task - 29001',
-    status: '2',
-    memo:
-      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    priority: 'High',
-  }, {
-    id: 'Task 3',
-    userName: 'Task - 29001',
-    status: '3',
-    memo:
-      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    priority: 'High',
-  }, {
-    id: 'Task 4',
-    userName: 'Task - 29001',
-    status: '4',
-    memo:
-      'Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.Analyze customer requirements.',
-    priority: 'High',
-  },
-];
