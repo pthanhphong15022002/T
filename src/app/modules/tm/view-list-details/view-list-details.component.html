@@ -8,7 +8,7 @@
           <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
           <codx-listview [itemTemplate]="templateItem" [selectFirst]="true" #listview funcId="" [pageSize]="10"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'"
+            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" 
             [itemTemplateLoading]="templateloading" [dataObj]="dataObj" [data]="data">
           </codx-listview>
         </div>
@@ -558,9 +558,12 @@
           <td>
             <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
             item?.taskID == itemSelected?.taskID ? 'yellow' : ''
-            " (click)="clickItem(item)">
+            " (click)="clickItem(item)" (mouseover)="showControl(p,item)"
+            [ngbPopover]="popContent" popoverClass="empPopoverClass"
+                 #p="ngbPopover"
+            placement="right left" container="body" autoClose="outside" triggers="manual">
               <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
-              </more-funtion> -->
+              </more-funtion>  -->
               <div class="symbol symbol-40 symbol-circle mr-3">
                 <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy"
                   objectType="AD_Users" width="40">
@@ -671,6 +674,35 @@
     </div>
   
   </div>
+</ng-template>
+
+
+<!-- // dung de tesst -->
+<ng-template #popContent >
+  <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-edit icon-18 ml-2 mr-2"></span>
+        <span class="tooltiptext">Edit</span>
+    </div>
+</a>
+<a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+        <span class="tooltiptext">Copy</span>
+    </div>
+</a>
+<a class="action-item" (click)="Click(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+        <span class="tooltiptext">Delete</span>
+    </div>
+</a>
+<a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
+  <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
+      <span class="tooltiptext">Xem</span>
+  </div>
+</a>
 </ng-template>
 
 
