@@ -38,6 +38,7 @@ export class TaskInfoComponent implements OnInit {
   user: any;
   readOnly = false;
   listUser: any;
+  listUserDetail= [];
   listTodo: TaskGoal[];
   todoAddText: any;
   disableAddToDo = true;
@@ -54,8 +55,11 @@ export class TaskInfoComponent implements OnInit {
     taskName: false,
   };
   message: string = '';
-  isConfirm = false;
+  isConfirm = true;
   isCheckTime = true;
+  isCheckProjectControl = false;
+  isCheckAttachmentControl = false;
+  isCheckCheckListControl = false;
   openMemo2 = false;
   @Input('viewBase') viewBase: ViewsComponent;
 
@@ -80,9 +84,11 @@ export class TaskInfoComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = 'TM001'; //dung test
-
     this.getParam(); //bật tắt set param
     this.openTask();
+ 
+    // this.api.execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness","GetListEmployeesByUserIDAsync","PMNHI").subscribe(res=>{
+    //   console.log(res)})
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
     //   if (res) t.grvSetup = res;
     // });
@@ -218,8 +224,17 @@ export class TaskInfoComponent implements OnInit {
 
   SaveData(id) {
     this.checkLogicTime();
-    if (!this.isConfirm || this.isCheckTime) return;
-    this.task.assignTo = 'PMNHI'; //tesst thu
+    this.confirmDueTime()
+    if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
+    var checkLogic =
+      !this.isConfirm ||
+      !this.isCheckTime ||
+      this.isCheckProjectControl ||
+      this.isCheckCheckListControl ||
+      this.isCheckAttachmentControl;
+    if (checkLogic) { this.notiService.notify('TM002');
+      return;} 
+    this.task.assignTo = 'PMNHI;' //tesst thu
     this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask();
     else this.addTask();
@@ -277,7 +292,7 @@ export class TaskInfoComponent implements OnInit {
           //   }
           // }
         } else {
-          this.notiService.notify('', 'TM002');
+          this.notiService.notify( "TM002"); /// call sau
           return;
         }
       });
@@ -338,7 +353,7 @@ export class TaskInfoComponent implements OnInit {
           this.task = new TM_Tasks();
           this.closeTask();
         } else {
-          this.notiService.notify('', 'TM002');
+          this.notiService.notify('TM002');
           return;
         }
       });
@@ -399,56 +414,67 @@ export class TaskInfoComponent implements OnInit {
 
   checkLogicTime() {
     if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
-      this.message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
+      var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
-      //  this.openMessageError(this.messageError) ;
-      this.notiService.notify(this.message);
-      // this.notiService.alert("Cảnh báo !!",this.message);
-      // this.notiService.alertCode("TM002")
-      return;
+      this.notiService.notify(message);
+    }else{
+      this.isCheckTime = true;
     }
+  }
+  confirmDueTime(){
     if (
       this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-      (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
-        !this.isConfirm)
+      this.task.dueDate.getDate() < this.task.endDate.getDate() &&
+        !this.isConfirm
     ) {
-      this.message = 'Lỗi ngày thực hiện ??';
+      if(this.task.dueDate.getDate() < this.task.startDate.getDate()){
+        this.message = 'Cảnh báo !! Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      }else   this.message = 'Cảnh báo !! Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+     
       if (confirm(this.message)) {
         this.isConfirm = true;
       } else {
+        this.isConfirm = false;
         if (this.task.dueDate.getDate() < this.task.startDate.getDate())
           $('#startDate').focus();
         else $('#endDate').focus();
       }
-
-      //  this.openMessageError(this.messageError) ;
     }
   }
-
-  // confirmTime(modal){
-  //   this.isConfirm = true ;
-  //   modal.dismiss() ;
-  // }
-
-  openMessageError(content) {
-    this.modalService
-      .open(content, {
-        ariaLabelledBy: 'modal-basic-title',
-        size: 'md',
-        windowClass: 'custom-class',
-      })
-      .result.then(
-        (result) => {
-          console.log(`Closed with: ${result}`);
-        },
-        (reason) => {
-          // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  checkLogicTaskGroup(idTaskGroup) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskGroupBusiness',
+        'GetAsync',
+        idTaskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.isCheckProjectControl = !this.task.projectID && res.ProjectControl != '0';
+          this.isCheckAttachmentControl = res.AttachmentControl != '0';
+          this.isCheckCheckListControl = res.CheckListControl != '0' && this.listTodo.length > 0;
+          
+          if (this.isCheckProjectControl) {
+            var message = 'Dự án không được để trống';
+            this.notiService.notify(message);
+          }
+          if (this.isCheckAttachmentControl) {
+            var message = 'File tài liệu không được để trống';
+            this.notiService.notify(message);
+          }
+          if (this.isCheckCheckListControl) {
+            //thieu dk taskk
+            var message = 'Danh sách việc cần làm không được để trống';
+            this.notiService.notify(message);
+          }
         }
-      );
+      });
   }
 
   changeVLL(data) {
-    this.task[data.field] = data.data.value;
+    this.task[data.field] = data.data;
   }
 
   cbxChange(data) {
@@ -462,29 +488,37 @@ export class TaskInfoComponent implements OnInit {
   loadTodoByGroup() { }
 
   openTask(): void {
-    const t = this;
+    const t =this
+    this.task.estimated = 0 ;
     this.readOnly = false;
     this.task = new TM_Tasks();
     this.listTodo = [];
-    this.listUser = [];
+    // this.listUser = [];
     this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
+    this.task.estimated = 0,'hours';
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        if (o) t.showPanel();
-      });
-    else {
-      t.closePanel();
-    }
+    // if (!this.param)
+    //   this.getParam(function (o) {
+    //     if (o) t.showPanel();
+    //   });
+    // else {
+    //   t.closePanel();
+    // }
   }
 
   valueChangeUser(event) {
     if (event?.valueSeleteds) {
       this.task.assignTo = event?.valueSeleteds;
     }
+    // this.listUser =  this.task.assignTo.split(";");
+  
+    // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
+    //   this.listUserDetail = res ;
+    // })
+    
   }
 
   openInfo(id, action) {
@@ -540,6 +574,8 @@ export class TaskInfoComponent implements OnInit {
     this.closePanel();
   }
   resetTask() {
+    this.task.estimated = 0,'hours';
+    this.isConfirm =true;
     this.required.taskName = false;
     this.disableAddToDo = true;
     this.readOnly = false;
@@ -587,5 +623,8 @@ export class TaskInfoComponent implements OnInit {
   }
   closePanel() {
     this.viewBase.currentView.closeSidebarRight();
+  }
+  onDeleteUser(userID){
+
   }
 }
