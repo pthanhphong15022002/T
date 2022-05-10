@@ -64,8 +64,7 @@
             </td>
             <td>
               <div class="d-flex align-items-center">
-                <div class="symbol-group symbol-hover justify-content-end"
-                  *ngIf="item?.category == '3' || item?.category == '4'">
+                <div *ngIf="item?.category == '3' || item?.category == '4'">
                   <codx-imgs popoverClass="userPopoverClass" placement="bottom"
                     class="symbol symbol-30px symbol-circle ms-1" [objectId]="item?.assignTo" objectName="AD_Users"
                     [numberImages]="4">

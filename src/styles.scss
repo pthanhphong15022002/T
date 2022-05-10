@@ -424,12 +424,31 @@ label {
     width: calc(1.2em + 1.1rem + 2px);
 }
 
+.e-listview {
+    border: o;
+}
 
 
 hr {
     margin: .5rem 0;
 }
 
+input.form-control {
+    border-color: #d8d8d9;
+    color: #212529;
+    padding: 0.33rem 0.7rem;
+    border-radius: 2px;
+}
+
+.is-error {
+    border: 1px solid #dc3545;
+}
+
+.dropdown-menu .dropdown-item i {
+    color: #222 !important;
+    margin-right: 7px;
+    font-size: 1.32rem;
+}
 
 /**** icon ***/
 [class^="icon-"],
