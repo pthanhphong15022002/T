@@ -235,12 +235,19 @@ export class ViewListDetailsComponent implements OnInit {
   copyDetailTask(taskAction){
     alert("copy data")}
 
-  Click(taskAction){
+  clickDelete(taskAction){
+    
+    if(taskAction.status == 9){
+        // this.notiService.notifyCode("TM001")
+      this.notiService.notify("Không thể xóa công việc này. Vui lòng kiểm tra lại!") ;
+      return ;
+    }
+    var isCanDelete = true ;
     var listTask = [] ;
     this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListTaskChildDetail", taskAction.id).subscribe(res=>{
       listTask = res;
     })
-    var isCanDelete = true ;
+   
     listTask.forEach(t=>{
       if(t.status != '1'){
         isCanDelete = false ; 
@@ -255,9 +262,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.notiService
       .alert('Cảnh báo', message, { type: 'YesNo' })
       .subscribe((dialog: Dialog) => {
-        dialog.beforeClose = this.beforeClose;
         dialog.close = this.close;
-        console.log(dialog);
       });
       // this.notiService
       // .alertCode("TM003", { type: 'YesNo' })
@@ -265,29 +270,22 @@ export class ViewListDetailsComponent implements OnInit {
       //   dialog.close = this.close;
       //   console.log(dialog);
       // });
-    // this.tmSv.deleteTask(taskAction.id).subscribe(res=>{
-    //   if(res){
-    //     this.notiService.notifyCode("TM004")
-    //   }
-    // })
   }
 
   viewItem(taskAction){
     alert("xem data")
   }
 
-  beforeClose(e: any) {
-    console.log("aaaaaaaaaaaaaaaa");
-    console.log(e.status)
+  close(e: any ) {
+  if(e?.event?.status =="Y"){
+   this.tmSv.deleteTask(this.taskAction.id).subscribe(res=>{
+      if(res){
+       return this.notiService.notifyCode("Xóa task thành công !")
+        // this.notiService.notifyCode("TM004")
+      }
+      this.notiService.notifyCode("Xóa task không thành công. Vui lòng kiểm tra lại !")
+    })
   }
-
-  close(e: any) {
-  console.log(e.status)
-   // this.tmSv.deleteTask(taskAction.id).subscribe(res=>{
-    //   if(res){
-    //     this.notiService.notifyCode("TM004")
-    //   }
-    // })
   }
 
 }

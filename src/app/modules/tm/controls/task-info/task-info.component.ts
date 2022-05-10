@@ -474,7 +474,7 @@ export class TaskInfoComponent implements OnInit {
   }
 
   changeVLL(data) {
-    this.task[data.field] = data.data.value;
+    this.task[data.field] = data.data;
   }
 
   cbxChange(data) {
@@ -500,13 +500,13 @@ export class TaskInfoComponent implements OnInit {
       .toDate();
     this.task.estimated = 0,'hours';
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        if (o) t.showPanel();
-      });
-    else {
-      t.closePanel();
-    }
+    // if (!this.param)
+    //   this.getParam(function (o) {
+    //     if (o) t.showPanel();
+    //   });
+    // else {
+    //   t.closePanel();
+    // }
   }
 
   valueChangeUser(event) {
