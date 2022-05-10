@@ -1,3 +1,4 @@
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { TestKanbanComponent } from './kanban/kanban.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -48,7 +49,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [HomeComponent, TestKanbanComponent, TmComponent, ViewListDetailsComponent, ListTasksComponent, MoreFuntionComponent, ScheduleComponent, TaskInfoComponent],
+  declarations: [
+    HomeComponent,
+    TestKanbanComponent,
+    TmComponent,
+    ViewListDetailsComponent,
+    ListTasksComponent,
+    MoreFuntionComponent,
+    ScheduleComponent,
+    TaskInfoComponent,
+    DashboardComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

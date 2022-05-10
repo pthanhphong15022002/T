@@ -42,11 +42,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // Chart bar
   public data: Object[] = [
-    { x: new Date(2005, 0, 1), y: 21 },
-    //{ x: new Date(2006, 0, 1), y: 24 },
-    // { x: new Date(2007, 0, 1), y: 36 }, { x: new Date(2008, 0, 1), y: 38 },
-    // { x: new Date(2009, 0, 1), y: 54 }, { x: new Date(2010, 0, 1), y: 57 },
-    // { x: new Date(2011, 0, 1), y: 70 }
+    { value: new Date(2005, 0, 1), id: 21 },
+    { value: new Date(2006, 0, 1), id: 24 },
+    { value: new Date(2007, 0, 1), id: 36 },
+    { value: new Date(2008, 0, 1), id: 38 },
+    { value: new Date(2009, 0, 1), id: 54 },
+    { value: new Date(2010, 0, 1), id: 57 },
+    { value: new Date(2011, 0, 1), id: 70 }
   ];
   public primaryXAxis: Object = {
     valueType: 'DateTime',
@@ -82,7 +84,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     width: 10
   };
   public tooltip: Object = {
-    enable: true
+    enable: false
   };
   public title: string = 'Inflation - Consumer Price';
   public legendSettingsBar: Object = {

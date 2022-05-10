@@ -2,28 +2,7 @@
   [moreFuncs]="moreFunc"> </codx-views>
 
 <ng-template #chart>
-  <div class="p-2 container">
-    <ejs-chart width='150' height='100' style='display:block;' [chartArea]='chartArea' [width]='width'
-      id='chartcontainer' [legendSettings]="legendSettingsBar" [primaryXAxis]='primaryXAxis'
-      [primaryYAxis]='primaryYAxis' [tooltip]='tooltip'>
-      <e-series-collection>
-        <e-series [dataSource]='data' type='Bar' xName='x' yName='y' name='India'></e-series>
-      </e-series-collection>
-    </ejs-chart>
-  </div>
-  <div class="control-section">
-    <div style="padding-left: 35px;">
-      <ejs-accumulationchart id="donut-container" #pie style='display:block; width: 92%'
-        [legendSettings]="legendSettings" [tooltip]="tooltip" [title]="titleDonut" (textRender)="onTextRender($event)"
-        selectionMode='Point' (load)='load($event)'>
-        <e-accumulation-series-collection>
-          <e-accumulation-series name='Revenue' [dataSource]='data2' xName='x' yName='y' [startAngle]="startAngle"
-            [endAngle]="endAngle" innerRadius="40%" [dataLabel]="dataLabel"> </e-accumulation-series>
-        </e-accumulation-series-collection>
-      </ejs-accumulationchart>
-      <div id="center_title" style="visibility: hidden; position: absolute;">Expenses in Year</div>
-    </div>
-  </div>
+  <app-dashboard></app-dashboard>
 </ng-template>
 
 <ng-template #sidebarRight>

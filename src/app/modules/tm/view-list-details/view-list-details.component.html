@@ -54,7 +54,7 @@
                     " [style.background-color]="
                       (itemSelected?.status | vll: 'L0614':'color' | async) +
                       '30'
-                    " [style.color]=" 
+                    " [style.color]="
                       itemSelected?.status | vll: 'L0614':'color' | async
                     " style="border: none">
                     {{ itemSelected?.status | vll: "L0614":"text" | async }}
@@ -562,7 +562,7 @@
               <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
               </more-funtion> -->
               <div class="symbol symbol-40 symbol-circle mr-3">
-                <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy"
+                <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item.createdBy"
                   objectType="AD_Users" width="40">
                 </codx-img>
               </div>
@@ -643,7 +643,7 @@
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <div class="mr-6" >
+          <div class="mr-6">
             <span class="icon-16 icon-message mr-1 text-primary "></span>
             <span class="text-dark-75 font-weight-bolder">{{data.comments}}</span>
           </div>
@@ -661,7 +661,7 @@
         " [style.background-color]="
           (data?.status | vll: 'L0614':'color' | async) +
           '30'
-        " [style.color]=" 
+        " [style.color]="
           data?.status | vll: 'L0614':'color' | async
         " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}</span>
           <!--end::Btn-->
@@ -669,8 +669,6 @@
         <!--end::Section-->
       </div>
     </div>
-  
+
   </div>
 </ng-template>
-
-
