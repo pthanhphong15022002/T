@@ -19,8 +19,10 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import * as moment from 'moment';
+import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
+import { TM_Tasks } from '../models/TM_Tasks.model';
 import { TmService } from '../tm.service';
 
 @Component({
@@ -29,6 +31,7 @@ import { TmService } from '../tm.service';
   styleUrls: ['./view-list-details.component.scss'],
 })
 export class ViewListDetailsComponent implements OnInit {
+  @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() data = [];
   taskChild = [];
   user: any;
@@ -72,6 +75,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {}
+  
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
@@ -79,7 +83,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = 'TM003'; //this.viewBase.funcID ;
+    model.funcID = "TM003"//this.viewBase.funcID ;
     model.page = 1;
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
@@ -124,7 +128,7 @@ export class ViewListDetailsComponent implements OnInit {
             }
           });
 
-        if (this.itemSelected.id && this.itemSelected?.category != '1') {
+        if (this.itemSelected?.category != '1') {
           this.api
             .execSv<any>(
               'TM',
@@ -294,50 +298,15 @@ export class ViewListDetailsComponent implements OnInit {
       );
       return;
     }
-   
     var message = 'Bạn có chắc chắn muốn xóa task này !';
-    if (confirm(message)) {
-      var isCanDelete = true;
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          taskAction.taskID
-        )
-        .subscribe((res) => {
-         if(res){
-          res.forEach((element) => {
-            if (element.status != '1') {
-              isCanDelete = false;
-              return;
-            }
-          });
-          if (!isCanDelete) {
-            // this.notiService.notifyCode("TM001")
-            this.notiService.notify(
-              'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-            );
-          }else{
-            this.tmSv.deleteTask(this.taskAction.taskID).subscribe((res) => {
-              if (res) {
-                // this.notiService.notifyCode("TM004")
-                return this.notiService.notify('Xóa task thành công !');
-              }
-              this.notiService.notify(
-                'Xóa task không thành công. Vui lòng kiểm tra lại !'
-              );
-            });
-          }
-         } 
-        });
-    }
-    // this.notiService
-    //   .alert('Cảnh báo', message, { type: 'YesNo' })
-    //   .subscribe((dialog: Dialog) => {
-    //     dialog.close = this.close;
-    //   });
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var that = this;
+        dialog.close =  function(e){
+          return that.close(e, that);
+        } 
+      });
     // this.notiService
     // .alertCode("TM003", { type: 'YesNo' })
     // .subscribe((dialog: Dialog) => {
@@ -346,28 +315,15 @@ export class ViewListDetailsComponent implements OnInit {
     // });
   }
 
-  viewItem(taskAction) {
-    alert('xem data');
+  viewItem(taskAction ) {
+   this.taskInfo.openInfo(taskAction.taskID,'view');
   }
 
-  close(e: any) {
-    console.log("nhấn ok" , e.event.status)
-  
-    console.log(typeof(e.event.status) )
-    console.log(e)
+  close(e: any , t: ViewListDetailsComponent) {
     if (e?.event?.status == "Y") {
-      alert("dong ý")
       var isCanDelete = true;
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          this.taskAction.taskID
-        )
-        .subscribe((res) => {
-         if(res){
+      t.api.execSv<any>('TM','ERM.Business.TM', 'TaskBusiness','GetListTaskChildDetailAsync', t.taskAction.taskID).subscribe((res: any)=>{
+     if(res){
           res.forEach((element) => {
             if (element.status != '1') {
               isCanDelete = false;
@@ -376,24 +332,22 @@ export class ViewListDetailsComponent implements OnInit {
           });
           if (!isCanDelete) {
             // this.notiService.notifyCode("TM001")
-            this.notiService.notify(
+            t.notiService.notify(
               'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
             );
           }else{
-            this.tmSv.deleteTask(this.taskAction.taskID).subscribe((res) => {
+            t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
               if (res) {
                 // this.notiService.notifyCode("TM004")
                 return this.notiService.notify('Xóa task thành công !');
               }
-              this.notiService.notify(
+              t.notiService.notify(
                 'Xóa task không thành công. Vui lòng kiểm tra lại !'
               );
             });
           }
          } 
-        });
-    }else{
-      alert("xem lai")
+     })
     }
   }
 }
