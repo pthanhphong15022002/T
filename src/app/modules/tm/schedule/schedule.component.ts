@@ -804,8 +804,15 @@ export class ScheduleComponent implements OnInit {
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    userID: {name:"owners"},
+    resourceId: {name:"userID"},
   }
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
   columns = [
     {
       text: 'Tên thành viên', field: 'name', width: 200, htmlEncode: false,
@@ -883,8 +890,8 @@ export class ScheduleComponent implements OnInit {
     this.model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.endDate },
+        { operator: 'gte', field: fied, value: this.startDate || moment("04/11/2022").toDate()}, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate || moment("05/11/2022").toDate()},
       ],
     };
   }
@@ -905,8 +912,8 @@ export class ScheduleComponent implements OnInit {
     model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value:  this.endDate },
+        { operator: 'gte', field: fied, value: this.startDate || moment("04/11/2022").toDate()}, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate || moment("05/11/2022").toDate()},
       ],
     };
     const t = this;
