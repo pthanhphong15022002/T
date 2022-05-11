@@ -645,24 +645,19 @@
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <<<<<<< HEAD <div class="mr-6">
-            <span class="icon-16 icon-message mr-1 text-primary "></span>
-            <span class="text-dark-75 font-weight-bolder">{{data.comments}}</span>
-            =======
-            <div class="me-6">
-              <span class="icon-16 icon-message me-1 text-primary "></span>
-              <span class="text-gray-700 fw-bolder">{{data.comments}}</span>
-              >>>>>>> 551263822c6935df02f6cf1b819737869747371e
-            </div>
-            <!--end::Label-->
-            <!--begin::Label-->
-            <div class="me-6">
-              <span class="icon-16  icon-attach_file me-1 text-primary "></span>
-              <span class="text-gray-700 fw-bolder">3</span>
-            </div>
-            <!--end::Label-->
-            <!--begin::Btn-->
-            <span class="label  px-3 py-5 min-w-45px" [style.border-color]="
+          <div class="me-6">
+            <span class="icon-16 icon-message me-1 text-primary "></span>
+            <span class="text-gray-700 fw-bolder">{{data.comments}}</span>
+          </div>
+          <!--end::Label-->
+          <!--begin::Label-->
+          <div class="me-6">
+            <span class="icon-16  icon-attach_file me-1 text-primary "></span>
+            <span class="text-gray-700 fw-bolder">3</span>
+          </div>
+          <!--end::Label-->
+          <!--begin::Btn-->
+          <span class="label  px-3 py-5 min-w-45px" [style.border-color]="
           (data?.status | vll: 'L0614':'color' | async) +
           '30'
         " [style.background-color]="
@@ -671,7 +666,7 @@
         " [style.color]="
           data?.status | vll: 'L0614':'color' | async
         " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}</span>
-            <!--end::Btn-->
+          <!--end::Btn-->
         </div>
         <!--end::Section-->
       </div>
@@ -679,31 +674,32 @@
 
   </div>
 </ng-template>
-<<<<<<< HEAD=======<!-- // dung de tesst -->
-  <ng-template #popContent>
-    <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
-        <span class="tooltiptext">Copy</span>
-      </div>
-    </a>
-    <a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-        <span class="tooltiptext">Delete</span>
-      </div>
-    </a>
-    <a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
-        <span class="tooltiptext">Xem</span>
-      </div>
-    </a>
-  </ng-template>
-  >>>>>>> 551263822c6935df02f6cf1b819737869747371e
+
+
+<!-- // dung de tesst -->
+<ng-template #popContent>
+  <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ml-2 mr-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+      <span class="tooltiptext">Copy</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
+      <span class="tooltiptext">Xem</span>
+    </div>
+  </a>
+</ng-template>
