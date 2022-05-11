@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from
 import { HomeComponent } from '@pages/home/home.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
-import { ApiHttpService, AuthStore, CodxListviewComponent, ImageviewersComponent } from 'codx-core';
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { ApiHttpService, AuthStore, CodxListviewComponent, ImageviewersComponent, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from "moment";
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
@@ -18,6 +18,7 @@ import { TmService } from '../tm.service';
 })
 export class ViewListDetailsComponent implements OnInit {
   @Input() data = [];
+  taskChild = [] ;
   user: any;
   objectAssign: any;
   objectState: any;
@@ -35,13 +36,13 @@ export class ViewListDetailsComponent implements OnInit {
   listUserTask =[] ;
   listNode =[] ;
   isFinishLoad = false ;
+  taskAction : any ; 
 
-
-  @Input('viewBase') viewBase: ViewBaseComponent;
+  @Input('viewBase') viewBase: ViewsComponent;
   
   constructor(
     private tmSv: TmService,
-    // private mainService: MainService,
+    private notiService: NotificationsService ,
     // private changeDetectorRef: ChangeDetectorRef,
     // private confirmationDialogService: ConfirmationDialogService,
     private api: ApiHttpService,
@@ -219,4 +220,72 @@ export class ViewListDetailsComponent implements OnInit {
   //       );
   //     });
   // }
+
+
+  ///test control
+  showControl(p,item){
+    this.taskAction = item ;
+    p.open();
+  }
+  viewDetailTask(taskAction){
+    alert("edit data")
+    this.viewBase.currentView.openSidebarRight() ; /// vi sao call ko dc 
+  }
+
+  copyDetailTask(taskAction){
+    alert("copy data")}
+
+  clickDelete(taskAction){
+    
+    if(taskAction.status == 9){
+        // this.notiService.notifyCode("TM001")
+      this.notiService.notify("Không thể xóa công việc này. Vui lòng kiểm tra lại!") ;
+      return ;
+    }
+    var isCanDelete = true ;
+    var listTask = [] ;
+    this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListTaskChildDetail", taskAction.id).subscribe(res=>{
+      listTask = res;
+    })
+   
+    listTask.forEach(t=>{
+      if(t.status != '1'){
+        isCanDelete = false ; 
+      }
+    })
+    if(!isCanDelete){
+      // this.notiService.notifyCode("TM001")
+      this.notiService.notify("Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!") ;
+      return ;
+    }
+    var message = "Bạn có chắc chắn muốn xóa task này !"
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        dialog.close = this.close;
+      });
+      // this.notiService
+      // .alertCode("TM003", { type: 'YesNo' })
+      // .subscribe((dialog: Dialog) => {
+      //   dialog.close = this.close;
+      //   console.log(dialog);
+      // });
+  }
+
+  viewItem(taskAction){
+    alert("xem data")
+  }
+
+  close(e: any ) {
+  if(e?.event?.status =="Y"){
+   this.tmSv.deleteTask(this.taskAction.id).subscribe(res=>{
+      if(res){
+       return this.notiService.notifyCode("Xóa task thành công !")
+        // this.notiService.notifyCode("TM004")
+      }
+      this.notiService.notifyCode("Xóa task không thành công. Vui lòng kiểm tra lại !")
+    })
+  }
+  }
+
 }

@@ -19,35 +19,35 @@
       <div class="container" *ngIf="itemSelected?.taskID">
         <div class="task-info mt-2">
           <div class="d-flex flex-grow-1 mb-2">
-            <div class="symbol symbol-40 symbol-circle mr-4">
-              <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="itemSelected?.createdBy"
-                objectType="AD_Users">
+            <div class="symbol symbol-40px symbol-circle me-4">
+              <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users">
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div class="text-dark font-weight-bold font-size-h6">{{ itemSelected?.userNameCreate }}
+                  <div class="text-dark fw-bold fs-7">{{ itemSelected?.userNameCreate }}
                   </div>
-                  <div class="text-dark-50 font-weight-bold mr-4">{{ itemSelected?.positionNameCreate }}
+                  <div class="text-gray-600 fw-bold me-4">{{ itemSelected?.positionNameCreate }}
                   </div>
                   <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center mr-4">
-                      <span class="icon-phone_android icon-16 text-dark-50 mr-2"></span>
-                      <div class="text-dark-50" [ngClass]="itemSelected?.phoneCreate?'text-dark-50':'text-muted'">
+                    <div class="d-flex align-items-center me-4">
+                      <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
+                      <div class="text-gray-600" [ngClass]="itemSelected?.phoneCreate?'text-gray-600':'text-gray-400'">
                         {{ itemSelected?.phoneCreate ? itemSelected?.phoneCreate : 'Số điện thoại' }}
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="icon-email icon-16 text-dark-50 mr-2"></span>
-                      <div class="font-size-sm" [ngClass]="itemSelected?.emailCreate ? 'text-dark-50' : 'text-muted'">
+                      <span class="icon-email icon-16 text-gray-600 me-2"></span>
+                      <div class="font-size-sm"
+                        [ngClass]="itemSelected?.emailCreate ? 'text-gray-600' : 'text-gray-400'">
                         {{ itemSelected?.emailCreate ? itemSelected?.emailCreate : 'Email' }}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="d-flex">
-                  <div class="label label-xxs label-pill label-inline label-light-danger mr-2 label-status"
+                  <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
                     [style.border-color]="
                       (itemSelected?.status | vll: 'L0614':'color' | async) +
                       '30'
@@ -64,84 +64,86 @@
             </div>
           </div>
           <div class="d-flex mt-1">
-            <div class="d-flex mr-6">
-              <span class="font-weight-bold mr-1">Ngày hết hạn:</span>
-              <span [ngClass]="itemSelected?.dueDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.dueDate | date:
+            <div class="d-flex me-6">
+              <span class="fw-bold me-1">Ngày hết hạn:</span>
+              <span [ngClass]="itemSelected?.dueDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.dueDate |
+                date:
                 'dd/MM/yyyy'}}</span>
             </div>
-            <div class="d-flex align-items-center text-dark-75 mr-6">
-              <span class="font-weight-bold mr-1">Ưu tiên:</span>
-              <span class="icon-14 mr-2">
+            <div class="d-flex align-items-center text-gray-700 me-6">
+              <span class="fw-bold me-1">Ưu tiên:</span>
+              <span class="icon-14 me-2">
                 <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
                   [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"></span>
               </span>
-              <span class="text-dark-75">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
+              <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
 
             </div>
             <div class="d-flex">
-              <span class="font-weight-bold mr-1">Nhóm công việc:</span>
-              <span class="text-muted">{{ itemSelected?.taskGroupName }}</span>
+              <span class="fw-bold me-1">Nhóm công việc:</span>
+              <span class="text-gray-400">{{ itemSelected?.taskGroupName }}</span>
             </div>
           </div>
           <div class="d-flex mt-1">
-            <div class="d-flex mr-6">
-              <span class="font-weight-bold mr-1">Ngày bắt đầu:</span>
-              <span [ngClass]="itemSelected?.startDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.startDate |
+            <div class="d-flex me-6">
+              <span class="fw-bold me-1">Ngày bắt đầu:</span>
+              <span [ngClass]="itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.startDate
+                |
                 date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div class="d-flex align-items-center text-dark-75 mr-6">
-              <span class="font-weight-bold mr-1">Ngày kết thúc:</span>
-              <span [ngClass]="itemSelected?.endDate ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.endDate | date:
+            <div class="d-flex align-items-center text-gray-700 me-6">
+              <span class="fw-bold me-1">Ngày kết thúc:</span>
+              <span [ngClass]="itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.endDate |
+                date:
                 'dd/MM/yyyy' }}</span>
               <!-- icon-flag -->
             </div>
             <div class="d-flex">
-              <span class="font-weight-bold mr-1">Ngày hoàn tất:</span>
-              <span [ngClass]="itemSelected?.completedOn ? 'text-dark-75' : 'text-muted' ">{{ itemSelected?.completedOn
+              <span class="fw-bold me-1">Ngày hoàn tất:</span>
+              <span [ngClass]="itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400' ">{{
+                itemSelected?.completedOn
                 | date: 'dd/MM/yyyy' }}</span>
             </div>
           </div>
         </div>
         <div class="mt-2">
           <div class="d-flex mb-1">
-            <span class="font-weight-bold mr-2">Dự án:</span>
-            <span class="text-dark-50">{{ itemSelected?.projectName }}</span>
+            <span class="fw-bold me-2">Dự án:</span>
+            <span class="text-gray-600">{{ itemSelected?.projectName }}</span>
           </div>
           <div class="d-flex">
-            <span class="font-weight-bold mr-2">Địa điểm:</span>
-            <span class="text-dark-50">{{ itemSelected?.location }}</span>
+            <span class="fw-bold me-2">Địa điểm:</span>
+            <span class="text-gray-600">{{ itemSelected?.location }}</span>
           </div>
         </div>
         <div class="mt-2">
           <tags [editMode]="false" [entityName]="'TM_Task'" [(value)]="itemSelected.tags">
           </tags>
         </div>
-        <div class="text-primary font-weight-bold mt-3 mb-2 mr-5">Người thực hiện</div>
+        <div class="text-primary fw-bold mt-3 mb-2 me-5">Người thực hiện</div>
         <div class="d-flex align-items-center">
-          <div class="symbol-group symbol-hover justify-content-end"
-            *ngIf="itemSelected?.category == '3' || itemSelected?.category == '4'">
-            <codx-imgs class="symbol symbol-30 symbol-circle ml-1 symbol-icon symbol-icon-check-bottom"
+          <div *ngIf="itemSelected?.category == '3' || itemSelected?.category == '4'">
+            <codx-imgs class="symbol symbol-30px symbol-circle ms-1 symbol-icon symbol-icon-check-bottom"
               [objectId]="objectAssign" objectName="AD_Users" [numberImages]="4">
             </codx-imgs>
           </div>
 
-          <div class="symbol-group symbol-hover justify-content-end"
-            *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
-            <codx-imgs class="symbol symbol-30 symbol-circle ml-1" [objectId]="itemSelected?.owner"
+          <div *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
+            <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="itemSelected?.owner"
               objectName="AD_Users" [numberImages]="4">
             </codx-imgs>
           </div>
         </div>
-        <div class="text-primary font-weight-bold mt-4 mb-2">Nội dung</div>
-        <div class="task-name font-weight-bold font-size-h5 text-dark mt-2 mb-2">
+        <div class="text-primary fw-bold mt-4 mb-2">Nội dung</div>
+        <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
           {{ itemSelected?.taskName }}
         </div>
-        <div class="text-dark-50">
+        <div class="text-gray-600">
           {{ itemSelected?.memo }}
         </div>
         <div class="task-detail mt-5">
-          <div class="text-primary font-weight-bold mt-4 mb-2">Chọn</div>
-          <div class="checkbox-list mt-6 ml-6" *ngIf="itemSelected?.listTaskGoals?.length > 0">
+          <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
+          <div class="checkbox-list mt-6 ms-6" *ngIf="itemSelected?.listTaskGoals?.length > 0">
             <label class="checkbox checkbox-square" *ngFor="let item of itemSelected?.listTaskGoals">
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span></span>{{ item.memo }}
@@ -162,17 +164,17 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#tab_att">
-                <span class="nav-text">Đính kèm</span><span class="ml-1">(3)</span>
+                <span class="nav-text">Đính kèm</span><span class="ms-1">(3)</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#tab_com">
-                <span class="nav-text">Bình luận</span><span class="ml-1">(3)</span>
+                <span class="nav-text">Bình luận</span><span class="ms-1">(3)</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#tab_ref">
-                <span class="nav-text">Tham chiếu</span><span class="ml-1">(3)</span>
+                <span class="nav-text">Tham chiếu 111111111</span><span class="ms-1">(3)</span>
               </a>
             </li>
             <li class="nav-item">
@@ -198,7 +200,7 @@
                   Tạo
                   mới </span>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
                     <span class="icon-circle">
                       <span class="icon-add icon-12"></span>
@@ -206,19 +208,19 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Lê
                         Thị
                         Mùi</div>
-                      <div class="text-dark-50">2021/08/31 4:38</div>
+                      <div class="text-gray-600">2021/08/31 4:38</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Tạo mới mẫu
+                    <div class="task-name text-gray-600 mt-1">Tạo mới mẫu
                       phiếu
                     </div>
                   </div>
                 </div>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
                     <span class="icon-circle">
                       <span class="icon-create icon-12"></span>
@@ -226,18 +228,18 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Chỉnh sửa mẫu
+                    <div class="task-name text-gray-600 mt-1">Chỉnh sửa mẫu
                       phiếu
                     </div>
                   </div>
                 </div>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
                     <span class="icon-circle">
                       <span class="icon-mode_comment icon-12"></span>
@@ -245,13 +247,13 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Bùi
                         Thái
                         Tú</div>
-                      <div class="text-dark-50">1 giờ trước</div>
+                      <div class="text-gray-600">1 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Thank you...</div>
+                    <div class="task-name text-gray-600 mt-1">Thank you...</div>
                   </div>
                 </div>
               </div>
@@ -261,7 +263,7 @@
                   xét duyệt
                 </span>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
                     <span class="icon-circle">
                       <span class="icon-create icon-12"></span>
@@ -269,18 +271,18 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Lê
                         Thị
                         Mùi</div>
-                      <div class="text-dark-50">2021/08/31 4:38</div>
+                      <div class="text-gray-600">2021/08/31 4:38</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Update status
+                    <div class="task-name text-gray-600 mt-1">Update status
                     </div>
                   </div>
                 </div>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
                     <span class="icon-circle">
                       <span class="icon-mode_comment icon-12"></span>
@@ -288,12 +290,12 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Hợp đồng chưa
+                    <div class="task-name text-gray-600 mt-1">Hợp đồng chưa
                       đúng,
                       kiểm tra
                       lại
@@ -302,7 +304,7 @@
                   </div>
                 </div>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
                     <span class="icon-circle">
                       <span class="icon-attach_file icon-12"></span>
@@ -310,16 +312,16 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Bùi
                         Thái
                         Tú</div>
-                      <div class="text-dark-50">1 giờ trước</div>
+                      <div class="text-gray-600">1 giờ trước</div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <div class="task-name text-dark-50 mt-1">
+                      <div class="task-name text-gray-600 mt-1">
                         Laboco_Contract.xsls</div>
-                      <span class="icon-download icon-18 ml-3"></span>
+                      <span class="icon-download icon-18 ms-3"></span>
                     </div>
                   </div>
                 </div>
@@ -328,7 +330,7 @@
                 <span class="label label-sm label-success label-inline mb-5"> Đã
                   duyệt </span>
                 <div class="d-flex history-item pb-6 line-hor">
-                  <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                  <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
                     <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
                     <span class="icon-circle">
                       <span class="icon-check icon-12"></span>
@@ -336,12 +338,12 @@
                   </div>
                   <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex justify-content-between">
-                      <div class="text-dark text-hover-primary font-weight-bold">
+                      <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Ok duyệt nha!
+                    <div class="task-name text-gray-600 mt-1">Ok duyệt nha!
                     </div>
                   </div>
                 </div>
@@ -353,106 +355,106 @@
               <div class="tab_body">
                 <div class="d-flex flex-column py-3 flex-grow-1">
                   <div class="d-flex align-items-center">
-                    <div class="symbol symbol-40 symbol-circle mr-3">
+                    <div class="symbol symbol-40px symbol-circle me-3">
                       <img alt="Pic" src="../../../assets/demos/user/user9.jpg">
                     </div>
                     <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark font-weight-bold">
+                      <div class="text-dark fw-bold">
                         Phạm Thị Mỹ
                         Duyên
                       </div>
-                      <span class="text-muted">Business Analyst</span>
+                      <span class="text-gray-400">Business Analyst</span>
                     </div>
-                    <div class="text-dark-50">2 giờ trước</div>
+                    <div class="text-gray-600">2 giờ trước</div>
                   </div>
-                  <div class="mt-1 text-dark-75">Nhận xét đánh giá, đánh đánh
+                  <div class="mt-1 text-gray-700">Nhận xét đánh giá, đánh đánh
                     giá
                     giá,..
                   </div>
                   <div class="d-flex align-items-center group-action mt-1">
                     <span class="btn-action d-flex align-items-center">
-                      <span class="icon-favorite_border icon-18 text-danger mr-1"></span>
+                      <span class="icon-favorite_border icon-18 text-danger me-1"></span>
                       <span></span>
                     </span>
-                    <span class="btn-action d-flex align-items-center ml-4">
-                      <span class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
+                    <span class="btn-action d-flex align-items-center ms-4">
+                      <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
                       <span></span>
                     </span>
                   </div>
                 </div>
                 <div class="d-flex flex-column py-3 flex-grow-1">
                   <div class="d-flex align-items-center">
-                    <div class="symbol symbol-40 symbol-circle mr-3">
+                    <div class="symbol symbol-40px symbol-circle me-3">
                       <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
                     </div>
                     <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark font-weight-bold">
+                      <div class="text-dark fw-bold">
                         Nguyễn Thanh
                         Thức
                       </div>
-                      <span class="text-muted">Business Analyst</span>
+                      <span class="text-gray-400">Business Analyst</span>
                     </div>
-                    <div class="text-dark-50">2 giờ trước</div>
+                    <div class="text-gray-600">2 giờ trước</div>
                   </div>
-                  <div class="mt-1 text-dark-75">Bài viết rất hay, tuyệt vời!
+                  <div class="mt-1 text-gray-700">Bài viết rất hay, tuyệt vời!
                   </div>
                   <div class="d-flex align-items-center group-action mt-1">
                     <span class="btn-action d-flex align-items-center">
-                      <span class="icon-favorite_border icon-18 text-danger mr-1"></span>
+                      <span class="icon-favorite_border icon-18 text-danger me-1"></span>
                       <span>31</span>
                     </span>
-                    <span class="btn-action d-flex align-items-center ml-4">
-                      <span class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
+                    <span class="btn-action d-flex align-items-center ms-4">
+                      <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
                       <span>1</span>
                     </span>
                   </div>
-                  <div class="comment-level-2 ml-5 pl-2 border-left mt-4">
+                  <div class="comment-level-2 ms-5 ps-2 border-left mt-4">
                     <div class="d-flex align-items-start py-3 flex-grow-1">
-                      <div class="symbol symbol-30 symbol-circle mr-2">
+                      <div class="symbol symbol-30px symbol-circle me-2">
                         <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
                       </div>
                       <div class="d-flex flex-column flex-grow-1">
-                        <div class="text-dark font-weight-bold">Trần
+                        <div class="text-dark fw-bold">Trần
                           Quốc
                           Hoàn
                         </div>
-                        <div class="text-dark-75 font-size-sm">You’re
+                        <div class="text-gray-700 font-size-sm">You’re
                           welcome!</div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="text-dark-50 text-hover-primary mr-3">Thích</span>
-                          <span class="text-dark-50 text-hover-primary">Trả
+                          <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                          <span class="text-gray-600 text-hover-primary">Trả
                             lời</span>
                         </div>
                       </div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
                     <div class="d-flex align-items-start py-3 flex-grow-1">
-                      <div class="symbol symbol-30 symbol-circle mr-2">
+                      <div class="symbol symbol-30px symbol-circle me-2">
                         <img alt="Pic" src="../../../assets/demos/user/user3.jpg">
                       </div>
                       <div class="d-flex flex-column flex-grow-1">
-                        <div class="text-dark font-weight-bold">Lê Thị
+                        <div class="text-dark fw-bold">Lê Thị
                           Mơ
                         </div>
-                        <div class="text-dark-75 font-size-sm">You’re
+                        <div class="text-gray-700 font-size-sm">You’re
                           welcome!</div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="text-dark-50 text-hover-primary mr-3">Thích</span>
-                          <span class="text-dark-50 text-hover-primary">Trả
+                          <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                          <span class="text-gray-600 text-hover-primary">Trả
                             lời</span>
                         </div>
                       </div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="tab_footer">
                 <form class="position-relative feed-box">
-                  <textarea class="form-control border-0 p-0 pr-26 resize-none" rows="1"
+                  <textarea class="form-control border-0 p-0 pe-26 resize-none" rows="1"
                     placeholder="Bình luận..."></textarea>
                   <div class="feed-icon">
-                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary">
+                    <span class="btn btn-icon btn-sm px-0 text-gray-600 text-hover-primary">
                       <span class="icon-attach_file icon-18"></span>
                     </span>
                   </div>
@@ -467,22 +469,22 @@
                   [objectId]="itemSelected?.taskID + ';' + itemSelected?.parentID" [isFooter]="false">
                 </app-attachment>
                 <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                  <img alt="" class="max-h-35px mr-2" src="../../../assets/demos/dms/pdf.svg">
+                  <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
-                    <span class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
-                      <div class="text-muted text-italic mr-2">LHThuong
+                      <div class="text-gray-400 text-italic me-2">LHThuong
                       </div>
-                      <div class="text-muted">20/07/2021</div>
+                      <div class="text-gray-400">20/07/2021</div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="tab_footer">
                 <button type="button" class="btn btn-sm btn-outline-primary mb-4">
-                  <i class="icon-cloud_upload icon-16 mr-1"></i>Upload file
+                  <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
                 </button>
               </div>
             </div>
@@ -502,35 +504,35 @@
               <div class="tab_body">
 
                 <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                  <img alt="" class="max-h-35px mr-2" src="../../../assets/demos/dms/pdf.svg">
+                  <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
-                    <span class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
-                      <div class="text-muted text-italic mr-2">LHThuong
+                      <div class="text-gray-400 text-italic me-2">LHThuong
                       </div>
-                      <div class="text-muted">20/07/2021</div>
+                      <div class="text-gray-400">20/07/2021</div>
                     </div>
                   </div>
                 </div>
                 <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                  <img alt="" class="max-h-35px mr-2" src="../../../assets/demos/dms/pdf.svg">
+                  <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
-                    <span class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
-                      <div class="text-muted text-italic mr-2">LHThuong
+                      <div class="text-gray-400 text-italic me-2">LHThuong
                       </div>
-                      <div class="text-muted">20/07/2021</div>
+                      <div class="text-gray-400">20/07/2021</div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="tab_footer">
                 <button type="button" class="btn btn-sm btn-outline-primary mb-4">
-                  <i class="icon-cloud_upload icon-16 mr-1"></i>Upload file
+                  <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
                 </button>
               </div>
             </div>
@@ -555,32 +557,34 @@
       <tbody>
         <tr *ngFor="let item of item.mytasks ;trackBy:trackByFn">
           <td>
-            <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
-            item?.taskID == itemSelected?.taskID ? 'yellow' : ''
-            " (click)="clickItem(item)">
+            <div class="d-flex p-3 flex-grow-1 border-bottom item-active" [style.background-color]="
+            item?.taskID == itemSelected?.taskID ? '' : ''
+            " (click)="clickItem(item)" (mouseover)="showControl(p,item)" [ngbPopover]="popContent"
+              popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body" autoClose="outside"
+              triggers="manual">
               <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
-              </more-funtion> -->
-              <div class="symbol symbol-40 symbol-circle mr-3">
-                <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy"
-                  objectType="AD_Users" width="40">
+              </more-funtion>  -->
+              <div class="me-3">
+                <codx-img class="symbol symbol-40px symbol-circle" [objectId]="item?.createdBy" objectType="AD_Users"
+                  width="40">
                 </codx-img>
               </div>
               <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center justify-content-between">
-                  <div class="text-dark text-hover-primary font-weight-bold">
+                  <div class="text-dark text-hover-primary fw-bold">
                     {{ item.userNameCreate }}
                   </div>
 
-                  <span class="icon-15 mr-2">
+                  <span class="icon-15 me-2">
                     <span [class]="item?.priority | vll: 'L0186':'icon' | async"
                       [style.color]="item?.priority | vll: 'L0186':'color' | async"></span>
                   </span>
                 </div>
-                <span class="text-muted">{{ item.positionNameCreate }}</span>
+                <span class="text-gray-400">{{ item.positionNameCreate }}</span>
                 <div class="task-name mb-1 max-h-36px">{{ item?.taskName }}</div>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="task-status d-flex">
-                    <div class="label label-xxs label-pill label-inline label-light-danger mr-2 label-status"
+                    <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
                       [style.border-color]="
                     (item?.status | vll: 'L0614':'color' | async) + '30'
                   " [style.background-color]="
@@ -588,12 +592,11 @@
                   " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
                       {{ item?.status | vll: "L0614":"text" | async }}
                     </div>
-                    <span class="text-dark-50 font-size-md">
+                    <span class="text-gray-600 font-size-md">
                       {{ item?.createdOn | date: 'dd/MM/yyyy' }}</span>
                   </div>
-                  <div class="symbol-group symbol-hover justify-content-end"
-                    *ngIf="item?.category == '3' || item?.category == '4'">
-                    <codx-imgs class="symbol symbol-30 symbol-circle ml-1" [objectId]="item?.assignTo"
+                  <div *ngIf="item?.category == '3' || item?.category == '4'">
+                    <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="item?.assignTo"
                       objectName="AD_Users" [numberImages]="2">
                     </codx-imgs>
                   </div>
@@ -617,16 +620,16 @@
   <div class="list-group p-0 mt-5">
     <div class="d-flex align-items-center justify-content-between list-title">
       <div class="d-flex flex-wrap align-items-top">
-        <span class="icon-18  icon-add_box mr-2 align-items-start" *ngIf="data.items.length >0"></span>
-        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data?.owner" objectType="AD_Users">
+        <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="data.items.length >0"></span>
+        <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="data?.owner" objectType="AD_Users">
         </codx-img>
         <!--end::Symbol-->
         <!--begin::Title-->
-        <div class="d-flex flex-column align-items-cente mr-2  w-50">
-          <div class="text-dark font-weight-bold font-size-h6">
+        <div class="d-flex flex-column align-items-center me-2 w-50">
+          <div class="text-dark fw-bold fs-7">
             {{data?.userName}}
           </div>
-          <div class="text-dark-50">{{data.positionName}}</div>
+          <div class="text-gray-600">{{data.positionName}}</div>
           <div class="text-dark" *ngIf="data?.category == '1' || data?.category == '3'">{{data.taskName}}
           </div>
           <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
@@ -634,23 +637,23 @@
         </div>
         <!--end::Title-->
         <!--begin::Section-->
-        <div class="d-flex align-items-center mt-lg-0 mt-3 ml-auto">
+        <div class="d-flex align-items-center mt-lg-0 mt-3 ms-auto">
           <!--begin::Label-->
-          <div class="mr-6">
-            <span class="icon-16  icon-person mr-1 text-primary "></span>
-            <span class="text-dark-75 font-weight-bolder">{{data.items.length}}</span>
+          <div class="me-6">
+            <span class="icon-16 icon-person me-1 text-primary "></span>
+            <span class="text-gray-700 fw-bolder">{{data.items.length}}</span>
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <div class="mr-6" >
-            <span class="icon-16 icon-message mr-1 text-primary "></span>
-            <span class="text-dark-75 font-weight-bolder">{{data.comments}}</span>
+          <div class="me-6">
+            <span class="icon-16 icon-message me-1 text-primary "></span>
+            <span class="text-gray-700 fw-bolder">{{data.comments}}</span>
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <div class="mr-6">
-            <span class="icon-16  icon-attach_file mr-1 text-primary "></span>
-            <span class="text-dark-75 font-weight-bolder">3</span>
+          <div class="me-6">
+            <span class="icon-16  icon-attach_file me-1 text-primary "></span>
+            <span class="text-gray-700 fw-bolder">3</span>
           </div>
           <!--end::Label-->
           <!--begin::Btn-->
@@ -668,8 +671,35 @@
         <!--end::Section-->
       </div>
     </div>
-  
+
   </div>
 </ng-template>
 
 
+<!-- // dung de tesst -->
+<ng-template #popContent>
+  <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ml-2 mr-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+      <span class="tooltiptext">Copy</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
+      <span class="tooltiptext">Xem</span>
+    </div>
+  </a>
+</ng-template>

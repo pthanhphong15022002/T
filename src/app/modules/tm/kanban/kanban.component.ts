@@ -1,3 +1,4 @@
+import { map } from 'rxjs';
 import { TmService } from './../tm.service';
 import {
   Component,
@@ -14,7 +15,6 @@ import {
 } from '@syncfusion/ej2-angular-kanban';
 import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
-import { DataSv } from '../models/task.model';
 import { KanbanSetting } from '../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
@@ -42,6 +42,7 @@ export class TestKanbanComponent implements OnInit {
   Sumary: string = '';
   columns: any = [];
   settings: any;
+  kanbanSetting = new KanbanSetting();
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -94,11 +95,11 @@ export class TestKanbanComponent implements OnInit {
     enable: true,
     menuItem: [],
   };
-  
+
   clickme() {
     console.log('aloooo');
   }
-  
+
   public getString(assignee: any) {
     return assignee
       .match(/\b(\w)/g)
@@ -134,7 +135,6 @@ export class TestKanbanComponent implements OnInit {
 
   onDataDrag(evt: any) {
     this.item = evt;
-
   }
 
   submit(e: any, modal: any) {
@@ -171,18 +171,41 @@ export class TestKanbanComponent implements OnInit {
 
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
-        this.dataSource = res[1];
-        this.kanban.setDataSource(res[1]);
-        //  this.tmSv.setChangeData(new DataSv(res[0], this.view));
-        console.log(this.dataSource);
+        if (this.kanbanSetting.BreakDateBy == '1') {
+          const today = new Date();
+          res[0].map((data) => {
+            if (this.isSameWeek(today, new Date(data.dueDate))) {
+              data.dayOfWeek = this.getDayOfWeek(
+                new Date(data.dueDate)
+              ).toString();
+            }
+          });
+        }
+        if (this.kanbanSetting.BreakDateBy == '3') {
+          const today = new Date();
+          res[0].map((data) => {
+            if (
+              this.isSameMonth(
+                today,
+                new Date(data.dueDate)
+              )
+            ) {
+              data.weekOfMonth = this.getWeekOfMonth(
+                new Date(data.dueDate)
+              ).toString();
+            }
+          });
+        }
+        this.dataSource = res[0];
+        this.kanban.setDataSource(res[0]);
         this.cr.detectChanges();
       }
     });
   }
 
   getColumnKanban() {
-    let kanbanSetting = new KanbanSetting();
     const {
+      //ColumnField,
       ColumnMenu,
       ColumnToolbars,
       CountObjects,
@@ -195,29 +218,55 @@ export class TestKanbanComponent implements OnInit {
       SwimlanesControl,
       SwimlanesField,
     } = this.settings;
-    kanbanSetting.BreakDateBy = '1';
-    kanbanSetting.ColumnField = 'Status';
-    kanbanSetting.ColumnMenu = JSON.parse(ColumnMenu);
-    kanbanSetting.ColumnToolbars = JSON.parse(ColumnToolbars);
-    kanbanSetting.IsChangeColumn = true;
-    kanbanSetting.CountObjects = JSON.parse(CountObjects);
-    kanbanSetting.DragColumn = JSON.parse(DragColumn);
-    kanbanSetting.DragSwimlanes = JSON.parse(DragSwimlanes);
-    kanbanSetting.DateType = DateType;
-    kanbanSetting.ProcessBar = JSON.parse(ProcessBar);
-    kanbanSetting.Tags = JSON.parse(Tags);
-    kanbanSetting.Resources = JSON.parse(Resources);
-    kanbanSetting.SwimlanesControl = JSON.parse(SwimlanesControl);
-    kanbanSetting.IsChangeSwimlanes = true;
-    kanbanSetting.SwimlanesField = SwimlanesField;
-    kanbanSetting.FormName = 'Tasks';
-    kanbanSetting.GrvName = 'grvTasks';
-    this.tmSv.loadColumnsKanban(kanbanSetting).subscribe((res) => {
+    this.kanbanSetting.BreakDateBy = '3';
+    this.kanbanSetting.ColumnField = 'DueDate';
+    this.kanbanSetting.ColumnMenu = JSON.parse(ColumnMenu);
+    this.kanbanSetting.ColumnToolbars = JSON.parse(ColumnToolbars);
+    this.kanbanSetting.IsChangeColumn = true;
+    this.kanbanSetting.CountObjects = JSON.parse(CountObjects);
+    this.kanbanSetting.DragColumn = JSON.parse(DragColumn);
+    this.kanbanSetting.DragSwimlanes = JSON.parse(DragSwimlanes);
+    this.kanbanSetting.DateType = DateType;
+    this.kanbanSetting.ProcessBar = JSON.parse(ProcessBar);
+    this.kanbanSetting.Tags = JSON.parse(Tags);
+    this.kanbanSetting.Resources = JSON.parse(Resources);
+    this.kanbanSetting.SwimlanesControl = JSON.parse(SwimlanesControl);
+    this.kanbanSetting.IsChangeSwimlanes = true;
+    this.kanbanSetting.SwimlanesField = SwimlanesField;
+    this.kanbanSetting.FormName = 'Tasks';
+    this.kanbanSetting.GrvName = 'grvTasks';
+    this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
         this.columns = res.column;
         // this.kanban.columns = res.column
         this.cr.detectChanges();
       }
     });
+  }
+
+  private getDayOfWeek(date: Date) {
+    return date.getDay();
+  }
+
+  private getWeekOfMonth(date: Date) {
+    return Math.ceil((date.getDate() - 1 - date.getDay()) / 7) + 1;
+  }
+
+  private getWeek(date: Date) {
+    const janFirst = new Date(date.getFullYear(), 0, 1);
+    return Math.ceil(
+      ((date.getTime() - janFirst.getTime()) / 86400000 +
+        janFirst.getDay() +
+        1) /
+        7
+    );
+  }
+
+  private isSameWeek(dateA: Date, dateB: Date) {
+    return this.getWeek(dateA) === this.getWeek(dateB);
+  }
+
+  private isSameMonth(dateA: Date, dateB: Date) {
+    return dateA.getMonth() === dateB.getMonth();
   }
 }

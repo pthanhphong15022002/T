@@ -1,6 +1,9 @@
 <div id="kt_engage_demos" class="bg-body drawer drawer-end drawer-on" style="width: 550px;">
   <div class="card w-100 rounded-0 border-0">
     <div class="card-header pe-5">
+      <div style="width : 30px" [style.background-color]="
+      ( task.status | vll: 'L0614':'color' | async) ">
+      </div>
       <div class="card-title">
         <h2 class="m-0">Tạo mới công việc</h2>
       </div>
@@ -97,7 +100,7 @@
       </div>
       <div class="form-group mt-3" *ngIf="param?.ProjectControl != '0'">
         <label>Dự án</label>
-        <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
+    
         <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
           ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
           [disabled]="readOnly" [value]="task.projectID">
@@ -105,14 +108,14 @@
       </div>
       <div class="form-group mt-3" *ngIf="param?.ReferenceControl != '0'">
         <label>Tham chiếu</label>
-        <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
+    
         <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
           style="border: none" placeholder="Tham chiếu" ngDefaultControl refValue="" [disabled]="readOnly"
           loadFull="true" field="refNo" (valueChange)="cbxChange($event)"></codx-combobox>
       </div>
       <div class="form-group mt-3" *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
         <label>Bước qui trình</label>
-        <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
+      
         <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
           placeholder="Bước qui trình" ngDefaultControl refValue="" loadFull="true" field="activityID"
           [disabled]="readOnly" (valueChange)="cbxChange($event)">
@@ -140,7 +143,6 @@
         <div class="form-group row mt-3">
           <div class="col-6">
             <label>Số giờ thực hiện</label>
-            <!-- <input type="text" class="form-control" placeholder="" /> -->
             <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
           </div>
         </div>
@@ -243,7 +245,35 @@
               [valueSeleteds]="task.assignTo">
             </app-selectuser> -->
       </div>
-      <div class="user-mini-group mt-2">
+      <div >
+        <ng-container *ngFor="let item of listUserDetail; index as i">
+          <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item?.owner" objectType="AD_Users">
+          </codx-img>
+          <!--end::Symbol-->
+          <!--begin::Title-->
+          <div class="d-flex flex-column align-items-cente mr-2  w-50">
+            <div class="text-dark font-weight-bold font-size-h6">
+              {{item?.userName}}
+            </div>
+            <div class="text-dark-50">{{item.positionName}}</div>
+            <div class="text-dark" >{{item.taskName}}
+            </div>
+          </div>
+          <div class="div-action-menu">
+            <div class="action-menu d-flex">
+              <div class="action-content d-flex align-items-center">
+                <a class="action-item" (click)="onDeleteUser(item.UserID)">
+                  <div class="d-flex align-items-center btn-tooltip">
+                    <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+                    <span class="tooltiptext">Delete</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <!-- <div class="user-mini-group mt-2">
         <div class="user-mini-item">
           <div class="d-flex align-items-center">
             <div class="symbol symbol-20px symbol-circle me-2">
@@ -280,7 +310,7 @@
             <span class="icon-close icon-16 ms-2"></span>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex align-items-center">
           <span class="icon-attach icon-16 me-2 text-primary"></span>
@@ -380,32 +410,6 @@
   </div>
 </ng-template>
 
-<ng-template #messageError let-modal>
-  <div class="modal-header">
-    <div class="task-header border-bottom p-3">
-      <div class="text-dark font-weight-bold font-size-h6 mb-1">
-          Cảnh Báo !!
-      </div>
-    </div>
-    <!-- <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
-      <i class="icon-close icon-20 text-dark text-hover-primary"></i>
-    </button> -->
-  </div>
-  <div class="modal-body">
-    <div class="form-group mt-3">
-    <span>{{message}}</span>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <!-- <button type="button" *ngIf="isCheckTime" class="btn btn-primary" (click)="confirmTime(modal)">
-      Đồng ý
-    </button> -->
-    <button type="button" class="btn btn-primary" (click)="modal.dismiss('Cross click')">
-      Cance
-    </button>
-  </div>
-</ng-template>
-
 <ng-template #contentListTask let-modal>
   <div class="modal-header">
     <div class="task-header border-bottom p-3">
@@ -476,3 +480,5 @@
     </div>
   </div>
 </ng-template>
+
+
