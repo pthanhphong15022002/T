@@ -124,7 +124,7 @@ export class ViewListDetailsComponent implements OnInit {
             }
           });
 
-        if (!this.itemSelected.id && this.itemSelected?.category != '1') {
+        if (this.itemSelected.id && this.itemSelected?.category != '1') {
           this.api
             .execSv<any>(
               'TM',
