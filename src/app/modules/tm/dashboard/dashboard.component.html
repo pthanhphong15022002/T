@@ -20,8 +20,8 @@
                 </svg>
               </span>
               <!--end::Svg Icon-->
-              <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">500M$</div>
-              <div class="fw-bold text-gray-400">SAP UI Progress</div>
+              <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5"> {{ taskRemind.taskOutOfDate }}</div>
+              <div class="fw-bold text-gray-400">Quá hạn</div>
             </div>
             <!--end::Body-->
           </a>
@@ -47,8 +47,8 @@
                 </svg>
               </span>
               <!--end::Svg Icon-->
-              <div class="text-gray-100 fw-bolder fs-2 mb-2 mt-5">+3000</div>
-              <div class="fw-bold text-gray-100">New Customers</div>
+              <div class="text-gray-100 fw-bolder fs-2 mb-2 mt-5"> {{ taskRemind.taskUncompelete }}</div>
+              <div class="fw-bold text-gray-100">Chưa thực hiện</div>
             </div>
             <!--end::Body-->
           </a>
@@ -71,8 +71,8 @@
                 </svg>
               </span>
               <!--end::Svg Icon-->
-              <div class="text-white fw-bolder fs-2 mb-2 mt-5">$50,000</div>
-              <div class="fw-bold text-white">Milestone Reached</div>
+              <div class="text-white fw-bolder fs-2 mb-2 mt-5">{{ taskRemind.taskPrioritized }}</div>
+              <div class="fw-bold text-white"> Ưu tiên cao chưa thực hiện</div>
             </div>
             <!--end::Body-->
           </a>
@@ -95,8 +95,8 @@
                 </svg>
               </span>
               <!--end::Svg Icon-->
-              <div class="text-white fw-bolder fs-2 mb-2 mt-5">$50,000</div>
-              <div class="fw-bold text-white">Milestone Reached</div>
+              <div class="text-white fw-bolder fs-2 mb-2 mt-5">{{ taskRemind.taskPrioritizedUnFinish }}</div>
+              <div class="fw-bold text-white">Hoãn lại</div>
             </div>
             <!--end::Body-->
           </a>
@@ -112,18 +112,17 @@
         </div>
         <div class="col pl-0 pr-9">
           <div>
-            <div class="d-flex  flex-column flex-grow-1 mb-3">
+            <div class="d-flex flex-grow-1 mb-3">
               <div class="font-size-h2 font-weight-bold mr-3">
-                99%
-                <!-- {{ chartTaskRemind.rateDoneOnTime | percent }} -->
+                {{ chartTaskRemind.rateDoneOnTime | percent }}
               </div>
-              <div class="chat-ondate d-flex w-100">
-                <ejs-chart width='300' height='100' style='display:block;' [chartArea]='chartArea' id='chartcontainer'
-                  [legendSettings]="legendSettingsBar" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis'
+              <div class="d-flex w-100 h-50px">
+                <ejs-chart width='200' height='80' style='display:block;' [chartArea]='chartArea' id='chartcontainer'
+                  [legendSettings]="legendLine" [primaryXAxis]='lineXAxis' [primaryYAxis]='lineYAxis'
                   [tooltip]='tooltip'>
                   <e-series-collection>
-                    <e-series [dataSource]='data' type='Line' yName='id' xName="value" name='Germany' width=2
-                      [marker]='marker'>
+                    <e-series [dataSource]='dataLine' type='Line' yName='id' xName="value" name='Germany' width=2
+                      [marker]='markerLine'>
                     </e-series>
                   </e-series-collection>
                 </ejs-chart>
@@ -140,11 +139,13 @@
         <div class="col pl-0">
           <div class="d-flex flex-column flex-grow-1 mb-3">
             <div class="font-size-h2 font-weight-bold mr-3">
-              <!-- {{ taskRemind.rateDoneAllTime | percent }} -->
+              {{ taskRemind.rateDoneAllTime | percent }}
             </div>
-            <div class="chart-now d-flex w-100">
-              <!-- <mat-progress-bar mode="determinate" [value]="taskRemind.rateDoneAllTime * 100">
-              </mat-progress-bar> -->
+            <div class="d-flex w-100">
+              <ejs-progressbar #linear1 id='linear1' type='Linear' [maximum]='100' [minimum]='0'
+                [value]='taskRemind.rateDoneAllTime * 100' width='100%' [trackThickness]='12' [progressThickness]='12'
+                height='5' [animation]='animation'>
+              </ejs-progressbar>
             </div>
           </div>
         </div>
@@ -153,10 +154,10 @@
       <div class="row m-0 mt-9 mb-3 pt-1">
         <div class="col-4">
           <div class="text-dark font-weight-bold">
-            <!-- Tổng số công việc trong tuần {{ week }} -->
+            Tổng số công việc trong tuần {{ week }}
           </div>
           <div class="text-dark font-size-h1 font-weight-bold mt-2">
-            <!-- {{ chartTaskRemind.totalTaskInWeek }} công việc -->
+            {{ chartTaskRemind.totalTaskInWeek }} công việc
           </div>
 
           <div class="text-dark-50">
@@ -164,6 +165,14 @@
           </div>
         </div>
         <div class="col-8">
+          <ejs-accumulationchart id="doughnut-container" #pie style='display:block' width='500' height='200'
+            selectionMode='Point'>
+            <e-accumulation-series-collection>
+              <e-accumulation-series name='Revenue' [dataSource]='doughnutData' xName='x' yName='y'
+                [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="80%"> </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+          <div id="center_title" style="visibility: hidden; position: absolute;">Expenses in Year</div>
           <!-- bar chart -->
           <!-- <ng-container>
             <canvas *ngIf="!isShowEmpty" baseChart [data]="chartDatas" [plugins]="doughnutChartPlugins"
@@ -195,14 +204,20 @@
     </div>
     <div class="p-6 chart-by-day">
       <!-- <img class="w-100" alt="Pic" src="../../../assets/demos/svg/chart4.png"> -->
-      <!-- <canvas height="100" baseChart chartType="bar" [datasets]="chart.datasets" [labels]="chart.labels"
-        [options]="chart.options" legend="true">
-      </canvas> -->
-
+      <ejs-chart style='display:block;' [chartArea]='chartArea' width='100%' align='center' id='chartbar'
+        [primaryXAxis]='columnXAxis' [primaryYAxis]='columnYAxis' [title]='title' [tooltip]='tooltip'>
+        <e-series-collection>
+          <e-series [dataSource]='dataColumn' type='Column' yName='id' xName="value" name='Gold' width=2
+            [marker]='markerColumn'>
+          </e-series>
+          <e-series [dataSource]='dataColumn' type='Line' yName='id' xName="value" name='Japan' [marker]='markerColumn'>
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
     </div>
   </div>
   <div id="task_dashboard-right" class="min-w-350px w-350px pr-6">
-    <!-- <div class="taskbox-user">
+    <div class="taskbox-user">
       <selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>
       <div class="taskbox-list" style="height: 720px">
         <div class="d-flex p-1 mb-3 flex-grow-1" *ngFor="let item of remiderOnDay">
@@ -221,8 +236,8 @@
             </div>
             <div class="task-name">{{ item.taskName }}</div>
             <div class="d-flex">
-              <span class="label label-inline label-pill"
-                [style.color]="item.status | vll: 'L06142':'color' | async" [style.background-color]="
+              <span class="label label-inline label-pill" [style.color]="item.status | vll: 'L06142':'color' | async"
+                [style.background-color]="
                   (item.status | vll: 'L06142':'color' | async) + '30'
                 ">
                 {{ item.status | vll: "L06142":"text" | async }}
@@ -231,31 +246,6 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </div>
-
-
-<!-- <div class="p-2 container">
-  <ejs-chart width='150' height='100' style='display:block;' [chartArea]='chartArea' [width]='width'
-    id='chartcontainer' [legendSettings]="legendSettingsBar" [primaryXAxis]='primaryXAxis'
-    [primaryYAxis]='primaryYAxis' [tooltip]='tooltip'>
-    <e-series-collection>
-      <e-series [dataSource]='data' type='Line' yName='id' xName="value" name='Germany' width=2 [marker]='marker'>
-      </e-series>
-    </e-series-collection>
-  </ejs-chart>
-</div>
-<div class="control-section">
-  <div style="padding-left: 35px;">
-    <ejs-accumulationchart id="donut-container" #pie style='display:block' width='500' height='200'
-      [legendSettings]="legendSettings" [title]="titleDonut" (textRender)="onTextRender($event)" selectionMode='Point'
-      (load)='load($event)'>
-      <e-accumulation-series-collection>
-        <e-accumulation-series name='Revenue' [dataSource]='data2' xName='x' yName='y' [startAngle]="startAngle"
-          [endAngle]="endAngle" innerRadius="80%"> </e-accumulation-series>
-      </e-accumulation-series-collection>
-    </ejs-accumulationchart>
-    <div id="center_title" style="visibility: hidden; position: absolute;">Expenses in Year</div>
-  </div>
-</div> -->

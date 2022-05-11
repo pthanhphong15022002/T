@@ -72,7 +72,7 @@ export class TestKanbanComponent implements OnInit {
     this.getData();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public cardSettings: CardSettingsModel = {
     headerField: 'taskID',
@@ -94,11 +94,11 @@ export class TestKanbanComponent implements OnInit {
     enable: true,
     menuItem: [],
   };
-  
+
   clickme() {
     console.log('aloooo');
   }
-  
+
   public getString(assignee: any) {
     return assignee
       .match(/\b(\w)/g)

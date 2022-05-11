@@ -474,7 +474,7 @@ export class TaskInfoComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (!this.param)
       this.getParam(function (o) {
-        if (o) t.showPanel();
+        //if (o) t.showPanel();
       });
     else {
       t.closePanel();

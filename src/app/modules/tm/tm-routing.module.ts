@@ -1,5 +1,4 @@
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { TestKanbanComponent } from './kanban/kanban.component';
+
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
@@ -17,7 +16,9 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TaskInfoComponent } from './controls/task-info/task-info.component';
-
+import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { TestKanbanComponent } from './kanban/kanban.component';
 const routes: Routes = [
   {
     path: '',
@@ -58,7 +59,8 @@ const routes: Routes = [
     MoreFuntionComponent,
     ScheduleComponent,
     TaskInfoComponent,
-    DashboardComponent],
+    DashboardComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -67,6 +69,7 @@ const routes: Routes = [
     SharedModule,
     ChartAllModule,
     AccumulationChartAllModule,
+    ProgressBarModule,
     DatePickerModule
   ],
   exports: [RouterModule],
