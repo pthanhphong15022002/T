@@ -804,7 +804,7 @@ export class ScheduleComponent implements OnInit {
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    UserID:{name:"owners"},
+    userID: {name:"owners"},
   }
   columns = [
     {
@@ -878,8 +878,8 @@ export class ScheduleComponent implements OnInit {
     this.model.pageSize = 100;
     // model.dataValue = this.user.userID;
     // set max dinh
-    // this.startDate = moment().toDate();
-    // this.endDate = moment().toDate();
+    // this.startDate = moment("04/11/2022").toDate();
+    // this.endDate = moment("05/11/2022").toDate();
     this.model.filter = {
       logic: 'and',
       filters: [
@@ -888,36 +888,36 @@ export class ScheduleComponent implements OnInit {
       ],
     };
   }
-  // resourceData(){
-  //   let fied = this.gridView?.dateControl || 'DueDate';
-  //   let model = new DataRequest();
-  //   model.formName = 'Tasks';
-  //   model.gridViewName = 'grvTasks';
-  //   model.entityName = 'TM_Tasks';
-  //   model.predicate = '';
-  //   model.funcID = "TM003"//this.viewBase.funcID ;
-  //   model.page = 1;
-  //   model.pageSize = 100;
-  //   // model.dataValue = this.user.userID;
-  //  // set max dinh
-  //   this.startDate =moment("4/15/2022").toDate();
-  //   this.endDate = moment("5/15/2022").toDate();
-  //   model.filter = {
-  //     logic: 'and',
-  //     filters: [
-  //       { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-  //       { operator: 'lte', field: fied, value:  this.endDate },
-  //     ],
-  //   };
-  //   const t = this;
-  //   t.tmSv.loadTaskByAuthen(model).subscribe((res)=>{
-  //     if (res && res.length) {
-  //       this.data = res[0]; 
-  //       this.itemSelected = res[1][0] ;
+  resourceData(){
+    let fied = this.gridView?.dateControl || 'DueDate';
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.predicate = '';
+    model.funcID = "TM003"//this.viewBase.funcID ;
+    model.page = 1;
+    model.pageSize = 100;
+    // model.dataValue = this.user.userID;
+   // set max dinh
+    // this.startDate =moment("4/15/2022").toDate();
+    // this.endDate = moment("5/15/2022").toDate();
+    model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value:  this.endDate },
+      ],
+    };
+    const t = this;
+    t.tmSv.loadTaskByAuthen(model).subscribe((res)=>{
+      if (res && res.length) {
+        this.data = res[0]; 
+        this.itemSelected = res[1][0] ;
         
-  //     }
-  //   })
-  // }
+      }
+    })
+  }
 
 
   handleDataSchedule(listTask) {
