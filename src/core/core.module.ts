@@ -1,4 +1,3 @@
-import { BackgroundImagePipe } from './pipes/background-image.pipe';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -11,6 +10,8 @@ import { DatetimePipe } from './pipes/datetime.pipe';
 import { FormatDatetimePipe } from './pipes/format-datetime.pipe';
 import { SharedControlPipe } from './pipes/sharedcontrol.pipe';
 import { FunctionPipe } from './pipes/function.pipe';
+import { BackgroundImagePipe } from './pipes/background-image.pipe';
+import { StatusPipe } from './pipes/status.pipe';
 import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
 // import { MessagePipe } from './pipes/message.pipe';
 
@@ -24,6 +25,7 @@ import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
     SharedControlPipe,
     FunctionPipe,
     BackgroundImagePipe,
+    StatusPipe
   ],
   imports: [CommonModule, FormsModule],
   providers: [
@@ -40,6 +42,7 @@ import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
     SharedControlPipe,
     FunctionPipe,
     BackgroundImagePipe,
+    StatusPipe
   ],
 })
 export class CoreModule {}
