@@ -472,13 +472,13 @@ export class TaskInfoComponent implements OnInit {
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        if (o) t.showPanel();
-      });
-    else {
-      t.closePanel();
-    }
+    // if (!this.param)
+    //   this.getParam(function (o) {
+    //     if (o) t.showPanel();
+    //   });
+    // else {
+    //   t.closePanel();
+    // }
   }
 
   valueChangeUser(event) {
