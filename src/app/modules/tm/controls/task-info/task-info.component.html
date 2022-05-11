@@ -5,7 +5,7 @@
       ( task.status | vll: 'L0614':'color' | async) ">
       </div>
       <div class="card-title">
-        <h2 class="m-0">Tạo mới công việc</h2>
+        <h2 class="m-0">{{title}}</h2>
       </div>
       <div class="card-toolbar">
         <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
@@ -55,22 +55,21 @@
       <div class="form-group row mt-3">
         <div class="col-6">
           <label>Ngày hết hạn</label>
-          <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
+          <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime" [disabled]="readOnly"
             [crrValue]="task.dueDate" dataformat="d" (valueChange)="changeTime($event)">
           </codx-input>
         </div>
         <div class="col-6">
           <label>Ưu tiên</label>
           <!-- <codx-valuelist [placeholder]="'Chọn độ ưu tiên'"></codx-valuelist> -->
-          <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"
+          <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"  [disabled]="readOnly"
             [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
           </codx-input>
         </div>
       </div>
       <div class="form-group mt-3">
         <label>Nhóm triển khai</label>
-        <!-- <codx-valuelist [placeholder]="'Nhóm'"></codx-valuelist> -->
-        <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc"
+        <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc" 
           ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChange($event)"
           [value]="task.taskGroupID">
         </codx-combobox>
@@ -80,11 +79,9 @@
           <label>Mô tả công việc</label>
           <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span>
         </div>
-        <!-- <codx-input type="textarea" field="textarea" placeholder="">
-        </codx-input> -->
         <textarea [readonly]="readOnly" [(ngModel)]="task.memo" class="form-control" rows="2"></textarea>
-        <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..." type="text"
-          class="col-md-8" style="margin-left: -17px;
+        <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
+          class="col-md-8" style="
           border-width: thin;
           border-style: none;
           margin-top: 3px;
@@ -92,7 +89,7 @@
       </div>
       <div class="form-group mt-3" *ngIf="param?.Location != '0'">
         <label>Địa điểm</label>
-        <input type="text" class="form-control" [disabled]="readOnly" [(ngModel)]="task.location" />
+        <input type="text" class="form-control" [readonly]="readOnly" [(ngModel)]="task.location" />
       </div>
       <div class="d-flex align-items-center mt-4">
         <span class="icon-share icon-16 me-2 text-primary"></span>
@@ -102,7 +99,7 @@
         <label>Dự án</label>
 
         <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
-          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
+          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" 
           [disabled]="readOnly" [value]="task.projectID">
         </codx-combobox>
       </div>
@@ -238,7 +235,7 @@
           <span class="icon-person icon-16 me-2 text-primary"></span>
           <div class="fw-bold fs-6 text-primary">Phân công cho</div>
         </div>
-        <button type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
+        <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
           <i class="icon-person_add_alt fs-5 me-1"></i>Add user
         </button>
         <!-- <app-selectuser *ngIf="task?.category == '2' ? false : true" (valueChange)="valueChangeUser($event)"
@@ -260,7 +257,7 @@
                   </div>
                   <div class="text-dark">{{item.positionName}}</div>
                   <div class="text-dark">
-                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" style="
+                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly" style="
                       border-width: thin;
                       border-style: none;
                       margin-top: 3px;
@@ -269,7 +266,7 @@
                 </div>
               </div>
             </div>
-            <div>
+            <div *ngIf="!readOnly">
               <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
                 <div>
                   <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
@@ -277,48 +274,9 @@
                 </div>
               </a>
             </div>
-          </div>
-         
+          </div>  
         </ng-container>
       </div>
-      <!-- <div class="user-mini-group mt-2">
-        <div class="user-mini-item">
-          <div class="d-flex align-items-center">
-            <div class="symbol symbol-20px symbol-circle me-2">
-              <codx-img #image objectId="ADMIN"></codx-img>
-            </div>
-            <div class="text-gray-700">Tất cả</div>
-            <span class="icon-close icon-16 ms-2"></span>
-          </div>
-        </div>
-        <div class="user-mini-item">
-          <div class="d-flex align-items-center">
-            <div class="symbol symbol-20px symbol-circle me-2">
-              <codx-img #image objectId="ADMIN"></codx-img>
-            </div>
-            <div class="text-gray-700">Admin</div>
-            <span class="icon-close icon-16 ms-2"></span>
-          </div>
-        </div>
-        <div class="user-mini-item">
-          <div class="d-flex align-items-center">
-            <div class="symbol symbol-20px symbol-circle me-2">
-              <codx-img #image objectId="ADMIN"></codx-img>
-            </div>
-            <div class="text-gray-700">Lê Phạm Thương Hoài</div>
-            <span class="icon-close icon-16 ms-2"></span>
-          </div>
-        </div>
-        <div class="user-mini-item">
-          <div class="d-flex align-items-center">
-            <div class="symbol symbol-20px symbol-circle me-2">
-              <codx-img #image objectId="ADMIN"></codx-img>
-            </div>
-            <div class="text-gray-700">Lê Phạm Thương Hoài</div>
-            <span class="icon-close icon-16 ms-2"></span>
-          </div>
-        </div>
-      </div> -->
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex align-items-center">
           <span class="icon-attach icon-16 me-2 text-primary"></span>
@@ -387,7 +345,7 @@
     <div class="card-footer pt-4">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary" (click)="closeTask()">Hủy</button>
-        <button type="button" class="btn btn-primary" (click)="SaveData(task.taskID)">Lưu</button>
+        <button type="button" class="btn btn-primary" (click)="SaveData(task.taskID)"  [disabled]="readOnly">Lưu</button>
       </div>
     </div>
   </div>

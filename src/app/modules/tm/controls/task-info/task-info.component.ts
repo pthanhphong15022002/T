@@ -47,10 +47,11 @@ export class TaskInfoComponent implements OnInit {
   disableAddToDo = true;
   grvSetup: any;
   param: any;
-  task = new TM_Tasks();
+  @Input() task = new TM_Tasks();
   functionID: string;
   view = '';
   action = '';
+  title = "Tạo mới công việc"
   contentTodoEdit = '';
   recIDTodoDelete = '';
   indexEditTodo = -1;
@@ -507,11 +508,12 @@ export class TaskInfoComponent implements OnInit {
   }
 
   cbxChange(data) {
-    if (data.field == 'taskGroupID') {
-      this.task.taskGroupID = data.data.TaskGroupID;
-      this.loadTodoByGroup();
-    }
-    if (data.field == 'projectID') this.task.projectID = data.data.ProjectID;
+    this.task.taskGroupID = data ;
+    // if (data.field == 'taskGroupID') {
+    //   this.task.taskGroupID = data.data.TaskGroupID;
+    //   this.loadTodoByGroup();
+    // }
+    // if (data.field == 'projectID') this.task.projectID = data.data.ProjectID;
   }
 
   loadTodoByGroup() { }
@@ -523,7 +525,7 @@ export class TaskInfoComponent implements OnInit {
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.task.assignTo = "TQHOAN;PMNHI";///tesst
-    this.getListUser()
+    this.getListUser(this.task.assignTo)
     this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -543,10 +545,13 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     t.task = new TM_Tasks();
     t.readOnly = action === 'edit' ? false : true;
+    t.title = action === 'edit' ? "Chỉnh sửa công việc" : "Xem chi tiết công việc"
     t.disableAddToDo = true;
+
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         t.task = res[0];
+        this.getListUser(t.task.assignTo)
         t.listUser = res[1] || [];
         t.listTodo = res[2];
         t.changeDetectorRef.detectChanges();
@@ -591,8 +596,10 @@ export class TaskInfoComponent implements OnInit {
     // })
     
   }
-   getListUser(){
-     var listUserDemo ="TQHOAN;PMNHI" ;//test demô
+   getListUser(listUserDemo){
+     while(listUserDemo.includes(" ")){
+       listUserDemo= listUserDemo.replace(" ","")
+     }
      this.listUser= listUserDemo.split(";");
      this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListUserDetailAsync", listUserDemo).subscribe(res=>{
         this.listUserDetail = res ;

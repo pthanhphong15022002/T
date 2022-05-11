@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
-  @ViewChild("task-info") taskInfo: TaskInfoComponent;
+  @ViewChild("taskInfo") taskInfo: TaskInfoComponent;
   public showBackdrop: boolean = true;
   public type: string = 'Push';
   public width: string = '550px';
@@ -146,7 +146,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '3',
-      type: 'listdetail',
+      type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
