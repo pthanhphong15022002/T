@@ -73,7 +73,7 @@ export class TestKanbanComponent implements OnInit {
     this.getData();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   public cardSettings: CardSettingsModel = {
     headerField: 'taskID',

@@ -20,6 +20,7 @@ import { RouterModule } from '@angular/router';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { CoreModule } from '@core/core.module';
 import { TagsComponent } from './layout/tags/tags.component';
+import { SelectweekComponent } from './components/selectweek/selectweek.component';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -31,7 +32,8 @@ const T_Component: Type<any>[] = [
   ChatBoxComponent,
   QuickLinksInnerComponent,
   NoteDrawerComponent,
-  TagsComponent
+  TagsComponent,
+  SelectweekComponent,
 ]
 
 const T_Moudule: Type<any>[] = [
