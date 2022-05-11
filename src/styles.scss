@@ -88,8 +88,8 @@
 
 /**** custom layout ****/
 body {
-    background-color: #fff;
-    font-family: Roboto, Helvetica, "sans-serif";
+    font-family: Roboto, Helvetica, "sans-serif" !important;
+    font-size: 1.025rem !important;
 }
 
 /**** custom boostrap ****/
@@ -107,7 +107,7 @@ body .btn {
 body .btn.btn-sm {
     border-radius: 0.25rem;
     font-size: .9rem;
-    padding: calc(0.2rem) calc(0.65rem) !important;
+    padding: calc(0.2rem) calc(0.75rem) !important;
     line-height: 1.4;
 }
 
@@ -125,6 +125,10 @@ body .btn.btn-xs {
     border-radius: 1rem;
 }
 
+.e-input-group-icon.e-date-icon,
+*.e-control-wrapper .e-input-group-icon.e-date-icon {
+    font-size: 16px;
+}
 
 
 /** custom control **/
@@ -441,7 +445,7 @@ input.form-control {
 }
 
 .is-error {
-    border: 1px solid #dc3545;
+    border: 1px solid #dc3545 !important;
 }
 
 .dropdown-menu .dropdown-item i {
@@ -747,7 +751,10 @@ codx-img img {
 
 .symbol-30px img,
 .symbol-30px codx-img,
-.symbol-30px .symbol-label {
+.symbol-30px .symbol-label,
+.symbol-30 img,
+.symbol-30 codx-img,
+.symbol-30 .symbol-label {
     width: 30px;
     height: 30px;
 }
@@ -761,7 +768,11 @@ codx-img img {
 
 .symbol-40px img,
 .symbol-40px codx-img,
-.symbol-40px .symbol-label {
+.symbol-40px .symbol-label,
+.symbol-40 img,
+.symbol-40 codx-img,
+.symbol-40 .symbol-label,
+.symbol-40 {
     width: 40px;
     height: 40px;
 }
@@ -892,4 +903,10 @@ codx-img img {
     position: absolute;
     right: 10px;
     bottom: 10px;
+}
+
+/******* temp ******/
+codx-imgs img {
+    margin-left: 2px;
+    margin-right: 2px;
 }

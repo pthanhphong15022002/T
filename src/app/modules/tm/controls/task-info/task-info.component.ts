@@ -90,7 +90,7 @@ export class TaskInfoComponent implements OnInit {
     this.functionID = 'TM001'; //dung test
     this.getParam(); //bật tắt set param
     this.openTask();
- 
+
     // this.api.execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness","GetListEmployeesByUserIDAsync","PMNHI").subscribe(res=>{
     //   console.log(res)})
     // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
@@ -252,8 +252,10 @@ export class TaskInfoComponent implements OnInit {
       this.isCheckProjectControl ||
       this.isCheckCheckListControl ||
       this.isCheckAttachmentControl;
-    if (checkLogic) { this.notiService.notify('TM002');
-      return;} 
+    if (checkLogic) {
+       this.notiService.notify('TM002');
+       return;
+    } 
     this.task.assignTo = "TQHOAN;PMNHI"  //tesst thu
     this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask();
@@ -307,7 +309,7 @@ export class TaskInfoComponent implements OnInit {
           //   }
           // }
         } else {
-          this.notiService.notify( "TM002"); /// call sau
+          this.notiService.notify("TM002"); /// call sau
           return;
         }
       });
@@ -432,17 +434,15 @@ export class TaskInfoComponent implements OnInit {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
       this.notiService.notify(message);
-    }else{
+    } else {
       this.isCheckTime = true;
     }
   }
-
-
-  confirmDueTime(){
+  confirmDueTime() {
     if (
       this.task.dueDate.getDate() < this.task.startDate.getDate() ||
       this.task.dueDate.getDate() < this.task.endDate.getDate() &&
-        !this.isConfirm
+      !this.isConfirm
     ) {
       if(this.task.dueDate.getDate() < this.task.startDate.getDate()){
         this.message = 'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
@@ -484,7 +484,7 @@ export class TaskInfoComponent implements OnInit {
           this.isCheckProjectControl = !this.task.projectID && res.ProjectControl != '0';
           this.isCheckAttachmentControl = res.AttachmentControl != '0';
           this.isCheckCheckListControl = res.CheckListControl != '0' && this.listTodo.length > 0;
-          
+
           if (this.isCheckProjectControl) {
             var message = 'Dự án không được để trống';
             this.notiService.notify(message);
@@ -517,8 +517,8 @@ export class TaskInfoComponent implements OnInit {
   loadTodoByGroup() { }
 
   openTask(): void {
-    const t =this
-    this.task.estimated = 0 ;
+    const t = this
+    this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
     this.listTodo = [];
@@ -528,15 +528,15 @@ export class TaskInfoComponent implements OnInit {
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
-    this.task.estimated = 0,'hours';
+    this.task.estimated = 0, 'hours';
     this.changeDetectorRef.detectChanges();
-    // if (!this.param)
-    //   this.getParam(function (o) {
-    //     if (o) t.showPanel();
-    //   });
-    // else {
-    //   t.closePanel();
-    // }
+    if (!this.param)
+      this.getParam(function (o) {
+        //if (o) t.showPanel();
+      });
+    else {
+      t.closePanel();
+    }
   }
 
   openInfo(id, action) {
@@ -613,8 +613,8 @@ export class TaskInfoComponent implements OnInit {
     this.closePanel();
   }
   resetTask() {
-    this.task.estimated = 0,'hours';
-    this.isConfirm =true;
+    this.task.estimated = 0, 'hours';
+    this.isConfirm = true;
     this.required.taskName = false;
     this.disableAddToDo = true;
     this.readOnly = false;

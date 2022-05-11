@@ -1,0 +1,33 @@
+.week-item {
+  border-radius: 6px;
+  padding: 5px 10px;
+  margin: 4px;
+  text-align: center;
+}
+.week-item:hover {
+  background-color: #c0d5f3;
+  cursor: pointer;
+}
+.week-item.active {
+  background-color: #005dc7;
+}
+.week-item.active div {
+  color: #fff !important;
+}
+
+.task-weekbox {
+  border-bottom: 2px #ddd solid;
+  padding: 10px;
+}
+
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+.text-dark {
+  color: #161719 !important;
+}
+
+.calender-day {
+  font-size: 38px;
+}

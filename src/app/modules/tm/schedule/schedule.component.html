@@ -1,6 +1,7 @@
-<codx-schedule height="650px" #schedule [eventTemplate]="eventTemplate" [templateResourceHeader]="resourceHeader" service="TM" assemblyName="TM" className="TaskBusiness" method="GetListDetailTasksAsync" methodResource="GetListDetailTasksAsync"
-[cellFooterTemplate]="cellFooter1" [fields]="fields" [StartDate]="fromDate" [EndDate]="toDate" [options]="model" entityName="TM_Tasks" funcId="TM001"
-[viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored' (onEventClick)="onCellDblClickScheduler($event)" [eventEditFeature]="false">
+<codx-schedule height="650px" #schedule [eventTemplate]="eventTemplate" [templateResourceHeader]="resourceHeader" service="TM" assemblyName="TM" className="TaskBusiness" 
+method="GetListDetailTasksAsync" methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter1" [fields]="fields" [StartDate]="startDate" [EndDate]="endDate" 
+[options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="TM001" [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored' 
+(onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" [eventEditFeature]="false" [readOnly]="true" >
 </codx-schedule>
 <ng-template #eventTemplate let-data>
     <div>

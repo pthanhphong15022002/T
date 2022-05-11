@@ -8,7 +8,7 @@
           <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
           <codx-listview [itemTemplate]="templateItem" [selectFirst]="true" #listview funcId="" [pageSize]="10"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" 
+            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'"
             [itemTemplateLoading]="templateloading" [dataObj]="dataObj" [data]="data">
           </codx-listview>
         </div>
@@ -28,19 +28,19 @@
                 <div class="d-flex flex-column">
                   <div class="text-dark fw-bold fs-7">{{ itemSelected?.userNameCreate }}
                   </div>
-                  <div class="text-dark-50 fw-bold me-4">{{ itemSelected?.positionNameCreate }}
+                  <div class="text-gray-600 fw-bold me-4">{{ itemSelected?.positionNameCreate }}
                   </div>
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-4">
-                      <span class="icon-phone_android icon-16 text-dark-50 me-2"></span>
-                      <div class="text-dark-50" [ngClass]="itemSelected?.phoneCreate?'text-dark-50':'text-gray-400'">
+                      <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
+                      <div class="text-gray-600" [ngClass]="itemSelected?.phoneCreate?'text-gray-600':'text-gray-400'">
                         {{ itemSelected?.phoneCreate ? itemSelected?.phoneCreate : 'Số điện thoại' }}
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="icon-email icon-16 text-dark-50 me-2"></span>
+                      <span class="icon-email icon-16 text-gray-600 me-2"></span>
                       <div class="font-size-sm"
-                        [ngClass]="itemSelected?.emailCreate ? 'text-dark-50' : 'text-gray-400'">
+                        [ngClass]="itemSelected?.emailCreate ? 'text-gray-600' : 'text-gray-400'">
                         {{ itemSelected?.emailCreate ? itemSelected?.emailCreate : 'Email' }}
                       </div>
                     </div>
@@ -54,7 +54,7 @@
                     " [style.background-color]="
                       (itemSelected?.status | vll: 'L0614':'color' | async) +
                       '30'
-                    " [style.color]=" 
+                    " [style.color]="
                       itemSelected?.status | vll: 'L0614':'color' | async
                     " style="border: none">
                     {{ itemSelected?.status | vll: "L0614":"text" | async }}
@@ -109,11 +109,11 @@
         <div class="mt-2">
           <div class="d-flex mb-1">
             <span class="fw-bold me-2">Dự án:</span>
-            <span class="text-dark-50">{{ itemSelected?.projectName }}</span>
+            <span class="text-gray-600">{{ itemSelected?.projectName }}</span>
           </div>
           <div class="d-flex">
             <span class="fw-bold me-2">Địa điểm:</span>
-            <span class="text-dark-50">{{ itemSelected?.location }}</span>
+            <span class="text-gray-600">{{ itemSelected?.location }}</span>
           </div>
         </div>
         <div class="mt-2">
@@ -138,10 +138,9 @@
         <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
           {{ itemSelected?.taskName }}
         </div>
-        <div class="text-dark-50">
+        <div class="text-gray-600">
           {{ itemSelected?.memo }}
         </div>
-
         <div class="task-detail mt-5">
           <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
           <div class="checkbox-list mt-6 ms-6" *ngIf="itemSelected?.listTaskGoals?.length > 0">
@@ -213,9 +212,9 @@
                         Lê
                         Thị
                         Mùi</div>
-                      <div class="text-dark-50">2021/08/31 4:38</div>
+                      <div class="text-gray-600">2021/08/31 4:38</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Tạo mới mẫu
+                    <div class="task-name text-gray-600 mt-1">Tạo mới mẫu
                       phiếu
                     </div>
                   </div>
@@ -232,9 +231,9 @@
                       <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Chỉnh sửa mẫu
+                    <div class="task-name text-gray-600 mt-1">Chỉnh sửa mẫu
                       phiếu
                     </div>
                   </div>
@@ -252,9 +251,9 @@
                         Bùi
                         Thái
                         Tú</div>
-                      <div class="text-dark-50">1 giờ trước</div>
+                      <div class="text-gray-600">1 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Thank you...</div>
+                    <div class="task-name text-gray-600 mt-1">Thank you...</div>
                   </div>
                 </div>
               </div>
@@ -276,9 +275,9 @@
                         Lê
                         Thị
                         Mùi</div>
-                      <div class="text-dark-50">2021/08/31 4:38</div>
+                      <div class="text-gray-600">2021/08/31 4:38</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Update status
+                    <div class="task-name text-gray-600 mt-1">Update status
                     </div>
                   </div>
                 </div>
@@ -294,9 +293,9 @@
                       <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Hợp đồng chưa
+                    <div class="task-name text-gray-600 mt-1">Hợp đồng chưa
                       đúng,
                       kiểm tra
                       lại
@@ -317,10 +316,10 @@
                         Bùi
                         Thái
                         Tú</div>
-                      <div class="text-dark-50">1 giờ trước</div>
+                      <div class="text-gray-600">1 giờ trước</div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <div class="task-name text-dark-50 mt-1">
+                      <div class="task-name text-gray-600 mt-1">
                         Laboco_Contract.xsls</div>
                       <span class="icon-download icon-18 ms-3"></span>
                     </div>
@@ -342,9 +341,9 @@
                       <div class="text-dark text-hover-primary fw-bold">
                         Hoàng
                         Ngọc Châu Bảo</div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
-                    <div class="task-name text-dark-50 mt-1">Ok duyệt nha!
+                    <div class="task-name text-gray-600 mt-1">Ok duyệt nha!
                     </div>
                   </div>
                 </div>
@@ -366,7 +365,7 @@
                       </div>
                       <span class="text-gray-400">Business Analyst</span>
                     </div>
-                    <div class="text-dark-50">2 giờ trước</div>
+                    <div class="text-gray-600">2 giờ trước</div>
                   </div>
                   <div class="mt-1 text-gray-700">Nhận xét đánh giá, đánh đánh
                     giá
@@ -395,7 +394,7 @@
                       </div>
                       <span class="text-gray-400">Business Analyst</span>
                     </div>
-                    <div class="text-dark-50">2 giờ trước</div>
+                    <div class="text-gray-600">2 giờ trước</div>
                   </div>
                   <div class="mt-1 text-gray-700">Bài viết rất hay, tuyệt vời!
                   </div>
@@ -422,12 +421,12 @@
                         <div class="text-gray-700 font-size-sm">You’re
                           welcome!</div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="text-dark-50 text-hover-primary me-3">Thích</span>
-                          <span class="text-dark-50 text-hover-primary">Trả
+                          <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                          <span class="text-gray-600 text-hover-primary">Trả
                             lời</span>
                         </div>
                       </div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
                     <div class="d-flex align-items-start py-3 flex-grow-1">
                       <div class="symbol symbol-30px symbol-circle me-2">
@@ -440,12 +439,12 @@
                         <div class="text-gray-700 font-size-sm">You’re
                           welcome!</div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="text-dark-50 text-hover-primary me-3">Thích</span>
-                          <span class="text-dark-50 text-hover-primary">Trả
+                          <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                          <span class="text-gray-600 text-hover-primary">Trả
                             lời</span>
                         </div>
                       </div>
-                      <div class="text-dark-50">2 giờ trước</div>
+                      <div class="text-gray-600">2 giờ trước</div>
                     </div>
                   </div>
                 </div>
@@ -455,7 +454,7 @@
                   <textarea class="form-control border-0 p-0 pe-26 resize-none" rows="1"
                     placeholder="Bình luận..."></textarea>
                   <div class="feed-icon">
-                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary">
+                    <span class="btn btn-icon btn-sm px-0 text-gray-600 text-hover-primary">
                       <span class="icon-attach_file icon-18"></span>
                     </span>
                   </div>
@@ -473,7 +472,7 @@
                   <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
                     <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
                       <div class="text-gray-400 text-italic me-2">LHThuong
@@ -508,7 +507,7 @@
                   <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
                     <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
                       <div class="text-gray-400 text-italic me-2">LHThuong
@@ -521,7 +520,7 @@
                   <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
                   <div class="d-flex flex-column flex-grow-1">
                     <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                    <span class="text-dark-50">Bảng báo giá quà tặng của nhà
+                    <span class="text-gray-600">Bảng báo giá quà tặng của nhà
                       cung cấp</span>
                     <div class="d-flex mt-1 justify-content-end">
                       <div class="text-gray-400 text-italic me-2">LHThuong
@@ -558,17 +557,16 @@
       <tbody>
         <tr *ngFor="let item of item.mytasks ;trackBy:trackByFn">
           <td>
-            <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
-            item?.taskID == itemSelected?.taskID ? 'yellow' : ''
-            " (click)="clickItem(item)" (mouseover)="showControl(p,item)"
-            [ngbPopover]="popContent" popoverClass="empPopoverClass"
-                 #p="ngbPopover"
-            placement="right left" container="body" autoClose="outside" triggers="manual">
+            <div class="d-flex p-3 flex-grow-1 border-bottom item-active" [style.background-color]="
+            item?.taskID == itemSelected?.taskID ? '' : ''
+            " (click)="clickItem(item)" (mouseover)="showControl(p,item)" [ngbPopover]="popContent"
+              popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body" autoClose="outside"
+              triggers="manual">
               <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
               </more-funtion>  -->
-              <div class="symbol symbol-40 symbol-circle mr-3">
-                <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy"
-                  objectType="AD_Users" width="40">
+              <div class="me-3">
+                <codx-img class="symbol symbol-40px symbol-circle" [objectId]="item?.createdBy" objectType="AD_Users"
+                  width="40">
                 </codx-img>
               </div>
               <div class="d-flex flex-column flex-grow-1">
@@ -594,7 +592,7 @@
                   " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
                       {{ item?.status | vll: "L0614":"text" | async }}
                     </div>
-                    <span class="text-dark-50 font-size-md">
+                    <span class="text-gray-600 font-size-md">
                       {{ item?.createdOn | date: 'dd/MM/yyyy' }}</span>
                   </div>
                   <div *ngIf="item?.category == '3' || item?.category == '4'">
@@ -631,7 +629,7 @@
           <div class="text-dark fw-bold fs-7">
             {{data?.userName}}
           </div>
-          <div class="text-dark-50">{{data.positionName}}</div>
+          <div class="text-gray-600">{{data.positionName}}</div>
           <div class="text-dark" *ngIf="data?.category == '1' || data?.category == '3'">{{data.taskName}}
           </div>
           <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
@@ -665,7 +663,7 @@
         " [style.background-color]="
           (data?.status | vll: 'L0614':'color' | async) +
           '30'
-        " [style.color]=" 
+        " [style.color]="
           data?.status | vll: 'L0614':'color' | async
         " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}</span>
           <!--end::Btn-->
@@ -679,31 +677,29 @@
 
 
 <!-- // dung de tesst -->
-<ng-template #popContent >
+<ng-template #popContent>
   <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
+      <span class="icon-edit icon-18 ml-2 mr-2"></span>
+      <span class="tooltiptext">Edit</span>
     </div>
-</a>
-<a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
+  </a>
+  <a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
-        <span class="tooltiptext">Copy</span>
+      <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+      <span class="tooltiptext">Copy</span>
     </div>
-</a>
-<a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
+  </a>
+  <a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-        <span class="tooltiptext">Delete</span>
+      <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+      <span class="tooltiptext">Delete</span>
     </div>
-</a>
-<a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
-  <div class="d-flex align-items-center btn-tooltip">
+  </a>
+  <a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
       <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
       <span class="tooltiptext">Xem</span>
-  </div>
-</a>
+    </div>
+  </a>
 </ng-template>
-
-
