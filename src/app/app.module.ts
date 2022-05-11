@@ -16,6 +16,7 @@ import localeFr from '@angular/common/locales/vi';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
+import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.component';
 
 
 //import { ReportComponent } from './modules/report/report.component';
@@ -63,6 +64,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+    CbxpopupComponent,
     //ReportComponent,
   ],
   imports: [
