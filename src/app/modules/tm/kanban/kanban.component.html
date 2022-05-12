@@ -1,7 +1,8 @@
 <div class="row">
-  <codx-kanban #kanban keyField="weekOfMonth" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
-    [cardTemplate]="cardTemplate" [dataSource]="dataSource" [popupTemplate]="content" [swimlanes]="swimlaneSettings"
-    [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')" (onDrag)="onDataDrag($event)">
+  <codx-kanban #kanban keyField="weekOfMonth" [dataSource]="dataSource" [columns]="columns"
+    [columnTemplate]="columTemplate" [cardTemplate]="cardTemplate" [popupTemplate]="content"
+    [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')"
+    (onDrag)="onDataDrag($event)">
   </codx-kanban>
   <input type="checkbox" [(ngModel)]="showSumary">
   <button class="btn btn-sm btn-success" (click)="openPopup($event)">

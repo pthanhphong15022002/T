@@ -146,15 +146,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '3',
-      type: 'listdetail',
+      type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
       model: {
-        service: 'TM',
-        assemblyName: 'TM',
-        className: 'TaskBusiness',
-        method: 'GetListDetailTasksAsync',
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
         sideBarLeftRef: this.asideLeft,
@@ -169,7 +165,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       text: 'List-tasks',
       active: false,
       model: {
-        itemTemplate: this.listDetails,
+        panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '550px'

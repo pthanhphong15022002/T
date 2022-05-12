@@ -6,6 +6,7 @@ import { AccPoints, AccumulationChart, AccumulationChartComponent, IAccAnimation
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '../models/dashboard.model';
 import { Subject, takeUntil } from 'rxjs';
+import { throws } from 'assert';
 
 @Component({
   selector: 'app-dashboard',
@@ -77,21 +78,17 @@ export class DashboardComponent implements OnInit {
 
         //Peformence chart
         if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
-          this.doughnutData = [];
+          this.doughnutData = this.doughnutEmpty;
+          this.palettes = this.palettesEmpty;
           this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
         } else {
           this.doughnutData = data.chartPerformance.doughnutData;
-          // if (this.doughnutData[0] == 0 && this.doughnutData[1] == 0) {
-          //   this.isShowEmpty = true;
-          // } else {
-          //   this.isShowEmpty = false;
-          // }
           this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
           // this.renderMiddleText(data.chartPerformance.rateTotalChange);
         }
 
         //trending chart
-        this.dataLine[0] = data.trendChart.doughnutData;
+        this.dataLineTrend[0] = data.trendChart.doughnutData;
       })
   }
 
@@ -103,24 +100,32 @@ export class DashboardComponent implements OnInit {
       ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: any) => {
-        // this.chart.datasets[0].data = [];
-        // this.chart.datasets[1].data = [];
-        // this.chart.labels = [];
-        // if (data.hasOwnProperty("barChart")) {
-        //   data.barChart.forEach((item) => {
-        //     this.chart.labels.push(item.date);
-        //     this.chart.datasets[1].data.push(item.totalTaskDone);
-        //   });
-        // }
-        // if (data.hasOwnProperty("lineChart")) {
-        //   data.lineChart.forEach((item) => {
-        //     this.chart.datasets[0].data.push(item.totalHourDone);
-        //   });
-        // }
+        if (data) {
+
+          if (data.hasOwnProperty("barChart")) {
+            this.dataColumn = data.barChart;
+          }
+          if (data.hasOwnProperty("lineChart")) {
+            this.dataLine = data.lineChart
+          }
+
+        }
         this.changeDetectorRef.detectChanges();
       });
   }
 
+  getRemiderOnDay() {
+    this.api
+      .exec("TM", "TaskBusiness", "GetRemiderOnDayAsync", [this.model,
+      this.daySelectedFrom,
+      this.daySelectedTo,
+      ])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((data: any) => {
+        this.remiderOnDay = data.result as RemiderOnDay[];
+        this.changeDetectorRef.detectChanges();
+      });
+  }
 
   onChangeValueSelectedWeek(data) {
     this.fromDate = data.fromDate;
@@ -128,14 +133,14 @@ export class DashboardComponent implements OnInit {
     this.daySelected = data.daySelected;
     this.daySelectedFrom = data.daySelectedFrom;
     this.daySelectedTo = data.daySelectedTo;
-    //this.getRemiderOnDay();
+    this.getRemiderOnDay();
     if (this.week != data.week) {
       this.week = data.week;
-      // this.refreshDataWhenChangeWeek();
+      this.getChartData();
     }
     if (this.monthSelected != data.month) {
       this.monthSelected = data.month;
-      //   this.getDataBarChart(data.beginMonth, data.endMonth);
+      this.getDataBarChart(data.beginMonth, data.endMonth);
     }
   }
 
@@ -155,15 +160,7 @@ export class DashboardComponent implements OnInit {
   }
 
   //#region chartline
-  public dataLine: Object[] = [
-    { value: new Date(2022, 0, 1), id: 21 },
-    { value: new Date(2022, 0, 2), id: 24 },
-    { value: new Date(2022, 0, 3), id: 36 },
-    { value: new Date(2022, 0, 4), id: 38 },
-    { value: new Date(2022, 0, 5), id: 54 },
-    { value: new Date(2022, 0, 6), id: 57 },
-    { value: new Date(2022, 0, 7), id: 70 }
-  ];
+  public dataLineTrend: Object[] = [];
   public lineXAxis: Object = {
     valueType: 'DateTime',
     labelFormat: 'y',
@@ -202,28 +199,15 @@ export class DashboardComponent implements OnInit {
   //#endregion chartline
 
   //#region proccess bar
-  public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
   valPcb = 100;
   //#endregion proccess bar
   //#region chartcolumn
-  public dataColumn: Object[] = [
-    { value: new Date(2022, 0, 1), id: 21 },
-    { value: new Date(2022, 0, 2), id: 24 },
-    { value: new Date(2022, 0, 3), id: 36 },
-    { value: new Date(2022, 0, 4), id: 38 },
-    { value: new Date(2022, 0, 5), id: 54 },
-    { value: new Date(2022, 0, 6), id: 57 },
-    { value: new Date(2022, 0, 7), id: 70 },
-    { value: new Date(2022, 0, 8), id: 57 },
-    { value: new Date(2022, 0, 9), id: 70 },
-    { value: new Date(2022, 0, 10), id: 57 },
-    { value: new Date(2022, 0, 11), id: 70 },
-    { value: new Date(2022, 0, 12), id: 57 },
-  ];
-  public columnXAxis: Object = {
-    valueType: 'DateTime',
-    labelFormat: 'y',
-    edgeLabelPlacement: 'Shift',
+  dataColumn: Object[] = [];
+  dataLine: Object[] = [];
+  columnXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
     rangePadding: 'None',
     majorGridLines: { width: 0 },
     majorTickLines: { width: 0 },
@@ -233,35 +217,38 @@ export class DashboardComponent implements OnInit {
     }
   };
 
-  public columnYAxis: Object = {
+  columnYAxis: Object = {
+    minimum: 1,
+    interval: 2,
     labelStyle: {
       color: 'gray'
     }
   };
-  public chartArea: Object = {
+  chartArea: Object = {
     border: {
       width: 0
     }
   };
-  public markerColumn: Object = {
+  markerColumn: Object = {
     visible: false,
     height: 5,
     width: 5
   };
-  public title: string = 'Inflation - Consumer Price';
+  title: string = 'Inflation - Consumer Price';
   //#endregion chartcolumn
 
   //#region donut
-  public pie: AccumulationChartComponent | AccumulationChart;
-  public execute = false;
-  public count = 0;
-  public startAngle: number = 0;
-  public endAngle: number = 360;
-  public doughnutData: Object[] = [
-    { 'x': 'Net-tution', y: 21, text: '21%' },
-    { 'x': 'Private Gifts', y: 8, text: '8%' },
+  pie: AccumulationChartComponent | AccumulationChart;
+  execute = false;
+  count = 0;
+  startAngle: number = 0;
+  endAngle: number = 360;
+  doughnutEmpty = [
+    { label: '', value: 100 },
   ];
-
+  doughnutData: Object[] = this.doughnutEmpty;
+  palettesEmpty = ['#deeeeee'];
+  palettes: string[] = ["#005DC7", "#06DDB8"];
 
   //Initializing Datalabel
   public dataLabel: Object = {
