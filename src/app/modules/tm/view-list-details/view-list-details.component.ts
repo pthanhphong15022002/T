@@ -45,7 +45,6 @@ export class ViewListDetailsComponent implements OnInit {
   configParam = null;
   dateNow: string = '';
   yesterday = '';
-  lstItems = [];
   dataObj = { view: 'listDetails', viewBoardID: '' };
   gridView: any;
   listUserTask = [];
@@ -54,7 +53,7 @@ export class ViewListDetailsComponent implements OnInit {
   taskAction: any;
 
   @Input('viewBase') viewBase: ViewsComponent;
-
+  @ViewChild("listview") listview: CodxListviewComponent
   readonly STATUS_TASK = StatusTask;
   readonly ACTION = ActionTypeOnTask;
   // readonly ACTION_TYPE = ActionType;
@@ -78,7 +77,14 @@ export class ViewListDetailsComponent implements OnInit {
     this.loadData();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.taskInfo.isAddNew.subscribe(res=>{
+      if(res){
+        this.listview.addHandler(res,true,'recID')
+        this.data.push(res) ;
+      }
+    })
+  }
 
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -105,11 +111,10 @@ export class ViewListDetailsComponent implements OnInit {
 
     model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
     const t = this;
-    this.lstItems = [];
+    // this.lstItems = [];
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.lstItems = res[0];
         this.itemSelected = res[0][0];
         this.api
           .execSv<any>(
@@ -162,11 +167,11 @@ export class ViewListDetailsComponent implements OnInit {
     this.getOneItem(item.id);
   }
   getOneItem(id) {
-    var itemDefault = this.lstItems.find((item) => item.id == id);
+    var itemDefault = this.data.find((item) => item.id == id);
     if (itemDefault != null) {
       this.itemSelected = itemDefault;
     } else {
-      this.itemSelected = this.lstItems[0];
+      this.itemSelected = this.data[0];
     }
 
     this.api
@@ -346,7 +351,9 @@ export class ViewListDetailsComponent implements OnInit {
             t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
               if (res) {
                 // this.notiService.notifyCode("TM004")
-                return this.notiService.notify('Xóa task thành công !');
+               this.listview.removeHandler(this.taskAction,'recID')
+               this.notiService.notify('Xóa task thành công !');
+               return;
               }
               t.notiService.notify(
                 'Xóa task không thành công. Vui lòng kiểm tra lại !'
@@ -360,10 +367,13 @@ export class ViewListDetailsComponent implements OnInit {
 
 
 
-  ChangeStatusTask(actionType) {
-    // this.onClickAction(this.data, this.ACTION.ChangeStatus, actionType);
+  ChangeStatusTask(idStatus) {
+    const fromName = "TM_Parameters";
+    const fieldName = "UpdateControl";
+    this.api.execSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
+      console.log(res)
+    });
   }
-  // onClickAction(data, actionType, value) {
-  //   this.clickAction.emit({ data, actionType, value });
-  // }
+
+  
 }
