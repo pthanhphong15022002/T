@@ -164,7 +164,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '4',
-      type: 'list',
+      type: 'kanban',
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
