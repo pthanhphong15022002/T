@@ -1,26 +1,38 @@
-<codx-schedule height="650px" #schedule [eventTemplate]="eventTemplate" service="TM" assemblyName="TM"
-  [templateResourceHeader]="resourceHeader" className="TaskBusiness" method="GetListDetailTasksAsync"
-  methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter1" [fields]="fields" [StartDate]="startDate"
-  [EndDate]="endDate" [options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="TM001"
-  [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored'
-  (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" [eventEditFeature]="false"
-  [readOnly]="true" [resourceField]="resourceField">
-</codx-schedule>
-<ng-template #eventTemplate let-data>
-  <div>
+<div class="row">
+  <codx-schedule height="100%" #schedule [eventTemplate]="eventTemplate" service="TM" assemblyName="TM"
+    [templateResourceHeader]="resourceHeader" className="TaskBusiness" method="GetListDetailTasksAsync"
+    methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter" [fields]="fields" [StartDate]="startDate"
+    [EndDate]="endDate" [options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="TM001"
+    [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored' [resourceTooltipTemplate]="resourceTootip"
+    (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew1(data)" [statusColor]="status" [eventEditFeature]="false" 
+    [readOnly]="true" [resourceField]="resourceField" (onViewChange)="testEvent($event)">
+  </codx-schedule>
+  <ng-template #eventTemplate let-data>
+    <div >
+      
+    </div>
+  </ng-template>
+  <ng-template #resourceTootip let-data>
+    <div class='template-wrap'>
+      <div class="res-text">Tên: {{data.resourceData.userName}} </div>
+      <div class="res-text">Vị trí: {{data.resourceData.positionName}} </div>
+    </div>
+  </ng-template>
+  <ng-template #resourceHeader let-data>
+    <div class="">
+      <div class="type">{{ data.resourceData.userName }}</div>
+      <div class="type">{{ data.resourceData.positionName }}</div>
+    </div>
+  </ng-template>
+  <ng-template #cellFooter let-data>
+    <div class="row border">
 
-  </div>
-</ng-template>
-<ng-template #resourceHeader let-data>
-  <div class="">
-    <img class="rounded-circle" style="width: 40px; height: 40px"
-      src="https://cdn.vox-cdn.com/thumbor/8o77pQGxiK4QcuQq34Gn44PhVUc=/0x0:2842x1470/920x613/filters:focal(1209x317:1663x771):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/53961067/bossbabycover.0.jpg" />
-    <div class="type">{{ data.resourceData.userName }}</div>
-    <div class="type">{{ data.resourceData.positionName }}</div>
-  </div>
-</ng-template>
-<ng-template #cellFooter1 let-data>
-  <div>
-    <div class="type">{{ data.resourceData.userName }}</div>
-  </div>
-</ng-template>
+      <button ejs-button id="more-details" cssClass="e-flat" (click)="addNew1(data)">
+        sửa
+      </button>
+      <button ejs-button id="delete" cssClass="e-flat" [isPrimary]="true" (click)="deleteTask(data)">
+        xóa
+      </button>
+    </div>
+  </ng-template>
+</div>

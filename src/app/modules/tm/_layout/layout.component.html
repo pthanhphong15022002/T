@@ -84,7 +84,7 @@
       <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
         [ngbTooltip]="f.comingSoon?'Coming soon':''" routerLinkActive="active">
         <span class="menu-icon">
-          <img class="w-25px" src="../../../{{f.smallIcon}}" />
+          <span class="{{f.smallIcon}} icon-20"></span>
         </span>
         <span class="menu-title">{{f.customName}}</span>
       </a>
@@ -93,7 +93,7 @@
       routerLinkActive='here show'>
       <span class="menu-link">
         <span class="menu-icon">
-          <img class="w-25px" src="../../../{{f.smallIcon}}" />
+          2
         </span>
         <span class="menu-title">{{f.customName}}</span>
         <span class="menu-arrow"></span>
@@ -103,7 +103,7 @@
           <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(fc.functionID)"
             routerLinkActive="active">
             <span class="menu-icon">
-              <img class="w-20px" src="../../../{{fc.smallIcon}}" />
+              3
             </span>
             <span class="menu-title">{{fc.customName}}</span>
           </a>
