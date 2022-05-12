@@ -1,9 +1,9 @@
 <div id="kt_engage_demos" class="bg-body drawer drawer-end drawer-on" style="width: 550px;">
   <div class="card w-100 rounded-0 border-0">
     <div class="card-header pe-5">
-      <div style="width : 30px" [style.background-color]="
+      <!-- <div style="width : 30px" [style.background-color]="
       ( task.status | vll: 'L0614':'color' | async) ">
-      </div>
+      </div> -->
       <div class="card-title">
         <h2 class="m-0">{{title}}</h2>
       </div>
@@ -13,12 +13,12 @@
           <span class="icon-close icon-18"></span>
         </button>
       </div>
-      <div class="btn-extand mt-2 d-flex justify-content-end">
+      <!-- <div class="btn-extand mt-2 d-flex justify-content-end">
         <a class="text-dark-75 text-hover-primary d-flex align-items-center" (click)="extendShow()">
           <span class="mr-2 text-dark">Mở rộng</span>
           <span class="icon-login icon-20 ml-1"></span>
         </a>
-      </div>
+      </div> -->
     </div>
     <div class="card-body">
       <div class="d-flex my-2">
@@ -62,14 +62,14 @@
         <div class="col-6">
           <label>Ưu tiên</label>
           <!-- <codx-valuelist [placeholder]="'Chọn độ ưu tiên'"></codx-valuelist> -->
-          <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"  [disabled]="readOnly"
-            [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+          <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"
+            [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
           </codx-input>
         </div>
       </div>
       <div class="form-group mt-3">
         <label>Nhóm triển khai</label>
-        <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc" 
+        <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc"
           ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChange($event)"
           [value]="task.taskGroupID">
         </codx-combobox>
@@ -80,8 +80,8 @@
           <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span>
         </div>
         <textarea [readonly]="readOnly" [(ngModel)]="task.memo" class="form-control" rows="2"></textarea>
-        <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-          class="col-md-8" style="
+        <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..." type="text"
+          [readonly]="readOnly" class="col-md-8" style="
           border-width: thin;
           border-style: none;
           margin-top: 3px;
@@ -99,7 +99,7 @@
         <label>Dự án</label>
 
         <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
-          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" 
+          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
           [disabled]="readOnly" [value]="task.projectID">
         </codx-combobox>
       </div>
@@ -257,7 +257,8 @@
                   </div>
                   <div class="text-dark">{{item.positionName}}</div>
                   <div class="text-dark">
-                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly" style="
+                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
+                      style="
                       border-width: thin;
                       border-style: none;
                       margin-top: 3px;
@@ -274,7 +275,7 @@
                 </div>
               </a>
             </div>
-          </div>  
+          </div>
         </ng-container>
       </div>
       <div class="d-flex align-items-center justify-content-between mt-4">
@@ -345,7 +346,8 @@
     <div class="card-footer pt-4">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary" (click)="closeTask()">Hủy</button>
-        <button type="button" class="btn btn-primary" (click)="SaveData(task.taskID)"  [disabled]="readOnly">Lưu</button>
+        <button type="button" class="btn btn-primary ms-1" (click)="SaveData(task.taskID)"
+          [disabled]="readOnly">Lưu</button>
       </div>
     </div>
   </div>
