@@ -1,4 +1,3 @@
-import { map } from 'rxjs';
 import { TmService } from './../tm.service';
 import {
   Component,
@@ -31,6 +30,7 @@ export class TestKanbanComponent implements OnInit {
   mode: string;
   view: string;
   isAdd = false;
+  today: Date = new Date();
   fromDate: Date = new Date(2022, 4, 1);
   toDate: Date = new Date(2022, 5, 31);
   configParam = null;
@@ -42,7 +42,25 @@ export class TestKanbanComponent implements OnInit {
   Sumary: string = '';
   columns: any = [];
   settings: any;
-  kanbanSetting = new KanbanSetting();
+  kanbanSetting: KanbanSetting = new KanbanSetting();
+  contextMenuSetting = {
+    enable: true,
+    menuItem: [],
+  };
+  cardSettings: CardSettingsModel = {
+    headerField: 'taskID',
+    template: '#cardTemplate',
+    selectionType: 'Multiple',
+  };
+  dialogSettings: DialogSettingsModel = {
+    fields: [
+      { text: 'ID', key: 'Description', type: 'TextBox' },
+      { key: 'Status', type: 'DropDown' },
+      { key: 'Assignee', type: 'DropDown' },
+      { key: 'RankId', type: 'TextBox' },
+      { key: 'Summary', type: 'TextArea' },
+    ],
+  };
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
@@ -75,32 +93,11 @@ export class TestKanbanComponent implements OnInit {
 
   ngAfterViewInit() { }
 
-  public cardSettings: CardSettingsModel = {
-    headerField: 'taskID',
-    template: '#cardTemplate',
-    selectionType: 'Multiple',
-  };
-
-  public dialogSettings: DialogSettingsModel = {
-    fields: [
-      { text: 'ID', key: 'Description', type: 'TextBox' },
-      { key: 'Status', type: 'DropDown' },
-      { key: 'Assignee', type: 'DropDown' },
-      { key: 'RankId', type: 'TextBox' },
-      { key: 'Summary', type: 'TextArea' },
-    ],
-  };
-
-  public contextMenuSetting = {
-    enable: true,
-    menuItem: [],
-  };
-
   clickme() {
-    console.log('aloooo');
+    this.showSumary = !this.showSumary;
   }
 
-  public getString(assignee: any) {
+  getString(assignee: any) {
     return assignee
       .match(/\b(\w)/g)
       .join('')
@@ -134,6 +131,9 @@ export class TestKanbanComponent implements OnInit {
   }
 
   onDataDrag(evt: any) {
+    if(!this.kanbanSetting.AllowDrag){
+      return;
+    }
     this.item = evt;
   }
 
@@ -184,12 +184,7 @@ export class TestKanbanComponent implements OnInit {
         if (this.kanbanSetting.BreakDateBy == '3') {
           const today = new Date();
           res[0].map((data) => {
-            if (
-              this.isSameMonth(
-                today,
-                new Date(data.dueDate)
-              )
-            ) {
+            if (this.isSameMonth(today, new Date(data.dueDate))) {
               data.weekOfMonth = this.getWeekOfMonth(
                 new Date(data.dueDate)
               ).toString();
@@ -218,8 +213,8 @@ export class TestKanbanComponent implements OnInit {
       SwimlanesControl,
       SwimlanesField,
     } = this.settings;
-    this.kanbanSetting.BreakDateBy = '3';
-    this.kanbanSetting.ColumnField = 'DueDate';
+    this.kanbanSetting.BreakDateBy = '1';
+    this.kanbanSetting.ColumnField = 'Status';
     this.kanbanSetting.ColumnMenu = JSON.parse(ColumnMenu);
     this.kanbanSetting.ColumnToolbars = JSON.parse(ColumnToolbars);
     this.kanbanSetting.IsChangeColumn = true;

@@ -804,8 +804,15 @@ export class ScheduleComponent implements OnInit {
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceID:{name:"owners"},
+    resourceId: {name:"userID"},
   }
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
   columns = [
     {
       text: 'Tên thành viên', field: 'name', width: 200, htmlEncode: false,
@@ -878,17 +885,16 @@ export class ScheduleComponent implements OnInit {
     this.model.pageSize = 100;
     // model.dataValue = this.user.userID;
     // set max dinh
-    this.startDate = moment("4/15/2022").toDate();
-    this.endDate = moment("5/15/2022").toDate();
+    // this.startDate = moment("04/11/2022").toDate();
+    // this.endDate = moment("05/11/2022").toDate();
     this.model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.endDate },
+        { operator: 'gte', field: fied, value: this.startDate || moment("04/11/2022").toDate()}, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate || moment("05/11/2022").toDate()},
       ],
     };
   }
-
   resourceData(){
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
@@ -901,13 +907,13 @@ export class ScheduleComponent implements OnInit {
     model.pageSize = 100;
     // model.dataValue = this.user.userID;
    // set max dinh
-    this.startDate =moment("4/15/2022").toDate();
-    this.endDate = moment("5/15/2022").toDate();
+    // this.startDate =moment("4/15/2022").toDate();
+    // this.endDate = moment("5/15/2022").toDate();
     model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value:  this.endDate },
+        { operator: 'gte', field: fied, value: this.startDate || moment("04/11/2022").toDate()}, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate || moment("05/11/2022").toDate()},
       ],
     };
     const t = this;
@@ -915,15 +921,7 @@ export class ScheduleComponent implements OnInit {
       if (res && res.length) {
         this.data = res[0]; 
         this.itemSelected = res[1][0] ;
-        this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync").subscribe(res => {
-          if (res && res.length > 0) {
-            let user = res[0].owner;
-            for (let i = 1; i < res?.length; i++) {
-              user += ";" + res[i].owner;
-            };
-            this.model = user;
-          }
-        }) ;
+        
       }
     })
   }

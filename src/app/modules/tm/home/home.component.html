@@ -6,7 +6,7 @@
 </ng-template>
 
 <ng-template #sidebarRight>
-  <!-- <app-task-info [viewBase]="viewBase" []></app-task-info> -->
+  <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
 </ng-template>
 
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
@@ -17,7 +17,7 @@
 
 <!-- list-task-detail -->
 <ng-template #listDetails>
-  <app-view-list-details [viewBase]="viewBase"></app-view-list-details>
+  <app-view-list-details [viewBase]="viewBase" [taskInfo]="taskInfo"></app-view-list-details>
 </ng-template>
 <!-- end list-task-detail -->
 <!-- list-task -->
