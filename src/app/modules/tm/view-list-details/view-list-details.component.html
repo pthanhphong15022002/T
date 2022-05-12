@@ -6,10 +6,15 @@
           <div class="tab-pane fade show active" id="gift_1" role="tabpanel"></div>
           <div class="tab-pane fade" id="gift_2" role="tabpanel"></div>
           <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
-          <codx-listview [itemTemplate]="templateItem" [selectFirst]="true" #listview funcId="" [pageSize]="10"
+          <!-- <codx-listview [itemTemplate]="templateItem" [selectFirst]="true" #listview funcId="" [pageSize]="10"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
             [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'"
             [itemTemplateLoading]="templateloading" [dataObj]="dataObj" [data]="data">
+          </codx-listview> -->
+          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="10"
+            service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
+            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
+            entityName="TM_Tasks" [data]="data" groupBy="createdOn">
           </codx-listview>
         </div>
       </div>
@@ -607,9 +612,12 @@
       </tbody>
     </table>
   </div> -->
-  <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active list-action-menu" [style.background-color]="
-      item?.taskID == itemSelected?.taskID ? '#F4F7FF' : ''
-    " (click)="clickItem(item)">
+  <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
+  item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (mouseover)="showControl(p,item)" [ngbPopover]="popContent"
+  popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body" autoClose="outside"
+  triggers="manual">
+    <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
+    </more-funtion> -->
     <div class="symbol symbol-40 symbol-circle mr-3">
       <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy" objectType="AD_Users"
         width="40">
@@ -620,7 +628,6 @@
         <div class="text-dark text-hover-primary font-weight-bold">
           {{ item.userNameCreate }}
         </div>
-        <!-- <span class="icon-flag icon-18 text-danger"></span> -->
         <span class="icon-15 mr-2">
           <span [class]="item?.priority | vll: 'L0186':'icon' | async"
             [style.color]="item?.priority | vll: 'L0186':'color' | async"></span>
@@ -630,13 +637,12 @@
       <div class="task-name mb-1 max-h-36px">{{ item?.taskName }}</div>
       <div class="d-flex align-items-center justify-content-between">
         <div class="task-status d-flex">
-          <!-- <span class="label label-inline label-pill label-light-danger mr-2">Chưa thực hiện</span> -->
           <div class="label label-xxs label-pill label-inline label-light-danger mr-2 label-status"
             [style.border-color]="
-              (item?.status | vll: 'L0614':'color' | async) + '30'
-            " [style.background-color]="
-              (item?.status | vll: 'L0614':'color' | async) + '30'
-            " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
+          (item?.status | vll: 'L0614':'color' | async) + '30'
+        " [style.background-color]="
+          (item?.status | vll: 'L0614':'color' | async) + '30'
+        " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
             {{ item?.status | vll: "L0614":"text" | async }}
           </div>
           <span class="text-dark-50 font-size-md">
@@ -644,14 +650,13 @@
         </div>
         <div class="symbol-group symbol-hover justify-content-end"
           *ngIf="item?.category == '3' || item?.category == '4'">
-          <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="item?.assignTo"
-          objectName="AD_Users" [numberImages]="2">
-        </codx-imgs>
+          <codx-imgs class="symbol symbol-30 symbol-circle ml-1" [objectId]="item?.assignTo" objectName="AD_Users"
+            [numberImages]="2">
+          </codx-imgs>
         </div>
       </div>
     </div>
   </div>
-
 </ng-template>
 <ng-template #templateloading let-data>
   <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
@@ -747,8 +752,8 @@
     </div>
   </a>
   <a class="action-item" (click)="setupStatus(p2,taskAction)" [ngbPopover]="setupStatusTask"
-  popoverClass="empPopoverClass" #p2="ngbPopover" placement="right left" container="body" autoClose="outside"
-  triggers="manual" style="cursor: pointer">
+    popoverClass="empPopoverClass" #p2="ngbPopover" placement="right left" container="body" autoClose="outside"
+    triggers="manual" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
       <span class="icon-add_box icon-20 text-dark ml-2 mr-2"></span>
       <span class="tooltiptext">Setup trạng thái </span>
@@ -758,42 +763,42 @@
 
 <ng-template #setupStatusTask>
 
-    <div >
-        <div >
-            <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Done)">
-                <div class="d-flex align-items-center">
-                    <span class="icon-edit icon-18"></span>
-                    <span class="ml-3">Hoàn tất</span>
-                </div>
-            </a>
-            <a class="dropdown-item">
-                <div class="d-flex align-items-center" (click)="ChangeStatusTask(STATUS_TASK.Processing)">
-                    <span class="icon-content_copy icon-18"></span>
-                    <span class="ml-3">Đang thực hiện</span>
-                </div>
-            </a>
-            <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Postpone)">
-                <div class="d-flex align-items-center">
-                    <span class="icon-delete icon-18"></span>
-                    <span class="ml-3">Hoãn lại</span>
-                </div>
-            </a>
-            <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Cancelled)">
-                <div class="d-flex align-items-center">
-                    <span class="icon-delete icon-18"></span>
-                    <span class="ml-3">Hủy</span>
-                </div>
-            </a>
+  <div>
+    <div>
+      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Done)">
+        <div class="d-flex align-items-center">
+          <span class="icon-edit icon-18"></span>
+          <span class="ml-3">Hoàn tất</span>
         </div>
-        <!-- <div class="dropdown-divider"></div> -->
-        <!-- 
+      </a>
+      <a class="dropdown-item">
+        <div class="d-flex align-items-center" (click)="ChangeStatusTask(STATUS_TASK.Processing)">
+          <span class="icon-content_copy icon-18"></span>
+          <span class="ml-3">Đang thực hiện</span>
+        </div>
+      </a>
+      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Postpone)">
+        <div class="d-flex align-items-center">
+          <span class="icon-delete icon-18"></span>
+          <span class="ml-3">Hoãn lại</span>
+        </div>
+      </a>
+      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Cancelled)">
+        <div class="d-flex align-items-center">
+          <span class="icon-delete icon-18"></span>
+          <span class="ml-3">Hủy</span>
+        </div>
+      </a>
+    </div>
+    <!-- <div class="dropdown-divider"></div> -->
+    <!-- 
         <a *ngFor="let f of menuAppend" class="dropdown-item" (click)="Click(f.id,f.funcID)">
             <div class="d-flex align-items-center">
                 <span class="{{f.icon}} icon-18"></span>
                 <span class="ml-3">{{f.text}}</span>
             </div>
         </a> -->
-        <!-- <a class="dropdown-item">
+    <!-- <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-attachment icon-18"></span>
                 <span class="ml-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
@@ -824,5 +829,5 @@
                 <span class="ml-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
             </div>
         </a> -->
-    </div>
+  </div>
 </ng-template>
