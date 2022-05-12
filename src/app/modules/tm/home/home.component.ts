@@ -206,7 +206,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   click(evt: any) {
     console.log(evt);
-    // alert("bắt sự kiện click")
+    this.taskInfo.openTask() ;
+    this.taskInfo.title="Tạo mới công việc"
     this.viewBase.currentView.openSidebarRight();
   }
 
