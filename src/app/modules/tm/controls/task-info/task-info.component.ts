@@ -228,10 +228,11 @@ export class TaskInfoComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  SaveData(id) {
+  saveData(id) {
     this.checkLogicTime();
     if (!this.isCheckTime) {
-      this.notiService.notify('TM002');
+      this.notiService.notifyCode('TM002');
+      this.notiService.notify('Lỗi TM002');
       return;
     }
     // if (
@@ -546,7 +547,6 @@ export class TaskInfoComponent implements OnInit {
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
-    (this.task.estimated = 0), 'hours';
     this.changeDetectorRef.detectChanges();
     if (!this.param)
       this.getParam(function (o) {

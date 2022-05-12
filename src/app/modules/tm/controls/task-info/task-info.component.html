@@ -127,13 +127,13 @@
           <div class="col-6">
             <label>Ngày bắt đầu</label>
             <codx-input name="startDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-              placeholder="datetime" [crrValue]="task.startDate" dataformat="d" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
           <div class="col-6">
             <label>Ngày kết thúc</label>
             <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-              placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
         </div>
@@ -346,12 +346,7 @@
     <div class="card-footer pt-4">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary" (click)="closeTask()">Hủy</button>
-<<<<<<< HEAD
-        <button  type="button" class="btn btn-primary" (click)="SaveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
-=======
-        <button type="button" class="btn btn-primary ms-1" (click)="SaveData(task.taskID)"
-          [disabled]="readOnly">Lưu</button>
->>>>>>> 2ce7aaf6715aa478ba0efe53113592be0b0ea364
+        <button  type="button" class="btn btn-primary" (click)="saveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
       </div>
     </div>
   </div>
