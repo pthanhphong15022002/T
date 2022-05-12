@@ -117,12 +117,12 @@
                 <!-- {{ chartTaskRemind.rateDoneOnTime | percent }} -->
               </div>
               <div class="d-flex w-100 h-50px">
-                <ejs-chart width='200' height='80' style='display:block;' [chartArea]='chartArea' id='chartcontainer'
-                  [legendSettings]="legendLine" [primaryXAxis]='lineXAxis' [primaryYAxis]='lineYAxis'
-                  [tooltip]='tooltip'>
+                <ejs-chart background="transparent" width='200' height='80' style='display:block;'
+                  [chartArea]='chartArea' id='chartcontainer' [legendSettings]="legendLine" [primaryXAxis]='lineXAxis'
+                  [primaryYAxis]='lineYAxis' [tooltip]='tooltip'>
                   <e-series-collection>
-                    <e-series [dataSource]='dataLine' type='Line' yName='id' xName="value" name='Germany' width=2
-                      [marker]='markerLine'>
+                    <e-series [dataSource]='dataLineTrend' fill="#F9D923" type='Line' yName='label' xName="value"
+                      name='Germany' width=2 [marker]='markerLine'>
                     </e-series>
                   </e-series-collection>
                 </ejs-chart>
@@ -161,35 +161,25 @@
           </div>
 
           <div class="text-dark-50">
-            <!-- {{ this.rateTotalChange }} -->
+            {{ this.rateTotalChange }}
           </div>
         </div>
         <div class="col-8">
-          <ejs-accumulationchart id="doughnut-container" #pie style='display:block' width='500' height='200'
-            selectionMode='Point'>
+          <ejs-accumulationchart background="transparent" ser id="doughnut-container" #pie style='display:block'
+            width='500' height='200' selectionMode='Point'>
             <e-accumulation-series-collection>
-              <e-accumulation-series name='Revenue' [dataSource]='doughnutData' xName='x' yName='y'
-                [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="80%"> </e-accumulation-series>
+              <e-accumulation-series name='Revenue' [palettes]='palettes' [dataSource]='doughnutData' xName='label'
+                yName='value' [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="80%">
+              </e-accumulation-series>
             </e-accumulation-series-collection>
           </ejs-accumulationchart>
           <div id="center_title" style="visibility: hidden; position: absolute;">Expenses in Year</div>
-          <!-- bar chart -->
-          <!-- <ng-container>
-            <canvas *ngIf="!isShowEmpty" baseChart [data]="chartDatas" [plugins]="doughnutChartPlugins"
-              [options]="options" height="70" [labels]="chartLabels" [chartType]="chartType" [colors]="colors">
-            </canvas>
-          </ng-container>
-          <ng-container>
-            <canvas *ngIf="isShowEmpty" baseChart [data]="chartDatas_empty" height="70" [options]="options_empty"
-              [labels]="labels_empty" [chartType]="chartType" [colors]="colors_empty">
-            </canvas>
-          </ng-container> -->
         </div>
       </div>
     </div>
     <div class="d-flex align-items-center justify-content-between mt-6 mx-6">
       <div class="text-dark font-weight-bold font-size-h4">
-        <!-- Task by days - {{ daySelected | date: "MMMM yyyy" }} -->
+        Task by days - {{ daySelected | date: "MMMM yyyy" }}
       </div>
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center m-6">
@@ -202,15 +192,14 @@
         </div>
       </div>
     </div>
-    <div class="p-6 chart-by-day">
-      <!-- <img class="w-100" alt="Pic" src="../../../assets/demos/svg/chart4.png"> -->
-      <ejs-chart style='display:block;' [chartArea]='chartArea' width='100%' align='center' id='chartbar'
-        [primaryXAxis]='columnXAxis' [primaryYAxis]='columnYAxis' [title]='title' [tooltip]='tooltip'>
+    <div class="p-6 w-100" style="height: 100px;">
+      <ejs-chart style='display:block' background="transparent" [chartArea]='chartArea' width='100%' [align]="'center'"
+        id='chartbar' [primaryXAxis]='columnXAxis' [primaryYAxis]='columnYAxis' [title]='title' [tooltip]='tooltip'>
         <e-series-collection>
-          <e-series [dataSource]='dataColumn' type='Column' yName='id' xName="value" name='Gold' width=2
+          <e-series [dataSource]='dataColumn' type='Column' yName='value' xName="label" width=20
             [marker]='markerColumn'>
           </e-series>
-          <e-series [dataSource]='dataColumn' type='Line' yName='id' xName="value" name='Japan' [marker]='markerColumn'>
+          <e-series [dataSource]='dataLine' type='Line' yName='value' xName="label" [marker]='markerColumn'>
           </e-series>
         </e-series-collection>
       </ejs-chart>

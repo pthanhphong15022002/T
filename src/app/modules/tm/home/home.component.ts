@@ -151,10 +151,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       text: 'List-details',
       active: false,
       model: {
-        service: 'TM',
-        assemblyName: 'TM',
-        className: 'TaskBusiness',
-        method: 'GetListDetailTasksAsync',
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
         sideBarLeftRef: this.asideLeft,
@@ -169,7 +165,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       text: 'List-tasks',
       active: false,
       model: {
-        itemTemplate: this.listDetails,
+        panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '550px'
@@ -206,7 +202,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   click(evt: any) {
     console.log(evt);
-    // alert("bắt sự kiện click")
+    this.taskInfo.openTask() ;
+    this.taskInfo.title="Tạo mới công việc"
     this.viewBase.currentView.openSidebarRight();
   }
 
