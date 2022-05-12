@@ -762,28 +762,27 @@
 </ng-template>
 
 <ng-template #setupStatusTask>
-
   <div>
     <div>
-      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Done)">
+      <a class="dropdown-item" (click)="ChangeStatusTask('TM0068')" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-edit icon-18"></span>
           <span class="ml-3">Hoàn tất</span>
         </div>
       </a>
       <a class="dropdown-item">
-        <div class="d-flex align-items-center" (click)="ChangeStatusTask(STATUS_TASK.Processing)">
+        <div class="d-flex align-items-center" (click)="ChangeStatusTask('TM0069')"style="cursor: pointer">
           <span class="icon-content_copy icon-18"></span>
           <span class="ml-3">Đang thực hiện</span>
         </div>
       </a>
-      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Postpone)">
+      <a class="dropdown-item" (click)="ChangeStatusTask('TM0070')" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-delete icon-18"></span>
           <span class="ml-3">Hoãn lại</span>
         </div>
       </a>
-      <a class="dropdown-item" (click)="ChangeStatusTask(STATUS_TASK.Cancelled)">
+      <a class="dropdown-item" (click)="ChangeStatusTask('TM0071')" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-delete icon-18"></span>
           <span class="ml-3">Hủy</span>

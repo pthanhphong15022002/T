@@ -70,7 +70,7 @@
       <div class="form-group mt-3">
         <label>Nhóm triển khai</label>
         <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc" 
-          ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChange($event)"
+          ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChangeTaskGroup($event)"
           [value]="task.taskGroupID">
         </codx-combobox>
       </div>
@@ -283,7 +283,7 @@
           <div class="fw-bold fs-6 text-primary">Tài liệu đính kèm</div>
         </div>
         <button type="button" class="btn btn-sm btn-light-primary" *ngIf="!readOnly" appDragDropFileUpload
-          (click)="clickOpenFormAttach(task.taskID)">
+          (click)="clickOpenFormAttach(task.taskID)">         
           <i class="icon-note_add fs-5 me-1"></i>Add file
         </button>
       </div>
@@ -345,7 +345,7 @@
     <div class="card-footer pt-4">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary" (click)="closeTask()">Hủy</button>
-        <button type="button" class="btn btn-primary" (click)="SaveData(task.taskID)"  [disabled]="readOnly">Lưu</button>
+        <button  type="button" class="btn btn-primary" (click)="SaveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
       </div>
     </div>
   </div>
