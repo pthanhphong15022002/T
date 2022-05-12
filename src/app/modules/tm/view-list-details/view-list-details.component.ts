@@ -370,7 +370,9 @@ export class ViewListDetailsComponent implements OnInit {
   ChangeStatusTask(idStatus) {
     const fromName = "TM_Parameters";
     const fieldName = "UpdateControl";
-    this.api.execSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]);
+    this.api.execSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
+      console.log(res)
+    });
   }
 
   
