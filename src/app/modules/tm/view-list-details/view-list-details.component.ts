@@ -20,7 +20,7 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { ActionTypeOnTask } from '../models/enum/enum';
+import { ActionTypeOnTask, StatusTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { TmService } from '../tm.service';
@@ -55,6 +55,10 @@ export class ViewListDetailsComponent implements OnInit {
 
   @Input('viewBase') viewBase: ViewsComponent;
 
+  readonly STATUS_TASK = StatusTask;
+  readonly ACTION = ActionTypeOnTask;
+  // readonly ACTION_TYPE = ActionType;
+
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
@@ -75,7 +79,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {}
-  
+
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
@@ -105,8 +109,8 @@ export class ViewListDetailsComponent implements OnInit {
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.lstItems = res[1];
-        this.itemSelected = res[1][0];
+        this.lstItems = res[0];
+        this.itemSelected = res[0][0];
         this.api
           .execSv<any>(
             'TM',
@@ -282,9 +286,8 @@ export class ViewListDetailsComponent implements OnInit {
     p.open();
   }
   viewDetailTask(taskAction) {
-    alert('edit data');
-    this.viewBase.currentView.openSidebarRight(); 
-  }
+     this.taskInfo.openInfo(taskAction.taskID,'edit');
+    }
 
   copyDetailTask(taskAction) {
     alert('copy data');
@@ -319,6 +322,10 @@ export class ViewListDetailsComponent implements OnInit {
    this.taskInfo.openInfo(taskAction.taskID,'view');
   }
 
+  setupStatus(p,item){
+    p.open();
+  }
+
   close(e: any , t: ViewListDetailsComponent) {
     if (e?.event?.status == "Y") {
       var isCanDelete = true;
@@ -350,4 +357,13 @@ export class ViewListDetailsComponent implements OnInit {
      })
     }
   }
+
+
+
+  ChangeStatusTask(actionType) {
+    // this.onClickAction(this.data, this.ACTION.ChangeStatus, actionType);
+  }
+  // onClickAction(data, actionType, value) {
+  //   this.clickAction.emit({ data, actionType, value });
+  // }
 }

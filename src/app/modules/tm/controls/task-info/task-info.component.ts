@@ -482,23 +482,24 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.isCheckProjectControl = !this.task.projectID && res.ProjectControl != '0';
-          this.isCheckAttachmentControl = res.AttachmentControl != '0';
-          this.isCheckCheckListControl = res.CheckListControl != '0' && this.listTodo.length > 0;
+          console.log(res)
+          // this.isCheckProjectControl = !this.task.projectID && res.ProjectControl != '0';
+          // this.isCheckAttachmentControl = res.AttachmentControl != '0';
+          // this.isCheckCheckListControl = res.CheckListControl != '0' && this.listTodo.length > 0;
 
-          if (this.isCheckProjectControl) {
-            var message = 'Dự án không được để trống';
-            this.notiService.notify(message);
-          }
-          if (this.isCheckAttachmentControl) {
-            var message = 'File tài liệu không được để trống';
-            this.notiService.notify(message);
-          }
-          if (this.isCheckCheckListControl) {
-            //thieu dk taskk
-            var message = 'Danh sách việc cần làm không được để trống';
-            this.notiService.notify(message);
-          }
+          // if (this.isCheckProjectControl) {
+          //   var message = 'Dự án không được để trống';
+          //   this.notiService.notify(message);
+          // }
+          // if (this.isCheckAttachmentControl) {
+          //   var message = 'File tài liệu không được để trống';
+          //   this.notiService.notify(message);
+          // }
+          // if (this.isCheckCheckListControl) {
+          //   //thieu dk taskk
+          //   var message = 'Danh sách việc cần làm không được để trống';
+          //   this.notiService.notify(message);
+          // }
         }
       });
   }
@@ -542,6 +543,7 @@ export class TaskInfoComponent implements OnInit {
   }
 
   openInfo(id, action) {
+    this.getParam();
     const t = this;
     t.task = new TM_Tasks();
     t.readOnly = action === 'edit' ? false : true;
@@ -628,6 +630,7 @@ export class TaskInfoComponent implements OnInit {
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.listUser = [];
+    this.listUserDetail =""
     this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
