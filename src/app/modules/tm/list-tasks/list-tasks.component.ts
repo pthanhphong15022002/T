@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Injector } from '@angular/core';
-import { ApiHttpService, AuthStore } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxListviewComponent } from 'codx-core';
 import * as moment from 'moment';
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { TmService } from '../tm.service';
@@ -18,7 +18,8 @@ declare var _;
 export class ListTasksComponent implements OnInit {
   @Input() data: any = [];
   @Input('viewBase') viewBase: ViewBaseComponent;
-
+  @Input('listview') listview: CodxListviewComponent;
+  model: DataRequest;
   user: any;
   i = 0;
 
@@ -61,6 +62,8 @@ export class ListTasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+
+
   }
 
   ngAfterViewInit(): void {
@@ -154,30 +157,32 @@ export class ListTasksComponent implements OnInit {
 
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
-    let model = new DataRequest();
-    model.formName = 'Tasks';
-    model.gridViewName = 'grvTasks';
-    model.entityName = 'TM_Tasks';
-    model.predicate = '';
-    model.funcID = "TM003"//this.viewBase.funcID ;
-    model.page = 1;
-    model.pageSize = 100;
-    // model.dataValue = this.user.userID;
-    // set max dinh
     this.fromDate = moment("3/31/2022").toDate();
     this.toDate = moment("4/30/2022").toDate();
-    model.filter = {
+
+
+    this.model = new DataRequest();
+    this.model.formName = 'Tasks';
+    this.model.gridViewName = 'grvTasks';
+    this.model.entityName = 'TM_Tasks';
+    this.model.predicate = '';
+    this.model.funcID = "TM003"//this.viewBase.funcID ;
+    this.model.page = 1;
+    this.model.pageSize = 100;
+    // model.dataValue = this.user.userID;
+    // set max dinh
+
+    this.model.filter = {
       logic: 'and',
       filters: [
         { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filter
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    // let dataObj = { view: this.view, viewBoardID: '' };
 
-    model.dataObj = "{\"view\":\"2\"}" //JSON.stringify(this.dataObj);
+    this.model.dataObj = "{\"view\":\"2\"}";
     const t = this;
-    t.tmSv.loadTaskByAuthen(model).subscribe(
+    t.tmSv.loadTaskByAuthen(this.model).subscribe(
       (res) => {
         if (res && res.length) {
           this.data = res[0];
