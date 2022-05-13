@@ -21,7 +21,7 @@ export class KanbanSetting {
     ShowDateBy: boolean;
     Date: Date;
     TaskDrap: boolean;
-    CustomRange: any;
+    CustomRange: string[];
     ShowCustomRange: boolean;
     AllowDrag: boolean = false;
     SelectOnNavigation: boolean = false;
