@@ -16,7 +16,6 @@ import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { KanbanSetting } from '../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
-import { events } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'app-kanban',
@@ -204,40 +203,42 @@ export class TestKanbanComponent implements OnInit {
         ) {
           const today = new Date();
           res[0].map((data) => {
-            const diffTime = today.getTime() - new Date(data.dueDate).getTime();
+            const diffTime = Math.abs(today.getTime() - new Date(data.dueDate).getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             console.log(
               today.getTime(),
               new Date(data.dueDate).getTime(),
               diffDays
             );
-            if (today.getTime() < new Date(data.dueDate).getTime()) {
-              if (diffDays <= 2) {
-                data.diffDays = '2';
+            if(data.status == "1"){
+              if (today.getTime() <= new Date(data.dueDate).getTime()) {
+                if (diffDays <= 2) {
+                  data.diffDays = '2';
+                }
+                if (diffDays >= 3 && diffDays <= 5) {
+                  data.diffDays = '5';
+                }
+                if (diffDays >= 6 && diffDays <= 7) {
+                  data.diffDays = '7';
+                }
+                if (diffDays > 7) {
+                  data.diffDays = '8';
+                }
+              } else {
+                if (diffDays <= 2) {
+                  data.diffDays = '-2';
+                }
+                if (diffDays >= 3 && diffDays <= 5) {
+                  data.diffDays = '-5';
+                }
+                if (diffDays >= 6 && diffDays <= 7) {
+                  data.diffDays = '-7';
+                }
+                if (diffDays > 7) {
+                  data.diffDays = '-8';
+                }
               }
-              if (diffDays >= 3 && diffDays <= 5) {
-                data.diffDays = '5';
-              }
-              if (diffDays >= 6 && diffDays <= 7) {
-                data.diffDays = '7';
-              }
-              if (diffDays > 7) {
-                data.diffDays = '8';
-              }
-            } else {
-              if (diffDays <= 2) {
-                data.diffDays = '-2';
-              }
-              if (diffDays >= 3 && diffDays <= 5) {
-                data.diffDays = '-5';
-              }
-              if (diffDays >= 6 && diffDays <= 7) {
-                data.diffDays = '-7';
-              }
-              if (diffDays > 7) {
-                data.diffDays = '-8';
-              }
-            }
+            }            
           });
         }
         this.dataSource = res[0];
