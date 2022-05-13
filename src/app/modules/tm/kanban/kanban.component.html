@@ -1,5 +1,5 @@
 <div class="row">
-  <codx-kanban #kanban keyField="weekOfMonth" [dataSource]="dataSource" [columns]="columns"
+  <codx-kanban #kanban keyField="diffDays" [dataSource]="dataSource" [columns]="columns"
     [columnTemplate]="columTemplate" [cardTemplate]="cardTemplate" [popupTemplate]="content"
     [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')"
     (onDrag)="onDataDrag($event)">
@@ -14,23 +14,33 @@
     <div class="e-card-header">
       <div class="e-card-header-caption">
         <div class="e-text">{{ data.dueDate | fmDT }}</div>
-        <div class="e-text">{{ data.status | status }}</div>
+        <div class="e-text" [style.color]="data.textColor">
+          {{ data.status | status }}
+        </div>
         <div class="e-text" *ngIf="data.status != '8' && data.status != '9'">
           IsOverdue
         </div>
+        <i
+          class="lab la-font-awesome-flag"
+          [style.color]="data.priorityColor"
+        ></i>
         <div class="e-card-content">
           <div class="e-card-header-title">{{ data.taskName }}</div>
-          <div class="d-flex" *ngIf="data.memo || data.memo">
-            <button (click)="clickme()">Xem mô tả chi tiết</button>
+          <div class="d-flex" *ngIf="data.memo || data.memo2">
+            <button (click)="viewMemo(data.id)">Xem mô tả chi tiết</button>
           </div>
-          <div class="e-text">Comments: {{ data.comments }}</div>
-          <div class="e-text">Attachments: {{ data.attachments }}</div>
-          <div class="e-card-avatar">{{ getString(data.userName) }}</div>
+          <!-- <div class="e-text" *ngFor="let tag of data.tags.split(',');">{{tag}}</div> -->
+          <div *ngIf="settings.CountObjects">
+            <div class="e-text">Comments: {{ data.comments }}</div>
+            <div class="e-text">Check list: {{ data.todo }}</div>
+            <div class="e-text">Attachments: {{ data.attachments }}</div>
+            <div class="e-card-avatar" *ngIf="data.category == '3' || data.category == '4'">{{ getString(data.userName) }}</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="e-card-custom-footer" *ngIf="showSumary">
+    <div class="e-card-custom-footer" *ngIf="cardId == data.id">
       <div class="e-text">{{ data.memo }}</div>
       <div class="e-text">{{ data.memo2 }}</div>
     </div>
