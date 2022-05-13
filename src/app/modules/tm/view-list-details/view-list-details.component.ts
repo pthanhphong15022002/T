@@ -13,6 +13,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthStore,
+  CallFuncService,
   CodxListviewComponent,
   ImageviewersComponent,
   NotificationsService,
@@ -20,6 +21,7 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { UpdateStatusPopupComponent } from '../controls/update-status-popup/update-status-popup.component';
 import { ActionTypeOnTask, StatusTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
 import { TM_Tasks } from '../models/TM_Tasks.model';
@@ -54,10 +56,7 @@ export class ViewListDetailsComponent implements OnInit {
 
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild("listview") listview: CodxListviewComponent
-  readonly STATUS_TASK = StatusTask;
-  readonly ACTION = ActionTypeOnTask;
-  // readonly ACTION_TYPE = ActionType;
-
+  
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
@@ -66,7 +65,7 @@ export class ViewListDetailsComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    injector: Injector
+    private callfc: CallFuncService
   ) {
     this.user = this.authStore.get();
   }
@@ -84,6 +83,7 @@ export class ViewListDetailsComponent implements OnInit {
         this.data.push(res) ;
       }
     })
+   
   }
 
   loadData() {
@@ -323,7 +323,7 @@ export class ViewListDetailsComponent implements OnInit {
     // });
   }
 
-  viewItem(taskAction ) {
+  viewItem(taskAction) {
    this.taskInfo.openInfo(taskAction.taskID,'view');
   }
 
@@ -367,13 +367,55 @@ export class ViewListDetailsComponent implements OnInit {
 
 
 
-  ChangeStatusTask(idStatus) {
+  ChangeStatusTask(status, taskAction) {
     const fromName = "TM_Parameters";
     const fieldName = "UpdateControl";
-    this.api.execSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
-      console.log(res)
+    this.api.execSv<any>("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
+       if(res){
+         var fieldValue = res.fieldValue ;
+         if(fieldValue !='0'){
+          this.openPopupUpdateStatus(fieldValue, status,taskAction)
+         }else{
+          var completedOn = moment(new Date()).toDate();
+          var startDate =moment(new Date(taskAction.startDate)).toDate();
+          var estimated = moment(completedOn).diff(
+           moment(startDate),
+           'hours'
+         );
+         this.tmSv.setStatusTask(taskAction.taskID,status,completedOn,estimated.toString(),'').subscribe(res=>{
+           if(res){
+            taskAction.status = status ;
+            taskAction.completedOn = completedOn ;
+            taskAction.comment = '' ;
+            taskAction.completed = estimated ;
+            this.listview.addHandler(taskAction,false,'recID')
+            this.notiService.notify("Cập nhật trạng thái thành công !")
+           }
+           else{
+            this.notiService.notify("Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !")
+           }
+
+         })
+         
+         }
+       }
     });
   }
 
+  openPopupUpdateStatus(fieldValue, status,taskAction) {
+    let obj = {
+      fieldValue: fieldValue,
+      status : status,
+      taskAction : taskAction
+    };
+    this.callfc.openForm(UpdateStatusPopupComponent, 'Cập nhật tình trạng', 500, 350, '', obj).subscribe((dt:any)=>{dt.close = this.closePopup});
+  }
   
+  closePopup(e:any){
+    if(e.closedBy == "user action"){
+      var task = e.event ;
+      this.listview.addHandler(task,false,'recID')
+    }
+  }
+
 }

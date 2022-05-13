@@ -346,12 +346,7 @@
     <div class="card-footer pt-4">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-outline-primary" (click)="closeTask()">Hủy</button>
-<<<<<<< HEAD
-        <button  type="button" class="btn btn-primary" (click)="SaveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
-=======
-        <button type="button" class="btn btn-primary ms-1" (click)="SaveData(task.taskID)"
-          [disabled]="readOnly">Lưu</button>
->>>>>>> 2ce7aaf6715aa478ba0efe53113592be0b0ea364
+        <button  type="button" class="btn btn-primary" (click)="saveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
       </div>
     </div>
   </div>
