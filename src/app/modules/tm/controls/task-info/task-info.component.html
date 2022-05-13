@@ -127,13 +127,13 @@
           <div class="col-6">
             <label>Ngày bắt đầu</label>
             <codx-input name="startDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-              placeholder="datetime" [crrValue]="task.startDate" dataformat="f" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.startDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
           <div class="col-6">
             <label>Ngày kết thúc</label>
             <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-              placeholder="datetime" [crrValue]="task.endDate" dataformat="f" (valueChange)="changeTime($event)">
+              placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
           </div>
         </div>
