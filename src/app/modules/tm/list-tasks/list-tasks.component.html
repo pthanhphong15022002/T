@@ -1,6 +1,6 @@
 <codx-listview #listview [itemTemplate]="templateTask" [selectFirst]="true" funcId="" [pageSize]="10" service="TM"
   assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [predicate]="" [dataValue]=""
-  type="listView" [gridViewName]="'grvTasks'" autoLoad="false" entityName="TM_Tasks" [data]="data" groupBy="createdOn">
+  type="listView" [gridViewName]="'grvTasks'" autoLoad="false" entityName="TM_Tasks" [data]="data" groupBy="fieldGroup">
 </codx-listview>
 
 <ng-template #templateTask let-item>
