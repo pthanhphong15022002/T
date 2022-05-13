@@ -42,6 +42,7 @@ export class TaskInfoComponent implements OnInit {
   user: any;
   readOnly = false;
   listUser: any[];
+  listMemo2OfUser: Array<{userID: string, memo2 : string}> =[] ;
   listUserDetail: any[];
   listTodo: TaskGoal[];
   todoAddText: any;
@@ -171,6 +172,23 @@ export class TaskInfoComponent implements OnInit {
     // this.changeDetectorRef.detectChanges();
     // modal.dismiss();
   }
+  changeMeno2User(message,id){
+    var index = this.listMemo2OfUser.findIndex(obj=>obj.userID == id)
+    if(index!=-1){
+      this.listMemo2OfUser.forEach(obj=>{
+        if(obj.userID==id){
+          obj.memo2 = message 
+          return ;
+        }
+      })
+    }else{
+      var memo2OfUser = {
+        userID : id,
+         memo2 : message 
+      }
+      this.listMemo2OfUser.push(memo2OfUser)
+    }
+  }
 
   onOpenTodo() {
     if (!this.disableAddToDo) {
@@ -223,10 +241,9 @@ export class TaskInfoComponent implements OnInit {
           : this.STATUS_TASK_GOAL.Checked;
     }
   }
-  removeUserRight(index) {
-    this.listUser.splice(index, 1); //remove element from array
-    this.changeDetectorRef.detectChanges();
-  }
+ 
+
+  
 
   saveData(id) {
     this.checkLogicTime();
@@ -270,9 +287,8 @@ export class TaskInfoComponent implements OnInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    
     this.tmSv
-      .addTask([this.task, this.listTodo, this.functionID])
+      .addTask([this.task, this.listTodo, this.functionID,this.listMemo2OfUser])
       .subscribe((res) => {
         if (res) {
           this.notiService.notify(res.message);
@@ -428,6 +444,9 @@ export class TaskInfoComponent implements OnInit {
   }
 
   checkLogicTime() {
+    if(!this.task.startDate){
+      this.notiService.notify("Phải nhập thời gian bắt đầu !");
+      return }
     if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
@@ -540,7 +559,7 @@ export class TaskInfoComponent implements OnInit {
     this.readOnly = false;
     this.task = new TM_Tasks();
     this.listTodo = [];
-    this.task.assignTo = 'TQHOAN;PMNHI'; ///tesst
+    this.task.assignTo = 'TQHOAN;PMNHI;VVQUANG;NVHAO'; ///tesst
     this.getListUser(this.task.assignTo);
     this.task.status = '1';
     this.task.priority = '1';
@@ -602,16 +621,17 @@ export class TaskInfoComponent implements OnInit {
     // }
   }
 
-  valueChangeUser(event) {
-    if (event?.valueSeleteds) {
-      this.task.assignTo = event?.valueSeleteds;
-    }
+  // valueChangeUser(event) {
+  //   if (event?.valueSeleteds) {
+  //     this.task.assignTo = event?.valueSeleteds;
+  //   }
     // this.listUser =  this.task.assignTo.split(";");
 
     // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
     //   this.listUserDetail = res ;
     // })
-  }
+  // }
+  
   getListUser(listUserDemo) {
     while (listUserDemo.includes(' ')) {
       listUserDemo = listUserDemo.replace(' ', '');
@@ -698,6 +718,7 @@ export class TaskInfoComponent implements OnInit {
   closePanel() {
     this.viewBase.currentView.closeSidebarRight();
   }
+
   onDeleteUser(userID) {
     var listUser = [];
     for (var i = 0; i < this.listUser.length; i++) {

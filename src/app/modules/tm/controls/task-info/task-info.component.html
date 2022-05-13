@@ -257,7 +257,7 @@
                   </div>
                   <div class="text-dark">{{item.positionName}}</div>
                   <div class="text-dark">
-                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
+                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly" (keydown.enter)="changeMeno2User($event.target.value,item?.userID)"
                       style="
                       border-width: thin;
                       border-style: none;
