@@ -211,7 +211,7 @@ export class DashboardComponent implements OnInit {
     majorTickLines: { width: 0 },
     lineStyle: { width: 0 },
     labelStyle: {
-      color: 'gray'
+      color: 'dark'
     }
   };
 
