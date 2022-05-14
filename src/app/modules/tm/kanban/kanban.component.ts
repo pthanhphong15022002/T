@@ -22,7 +22,7 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss'],
 })
-export class TestKanbanComponent implements OnInit {
+export class KanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
   dataSource: any = [];
   data: any;
@@ -205,11 +205,6 @@ export class TestKanbanComponent implements OnInit {
           res[0].map((data) => {
             const diffTime = Math.abs(today.getTime() - new Date(data.dueDate).getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            console.log(
-              today.getTime(),
-              new Date(data.dueDate).getTime(),
-              diffDays
-            );
             if(data.status == "1"){
               if (today.getTime() <= new Date(data.dueDate).getTime()) {
                 if (diffDays <= 2) {
@@ -263,8 +258,8 @@ export class TestKanbanComponent implements OnInit {
       SwimlanesControl,
       SwimlanesField,
     } = this.settings;
-    this.kanbanSetting.BreakDateBy = '9';
-    this.kanbanSetting.ColumnField = 'DueDate';
+    this.kanbanSetting.BreakDateBy = '1';
+    this.kanbanSetting.ColumnField = 'Status';
     this.kanbanSetting.CustomRange = [
       '<=2 ngày',
       '<=5 ngày',
