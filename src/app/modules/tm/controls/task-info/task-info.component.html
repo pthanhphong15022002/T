@@ -259,7 +259,7 @@
                   </div>
                   <div class="text-dark">{{item.positionName}} <span *ngIf="item.departmentName"> | {{item.departmentName}}</span></div>
 
-                  <div class="text-dark" *ngIf="listMemo2OfUser[i].memo2 == null">
+                  <div class="text-dark">
                     <input name="txtTaskMemo2"  placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly" (keydown.enter)="changeMeno2User($event.target.value,item?.userID)"
                       style="
                       border-width: thin;
@@ -267,14 +267,7 @@
                       margin-top: 3px;
                       outline: none;" />
                   </div>
-                  <div class="text-dark" *ngIf="listMemo2OfUser[i].memo2">
-                    <input name="txtTaskMemo2"  value="{{listMemo2OfUser[i].memo2}}" type="text" [readonly]="readOnly" (keydown.enter)="changeMeno2User($event.target.value,item?.userID)"
-                      style="
-                      border-width: thin;
-                      border-style: none;
-                      margin-top: 3px;
-                      outline: none;" />
-                  </div>
+        
                 </div>
               </div>
             </div>

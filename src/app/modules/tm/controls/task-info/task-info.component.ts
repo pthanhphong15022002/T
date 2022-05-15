@@ -269,24 +269,22 @@ export class TaskInfoComponent implements OnInit {
     //       };
     //     });
     // } else {
-      this.confirmDueTime()
-      if (this.task.taskGroupID)
-        this.checkLogicTaskGroup(this.task.taskGroupID);
-      var checkLogic =
-        !this.isConfirm ||
-        this.isCheckProjectControl ||
-        this.isCheckCheckListControl ||
-        this.isCheckAttachmentControl;
-      if (checkLogic) {
-        this.notiService.notifyCode('TM002');
-        this.notiService.notify('Mã lỗi TM002');
-        return;
-      }
-      this.task.taskType = this.param['TaskType'];
-      if (id) this.updateTask();
-      else this.addTask();
-      this.viewBase.currentView.closeSidebarRight();
-    
+    this.confirmDueTime();
+    if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
+    var checkLogic =
+      !this.isConfirm ||
+      this.isCheckProjectControl ||
+      this.isCheckCheckListControl ||
+      this.isCheckAttachmentControl;
+    if (checkLogic) {
+      this.notiService.notifyCode('TM002');
+      this.notiService.notify('Mã lỗi TM002');
+      return;
+    }
+    this.task.taskType = this.param['TaskType'];
+    if (id) this.updateTask();
+    else this.addTask();
+    this.viewBase.currentView.closeSidebarRight();
   }
 
   addTask(isCloseFormTask: boolean = true) {
@@ -586,11 +584,34 @@ export class TaskInfoComponent implements OnInit {
 
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        this.getMemo2OfUser(id) ;
         t.task = res[0];
         this.getListUser(t.task.assignTo);
-        t.listUser = res[1] || [];
+
+        console.log(this.listMemo2OfUser);
+        // t.listUser = res[1] || [];  cái này sau se doi lai
         t.listTodo = res[2];
+
+        // this.listMemo2OfUser = [];
+        this.api
+          .execSv<any>(
+            'TM',
+            'ERM.Business.TM',
+            'TaskBusiness',
+            'GetListTaskChildDetailAsync',
+            t.task.taskID
+          )
+          .subscribe((resp: any) => {
+            if (resp) {
+              resp.forEach((t) => {
+                var Memo2OfUser = {
+                  userID: t.owner,
+                  memo2: t.memo2,
+                };
+                this.listMemo2OfUser.push(Memo2OfUser);
+              });
+            }
+          });
+        console.log(this.listMemo2OfUser);
         t.changeDetectorRef.detectChanges();
         this.showPanel();
       }
@@ -637,7 +658,6 @@ export class TaskInfoComponent implements OnInit {
       listUser = listUser.replace(' ', '');
     }
     this.listUser = listUser.split(';');
- 
     this.api
       .execSv<any>(
         'TM',
@@ -648,14 +668,15 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         this.listUserDetail = res;
-        this.listUserDetail.forEach(u=>{
-          var obj ={ userID : u ,memo2: null}
-          this.listMemo2OfUser.push(obj) ;
-        })
+        this.listUserDetail.forEach((u) => {
+          var obj = { userID: u.userID, memo2: null };
+          this.listMemo2OfUser.push(obj);
+        });
       });
   }
 
   getMemo2OfUser(taskID) {
+    this.listMemo2OfUser = [];
     this.api
       .execSv<any>(
         'TM',
@@ -667,8 +688,6 @@ export class TaskInfoComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           res.forEach((task) => {
-            if (task.memo2 != null) {
-            }
             var Memo2OfUser = {
               userID: task.owner,
               memo2: task.memo2,
@@ -696,6 +715,7 @@ export class TaskInfoComponent implements OnInit {
     this.isCheckAttachmentControl = false;
     this.isCheckCheckListControl = false;
 
+    this.listMemo2OfUser = [];
     this.task.estimated = 0;
     this.isConfirm = true;
     this.required.taskName = false;

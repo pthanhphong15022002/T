@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           itemTemplate: this.templateTask,
           sideBarLeftRef: this.asideLeft,
           sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '300px',
+          widthAsideRight: '550px',
         },
       },
       {
