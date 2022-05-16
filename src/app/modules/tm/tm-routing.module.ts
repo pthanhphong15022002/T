@@ -18,7 +18,9 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TaskInfoComponent } from './controls/task-info/task-info.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { TestKanbanComponent } from './kanban/kanban.component';
+import { KanbanComponent } from './kanban/kanban.component';
+import { SettingComponent } from './setting/setting.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -52,7 +54,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     HomeComponent,
-    TestKanbanComponent,
+    KanbanComponent,
     TmComponent,
     ViewListDetailsComponent,
     ListTasksComponent,
@@ -60,6 +62,7 @@ const routes: Routes = [
     ScheduleComponent,
     TaskInfoComponent,
     DashboardComponent,
+    SettingComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

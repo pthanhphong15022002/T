@@ -97,3 +97,9 @@ export const RangeLineFormGroup = {
     BreakName: new FormControl(null, Validators.required),
     BreakValue: new FormControl(null, Validators.required)
 }
+
+export class MemoUser{
+    userID : string ;
+    memo : string ;
+    memo2 :string ;
+}
