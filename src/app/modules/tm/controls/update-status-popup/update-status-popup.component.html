@@ -1,0 +1,27 @@
+<div>
+    <div class="form-group row">
+        <div class="col-12">
+            <label>Tình trạng</label>
+            <input class="form-control" value ="{{statusDisplay}}" type="text" readonly />
+        </div>
+        <div class="col-6" *ngIf="data.status =='9'">
+            <label>Ngày cập nhật</label>
+                <!-- tạm dùng "d" vf f đang lỗi -->
+            <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
+                [crrValue]="completedOn" dataformat="d" (valueChange)="changeTime($event)">
+            </codx-input>
+        </div>
+        <div class="col-6" *ngIf="data.status =='9'">
+            <label>Thời gian hoàn tất</label>
+            <input type="number" class="form-control" [(ngModel)]="estimated" />
+        </div>
+        <div class="col-12"> <label>Comment</label>
+            <textarea [(ngModel)]="comment" class="form-control" rows="2"></textarea>
+        </div>
+    </div>
+    <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="saveData()">Lưu</button>
+        </div>
+    </div>
+</div>

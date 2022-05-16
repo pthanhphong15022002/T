@@ -728,68 +728,6 @@ codx-img img {
     margin-bottom: 1.2rem;
 }
 
-/******/
-.symbol-circle img,
-.symbol-circle codx-img,
-.symbol-circle .symbol-label {
-    border-radius: 50%;
-}
-
-.symbol-20px img,
-.symbol-20px codx-img,
-.symbol-20px .symbol-label {
-    width: 20px;
-    height: 20px;
-}
-
-.symbol-24px img,
-.symbol-24px codx-img,
-.symbol-24px .symbol-label {
-    width: 24px;
-    height: 24px;
-}
-
-.symbol-30px img,
-.symbol-30px codx-img,
-.symbol-30px .symbol-label,
-.symbol-30 img,
-.symbol-30 codx-img,
-.symbol-30 .symbol-label {
-    width: 30px;
-    height: 30px;
-}
-
-.symbol-35px img,
-.symbol-35px codx-img,
-.symbol-35px .symbol-label {
-    width: 35px;
-    height: 35px;
-}
-
-.symbol-40px img,
-.symbol-40px codx-img,
-.symbol-40px .symbol-label,
-.symbol-40 img,
-.symbol-40 codx-img,
-.symbol-40 .symbol-label,
-.symbol-40 {
-    width: 40px;
-    height: 40px;
-}
-
-.symbol-50px img,
-.symbol-50px codx-img,
-.symbol-50px .symbol-label {
-    width: 50px;
-    height: 50px;
-}
-
-.symbol-60px img,
-.symbol-60px codx-img,
-.symbol-60px .symbol-label {
-    width: 60px;
-    height: 60px;
-}
 
 .badge.badge-square {
     border-radius: 4px !important;
@@ -909,4 +847,10 @@ codx-img img {
 codx-imgs img {
     margin-left: 2px;
     margin-right: 2px;
+}
+
+/*********** TM *****************/
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+    border: 0;
 }

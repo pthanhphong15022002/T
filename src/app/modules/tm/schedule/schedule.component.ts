@@ -25,8 +25,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   @Input() viewPreset: string = "weekAndDay";
   moment = moment().locale("en");
   today: Date = new Date();
-  startDate: Date = undefined;
-  endDate: Date = undefined;
+  startDate: Date = new Date();
+  endDate: Date =  new Date();
   daySelected: Date;
   user: any;
   minHeight = 525;
@@ -943,7 +943,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       logic: 'and',
       fields: [
         { operator: 'gte', field: fied, value: this.startDate },
-        { operator: 'gte', field: fied, value: this.endDate }
+        { operator: 'lte', field: fied, value: this.endDate }
       ]
     }
     //reload data

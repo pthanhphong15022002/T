@@ -6,11 +6,21 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { AccPoints, AccumulationChart, AccumulationChartComponent, ChartTheme, IAccAnimationCompleteEventArgs, IAccTextRenderEventArgs, IAxisLabelRenderEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
+import {
+  AccPoints,
+  AccumulationChart,
+  AccumulationChartComponent,
+  ChartTheme,
+  IAccAnimationCompleteEventArgs,
+  IAccTextRenderEventArgs,
+  IAxisLabelRenderEventArgs,
+  ILoadedEventArgs,
+} from '@syncfusion/ej2-angular-charts';
 import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { SettingComponent } from '../setting/setting.component';
 
 @Component({
   selector: 'app-home',
@@ -30,14 +40,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('schedule') schedule: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
+  @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
 
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
-  @ViewChild("taskInfo") taskInfo: TaskInfoComponent;
+  @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   public showBackdrop: boolean = true;
   public type: string = 'Push';
   public width: string = '550px';
   public closeOnDocumentClick: boolean = true;
-
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
@@ -51,7 +61,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     { value: new Date(2008, 0, 1), id: 38 },
     { value: new Date(2009, 0, 1), id: 54 },
     { value: new Date(2010, 0, 1), id: 57 },
-    { value: new Date(2011, 0, 1), id: 70 }
+    { value: new Date(2011, 0, 1), id: 70 },
   ];
   public primaryXAxis: Object = {
     valueType: 'DateTime',
@@ -63,8 +73,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     majorTickLines: { width: 0 },
     lineStyle: { width: 0 },
     labelStyle: {
-      color: 'transparent'
-    }
+      color: 'transparent',
+    },
   };
 
   //Initializing Primary Y Axis
@@ -73,21 +83,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     majorTickLines: { width: 0 },
     majorGridLines: { width: 0 },
     labelStyle: {
-      color: 'transparent'
-    }
+      color: 'transparent',
+    },
   };
   public chartArea: Object = {
     border: {
-      width: 0
-    }
+      width: 0,
+    },
   };
   public marker: Object = {
     visible: true,
     height: 10,
-    width: 10
+    width: 10,
   };
   public tooltip: Object = {
-    enable: false
+    enable: false,
   };
   public title: string = 'Inflation - Consumer Price';
   public legendSettingsBar: Object = {
@@ -95,20 +105,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
   };
   //End chart bar
 
-
-  constructor(private cf: ChangeDetectorRef) { }
+  constructor(private cf: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // this.buttons = [{
-    //   id: '1',
-    //   icon: 'icon-list-checkbox',
-    //   text: 'button 1',
-    // },
-    // {
-    //   id: '2',
-    //   icon: 'icon-list-checkbox',
-    //   text: 'button 2',
-    // }]
+    this.buttons = [
+      {
+        id: '1',
+        icon: 'icon-list-checkbox',
+        text: 'Settings',
+      },
+      {
+        id: '2',
+        icon: 'icon-list-checkbox',
+        text: 'button 2',
+      },
+    ];
 
     this.moreFunc = [
       {
@@ -197,22 +208,34 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (args.axis.orientation === 'Horizontal') {
       args.cancel = args.value === 15 || args.value === 21;
     }
-  };
+  }
 
   load(args: ILoadedEventArgs): void {
     let selectedTheme: string = location.hash.split('/')[1];
     selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.chart.theme = <ChartTheme>(selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(/-dark/i, "Dark");
-  };
-
-  click(evt: any) {
-    console.log(evt);
-    this.taskInfo.openTask() ;
-    this.taskInfo.title="Tạo mới công việc"
-    this.viewBase.currentView.openSidebarRight();
+    args.chart.theme = <ChartTheme>(
+      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(
+        /-dark/i,
+        'Dark'
+      )
+    );
   }
 
+  click(evt: any) {
+    console.log(evt.id);
+    switch (evt.id) {
+      case 'add':
+        this.taskInfo.openTask();
+        this.taskInfo.title = 'Tạo mới công việc';
+        this.viewBase.currentView.openSidebarRight();
+        break;
+      case '1':
+        this.viewBase.currentView.openSidebarRight();
+        break;
+      default:
+        break;
+    }
+  }
 
   //Donut
-
 }

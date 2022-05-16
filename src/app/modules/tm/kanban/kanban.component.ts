@@ -22,11 +22,11 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss'],
 })
-export class TestKanbanComponent implements OnInit {
+export class KanbanComponent implements OnInit {
   @Input('viewBase') viewBase: ViewBaseComponent;
   dataSource: any = [];
   data: any;
-  setCalendar = true;
+  setCalendar: boolean = true;
   mode: string;
   view: string;
   isAdd = false;
@@ -61,9 +61,11 @@ export class TestKanbanComponent implements OnInit {
       { key: 'Summary', type: 'TextArea' },
     ],
   };
+  cardId: string;
 
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
+
   constructor(
     private modalService: NgbModal,
     private tmSv: TmService,
@@ -82,6 +84,7 @@ export class TestKanbanComponent implements OnInit {
     this.cache.viewSettings('TM001').subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
+        console.log('Setting: ', this.settings);
         this.getColumnKanban();
       }
     });
@@ -91,10 +94,10 @@ export class TestKanbanComponent implements OnInit {
     this.getData();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
-  clickme() {
-    this.showSumary = !this.showSumary;
+  viewMemo(id: string) {
+    this.cardId = id;
   }
 
   getString(assignee: any) {
@@ -131,14 +134,11 @@ export class TestKanbanComponent implements OnInit {
   }
 
   onDataDrag(evt: any) {
-    if(!this.kanbanSetting.AllowDrag){
-      return;
-    }
     this.item = evt;
   }
 
   submit(e: any, modal: any) {
-    const completed = new Date(2022, 5, 9, 12, 0, 0);
+    const completed = new Date(2022, 5, 11, 18, 0, 0);
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
@@ -171,7 +171,10 @@ export class TestKanbanComponent implements OnInit {
 
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
-        if (this.kanbanSetting.BreakDateBy == '1') {
+        if (
+          this.kanbanSetting.BreakDateBy == '1' &&
+          this.kanbanSetting.ColumnField != 'status'
+        ) {
           const today = new Date();
           res[0].map((data) => {
             if (this.isSameWeek(today, new Date(data.dueDate))) {
@@ -181,7 +184,10 @@ export class TestKanbanComponent implements OnInit {
             }
           });
         }
-        if (this.kanbanSetting.BreakDateBy == '3') {
+        if (
+          this.kanbanSetting.BreakDateBy == '3' &&
+          this.kanbanSetting.ColumnField != 'status'
+        ) {
           const today = new Date();
           res[0].map((data) => {
             if (this.isSameMonth(today, new Date(data.dueDate))) {
@@ -189,6 +195,45 @@ export class TestKanbanComponent implements OnInit {
                 new Date(data.dueDate)
               ).toString();
             }
+          });
+        }
+        if (
+          this.kanbanSetting.BreakDateBy == '9' &&
+          this.kanbanSetting.ColumnField != 'status'
+        ) {
+          const today = new Date();
+          res[0].map((data) => {
+            const diffTime = Math.abs(today.getTime() - new Date(data.dueDate).getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if(data.status == "1"){
+              if (today.getTime() <= new Date(data.dueDate).getTime()) {
+                if (diffDays <= 2) {
+                  data.diffDays = '2';
+                }
+                if (diffDays >= 3 && diffDays <= 5) {
+                  data.diffDays = '5';
+                }
+                if (diffDays >= 6 && diffDays <= 7) {
+                  data.diffDays = '7';
+                }
+                if (diffDays > 7) {
+                  data.diffDays = '8';
+                }
+              } else {
+                if (diffDays <= 2) {
+                  data.diffDays = '-2';
+                }
+                if (diffDays >= 3 && diffDays <= 5) {
+                  data.diffDays = '-5';
+                }
+                if (diffDays >= 6 && diffDays <= 7) {
+                  data.diffDays = '-7';
+                }
+                if (diffDays > 7) {
+                  data.diffDays = '-8';
+                }
+              }
+            }            
           });
         }
         this.dataSource = res[0];
@@ -200,7 +245,7 @@ export class TestKanbanComponent implements OnInit {
 
   getColumnKanban() {
     const {
-      //ColumnField,
+      ColumnField,
       ColumnMenu,
       ColumnToolbars,
       CountObjects,
@@ -215,6 +260,12 @@ export class TestKanbanComponent implements OnInit {
     } = this.settings;
     this.kanbanSetting.BreakDateBy = '1';
     this.kanbanSetting.ColumnField = 'Status';
+    this.kanbanSetting.CustomRange = [
+      '<=2 ngày',
+      '<=5 ngày',
+      '<=7 ngày',
+      'Trước đó',
+    ];
     this.kanbanSetting.ColumnMenu = JSON.parse(ColumnMenu);
     this.kanbanSetting.ColumnToolbars = JSON.parse(ColumnToolbars);
     this.kanbanSetting.IsChangeColumn = true;
@@ -232,8 +283,7 @@ export class TestKanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-        this.columns = res.column;
-        // this.kanban.columns = res.column
+        this.kanban.columns = res.column;
         this.cr.detectChanges();
       }
     });

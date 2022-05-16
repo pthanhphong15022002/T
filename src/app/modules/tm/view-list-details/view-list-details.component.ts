@@ -13,6 +13,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthStore,
+  CallFuncService,
   CodxListviewComponent,
   ImageviewersComponent,
   NotificationsService,
@@ -20,6 +21,7 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { UpdateStatusPopupComponent } from '../controls/update-status-popup/update-status-popup.component';
 import { ActionTypeOnTask, StatusTask } from '../models/enum/enum';
 import { DataSv } from '../models/task.model';
 import { TM_Tasks } from '../models/TM_Tasks.model';
@@ -45,7 +47,6 @@ export class ViewListDetailsComponent implements OnInit {
   configParam = null;
   dateNow: string = '';
   yesterday = '';
-  lstItems = [];
   dataObj = { view: 'listDetails', viewBoardID: '' };
   gridView: any;
   listUserTask = [];
@@ -54,11 +55,8 @@ export class ViewListDetailsComponent implements OnInit {
   taskAction: any;
 
   @Input('viewBase') viewBase: ViewsComponent;
-
-  readonly STATUS_TASK = StatusTask;
-  readonly ACTION = ActionTypeOnTask;
-  // readonly ACTION_TYPE = ActionType;
-
+  @ViewChild("listview") listview: CodxListviewComponent
+  
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
@@ -67,7 +65,7 @@ export class ViewListDetailsComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    injector: Injector
+    private callfc: CallFuncService
   ) {
     this.user = this.authStore.get();
   }
@@ -78,7 +76,15 @@ export class ViewListDetailsComponent implements OnInit {
     this.loadData();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.taskInfo.isAddNew.subscribe(res=>{
+      if(res){
+        this.listview.addHandler(res,true,'recID')
+        this.data.push(res) ;
+      }
+    })
+   
+  }
 
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -93,7 +99,7 @@ export class ViewListDetailsComponent implements OnInit {
     // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/15/2022').toDate();
+    this.toDate = moment('5/20/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -105,11 +111,10 @@ export class ViewListDetailsComponent implements OnInit {
 
     model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
     const t = this;
-    this.lstItems = [];
+    // this.lstItems = [];
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.lstItems = res[0];
         this.itemSelected = res[0][0];
         this.api
           .execSv<any>(
@@ -162,11 +167,11 @@ export class ViewListDetailsComponent implements OnInit {
     this.getOneItem(item.id);
   }
   getOneItem(id) {
-    var itemDefault = this.lstItems.find((item) => item.id == id);
+    var itemDefault = this.data.find((item) => item.id == id);
     if (itemDefault != null) {
       this.itemSelected = itemDefault;
     } else {
-      this.itemSelected = this.lstItems[0];
+      this.itemSelected = this.data[0];
     }
 
     this.api
@@ -318,7 +323,7 @@ export class ViewListDetailsComponent implements OnInit {
     // });
   }
 
-  viewItem(taskAction ) {
+  viewItem(taskAction) {
    this.taskInfo.openInfo(taskAction.taskID,'view');
   }
 
@@ -346,7 +351,9 @@ export class ViewListDetailsComponent implements OnInit {
             t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
               if (res) {
                 // this.notiService.notifyCode("TM004")
-                return this.notiService.notify('Xóa task thành công !');
+               this.listview.removeHandler(this.taskAction,'recID')
+               this.notiService.notify('Xóa task thành công !');
+               return;
               }
               t.notiService.notify(
                 'Xóa task không thành công. Vui lòng kiểm tra lại !'
@@ -360,10 +367,55 @@ export class ViewListDetailsComponent implements OnInit {
 
 
 
-  ChangeStatusTask(actionType) {
-    // this.onClickAction(this.data, this.ACTION.ChangeStatus, actionType);
+  ChangeStatusTask(status, taskAction) {
+    const fromName = "TM_Parameters";
+    const fieldName = "UpdateControl";
+    this.api.execSv<any>("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
+       if(res){
+         var fieldValue = res.fieldValue ;
+         if(fieldValue !='0'){
+          this.openPopupUpdateStatus(fieldValue, status,taskAction)
+         }else{
+          var completedOn = moment(new Date()).toDate();
+          var startDate =moment(new Date(taskAction.startDate)).toDate();
+          var estimated = moment(completedOn).diff(
+           moment(startDate),
+           'hours'
+         );
+         this.tmSv.setStatusTask(taskAction.taskID,status,completedOn,estimated.toString(),'').subscribe(res=>{
+           if(res){
+            taskAction.status = status ;
+            taskAction.completedOn = completedOn ;
+            taskAction.comment = '' ;
+            taskAction.completed = estimated ;
+            this.listview.addHandler(taskAction,false,'recID')
+            this.notiService.notify("Cập nhật trạng thái thành công !")
+           }
+           else{
+            this.notiService.notify("Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !")
+           }
+
+         })
+         
+         }
+       }
+    });
   }
-  // onClickAction(data, actionType, value) {
-  //   this.clickAction.emit({ data, actionType, value });
-  // }
+
+  openPopupUpdateStatus(fieldValue, status,taskAction) {
+    let obj = {
+      fieldValue: fieldValue,
+      status : status,
+      taskAction : taskAction
+    };
+    this.callfc.openForm(UpdateStatusPopupComponent, 'Cập nhật tình trạng', 500, 350, '', obj).subscribe((dt:any)=>{dt.close = this.closePopup});
+  }
+  
+  closePopup(e:any){
+    if(e.closedBy == "user action"){
+      var task = e.event ;
+      this.listview.addHandler(task,false,'recID')
+    }
+  }
+
 }

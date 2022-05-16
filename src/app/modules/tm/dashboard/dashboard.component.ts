@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit {
         }
 
         //trending chart
-        this.dataLineTrend[0] = data.trendChart.doughnutData;
+        this.dataLineTrend = data.trendChart.result;
       })
   }
 
@@ -162,10 +162,8 @@ export class DashboardComponent implements OnInit {
   //#region chartline
   public dataLineTrend: Object[] = [];
   public lineXAxis: Object = {
-    valueType: 'DateTime',
+    valueType: 'Category',
     labelFormat: 'y',
-    intervalType: 'Years',
-    edgeLabelPlacement: 'Shift',
     rangePadding: 'None',
     majorGridLines: { width: 0 },
     majorTickLines: { width: 0 },
@@ -213,7 +211,7 @@ export class DashboardComponent implements OnInit {
     majorTickLines: { width: 0 },
     lineStyle: { width: 0 },
     labelStyle: {
-      color: 'gray'
+      color: 'dark'
     }
   };
 

@@ -15,6 +15,11 @@
   <app-kanban [viewBase]="viewBase"></app-kanban>
 </ng-template>
 
+<ng-template #settingPanel>
+  <app-setting [viewBase]="viewBase"></app-setting>
+</ng-template>
+
+
 <!-- list-task-detail -->
 <ng-template #listDetails>
   <app-view-list-details [viewBase]="viewBase" [taskInfo]="taskInfo"></app-view-list-details>
