@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent } from 'codx-core';
-import { DataRequest } from '@shared/models/data.request';
+import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
@@ -899,16 +898,16 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     this.model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.endDate },
+        { operator: 'gte', field: fied, value: this.startDate,logic:'and', }, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate,logic:'and'  },
       ],
     };
 
   }
 
-  addNew(taskAction: any) {
-    this.taskInfo.openInfo(taskAction, "add");
-
+  addNew(evt: any) {
+    console.log(evt);
+    this.taskInfo.openTask();
   }
 
   edit(taskAction) {
@@ -932,6 +931,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';
     console.log(evt);
@@ -941,13 +941,15 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     //Thêm vào option predicate
     this.model.filter = {
       logic: 'and',
-      fields: [
-        { operator: 'gte', field: fied, value: this.startDate },
-        { operator: 'lte', field: fied, value: this.endDate }
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate,logic:'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic:'and'}
       ]
     }
     //reload data
-    this.schedule.reloadDataSource()
+    this.schedule.reloadDataSource();
+    this.schedule.reloadResource();
+    
   }
   close(e: any, t: ScheduleComponent) {
     if (e?.event?.status == "Y") {
