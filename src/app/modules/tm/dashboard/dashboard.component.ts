@@ -47,22 +47,35 @@ export class DashboardComponent implements OnInit {
     this.daySelected = this.selectweekComponent.daySelected;
     this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
     this.daySelectedTo = this.selectweekComponent.daySelectedTo;
+    this.getGenaralData();
 
-    this.getDataBarChart(
-      this.selectweekComponent.beginMonth,
-      this.selectweekComponent.endMonth
-    );
-    this.getListTaskRemindWork();
-    this.getChartData();
+    // this.getDataBarChart(
+    //   this.selectweekComponent.beginMonth,
+    //   this.selectweekComponent.endMonth
+    // );
+    //this.getChartData();
   }
 
-  getListTaskRemindWork() {
+  getGenaralData() {
     this.api
-      .exec("TM", "TaskBusiness", "GetListTaskRemindWorkAsync", [this.model, this.daySelectedFrom, this.daySelectedTo])
+      .exec("TM", "TaskBusiness", "GetGenaralDataAsync", [
+        this.model,
+        this.daySelectedFrom,
+        this.daySelectedTo,
+        this.fromDate,
+        this.toDate,
+        this.selectweekComponent.beginMonth,
+        this.selectweekComponent.endMonth
+      ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: TaskRemind) => {
         this.taskRemind = data;
-        this.remiderOnDay = data.tasks['result'];
+        this.remiderOnDay = data.listTaskByDay['result'];
+
+        //set data Chart
+        this.setDataChart(data.chartData);
+
+        //Set data chart colum
       });
   }
 
@@ -73,22 +86,7 @@ export class DashboardComponent implements OnInit {
       this.toDate,
       ])
       .pipe(takeUntil(this.ngUnsubscribe)).subscribe((data: any) => {
-        console.log('data: ', data);
-        this.chartTaskRemind = data.chartTaskRemind;
-
-        //Peformence chart
-        if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
-          this.doughnutData = this.doughnutEmpty;
-          this.palettes = this.palettesEmpty;
-          this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
-        } else {
-          this.doughnutData = data.chartPerformance.doughnutData;
-          this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
-          // this.renderMiddleText(data.chartPerformance.rateTotalChange);
-        }
-
-        //trending chart
-        this.dataLineTrend = data.trendChart.result;
+        if (data) this.setDataChart(data);
       })
   }
 
@@ -114,9 +112,9 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  getRemiderOnDay() {
+  GetDataWorkOnDay() {
     this.api
-      .exec("TM", "TaskBusiness", "GetRemiderOnDayAsync", [this.model,
+      .exec("TM", "TaskBusiness", "GetDataWorkOnDayAsync", [this.model,
       this.daySelectedFrom,
       this.daySelectedTo,
       ])
@@ -133,7 +131,7 @@ export class DashboardComponent implements OnInit {
     this.daySelected = data.daySelected;
     this.daySelectedFrom = data.daySelectedFrom;
     this.daySelectedTo = data.daySelectedTo;
-    this.getRemiderOnDay();
+    this.GetDataWorkOnDay();
     if (this.week != data.week) {
       this.week = data.week;
       this.getChartData();
@@ -157,6 +155,23 @@ export class DashboardComponent implements OnInit {
     console.log("rateTotalChange", rateTotalChange);
     let rate = (Math.abs(1 - rateTotalChange) * 100).toFixed(2);
     return title + ` ${rate}% công việc so với tuần trước`;
+  }
+
+  setDataChart(data: any) {
+    this.chartTaskRemind = data.chartTaskRemind;
+    //Peformence chart
+    if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
+      this.doughnutData = this.doughnutEmpty;
+      this.palettes = this.palettesEmpty;
+      this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
+    } else {
+      this.doughnutData = data.chartPerformance.doughnutData;
+      this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
+      // this.renderMiddleText(data.chartPerformance.rateTotalChange);
+    }
+
+    //trending chart
+    this.dataLineTrend = data.trendChart.result;
   }
 
   //#region chartline
