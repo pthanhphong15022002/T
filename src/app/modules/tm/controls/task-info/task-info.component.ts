@@ -605,7 +605,7 @@ export class TaskInfoComponent implements OnInit {
      this.listUser= listUserDemo.split(";");
      this.api.execSv<any>("TM", "ERM.Business.TM", "TaskBusiness", "GetListUserDetailAsync", listUserDemo).subscribe(res=>{
         this.listUserDetail = res ;
-      })
+      }) 
    }
   
 

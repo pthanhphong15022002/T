@@ -1,11 +1,11 @@
 <div class="row">
   <codx-schedule height="100%" #schedule [eventTemplate]="eventTemplate" service="TM" assemblyName="TM"
     [templateResourceHeader]="resourceHeader" className="TaskBusiness" method="GetListDetailTasksAsync"
-    methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter" [fields]="fields" [StartDate]="startDate"
-    [EndDate]="endDate" [options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="TM001"
+    methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter" [fields]="fields" [selectedDate]="selectedDate"
+    [EndDate]="endDate" [options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="TM001" (onViewChange)="viewChange($event)"
     [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored' [resourceTooltipTemplate]="resourceTootip"
-    (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew1(data)" [statusColor]="status" [eventEditFeature]="false" 
-    [readOnly]="true" [resourceField]="resourceField" (onViewChange)="testEvent($event)">
+    (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" (onEdit)="edit($event)" (onDelete)="deleteTask($event)" [statusColor]="status" [eventEditFeature]="false" 
+    [readOnly]="true" [resourceField]="resourceField">
   </codx-schedule>
   <ng-template #eventTemplate let-data>
     <div >
@@ -27,7 +27,7 @@
   <ng-template #cellFooter let-data>
     <div class="row border">
 
-      <button ejs-button id="more-details" cssClass="e-flat" (click)="addNew1(data)">
+      <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
         sửa
       </button>
       <button ejs-button id="delete" cssClass="e-flat" [isPrimary]="true" (click)="deleteTask(data)">

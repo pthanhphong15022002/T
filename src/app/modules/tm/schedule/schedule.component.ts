@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore, ApiHttpService, CallFuncService, NotificationsService } from 'codx-core';
+import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
@@ -13,19 +13,20 @@ import { CbxpopupComponent } from '../controls/cbxpopup/cbxpopup.component';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewListDetailsComponent } from '../view-list-details/view-list-details.component';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.scss']
 })
-export class ScheduleComponent implements OnInit {
+export class ScheduleComponent implements OnInit, AfterViewInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() viewPreset: string = "weekAndDay";
   moment = moment().locale("en");
   today: Date = new Date();
-  startDate: Date;
-  endDate: Date;
+  startDate: Date = undefined;
+  endDate: Date = undefined;
   daySelected: Date;
   user: any;
   minHeight = 525;
@@ -39,6 +40,7 @@ export class ScheduleComponent implements OnInit {
   taskAction: any;
 
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
+  @ViewChild("schedule") schedule: CodxScheduleComponent;
 
   model = new DataRequest();
   dataSource = [
@@ -816,7 +818,7 @@ export class ScheduleComponent implements OnInit {
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: {name:"userID"},
+    resourceId: { name: "userID" },
   }
   resourceField = {
     Name: 'Resources',
@@ -825,7 +827,7 @@ export class ScheduleComponent implements OnInit {
     TextField: 'userName',
     Title: 'Resources',
   };
-
+  selectedDate = new Date();
   status = [
     { id: 1, status: '0', color: '#ff0000' },
     { id: 2, status: '1', color: '#ff8c1a' },
@@ -835,7 +837,7 @@ export class ScheduleComponent implements OnInit {
     { id: 6, status: '5', color: '#010102' },
     { id: 7, status: '9', color: '#030333' },
     { id: 8, status: '8', color: '#420233' },
-    
+
   ]
 
   columns = [
@@ -875,6 +877,10 @@ export class ScheduleComponent implements OnInit {
   ) {
     this.user = this.auStore.get();
   }
+  scheduleObj: any = undefined;
+  ngAfterViewInit(): void {
+    this.scheduleObj = this.schedule.scheduleObj;
+  }
 
   group = {
     enableCompactView: false,
@@ -893,24 +899,24 @@ export class ScheduleComponent implements OnInit {
     this.model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.startDate || moment("03/01/2022").toDate()}, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.endDate || moment("05/15/2022").toDate()},
+        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.endDate },
       ],
     };
+
   }
 
-  addNew(evt: any) {
-    console.log(evt);
-    alert('edit data');
-    this.viewBase.currentView.openSidebarRight(); 
+  addNew(taskAction: any) {
+    this.taskInfo.openInfo(taskAction, "add");
+
   }
 
-  addNew1(taskAction){
-    this.taskInfo.openInfo(taskAction.id,"edit"); 
+  edit(taskAction) {
+    this.taskInfo.openInfo(taskAction.id, "edit");
   }
 
-  deleteTask(taskAction){
-    if(taskAction.status=='9'){
+  deleteTask(taskAction) {
+    if (taskAction.status == '9') {
       this.notiService.notify(
         'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
       );
@@ -921,17 +927,33 @@ export class ScheduleComponent implements OnInit {
       .alert('Cảnh báo', message, { type: 'YesNo' })
       .subscribe((dialog: Dialog) => {
         var that = this;
-        dialog.close =  function(e){
+        dialog.close = function (e) {
           return that.close(e, that);
-        } 
+        }
       });
   }
-
-  close(e: any , t: ScheduleComponent){
+  viewChange(evt: any) {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    console.log(evt);
+    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+    this.startDate = evt?.fromDate;
+    this.endDate = evt?.toDate;
+    //Thêm vào option predicate
+    this.model.filter = {
+      logic: 'and',
+      fields: [
+        { operator: 'gte', field: fied, value: this.startDate },
+        { operator: 'gte', field: fied, value: this.endDate }
+      ]
+    }
+    //reload data
+    this.schedule.reloadDataSource()
+  }
+  close(e: any, t: ScheduleComponent) {
     if (e?.event?.status == "Y") {
       var isCanDelete = true;
-      t.api.execSv<any>('TM','ERM.Business.TM', 'TaskBusiness','GetUserByTasksAsync', this.fields.id).subscribe((res: any)=>{
-     if(res){
+      t.api.execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', 'GetListDetailTasksAsync', this.fields.id).subscribe((res: any) => {
+        if (res) {
           res.forEach((element) => {
             if (element.status != '1') {
               isCanDelete = false;
@@ -943,7 +965,7 @@ export class ScheduleComponent implements OnInit {
             t.notiService.notify(
               'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
             );
-          }else{
+          } else {
             t.tmSv.deleteTask(t.fields.id).subscribe((res) => {
               if (res) {
                 // this.notiService.notifyCode("TM004")
@@ -954,8 +976,8 @@ export class ScheduleComponent implements OnInit {
               );
             });
           }
-         } 
-     })
+        }
+      })
     }
   }
 
@@ -969,7 +991,7 @@ export class ScheduleComponent implements OnInit {
     this.tmSv.showPanel.next(new InfoOpenForm(taskID, "TM003", VIEW_ACTIVE.Schedule, 'edit'));
   }
 
-  testEvent(evt:any){
-console.log(evt)
+  testEvent(evt: any) {
+    console.log(evt)
   }
 }
