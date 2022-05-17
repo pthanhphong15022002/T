@@ -571,6 +571,7 @@ export class TaskInfoComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (!this.param)
       this.getParam(function (o) {
+        
         //if (o) t.showPanel();
       });
     else {
@@ -637,6 +638,28 @@ export class TaskInfoComponent implements OnInit {
   // })
   // }
 
+  // getListUser(listUser) {
+  //   while (listUser.includes(' ')) {
+  //     listUser = listUser.replace(' ', '');
+  //   }
+  //   this.listUser = listUser.split(';');
+  //   this.api
+  //     .execSv<any>(
+  //       'TM',
+  //       'ERM.Business.TM',
+  //       'TaskBusiness',
+  //       'GetListUserDetailAsync',
+  //       listUser
+  //     )
+  //     .subscribe((res) => {
+  //       this.listUserDetail = res;
+  //       this.listUserDetail.forEach((u) => {
+  //         var obj = { userID: u.userID, memo2: null };
+  //         this.listMemo2OfUser.push(obj);
+  //       });
+  //     });
+  // }
+
   getListUser(listUser) {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
@@ -658,8 +681,6 @@ export class TaskInfoComponent implements OnInit {
         });
       });
   }
-
-
   extendShow() {
     // this.panelTask.nativeElement.classList.toggle('extend-show');
   }

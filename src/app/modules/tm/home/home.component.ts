@@ -136,67 +136,69 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: 'content',
-        active: true,
-        model: {
-          panelLeftRef: this.chart,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideLeft: '550px',
-          widthAsideRight: '550px',
-        },
-      },
-      {
-        id: '2',
-        type: 'kanban',
-        active: false,
-        model: {
-          panelLeftRef: this.kanban,
-          sideBarRightRef: this.settingPanel,
-          widthAsideRight: '550px',
-        },
-      },
-      {
-        id: '3',
-        type: 'kanban',
-        icon: 'icon-chrome_reader_mode1',
-        text: 'List-details',
-        active: false,
-        model: {
-          panelLeftRef: this.listDetails,
-          itemTemplate: this.templateTask,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '550px',
-        },
-      },
-      {
-        id: '4',
-        type: 'kanban',
-        icon: 'icon-format_list_bulleted',
-        text: 'List-tasks',
-        active: false,
-        model: {
-          panelLeftRef: this.listTasks,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '550px',
-        },
-      },
-      {
-        id: '5',
-        type: 'schedule',
-        text: 'schedule',
-        active: false,
-        model: {
-          panelLeftRef: this.schedule,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '550px',
-        },
-      },
+    this.views = [{
+      id: '1',
+      type: 'content',
+      sameData: false,
+      active: true,
+      model: {
+        panelLeftRef: this.chart,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideLeft: '550px',
+        widthAsideRight: '550px'
+      }
+    },
+    {
+      id: '2',
+      type: 'kanban',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.kanban,
+      }
+    },
+    {
+      id: '3',
+      type: 'kanban',
+      icon: 'icon-chrome_reader_mode1',
+      text: 'List-details',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.listDetails,
+        itemTemplate: this.templateTask,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
+      }
+    },
+    {
+      id: '4',
+      type: 'list',
+      icon: 'icon-format_list_bulleted',
+      sameData: false,
+      text: 'List-tasks',
+      active: false,
+      model: {
+        panelLeftRef: this.listTasks,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
+      }
+    },
+    {
+      id: '5',
+      type: 'schedule',
+      text: 'schedule',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
+      }
+    },
     ];
     console.log(this.viewBase?.funcID);
     this.cf.detectChanges();

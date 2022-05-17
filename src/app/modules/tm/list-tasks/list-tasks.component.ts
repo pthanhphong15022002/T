@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Injector } from '@angular/core';
-import { ApiHttpService, AuthStore, CodxListviewComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxListviewComponent, NotificationsService } from 'codx-core';
 import * as moment from 'moment';
 import { ActionTypeOnTask } from '../models/enum/enum';
 import { TmService } from '../tm.service';
 import { DataRequest } from '@shared/models/data.request';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
+import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
 
 
 declare var _;
@@ -19,6 +21,8 @@ export class ListTasksComponent implements OnInit {
   @Input() data: any = [];
   @Input('viewBase') viewBase: ViewBaseComponent;
   @Input('listview') listview: CodxListviewComponent;
+  @Input('taskInfo') taskInfo: TaskInfoComponent;
+
   model: DataRequest;
   user: any;
   i = 0;
@@ -28,19 +32,12 @@ export class ListTasksComponent implements OnInit {
   fromDate: Date = moment(this.today).startOf("day").toDate();
   toDate: Date = moment(this.today).endOf("day").toDate();
   gridView: any;
-
-
+  itemSelected= null;
+  objectAssign: any;
+  objectState: any;
   resourceViewList: any;
   columnGroupby = "createdOn";
-  startOfToDay = moment().startOf('day');
-  endOfToDay = moment().endOf('day');
-  startOfYesterday = moment().subtract(1, 'day').startOf('day')
-  endOfYesterday = moment().subtract(1, 'day').endOf('day')
-  startOfMonth = moment().startOf('month');
-  endOfMonth = moment().endOf('month');
-  startOfLastWeek = moment().startOf('week');
-  endOfLastWeek = moment().endOf('week');
-
+  listNode = [];
   dataObj = { view: "listTasks", viewBoardID: "" };
 
   popoverList: any;
@@ -48,11 +45,12 @@ export class ListTasksComponent implements OnInit {
   imployeeInfo: any = {};
   listEmpInfo = [];
   lstTaskbyParent = [];
-
+  taskAction: any;
   constructor(private tmSv: TmService,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
+    private notiService: NotificationsService,
     injector: Injector,
     //  private confirmationDialogService: ConfirmationDialogService,
 
@@ -157,11 +155,6 @@ export class ListTasksComponent implements OnInit {
 
   loadData() {
     let fied = this.gridView?.dateControl || 'DueDate';
-    this.fromDate = moment("3/31/2022").toDate();
-    this.toDate = moment("4/30/2022").toDate();
-
-
-    this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -171,12 +164,11 @@ export class ListTasksComponent implements OnInit {
     this.model.pageSize = 100;
     // model.dataValue = this.user.userID;
     // set max dinh
-
     this.model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.fromDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.toDate },
+        { operator: 'gte', field: fied, value: this.fromDate || moment("3/01/2022").toDate()}, ///cho mac dinh cho filter
+        { operator: 'lte', field: fied, value: this.toDate || moment("5/31/2022").toDate()},
       ],
     };
 
@@ -186,19 +178,30 @@ export class ListTasksComponent implements OnInit {
       (res) => {
         if (res && res.length) {
           this.data = res[0];
-        } else {
-          this.data = [];
+          this.itemSelected = res[0][0];
+          this.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskBusiness',
+              'GetTaskByParentIDAsync',
+              [this.itemSelected?.id]
+            )
+            .subscribe((res) => {
+              if (res && res.length > 0) {
+                let objectId = res[0].owner;
+                let objectState = res[0].status;
+                for (let i = 1; i < res?.length; i++) {
+                  objectId += ';' + res[i].owner;
+                  objectState += ';' + res[i].status;
+                }
+                this.objectAssign = objectId;
+                this.objectState = objectState;
+              }
+            });
         }
-
         t.dt.detectChanges();
       });
-    // this.tmSv.loadTaskByAuthen(data).subscribe((res)=>{
-    //         if(res && res.length){
-    //           console.log(res);
-    //           this.data = res[0];
-    //         }
-    //     //this.users = resp[0];
-    // })
 
   }
   PopoverDetail(p: any, emp) {
@@ -231,4 +234,108 @@ export class ListTasksComponent implements OnInit {
   isTooltip(el) {
     return (el.offsetWidth < el.scrollWidth);
   }
+
+  clickItem(item) {
+    this.getOneItem(item.id);
+  }
+  getOneItem(id) {
+    var itemDefault = this.data.find((item) => item.id == id);
+    if (itemDefault != null) {
+      this.itemSelected = itemDefault;
+    } else {
+      this.itemSelected = this.data[0];
+    }
+
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetTaskByParentIDAsync',
+        [this.itemSelected?.id]
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          let objectId = res[0].owner;
+          let objectState = res[0].status;
+          for (let i = 1; i < res?.length; i++) {
+            objectId += ';' + res[i].owner;
+            objectState += ';' + res[i].status;
+          }
+          this.objectAssign = objectId;
+          this.objectState = objectState;
+        }
+      });
+    console.log(this.itemSelected);
+  }
+
+  
+  viewItem(taskAction) {
+    this.taskInfo.openInfo(taskAction.taskID,'view');
+   }
+
+  showControl(p, item) {
+    this.taskAction = item;
+    p.open();
+  }
+
+  viewDetailTask(taskAction) {
+    this.taskInfo.openInfo(taskAction.taskID,'edit');
+   }
+
+   copyDetailTask(taskAction) {
+    alert('copy data');
+  }
+
+  clickDelete(taskAction) {
+    if (taskAction.status == 9) {
+      // this.notiService.notifyCode("TM001")
+      this.notiService.notify(
+        'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
+      );
+      return;
+    }
+    var message = 'Bạn có chắc chắn muốn xóa task này !';
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var that = this;
+        dialog.close =  function(e){
+          return that.close(e, that);
+        } 
+      });
+    }
+    close(e: any , t: ListTasksComponent) {
+      if (e?.event?.status == "Y") {
+        var isCanDelete = true;
+        t.api.execSv<any>('TM','ERM.Business.TM', 'TaskBusiness','GetListTaskChildDetailAsync', t.taskAction.taskID).subscribe((res: any)=>{
+       if(res){
+            res.forEach((element) => {
+              if (element.status != '1') {
+                isCanDelete = false;
+                return;
+              }
+            });
+            if (!isCanDelete) {
+              // this.notiService.notifyCode("TM001")
+              t.notiService.notify(
+                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+              );
+            }else{
+              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
+                if (res) {
+                  // this.notiService.notifyCode("TM004")
+                 this.listview.removeHandler(this.taskAction,'recID')
+                 this.notiService.notify('Xóa task thành công !');
+                 return;
+                }
+                t.notiService.notify(
+                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
+                );
+              });
+            }
+           } 
+       })
+      }
+    }
 }
