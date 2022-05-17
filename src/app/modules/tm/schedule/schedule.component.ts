@@ -37,7 +37,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   gridView: any;
   itemSelected = null;
   taskAction: any;
-
+  objectAssign: any;
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
   @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -902,7 +902,33 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
         { operator: 'lte', field: fied, value: this.endDate,logic:'and'  },
       ],
     };
-
+    const t = this;
+    // this.lstItems = [];
+    t.tmSv.loadTaskByAuthen(this.model).subscribe((res) => {
+      if (res && res.length) {
+        this.data = res[0];
+        this.itemSelected = res[0][0];
+        this.api
+          .execSv<any>(
+            'TM',
+            'ERM.Business.TM',
+            'TaskBusiness',
+            'GetTaskByParentIDAsync',
+            [this.itemSelected?.id]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) {
+              let objectId = res[0].owner;
+              let objectState = res[0].status;
+              for (let i = 1; i < res?.length; i++) {
+                objectId += ';' + res[i].owner;
+                objectState += ';' + res[i].status;
+              }
+              this.objectAssign = objectId;
+            }
+          });   
+      } 
+    });
   }
 
   addNew(evt: any) {
