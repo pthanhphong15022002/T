@@ -42,6 +42,7 @@ export class TaskInfoComponent implements OnInit {
   user: any;
   readOnly = false;
   listUser: any[];
+  // listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[];
   listTodo: TaskGoal[];
@@ -69,6 +70,8 @@ export class TaskInfoComponent implements OnInit {
   openMemo2 = false;
   dataAddNew = new BehaviorSubject<any>(null);
   isAddNew = this.dataAddNew.asObservable();
+  updateData = new BehaviorSubject<any>(null);
+  isUpdate = this.updateData.asObservable();
   @Input('viewBase') viewBase: ViewsComponent;
 
   @ViewChild('contentAddUser') contentAddUser;
@@ -92,7 +95,7 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = 'TM001'; //dung test
+    this.functionID = this.viewBase.funcID ;
     this.getParam(); //bật tắt set param
     this.openTask();
 
@@ -345,40 +348,42 @@ export class TaskInfoComponent implements OnInit {
         null,
         this.functionID,
         this.recIDTodoDelete,
+        this.listMemo2OfUser
       ])
       .subscribe((res) => {
         if (res) {
           this.notiService.notify(res.message);
           var data = res.data;
-          if (data.priorityColor == null && data.priorityIcon == null) {
-            switch (data.priority) {
-              case '1':
-                data.priorityColor = '#66a3ff';
-                data.priorityIcon = 'fa fa-flag-o';
-                break;
-              case '2':
-                data.priorityColor = '#ffd11a';
-                data.priorityIcon = 'fa fa-flag-o';
-                break;
-              case '3': {
-                data.priorityColor = '#ff6600';
-                data.priorityIcon = 'fa fa-flag-o';
-                break;
-              }
-            }
-          }
-          let obj = this.tmSv.changeData.value;
-          obj.view = this.view;
-          if (res?.data.length > 0) {
-            let listTask = res?.data as Array<any>;
-            listTask.forEach((item) => {
-              let index = obj.data.findIndex((p) => p.id == item.id);
-              if (index >= 0) {
-                obj.data[index] = item;
-              }
-            });
-          }
-          this.tmSv.setChangeData(obj);
+          // if (data.priorityColor == null && data.priorityIcon == null) {
+          //   switch (data.priority) {
+          //     case '1':
+          //       data.priorityColor = '#66a3ff';
+          //       data.priorityIcon = 'fa fa-flag-o';
+          //       break;
+          //     case '2':
+          //       data.priorityColor = '#ffd11a';
+          //       data.priorityIcon = 'fa fa-flag-o';
+          //       break;
+          //     case '3': {
+          //       data.priorityColor = '#ff6600';
+          //       data.priorityIcon = 'fa fa-flag-o';
+          //       break;
+          //     }
+          //   }
+          // }
+          // let obj = this.tmSv.changeData.value;
+          // obj.view = this.view;
+          // if (res?.data.length > 0) {
+          //   let listTask = res?.data as Array<any>;
+          //   listTask.forEach((item) => {
+          //     let index = obj.data.findIndex((p) => p.id == item.id);
+          //     if (index >= 0) {
+          //       obj.data[index] = item;
+          //     }
+          //   });
+          // }
+          // this.tmSv.setChangeData(obj);
+          this.updateData.next(data);
           this.listTodo = [];
           this.listUser = [];
           this.task = new TM_Tasks();
@@ -576,6 +581,7 @@ export class TaskInfoComponent implements OnInit {
   openInfo(id, action) {
     this.getParam();
     const t = this;
+   
     t.task = new TM_Tasks();
     t.readOnly = action === 'edit' ? false : true;
     t.title =
@@ -585,33 +591,11 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         t.task = res[0];
-        this.getListUser(t.task.assignTo);
-
-        console.log(this.listMemo2OfUser);
-        // t.listUser = res[1] || [];  cái này sau se doi lai
+        t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
-
-        // this.listMemo2OfUser = [];
-        this.api
-          .execSv<any>(
-            'TM',
-            'ERM.Business.TM',
-            'TaskBusiness',
-            'GetListTaskChildDetailAsync',
-            t.task.taskID
-          )
-          .subscribe((resp: any) => {
-            if (resp) {
-              resp.forEach((t) => {
-                var Memo2OfUser = {
-                  userID: t.owner,
-                  memo2: t.memo2,
-                };
-                this.listMemo2OfUser.push(Memo2OfUser);
-              });
-            }
-          });
-        console.log(this.listMemo2OfUser);
+        t.listMemo2OfUser = res[3];
+        if( t.task.assignTo !=null)
+        t.listUser= t.task.assignTo.split(";")
         t.changeDetectorRef.detectChanges();
         this.showPanel();
       }
@@ -675,28 +659,6 @@ export class TaskInfoComponent implements OnInit {
       });
   }
 
-  getMemo2OfUser(taskID) {
-    this.listMemo2OfUser = [];
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTaskChildDetailAsync',
-        taskID
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          res.forEach((task) => {
-            var Memo2OfUser = {
-              userID: task.owner,
-              memo2: task.memo2,
-            };
-            this.listMemo2OfUser.push(Memo2OfUser);
-          });
-        }
-      });
-  }
 
   extendShow() {
     // this.panelTask.nativeElement.classList.toggle('extend-show');
@@ -770,20 +732,32 @@ export class TaskInfoComponent implements OnInit {
 
   onDeleteUser(userID) {
     var listUser = [];
-    for (var i = 0; i < this.listUser.length; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-    }
-    this.listUser = listUser;
-
+    var listMemo2OfUser = [];
     var listUserDetail = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
+      if (this.listUser[i] != userID) {
+        listUser.push(this.listUser[i]);
+
+      }
       if (this.listUserDetail[i].userID != userID) {
         listUserDetail.push(this.listUserDetail[i]);
       }
+      if (this.listMemo2OfUser[i]?.userID != userID) {
+        listMemo2OfUser.push(this.listMemo2OfUser[i]);
+      }
     }
+    this.listUser = listUser ;
     this.listUserDetail = listUserDetail;
+    this.listMemo2OfUser = listMemo2OfUser;
+
+    var assignTo = '';
+    if (listUser.length > 0) {
+      listUser.forEach((idUser) => {
+        assignTo +=idUser + ';';
+      });
+      assignTo = assignTo.slice(0, -1);
+      this.task.assignTo = assignTo;
+    } 
   }
 
   openDialog() {

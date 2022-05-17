@@ -129,13 +129,13 @@
         <div class="d-flex align-items-center">
           <div *ngIf="itemSelected?.category == '3' || itemSelected?.category == '4'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1 symbol-icon symbol-icon-check-bottom"
-              [objectId]="objectAssign" objectName="AD_Users" [numberImages]="4">
+              [objectId]="objectAssign" objectName="AD_Users" [numberImages]="countOwner>=4 ?4:null">
             </codx-imgs>
           </div>
 
           <div *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="itemSelected?.owner"
-              objectName="AD_Users" [numberImages]="4">
+              objectName="AD_Users" [numberImages]="countOwner>=4 ?4:null">
             </codx-imgs>
           </div>
         </div>
@@ -146,9 +146,9 @@
         <div class="text-gray-600">
           {{ itemSelected?.memo }}
         </div>
-        <div class="task-detail mt-5">
+        <div class="task-detail mt-5" *ngIf="itemSelected?.listTaskGoals?.length > 0">
           <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
-          <div class="checkbox-list mt-6 ms-6" *ngIf="itemSelected?.listTaskGoals?.length > 0">
+          <div class="checkbox-list mt-6 ms-6" >
             <label class="checkbox checkbox-square" *ngFor="let item of itemSelected?.listTaskGoals">
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span></span>{{ item.memo }}
@@ -727,7 +727,7 @@
 
 <!-- // dung de tesst -->
 <ng-template #popContent>
-  <a class="action-item" (click)="viewDetailTask(taskAction)" style="cursor: pointer">
+  <a class="action-item" (click)="editTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
       <span class="icon-edit icon-18 ml-2 mr-2"></span>
       <span class="tooltiptext">Edit</span>
