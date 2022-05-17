@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest } from 'codx-core';
+import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest, CodxListviewComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
@@ -13,6 +13,7 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewListDetailsComponent } from '../view-list-details/view-list-details.component';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { Calendar } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'app-schedule',
@@ -22,6 +23,9 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 export class ScheduleComponent implements OnInit, AfterViewInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() viewPreset: string = "weekAndDay";
+  @Input() calendarID: string;
+  @Input('listview') listview: CodxListviewComponent;
+
   moment = moment().locale("en");
   today: Date = new Date();
   startDate: Date = new Date();
@@ -36,11 +40,12 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   lstResource = [];
   gridView: any;
   itemSelected = null;
+  dayWeeks = [];
   taskAction: any;
   objectAssign: any;
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
   @ViewChild("schedule") schedule: CodxScheduleComponent;
-
+  private calendar = new Calendar();
   model = new DataRequest();
   dataSource = [
     {
@@ -926,9 +931,31 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
               }
               this.objectAssign = objectId;
             }
-          });   
+          }); 
+         
       } 
     });
+    this.getParams();
+  }
+
+  getParams() {
+    this.api.execSv<any>('SYS', 'ERM.Business.CM', 'ParametersBusiness', 'GetOneField', ['TM_Parameters', null, 'CalendarID']).subscribe(res => {
+      if (res) {
+        this.calendarID = res.fieldValue;
+        this.getDayOff();
+      }
+    })
+  }
+
+  getDayOff(id = null) {
+    if (id)
+      this.calendarID = id;
+    this.api.execSv<any>('BS', 'ERM.Business.BS','CalendarsBusiness','GetDayWeekAsync', [this.calendarID]).subscribe(res => {
+      if (res) {
+        console.log(res);
+        this.dayWeeks = res;
+      }
+    })
   }
 
   addNew(evt: any) {
@@ -941,21 +968,26 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   }
 
   deleteTask(taskAction) {
-    if (taskAction.status == '9') {
-      this.notiService.notify(
-        'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
-      );
-      return;
-    }
-    var message = 'Bạn có chắc chắn muốn xóa task này !';
-    this.notiService
-      .alert('Cảnh báo', message, { type: 'YesNo' })
-      .subscribe((dialog: Dialog) => {
-        var that = this;
-        dialog.close = function (e) {
-          return that.close(e, that);
-        }
-      });
+    if (!taskAction.delete) {
+      if (taskAction.status == 9) {
+        // this.notiService.notifyCode("TM001")
+        this.notiService.notify(
+          'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
+        );
+        return;
+      }
+      var message = 'Bạn có chắc chắn muốn xóa task này !';
+      this.notiService
+        .alert('Cảnh báo', message, { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.close(e, that);
+          };
+        });
+
+    } else
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
   
   viewChange(evt: any) {
@@ -978,34 +1010,44 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     
   }
   close(e: any, t: ScheduleComponent) {
-    if (e?.event?.status == "Y") {
+    if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api.execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', 'GetListDetailTasksAsync', this.fields.id).subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '1') {
-              isCanDelete = false;
-              return;
-            }
-          });
-          if (!isCanDelete) {
-            // this.notiService.notifyCode("TM001")
-            t.notiService.notify(
-              'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-            );
-          } else {
-            t.tmSv.deleteTask(t.fields.id).subscribe((res) => {
-              if (res) {
-                // this.notiService.notifyCode("TM004")
-                return this.notiService.notify('Xóa task thành công !');
+      t.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          t.taskAction.taskID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            res.forEach((element) => {
+              if (element.status != '1') {
+                isCanDelete = false;
+                return;
               }
-              t.notiService.notify(
-                'Xóa task không thành công. Vui lòng kiểm tra lại !'
-              );
             });
+            if (!isCanDelete) {
+              // this.notiService.notifyCode("TM001")
+              t.notiService.notify(
+                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+              );
+            } else {
+              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
+                if (res) {
+                  // this.notiService.notifyCode("TM004")
+                  this.listview.removeHandler(this.taskAction, 'recID');
+                  this.notiService.notify('Xóa task thành công !');
+                  return;
+                }
+                t.notiService.notify(
+                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
+                );
+              });
+            }
           }
-        }
-      })
+        });
     }
   }
 
@@ -1021,5 +1063,20 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
   testEvent(evt: any) {
     console.log(evt)
+  }
+  getCellContent(evt: any){
+    var d = new Date();
+    if(evt.getMonth() == d.getMonth() && evt.getDate() == d.getDate()){
+      var time = evt.getTime();
+      var ele = document.querySelectorAll('[data-date="'+time+'"]');
+      if(ele.length == 2){
+        (ele[1] as any).style.backgroundColor = "#ddd";
+      }
+     if(ele.length ==1){
+      (ele[0] as any).style.backgroundColor = "#ddd";
+     }
+      return `<span >Đây là ngày hôm nay</span>`
+    }
+    return ``;
   }
 }
