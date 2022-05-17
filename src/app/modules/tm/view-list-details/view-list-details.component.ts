@@ -97,9 +97,10 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-  //  model.funcID = 'TM003'; //this.viewBase.funcID ;
+  //  model.funcID = "TM001" ;
     model.page = 1;
     model.pageSize = 100;
+    model.predicate = 'Owner=@0';
     model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/15/2022').toDate();
@@ -319,7 +320,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   clickDelete(taskAction) {
-   if(!taskAction.delete){
+   if(taskAction.delete){
       if (taskAction.status == 9) {
         // this.notiService.notifyCode("TM001")
         this.notiService.notify(
