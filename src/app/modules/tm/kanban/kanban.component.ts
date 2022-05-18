@@ -31,7 +31,7 @@ export class KanbanComponent implements OnInit {
   view: string;
   isAdd = false;
   today: Date = new Date();
-  fromDate: Date = new Date(2022, 4, 1);
+  fromDate: Date = new Date(2022, 3, 1);
   toDate: Date = new Date(2022, 5, 31);
   configParam = null;
   gridView: any;
@@ -84,14 +84,13 @@ export class KanbanComponent implements OnInit {
     this.cache.viewSettings('TM001').subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
-        console.log('Setting: ', this.settings);
         this.getColumnKanban();
       }
     });
     if (this.tmSv.myTaskComponent) {
       this.tmSv.myTaskComponent = false;
     }
-    this.getData();
+    this.getListDetailTask();
   }
 
   ngAfterViewInit() {}
@@ -142,13 +141,11 @@ export class KanbanComponent implements OnInit {
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => {
-        console.log(res);
-      });
+      .subscribe((res) => {});
     modal.close(true);
   }
 
-  getData() {
+  getListDetailTask() {
     let field = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'Tasks';
@@ -203,9 +200,11 @@ export class KanbanComponent implements OnInit {
         ) {
           const today = new Date();
           res[0].map((data) => {
-            const diffTime = Math.abs(today.getTime() - new Date(data.dueDate).getTime());
+            const diffTime = Math.abs(
+              today.getTime() - new Date(data.dueDate).getTime()
+            );
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if(data.status == "1"){
+            if (data.status == '1') {
               if (today.getTime() <= new Date(data.dueDate).getTime()) {
                 if (diffDays <= 2) {
                   data.diffDays = '2';
@@ -233,7 +232,7 @@ export class KanbanComponent implements OnInit {
                   data.diffDays = '-8';
                 }
               }
-            }            
+            }
           });
         }
         this.dataSource = res[0];

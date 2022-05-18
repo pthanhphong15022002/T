@@ -1,5 +1,5 @@
 <div class="row">
-  <codx-kanban #kanban keyField="weekOfMonth" [dataSource]="dataSource" [columns]="columns"
+  <codx-kanban #kanban keyField="status" [dataSource]="dataSource" [columns]="columns"
     [columnTemplate]="columTemplate" [cardTemplate]="cardTemplate" [popupTemplate]="content"
     [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')"
     (onDrag)="onDataDrag($event)">
