@@ -17,7 +17,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       text: '',
       id: '1',
       active: false,
-      sameData: false,
+      // sameData: false,
       model: {
         service: 'TM',
         assemblyName: 'TM',
@@ -37,7 +37,7 @@ export class TmComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '2',
-      sameData: false,
+      // sameData: false,
       active: false,
       model: {
         service: 'TM',

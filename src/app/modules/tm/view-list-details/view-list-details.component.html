@@ -135,7 +135,7 @@
 
           <div *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="itemSelected?.owner"
-              objectName="AD_Users" [numberImages]="countOwner>=4 ?4:null">
+              objectName="AD_Users" >
             </codx-imgs>
           </div>
         </div>
@@ -497,7 +497,7 @@
           <!-- trew view ///////////////////////////////////////////////////////////////////////////-->
           <div class="tab-pane pt-3 fade show active" id="tab_ref" role="tabpanel">
             <div class="tab_container">
-              <div class="tab_body">
+              <div class="tab_body" *ngIf="itemSelected?.category != '1'">
                 <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode" [enableCheck]=false
                   idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
                 </codx-treeview>
@@ -665,7 +665,7 @@
 </ng-template>
 
 
-<ng-template #templatetree let-data>
+<ng-template #templatetree let-data >
   <div class="list-group p-0 mt-5">
     <div class="d-flex align-items-center justify-content-between list-title">
       <div class="d-flex flex-wrap align-items-top">

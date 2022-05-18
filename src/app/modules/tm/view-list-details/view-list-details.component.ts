@@ -9,6 +9,7 @@ import {
 import { HomeComponent } from '@pages/home/home.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
@@ -76,6 +77,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    const t = this ;
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, true, 'recID');
@@ -85,7 +87,13 @@ export class ViewListDetailsComponent implements OnInit {
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, false, 'recID');
-        this.loadData() ;
+        if(t.itemSelected.taskID == res.taskID){
+          t.tmSv.getTask(res.taskID).subscribe(t=>{
+            t.itemSelected = t
+            t.getOneItem(this.itemSelected.taskID) ;
+            t.dt.detectChanges();
+          })
+        }
       }
     });
   }
@@ -97,14 +105,14 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-  //  model.funcID = "TM001" ;
+    // model.funcID = "TM001" ;
     model.page = 1;
-    model.pageSize = 100;
-    model.predicate = 'Owner=@0';
-    model.dataValue = this.user.userID;
+    model.pageSize = 150;
+    // model.predicate = 'Owner=@0';
+    // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/20/2022').toDate();
+    this.toDate = moment('5/25/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -116,18 +124,18 @@ export class ViewListDetailsComponent implements OnInit {
 
     model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
     const t = this;
-    // this.lstItems = [];
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
-        this.api
+        if(this.itemSelected.parentID != null){
+          this.api
           .execSv<any>(
             'TM',
             'ERM.Business.TM',
             'TaskBusiness',
             'GetTaskByParentIDAsync',
-            [this.itemSelected?.id]
+            [this.itemSelected?.parentID]
           )
           .subscribe((res) => {
             this.countOwner = res.length
@@ -142,7 +150,8 @@ export class ViewListDetailsComponent implements OnInit {
               this.objectState = objectState;
             }
           });
-
+        }
+        this.isFinishLoad = true;
         if (this.itemSelected?.category != '1') {
           this.api
             .execSv<any>(
@@ -154,13 +163,11 @@ export class ViewListDetailsComponent implements OnInit {
             )
             .subscribe((res) => {
               this.listNode = res;
-              this.isFinishLoad = true;
             });
         }
       } else {
         this.data = [];
       }
-
       t.dt.detectChanges();
     });
   }
@@ -180,13 +187,14 @@ export class ViewListDetailsComponent implements OnInit {
       this.itemSelected = this.data[0];
     }
 
-    this.api
+    if(this.itemSelected.parentID != null){
+      this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
         'TaskBusiness',
         'GetTaskByParentIDAsync',
-        [this.itemSelected?.id]
+        [this.itemSelected?.parentID]
       )
       .subscribe((res) => {
         this.countOwner = res.length
@@ -201,6 +209,7 @@ export class ViewListDetailsComponent implements OnInit {
           this.objectState = objectState;
         }
       });
+    }
     if (this.itemSelected?.category != '1') {
       this.api
         .execSv<any>(
@@ -316,7 +325,11 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   copyDetailTask(taskAction) {
-    alert('copy data');
+    if(!taskAction.share){
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
+    }
+    this.taskInfo.getTaskCoppied(taskAction.taskID);
   }
 
   clickDelete(taskAction) {
@@ -334,7 +347,7 @@ export class ViewListDetailsComponent implements OnInit {
         .subscribe((dialog: Dialog) => {
           var that = this;
           dialog.close = function (e) {
-            return that.close(e, that);
+            return that.confirmDelete(e, that);
           };
         });
       
@@ -351,7 +364,7 @@ export class ViewListDetailsComponent implements OnInit {
     p.open();
   }
 
-  close(e: any, t: ViewListDetailsComponent) {
+  confirmDelete(e: any, t: ViewListDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
       t.api
@@ -378,9 +391,13 @@ export class ViewListDetailsComponent implements OnInit {
             } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res) {
+                  t.data = t.data.filter(function (element, index) {
+                    return element["taskID"] !== t.taskAction.taskID;
+                  });
+                  t.itemSelected = t.data[0];
                   // this.notiService.notifyCode("TM004")
-                  this.listview.removeHandler(this.taskAction, 'recID');
-                  this.notiService.notify('Xóa task thành công !');
+                  t.listview.removeHandler(this.taskAction, 'recID');
+                  t.notiService.notify('Xóa task thành công !');
                   return;
                 }
                 t.notiService.notify(
