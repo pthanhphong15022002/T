@@ -5,7 +5,7 @@
     [options]="model" [optionsResource]="model" entityName="TM_Tasks" funcId="" (onViewChange)="viewChange($event)"
     [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle='colored' [resourceTooltipTemplate]="resourceTootip"
     (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" (onEdit)="edit($event)" (onDelete)="deleteTask($event)" [statusColor]="status" [eventEditFeature]="false" 
-    [readOnly]="true" [resourceField]="resourceField" >
+    [readOnly]="true" [resourceField]="resourceField" [cellTemplate]="cellTemplate">
   </codx-schedule>
   <ng-template #cellTemplate let-data>
     <div [innerHtml]="getCellContent(data.date)"></div>
@@ -23,7 +23,7 @@
     </div>
   </ng-template>
   <ng-template #resourceHeader let-data>
-    <div class="">
+    <div class="">  
       <div class="type">{{ data.resourceData.userName }}</div>
       <div class="type">{{ data.resourceData.positionName }}</div>
     </div>

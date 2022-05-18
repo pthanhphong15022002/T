@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      sameData: false,
+      // sameData: false,
       active: true,
       model: {
         panelLeftRef: this.chart,
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       id: '2',
       type: 'kanban',
-      sameData: false,
+      // sameData: false,
       active: false,
       model: {
         panelLeftRef: this.kanban,
@@ -162,7 +162,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      sameData: false,
+      // sameData: false,
       active: false,
       model: {
         panelLeftRef: this.listDetails,
@@ -176,7 +176,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '4',
       type: 'list',
       icon: 'icon-format_list_bulleted',
-      sameData: false,
+      // sameData: false,
       text: 'List-tasks',
       active: false,
       model: {
@@ -190,7 +190,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '5',
       type: 'schedule',
       text: 'schedule',
-      sameData: false,
+      // sameData: false,
       active: false,
       model: {
         panelLeftRef: this.schedule,

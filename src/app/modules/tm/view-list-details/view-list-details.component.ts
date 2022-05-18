@@ -466,6 +466,7 @@ export class ViewListDetailsComponent implements OnInit {
   closePopup(e: any) {
     if (e.closedBy == 'user action') {
       var task = e.event;
+    
       this.listview.addHandler(task, false, 'recID');
     }
   }
