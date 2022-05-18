@@ -20,6 +20,7 @@ import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.compo
 import { UpdateStatusPopupComponent } from './modules/tm/controls/update-status-popup/update-status-popup.component';
 
 
+
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
@@ -67,6 +68,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     CbxpopupComponent,
     UpdateStatusPopupComponent,
+    
     //ReportComponent,
   ],
   imports: [

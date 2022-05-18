@@ -71,6 +71,10 @@ export class TmService {
       return this.api.execSv("SYS", "CM", "ParametersBusiness", "GetByPredicate", [predicate, dataValue]);
     }
   
+    getGridViewSetup(predicate, dataValue?) {
+      return this.api.execSv("SYS", "SYS", "GridViewSetupBusiness", "GetByPredicate", [predicate, dataValue]);
+    }
+  
 
     setStatusTask(id: string, status: string, datacomplete: Date, hour: string, comment: string) {
       return this.api.execSv<any>("TM", "TM", "TaskBusiness", "SetStatusTaskAsync", [id, status, datacomplete, hour, comment]);
@@ -135,4 +139,8 @@ export class TmService {
     //   this.dmDialog.CloseDialog();
   
     // }
+    convertListToObject(list: Array<object>, fieldName: string, fieldValue: string) {
+      if (!Array.isArray(list) || list.length == 0) return {};
+      return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
+    }
   }
