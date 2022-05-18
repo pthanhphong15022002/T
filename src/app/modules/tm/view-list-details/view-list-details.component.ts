@@ -55,7 +55,7 @@ export class ViewListDetailsComponent implements OnInit {
   isFinishLoad = false;
   taskAction: any;
   countOwner = 0 ;
-
+   model = new DataRequest();
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -87,12 +87,10 @@ export class ViewListDetailsComponent implements OnInit {
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, false, 'recID');
+        this.data = this.listview.data ;
         if(t.itemSelected.taskID == res.taskID){
-          t.tmSv.getTask(res.taskID).subscribe(t=>{
-            t.itemSelected = t
             t.getOneItem(this.itemSelected.taskID) ;
-            t.dt.detectChanges();
-          })
+            t.dt.detectChanges(); 
         }
       }
     });
@@ -123,6 +121,7 @@ export class ViewListDetailsComponent implements OnInit {
     // let dataObj = { view: this.view, viewBoardID: '' };
 
     model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
+    this.model = model ;
     const t = this;
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
