@@ -20,6 +20,7 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
 import { SettingComponent } from './setting/setting.component';
+import { TreeviewComponent } from './treeview/treeview.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,7 @@ const routes: Routes = [
     TaskInfoComponent,
     DashboardComponent,
     SettingComponent,
+    TreeviewComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

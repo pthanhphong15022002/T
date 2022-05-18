@@ -38,6 +38,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   //End List-detail
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
+
+  @ViewChild('treeViews') treeViews: TemplateRef<any>;
+
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
   @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
@@ -194,6 +197,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
       active: false,
       model: {
         panelLeftRef: this.schedule,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '550px'
+      }
+    },
+    {
+      id: '6',
+      type: 'list',
+      text: 'treeViews',
+      // sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.treeViews,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '550px'
