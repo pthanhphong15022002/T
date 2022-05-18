@@ -304,7 +304,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     console.log(evt)
   }
   getCellContent(evt: any) {
-debugger
+
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
@@ -315,7 +315,7 @@ debugger
           var ele = document.querySelectorAll('[data-date="' + time + '"]');
           if (ele.length > 0) {
             ele.forEach(item => {
-              (item as any).style.backgroundColor = '#ddd';
+              (item as any).style.backgroundColor = this.dayoff[i].color;
             })
           }
           return '<icon class="'+ this.dayoff[i].symbol+'"></icon>'+'<span>'+this.dayoff[i].note+'</span>'
