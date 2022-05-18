@@ -158,6 +158,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       active: false,
       model: {
         panelLeftRef: this.kanban,
+        sideBarRightRef: this.settingPanel,
+        widthAsideRight: '550px'
       }
     },
     {
