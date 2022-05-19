@@ -40,7 +40,7 @@ export class ListTasksComponent implements OnInit {
   columnGroupby = "createdOn";
   listNode = [];
   dataObj = { view: "listTasks", viewBoardID: "" };
-  countOwner = 0 ;
+  countOwner = 0;
   popoverList: any;
   popoverDetail: any;
   imployeeInfo: any = {};
@@ -61,6 +61,11 @@ export class ListTasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  ngAfterViewInit(): void {
+    const t = this;
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, true, 'recID');
@@ -70,16 +75,13 @@ export class ListTasksComponent implements OnInit {
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, false, 'recID');
-        this.loadData() ;
+        this.data = this.listview.data;
+        if (t.itemSelected.taskID == res.taskID) {
+          t.getOneItem(this.itemSelected.taskID) ;
+          t.dt.detectChanges();
+        }
       }
     });
-    
-
-
-  }
-
-  ngAfterViewInit(): void {
-    
   }
 
 
@@ -116,7 +118,7 @@ export class ListTasksComponent implements OnInit {
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.predicate = '';
-    this.model.funcID = "TM003"//this.viewBase.funcID ;
+   // this.model.funcID = "TM003"//this.viewBase.funcID ;
     this.model.page = 1;
     this.model.pageSize = 100;
     // model.dataValue = this.user.userID;
@@ -177,7 +179,7 @@ export class ListTasksComponent implements OnInit {
     this.popoverList = p;
     if (emp != null) {
       this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", [emp.taskID]).subscribe(res => {
-        
+
         if (res && res.msgBodyData[0].length > 0) {
           this.lstTaskbyParent = res.msgBodyData[0];
           console.log("data123", this.lstTaskbyParent)

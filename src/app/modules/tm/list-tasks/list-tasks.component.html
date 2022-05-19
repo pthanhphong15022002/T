@@ -4,7 +4,7 @@
 </codx-listview>
 
 <ng-template #templateTask let-data>
-  <div class="task-row py-3 px-6 ">
+  <div class="task-row py-3 px-6 " >
     <table class="table w-100 table-action-menu d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="data?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (onclick)="clickItem(data)"
     (mouseover)="showControl(p,data)" [ngbPopover]="popMorefunc" popoverClass="empPopoverClass" #p="ngbPopover"
     placement="right left" container="body" autoClose="outside" triggers="manual">
