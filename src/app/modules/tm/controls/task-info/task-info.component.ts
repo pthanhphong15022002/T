@@ -551,7 +551,13 @@ export class TaskInfoComponent implements OnInit {
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null) t.listUser = t.task.assignTo.split(';');
+        if (t.task.assignTo != null && t.task.assignTo != '') 
+          t.listUser = t.task.assignTo.split(';');
+        else {
+           //thêm giá trị đê add thử copy -sau nay xóa đi 
+         this.task.assignTo = 'TQHOAN'; ///tesst
+         this.getListUser(this.task.assignTo);
+        }
         t.changeDetectorRef.detectChanges();
         this.showPanel();
       }
@@ -582,6 +588,7 @@ export class TaskInfoComponent implements OnInit {
   }
 
   beforeCopy(data) {
+    this.title = "Copy công việc "
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
@@ -589,11 +596,15 @@ export class TaskInfoComponent implements OnInit {
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     t.task.startDate = moment(new Date(data.startDate)).toDate();
     t.task.endDate = moment(new Date(data.endDate)).toDate();
-    t.task.assignTo = null;
     t.task.parentID = null;
-    this.listMemo2OfUser = [];
+    t.task.assignTo = null;
     this.listUser = [];
     this.listUserDetail = [];
+    this.listMemo2OfUser = [];
+    //thêm giá trị đê add thử copy -sau nay xóa đi 
+    this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
+    this.getListUser(this.task.assignTo);
+
     t.changeDetectorRef.detectChanges();
     this.showPanel();
   }

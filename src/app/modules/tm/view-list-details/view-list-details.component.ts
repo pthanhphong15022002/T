@@ -86,8 +86,13 @@ export class ViewListDetailsComponent implements OnInit {
     });
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
-        this.listview.addHandler(res, false, 'recID');
-        this.data = this.listview.data ;
+        var index =  this.data.findIndex(x=>x.taskID == res.taskID);
+        if(index != -1){
+          this.listview.addHandler(res, false, 'recID');
+        }else{
+          this.listview.addHandler(res, true, 'recID');   
+        }
+       this.data = this.listview.data ;
         if(t.itemSelected.taskID == res.taskID){
             t.getOneItem(this.itemSelected.taskID) ;
             t.dt.detectChanges(); 
@@ -390,12 +395,16 @@ export class ViewListDetailsComponent implements OnInit {
             } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res) {
-                  t.data = t.data.filter(function (element, index) {
-                    return element["taskID"] !== t.taskAction.taskID;
-                  });
+                  res.forEach(obj=>{
+                    t.data = t.data.filter(function (element, index) {
+                      return element["taskID"] !== obj.taskID;
+                    });
+                    // this.notiService.notifyCode("TM004")
+                    t.listview.removeHandler(this.taskAction, 'recID');
+                  })
+                  t.data = t.listview.data ;
                   t.itemSelected = t.data[0];
-                  // this.notiService.notifyCode("TM004")
-                  t.listview.removeHandler(this.taskAction, 'recID');
+                  t.getOneItem(t.itemSelected.taskID)
                   t.notiService.notify('Xóa task thành công !');
                   return;
                 }

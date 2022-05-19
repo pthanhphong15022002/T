@@ -129,13 +129,13 @@
         <div class="d-flex align-items-center">
           <div *ngIf="itemSelected?.category == '3' || itemSelected?.category == '4'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1 symbol-icon symbol-icon-check-bottom"
-              [objectId]="objectAssign" objectName="AD_Users" [numberImages]="countOwner>=4 ?4:null">
+              [objectId]="objectAssign" objectName="AD_Users" [numberImages]="4">
             </codx-imgs>
           </div>
 
           <div *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="itemSelected?.owner"
-              objectName="AD_Users" >
+              objectName="AD_Users" [numberImages]="4" >
             </codx-imgs>
           </div>
         </div>
