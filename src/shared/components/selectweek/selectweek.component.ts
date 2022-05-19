@@ -60,18 +60,18 @@ export class SelectweekComponent implements OnInit {
       moment(date).format('MMM') +
       ', ' +
       moment(date).format('YYYY');
-      
+
   }
 
-  LoadFinished(i){
-    if(this.isChangeWeek == true && this.isFinished == false){
+  LoadFinished(i) {
+    if (this.isChangeWeek == true && this.isFinished == false) {
       this.isFinished = true;
       this.onChangeWeek.emit();
     }
     this.isChangeWeek == false;
 
   }
-  
+
   changeTimeByControl(data) {
     if (this.isGenerateWeek)
       //console.log('data',data.data);
@@ -79,7 +79,7 @@ export class SelectweekComponent implements OnInit {
       this.isGenerateWeek = false;
     else this.generateDateInWeek(data.data);
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   changeWeek(numberDay) {
     this.isFinished = false;
     this.isChangeWeek = true;
