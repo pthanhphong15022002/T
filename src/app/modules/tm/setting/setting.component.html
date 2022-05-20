@@ -1,0 +1,575 @@
+<div class="page-home page-master border-top-erm">
+  <div
+    id="canvas_Setting"
+    #panel
+    class="offcanvas offcanvas-md offcanvas-right"
+  >
+    <div class="offcanvas-header" kt-hidden-height="46">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <h2 class="m-0">Setting</h2>
+        </div>
+        <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+          <span (click)="closeSetting()" class="icon-close icon-18"></span>
+        </a>
+      </div>
+    </div>
+    <div class="offcanvas-content">
+      <div class="offcanvas-wrapper">
+        <div class="d-flex">
+          <div class="flex-grow-1">
+            <div class="tab-horizone mt-2">
+              <ul class="nav nav-tabs nav-tabs-line">
+                <li class="nav-item">
+                  <a
+                    class="nav-link {{
+                      view == VIEW_ACTIVE.List ? 'active' : ''
+                    }}"
+                    data-toggle="tab"
+                    href="#tab_1"
+                  >
+                    <span class="nav-text">List</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#tab_2">
+                    <span class="nav-text">Card</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link {{
+                      view == VIEW_ACTIVE.Kanban ? 'active' : ''
+                    }}"
+                    data-toggle="tab"
+                    (click)="tabChange(VIEW_ACTIVE.Kanban)"
+                    href="#kanban{{ view }}"
+                  >
+                    <span class="nav-text">Kanban</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link {{
+                      view == VIEW_ACTIVE.Calendar ? 'active' : ''
+                    }}"
+                    data-toggle="tab"
+                    (click)="tabChange(VIEW_ACTIVE.Calendar)"
+                    href="#calendar{{ view }}"
+                  >
+                    <span class="nav-text">Calendar</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    data-toggle="tab"
+                    href="#tab_5"
+                    (click)="tabChange('kanban')"
+                  >
+                    <span class="nav-text">Schedule</span>
+                  </a>
+                </li>
+              </ul>
+              <div class="tab-content mt-2">
+                <div class="tab-pane fade" id="tab_1" role="tabpanel">
+                  <div
+                    class="setting-preview d-flex justify-content-center mt-6"
+                  >
+                    <img
+                      src="../../../../assets/demos/svg/setting-preview1.png"
+                    />
+                  </div>
+                  <div class="mt-6">
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-3 bg-hover"
+                    >
+                      <div class="text-dark-75">Use Default</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked="checked"
+                            name="select"
+                          />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-3 bg-hover"
+                    >
+                      <div class="text-dark-75">PageLoading</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-3 bg-hover"
+                    >
+                      <div class="text-dark-75">GroupControl</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-3 bg-hover"
+                    >
+                      <div class="text-dark-75">View Hierarchy Control</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="text-dark mt-3 mb-3">Số tự động</div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="TASK-2021-0056"
+                      />
+                      <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button">
+                          <span class="icon-create text-dark-50 icon-18"></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="tab_2" role="tabpanel">
+                  <div
+                    class="setting-preview d-flex justify-content-center mt-6"
+                  >
+                    <img src="../../../../assets/demos/svg/preview-card.png" />
+                  </div>
+                  <div class="mt-6">
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">Use Default</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked="checked"
+                            name="select"
+                          />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">PageLoading</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">GroupControl</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">View Hierarchy Control</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="text-primary mt-3 mb-3">Template card</div>
+                  <div class="list">
+                    <div class="radio-list mb-6">
+                      <div class="row">
+                        <div class="col">
+                          <div class="d-flex justify-content-center">
+                            <img
+                              class="w-150px mb-3"
+                              src="../../../../assets/demos/svg/card-preview1.png"
+                            />
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <label class="radio">
+                              <input
+                                type="radio"
+                                checked="checked"
+                                name="radio"
+                              />
+                              <span></span>IsDefault
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="d-flex justify-content-center">
+                            <img
+                              class="w-150px mb-3"
+                              src="../../../../assets/demos/svg/card-preview2.png"
+                            />
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <label class="radio">
+                              <input
+                                type="radio"
+                                checked="checked"
+                                name="radio"
+                              />
+                              <span></span>IsDefault
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tab-pane fade show active"
+                  id="kanban{{ VIEW_ACTIVE.Kanban }}"
+                  role="tabpanel"
+                >
+                  <div
+                    class="setting-preview d-flex justify-content-center mt-6"
+                  >
+                    <img
+                      src="../../../../assets/demos/svg/preview-kanban.png"
+                    />
+                  </div>
+                  <div class="mt-6">
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">Dùng mặc định</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <codx-input
+                            type="checkbox"
+                            checked="checked"
+                            name="select"
+                          >
+                          </codx-input>
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div class="mb-3 text-primary">Column</div>
+                    <div class="mb-4">
+                      <div class="form-group" *ngIf="functionList">
+                        <!-- <app-ermcombobox [value]="kanbanSetting?.ColumnField" service="SYS"
+                                                    refValue="KBColumn" [model]="functionList" field="column"
+                                                    (valueChange)="onKanbanCbxChange($event)">
+                                                </app-ermcombobox> -->
+                        <codx-combobox
+                          service="TM"
+                          type="combobox"
+                          name="combobox"
+                          placeholder="Nhóm công việc"
+                          ngDefaultControl
+                          refValue="TaskGroups"
+                          loadFull="true"
+                          field="taskGroupID"
+                        >
+                        </codx-combobox>
+                        <span class="text-primary">
+                          {{
+                            kanbanSetting?.AllowDrag
+                              ? " Cho phép kéo thả"
+                              : " Không cho phép kéo"
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                    <ng-container *ngIf="kanbanSetting?.ShowDateBy">
+                      <div
+                        class="d-flex align-items-center justify-content-between mb-1"
+                      >
+                        <div class="text-dark-75">BreakDateBy</div>
+                      </div>
+                      <div class="mb-4">
+                        <div class="form-group">
+                          <codx-valuelist
+                            [placeholder]="'Customize'"
+                          ></codx-valuelist>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="kanbanSetting?.ShowCustomRange">
+                      <div
+                        class="d-flex align-items-center justify-content-between mb-1"
+                      >
+                        <div class="text-dark-75">CustomRange</div>
+                      </div>
+                      <div class="mb-4" *ngIf="kanbanSetting?.ShowCustomRange">
+                        <codx-combobox></codx-combobox>
+                      </div>
+                    </ng-container>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-1"
+                    >
+                      <div class="text-dark-75">Swimlanes Field</div>
+                      <span class="switch switch-sm">
+                        <label>
+                        <codx-input
+                            type="checkbox"
+                            name="select"
+                            [checked]="kanbanSetting?.SwimlanesControl"
+                            [(ngModel)]="kanbanSetting.SwimlanesControl"
+                          >
+                        </codx-input>
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div class="mb-4" *ngIf="kanbanSetting?.SwimlanesControl">
+                      <div class="form-group">
+                        <codx-combobox></codx-combobox>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-primary mt-3 mb-3">Template card</div>
+                  <div class="list">
+                    <div class="radio-list mb-6">
+                      <div class="row">
+                        <div class="col">
+                          <div class="d-flex justify-content-center">
+                            <img
+                              class="w-250px mb-3"
+                              src="../../../../assets/demos/svg/template-kanban.png"
+                            />
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <label class="radio">
+                              <input
+                                type="radio"
+                                checked="checked"
+                                name="radio"
+                              />
+                              <span></span>IsDefault
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-4"
+                  >
+                    <div class="text-dark-75">Progress bar</div>
+                    <span class="switch switch-sm">
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="select"
+                          [checked]="kanbanSetting?.ProcessBar"
+                          [(ngModel)]="kanbanSetting.ProcessBar"
+                        />
+                        <span></span>
+                      </label>
+                    </span>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-4"
+                  >
+                    <div class="text-dark-75">Tags</div>
+                    <span class="switch switch-sm">
+                      <label>
+                        <codx-input type="checkbox"></codx-input> 
+                        <span></span>
+                      </label>
+                    </span>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-4"
+                  >
+                    <div class="text-dark-75">Count Objects</div>
+                    <span class="switch switch-sm">
+                      <label>
+                        <codx-input type="checkbox"></codx-input> 
+                        <span></span>
+                      </label>
+                    </span>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-4"
+                  >
+                    <div class="text-dark-75">Resources Avatar</div>
+                    <span class="switch switch-sm">
+                      <label>
+                        <codx-input type="checkbox"></codx-input> 
+                        <span></span>
+                      </label>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="tab-pane fade {{
+                    view == VIEW_ACTIVE.Calendar ? 'show active' : ''
+                  }}"
+                  id="calendar{{ VIEW_ACTIVE.Calendar }}"
+                  role="tabpanel"
+                >
+                  <div
+                    class="setting-preview d-flex justify-content-center mt-6"
+                  >
+                    <img
+                      src="../../../../assets/demos/svg/preview-calendar.png"
+                    />
+                  </div>
+                  <div class="mt-6">
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">Dùng mặc định</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked="checked"
+                            name="select"
+                          />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div class="mb-3 text-primary">Calendar</div>
+                    <div class="mb-4">
+                      <div class="form-group">
+                        <div
+                          class="d-flex align-items-center justify-content-between mb-1"
+                        >
+                          <div class="text-dark-75">Scroll to hour</div>
+                          <span class="switch switch-sm mr-2">
+                            <label>
+                              <input type="checkbox" name="select" />
+                              <span></span>
+                            </label>
+                          </span>
+                        </div>
+                        <select
+                          class="form-control"
+                          placeholder="Loại công việc"
+                        >
+                          <option>1</option>
+                          <option>2</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <div class="form-group">
+                        <div
+                          class="d-flex align-items-center justify-content-between mb-1"
+                        >
+                          <div class="text-dark-75">
+                            Snap Increment (minutes)
+                          </div>
+                          <span class="switch switch-sm mr-2">
+                            <label>
+                              <input type="checkbox" name="select" />
+                              <span></span>
+                            </label>
+                          </span>
+                        </div>
+                        <select
+                          class="form-control"
+                          placeholder="Loại công việc"
+                        >
+                          <option>1</option>
+                          <option>2</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">
+                        Fit timeline to available space
+                      </div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">Fillter highlight result</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">
+                        Show week column (mode Month)
+                      </div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
+                      <div class="text-dark-75">Tooltips</div>
+                      <span class="switch switch-sm mr-2">
+                        <label>
+                          <input type="checkbox" name="select" />
+                          <span></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="offcanvas-footer d-block">
+        <div class="d-flex align-items-center justify-content-between">
+          <a class="text-primary text-italic"></a>
+          <button
+            (click)="applySetting()"
+            type="button"
+            class="btn btn-primary"
+          >
+            Áp dụng
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-overlay"></div>
+  </div>
+  <div class="offcanvas-overlay"></div>
+</div>

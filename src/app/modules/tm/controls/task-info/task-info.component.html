@@ -154,9 +154,11 @@
         </button> -->
       </div>
       <div>
+        
+      </div>
+      <div>
         <ng-container *ngFor="let item of listTodo; index as i">
-          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item"
-            (click)="editTodo(i, item.text)">
+          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item">
             <div class="checkbox-list">
               <div class="d-flex flex-column flex-grow-1 w-100">
                 <div class="flex" *ngIf="i != indexEditTodo">
@@ -165,7 +167,7 @@
                       [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
                       (change)="updateStatusTodoList(i)">
                   </div>
-                  <div class="" style="
+                  <div class=""  (click)="editTodo(i, item.text)" style="
                     margin-top: 4px; margin-left: 12px;">
                     {{ item.text }}
                   </div>
@@ -255,15 +257,17 @@
                   <div class="text-dark fw-bold fs-7">
                     {{item?.userName}}
                   </div>
-                  <div class="text-dark">{{item.positionName}}</div>
+                  <div class="text-dark">{{item.positionName}} <span *ngIf="item.departmentName"> | {{item.departmentName}}</span></div>
+
                   <div class="text-dark">
-                    <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
+                    <input name="txtTaskMemo2"  placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly" (keydown.enter)="changeMeno2User($event.target.value,item?.userID)"
                       style="
                       border-width: thin;
                       border-style: none;
                       margin-top: 3px;
                       outline: none;" />
                   </div>
+        
                 </div>
               </div>
             </div>

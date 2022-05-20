@@ -8,6 +8,7 @@ export class TaskRemind {
   listTaskByDay: Array<RemiderOnDay> = [];
   rateDoneAllTime: number = 0;
   chartData: any;
+  barChart: any;
 }
 export class ChartTaskRemind {
   rateDoneOnTime: number = 0;

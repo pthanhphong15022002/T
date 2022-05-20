@@ -1,4 +1,4 @@
-<codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
+<codx-views #view funcID="TM001" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
 
 <ng-template #chart>
@@ -6,7 +6,7 @@
 </ng-template>
 
 <ng-template #sidebarRight>
-  <app-task-info #taskInfo [viewBase]="viewBase" ></app-task-info>
+  <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
 </ng-template>
 
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
@@ -14,6 +14,11 @@
 <ng-template #kanban>
   <app-kanban [viewBase]="viewBase"></app-kanban>
 </ng-template>
+
+<ng-template #settingPanel>
+  <app-setting [viewBase]="viewBase"></app-setting>
+</ng-template>
+
 
 <!-- list-task-detail -->
 <ng-template #listDetails>

@@ -1,0 +1,80 @@
+/**** module qlcv / module task ***/
+.vmd-items {
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+
+.vmd-items.active,
+.vmd-items:hover {
+    background-color: rgb(0 93 199 / 4%);
+    cursor: pointer;
+}
+
+.tm-box-img {
+    position: relative;
+}
+
+.tm-box-img img {
+    border-radius: 4px 4px 0 0;
+}
+
+.tm-box-img .dropdown {
+    position: absolute;
+    z-index: 99;
+    top: 5px;
+    right: 5px;
+}
+
+.tm-box-img .dropdown button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+}
+
+.status-item {
+    height: 6px;
+    width: 26px;
+    border-radius: 6px;
+    display: block;
+    margin-right: 5px;
+}
+
+.status-item.primary {
+    background-color: #3699ff;
+}
+
+.status-item.warning {
+    background-color: #ffa800;
+}
+
+.status-item.info {
+    background-color: #8950fc;
+}
+
+.pic-color.h-20.w-20 {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+/**** qlcv task calendar ***/
+.task-calendar {
+    border: 2px #3699ff solid;
+    padding: 10px;
+    border-radius: 5px;
+    border-left-width: 5px;
+}
+
+.task-calendar.task-success {
+    border-color: #1bc5bd;
+}
+
+.task-calendar.task-warning {
+    border-color: #ffa800;
+}
+
+.task-calendar.task-danger {
+    border-color: #f64e60;
+}

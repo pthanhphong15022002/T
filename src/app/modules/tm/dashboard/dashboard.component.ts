@@ -1,8 +1,8 @@
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, AuthStore } from 'codx-core';
 import { DataRequest } from './../../../../shared/models/data.request';
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { AccPoints, AccumulationChart, AccumulationChartComponent, IAccAnimationCompleteEventArgs } from '@syncfusion/ej2-angular-charts';
+import { AccPoints, AccumulationChart, AccumulationChartComponent, IAccAnimationCompleteEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '../models/dashboard.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -30,14 +30,17 @@ export class DashboardComponent implements OnInit {
   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
   taskRemind: TaskRemind = new TaskRemind();
   model: DataRequest;
-  constructor(private api: ApiHttpService, private changeDetectorRef: ChangeDetectorRef) { }
+  user: any;
+  constructor(private api: ApiHttpService, private changeDetectorRef: ChangeDetectorRef, private authStore: AuthStore) { }
   public ngUnsubscribe = new Subject<void>();
   ngOnInit(): void {
+    this.user = this.authStore.get();
     this.model = new DataRequest();
     this.model.formName = "Tasks";
     this.model.gridViewName = "grvTasks";
     this.model.entityName = "TM_Tasks";
     this.model.pageLoading = false;
+    this.doughnutData = this.doughnutEmpty;
   }
 
   ngAfterViewInit(): void {
@@ -76,48 +79,43 @@ export class DashboardComponent implements OnInit {
         this.setDataChart(data.chartData);
 
         //Set data chart colum
+        this.setDataChartBar(data.barChart);
       });
   }
 
   getChartData() {
+    let option = this.model;
+    option.predicate = "DueDate.Value >= @0 and DueDate.Value <= @1";
+    option.dataValue = `${this.fromDate.toISOString()};${this.toDate.toISOString()}`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataChartAsync", [this.model,
-      this.fromDate,
-      this.toDate,
-      ])
+      .exec("TM", "TaskBusiness", "GetDataChartAsync", [option, this.fromDate,
+        this.toDate,])
       .pipe(takeUntil(this.ngUnsubscribe)).subscribe((data: any) => {
         if (data) this.setDataChart(data);
       })
   }
 
   getDataBarChart(beginMonth: Date, endMonth: Date) {
+    let option = this.model;
+    // option.predicate = "CompletedOn.Value >= @0 and CompletedOn.Value <=@1 and Owner == @2 and Status == @3";
+    // option.dataValue = `${beginMonth.toISOString()};${endMonth.toISOString()};${this.user.userID};9`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataBarChartAsync", [this.model,
-        beginMonth,
-        endMonth,
-      ])
+      .exec("TM", "TaskBusiness", "GetDataBarChartAsync", [option, beginMonth,
+        endMonth,])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: any) => {
-        if (data) {
-
-          if (data.hasOwnProperty("barChart")) {
-            this.dataColumn = data.barChart;
-          }
-          if (data.hasOwnProperty("lineChart")) {
-            this.dataLine = data.lineChart
-          }
-
-        }
-        this.changeDetectorRef.detectChanges();
+        if (data)
+          this.setDataChartBar(data);
       });
   }
 
   GetDataWorkOnDay() {
+    let option = this.model;
+    option.predicate = "DueDate.Value >= @0 and DueDate.Value <= @1";
+    option.dataValue = `${this.daySelectedFrom.toISOString()};${this.daySelectedTo.toISOString()}`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataWorkOnDayAsync", [this.model,
-      this.daySelectedFrom,
-      this.daySelectedTo,
-      ])
+      .exec("TM", "TaskBusiness", "GetDataWorkOnDayAsync", [option, this.daySelectedFrom,
+        this.daySelectedTo,])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: any) => {
         this.remiderOnDay = data.result as RemiderOnDay[];
@@ -172,8 +170,19 @@ export class DashboardComponent implements OnInit {
 
     //trending chart
     this.dataLineTrend = data.trendChart.result;
+    this.changeDetectorRef.detectChanges();
+
   }
 
+  setDataChartBar(data: any) {
+    if (data.hasOwnProperty("barChart")) {
+      this.dataColumn = data.barChart;
+    }
+    if (data.hasOwnProperty("lineChart")) {
+      this.dataLine = data.lineChart
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   //#region chartline
   public dataLineTrend: Object[] = [];
   public lineXAxis: Object = {
@@ -259,7 +268,7 @@ export class DashboardComponent implements OnInit {
   doughnutEmpty = [
     { label: '', value: 100 },
   ];
-  doughnutData: Object[] = this.doughnutEmpty;
+  doughnutData = [];
   palettesEmpty = ['#deeeeee'];
   palettes: string[] = ["#005DC7", "#06DDB8"];
 
@@ -300,5 +309,8 @@ export class DashboardComponent implements OnInit {
       return '6px';
     }
   };
+  public loaded(args: ILoadedEventArgs): void {
+    args.chart.refresh();
+  }
   //#endregion doughnut
 }
