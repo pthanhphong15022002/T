@@ -20,7 +20,7 @@ import { ViewsComponent, CacheService } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { SettingComponent } from '../setting/setting.component';
+import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 
 @Component({
   selector: 'app-home',
@@ -39,11 +39,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
 
+  @ViewChild('calendar') calendar: TemplateRef<any>;
+
   @ViewChild('treeViews') treeViews: TemplateRef<any>;
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
   @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
+  @ViewChild('calendarPanel') calendarPanel: TemplateRef<any> | null;
 
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
@@ -159,6 +162,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '7',
+      type: 'calendar',
+      text: 'calendar',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.calendar,
+        widthAsideRight: '550px'
       }
     },
     ];

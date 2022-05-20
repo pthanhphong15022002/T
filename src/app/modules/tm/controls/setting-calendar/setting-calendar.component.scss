@@ -1,0 +1,14 @@
+.dropdown-customv2:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-customv2 > .dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}
+.hoverIcon{
+    opacity: 0;
+}
+div.d-flex.align-items-center:hover > div.dropdown.ml-2.dropdown-customv2 > button#dropdownMenuButton > span.hoverIcon{
+    opacity: 1;
+}
