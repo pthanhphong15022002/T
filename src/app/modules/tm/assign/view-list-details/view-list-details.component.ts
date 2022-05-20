@@ -107,7 +107,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    //model.funcID = "WP036" ;
+    model.funcID = "TM003" ;
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -282,25 +282,7 @@ export class ViewListDetailsComponent implements OnInit {
     var dd = day.substring(8, 10);
     return dd + '/' + mm + '/' + year;
   }
-  // getValueCMParameter() {
-  //   const perdicate =
-  //     "FieldName=@0 or FieldName=@1 or FieldName=@2 or FieldName=@3";
-  //   const fieldName =
-  //     "ProjectControl;LocationControl;UpdateControl;PlanControl";
-  //   this.tmSv
-  //     .getValueCMParameter(
-  //       `FormName = 'TM_Parameters' AND (${perdicate})`,
-  //       fieldName
-  //     )
-  //     .subscribe((result) => {
-  //       this.configParam = this.mainService.convertListToObject(
-  //         result as [],
-  //         "fieldName",
-  //         "fieldValue"
-  //       );
-  //     });
-  // }
-
+  
   ///test control
   showControl(p, item) {
     this.taskAction = item;

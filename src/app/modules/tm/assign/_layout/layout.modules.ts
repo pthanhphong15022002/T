@@ -1,9 +1,8 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AssignModule } from '@modules/tm/assign/assign-routing.component';
 import { SharedModule } from 'src/shared';
-import { MwpModule } from '../mwp-routing.component';
+import { AssignModule } from '../assign-routing.component';
 import { LayoutComponent } from './layout.component';
 
 @NgModule({
@@ -11,8 +10,8 @@ import { LayoutComponent } from './layout.component';
     LayoutComponent,
   ],
   imports: [
-    MwpModule,
-    SharedModule,
+    AssignModule,
+    SharedModule
   ],
   exports: [RouterModule],
 })

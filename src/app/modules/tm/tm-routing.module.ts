@@ -53,6 +53,12 @@ const routes: Routes = [
           import('./mwp/_layout/layout.modules').then((m) => m.LayoutModule),
       },
       {
+        path: 'assign',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./assign/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
         path: '**',
         redirectTo: 'error/404',
       },

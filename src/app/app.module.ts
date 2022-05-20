@@ -69,7 +69,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     CbxpopupComponent,
     UpdateStatusPopupComponent,
-    AssignComponent,
     
     //ReportComponent,
   ],
