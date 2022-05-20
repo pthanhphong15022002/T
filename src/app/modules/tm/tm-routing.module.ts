@@ -2,7 +2,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { CodxCoreModule } from 'codx-core';
+import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
@@ -44,6 +44,12 @@ const routes: Routes = [
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
+      },
+      {
+        path: 'mwp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./mwp/_layout/layout.modules').then((m) => m.LayoutModule),
       },
       {
         path: '**',

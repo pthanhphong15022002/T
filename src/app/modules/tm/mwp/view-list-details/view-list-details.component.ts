@@ -6,6 +6,9 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
+import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
+import { TmService } from '@modules/tm/tm.service';
 import { HomeComponent } from '@pages/home/home.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
@@ -21,12 +24,6 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import * as moment from 'moment';
-import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { UpdateStatusPopupComponent } from '../controls/update-status-popup/update-status-popup.component';
-import { ActionTypeOnTask, StatusTask } from '../models/enum/enum';
-import { DataSv } from '../models/task.model';
-import { TM_Tasks } from '../models/TM_Tasks.model';
-import { TmService } from '../tm.service';
 
 @Component({
   selector: 'app-view-list-details',
@@ -110,7 +107,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    // model.funcID = "TM001" ;
+    model.funcID = "TM003" ;
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -285,6 +282,25 @@ export class ViewListDetailsComponent implements OnInit {
     var dd = day.substring(8, 10);
     return dd + '/' + mm + '/' + year;
   }
+  // getValueCMParameter() {
+  //   const perdicate =
+  //     "FieldName=@0 or FieldName=@1 or FieldName=@2 or FieldName=@3";
+  //   const fieldName =
+  //     "ProjectControl;LocationControl;UpdateControl;PlanControl";
+  //   this.tmSv
+  //     .getValueCMParameter(
+  //       `FormName = 'TM_Parameters' AND (${perdicate})`,
+  //       fieldName
+  //     )
+  //     .subscribe((result) => {
+  //       this.configParam = this.mainService.convertListToObject(
+  //         result as [],
+  //         "fieldName",
+  //         "fieldValue"
+  //       );
+  //     });
+  // }
+
   ///test control
   showControl(p, item) {
     this.taskAction = item;
@@ -375,17 +391,10 @@ export class ViewListDetailsComponent implements OnInit {
               );
             } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
-                if (res[0]) {
-                  var lstTaskDelete = res[0] ;
-                 for(var i=0; i< lstTaskDelete.length ; i++){
-                    var taskDelete = t.data.find(x=>x.taskID == lstTaskDelete[i].taskID) ;
+                if (res) {
+                 for(var i=0; i< res.length ; i++){
+                    var taskDelete = t.data.find(x=>x.taskID == res[i].taskID) ;
                     t.listview.removeHandler(taskDelete, 'recID');
-                  }
-                  if(res[1]!=null){
-                    var parent = t.data.find(x=>x.taskID == res[1].taskID) ;
-                    parent.assignTo = res[1].assignTo ;
-                    parent.category = res[1].category ;
-                    t.listview.addHandler(parent, false, 'recID');
                   }
                  // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');
@@ -485,24 +494,4 @@ export class ViewListDetailsComponent implements OnInit {
   openShowNode(){
     this.openNode = !this.openNode;
   }
-
-
-  // getValueCMParameter() {
-  //   const perdicate =
-  //     "FieldName=@0 or FieldName=@1 or FieldName=@2 or FieldName=@3";
-  //   const fieldName =
-  //     "ProjectControl;LocationControl;UpdateControl;PlanControl";
-  //   this.tmSv
-  //     .getValueCMParameter(
-  //       `FormName = 'TM_Parameters' AND (${perdicate})`,
-  //       fieldName
-  //     )
-  //     .subscribe((result) => {
-  //       this.configParam = this.mainService.convertListToObject(
-  //         result as [],
-  //         "fieldName",
-  //         "fieldValue"
-  //       );
-  //     });
-  // }
 }
