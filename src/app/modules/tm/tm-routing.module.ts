@@ -1,8 +1,9 @@
+import { CalendarComponent } from './calendar/calendar.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { CodxCoreModule } from 'codx-core';
+import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
@@ -19,7 +20,7 @@ import { TaskInfoComponent } from './controls/task-info/task-info.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
-import { SettingComponent } from './setting/setting.component';
+import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
@@ -46,6 +47,18 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'mwp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./mwp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'assign',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./assign/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
         path: '**',
         redirectTo: 'error/404',
       },
@@ -66,6 +79,7 @@ const routes: Routes = [
     DashboardComponent,
     SettingComponent,
     TreeviewComponent,
+    CalendarComponent
   ],
   imports: [
     RouterModule.forChild(routes),

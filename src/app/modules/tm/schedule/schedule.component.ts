@@ -28,8 +28,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
   moment = moment().locale("en");
   today: Date = new Date();
-  startDate: Date = undefined;
-  endDate: Date = undefined;
+  startDate: Date = new Date();
+  endDate: Date = new Date();
   daySelected: Date;
   user: any;
   minHeight = 525;
@@ -154,15 +154,15 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       }
     })
   }
-  
+
   getDayOff(id = null) {
     if (id)
       this.calendarID = id;
     this.api.execSv<any>('BS', 'ERM.Business.BS', 'CalendarsBusiness', 'GetDayWeekAsync', [this.calendarID]).subscribe(res => {
       if (res) {
         console.log(res);
-        res.forEach(ele => {      
-          this.dayoff = res;         
+        res.forEach(ele => {
+          this.dayoff = res;
         });
       }
     })
@@ -279,9 +279,9 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
-        if (day && evt.getFullYear() == day.getFullYear() && 
-            evt.getMonth() == day.getMonth() && 
-            evt.getDate() == day.getDate()) {
+        if (day && evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()) {
           var time = evt.getTime();
           var ele = document.querySelectorAll('[data-date="' + time + '"]');
           if (ele.length > 0) {
@@ -289,7 +289,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
               (item as any).style.backgroundColor = this.dayoff[i].color;
             })
           }
-          return '<icon class="'+ this.dayoff[i].symbol+'"></icon>'+'<span>'+this.dayoff[i].note+'</span>'
+          return '<icon class="' + this.dayoff[i].symbol + '"></icon>' + '<span>' + this.dayoff[i].note + '</span>'
         }
       }
     }
