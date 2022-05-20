@@ -9,6 +9,7 @@ import {
 import { HomeComponent } from '@pages/home/home.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
@@ -53,15 +54,16 @@ export class ViewListDetailsComponent implements OnInit {
   listNode = [];
   isFinishLoad = false;
   taskAction: any;
-
+  countOwner = 0 ;
+  model = new DataRequest();
+  openNode = false ;
+  innerHTML =''
   @Input('viewBase') viewBase: ViewsComponent;
-  @ViewChild("listview") listview: CodxListviewComponent
-  
+  @ViewChild('listview') listview: CodxListviewComponent;
+
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
-    // private changeDetectorRef: ChangeDetectorRef,
-    // private confirmationDialogService: ConfirmationDialogService,
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
@@ -77,13 +79,28 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.taskInfo.isAddNew.subscribe(res=>{
-      if(res){
-        this.listview.addHandler(res,true,'recID')
-        this.data.push(res) ;
+    const t = this ;
+    this.taskInfo.isAddNew.subscribe((res) => {
+      if (res) {
+        this.listview.addHandler(res, true, 'recID');
+        this.data.push(res);
       }
-    })
-   
+    });
+    this.taskInfo.isUpdate.subscribe((res) => {
+      if (res) {
+        var index =  this.data.findIndex(x=>x.taskID == res.taskID);
+        if(index != -1){
+          this.listview.addHandler(res, false, 'recID');
+        }else{
+          this.listview.addHandler(res, true, 'recID');   
+        }
+       this.data = this.listview.data ;
+        if(t.itemSelected.taskID == res.taskID){
+            t.getOneItem(this.itemSelected.taskID) ;
+            t.dt.detectChanges(); 
+        }
+      }
+    });
   }
 
   loadData() {
@@ -93,13 +110,14 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = "TM003"//this.viewBase.funcID ;
+    // model.funcID = "TM001" ;
     model.page = 1;
     model.pageSize = 100;
+    // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/20/2022').toDate();
+    this.toDate = moment('5/25/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -110,21 +128,25 @@ export class ViewListDetailsComponent implements OnInit {
     // let dataObj = { view: this.view, viewBoardID: '' };
 
     model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
+    this.model = model ;
     const t = this;
-    // this.lstItems = [];
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
-        this.api
+       
+        // $("#showMemo").html(this.itemSelected.memo)
+        if(this.itemSelected.parentID != null){
+          this.api
           .execSv<any>(
             'TM',
             'ERM.Business.TM',
             'TaskBusiness',
             'GetTaskByParentIDAsync',
-            [this.itemSelected?.id]
+            [this.itemSelected?.parentID]
           )
           .subscribe((res) => {
+            this.countOwner = res.length
             if (res && res.length > 0) {
               let objectId = res[0].owner;
               let objectState = res[0].status;
@@ -136,7 +158,8 @@ export class ViewListDetailsComponent implements OnInit {
               this.objectState = objectState;
             }
           });
-
+        }
+        this.isFinishLoad = true;
         if (this.itemSelected?.category != '1') {
           this.api
             .execSv<any>(
@@ -148,13 +171,11 @@ export class ViewListDetailsComponent implements OnInit {
             )
             .subscribe((res) => {
               this.listNode = res;
-              this.isFinishLoad = true;
             });
         }
       } else {
         this.data = [];
       }
-
       t.dt.detectChanges();
     });
   }
@@ -164,6 +185,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   clickItem(item) {
+    this.openNode = false ;
     this.getOneItem(item.id);
   }
   getOneItem(id) {
@@ -174,15 +196,17 @@ export class ViewListDetailsComponent implements OnInit {
       this.itemSelected = this.data[0];
     }
 
-    this.api
+    if(this.itemSelected.parentID != null){
+      this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
         'TaskBusiness',
         'GetTaskByParentIDAsync',
-        [this.itemSelected?.id]
+        [this.itemSelected?.parentID]
       )
       .subscribe((res) => {
+        this.countOwner = res.length
         if (res && res.length > 0) {
           let objectId = res[0].owner;
           let objectState = res[0].status;
@@ -194,7 +218,7 @@ export class ViewListDetailsComponent implements OnInit {
           this.objectState = objectState;
         }
       });
-    console.log(this.itemSelected);
+    }
     if (this.itemSelected?.category != '1') {
       this.api
         .execSv<any>(
@@ -207,12 +231,6 @@ export class ViewListDetailsComponent implements OnInit {
         .subscribe((res) => {
           this.listNode = res;
         });
-    }
-  }
-
-  onChangeStatusTask(data) {
-    if (data.actionType == ActionTypeOnTask.ChangeStatus) {
-      this.tmSv.onChangeStatusTask(data.data.taskID, data.value);
     }
   }
 
@@ -240,6 +258,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.objectAssign = objectId;
     return objectState;
   }
+  
   formatDateLocal(date: Date): string {
     var month = '';
     var day = '';
@@ -290,132 +309,192 @@ export class ViewListDetailsComponent implements OnInit {
     this.taskAction = item;
     p.open();
   }
-  viewDetailTask(taskAction) {
-     this.taskInfo.openInfo(taskAction.taskID,'edit');
+  editTask(taskAction) {
+    if(!taskAction.write){
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
     }
+    if (taskAction.status < 8) {
+      this.taskInfo.openInfo(taskAction.taskID, 'edit');
+    } else {
+      var message = 'Không thể chỉnh sửa công việc này !';
+      if (taskAction.status == 8) {
+        message = 'Công việc này đã bị hủy ! ' + message;
+      }
+      if (taskAction.status == 9) {
+        message = 'Công việc này đã hoàn thành ! ' + message;
+      }
+      this.notiService.notify(message);
+    }
+  }
 
   copyDetailTask(taskAction) {
-    alert('copy data');
+    if(!taskAction.share){
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
+    }
+    this.taskInfo.getTaskCoppied(taskAction.taskID);
   }
 
   clickDelete(taskAction) {
-    if (taskAction.status == 9) {
-      // this.notiService.notifyCode("TM001")
-      this.notiService.notify(
-        'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
-      );
-      return;
+   if(taskAction.delete){
+      if (taskAction.status == 9) {
+        // this.notiService.notifyCode("TM001")
+        this.notiService.notify(
+          'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
+        );
+        return;
+        }
+      var message = 'Bạn có chắc chắn muốn xóa task này !';
+      this.notiService
+        .alert('Cảnh báo', message, { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.confirmDelete(e, that);
+          };
+        });
+      
+    } else 
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
     }
-    var message = 'Bạn có chắc chắn muốn xóa task này !';
-    this.notiService
-      .alert('Cảnh báo', message, { type: 'YesNo' })
-      .subscribe((dialog: Dialog) => {
-        var that = this;
-        dialog.close =  function(e){
-          return that.close(e, that);
-        } 
-      });
-    // this.notiService
-    // .alertCode("TM003", { type: 'YesNo' })
-    // .subscribe((dialog: Dialog) => {
-    //   dialog.close = this.close;
-    //   console.log(dialog);
-    // });
-  }
+  
 
   viewItem(taskAction) {
-   this.taskInfo.openInfo(taskAction.taskID,'view');
+    this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
 
-  setupStatus(p,item){
+  setupStatus(p, item) {
     p.open();
   }
 
-  close(e: any , t: ViewListDetailsComponent) {
-    if (e?.event?.status == "Y") {
+  confirmDelete(e: any, t: ViewListDetailsComponent) {
+    if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api.execSv<any>('TM','ERM.Business.TM', 'TaskBusiness','GetListTaskChildDetailAsync', t.taskAction.taskID).subscribe((res: any)=>{
-     if(res){
-          res.forEach((element) => {
-            if (element.status != '1') {
-              isCanDelete = false;
-              return;
-            }
-          });
-          if (!isCanDelete) {
-            // this.notiService.notifyCode("TM001")
-            t.notiService.notify(
-              'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-            );
-          }else{
-            t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
-              if (res) {
-                // this.notiService.notifyCode("TM004")
-               this.listview.removeHandler(this.taskAction,'recID')
-               this.notiService.notify('Xóa task thành công !');
-               return;
+      t.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          t.taskAction.taskID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            res.forEach((element) => {
+              if (element.status != '1') {
+                isCanDelete = false;
+                return;
               }
-              t.notiService.notify(
-                'Xóa task không thành công. Vui lòng kiểm tra lại !'
-              );
             });
+            if (!isCanDelete) {
+              // this.notiService.notifyCode("TM001")
+              t.notiService.notify(
+                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+              );
+            } else {
+              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
+                if (res) {
+                 for(var i=0; i< res.length ; i++){
+                    var taskDelete = t.data.find(x=>x.taskID == res[i].taskID) ;
+                    t.listview.removeHandler(taskDelete, 'recID');
+                  }
+                 // t.notiService.notifyCode("TM004")
+                  t.notiService.notify('Xóa task thành công !');
+                  t.data = t.listview.data ;
+                  t.itemSelected = t.data[0];
+                  t.getOneItem(t.itemSelected.taskID)
+                  return;
+                }
+                t.notiService.notify(
+                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
+                );
+              });
+            }
           }
-         } 
-     })
+        });
     }
   }
-
-
 
   ChangeStatusTask(status, taskAction) {
-    const fromName = "TM_Parameters";
-    const fieldName = "UpdateControl";
-    this.api.execSv<any>("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [fromName, null, fieldName]).subscribe(res=>{
-       if(res){
-         var fieldValue = res.fieldValue ;
-         if(fieldValue !='0'){
-          this.openPopupUpdateStatus(fieldValue, status,taskAction)
-         }else{
-          var completedOn = moment(new Date()).toDate();
-          var startDate =moment(new Date(taskAction.startDate)).toDate();
-          var estimated = moment(completedOn).diff(
-           moment(startDate),
-           'hours'
-         );
-         this.tmSv.setStatusTask(taskAction.taskID,status,completedOn,estimated.toString(),'').subscribe(res=>{
-           if(res){
-            taskAction.status = status ;
-            taskAction.completedOn = completedOn ;
-            taskAction.comment = '' ;
-            taskAction.completed = estimated ;
-            this.listview.addHandler(taskAction,false,'recID')
-            this.notiService.notify("Cập nhật trạng thái thành công !")
-           }
-           else{
-            this.notiService.notify("Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !")
-           }
-
-         })
-         
-         }
-       }
-    });
+    const fromName = 'TM_Parameters';
+    const fieldName = 'UpdateControl';
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        [fromName, null, fieldName]
+      )
+      .subscribe((res) => {
+        if (res) {
+          var fieldValue = res.fieldValue;
+          if (fieldValue != '0') {
+            this.openPopupUpdateStatus(fieldValue, status, taskAction);
+          } else {
+            var completedOn = moment(new Date()).toDate();
+            var startDate = moment(new Date(taskAction.startDate)).toDate();
+            var estimated = moment(completedOn).diff(
+              moment(startDate),
+              'hours'
+            );
+            this.tmSv
+              .setStatusTask(
+                taskAction.taskID,
+                status,
+                completedOn,
+                estimated.toString(),
+                ''
+              )
+              .subscribe((res) => {
+                if (res) {
+                  taskAction.status = status;
+                  taskAction.completedOn = completedOn;
+                  taskAction.comment = '';
+                  taskAction.completed = estimated;
+                  this.listview.addHandler(taskAction, false, 'recID');
+                  this.notiService.notify('Cập nhật trạng thái thành công !');
+                } else {
+                  this.notiService.notify(
+                    'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
+                  );
+                }
+              });
+          }
+        }
+      });
   }
 
-  openPopupUpdateStatus(fieldValue, status,taskAction) {
+  openPopupUpdateStatus(fieldValue, status, taskAction) {
     let obj = {
       fieldValue: fieldValue,
-      status : status,
-      taskAction : taskAction
+      status: status,
+      taskAction: taskAction,
     };
-    this.callfc.openForm(UpdateStatusPopupComponent, 'Cập nhật tình trạng', 500, 350, '', obj).subscribe((dt:any)=>{dt.close = this.closePopup});
+    this.callfc
+      .openForm(
+        UpdateStatusPopupComponent,
+        'Cập nhật tình trạng',
+        500,
+        350,
+        '',
+        obj
+      )
+      .subscribe((dt: any) => {
+        dt.close = this.closePopup;
+      });
   }
-  
-  closePopup(e:any){
-    if(e.closedBy == "user action"){
-      var task = e.event ;
-      this.listview.addHandler(task,false,'recID')
+
+  closePopup(e: any) {
+    if (e.closedBy == 'user action') {
+      var task = e.event;
+    
+      this.listview.addHandler(task, false, 'recID');
     }
   }
 
+  openShowNode(){
+    this.openNode = !this.openNode;
+  }
 }

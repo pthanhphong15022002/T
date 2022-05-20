@@ -14,4 +14,10 @@
 .taskbox-list {
     overflow: auto;
     height: 400px;
+    background-color: #f3f3f5;
+    border-top: 1px #dbd7d7 solid;
+}
+
+.taskbox-list .task-item {
+    border-bottom: 1px #e4e4e4 dashed;
 }

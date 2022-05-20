@@ -23,8 +23,6 @@ export class UpdateStatusPopupComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef,private tmSv: TmService, private notiService: NotificationsService, @Optional() dt?: DialogData, @Optional() dialog?: Dialog) {
     this.data = dt?.data;
     this.dialog = dialog;
-    
-    //this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {

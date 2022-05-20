@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent } from 'codx-core';
-import { DataRequest } from '@shared/models/data.request';
+import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest, CodxListviewComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
@@ -14,6 +13,7 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewListDetailsComponent } from '../view-list-details/view-list-details.component';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { Calendar } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'app-schedule',
@@ -23,6 +23,9 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 export class ScheduleComponent implements OnInit, AfterViewInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() viewPreset: string = "weekAndDay";
+  @Input() calendarID: string;
+  @Input('listview') listview: CodxListviewComponent;
+
   moment = moment().locale("en");
   today: Date = new Date();
   startDate: Date = new Date();
@@ -37,780 +40,14 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   lstResource = [];
   gridView: any;
   itemSelected = null;
+  dayWeeks = [];
   taskAction: any;
-
+  objectAssign: any;
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
   @ViewChild("schedule") schedule: CodxScheduleComponent;
-
+  private calendar = new Calendar();
   model = new DataRequest();
-  dataSource = [
-    {
-      "id": "TSK2205-0013",
-      "userName": "Phan Mẫn Nhi",
-      "userID": "PMNHI",
-      "positionName": "Quality Control",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 2,
-      "listTag": null,
-      "listTaskGoals": [
-        {
-          "recID": "33c995ec-cf3a-11ec-a072-707781768eda",
-          "refID": null,
-          "entityName": null,
-          "projectID": null,
-          "activityID": null,
-          "taskID": "TSK2205-0013",
-          "category": null,
-          "memo": "1",
-          "interval": null,
-          "startDate": null,
-          "endDate": null,
-          "target": 0,
-          "status": "0",
-          "result": 0,
-          "resultNote": null,
-          "actualStartDate": null,
-          "actualEndDate": null,
-          "note": null,
-          "sorting": 0,
-          "createdOn": "2022-05-09T08:49:13.394747Z",
-          "createdBy": "ADMIN",
-          "modifiedOn": null,
-          "modifiedBy": null,
-          "owner": "ADMIN",
-          "buid": "O1001",
-          "employeeID": "E-0010",
-          "positionID": "DEVW",
-          "orgUnitID": "THUONG007",
-          "divisionID": null,
-          "tM_Tasks": null,
-          "write": true,
-          "delete": true,
-          "share": true,
-          "assign": true,
-          "includeTables": null,
-          "updateColumns": ""
-        },
-        {
-          "recID": "33c995ed-cf3a-11ec-a072-707781768eda",
-          "refID": null,
-          "entityName": null,
-          "projectID": null,
-          "activityID": null,
-          "taskID": "TSK2205-0013",
-          "category": null,
-          "memo": "2",
-          "interval": null,
-          "startDate": null,
-          "endDate": null,
-          "target": 0,
-          "status": "0",
-          "result": 0,
-          "resultNote": null,
-          "actualStartDate": null,
-          "actualEndDate": null,
-          "note": null,
-          "sorting": 0,
-          "createdOn": "2022-05-09T08:49:13.966226Z",
-          "createdBy": "ADMIN",
-          "modifiedOn": null,
-          "modifiedBy": null,
-          "owner": "ADMIN",
-          "buid": "O1001",
-          "employeeID": "E-0010",
-          "positionID": "DEVW",
-          "orgUnitID": "THUONG007",
-          "divisionID": null,
-          "tM_Tasks": null,
-          "write": true,
-          "delete": true,
-          "share": true,
-          "assign": true,
-          "includeTables": null,
-          "updateColumns": ""
-        }
-      ],
-      "items": null,
-      "recID": "33c995e8-cf3a-11ec-a072-707781768eda",
-      "taskID": "TSK2205-0013",
-      "taskName": "test 222222",
-      "tags": null,
-      "taskType": "1",
-      "category": "2",
-      "taskGroupID": null,
-      "parentID": "TSK2205-0012",
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "a",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 25,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-09T16:59:59Z",
-      "startDate": "2022-05-08T17:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-09T18:00:00Z",
-      "startedOn": null,
-      "completed": 0,
-      "completedOn": null,
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "PMNHI",
-      "buid": "THUONG006",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-09T08:49:12.961897Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": null,
-      "modifiedBy": null,
-      "employeeID": "E-0000",
-      "positionID": "QC",
-      "orgUnitID": "THUONG006",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-    {
-      "id": "TSK2205-0011",
-      "userName": "Phan Mẫn Nhi",
-      "userID": "PMNHI",
-      "positionName": "Quality Control",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 0,
-      "listTag": null,
-      "listTaskGoals": [],
-      "items": null,
-      "recID": "a3424e4c-ce13-11ec-a072-707781768eda",
-      "taskID": "TSK2205-0011",
-      "taskName": "test 33333333333",
-      "tags": null,
-      "taskType": "1",
-      "category": "2",
-      "taskGroupID": null,
-      "parentID": "TSK2205-0010",
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "tạm ổn !!",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 25,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-07T16:59:59Z",
-      "startDate": "2022-05-06T17:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-07T18:00:00Z",
-      "startedOn": null,
-      "completed": 0,
-      "completedOn": null,
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "PMNHI",
-      "buid": "THUONG006",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-07T21:40:35.609158Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": null,
-      "modifiedBy": null,
-      "employeeID": "E-0000",
-      "positionID": "QC",
-      "orgUnitID": "THUONG006",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-    {
-      "id": "TSK2205-0009",
-      "userName": "Phan Mẫn Nhi",
-      "userID": "PMNHI",
-      "positionName": "Quality Control",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 0,
-      "listTag": null,
-      "listTaskGoals": [],
-      "items": null,
-      "recID": "58b2ab1f-ce13-11ec-9427-00155d035517",
-      "taskID": "TSK2205-0009",
-      "taskName": "test 222222",
-      "tags": null,
-      "taskType": "1",
-      "category": "2",
-      "taskGroupID": null,
-      "parentID": "TSK2205-0008",
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "ttttt",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 49,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-07T16:59:59Z",
-      "startDate": "2022-05-06T17:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-08T18:00:00Z",
-      "startedOn": null,
-      "completed": 0,
-      "completedOn": null,
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "PMNHI",
-      "buid": "THUONG006",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-07T07:38:24.675883Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": null,
-      "modifiedBy": null,
-      "employeeID": "E-0000",
-      "positionID": "QC",
-      "orgUnitID": "THUONG006",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-    {
-      "id": "TSK2205-0003",
-      "userName": "Phan Đăng Vui",
-      "userID": "ADMIN",
-      "positionName": "Dev WEB",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 0,
-      "listTag": null,
-      "listTaskGoals": [],
-      "items": null,
-      "recID": "cbf2955c-cd24-11ec-a3d4-c025a5a4cd5d",
-      "taskID": "TSK2205-0003",
-      "taskName": "Test lưu data chua aaa",
-      "tags": null,
-      "taskType": "1",
-      "category": "1",
-      "taskGroupID": null,
-      "parentID": null,
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "assssss",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 0,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-06T16:59:59.037Z",
-      "startDate": "2022-05-06T08:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-06T17:00:00Z",
-      "startedOn": "2022-05-09T11:52:50.250684Z",
-      "completed": 8,
-      "completedOn": null,
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "ADMIN",
-      "buid": "O1001",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-06T17:10:52.148245Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": "2022-05-09T17:27:34.751893Z",
-      "modifiedBy": "ADMIN",
-      "employeeID": "E-0010",
-      "positionID": "DEVW",
-      "orgUnitID": "THUONG007",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-    {
-      "id": "TSK2205-0007",
-      "userName": "Phan Mẫn Nhi",
-      "userID": "PMNHI",
-      "positionName": "Quality Control",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 2,
-      "listTag": null,
-      "listTaskGoals": [
-        {
-          "recID": "acb4d7cd-cd28-11ec-9427-00155d035517",
-          "refID": null,
-          "entityName": null,
-          "projectID": null,
-          "activityID": null,
-          "taskID": "TSK2205-0007",
-          "category": null,
-          "memo": "aaa",
-          "interval": null,
-          "startDate": null,
-          "endDate": null,
-          "target": 0,
-          "status": "0",
-          "result": 0,
-          "resultNote": null,
-          "actualStartDate": null,
-          "actualEndDate": null,
-          "note": null,
-          "sorting": 0,
-          "createdOn": "2022-05-06T03:38:34.065588Z",
-          "createdBy": "ADMIN",
-          "modifiedOn": null,
-          "modifiedBy": null,
-          "owner": "ADMIN",
-          "buid": "O1001",
-          "employeeID": "E-0010",
-          "positionID": "DEVW",
-          "orgUnitID": "THUONG007",
-          "divisionID": null,
-          "tM_Tasks": null,
-          "write": true,
-          "delete": true,
-          "share": true,
-          "assign": true,
-          "includeTables": null,
-          "updateColumns": ""
-        },
-        {
-          "recID": "acb4d7ce-cd28-11ec-9427-00155d035517",
-          "refID": null,
-          "entityName": null,
-          "projectID": null,
-          "activityID": null,
-          "taskID": "TSK2205-0007",
-          "category": null,
-          "memo": "aaaaaaaaaa",
-          "interval": null,
-          "startDate": null,
-          "endDate": null,
-          "target": 0,
-          "status": "0",
-          "result": 0,
-          "resultNote": null,
-          "actualStartDate": null,
-          "actualEndDate": null,
-          "note": null,
-          "sorting": 0,
-          "createdOn": "2022-05-06T03:38:34.097693Z",
-          "createdBy": "ADMIN",
-          "modifiedOn": null,
-          "modifiedBy": null,
-          "owner": "ADMIN",
-          "buid": "O1001",
-          "employeeID": "E-0010",
-          "positionID": "DEVW",
-          "orgUnitID": "THUONG007",
-          "divisionID": null,
-          "tM_Tasks": null,
-          "write": true,
-          "delete": true,
-          "share": true,
-          "assign": true,
-          "includeTables": null,
-          "updateColumns": ""
-        }
-      ],
-      "items": null,
-      "recID": "acb4d7c9-cd28-11ec-9427-00155d035517",
-      "taskID": "TSK2205-0007",
-      "taskName": "Test lưu data chưa na",
-      "tags": null,
-      "taskType": "1",
-      "category": "2",
-      "taskGroupID": null,
-      "parentID": "TSK2205-0006",
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "aaaaaaaaaaaa",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 25,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-06T16:59:59Z",
-      "startDate": "2022-05-05T17:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-06T18:00:00Z",
-      "startedOn": null,
-      "completed": 0,
-      "completedOn": null,
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "PMNHI",
-      "buid": "THUONG006",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-06T03:38:34.036139Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": null,
-      "modifiedBy": null,
-      "employeeID": "E-0000",
-      "positionID": "QC",
-      "orgUnitID": "THUONG006",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-    {
-      "id": "TSK2205-0005",
-      "userName": "Phan Đăng Vui",
-      "userID": "ADMIN",
-      "positionName": "Dev WEB",
-      "userNameStuff": null,
-      "backgroundColor": "#DAD4E8",
-      "textColor": "#270082",
-      "priorityColor": null,
-      "priorityIcon": null,
-      "priorityText": null,
-      "userNameCreate": "Phan Đăng Vui",
-      "positionNameCreate": "Dev WEB",
-      "emailCreate": "pdvui@lacviet.com.vn",
-      "phoneCreate": "0907323494",
-      "taskGroupName": null,
-      "projectName": null,
-      "allDay": false,
-      "todo": 0,
-      "listTag": null,
-      "listTaskGoals": [],
-      "items": null,
-      "recID": "07f9ce3d-cd28-11ec-9427-00155d035517",
-      "taskID": "TSK2205-0005",
-      "taskName": "Test lưu data chưaaaaaa",
-      "tags": null,
-      "taskType": "1",
-      "category": "1",
-      "taskGroupID": null,
-      "parentID": null,
-      "sourceID": null,
-      "sourceType": null,
-      "projectID": null,
-      "activityID": null,
-      "iterationID": null,
-      "recurrence": false,
-      "interval": "1",
-      "weekday": null,
-      "memo": "AAAAAAAAAAAAAAAAAAA",
-      "memo2": null,
-      "location": null,
-      "objectID": null,
-      "objectType": null,
-      "status": "1",
-      "statusCode": null,
-      "reasonCode": null,
-      "priority": null,
-      "rank": null,
-      "points": 0,
-      "estimated": 0,
-      "estimatedCost": 0,
-      "remaining": null,
-      "assignTo": null,
-      "assignedOn": null,
-      "dueDate": "2022-05-06T16:59:59Z",
-      "startDate": "2022-05-06T08:00:00Z",
-      "startTime": "00:00",
-      "endDate": "2022-05-06T17:00:00Z",
-      "startedOn": "2022-05-09T14:08:56.11351Z",
-      "completed": 8,
-      "completedOn": "2022-06-09T05:00:00Z",
-      "completedTime": null,
-      "completedQty": 0,
-      "duration": 0,
-      "lateCode": null,
-      "refID": null,
-      "refType": null,
-      "refNo": null,
-      "refNote": null,
-      "note": null,
-      "owner": "ADMIN",
-      "buid": "O1001",
-      "attachment": null,
-      "approvalRule": "0",
-      "approveStatus": "1",
-      "approvers": null,
-      "approvedOn": null,
-      "approvedBy": null,
-      "privateTask": false,
-      "remainder": false,
-      "remainderDays": 0,
-      "reOpens": 0,
-      "splitedNo": 0,
-      "attachments": 0,
-      "comments": 0,
-      "closed": false,
-      "createdOn": "2022-05-06T03:33:57.065923Z",
-      "createdBy": "ADMIN",
-      "modifiedOn": "2022-05-09T14:24:58.087509Z",
-      "modifiedBy": "ADMIN",
-      "employeeID": "E-0010",
-      "positionID": "DEVW",
-      "orgUnitID": "THUONG007",
-      "divisionID": null,
-      "tM_Sprints": null,
-      "write": true,
-      "delete": true,
-      "share": true,
-      "assign": true,
-      "includeTables": null,
-      "updateColumns": ""
-    },
-  ];
+  dayoff = [];
   resourceDataSource: any;
 
   fields = {
@@ -888,7 +125,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   };
 
   ngOnInit(): void {
-
+    this.getParams();
     let fied = this.gridView?.dateControl || 'DueDate';
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
@@ -897,19 +134,72 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     this.model.funcID = "TM003"//this.viewBase.funcID ;
     this.model.page = 1;
     this.model.pageSize = 100;
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.endDate },
-      ],
-    };
+    if (this.startDate && this.endDate) {
+      this.model.filter = {
+        logic: 'and',
+        filters: [
+          { operator: 'gte', field: fied, value: this.startDate, logic: 'and', }, ///cho mac dinh cho filter
+          { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
+        ],
+      };
+    }
+
+    const t = this;
+    // this.lstItems = [];
+    t.tmSv.loadTaskByAuthen(this.model).subscribe((res) => {
+      if (res && res.length) {
+        this.data = res[0];
+        this.itemSelected = res[0][0];
+        this.api
+          .execSv<any>(
+            'TM',
+            'ERM.Business.TM',
+            'TaskBusiness',
+            'GetTaskByParentIDAsync',
+            [this.itemSelected?.id]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) {
+              let objectId = res[0].owner;
+              let objectState = res[0].status;
+              for (let i = 1; i < res?.length; i++) {
+                objectId += ';' + res[i].owner;
+                objectState += ';' + res[i].status;
+              }
+              this.objectAssign = objectId;
+            }
+          });
+
+      }
+    });
 
   }
 
-  addNew(taskAction: any) {
-    this.taskInfo.openInfo(taskAction, "add");
+  getParams() {
+    this.api.execSv<any>('SYS', 'ERM.Business.CM', 'ParametersBusiness', 'GetOneField', ['TM_Parameters', null, 'CalendarID']).subscribe(res => {
+      if (res) {
+        this.calendarID = res.fieldValue;
+        this.getDayOff(this.calendarID);
+      }
+    })
+  }
 
+  getDayOff(id = null) {
+    if (id)
+      this.calendarID = id;
+    this.api.execSv<any>('BS', 'ERM.Business.BS', 'CalendarsBusiness', 'GetDayWeekAsync', [this.calendarID]).subscribe(res => {
+      if (res) {
+        console.log(res);
+        res.forEach(ele => {
+          this.dayoff = res;
+        });
+      }
+    })
+  }
+
+  addNew(evt: any) {
+    console.log(evt);
+    this.taskInfo.openTask();
   }
 
   edit(taskAction) {
@@ -917,22 +207,28 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   }
 
   deleteTask(taskAction) {
-    if (taskAction.status == '9') {
-      this.notiService.notify(
-        'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
-      );
-      return;
-    }
-    var message = 'Bạn có chắc chắn muốn xóa task này !';
-    this.notiService
-      .alert('Cảnh báo', message, { type: 'YesNo' })
-      .subscribe((dialog: Dialog) => {
-        var that = this;
-        dialog.close = function (e) {
-          return that.close(e, that);
-        }
-      });
+    if (!taskAction.delete) {
+      if (taskAction.status == 9) {
+        // this.notiService.notifyCode("TM001")
+        this.notiService.notify(
+          'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
+        );
+        return;
+      }
+      var message = 'Bạn có chắc chắn muốn xóa task này !';
+      this.notiService
+        .alert('Cảnh báo', message, { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.close(e, that);
+          };
+        });
+
+    } else
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
+
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';
     console.log(evt);
@@ -942,43 +238,55 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     //Thêm vào option predicate
     this.model.filter = {
       logic: 'and',
-      fields: [
-        { operator: 'gte', field: fied, value: this.startDate },
-        { operator: 'lte', field: fied, value: this.endDate }
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
       ]
     }
     //reload data
-    this.schedule.reloadDataSource()
+    this.schedule.reloadDataSource();
+    this.schedule.reloadResource();
+
   }
   close(e: any, t: ScheduleComponent) {
-    if (e?.event?.status == "Y") {
+    if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api.execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', 'GetListDetailTasksAsync', this.fields.id).subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '1') {
-              isCanDelete = false;
-              return;
-            }
-          });
-          if (!isCanDelete) {
-            // this.notiService.notifyCode("TM001")
-            t.notiService.notify(
-              'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-            );
-          } else {
-            t.tmSv.deleteTask(t.fields.id).subscribe((res) => {
-              if (res) {
-                // this.notiService.notifyCode("TM004")
-                return this.notiService.notify('Xóa task thành công !');
+      t.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          t.taskAction.taskID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            res.forEach((element) => {
+              if (element.status != '1') {
+                isCanDelete = false;
+                return;
               }
-              t.notiService.notify(
-                'Xóa task không thành công. Vui lòng kiểm tra lại !'
-              );
             });
+            if (!isCanDelete) {
+              // this.notiService.notifyCode("TM001")
+              t.notiService.notify(
+                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+              );
+            } else {
+              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
+                if (res) {
+                  // this.notiService.notifyCode("TM004")
+                  this.listview.removeHandler(this.taskAction, 'recID');
+                  this.notiService.notify('Xóa task thành công !');
+                  return;
+                }
+                t.notiService.notify(
+                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
+                );
+              });
+            }
           }
-        }
-      })
+        });
     }
   }
 
@@ -994,5 +302,37 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
   testEvent(evt: any) {
     console.log(evt)
+  }
+  getCellContent(evt: any) {
+
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (day && evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach(item => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            })
+          }
+          return '<icon class="' + this.dayoff[i].symbol + '"></icon>' + '<span>' + this.dayoff[i].note + '</span>'
+        }
+      }
+    }
+    // var d = new Date();
+    // if(evt.getMonth() == d.getMonth() && evt.getDate() == d.getDate()){
+    //   var time = evt.getTime();
+    //   var ele = document.querySelectorAll('[data-date="'+time+'"]');
+    //   if(ele.length>0){
+    //     ele.forEach(item => {
+    //       (item as any).style.backgroundColor = '#ddd';
+    //     })
+    //   }
+    //   return `<span >Nghỉ làm</span>`
+    // }
+    return ``;
   }
 }

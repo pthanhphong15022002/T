@@ -87,11 +87,12 @@
                       <div class="text-dark-75">Use Default</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input
-                            type="checkbox"
-                            checked="checked"
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
                             name="select"
-                          />
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -102,7 +103,12 @@
                       <div class="text-dark-75">PageLoading</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -113,7 +119,12 @@
                       <div class="text-dark-75">GroupControl</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -124,7 +135,12 @@
                       <div class="text-dark-75">View Hierarchy Control</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -133,11 +149,12 @@
                   <div class="text-dark mt-3 mb-3">Số tự động</div>
                   <div class="form-group">
                     <div class="input-group">
-                      <input
+                      <codx-input
                         type="text"
                         class="form-control"
                         placeholder="TASK-2021-0056"
-                      />
+                      >
+                      </codx-input>
                       <div class="input-group-append">
                         <button class="btn btn-secondary" type="button">
                           <span class="icon-create text-dark-50 icon-18"></span>
@@ -159,11 +176,11 @@
                       <div class="text-dark-75">Use Default</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input
-                            type="checkbox"
-                            checked="checked"
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
                             name="select"
-                          />
+                          ></codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -174,7 +191,11 @@
                       <div class="text-dark-75">PageLoading</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          ></codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -185,7 +206,11 @@
                       <div class="text-dark-75">GroupControl</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          ></codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -196,7 +221,11 @@
                       <div class="text-dark-75">View Hierarchy Control</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          ></codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -215,11 +244,11 @@
                           </div>
                           <div class="d-flex justify-content-center">
                             <label class="radio">
-                              <input
+                              <codx-input
                                 type="radio"
-                                checked="checked"
+                                [checked]="checked"
                                 name="radio"
-                              />
+                              ></codx-input>
                               <span></span>IsDefault
                             </label>
                           </div>
@@ -233,11 +262,11 @@
                           </div>
                           <div class="d-flex justify-content-center">
                             <label class="radio">
-                              <input
+                              <codx-input
                                 type="radio"
-                                checked="checked"
+                                [checked]="checked"
                                 name="radio"
-                              />
+                              ></codx-input>
                               <span></span>IsDefault
                             </label>
                           </div>
@@ -265,11 +294,7 @@
                       <div class="text-dark-75">Dùng mặc định</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <codx-input
-                            type="checkbox"
-                            checked="checked"
-                            name="select"
-                          >
+                          <codx-input type="switch" [checked]="checked">
                           </codx-input>
                           <span></span>
                         </label>
@@ -278,21 +303,18 @@
                     <div class="mb-3 text-primary">Column</div>
                     <div class="mb-4">
                       <div class="form-group" *ngIf="functionList">
-                        <!-- <app-ermcombobox [value]="kanbanSetting?.ColumnField" service="SYS"
-                                                    refValue="KBColumn" [model]="functionList" field="column"
-                                                    (valueChange)="onKanbanCbxChange($event)">
-                                                </app-ermcombobox> -->
-                        <codx-combobox
-                          service="TM"
+
+                        <codx-input
                           type="combobox"
                           name="combobox"
-                          placeholder="Nhóm công việc"
-                          ngDefaultControl
-                          refValue="TaskGroups"
-                          loadFull="true"
-                          field="taskGroupID"
+                          [crrValue]="kanbanSetting?.ColumnField"
+                          service="SYS"
+                          refValue="KBColumn"
+                          [model]="functionList"
+                          field="column"
+                          (valueChange)="onKanbanCbxChange($event)"
                         >
-                        </codx-combobox>
+                        </codx-input>
                         <span class="text-primary">
                           {{
                             kanbanSetting?.AllowDrag
@@ -302,7 +324,7 @@
                         </span>
                       </div>
                     </div>
-                    <ng-container *ngIf="kanbanSetting?.ShowDateBy">
+                    <ng-container>
                       <div
                         class="d-flex align-items-center justify-content-between mb-1"
                       >
@@ -310,42 +332,62 @@
                       </div>
                       <div class="mb-4">
                         <div class="form-group">
-                          <codx-valuelist
+                          <codx-input
+                            type="valuelist"
+                            field="BreakDateBy"
+                            [crrValue]="kanbanSetting?.BreakDateBy"
                             [placeholder]="'Customize'"
-                          ></codx-valuelist>
+                            refValue="L1471"
+                          ></codx-input>
                         </div>
                       </div>
                     </ng-container>
-                    <ng-container *ngIf="kanbanSetting?.ShowCustomRange">
+                    <ng-container *ngIf="functionList">
                       <div
                         class="d-flex align-items-center justify-content-between mb-1"
                       >
                         <div class="text-dark-75">CustomRange</div>
                       </div>
-                      <div class="mb-4" *ngIf="kanbanSetting?.ShowCustomRange">
-                        <codx-combobox></codx-combobox>
+                      <div class="mb-4" *ngIf="functionList">
+                        <codx-input
+                          type="combobox"
+                          name="combobox"
+                          [crrValue]="kanbanSetting?.CustomRange"
+                          service="BS"
+                          refValue="TimeRanges"
+                          [model]="functionList"
+                          field="column"
+                          (valueChange)="onKanbanCbxChange($event)"
+                        >
+                        </codx-input>
                       </div>
                     </ng-container>
                     <div
                       class="d-flex align-items-center justify-content-between mb-1"
                     >
-                      <div class="text-dark-75">Swimlanes Field</div>
-                      <span class="switch switch-sm">
-                        <label>
-                        <codx-input
-                            type="checkbox"
-                            name="select"
-                            [checked]="kanbanSetting?.SwimlanesControl"
-                            [(ngModel)]="kanbanSetting.SwimlanesControl"
-                          >
-                        </codx-input>
-                          <span></span>
-                        </label>
-                      </span>
+                      <span><label for="switch">Swimlanes Field</label></span>
+                      <codx-input
+                        #checkbox
+                        type="switch"
+                        id="switch"
+                        class="test-switch"
+                        [checked]="kanbanSetting?.SwimlanesControl"
+                        labelPosition="Before"
+                        [disabled]="false"
+                        (valueChange)="onKanbanValueChange($event, 'SwimlanesControl')"
+                      ></codx-input>
                     </div>
-                    <div class="mb-4" *ngIf="kanbanSetting?.SwimlanesControl">
-                      <div class="form-group">
-                        <codx-combobox></codx-combobox>
+                    <div class="mb-4">
+                      <div class="form-group" *ngIf="functionList">
+                        <codx-combobox
+                        [crrValue]="kanbanSetting?.SwimlanesField"
+                        service="BS"
+                        refValue="Swimlances"
+                        [model]="functionList"
+                        field="swimlanes"
+                        (valueChange)="onKanbanCbxChange($event)"
+                      >
+                      </codx-combobox>
                       </div>
                     </div>
                   </div>
@@ -362,11 +404,11 @@
                           </div>
                           <div class="d-flex justify-content-center">
                             <label class="radio">
-                              <input
+                              <codx-input
                                 type="radio"
-                                checked="checked"
+                                [checked]="checked"
                                 name="radio"
-                              />
+                              ></codx-input>
                               <span></span>IsDefault
                             </label>
                           </div>
@@ -377,51 +419,64 @@
                   <div
                     class="d-flex align-items-center justify-content-between mb-4"
                   >
-                    <div class="text-dark-75">Progress bar</div>
-                    <span class="switch switch-sm">
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="select"
-                          [checked]="kanbanSetting?.ProcessBar"
-                          [(ngModel)]="kanbanSetting.ProcessBar"
-                        />
-                        <span></span>
-                      </label>
-                    </span>
+                    <span><label for="switch">Process bar</label></span>
+                    <codx-input
+                      #checkbox
+                      type="switch"
+                      id="switch"
+                      class="test-switch"
+                      [checked]="kanbanSetting.ProcessBar"
+                      labelPosition="Before"
+                      [disabled]="false"
+                      (valueChange)="onKanbanValueChange($event, 'ProcessBar')"
+                    ></codx-input>
                   </div>
                   <div
                     class="d-flex align-items-center justify-content-between mb-4"
                   >
-                    <div class="text-dark-75">Tags</div>
-                    <span class="switch switch-sm">
-                      <label>
-                        <codx-input type="checkbox"></codx-input> 
-                        <span></span>
-                      </label>
-                    </span>
+                    <span><label for="switch">Tags</label></span>
+                    <codx-input
+                      #checkbox
+                      type="switch"
+                      id="switch"
+                      class="test-switch"
+                      [checked]="kanbanSetting.Tags"
+                      labelPosition="Before"
+                      [disabled]="false"
+                      (valueChange)="onKanbanValueChange($event, 'Tags')"
+                    ></codx-input>
                   </div>
                   <div
                     class="d-flex align-items-center justify-content-between mb-4"
                   >
-                    <div class="text-dark-75">Count Objects</div>
-                    <span class="switch switch-sm">
-                      <label>
-                        <codx-input type="checkbox"></codx-input> 
-                        <span></span>
-                      </label>
-                    </span>
+                    <span><label for="switch">Count Objects</label></span>
+                    <codx-input
+                      #checkbox
+                      type="switch"
+                      id="switch"
+                      class="test-switch"
+                      [checked]="kanbanSetting.CountObjects"
+                      labelPosition="Before"
+                      [disabled]="false"
+                      (valueChange)="
+                        onKanbanValueChange($event, 'CountObjects')
+                      "
+                    ></codx-input>
                   </div>
                   <div
                     class="d-flex align-items-center justify-content-between mb-4"
                   >
-                    <div class="text-dark-75">Resources Avatar</div>
-                    <span class="switch switch-sm">
-                      <label>
-                        <codx-input type="checkbox"></codx-input> 
-                        <span></span>
-                      </label>
-                    </span>
+                    <span><label for="switch">Resources Avatar</label></span>
+                    <codx-input
+                      #checkbox
+                      type="switch"
+                      id="switch"
+                      class="test-switch"
+                      [checked]="kanbanSetting.Resources"
+                      labelPosition="Before"
+                      [disabled]="false"
+                      (valueChange)="onKanbanValueChange($event, 'Resources')"
+                    ></codx-input>
                   </div>
                 </div>
                 <div
@@ -440,19 +495,17 @@
                   </div>
                   <div class="mt-6">
                     <div
-                      class="d-flex align-items-center justify-content-between mb-4"
-                    >
-                      <div class="text-dark-75">Dùng mặc định</div>
-                      <span class="switch switch-sm mr-2">
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked="checked"
-                            name="select"
-                          />
-                          <span></span>
-                        </label>
-                      </span>
+                      class="d-flex align-items-center justify-content-between mb-4">
+                      <span><label for="switch">Dùng mặc định</label></span>
+                      <codx-input
+                        #checkbox
+                        type="switch"
+                        id="switch"
+                        class="test-switch"
+                        [checked]="checked"
+                        labelPosition="Before"
+                        [disabled]="false"
+                      ></codx-input>
                     </div>
                     <div class="mb-3 text-primary">Calendar</div>
                     <div class="mb-4">
@@ -463,7 +516,12 @@
                           <div class="text-dark-75">Scroll to hour</div>
                           <span class="switch switch-sm mr-2">
                             <label>
-                              <input type="checkbox" name="select" />
+                              <codx-input
+                                type="switch"
+                                [checked]="checked"
+                                name="select"
+                              >
+                              </codx-input>
                               <span></span>
                             </label>
                           </span>
@@ -487,7 +545,12 @@
                           </div>
                           <span class="switch switch-sm mr-2">
                             <label>
-                              <input type="checkbox" name="select" />
+                              <codx-input
+                                type="switch"
+                                [checked]="checked"
+                                name="select"
+                              >
+                              </codx-input>
                               <span></span>
                             </label>
                           </span>
@@ -509,7 +572,12 @@
                       </div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -520,7 +588,12 @@
                       <div class="text-dark-75">Fillter highlight result</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -533,7 +606,12 @@
                       </div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -544,7 +622,12 @@
                       <div class="text-dark-75">Tooltips</div>
                       <span class="switch switch-sm mr-2">
                         <label>
-                          <input type="checkbox" name="select" />
+                          <codx-input
+                            type="switch"
+                            [checked]="checked"
+                            name="select"
+                          >
+                          </codx-input>
                           <span></span>
                         </label>
                       </span>
@@ -564,7 +647,7 @@
             type="button"
             class="btn btn-primary"
           >
-            Áp dụng
+            Lưu
           </button>
         </div>
       </div>
