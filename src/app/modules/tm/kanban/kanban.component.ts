@@ -67,7 +67,6 @@ export class KanbanComponent implements OnInit {
   @ViewChild('popupAdd') modalContent: any;
 
   constructor(
-    private modalService: NgbModal,
     private tmSv: TmService,
     private authStore: AuthStore,
     private cache: CacheService,
@@ -104,32 +103,6 @@ export class KanbanComponent implements OnInit {
       .match(/\b(\w)/g)
       .join('')
       .toUpperCase();
-  }
-
-  openPopup(evt: any, action: string = 'add') {
-    this.modalService
-      .open(this.modalContent, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(
-        (res) => {
-          if (res) {
-            if (action == 'add')
-              this.kanban.addCard({
-                Id: 'Task 100',
-                Description: 'Task - BigData',
-                Status: '1',
-                Summary: 'Big data is so cool',
-                Priority: 'High',
-                Tags: 'Bug, Release Bug',
-                RankId: 1,
-                Assignee: 'Nancy Davloio',
-              });
-          }
-        },
-        (reason) => {
-          if (reason) {
-          }
-        }
-      );
   }
 
   onDataDrag(evt: any) {
@@ -282,7 +255,7 @@ export class KanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-        // this.kanban.columns = res.column;
+        this.kanban.model.columns = res.column;
         this.cr.detectChanges();
       }
     });

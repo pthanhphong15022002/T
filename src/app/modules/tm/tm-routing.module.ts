@@ -1,3 +1,4 @@
+import { CalendarComponent } from './calendar/calendar.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,7 +20,7 @@ import { TaskInfoComponent } from './controls/task-info/task-info.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
-import { SettingComponent } from './setting/setting.component';
+import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
@@ -72,6 +73,7 @@ const routes: Routes = [
     DashboardComponent,
     SettingComponent,
     TreeviewComponent,
+    CalendarComponent
   ],
   imports: [
     RouterModule.forChild(routes),

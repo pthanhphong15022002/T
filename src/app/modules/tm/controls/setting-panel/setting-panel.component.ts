@@ -8,13 +8,13 @@ import {
 import { VIEW_ACTIVE } from '@shared/constant/enum';
 import { ok } from 'assert';
 import { AuthStore, CacheService, DataRequest } from 'codx-core';
-import { KanbanSetting } from '../models/settings.model';
-import { TmService } from '../tm.service';
+import { KanbanSetting } from '../../models/settings.model';
+import { TmService } from '../../tm.service';
 
 @Component({
-  selector: 'app-setting',
-  templateUrl: './setting.component.html',
-  styleUrls: ['./setting.component.scss'],
+  selector: 'app-setting-panel',
+  templateUrl: './setting-panel.component.html',
+  styleUrls: ['./setting-panel.component.scss'],
 })
 export class SettingComponent implements OnInit {
   const_modes = { d: 'day', w: 'week', m: 'month', y: 'year' };
