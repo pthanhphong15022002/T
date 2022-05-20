@@ -72,8 +72,8 @@ export class TaskInfoComponent implements OnInit {
   isAddNew = this.dataAddNew.asObservable();
   updateData = new BehaviorSubject<any>(null);
   isUpdate = this.updateData.asObservable();
+  showPlan = true ;
   @Input('viewBase') viewBase: ViewsComponent;
-
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
@@ -179,6 +179,11 @@ export class TaskInfoComponent implements OnInit {
       };
       this.listMemo2OfUser.push(memo2OfUser);
     }
+  } 
+  changeMemo(event:any){
+    var field = event.field;
+    var dt = event.data;
+    this.task.memo = dt?.value ? dt.value : dt;  
   }
 
   onOpenTodo() {
@@ -236,7 +241,7 @@ export class TaskInfoComponent implements OnInit {
   saveData(id) {
     this.checkLogicTime();
     if (!this.isCheckTime) {
-      this.notiService.notifyCode('TM002');
+      // this.notiService.notifyCode('TM002');
       return;
     }
     // if (
@@ -272,6 +277,7 @@ export class TaskInfoComponent implements OnInit {
       return;
     }
     this.task.taskType = this.param['TaskType'];
+
     if (id) this.updateTask();
     else this.addTask();
     this.viewBase.currentView.closeSidebarRight();
@@ -403,8 +409,12 @@ export class TaskInfoComponent implements OnInit {
   }
 
   checkLogicTime() {
-    if (!this.task.startDate) {
-      this.notiService.notify('Phải nhập thời gian bắt đầu !');
+    if (!this.task.startDate && !this.task.endDate ) {
+      this.isCheckTime = true ;
+      return;
+    }
+    if (!this.task.startDate && this.task.endDate ) {
+      this.notiService.notify("Phải nhập ngày bắt đầu công việc !");
       this.isCheckTime = false ;
       return;
     }
@@ -439,7 +449,7 @@ export class TaskInfoComponent implements OnInit {
           else $('#endDate').focus();
         }
       }
-    }else   this.isConfirm = false;
+    }else   this.isConfirm = true;
   }
 
   checkLogicTaskGroup(idTaskGroup) {
@@ -522,6 +532,7 @@ export class TaskInfoComponent implements OnInit {
     this.getListUser(this.task.assignTo);
     this.task.status = '1';
     this.task.priority = '1';
+    this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
@@ -555,8 +566,11 @@ export class TaskInfoComponent implements OnInit {
           t.listUser = t.task.assignTo.split(';');
         else {
            //thêm giá trị đê add thử copy -sau nay xóa đi 
-         this.task.assignTo = 'TQHOAN'; ///tesst
-         this.getListUser(this.task.assignTo);
+           if(action =="edit"){
+            this.task.assignTo = 'TQHOAN'; ///tesst
+            this.getListUser(this.task.assignTo);
+           }
+       
         }
         t.changeDetectorRef.detectChanges();
         this.showPanel();
@@ -593,9 +607,6 @@ export class TaskInfoComponent implements OnInit {
     t.task = new TM_Tasks();
     t.task = data;
     t.task.taskID = null;
-    t.task.dueDate = moment(new Date(data.dueDate)).toDate();
-    t.task.startDate = moment(new Date(data.startDate)).toDate();
-    t.task.endDate = moment(new Date(data.endDate)).toDate();
     t.task.parentID = null;
     t.task.assignTo = null;
     this.listUser = [];
@@ -667,9 +678,12 @@ export class TaskInfoComponent implements OnInit {
     // this.panelTask.nativeElement.classList.toggle('extend-show');
   }
 
-  closeTask(): void {
-    // if (this.tagsComponent.isOpen) this.tagsComponent.close();
+  extendShowPlan(){
+    this.showPlan = !this.showPlan
+  }
 
+  closeTask(): void {
+    // if (this.tagsComponent.isOpen) this.tagsComponent.close()
     this.required.taskName = false;
     this.disableAddToDo = true;
     this.resetTask();

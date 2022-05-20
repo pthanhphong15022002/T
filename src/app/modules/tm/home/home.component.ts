@@ -142,24 +142,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      // sameData: false,
+      sameData: false,
       active: true,
       model: {
         panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
         widthAsideLeft: '550px',
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     {
       id: '2',
       type: 'kanban',
-      // sameData: false,
+      sameData: false,
       active: false,
       model: {
         panelLeftRef: this.kanban,
         sideBarRightRef: this.settingPanel,
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     {
@@ -167,54 +167,54 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      // sameData: false,
+      sameData: false,
       active: false,
       model: {
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     {
       id: '4',
       type: 'list',
       icon: 'icon-format_list_bulleted',
-      // sameData: false,
+      sameData: false,
       text: 'List-tasks',
       active: false,
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     {
       id: '5',
       type: 'schedule',
       text: 'schedule',
-      // sameData: false,
+      sameData: false,
       active: false,
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     {
       id: '6',
       type: 'list',
       text: 'treeViews',
-      // sameData: false,
+      sameData: false,
       active: false,
       model: {
         panelLeftRef: this.treeViews,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '550px'
+        widthAsideRight: '900px'
       }
     },
     ];

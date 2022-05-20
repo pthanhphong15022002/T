@@ -55,7 +55,9 @@ export class ViewListDetailsComponent implements OnInit {
   isFinishLoad = false;
   taskAction: any;
   countOwner = 0 ;
-   model = new DataRequest();
+  model = new DataRequest();
+  openNode = false ;
+  innerHTML =''
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -110,7 +112,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.predicate = '';
     // model.funcID = "TM001" ;
     model.page = 1;
-    model.pageSize = 150;
+    model.pageSize = 100;
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
@@ -132,6 +134,8 @@ export class ViewListDetailsComponent implements OnInit {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
+       
+        // $("#showMemo").html(this.itemSelected.memo)
         if(this.itemSelected.parentID != null){
           this.api
           .execSv<any>(
@@ -181,6 +185,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   clickItem(item) {
+    this.openNode = false ;
     this.getOneItem(item.id);
   }
   getOneItem(id) {
@@ -229,12 +234,6 @@ export class ViewListDetailsComponent implements OnInit {
     }
   }
 
-  onChangeStatusTask(data) {
-    if (data.actionType == ActionTypeOnTask.ChangeStatus) {
-      this.tmSv.onChangeStatusTask(data.data.taskID, data.value);
-    }
-  }
-
   getByParentID(task) {
     let objectId = '';
     let objectState = '';
@@ -259,6 +258,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.objectAssign = objectId;
     return objectState;
   }
+  
   formatDateLocal(date: Date): string {
     var month = '';
     var day = '';
@@ -395,17 +395,15 @@ export class ViewListDetailsComponent implements OnInit {
             } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res) {
-                  res.forEach(obj=>{
-                    t.data = t.data.filter(function (element, index) {
-                      return element["taskID"] !== obj.taskID;
-                    });
-                    // this.notiService.notifyCode("TM004")
-                    t.listview.removeHandler(this.taskAction, 'recID');
-                  })
+                 for(var i=0; i< res.length ; i++){
+                    var taskDelete = t.data.find(x=>x.taskID == res[i].taskID) ;
+                    t.listview.removeHandler(taskDelete, 'recID');
+                  }
+                 // t.notiService.notifyCode("TM004")
+                  t.notiService.notify('Xóa task thành công !');
                   t.data = t.listview.data ;
                   t.itemSelected = t.data[0];
                   t.getOneItem(t.itemSelected.taskID)
-                  t.notiService.notify('Xóa task thành công !');
                   return;
                 }
                 t.notiService.notify(
@@ -494,5 +492,9 @@ export class ViewListDetailsComponent implements OnInit {
     
       this.listview.addHandler(task, false, 'recID');
     }
+  }
+
+  openShowNode(){
+    this.openNode = !this.openNode;
   }
 }
