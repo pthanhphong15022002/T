@@ -16,13 +16,14 @@ import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { TaskInfoComponent } from './controls/task-info/task-info.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { MwpModule } from './mwp/mwp-routing.module';
+import { ControlsModule } from './controls/controls.module';
 
 const routes: Routes = [
   {
@@ -47,12 +48,6 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'mwp',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./mwp/_layout/layout.modules').then((m) => m.LayoutModule),
-      },
-      {
         path: 'assign',
         canActivate: [AuthGuard],
         loadChildren: () =>
@@ -75,11 +70,10 @@ const routes: Routes = [
     ListTasksComponent,
     MoreFuntionComponent,
     ScheduleComponent,
-    TaskInfoComponent,
     DashboardComponent,
     SettingComponent,
     TreeviewComponent,
-    CalendarComponent
+    CalendarComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -90,7 +84,7 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    DatePickerModule,TabModule
+    DatePickerModule,TabModule,ControlsModule
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

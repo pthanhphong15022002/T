@@ -70,8 +70,6 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dateNow = this.formatDateLocal(this.today);
-    this.yesterday = this.formatDateLocal(this.getYesterday());
     this.loadData();
   }
 
@@ -131,31 +129,27 @@ export class ViewListDetailsComponent implements OnInit {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
-       
-        // $("#showMemo").html(this.itemSelected.memo)
-        if(this.itemSelected.parentID != null){
+        if(this.itemSelected.category == "3" || this.itemSelected.category == "4"){
           this.api
           .execSv<any>(
             'TM',
             'ERM.Business.TM',
             'TaskBusiness',
             'GetTaskByParentIDAsync',
-            [this.itemSelected?.parentID]
+            [this.itemSelected?.recID]
           )
-          .subscribe((res) => {
-            this.countOwner = res.length
-            if (res && res.length > 0) {
-              let objectId = res[0].owner;
-              let objectState = res[0].status;
-              for (let i = 1; i < res?.length; i++) {
-                objectId += ';' + res[i].owner;
-                objectState += ';' + res[i].status;
+          .subscribe((data) => {
+            if (data && data.length > 0) {
+              let objectId = data[0].owner;
+              let objectState = data[0].status;
+              for (let i = 1; i < data?.length; i++) {
+                objectId += ';' + data[i].owner;
+                objectState += ';' + data[i].status;
               }
               this.objectAssign = objectId;
               this.objectState = objectState;
             }
-          });
-        }
+          });}
         this.isFinishLoad = true;
         if (this.itemSelected?.category != '1') {
           this.api
@@ -171,10 +165,10 @@ export class ViewListDetailsComponent implements OnInit {
             });
         }
       } else {
-        this.data = [];
-      }
+       this.data = [];
+     }
       t.dt.detectChanges();
-    });
+     });
   }
 
   trackByFn(index: number, item): string {
@@ -193,17 +187,16 @@ export class ViewListDetailsComponent implements OnInit {
       this.itemSelected = this.data[0];
     }
 
-    if(this.itemSelected.parentID != null){
+    if(this.itemSelected.category == "3" || this.itemSelected.category == "4"){
       this.api
       .execSv<any>(
         'TM',
         'ERM.Business.TM',
         'TaskBusiness',
         'GetTaskByParentIDAsync',
-        [this.itemSelected?.parentID]
+        [this.itemSelected?.recID]
       )
       .subscribe((res) => {
-        this.countOwner = res.length
         if (res && res.length > 0) {
           let objectId = res[0].owner;
           let objectState = res[0].status;
@@ -256,34 +249,6 @@ export class ViewListDetailsComponent implements OnInit {
     return objectState;
   }
   
-  formatDateLocal(date: Date): string {
-    var month = '';
-    var day = '';
-    if (date.getMonth() + 1 < 10) {
-      month = '0' + (date.getMonth() + 1);
-    }
-    if (date.getDate() < 10) {
-      day = '0' + date.getDate();
-    } else {
-      day = date.getDate().toString();
-    }
-    return day + '/' + month + '/' + date.getFullYear();
-  }
-
-  getYesterday(): Date {
-    var date = new Date(this.today);
-    date.setDate(date.getDate() - 1);
-    return date;
-  }
-
-  formatDateCreatedOn(day: string): string {
-    var year = day.substring(0, 4);
-    var mm = day.substring(5, 7);
-    var dd = day.substring(8, 10);
-    return dd + '/' + mm + '/' + year;
-  }
-  
-  ///test control
   showControl(p, item) {
     this.taskAction = item;
     p.open();

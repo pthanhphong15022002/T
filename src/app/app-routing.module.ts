@@ -28,6 +28,18 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./modules/tm/_layout/layout.modules').then((m) => m.LayoutModule),
       },
+      {
+        path: 'mwp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
+      {
+        path: 'assign',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./modules/tm/assign/_layout/layout.modules').then((m) => m.LayoutModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

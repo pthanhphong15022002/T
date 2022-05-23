@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
-import { AssignModule } from '../assign-routing.component';
+import { AssignModule } from '../assign-routing.module';
 import { LayoutComponent } from './layout.component';
 
 @NgModule({
