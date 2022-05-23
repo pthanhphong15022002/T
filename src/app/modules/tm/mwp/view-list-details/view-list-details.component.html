@@ -6,11 +6,57 @@
           <div class="tab-pane fade show active" id="gift_1" role="tabpanel"></div>
           <div class="tab-pane fade" id="gift_2" role="tabpanel"></div>
           <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
-          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
+          <ejs-tab>
+            <e-tabitems>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div>Tạo mới</div>
+                </ng-template>
+                <ng-template #content>
+                  <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true"  [data]="dataAddNew" groupBy="fieldGroup">
+                </codx-listview>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div>Đã hoàn thành</div>
+                </ng-template>
+                <ng-template #content>
+                  <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [data]="dataCompleted" groupBy="fieldGroup">
+                </codx-listview>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div>Hoãn lại</div>
+                </ng-template>
+                <ng-template #content>
+                  <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
+                  service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
+                  [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
+                  entityName="TM_Tasks" [data]="dataPostpone" groupBy="fieldGroup">
+                </codx-listview>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div>Hủy</div>
+                </ng-template>
+                <ng-template #content>
+                  <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
+                  service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
+                  [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
+                  entityName="TM_Tasks" [data]="dataRefuse" groupBy="fieldGroup">
+                </codx-listview>
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
+          <!-- <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
             [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
             entityName="TM_Tasks" [data]="data" groupBy="fieldGroup">
-          </codx-listview>
+          </codx-listview> -->
         </div>
       </div>
     </div>
@@ -130,7 +176,7 @@
 
           <div *ngIf="itemSelected?.category == '1' || itemSelected?.category == '2'">
             <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="itemSelected?.owner"
-              objectName="AD_Users" [numberImages]="4" >
+              objectName="AD_Users" [numberImages]="4">
             </codx-imgs>
           </div>
         </div>
@@ -139,12 +185,12 @@
           {{ itemSelected?.taskName }}
         </div>
         <div class="text-gray-600">
-          {{ itemSelected?.memo }} 
-          <div id =showMemo ></div>
+          {{ itemSelected?.memo }}
+          <div id=showMemo></div>
         </div>
         <div class="task-detail mt-5" *ngIf="itemSelected?.listTaskGoals?.length > 0">
           <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
-          <div class="checkbox-list mt-6 ms-6" >
+          <div class="checkbox-list mt-6 ms-6">
             <label class="checkbox checkbox-square" *ngFor="let item of itemSelected?.listTaskGoals">
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span></span>{{ item.memo }}
@@ -546,9 +592,9 @@
 <div class="offcanvas-overlay"></div>
 <ng-template #templateItem let-item>
   <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
-  item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (dblclick)="showControl(p,item)" [ngbPopover]="popContent"
-  popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body" autoClose="outside"
-  triggers="manual">
+  item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (dblclick)="showControl(p,item)"
+    [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body"
+    autoClose="outside" triggers="manual">
     <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
     </more-funtion> -->
     <div class="symbol symbol-40 symbol-circle mr-3">
@@ -598,13 +644,13 @@
 </ng-template>
 
 
-<ng-template #templatetree let-data >
+<ng-template #templatetree let-data>
   <div class="list-group p-0 mt-5">
     <div class="d-flex align-items-center justify-content-between list-title">
       <div class="d-flex flex-wrap align-items-top" (click)="openShowNode()">
-        <div *ngIf="data.items.length >0" >
+        <div *ngIf="data.items.length >0">
           <span class="icon-18 icon-remove me-2 align-items-start" *ngIf="openNode"></span>
-          <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="!openNode" ></span>
+          <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="!openNode"></span>
         </div>
         <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="data?.owner" objectType="AD_Users">
         </codx-img>
@@ -707,7 +753,7 @@
         </div>
       </a>
       <a class="dropdown-item">
-        <div class="d-flex align-items-center" (click)="ChangeStatusTask('2',taskAction)"style="cursor: pointer">
+        <div class="d-flex align-items-center" (click)="ChangeStatusTask('2',taskAction)" style="cursor: pointer">
           <span class="icon-content_copy icon-18"></span>
           <span class="ml-3">Đang thực hiện</span>
         </div>
