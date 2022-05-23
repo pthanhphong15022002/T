@@ -1,20 +1,13 @@
 <div class="page-home page-master">
   <div class="d-flex flex-row">
-    <div id="erm_tree" class="min-w-375px w-375px">
-      <div class="tab-horizone">
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="gift_1" role="tabpanel"></div>
-          <div class="tab-pane fade" id="gift_2" role="tabpanel"></div>
-          <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
-          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
-            service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
-            entityName="TM_Tasks" [data]="data" groupBy="fieldGroup">
-          </codx-listview>
-        </div>
-      </div>
+    <div id="codx_master" class="min-w-375px w-375px">
+      <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0" service="TM"
+        assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [predicate]=""
+        [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false" entityName="TM_Tasks" [data]="data"
+        groupBy="fieldGroup">
+      </codx-listview>
     </div>
-    <div class="w-100 d-flex flex-column" id="erm_content">
+    <div class="w-100 d-flex flex-column" id="codx_detail">
       <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
       <div class="container" *ngIf="itemSelected?.taskID">
         <div class="task-info mt-2">

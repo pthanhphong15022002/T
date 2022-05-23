@@ -5,6 +5,10 @@
   .flex-root {
     height: 100%;
   }
+
+  .flex-root {
+    border: 2px aqua solid;
+  }
 }
 
 .page-loaded {
@@ -12,4 +16,12 @@
     opacity: 1;
     transition: opacity 1s ease-in-out;
   }
+}
+
+app-dashboard {
+  background-color: white;
+}
+
+body {
+  background-color: white !important;
 }
