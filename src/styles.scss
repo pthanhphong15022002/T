@@ -851,6 +851,7 @@ codx-img img {
 /**** custom layout ****/
 :root {
     --bs-body-line-height: 1.4;
+    --kt-toolbar-height: 45px;
 }
 
 body {
@@ -870,11 +871,18 @@ codx-wrapper {
     height: calc(100vh - 65px) !important;
 }
 
+
 codx-header+codx-wrapper {
     height: calc(100vh - 120px) !important;
 }
 
-.container {
+.container,
+.container-xxl,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
     padding: 0 20px;
 }
 
@@ -889,6 +897,50 @@ codx-header+codx-wrapper {
     border-radius: 6px !important;
     margin-left: 15px;
     padding: 20px !important;
+}
+
+@media (min-width: 992px) {
+    .header-fixed .header {
+        height: 52px;
+        box-shadow: none;
+    }
+
+    .header codx-img img {
+        width: 31px !important;
+        height: 31px !important;
+        border: 1px #eee solid;
+    }
+
+    .header-fixed.toolbar-fixed .toolbar {
+        top: 52px;
+    }
+
+    .header-fixed.toolbar-fixed .wrapper {
+        padding-top: calc(52px + 45px);
+    }
+
+    .header .w-30px.h-30px {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    codx-toolbar .w-30px.h-30px {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    codx-toolbar .dropdown-toggle:before {
+        border-color: #ffffff57 !important;
+    }
+
+    .toolbar-fixed .toolbar {
+        height: 45px;
+    }
+
+    .aside .aside-logo {
+        height: 52px;
+        padding-right: 5px;
+    }
 }
 
 /**** custom bootstrap all codx ***/
@@ -945,8 +997,9 @@ codx-header+codx-wrapper {
 }
 
 .dropdown-item {
-    padding: 0.35rem 1rem;
+    padding: 0.45rem 1rem;
 }
+
 
 /********* custom core codx / custom control all codx  *****/
 .symbol-group>div {
