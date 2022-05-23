@@ -12,9 +12,14 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { ControlsModule } from '../controls/controls.module';
+
+import { HomeComponent } from './home/home.component';
 import { MwpComponent } from './mwp.component';
+
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
 import { LayoutComponent } from './_layout/layout.component';
+
 
 const routes: Routes = [
   {
@@ -26,8 +31,8 @@ const routes: Routes = [
         component: MwpComponent,
       },
       {
-        path: 'view-list-details',
-        component: ViewListDetailsComponent,
+        path: 'home',
+        component: HomeComponent,
       },
       {
         path: '**',
@@ -37,7 +42,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [MwpComponent, ViewListDetailsComponent],
+  declarations: [MwpComponent,HomeComponent, ViewListDetailsComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -49,6 +54,7 @@ const routes: Routes = [
     ProgressBarModule,
     DatePickerModule,
     TabModule,
+    ControlsModule
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

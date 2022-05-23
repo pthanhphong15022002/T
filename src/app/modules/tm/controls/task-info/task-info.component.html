@@ -68,10 +68,14 @@
 
                   <div class="form-group mt-3">
                     <label>Nhóm triển khai</label>
-                    <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox"
+                    <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
+                    placeholder="Nhóm công việc" ngDefaultControl refValue="TaskGroups" loadFull="true"
+                    field="taskGroupID" (valueChange)="cbxChangeTaskGroup($event)" [crrValue]="task.taskGroupID">
+                      </codx-input>
+                    <!-- <codx-combobox service="TM" type="combobox" [disabled]="readOnly" name="combobox"
                       placeholder="Nhóm công việc" ngDefaultControl refValue="TaskGroups" loadFull="true"
                       field="taskGroupID" (valueChange)="cbxChangeTaskGroup($event)" [value]="task.taskGroupID">
-                    </codx-combobox>
+                    </codx-combobox> -->
                   </div>
                   <div class="form-group row mt-3">
                     <div class="col-6">
@@ -213,10 +217,10 @@
                       <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span>
                     </div>
                     <!-- <textarea [readonly]="readOnly" [(ngModel)]="task.memo" class="form-control" rows="2"></textarea> -->
-                    <codx-input type="textarea" field="memo" [crrValue]="task.memo" [readonly]="readOnly"  class="form-control" (valueChange)="changeMemo($event)"
+                    <codx-input type="textarea" field="memo" [crrValue]="task.memo" [disabled]="readOnly"  class="form-control" (valueChange)="changeMemo($event)"
                       ></codx-input>
                     <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..."
-                      type="text" [readonly]="readOnly" class="col-md-8" style="
+                      type="text" [readOnly]="readOnly" class="col-md-8" style="
                     border-width: thin;
                     border-style: none;
                     margin-top: 3px;
@@ -333,7 +337,7 @@
                                     style="margin-left: -8px;
                                 height: 14px;
                                 width: 14px;
-                                margin-top: 5px" class="col-md-4">>
+                                margin-top: 5px" class="col-md-4">
                                 </div>
                                 <div class="">
                                   <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
@@ -394,23 +398,27 @@
                 <ng-template #content>
                   <div class="form-group mt-3" *ngIf="param?.ProjectControl != '0'">
                     <label>Dự án</label>
-                    <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
+                    <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
                       ngDefaultControl refValue="Projects" loadFull="true" field="projectID"
-                      (valueChange)="cbxChange($event)" [disabled]="readOnly" [value]="task.projectID">
-                    </codx-combobox>
+                      (valueChange)="cbxChange($event)" [disabled]="readOnly" [crrValue]="task.projectID">
+                    </codx-input>
+                  </div>
+                  <div class="form-group mt-3" *ngIf="param?.Location != '0'">
+                    <label>Địa điểm</label>
+                    <input type="text" class="form-control" [readonly]="readOnly" [(ngModel)]="task.location" />
                   </div>
                   <div class="form-group mt-3" *ngIf="param?.ReferenceControl != '0'">
                     <label>Tham chiếu</label>
-                    <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
+                    <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
                       style="border: none" placeholder="Tham chiếu" ngDefaultControl refValue="" [disabled]="readOnly"
-                      loadFull="true" field="refNo" (valueChange)="cbxChange($event)"></codx-combobox>
+                      loadFull="true" field="refNo" (valueChange)="cbxChange($event)"></codx-input>
                   </div>
                   <div class="form-group mt-3" *ngIf="param?.ActivityControl != '0' || param?.ActivityControl == null ">
                     <label>Bước qui trình</label>
-                    <codx-combobox service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
+                    <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0"
                       placeholder="Bước qui trình" ngDefaultControl refValue="" loadFull="true" field="activityID"
                       [disabled]="readOnly" (valueChange)="cbxChange($event)">
-                    </codx-combobox>
+                    </codx-input>
                   </div>
                 </ng-template>
               </e-tabitem>

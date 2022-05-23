@@ -1,34 +1,27 @@
 <div class="page-home page-master">
   <div class="d-flex flex-row">
-    <div id="erm_tree" class="min-w-375px w-375px">
-      <div class="tab-horizone">
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="gift_1" role="tabpanel"></div>
-          <div class="tab-pane fade" id="gift_2" role="tabpanel"></div>
-          <div class="tab-pane fade" id="gift_3" role="tabpanel"></div>
-          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
-            service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
-            entityName="TM_Tasks" [data]="data" groupBy="fieldGroup">
-          </codx-listview>
-        </div>
-      </div>
+    <div id="codx_master" class="min-w-325px w-325px">
+      <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0" service="TM"
+        assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [predicate]=""
+        [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false" entityName="TM_Tasks" [data]="data"
+        groupBy="fieldGroup">
+      </codx-listview>
     </div>
-    <div class="w-100 d-flex flex-column" id="erm_content">
+    <div class="w-100 d-flex flex-column" id="codx_detail">
       <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
-      <div class="container" *ngIf="itemSelected?.taskID">
-        <div class="task-info mt-2">
-          <div class="d-flex flex-grow-1 mb-2">
-            <div class="symbol symbol-40px symbol-circle me-4">
+      <div class="container_detail" *ngIf="itemSelected?.taskID">
+        <div class="task-info">
+          <div class="d-flex flex-grow-1 mb-3">
+            <div class="symbol symbol-60px symbol-circle me-4">
               <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users">
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex justify-content-between">
                 <div class="d-flex flex-column">
-                  <div class="text-dark fw-bold fs-7">{{ itemSelected?.userNameCreate }}
+                  <div class="text-dark fw-bold fs-6">{{ itemSelected?.userNameCreate }}
                   </div>
-                  <div class="text-gray-600 fw-bold me-4">{{ itemSelected?.positionNameCreate }}
+                  <div class="text-gray-600 me-4 mb-1">{{ itemSelected?.positionNameCreate }}
                   </div>
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-4">
@@ -70,8 +63,8 @@
                 date:
                 'dd/MM/yyyy'}}</span>
             </div>
-            <div class="d-flex align-items-center text-gray-700 me-6">
-              <span class="fw-bold me-1">Ưu tiên:</span>
+            <div class="d-flex align-items-center me-6">
+              <span class="fw-bold text-darkme-1">Ưu tiên:</span>
               <span class="icon-14 me-2">
                 <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
                   [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"></span>
@@ -81,7 +74,7 @@
             </div>
             <div class="d-flex">
               <span class="fw-bold me-1">Nhóm công việc:</span>
-              <span class="text-gray-400">{{ itemSelected?.taskGroupName }}</span>
+              <span class="text-gray-700">{{ itemSelected?.taskGroupName }}</span>
             </div>
           </div>
           <div class="d-flex mt-1">
@@ -91,8 +84,8 @@
                 |
                 date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div class="d-flex align-items-center text-gray-700 me-6">
-              <span class="fw-bold me-1">Ngày kết thúc:</span>
+            <div class="d-flex align-items-center me-6">
+              <span class="fw-bold text-dark me-1">Ngày kết thúc:</span>
               <span [ngClass]="itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.endDate |
                 date:
                 'dd/MM/yyyy' }}</span>
@@ -123,7 +116,7 @@
         <div class="text-primary fw-bold mt-3 mb-2 me-5">Người thực hiện</div>
         <div class="d-flex align-items-center">
           <div *ngIf="itemSelected?.category == '3' || itemSelected?.category == '4'">
-            <codx-imgs class="symbol symbol-30px symbol-circle ms-1 symbol-icon symbol-icon-check-bottom"
+            <codx-imgs class="symbol symbol-30px symbol-circle me-1 symbol-icon symbol-icon-check-bottom"
               [objectId]="objectAssign" objectName="AD_Users" [numberImages]="4">
             </codx-imgs>
           </div>
@@ -145,7 +138,7 @@
         <div class="task-detail mt-5" *ngIf="itemSelected?.listTaskGoals?.length > 0">
           <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
           <div class="checkbox-list mt-6 ms-6">
-            <label class="checkbox checkbox-square" *ngFor="let item of itemSelected?.listTaskGoals">
+            <label class="checkbox checkbox-square me-3" *ngFor="let item of itemSelected?.listTaskGoals">
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span></span>{{ item.memo }}
             </label>
@@ -545,45 +538,41 @@
 </div>
 <div class="offcanvas-overlay"></div>
 <ng-template #templateItem let-item>
-  <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
+  <div class="d-flex px-2 p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
   item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (dblclick)="showControl(p,item)"
     [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body"
     autoClose="outside" triggers="manual">
     <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
     </more-funtion> -->
-    <div class="symbol symbol-40 symbol-circle mr-3">
-      <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="item?.createdBy" objectType="AD_Users"
-        width="40">
-      </codx-img>
-    </div>
+    <codx-img class="symbol symbol-35px symbol-circle me-3" [objectId]="item?.createdBy" objectType="AD_Users">
+    </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center justify-content-between">
-        <div class="text-dark text-hover-primary font-weight-bold">
+        <div class="text-dark fw-bold">
           {{ item.userNameCreate }}
         </div>
-        <span class="icon-15 mr-2">
+        <span class="icon-15 me-2">
           <span [class]="item?.priority | vll: 'L0186':'icon' | async"
             [style.color]="item?.priority | vll: 'L0186':'color' | async"></span>
         </span>
       </div>
-      <span class="text-muted">{{ item.positionNameCreate }}</span>
+      <span class="text-gray-400">{{ item.positionNameCreate }}</span>
       <div class="task-name mb-1 max-h-36px">{{ item?.taskName }}</div>
       <div class="d-flex align-items-center justify-content-between">
         <div class="task-status d-flex">
-          <div class="label label-xxs label-pill label-inline label-light-danger mr-2 label-status"
-            [style.border-color]="
+          <div class="badge badge-danger me-2" [style.border-color]="
           (item?.status | vll: 'L0614':'color' | async) + '30'
         " [style.background-color]="
           (item?.status | vll: 'L0614':'color' | async) + '30'
         " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
             {{ item?.status | vll: "L0614":"text" | async }}
           </div>
-          <span class="text-dark-50 font-size-md">
+          <span class="text-gray-600 fs-7">
             {{ item?.createdOn | fmDT: "dmy" }}</span>
         </div>
         <div class="symbol-group symbol-hover justify-content-end"
           *ngIf="item?.category == '3' || item?.category == '4'">
-          <codx-imgs class="symbol symbol-30 symbol-circle ml-1" [objectId]="item?.assignTo" objectName="AD_Users"
+          <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.assignTo" objectName="AD_Users"
             [numberImages]="2">
           </codx-imgs>
         </div>
@@ -611,10 +600,10 @@
         <!--end::Symbol-->
         <!--begin::Title-->
         <div class="d-flex flex-column align-items-center me-2 w-50">
-          <div class="text-dark fw-bold fs-7">
+          <div class="text-dark fw-bold fs-6">
             {{data?.userName}}
           </div>
-          <div class="text-gray-600">{{data.positionName}}</div>
+          <div class="text-gray-600 mb-1">{{data.positionName}}</div>
           <div class="text-dark" *ngIf="data?.category == '1' || data?.category == '3'">{{data.taskName}}
           </div>
           <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
@@ -665,25 +654,25 @@
 <ng-template #popContent>
   <a class="action-item" (click)="editTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-      <span class="icon-edit icon-18 ml-2 mr-2"></span>
+      <span class="icon-edit icon-18 ms-2 me-2"></span>
       <span class="tooltiptext">Edit</span>
     </div>
   </a>
   <a class="action-item" (click)="copyDetailTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-      <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+      <span class="icon-content_copy icon-16 text-warning ms-2 me-2"></span>
       <span class="tooltiptext">Copy</span>
     </div>
   </a>
   <a class="action-item" (click)="clickDelete(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-      <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
       <span class="tooltiptext">Delete</span>
     </div>
   </a>
   <a class="action-item" (click)="viewItem(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-      <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
+      <span class="icon-visibility icon-20 text-primary ms-2 me-2"></span>
       <span class="tooltiptext">Xem</span>
     </div>
   </a>
@@ -691,7 +680,7 @@
     popoverClass="empPopoverClass" #p2="ngbPopover" placement="right left" container="body" autoClose="outside"
     triggers="manual" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
-      <span class="icon-add_box icon-20 text-dark ml-2 mr-2"></span>
+      <span class="icon-add_box icon-20 text-dark ms-2 me-2"></span>
       <span class="tooltiptext">Setup trạng thái </span>
     </div>
   </a>
@@ -703,25 +692,25 @@
       <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-edit icon-18"></span>
-          <span class="ml-3">Hoàn tất</span>
+          <span class="ms-3">Hoàn tất</span>
         </div>
       </a>
       <a class="dropdown-item">
         <div class="d-flex align-items-center" (click)="ChangeStatusTask('2',taskAction)" style="cursor: pointer">
           <span class="icon-content_copy icon-18"></span>
-          <span class="ml-3">Đang thực hiện</span>
+          <span class="ms-3">Đang thực hiện</span>
         </div>
       </a>
       <a class="dropdown-item" (click)="ChangeStatusTask('5',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-delete icon-18"></span>
-          <span class="ml-3">Hoãn lại</span>
+          <span class="ms-3">Hoãn lại</span>
         </div>
       </a>
       <a class="dropdown-item" (click)="ChangeStatusTask('8',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
           <span class="icon-delete icon-18"></span>
-          <span class="ml-3">Hủy</span>
+          <span class="ms-3">Hủy</span>
         </div>
       </a>
     </div>
@@ -730,38 +719,38 @@
         <a *ngFor="let f of menuAppend" class="dropdown-item" (click)="Click(f.id,f.funcID)">
             <div class="d-flex align-items-center">
                 <span class="{{f.icon}} icon-18"></span>
-                <span class="ml-3">{{f.text}}</span>
+                <span class="ms-3">{{f.text}}</span>
             </div>
         </a> -->
     <!-- <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-attachment icon-18"></span>
-                <span class="ml-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
+                <span class="ms-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
             </div>
         </a>
         <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-archive icon-18"></span>
-                <span class="ml-3">{{'Export File' | lang : 'Common' : 'ExportFile'|async}}</span>
+                <span class="ms-3">{{'Export File' | lang : 'Common' : 'ExportFile'|async}}</span>
             </div>
         </a>
         <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-email icon-18"></span>
-                <span class="ml-3">{{'Gửi mail' | lang : 'Common' : 'SendMail'|async}}</span>
+                <span class="ms-3">{{'Gửi mail' | lang : 'Common' : 'SendMail'|async}}</span>
             </div>
         </a>
         <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-share icon-18"></span>
-                <span class="ml-3">{{'Chia sẽ' | lang : 'Common' : 'Share'|async}}</span>
+                <span class="ms-3">{{'Chia sẽ' | lang : 'Common' : 'Share'|async}}</span>
             </div>
         </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item">
             <div class="d-flex align-items-center">
                 <span class="icon-extension icon-18"></span>
-                <span class="ml-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
+                <span class="ms-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
             </div>
         </a> -->
   </div>
