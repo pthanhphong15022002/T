@@ -255,7 +255,7 @@ export class KanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-        this.kanban.model.columns = res.column;
+  //      this.kanban.model.columns = res.column;
         this.cr.detectChanges();
       }
     });

@@ -1,6 +1,6 @@
 <codx-listview #listview [itemTemplate]="templateTask" funcId="" [pageSize]="100" service="TM"
   assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [gridViewName]="'grvTasks'"
-  entityName="TM_Tasks" title="group" groupBy="fieldGroup" type="listView" [selectFirst]="true">
+  entityName="TM_Tasks" title="group" groupBy="fieldGroup" type="listView" [selectFirst]="true" [data]="data">
 </codx-listview>
 <!-- <codx-listview #listview [itemTemplate]="templateTask" [selectFirst]="true" funcId="" [pageSize]="10"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
@@ -13,7 +13,7 @@
     <table class="table w-100 table-action-menu " >
       <tbody>
         <td class="w-400px">
-          <div class="task-name mb-1 max-h-300px d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="data?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (onclick)="clickItem(data)"
+          <div class="task-name mb-1 max-h-300px d-flex p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="data?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " 
           (dblclick)="showControl(p2,data)" [ngbPopover]="popMorefunc" popoverClass="empPopoverClass" #p2="ngbPopover"
           placement="right left" container="body" autoClose="outside" triggers="manual">
             {{ data?.taskName }}</div>

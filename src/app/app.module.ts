@@ -19,6 +19,8 @@ import { CoreModule } from 'src/core/core.module';
 import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './modules/tm/controls/update-status-popup/update-status-popup.component';
 import { AssignComponent } from './modules/tm/assign/assign.component';
+import { FuncTaskGroupComponent } from './modules/tm/controls/func-task-group/func-task-group.component';
+
 
 
 
@@ -69,6 +71,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     CbxpopupComponent,
     UpdateStatusPopupComponent,
+    
+   
     
     //ReportComponent,
   ],

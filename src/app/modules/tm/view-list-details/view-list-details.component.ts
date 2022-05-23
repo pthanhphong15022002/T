@@ -378,7 +378,7 @@ export class ViewListDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0] ;
                  for(var i=0; i< lstTaskDelete.length ; i++){
-                    var taskDelete = t.data.find(x=>x.taskID == lstTaskDelete[i].taskID) ;
+                    var taskDelete = t.data.find(x=>x.taskID == lstTaskDelete[i].taskID);
                     t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if(res[1]!=null){
