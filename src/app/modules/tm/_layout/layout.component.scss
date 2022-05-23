@@ -6,9 +6,11 @@
     height: 100%;
   }
 
-  .flex-root {
-    border: 2px aqua solid;
+  .e-listview,
+  .e-listview * {
+    font-size: 13px !important;
   }
+
 }
 
 .page-loaded {
@@ -18,10 +20,16 @@
   }
 }
 
-app-dashboard {
-  background-color: white;
+div.flex-root {
+  background-color: #fff;
+  font-size: 13px;
 }
 
-body {
-  background-color: white !important;
+#codx_detail {
+  border: 2px red solid;
+}
+
+codx-wrapper {
+  background-color: #F7F7F9;
+  padding: 15px;
 }
