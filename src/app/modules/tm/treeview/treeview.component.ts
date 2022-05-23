@@ -24,7 +24,7 @@ export class TreeviewComponent implements OnInit {
   countOwner = 0;
   listNode = [];
   isFinishLoad = false;
-
+  openNode = false ;
   constructor(private tmSv: TmService, private api: ApiHttpService, private dt: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -33,26 +33,28 @@ export class TreeviewComponent implements OnInit {
 
 
   loadData(){
-    let fied = this.gridView?.dateControl || 'DueDate';
-    this.model.formName = 'Tasks';
-    this.model.gridViewName = 'grvTasks';
-    this.model.entityName = 'TM_Tasks';
-    this.model.predicate = '';
-    this.model.funcID = "TM003"//this.viewBase.funcID ;
-    this.model.page = 1;
-    this.model.pageSize = 100;
-    // model.dataValue = this.user.userID;
-    // set max dinh
-    this.model.filter = {
+    let field = this.gridView?.dateControl || 'DueDate';
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.predicate = '';
+    this.fromDate = moment('3/01/2022').toDate();
+    this.toDate = moment('5/31/2022').toDate();
+    model.page = 1;
+    model.pageSize = 100;
+    model.filter = {
       logic: 'and',
       filters: [
-        { operator: 'gte', field: fied, value: this.fromDate || moment("3/01/2022").toDate() }, ///cho mac dinh cho filter
-        { operator: 'lte', field: fied, value: this.toDate || moment("5/31/2022").toDate() },
+        { operator: 'gte', field: field, value: this.fromDate },
+        { operator: 'lte', field: field, value: this.toDate },
       ],
-    }; 
+    };
+    model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
+    this.model = model ;
     const t = this;
     // this.lstItems = [];
-    t.tmSv.loadTaskByAuthen(this.model).subscribe((res) => {
+    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
@@ -77,7 +79,7 @@ export class TreeviewComponent implements OnInit {
               this.objectState = objectState;
             }
           });
-
+          this.isFinishLoad = true;
         if (this.itemSelected?.category != '1') {
           this.api
             .execSv<any>(
@@ -89,7 +91,6 @@ export class TreeviewComponent implements OnInit {
             )
             .subscribe((res) => {
               this.listNode = res;
-              this.isFinishLoad = true;
             });
         }
       } else {
@@ -101,4 +102,7 @@ export class TreeviewComponent implements OnInit {
       
   }
 
+  openShowNode(){
+    this.openNode = !this.openNode;
+  }
 }
