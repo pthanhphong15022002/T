@@ -1,15 +1,27 @@
-<codx-input
-  type="combobox"
-  placeholder="Lịch làm việc"
-  [curValue]="param?.fieldValue"
-  service="BS"
-  [refValue]="param?.referedValue"
-  [field]="'groupID'"
-  (valueChange)="changeCombobox($event)"
->
-</codx-input>
-<button (click)="openCalendarSettings()">Setting</button>
-<button (click)="addCalendar()">Thêm</button>
+<div class="mr-1 header-combo" *ngIf="param">
+  <codx-input
+    #comboboxStd
+    type="combobox"
+    placeholder="Lịch làm việc"
+    [crrValue]="param?.fieldValue"
+    service="BS"
+    [refValue]="param?.referedValue"
+    [field]="'groupID'"
+    (valueChange)="changeCombobox($event)"
+  >
+  </codx-input>
+</div>
+
+<div class="nav-item header-btn mr-1">
+  <button class="btn btn-sm btn-primary" (click)="openCalendarSettings()">
+    <span class="icon-settings icon-18"></span>
+  </button>
+</div>
+
+<button class="btn btn-primary" (click)="addCalendar()">
+  <span>Thêm</span>
+</button>
+
 <div class="row">
   <codx-schedule
     height="100%"
@@ -108,9 +120,6 @@
             | async
         }}</label>
         <div class="col-4">
-          <!-- <lvInput type="text" [value]="model.calendarName" field="calendarName"
-                        (valueChange)="valueChange($event,'calendar')" placeholder="Lịch làm việc" ngDefaultControl>
-                    </lvInput> -->
           <codx-input
             type="text"
             field="calendarName"
@@ -125,9 +134,6 @@
           "Diễn giải" | lang: "Calendar":"lblCalendarName":"grvCalendar" | async
         }}</label>
         <div class="col-8">
-          <!-- <lvInput class="" dataformat="ed3" [value]="model.description" field="description" ngDefaultControl
-                        (valueChange)="valueChange($event,'calendar')" placeholder="Diễn giải"></lvInput> -->
-
           <codx-input
             type="text"
             dataformat="ed3"
@@ -144,7 +150,7 @@
     <button
       type="button"
       class="btn btn-primary"
-      (click)="modal.close('Save click')"
+      (click)="modal.close()"
     >
       Save
     </button>
@@ -201,9 +207,8 @@
             </td>
             <td class="text-center" *ngFor="let item of stShift?.data">
               <codx-input
-                class="text-check"
+                class="test-check"
                 type="checkbox"
-                name="checkbox"
                 field="stweekday"
                 [checked]="item.checked"
                 (valueChange)="weekdayChange($event, item)"
@@ -248,7 +253,6 @@
               <codx-input
                 class="text-check"
                 type="checkbox"
-                name="checkbox"
                 field="ndweekday"
                 [checked]="item.checked"
                 (valueChange)="weekdayChange($event, item)"
@@ -295,7 +299,6 @@
                 [checked]="item.calendar == '1'"
               >
               </codx-input>
-              <p>{{ item.calendar == "1" }}</p>
             </td>
             <td class="text-center">
               <codx-input
@@ -307,7 +310,6 @@
                 [checked]="item.calendar == '2' ? true : false"
               >
               </codx-input>
-              <p>{{ item.calendar == "2" ? true : false }}</p>
             </td>
             <td class="text-center">{{ item.day }}/{{ item.month }}</td>
 
@@ -414,10 +416,7 @@
                         <span class="ml-3">Chỉnh sửa</span>
                       </div>
                     </a>
-                    <a
-                      class="dropdown-item"
-                      (click)="removeCalendateDate(item)"
-                    >
+                    <a class="dropdown-item" (click)="removeCalendarDate(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-delete icon-16"></span>
                         <span class="ml-3">Xóa</span>
@@ -455,36 +454,34 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
-        <div class="form-group col-6">
-          <label class="col-form-label">{{
-            "Tháng" | lang: "Calendar":"lblMonth":"grvCalendar" | async
-          }}</label>
-          <div>
-            <codx-input
-              type="text"
-              field="month"
-              placeholder=""
-              [value]="evtData.month"
-              (valueChange)="valueChange($event, 'dayoff')"
-            >
-            </codx-input>
-          </div>
+      <div class="form-group row">
+        <label class="col-2 col-form-label">{{
+          "Tháng" | lang: "Calendar":"lblMonth":"grvCalendar" | async
+        }}</label>
+        <div class="col-4">
+          <codx-input
+            type="text"
+            field="month"
+            placeholder=""
+            [value]="evtData.month"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
+          </codx-input>
         </div>
-        <div class="form-group col-6">
-          <label class="col-form-label">{{
-            "Ngày" | lang: "Calendar":"lblDay":"grvCalendar" | async
-          }}</label>
-          <div>
-            <codx-input
-              type="text"
-              field="day"
-              placeholder=""
-              [value]="evtData.day"
-              (valueChange)="valueChange($event, 'dayoff')"
-            >
-            </codx-input>
-          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-2 col-form-label">{{
+          "Ngày" | lang: "Calendar":"lblDay":"grvCalendar" | async
+        }}</label>
+        <div class="col-4">
+          <codx-input
+            type="text"
+            field="day"
+            placeholder=""
+            [value]="evtData.day"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
+          </codx-input>
         </div>
       </div>
       <div #group class="form-group row">
@@ -492,15 +489,13 @@
           "Màu" | lang: "Calendar":"lblColor":"grvCalendar" | async
         }}</label>
         <div class="col-4">
-          <!-- <lvInput #elm [ele]="group" datatype="colorpicker" class="form-control text-white color-large"
-                        field="color" (valueChange)="valueChange($event,'dayoff', elm)" [value]="evtData.color"
-                        dataformat="hex">
-                    </lvInput> -->
           <codx-colorpicker
+            #elm
             class="form-control text-white color-large"
             field="color"
-            [value]="evtData.color"
             dataformat="hex"
+            [value]="evtData.color"
+            (valueChange)="valueChange($event, 'dayoff', elm)"
           >
           </codx-colorpicker>
         </div>
@@ -510,8 +505,6 @@
           "Symbol" | lang: "Calendar":"lblSymbol":"grvCalendar" | async
         }}</label>
         <div class="col-2 input-symbol">
-          <!-- <lvInput datatype="vllicon" refValue="L1470" field="symbolDayOff"
-                        (valueChange)="valueChange($event,'dayoff')"></lvInput> -->
           <codx-input
             type="valuelist"
             refValue="L1470"
@@ -526,8 +519,16 @@
           "Diễn giải" | lang: "Calendar":"lblNote":"grvCalendar" | async
         }}</label>
         <div class="col-10">
-          <!-- <lvInput field="note1" class="" dataformat="ed2" [value]="evtData.note" ngDefaultControl
-                        (valueChange)="valueChange($event,'dayoff')" placeholder="Diễn giải"></lvInput> -->
+          <codx-input
+            type="textarea"
+            field="note1"
+            dataformat="ed2"
+            [crrValue]="evtData.note1"
+            ngDefaultControl
+            (valueChange)="valueChange($event, 'dayoff')"
+            placeholder="Diễn giải"
+          >
+          </codx-input>
         </div>
       </div>
       <div class="form-group row">
@@ -538,7 +539,6 @@
             class="text-dark"
             label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
             [disabled]="evtData.recID ? true : false"
-            ngDefaultControl
             field="set"
             [checked]="set"
             (valueChange)="valueChange($event, 'dayoff')"
@@ -557,57 +557,69 @@
 
 <!-- add or edit calendardate -->
 <ng-template #editCalendarDate let-modal>
-  <div class="modal-header">
-    <!-- <h4 class="modal-title" id="modal-basic-title">{{'Thêm ngày nghỉ' | lang:'Calendar':'lblTitle':'grvCalendar' |
-            async}}
-        </h4> -->
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <i
-        class="icon-close icon-20 text-dark text-hover-primary"
-        (click)="modal.dismiss('Cross click')"
-      ></i>
-    </button>
-  </div>
   <div class="modal-body">
     <form>
       <div class="form-group row">
-        <!-- <label class="col-2 col-form-label">{{'Ngày nghỉ' |
-                    lang:'Calendar':'lblCalendarDate':'grvCalendar' | async}}</label> -->
+        <label class="col-2 col-form-label">{{
+          "Ngày nghỉ" | lang: "Calendar":"lblCalendarDate":"grvCalendar" | async
+        }}</label>
         <div class="col-4">
           <!-- <lvInput class="" datatype="datetime" dataformat="d" field="calendarDate"
                         (valueChange)="changeTime($event,'calendarDate')" [value]="evtCDDate?.calendarDate"></lvInput> -->
+          <codx-input
+            type="datetime"
+            dataformat="d"
+            field="calendarDate"
+            [value]="evtCDDate?.calendarDate"
+            (valueChange)="changeTime($event, 'calendarDate')"
+          >
+          </codx-input>
         </div>
       </div>
       <div class="form-group row">
-        <!-- <label class="col-2 col-form-label">{{'Màu' |
-                    lang:'Calendar':'lblColor':'grvCalendar' | async}}</label> -->
+        <label class="col-2 col-form-label">{{
+          "Màu" | lang: "Calendar":"lblColor":"grvCalendar" | async
+        }}</label>
         <div class="col-4" #group1>
-          <!-- <lvInput #elm [ele]="group1" datatype="colorpicker" class="form-control text-white color-large"
-                        field="dayoffColor" (valueChange)="valueChange($event,'calendarDate', elm)"
-                        [value]="evtCDDate.dayoffColor" dataformat="hex">
-                    </lvInput> -->
+          <codx-colorpicker
+            class="form-control text-white color-large"
+            field="dayoffColor"
+            dataformat="hex"
+            [value]="evtCDDate.dayoffColor"
+          >
+          </codx-colorpicker>
         </div>
       </div>
       <div class="form-group row">
-        <!-- <label class="col-2 col-form-label">{{'Symbol' |
-                    lang:'Calendar':'lblSymbol':'grvCalendar' | async}}</label> -->
+        <label class="col-2 col-form-label">{{
+          "Symbol" | lang: "Calendar":"lblSymbol":"grvCalendar" | async
+        }}</label>
         <div class="col-2 input-symbol">
-          <!-- <lvInput datatype="vllicon" refValue="L1470" field="symbolCld"
-                        (valueChange)="valueChange($event,'calendarDate')" [value]="evtCDDate.symbol"></lvInput> -->
+          <codx-input
+            type="valuelist"
+            refValue="L1470"
+            field="symbolCld"
+            [value]="evtCDDate.symbol"
+            (valueChange)="valueChange($event, 'calendarDate')"
+          >
+          </codx-input>
         </div>
       </div>
       <div class="form-group row">
-        <!-- <label class="col-2 col-form-label">{{'Diễn giải' |
-                    lang:'Calendar':'lblNote':'grvCalendar' | async}}</label> -->
+        <label class="col-2 col-form-label">{{
+          "Diễn giải" | lang: "Calendar":"lblNote":"grvCalendar" | async
+        }}</label>
         <div class="col-10">
-          <!-- <lvInput field="note2" class="" dataformat="ed2" [value]="evtCDDate.note" ngDefaultControl
-                        (valueChange)="valueChange($event,'calendarDate')" placeholder="Diễn giải">
-                    </lvInput> -->
+          <codx-input
+            type="textarea"
+            field="note2"
+            dataformat="ed2"
+            ngDefaultControl
+            [crrValue]="evtCDDate.note2"
+            (valueChange)="valueChange($event, 'calendarDate')"
+            placeholder="Diễn giải"
+          >
+          </codx-input>
         </div>
       </div>
     </form>
