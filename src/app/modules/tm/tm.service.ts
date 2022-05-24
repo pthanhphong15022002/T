@@ -51,6 +51,10 @@ export class TmService {
       return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetListDetailTasksAsync', [data]);
     }
 
+    loadTaskGroupByAuthen(data){
+      return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetListTaskGroupsAsync', [data]);
+    }
+
     loadColumnsKanban(data){
       return this.execTM(APICONSTANT.BUSINESS.TM.Task,'GetColumnsKanbanAsync', data)
     }

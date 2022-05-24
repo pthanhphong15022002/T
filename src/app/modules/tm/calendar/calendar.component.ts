@@ -52,6 +52,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @Input() calendarID: string;
   @Input('listview') listview: CodxListviewComponent;
 
+  @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
+  @ViewChild('schedule') schedule: CodxScheduleComponent;
+  @ViewChild('add') add: TemplateRef<any>;
+  @ViewChild('editCalendar') editCalendar: TemplateRef<any>;
+  @ViewChild('editEvent') editEvent: TemplateRef<any>;
+  @ViewChild('editCalendarDate') editCalendarDate: TemplateRef<any>;
+  @ViewChild('calendar') calendar: TemplateRef<any>;
+  @ViewChild('comboboxStd') comboboxStd: any;
+
+  stShift = new CalendarWeekModel();
+  ndShift = new CalendarWeekModel();
+  modelCalendar = new CalendarModel();
+  model = new DataRequest();
+
   moment = moment().locale('en');
   today: Date = new Date();
   startDate: Date = undefined;
@@ -69,20 +83,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   dayWeeks = [];
   taskAction: any;
   objectAssign: any;
-  @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
-  @ViewChild('schedule') schedule: CodxScheduleComponent;
-  @ViewChild('add') add: TemplateRef<any>;
-  @ViewChild('editCalendar') editCalendar: TemplateRef<any>;
-  @ViewChild('editEvent') editEvent: TemplateRef<any>;
-  @ViewChild('editCalendarDate') editCalendarDate: TemplateRef<any>;
-  @ViewChild('calendar') calendar: TemplateRef<any>;
-  model = new DataRequest();
   dayoff = [];
   resourceDataSource: any;
   calendateDate: any;
   dayOff: any;
-  stShift = new CalendarWeekModel();
-  ndShift = new CalendarWeekModel();
+
   vlls: any;
   set = false;
   evtData: any;
@@ -92,7 +97,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     DayOffs: 'dayoff',
     CalendarDate: 'calendarDate',
   };
-  editTilte: string = 'Lịch làm việc chuẩn';
   param: any;
 
   fields = {
@@ -178,10 +182,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // close(e, t: ){
-
-  // }
-
   getParams() {
     this.api
       .execSv<any>(
@@ -193,8 +193,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          this.param = res;
           this.calendarID = res.fieldValue;
           this.getDayOff(this.calendarID);
+          this.df.detectChanges();
         }
       });
   }
@@ -211,7 +213,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           res.forEach((ele) => {
             this.dayoff = res;
           });
@@ -220,7 +221,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   addNew(evt: any) {
-    console.log(evt);
     this.taskInfo.openTask();
   }
 
@@ -251,7 +251,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
     // lấy ra ngày bắt đầu và ngày kết thúc trong evt
     this.startDate = evt?.fromDate;
     this.endDate = evt?.toDate;
@@ -267,46 +266,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.schedule.reloadDataSource();
     this.schedule.reloadResource();
   }
-  close(e: any, t: CalendarComponent) {
-    if (e?.event?.status == 'Y') {
-      var isCanDelete = true;
-      t.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          t.taskAction.taskID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((element) => {
-              if (element.status != '1') {
-                isCanDelete = false;
-                return;
-              }
-            });
-            if (!isCanDelete) {
-              // this.notiService.notifyCode("TM001")
-              t.notiService.notify(
-                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-              );
-            } else {
-              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
-                if (res) {
-                  // this.notiService.notifyCode("TM004")
-                  this.listview.removeHandler(this.taskAction, 'recID');
-                  this.notiService.notify('Xóa task thành công !');
-                  return;
-                }
-                t.notiService.notify(
-                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
-                );
-              });
-            }
-          }
-        });
-    }
+  close(e: any, t) {
+    //alert('PopUp close');
   }
 
   onCellDblClickScheduler(data) {
@@ -321,9 +282,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     );
   }
 
-  testEvent(evt: any) {
-    console.log(evt);
-  }
+  testEvent(evt: any) {}
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
@@ -375,9 +334,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.callfc
       .openForm(this.add, 'Tạo lịch làm việc', 800, 500)
       .subscribe((res: Dialog) => {
-        var that = this;
+        var _this = this;
         res.close = function (e) {
-          return that.close(e, that);
+          return _this.close(e, _this);
         };
       });
   }
@@ -385,7 +344,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   //Modal setting
   openCalendarSettings() {
     this.callfc
-      .openForm(this.editCalendar, this.editTilte, 1200, 1000)
+      .openForm(this.editCalendar, 'Lịch làm việc chuẩn', 1200, 1000)
       .subscribe((res: Dialog) => {
         let _this = this;
         this.api
@@ -411,33 +370,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   //Modal event dayoff
   openDayOffs(data = null) {
-    // const t = this;
-    // t.evtData = new DaysOffModel();
-    // if (data)
-    //   t.evtData = { ...data };
-    // t.evtData.dayoffCode = this.calendarID;
-    // t.evtData.day = data?.day || 1;
-    // t.evtData.month = data?.month || 1;
-    // t.evtData.color = data?.color || '#0078ff'
-    // t.dayOffModal = t.modalService.open(this.editEvent, { ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
-    // t.dayOffModal.result.then((result) => {
-    //   t.evtData = new DaysOffModel();
-    //   t.calendar.getDayOff();
-    // }, (reason) => {
-    //   t.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    // });
-
     this.callfc
       .openForm(this.editEvent, 'Thêm Lễ/Tết/Sự kiện', 800, 800)
       .subscribe((res: Dialog) => {
         let _this = this;
+        _this.evtData = new DaysOffModel();
         if (data) _this.evtData = { ...data };
         _this.evtData.dayoffCode = this.calendarID;
         _this.evtData.day = data?.day || 1;
         _this.evtData.month = data?.month || 1;
         _this.evtData.color = data?.color || '#0078ff';
         _this.evtData = new DaysOffModel();
-        //_this.calendar.getDayOff();
+        _this.getDayOff();
         res.close = function (e) {
           return _this.close(e, _this);
         };
@@ -446,46 +390,40 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   //Modal calendarDate
   openCalendarDate(data = null) {
-    // const t = this;
-    // t.evtCDDate = new CalendarDateModel();
-    // if (data)
-    //   t.evtCDDate = data;
-    // t.evtCDDate.calendarID = this.calendarID;
-    // t.evtCDDate.calendarDate = data?.calendarDate ? new Date(data.calendarDate) : new Date();
-    // t.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
-    // t.calendarModal = t.modalService.open(this.editCalendarDate, { ariaLabelledBy: 'modal-basic-title', backdrop: 'static' });
-    // t.calendarModal.result.then((result) => {
-    //   t.evtCDDate = new CalendarDateModel();
-    //   t.calendar.getDayOff();
-    // }, (reason) => {
-    //   t.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    // });
+    this.callfc
+      .openForm(this.editCalendarDate, 'Thêm ngày nghỉ', 800, 800)
+      .subscribe((res: Dialog) => {
+        let _this = this;
+        _this.evtCDDate = new CalendarDateModel();
+        if (data) _this.evtCDDate = data;
+        _this.evtCDDate.calendarID = this.calendarID;
+        _this.evtCDDate.calendarDate = data?.calendarDate
+          ? new Date(data.calendarDate)
+          : new Date();
+        _this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
+        res.close = function (e) {
+          return _this.close(e, _this);
+        };
+      });
   }
   // modal
 
   //Method
-  saveAs() {
-    // this.api.execSv<any>('BS', 'BS', 'CalendarsBusiness', 'SaveCalendarAsync', this.model).subscribe(res => {
-    //   this.comboboxStd.data = [];
-    //   this.comboboxStd.loadData();
-    // })
-  }
 
   savaDayOff() {
-    // const t = this;
-    // t.evtData.Day
-    // let data = t.evtData;
+    const _this = this;
+    _this.evtData.Day;
+    let data = _this.evtData;
     // this.api.execSv<any>(APICONSTANT.SERVICES.BS, APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.DaysOff, 'SaveDayOffAsync', [this.evtData, this.set]).subscribe(res => {
     //   if (res) {
     //     if (res.isAdd)
-    //       t.dayOff.push(res.data);
+    //     _this.dayOff.push(res.data);
     //     else {
-    //       t.dayOff.filter(function (o, i) {
+    //       _this.dayOff.filter(function (o, i) {
     //         if (o.recID == data.recID)
-    //           t.dayOff[i] = data;
+    //         _this.dayOff[i] = data;
     //       })
     //     }
-    //     t.dayOffModal.close();
     //   }
     // })
   }
@@ -521,7 +459,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  removeCalendateDate(item) {
+  removeCalendarDate(item) {
     // const t = this;
     // this.mainSv.confirmDialog('E0327').then(res => {
     //   if (res) {
@@ -551,7 +489,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       let stCheck = _.some(dayOff.stShift.data, { weekday: y });
       let ndCheck = _.some(dayOff.ndShift.data, { weekday: y });
       t.stShift.data.push({
-        Weekday: y,
+        weekday: y,
         checked: stCheck,
         shiftType: 1,
       });
@@ -565,68 +503,62 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   weekdayChange(e, item) {
-    // var model = new CalendarWeekModel();
-    // model.wKTemplateID = this.calendarID;
-    // model.shiftType = item.shiftType;
-    // model.weekday = item.weekday;
-    // var check = e.data;
-    // this.api.execSv<any>(APICONSTANT.SERVICES.BS, APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, "SaveWeekdaysAsync", [model, check]).subscribe(res => {
-    // })
+    let model = new CalendarWeekModel();
+    model.wKTemplateID = this.calendarID;
+    model.shiftType = item.shiftType;
+    model.weekday = item.weekday;
+    let check = e.data.checked;
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+        'SaveWeekdaysAsync',
+        [model, check]
+      )
+      .subscribe();
   }
 
   valueChange(e, entity, element = null) {
-    // //Param for Calendars
-    // if (e.field == 'description' && entity == this.entity.Calendars)
-    //   this.model.description = e.data;
-    // if (e.field == 'calendarName' && entity == this.entity.Calendars)
-    //   this.model.calendarName = e.data;
-    // if (e.field == 'symbolCld')
-    //   this.evtCDDate.symbol = e.data.value;
-    // if (e.field == 'symbolDayOff')
-    //   this.evtData.symbol = e.data.value;
-    // //Param for DayOffs
-    // if (e.field == "day")
-    //   this.evtData.day = e.data;
-    // if (e.field == "month")
-    //   this.evtData.month = e.data;
-    // if (e.field == 'calendar' && entity == this.entity.DayOffs)
-    //   this.evtData.calendar = e.data.value;
-    // if (e.field == 'set' && entity == this.entity.DayOffs)
-    //   this.set = e.data;
-    // //Param for CalendarDate & DayOff
-    // if (e.field == 'note1')
-    //   this.evtData.note = e.data;
-    // if (e.field == 'note2')
-    //   this.evtCDDate.note = e.data;
-    // if (e.field === "color" || e.field === "dayoffColor") {
-    //   if (entity == this.entity.DayOffs)
-    //     this.evtData.color = e.data;
-    //   if (entity == this.entity.CalendarDate)
-    //     this.evtCDDate.dayoffColor = e.data;
-    //   var $elm = $('.symbol-label[data-color]', $('.patternt'));
-    //   $elm.removeClass('color-check');
-    //   $('kendo-colorpicker.symbol-label', $(element)).addClass('color-check');
-    //   this.df.detectChanges();
-    // } else {
-    //   if (element) {
-    //     var $parent = $(element.ele);
-    //     if ($parent && $parent.length > 0) {
-    //       var text = $('.k-selected-color', $parent);
-    //       text.text(e.data);
-    //       text.css("background-color", e);
-    //       if (e.field == "headerColor")
-    //         $('.header-pattent').css('color', e);
-    //       else if (e.field == "textColor")
-    //         $('.content-pattent').css('color', e);
-    //     }
-    //   }
-    // }
+    //Param for Calendars
+    if (e.field == 'description' && entity == this.entity.Calendars)
+      this.modelCalendar.description = e.data;
+    if (e.field == 'calendarName' && entity == this.entity.Calendars)
+      this.modelCalendar.calendarName = e.data;
+    if (e.field == 'symbolCld') this.evtCDDate.symbol = e.data;
+    if (e.field == 'symbolDayOff') this.evtData.symbol = e.data;
+    //Param for DayOffs
+    if (e.field == 'day') this.evtData.day = e.data;
+    if (e.field == 'month') this.evtData.month = e.data;
+    if (e.field == 'calendar' && entity == this.entity.DayOffs)
+      this.evtData.calendar = e.data;
+    if (e.field == 'set' && entity == this.entity.DayOffs) this.set = e.data;
+    //Param for CalendarDate & DayOff
+    if (e.field == 'note1') this.evtData.note = e.data;
+    if (e.field == 'note2') this.evtCDDate.note = e.data;
+    if (e.field === 'color' || e.field === 'dayoffColor') {
+      if (entity == this.entity.DayOffs) this.evtData.color = e.data;
+      if (entity == this.entity.CalendarDate)
+        this.evtCDDate.dayoffColor = e.data;
+      this.df.detectChanges();
+    } else {
+      if (element) {
+        var $parent = $(element.ele);
+        if ($parent && $parent.length > 0) {
+          var text = $('.k-selected-color', $parent);
+          text.text(e.data);
+          text.css('background-color', e);
+          if (e.field == 'headerColor') $('.header-pattent').css('color', e);
+          else if (e.field == 'textColor')
+            $('.content-pattent').css('color', e);
+        }
+      }
+    }
   }
 
   changeCombobox(e) {
-    this.calendarID = e.data.CalendarID;
-    this.editTilte = e.data.Description;
-    //this.calendar.getDayOff(this.calendarID);
+    this.calendarID = e[0];
+    this.getDayOff(this.calendarID);
   }
 
   changeTime(e, entity) {
