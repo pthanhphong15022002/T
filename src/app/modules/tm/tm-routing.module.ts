@@ -22,13 +22,10 @@ import { KanbanComponent } from './kanban/kanban.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-<<<<<<< HEAD
 import { TaskGroupComponent } from './task-group/task-group.component';
 import { FuncTaskGroupComponent } from './controls/func-task-group/func-task-group.component';
-=======
 import { MwpModule } from './mwp/mwp-routing.module';
 import { ControlsModule } from './controls/controls.module';
->>>>>>> bcfd73baae781842c728fad453392ae8f74d2ab3
 
 const routes: Routes = [
   {
@@ -79,11 +76,8 @@ const routes: Routes = [
     SettingComponent,
     TreeviewComponent,
     CalendarComponent,
-<<<<<<< HEAD
     TaskGroupComponent,
     FuncTaskGroupComponent,
-=======
->>>>>>> bcfd73baae781842c728fad453392ae8f74d2ab3
   ],
   imports: [
     RouterModule.forChild(routes),
