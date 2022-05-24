@@ -860,20 +860,60 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #dadce2 !important;
+    background-color: #e4e6ed !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #bcbdc4 !important;
+    background-color: #cdced4 !important;
 }
 
 codx-wrapper {
+    background-color: #F7F7F9;
     height: calc(100vh - 65px) !important;
+    padding: 10px;
+}
+
+#codx_master {
+    background-color: #fff;
+    border-radius: 6px !important;
+    padding: 4px;
+}
+
+#codx_master .codx_master_container {
+    padding: 0 3px;
+    overflow: auto;
+}
+
+#codx_detail {
+    background-color: #fff;
+    border-radius: 6px !important;
+    margin-left: 10px;
+    padding: 4px !important;
+}
+
+#codx_detail .codx_detail_container {
+    padding: 16px !important;
+    overflow: auto;
+}
+
+#codx_master .codx_master_container,
+#codx_detail .codx_detail_container {
+    height: calc(100vh - 65px) !important;
+
 }
 
 
 codx-header+codx-wrapper {
     height: calc(100vh - 120px) !important;
+}
+
+codx-header+codx-wrapper #codx_master .codx_master_container,
+codx-header+codx-wrapper #codx_detail .codx_detail_container {
+    height: calc(100vh - 130px) !important;
+}
+
+codx-wrapper ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
 }
 
 .container,
@@ -886,18 +926,7 @@ codx-header+codx-wrapper {
     padding: 0 20px;
 }
 
-#codx_master {
-    background-color: #fff;
-    border-radius: 6px !important;
-    padding: 0 7px;
-}
 
-#codx_detail {
-    background-color: #fff;
-    border-radius: 6px !important;
-    margin-left: 15px;
-    padding: 20px !important;
-}
 
 @media (min-width: 992px) {
     .header-fixed .header {
@@ -960,22 +989,24 @@ codx-header+codx-wrapper {
 
 .e-listview .e-list-group-item {
     background-color: transparent;
-    color: var(--primary-dark);
+    color: var(--primary-darker);
     padding: 0;
     border-bottom: 1px #eee solid;
-    height: 34px;
-    line-height: 34px;
+    height: 30px;
+    line-height: 30px;
     margin-bottom: 3px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    padding-left: 6px;
 }
 
 .card-with-dropdown-item {
     border-radius: 6px !important;
     margin-bottom: 2px;
-    border: 1px aqua solid;
 }
 
 .e-listview .e-list-group-item span {
-    font-size: 14px;
+    font-size: 14px !important;
 }
 
 .e-listview .e-list-group-item {

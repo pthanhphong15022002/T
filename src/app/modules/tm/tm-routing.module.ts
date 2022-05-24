@@ -99,7 +99,7 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    DatePickerModule,TabModule,ControlsModule
+    DatePickerModule, TabModule, ControlsModule
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
