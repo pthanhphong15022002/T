@@ -142,6 +142,8 @@ export class ListTasksComponent implements OnInit, AfterViewInit {
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
+        this.itemSelected = res[0][0];
+
       }})
   }
   PopoverDetail(p: any, emp) {

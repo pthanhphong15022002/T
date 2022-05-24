@@ -22,6 +22,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 import { FuncTaskGroupComponent } from '../controls/func-task-group/func-task-group.component';
+import { TaskGroupComponent } from '../task-group/task-group.component';
 
 @Component({
   selector: 'app-home',
@@ -49,11 +50,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
   @ViewChild('calendarPanel') calendarPanel: TemplateRef<any> | null;
   @ViewChild('taskGroup') taskGroup: TemplateRef<any>;
+  @ViewChild('rangesKanban') rangesKanban: TemplateRef<any>;
 
 
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
-  @ViewChild('funcTaskGroup') funcTaskGroup: FuncTaskGroupComponent;
+  @ViewChild('TaskGroup') TaskGroup: TaskGroupComponent;
 
   public showBackdrop: boolean = true;
   public type: string = 'Push';
@@ -193,6 +195,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
+    {
+      id: '9',
+      type: 'grid',
+      text: 'Ranges-kanban',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.rangesKanban,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
     ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();
@@ -207,8 +222,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.viewBase.currentView.openSidebarRight();
         break;
       case 'add1':
-        this.funcTaskGroup.openTask();
-        this.funcTaskGroup.title = 'Tạo mới nhóm làm việc';
+        this.TaskGroup.openTask();
+        this.TaskGroup.title = 'Tạo mới nhóm làm việc';
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
