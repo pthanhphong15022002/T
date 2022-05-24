@@ -34,6 +34,7 @@ export class ViewListDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() data = [];
   taskChild = [];
+  view:string;
   user: any;
   objectAssign: any;
   objectState: any;
@@ -120,50 +121,15 @@ export class ViewListDetailsComponent implements OnInit {
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    // let dataObj = { view: this.view, viewBoardID: '' };
-
-    model.dataObj = '{"view":"2"}'; //JSON.stringify(this.dataObj);
+    let dataObj = { view: this.view, viewBoardID: '' };
+    model.dataObj = JSON.stringify(dataObj);
     this.model = model ;
     const t = this;
     t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
-        if(this.itemSelected.category == "3" || this.itemSelected.category == "4"){
-          this.api
-          .execSv<any>(
-            'TM',
-            'ERM.Business.TM',
-            'TaskBusiness',
-            'GetTaskByParentIDAsync',
-            [this.itemSelected?.recID]
-          )
-          .subscribe((data) => {
-            if (data && data.length > 0) {
-              let objectId = data[0].owner;
-              let objectState = data[0].status;
-              for (let i = 1; i < data?.length; i++) {
-                objectId += ';' + data[i].owner;
-                objectState += ';' + data[i].status;
-              }
-              this.objectAssign = objectId;
-              this.objectState = objectState;
-            }
-          });}
-        this.isFinishLoad = true;
-        if (this.itemSelected?.category != '1') {
-          this.api
-            .execSv<any>(
-              'TM',
-              'ERM.Business.TM',
-              'TaskBusiness',
-              'GetListTasksTreeAsync',
-              this.itemSelected?.id
-            )
-            .subscribe((res) => {
-              this.listNode = res;
-            });
-        }
+       this.loadDetailTask(this.itemSelected)
       } else {
        this.data = [];
      }
@@ -186,42 +152,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-
-    if(this.itemSelected.category == "3" || this.itemSelected.category == "4"){
-      this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetTaskByParentIDAsync',
-        [this.itemSelected?.recID]
-      )
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          let objectId = res[0].owner;
-          let objectState = res[0].status;
-          for (let i = 1; i < res?.length; i++) {
-            objectId += ';' + res[i].owner;
-            objectState += ';' + res[i].status;
-          }
-          this.objectAssign = objectId;
-          this.objectState = objectState;
-        }
-      });
-    }
-    if (this.itemSelected?.category != '1') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTasksTreeAsync',
-          this.itemSelected?.id
-        )
-        .subscribe((res) => {
-          this.listNode = res;
-        });
-    }
+    this.loadDetailTask(this.itemSelected)
   }
 
   getByParentID(task) {
@@ -447,5 +378,47 @@ export class ViewListDetailsComponent implements OnInit {
 
   openShowNode(){
     this.openNode = !this.openNode;
+  }
+
+  loadDetailTask(task){
+    if (
+      task.category == '3' ||
+      task.category == '4'
+    ) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetTaskByParentIDAsync',
+          [task?.recID]
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            let objectId = res[0].owner;
+            let objectState = res[0].status;
+            for (let i = 1; i < res?.length; i++) {
+              objectId += ';' + res[i].owner;
+              objectState += ';' + res[i].status;
+            }
+            this.objectAssign = objectId;
+            this.objectState = objectState;
+          }
+        });
+    }
+    if (task?.category != '1') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTasksTreeAsync',
+          task?.id
+        )
+        .subscribe((res) => {
+          this.listNode = res;
+        });
+    }
+    this.isFinishLoad = true ;
   }
 }

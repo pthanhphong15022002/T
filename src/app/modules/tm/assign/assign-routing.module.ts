@@ -11,6 +11,7 @@ import { CodxCoreModule } from "codx-core";
 import { environment } from "src/environments/environment";
 import { LayoutComponent } from "../_layout/layout.component";
 import { AssignComponent } from "./assign.component";
+import { HomeComponent } from "./home/home.component";
 import { ViewListDetailsComponent } from "./view-list-details/view-list-details.component";
 
 
@@ -24,9 +25,9 @@ const routes: Routes = [
           component: AssignComponent,
         },
         {
-            path: 'view-list-details',
-            component: ViewListDetailsComponent,
-          },
+          path: 'home',
+          component: HomeComponent,
+        },
         {
           path: '**',
           redirectTo: 'error/404',
@@ -37,7 +38,7 @@ const routes: Routes = [
   @NgModule({
     declarations: [
         AssignComponent,
-        ViewListDetailsComponent
+        ViewListDetailsComponent,HomeComponent
     ],
     imports: [
       RouterModule.forChild(routes),
