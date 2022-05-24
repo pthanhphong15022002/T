@@ -1,0 +1,159 @@
+<div id="canvas_nhomcongviec" class="bg-body drawer drawer-end drawer-on ">
+    <div class="card w-100 rounded-0 border-0" kt-hidden-height="46">
+      <div class="card-header pe-5">
+        <h2 class="m-0">
+          <codx-label *ngIf="isAddMode" name="lblTitleAddTaskGroups" default="Thêm mới"></codx-label>
+          <codx-label *ngIf="!isAddMode" name="lblTitleEditTaskGroups" default="Chỉnh sửa"></codx-label>
+        </h2>
+        <a class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
+            id="kt_engage_demos_close" (click)="closeNhomcongviec()">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </a>
+      </div>
+    </div>
+    <div class="offcanvas-content" *ngIf="isAfterRender">
+      <codx-form [formGroup]="addEditForm">
+        <div class="offcanvas-wrapper">
+          <div class="d-flex">
+            <div class="flex-grow-1">
+              <div class="form-group">
+                <label>
+                  <codx-label fiedName="TaskGroupID" default="Mã nhóm công việc"></codx-label>
+                </label>
+                <input type="text" class="form-control" placeholder="" [attr.disabled]="!isAddMode ? '' : null"
+                  formControlName="taskGroupID" />
+              </div>
+              <div class="form-group mt-3">
+                <label>
+                  <codx-label fiedName="TaskGroupName" default="Nhóm công việc"></codx-label>
+                </label>
+                <input class="form-control" formControlName="taskGroupName" />
+              </div>
+              <div class="form-group mt-3">
+                <label>
+                  <codx-label fiedName="Note" default="Ghi chú"></codx-label>
+                </label>
+                <textarea class="form-control" rows="3" formControlName="note"></textarea>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+                <div class="d-flex align-items-center">
+                  <span class="text-primary font-weight-bold">Kiểm soát nhập liệu</span>
+                </div>
+              </div>
+              <div class="form-group row mt-3">
+                <div class="form-group col-8 ">
+                  <label>
+                    <codx-label fiedName="ApprovalControl" default="Xét duyệt"></codx-label>
+                  </label>
+                  <!-- <label #ApprovalControl>{{ 'Xét duyệt' | lang:
+                                  'TaskGroups':'ApprovalControl':'grvTaskGroups': ApprovalControl| async}}</label> -->
+                  <label class="text-dark-50">Kiểm soát xét duyệt khi tạo mới công việc</label>
+                </div>
+                <div class="col-4">
+                  <codx-input class="" type="select" name="select" class="cotrol-vll" placeholder="" ngDefaultControl
+                    refValue="L1433" [value]="addEditForm.value.approvalControl" field="approvalControl"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="form-group row mt-3">
+                <div class="form-group col-8">
+                  <label>
+                    <codx-label fiedName="ProjectControl" default="Chọn dự án"></codx-label>
+                  </label>
+                  <!-- <label #ProjectControl>{{ 'Chọn dự án' | lang:
+                                  'TaskGroups':'ProjectControl':'grvTaskGroups': ProjectControl| async}}</label> -->
+                  <label class="text-dark-50">Ràng buộc chọn thông tin dự án khi tạo công việc</label>
+                </div>
+                <div class="col-4">
+                  <codx-input type="select" name="select" class="cotrol-vll" placeholder="" ngDefaultControl
+                    refValue="L1462" [value]="addEditForm.value.projectControl" field="projectControl"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="form-group row mt-3">
+                <div class="form-group col-8">
+                  <codx-label fiedName="AttachmentControl" default="Đính kèm file">
+                  </codx-label>
+  
+                  <!-- <label #AttachmentControl>{{ 'Đính kèm file' | lang:
+                                  'TaskGroups':'AttachmentControl':'grvTaskGroups': AttachmentControl| async}}</label> -->
+                  <label class="text-dark-50">Kiểm soát file đính kèm khi tạo công việc</label>
+                </div>
+                <div class="col-4">
+                  <codx-input type="select" name="select" class="cotrol-vll" placeholder="" ngDefaultControl
+                    refValue="L1462" [value]="addEditForm.value.attachmentControl" field="attachmentControl"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="form-group row mt-3">
+                <div class="form-group col-8">
+                  <codx-label fiedName="CheckListControl" default="Nhập việc cần làm"></codx-label>
+                  <!-- <label #CheckListControl>{{ 'Nhập việc cần làm' | lang:
+                                  'TaskGroups':'CheckListControl':'grvTaskGroups': CheckListControl| async}}</label> -->
+                  <br />
+                  <label class="text-dark-50">Kiểm soát nhập liệu checklist</label>
+                </div>
+                <div class="col-4">
+                  <codx-input type="select" name="select" class="cotrol-vll" placeholder="" ngDefaultControl
+                    refValue="L1463" [value]="addEditForm.value.checkListControl" field="checkListControl"
+                    (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="workToDo" *ngIf="addEditForm.value.checkListControl == '2'">
+                <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+                  <div class="d-flex align-items-center">
+                    <span class="text-primary font-weight-bold">Công việc cần làm</span>
+                  </div>
+                  <div class="d-flex mt-2">
+                    <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
+                      <i class="icon-add icon-16 text-dark-75"></i>
+                      <span>Add to do list</span>
+                    </a>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="checkbox-list">
+                    <ng-container *ngFor="let item of listTodo; index as i;">
+                      <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+                        <label class="checkbox checkbox-square checkbox-sm mb-0">
+                          <input #checkShareRight1 type="checkbox" [checked]="item.status" id="checkShareRight1"
+                            (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
+  
+                          <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
+                          <span></span>{{item.text}}
+                        </label>
+                        <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="add-control mt-2" *ngIf="enableAddtodolist">
+                    <div class="input-group">
+                      <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
+                        [ngModelOptions]="{standalone: true}" required matInput class="form-control"
+                        placeholder="Add..." />
+                      <div class="input-group-append">
+                        <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
+                          <span class="icon-add icon-20"></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </codx-form>
+    </div>
+    <div class="offcanvas-footer">
+      <!-- <button type="button" class="btn btn-light-primary">Lưu & Tiếp tục</button> -->
+      <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu & Đóng</button>
+    </div>
+  </div>
