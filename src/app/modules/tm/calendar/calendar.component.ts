@@ -168,6 +168,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
   }
 
+  ngOnInit(): void {
+    this.getParams();
+    this.cache.valueList('L1481').subscribe((res) => {
+      this.vlls = res.datas;
+    });
+  }
+
   ngAfterViewInit(): void {
     this.scheduleObj = this.schedule.scheduleObj;
   }
@@ -176,13 +183,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     enableCompactView: false,
     resources: ['Resources'],
   };
-
-  ngOnInit(): void {
-    this.getParams();
-    this.cache.valueList('L1481').subscribe((res) => {
-      this.vlls = res.datas;
-    });
-  }
 
   getParams() {
     this.api
@@ -286,7 +286,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     );
   }
 
-  testEvent(evt: any) {}
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
@@ -429,7 +428,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   saveDayOff() {
     const _this = this;
-    _this.evtData.day = 1;
+    _this.evtData.day = 2;
+    _this.evtData.month = 5;
+    _this.evtData.note = 'Test'
     let data = _this.evtData;
     this.api
       .execSv<any>(
