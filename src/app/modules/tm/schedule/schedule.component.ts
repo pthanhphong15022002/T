@@ -131,7 +131,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.predicate = '';
-    this.model.funcID = "TM003"//this.viewBase.funcID ;
+   // this.model.funcID = "TM003"//this.viewBase.funcID ;
     this.model.page = 1;
     this.model.pageSize = 100;
     if (this.startDate && this.endDate) {
@@ -143,7 +143,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
         ],
       };
     }
-
+    
   }
 
   getParams() {

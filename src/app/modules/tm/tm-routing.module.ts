@@ -1,3 +1,4 @@
+import { ControlsModule } from './controls/controls.module';
 import { CalendarComponent } from './calendar/calendar.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -19,13 +20,13 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
-import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { TaskGroupComponent } from './task-group/task-group.component';
 import { FuncTaskGroupComponent } from './controls/func-task-group/func-task-group.component';
-import { MwpModule } from './mwp/mwp-routing.module';
-import { ControlsModule } from './controls/controls.module';
+import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
+import { SettingsComponent } from './settings/settings/settings.component';
+import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,14 @@ const routes: Routes = [
       {
         path: 'subhome',
         component: HomeComponent,
+      },
+      {
+        path: 'setting',
+        component: SettingsComponent,
+      },
+      {
+          path:'task-group',
+          component:TaskGroupComponent
       },
       {
         path: '',
@@ -78,6 +87,8 @@ const routes: Routes = [
     CalendarComponent,
     TaskGroupComponent,
     FuncTaskGroupComponent,
+    RangesKanbanComponent
+    
   ],
   imports: [
     RouterModule.forChild(routes),
