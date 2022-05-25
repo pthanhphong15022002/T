@@ -61,6 +61,8 @@ export class ViewListDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   tabSt = '1';
+  predicate ='Status=@0';
+  dataValue = '1';
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
   @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
@@ -82,6 +84,7 @@ export class ViewListDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+   this.isFinishLoad  = true;
   }
 
   ngAfterViewInit(): void {
@@ -116,12 +119,9 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    // model.predicate = '';
-    model.funcID = 'WPT036';
-    model.page = 1;
-    model.pageSize = 100;
-    // model.predicate = 'Owner=@0';
-    // model.dataValue = this.user.userID;
+     model.funcID = 'WPT036';
+     model.page = 1;
+     model.pageSize = 20;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('5/31/2022').toDate();
@@ -135,18 +135,18 @@ export class ViewListDetailsComponent implements OnInit {
     let dataObj = { view: this.view, viewBoardID: '' }; 
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
-    const t = this;
-    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-      if (res && res.length) {
-        this.data = res[0];
-        this.classifyStatus(this.data);
-        this.itemSelected = res[0][0];
-        this.loadDetailTask(this.itemSelected);
-      } else {
-        this.data = [];
-      }
-      t.dt.detectChanges();
-    });
+    //const t = this;
+    // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
+    //   if (res && res.length) {
+    //     this.data = res[0];
+    //     // this.classifyStatus(this.data);
+    //     // this.itemSelected = res[0][0];
+    //     // this.loadDetailTask(this.itemSelected);
+    //   } else {
+    //     this.data = [];
+    //   }
+    //   t.dt.detectChanges();
+    // });
   }
 
   trackByFn(index: number, item): string {
@@ -430,20 +430,24 @@ export class ViewListDetailsComponent implements OnInit {
   tabStatus(st:string){
     switch (st) {
       case '1':
+        this.dataAddNew = this.listview.data
         this.itemSelected = this.dataAddNew[0];
-        this.tabSt ='1' ;
+        this.dataValue='1'
         break;
       case '9':
         this.itemSelected = this.dataCompleted[0];
         this.tabSt ='9' ;
+        this.dataValue='9'
         break;
       case '5':
         this.itemSelected = this.dataPostpone[0];
         this.tabSt ='5' ;
+        this.dataValue='5'
         break;
       case '8':
         this.itemSelected = this.dataRefuse[0];
         this.tabSt ='8' ;
+        this.dataValue='8'
         break;
       default:
         break;
