@@ -23,7 +23,7 @@ import { KanbanComponent } from './kanban/kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { TaskGroupComponent } from './task-group/task-group.component';
-import { FuncTaskGroupComponent } from './controls/func-task-group/func-task-group.component';
+
 import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
 import { SettingsComponent } from './settings/settings/settings.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
@@ -86,7 +86,7 @@ const routes: Routes = [
     TreeviewComponent,
     CalendarComponent,
     TaskGroupComponent,
-    FuncTaskGroupComponent,
+
     RangesKanbanComponent
     
   ],
