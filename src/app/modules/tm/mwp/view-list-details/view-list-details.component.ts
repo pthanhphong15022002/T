@@ -60,7 +60,7 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  innerHTML = '';
+  tabSt = '1';
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
   @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
@@ -123,8 +123,8 @@ export class ViewListDetailsComponent implements OnInit {
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
-    this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/25/2022').toDate();
+    this.fromDate = moment('4/20/2022').toDate();
+    this.toDate = moment('5/31/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -132,7 +132,7 @@ export class ViewListDetailsComponent implements OnInit {
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    let dataObj = { view: this.view, viewBoardID: '' };
+    let dataObj = { view: this.view, viewBoardID: '' }; 
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
     const t = this;
@@ -282,22 +282,28 @@ export class ViewListDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(
+                    var data = t.dataOfStatus(lstTaskDelete[i].status)
+                    var taskDelete = data.find(
                       (x) => x.taskID == lstTaskDelete[i].taskID
                     );
-                    t.listview.removeHandler(taskDelete, 'recID');
+                    var lv = t.lvOfStatus(taskDelete.status)
+                    lv.removeHandler(taskDelete, 'recID');
+
                   }
+                  t.notiService.notify('Xóa task thành công !');
                   if (res[1] != null) {
-                    var parent = t.data.find((x) => x.taskID == res[1].taskID);
+                    var dt = t.dataOfStatus(res[i].status)
+                    var parent = dt.find((x) => x.taskID == res[1].taskID);
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
-                    t.listview.addHandler(parent, false, 'recID');
+                    var lv = t.lvOfStatus(parent.status)
+                   lv.addHandler(parent, false, 'recID');
                   }
                   // t.notiService.notifyCode("TM004")
-                  t.notiService.notify('Xóa task thành công !');
-                  t.data = t.listview.data;
-                  t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID);
+                
+                  // t.data = t.listview.data;
+                  // t.itemSelected = t.data[0];
+                  // t.getOneItem(t.itemSelected.taskID);
                   return;
                 }
                 t.notiService.notify(
@@ -383,8 +389,15 @@ export class ViewListDetailsComponent implements OnInit {
   closePopup(e: any) {
     if (e.closedBy == 'user action') {
       var task = e.event;
-
-      this.listview.addHandler(task, false, 'recID');
+      var lv = this.lvOfStatus(task.status)
+      var crrLv = this.lvOfStatus(this.tabSt)
+      if(task.status!=this.tabSt){
+        crrLv.removeHandler(task, 'recID');
+        lv.addHandler(task, false, 'recID');
+      }else{
+        crrLv.addHandler(task, false, 'recID');
+      }
+    
     }
   }
 
@@ -418,21 +431,50 @@ export class ViewListDetailsComponent implements OnInit {
     switch (st) {
       case '1':
         this.itemSelected = this.dataAddNew[0];
+        this.tabSt ='1' ;
         break;
       case '9':
         this.itemSelected = this.dataCompleted[0];
+        this.tabSt ='9' ;
         break;
       case '5':
         this.itemSelected = this.dataPostpone[0];
+        this.tabSt ='5' ;
         break;
       case '8':
         this.itemSelected = this.dataRefuse[0];
+        this.tabSt ='8' ;
         break;
       default:
         break;
     }
    this.loadDetailTask(this.itemSelected);
     
+  }
+
+  lvOfStatus(st) : any{
+    switch (st) {
+      case '1':
+      return this.listviewAdd
+      case '9':
+        return this.listviewCompleted
+      case '5':
+        return this.listviewPostpone
+      case '8':
+        return this.listviewRefuse
+    }
+  }
+  dataOfStatus(st) : any{
+    switch (st) {
+      case '1':
+      return this.dataAddNew
+      case '9':
+        return this.dataCompleted
+      case '5':
+        return this.dataPostpone
+      case '8':
+        return this.dataRefuse
+    }
   }
 
   loadDetailTask(task){

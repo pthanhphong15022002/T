@@ -30,6 +30,8 @@ import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { CbxpopupComponent } from '../cbxpopup/cbxpopup.component';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AttachmentService } from '@shared/components/attachment/attachment.service';
+import { AttachmentComponent } from '@shared/components/attachment/attachment.component';
 
 declare var _, $: any;
 @Component({
@@ -78,6 +80,8 @@ export class TaskInfoComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
+  @ViewChild('attachment') attachment:AttachmentComponent
+
  
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
@@ -88,7 +92,8 @@ export class TaskInfoComponent implements OnInit {
     private tmSv: TmService,
     private cache: CacheService,
     private notiService: NotificationsService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    public atSV: AttachmentService,
   ) {
     this.user = this.authStore.get();
   }
@@ -772,4 +777,11 @@ export class TaskInfoComponent implements OnInit {
       t.actionSave(id)
      }
    }
+   popup(evt: any){    
+    this.attachment.openPopup();
+  }
+  fileAdded(e){
+    console.log(e)
+  }
+
 }
