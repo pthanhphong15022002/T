@@ -28,15 +28,19 @@
         <div class="row">
           <div class="form-group">
             <div class="form-group mt-3">
-              <label>Mã nhóm công việc</label>
+              <label>
+                <codx-label fiedName="taskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups">Mã nhóm công việc
+                </codx-label>
+              </label>
+
               <input #taskGroupID name="taskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
-                class="form-control" placeholder="" style="width: 400px" />
+                class="form-control" [(ngModel)]="taskGroups.TaskGroupID" placeholder="" style="width: 400px" />
             </div>
             <div class="form-group mt-3">
               <label>Nhóm công việc</label>
               <input #taskGroupName name="taskGroupName" [(ngModel)]="taskGroups.TaskGroupName" type="text"
-                class="form-control" placeholder="Nhóm công việc"/>
-           
+                class="form-control" placeholder="Nhóm công việc" />
+
             </div>
             <div class="form-group mt-3">
               <label>Ghi chú</label>
@@ -58,10 +62,9 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-combobox service="TM" type="combobox" name="select" refValue="L1433"
-                  ngDefaultControlloadFull="true" field="approvalControl" [value]="taskGroups.ApprovalControl"
-                  (valueChange)="valueApp($event)">
-                </codx-combobox>
+                <codx-input name="approvalControl" type="combobox" refValue="L1433" field="approvalControl"
+                  placeholder="" [crrValue]="taskGroups.ApprovalControl" (valueChange)="valueApp($event)">
+                </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
@@ -72,10 +75,9 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-combobox service="TM" type="combobox" name="select" refValue="L1462"
-                  ngDefaultControlloadFull="true" field="projectControl" [value]="taskGroups.ProjectControl"
-                  (valueChange)="valuePro($event)">
-                </codx-combobox>
+                <codx-input name="projectControl" type="combobox" refValue="L1462" field="projectControl" placeholder=""
+                  [crrValue]="taskGroups.ProjectControl" (valueChange)="valuePro($event)">
+                </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
@@ -86,10 +88,9 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-combobox service="TM" type="combobox" name="select" refValue="L1462"
-                  ngDefaultControlloadFull="true" field="attachmentControl"
-                  [value]="taskGroups.AttachmentControl" (valueChange)="valueAtt($event)">
-                </codx-combobox>
+                <codx-input name="attachmentControl" type="combobox" refValue="L1462" field="attachmentControl"
+                  placeholder="" [crrValue]="taskGroups.AttachmentControl" (valueChange)="valueAtt($event)">
+                </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
@@ -102,10 +103,9 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-combobox service="TM" type="combobox" name="select" refValue="L1463"
-                  ngDefaultControlloadFull="true" field="checkListControl" [value]="taskGroups.CheckListControl"
-                  (valueChange)="valueCheck($event)">
-                </codx-combobox>
+                <codx-input name="checkListControl" type="combobox" refValue="L1463" field="checkListControl"
+                  placeholder="" [crrValue]="taskGroups.CheckListControl" (valueChange)="valueCheck($event)">
+                </codx-input>
               </div>
             </div>
             <div class="workToDo" *ngIf="taskGroups.CheckListControl == '2'">
@@ -161,27 +161,14 @@
   </div>
 </div>
 <ng-template #GiftIDCell let-dataItem>
-  <!-- <div class="div-action-menu">
-    <div class="action-menu d-flex">
-      <div class="action-content d-flex align-items-center">
-        <div class="d-flex align-items-center">
-          <a class="action-item d-flex align-items-center" (click)="openForm(dataItem,false)">
-            <div class="d-flex align-items-center btn-tooltip">
-              <span class="icon-edit icon-18 ml-2 mr-2"></span>
-              <span class="tooltiptext">Edit</span>
-            </div>
-          </a>
-          <a class="action-item d-flex align-items-center" (click)="deleteTaskGroup(dataItem)">
-            <div class="d-flex align-items-center btn-tooltip">
-              <span class="icon-close icon-18 text-danger mx-2"></span>
-              <span class="tooltiptext">Xóa</span>
-            </div>
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </div> -->
+  <div class="Box-tools pull-right" style="vertical-align: middle;">
+    <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="openForm(dataItem,false)">
+      <i class="fa fa-edit text-primary"></i>
+    </a>
+    <a class="btn btn-xs btn-flat btn-danger" (click)="deleteTaskGroup(dataItem)">
+      <i class="fa fa-remove "></i>
+    </a>
+  </div>
 </ng-template>
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>

@@ -14,7 +14,7 @@ import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 })
 export class TaskGroupComponent implements OnInit {
   @Input() data: [];
-  
+
   @Input() taskGroups = new TM_TaskGroups();
   dataAddNew = new BehaviorSubject<any>(null);
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -48,6 +48,8 @@ export class TaskGroupComponent implements OnInit {
   todoAddText: any;
   isAddNew = this.dataAddNew.asObservable();
   totalRow = 1;
+  createBy: any;
+  createOn: any;
   total: number;
   title = 'Tạo mới nhóm công việc';
 
@@ -81,7 +83,7 @@ export class TaskGroupComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.columnsGrid = [
-      //     { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
+      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 200 },
@@ -97,14 +99,14 @@ export class TaskGroupComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-  
+
   }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.addEditForm = item;
       this.isAfterRender = true;
-      this.getAutonumber("TM00632","TM_TaskGroups","TaskGroupID").subscribe(key => {
+      this.getAutonumber("TM00632", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
         // this.addEditForm.patchValue({
         //   taskGroupID: key,
         //   approvalControl: "0",
@@ -122,11 +124,11 @@ export class TaskGroupComponent implements OnInit {
     })
   }
 
-  public addHandler(dataItem: any, isNew: boolean, key: string) {
+  addHandler(dataItem: any, isNew: boolean, key: string) {
     var t = this;
     if (!dataItem) return null;
     if (isNew) {
-      this.gridView.data = [...[dataItem], ...this.gridView.data];
+      this.gridView.data = [...dataItem, ...this.gridView.data];
       this.total = this.gridView.data.length;
       this.totalRow = this.gridView.data.length;
     }
@@ -233,11 +235,11 @@ export class TaskGroupComponent implements OnInit {
   valuePro(data) {
     this.taskGroups.ProjectControl = data.data;
   }
-  valueAtt(data){
+  valueAtt(data) {
     this.taskGroups.AttachmentControl = data.data;
 
   }
-  valueCheck(data){
+  valueCheck(data) {
     this.taskGroups.CheckListControl = data.data
   }
   onChangeToDoStatus(value, index) {
@@ -300,24 +302,32 @@ export class TaskGroupComponent implements OnInit {
     return subject.asObservable();
   }
 
+  openForm(data, isUpdate) {
+
+  }
+
   deleteTaskGroup(item) {
 
   }
   addRow() {
+    var t = this;
     this.tmSv.addTaskGroup(this.taskGroups)
-    .subscribe((res)=>{
-      if(res){
-        this.notiService.notify(res.message);
-        if (res.data) {
-          res.data.forEach((dt) => {
-            var data = dt;
-            this.dataAddNew.next(data);   
-            this.addHandler(data, this.isAddMode, "taskGroupID")        
-          })}
-        
-      }
-    })
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notify(res[0].message);
+          t.data = res[1];
+          if (t.data) {
+            let item = t.data;
+            
+            this.addHandler(item, this.isAddMode, "taskGroupID");
+            this.dataAddNew.next(item);
+
+          }
+        }
+      })
   }
+
+  update
 
   lstSavecheckList: any = [];
 
@@ -331,7 +341,6 @@ export class TaskGroupComponent implements OnInit {
       }
 
       this.taskGroups.CheckList = this.lstSavecheckList.join(";");
-      debugger
       if (this.taskGroups.CheckList == "")
         this.taskGroups.CheckList = null;
     }
