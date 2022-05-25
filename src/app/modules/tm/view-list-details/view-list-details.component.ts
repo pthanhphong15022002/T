@@ -16,7 +16,6 @@ import {
   AuthStore,
   CallFuncService,
   CodxListviewComponent,
-  ImageviewersComponent,
   NotificationsService,
   ViewsComponent,
 } from 'codx-core';
@@ -115,8 +114,8 @@ export class ViewListDetailsComponent implements OnInit {
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
-    this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/25/2022').toDate();
+    this.fromDate = moment('4/20/2022').toDate();
+    this.toDate = moment('5/31/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -346,7 +345,7 @@ export class ViewListDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0] ;
                  for(var i=0; i< lstTaskDelete.length ; i++){
-                    var taskDelete = t.data.find(x=>x.taskID == lstTaskDelete[i].taskID);
+                    var taskDelete = t.data.find(x=>x.taskID == lstTaskDelete[i].taskID) ;
                     t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if(res[1]!=null){

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,6 +6,7 @@ import {
   ViewChild,
   AfterViewInit,
   TemplateRef,
+  Optional,
 } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
 import {
@@ -18,19 +18,15 @@ import {
   DataRequest,
   CodxListviewComponent,
   CacheService,
+  DialogData,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
 import * as moment from 'moment';
-import { EventSettingsModel } from '@syncfusion/ej2-angular-schedule';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { CbxpopupComponent } from '../controls/cbxpopup/cbxpopup.component';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewListDetailsComponent } from '../view-list-details/view-list-details.component';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { Calendar } from '@syncfusion/ej2-angular-calendars';
 import {
   CalendarDateModel,
   CalendarModel,
@@ -87,6 +83,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   resourceDataSource: any;
   calendateDate: any;
   dayOff: any;
+  scheduleObj: any = undefined;
+  dialog: any;
 
   vlls: any;
   set = false;
@@ -161,11 +159,15 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     private auStore: AuthStore,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private df: ChangeDetectorRef
+    private df: ChangeDetectorRef,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: Dialog
   ) {
     this.user = this.auStore.get();
+    //this.data = dt?.data;
+    this.dialog = dialog;
   }
-  scheduleObj: any = undefined;
+
   ngAfterViewInit(): void {
     this.scheduleObj = this.schedule.scheduleObj;
   }
@@ -213,7 +215,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach((ele) => {
+          res.forEach(() => {
             this.dayoff = res;
           });
         }
@@ -268,6 +270,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   close(e: any, t) {
     //alert('PopUp close');
+    if (e.closedBy == 'user action') {
+    }
   }
 
   onCellDblClickScheduler(data) {
@@ -380,11 +384,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         _this.evtData.day = data?.day || 1;
         _this.evtData.month = data?.month || 1;
         _this.evtData.color = data?.color || '#0078ff';
-        _this.evtData = new DaysOffModel();
         _this.getDayOff();
-        res.close = function (e) {
-          return _this.close(e, _this);
-        };
+        res.close = this.close;
       });
   }
 
@@ -410,69 +411,106 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   //Method
 
-  savaDayOff() {
-    const _this = this;
-    _this.evtData.Day;
-    let data = _this.evtData;
-    // this.api.execSv<any>(APICONSTANT.SERVICES.BS, APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.DaysOff, 'SaveDayOffAsync', [this.evtData, this.set]).subscribe(res => {
-    //   if (res) {
-    //     if (res.isAdd)
-    //     _this.dayOff.push(res.data);
-    //     else {
-    //       _this.dayOff.filter(function (o, i) {
-    //         if (o.recID == data.recID)
-    //         _this.dayOff[i] = data;
-    //       })
-    //     }
-    //   }
-    // })
+  saveCalendar() {
+    let test = {
+      calendarName: 'Test Name',
+      description: 'Test Description',
+    };
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'SaveCalendarAsync',
+        [test]
+      )
+      .subscribe((res) => {});
   }
 
-  savaCalendarDate() {
-    // const t = this;
-    // this.api.execSv<any>(APICONSTANT.SERVICES.BS, APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarDate, 'SaveCalendarDateAsync', this.evtCDDate).subscribe(res => {
-    //   if (res) {
-    //     if (res.isAdd) {
-    //       t.calendateDate.push(res.data);
-    //     } else {
-    //       var index = t.calendateDate.findIndex(p => p.recID == t.evtCDDate.recID);
-    //       t.calendateDate[index] = t.evtCDDate;
-    //     }
-    //     t.calendarModal.close();
-    //   }
-    // })
+  saveDayOff() {
+    const _this = this;
+    _this.evtData.day = 1;
+    let data = _this.evtData;
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.DaysOff,
+        'SaveDayOffAsync',
+        [data, this.set]
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (res.isAdd) {
+            _this.dayOff.push(res.data);
+          } else {
+            _this.dayOff.filter(function (o, i) {
+              if (o.recID == data.recID) _this.dayOff[i] = data;
+            });
+          }
+        }
+      });
+  }
+
+  saveCalendarDate() {
+    const t = this;
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'SaveCalendarDateAsync',
+        this.evtCDDate
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (res.isAdd) {
+            t.calendateDate.push(res.data);
+          } else {
+            var index = t.calendateDate.findIndex(
+              (p) => p.recID == t.evtCDDate.recID
+            );
+            t.calendateDate[index] = t.evtCDDate;
+          }
+          this.dialog.hide();
+        }
+      });
   }
 
   removeDayOff(item) {
-    // const t = this;
-    // this.mainSv.confirmDialog('E0327').then(res => {
-    //   if (res) {
-    //     t.api.exec(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.DaysOff, 'DeleteAsync', item).subscribe(res => {
-    //       if (res) {
-    //         t.dayOff = _.filter(t.dayOff, function (o) {
-    //           return o.recID != item.recID;
-    //         })
-    //         t.mainSv.notifyByMessageCode('E0408');
-    //       }
-    //     })
-    //   }
-    // });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.DaysOff,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayOff = _.filter(this.dayOff, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
 
   removeCalendarDate(item) {
-    // const t = this;
-    // this.mainSv.confirmDialog('E0327').then(res => {
-    //   if (res) {
-    //     t.api.exec(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarDate, 'DeleteAsync', item).subscribe(res => {
-    //       if (res) {
-    //         t.calendateDate = _.filter(t.calendateDate, function (o) {
-    //           return o.recID != item.recID;
-    //         })
-    //         t.mainSv.notifyByMessageCode('E0408');
-    //       }
-    //     })
-    //   }
-    // });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendateDate = _.filter(this.calendateDate, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
   //Method
 
@@ -532,10 +570,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     if (e.field == 'month') this.evtData.month = e.data;
     if (e.field == 'calendar' && entity == this.entity.DayOffs)
       this.evtData.calendar = e.data;
-    if (e.field == 'set' && entity == this.entity.DayOffs) this.set = e.data;
+    if (e.field == 'set' && entity == this.entity.DayOffs)
+      this.set = e.data.checked;
     //Param for CalendarDate & DayOff
-    if (e.field == 'note1') this.evtData.note = e.data;
-    if (e.field == 'note2') this.evtCDDate.note = e.data;
+    if (e.field == 'note1') this.evtData.note1 = e.data.value;
+    if (e.field == 'note2') this.evtCDDate.note2 = e.data.value;
     if (e.field === 'color' || e.field === 'dayoffColor') {
       if (entity == this.entity.DayOffs) this.evtData.color = e.data;
       if (entity == this.entity.CalendarDate)

@@ -112,8 +112,8 @@ export class ViewListDetailsComponent implements OnInit {
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
-    this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/25/2022').toDate();
+    this.fromDate = moment('4/20/2022').toDate();
+    this.toDate = moment('5/31/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [

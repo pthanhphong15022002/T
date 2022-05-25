@@ -1,10 +1,21 @@
 <div class="cal-toolbar d-flex align-items-center">
   <div class="me-1 header-combo" *ngIf="param">
-    <codx-input #comboboxStd type="combobox" placeholder="Lịch làm việc" [crrValue]="param?.fieldValue" service="BS"
-      [refValue]="param?.referedValue" [field]="'groupID'" (valueChange)="changeCombobox($event)">
+    <codx-input
+      #comboboxStd
+      type="combobox"
+      placeholder="Lịch làm việc"
+      [crrValue]="param?.fieldValue"
+      service="BS"
+      [refValue]="param?.referedValue"
+      [field]="'groupID'"
+      (valueChange)="changeCombobox($event)"
+    >
     </codx-input>
   </div>
-  <button class="btn btn-icon btn-primary me-1" (click)="openCalendarSettings()">
+  <button
+    class="btn btn-icon btn-primary me-1"
+    (click)="openCalendarSettings()"
+  >
     <span class="icon-settings icon-18"></span>
   </button>
   <button class="btn btn-primary" (click)="addCalendar()">
@@ -12,17 +23,42 @@
   </button>
 </div>
 
-
 <div class="cal-container">
-  <codx-schedule height="100%" #schedule [eventTemplate]="eventTemplate" service="TM" assemblyName="TM"
-    [templateResourceHeader]="resourceHeader" className="TaskBusiness" method="GetListDetailTasksAsync"
-    methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter" [fields]="fields"
-    [selectedDate]="selectedDate" [StartDate]="startDate" [EndDate]="endDate" [options]="model"
-    [optionsResource]="model" entityName="TM_Tasks" funcId="" (onViewChange)="viewChange($event)"
-    [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle="colored" [resourceTooltipTemplate]="resourceTootip"
-    (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" (onEdit)="edit($event)"
-    (onDelete)="deleteTask($event)" [statusColor]="status" [eventEditFeature]="false" [readOnly]="true"
-    [resourceField]="resourceField" [templateCell]="cellTemplate">
+  <codx-schedule
+    isTimelineView="false"
+    height="100%"
+    #schedule
+    [eventTemplate]="eventTemplate"
+    service="TM"
+    assemblyName="TM"
+    [templateResourceHeader]="resourceHeader"
+    className="TaskBusiness"
+    method="GetListDetailTasksAsync"
+    methodResource="GetUserByTasksAsync"
+    [cellFooterTemplate]="cellFooter"
+    [fields]="fields"
+    [selectedDate]="selectedDate"
+    [StartDate]="startDate"
+    [EndDate]="endDate"
+    [options]="model"
+    [optionsResource]="model"
+    entityName="TM_Tasks"
+    funcId=""
+    (onViewChange)="viewChange($event)"
+    [viewPreset]="viewPreset"
+    [minHeight]="minHeight"
+    eventStyle="colored"
+    [resourceTooltipTemplate]="resourceTootip"
+    (onEventClick)="onCellDblClickScheduler($event)"
+    (onAddNew)="addNew($event)"
+    (onEdit)="edit($event)"
+    (onDelete)="deleteTask($event)"
+    [statusColor]="status"
+    [eventEditFeature]="false"
+    [readOnly]="true"
+    [resourceField]="resourceField"
+    [templateCell]="cellTemplate"
+  >
   </codx-schedule>
   <app-setting-calendar></app-setting-calendar>
   <ng-template #cellTemplate let-data>
@@ -30,12 +66,18 @@
   </ng-template>
   <ng-template #eventTemplate let-data>
     <div class="symbol symbol-40px symbol-circle me-4">
-      <codx-img [objectId]="data?.resourceData.assignTo" objectName="AD_Users"></codx-img>
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
     </div>
   </ng-template>
   <ng-template #resourceTootip let-data>
     <div class="template-wrap symbol symbol-40px symbol-circle me-4">
-      <codx-img [objectId]="data?.resourceData.assignTo" objectName="AD_Users"></codx-img>
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
       <div class="res-text">Tên: {{ data.resourceData.userName }}</div>
       <div class="res-text">Vị trí: {{ data.resourceData.positionName }}</div>
     </div>
@@ -48,10 +90,21 @@
   </ng-template>
   <ng-template #cellFooter let-data>
     <div class="row border">
-      <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
+      <button
+        ejs-button
+        id="more-details"
+        cssClass="e-flat"
+        (click)="edit(data)"
+      >
         sửa
       </button>
-      <button ejs-button id="delete" cssClass="e-flat" [isPrimary]="true" (click)="deleteTask(data)">
+      <button
+        ejs-button
+        id="delete"
+        cssClass="e-flat"
+        [isPrimary]="true"
+        (click)="deleteTask(data)"
+      >
         xóa
       </button>
     </div>
@@ -59,42 +112,60 @@
 </div>
 
 <!-- modal add calendars -->
-<ng-template #add let-modal>
+<ng-template #add>
   <div class="modal-body">
     <form>
       <div class="form-group row">
-        <label class="col-4 col-form-label">{{
-          "Tên lịch làm việc"
-          | lang: "Calendar":"lblCalendarName":"grvCalendar"
-          | async
-          }}</label>
+        <label class="col-4 col-form-label">
+          <!-- theo gridview setup -->
+          <codx-label
+            fiedName="TaskName"
+            gridViewName=""
+            formName=""
+            default="Tên lịch làm việc"
+          ></codx-label>
+          <!--Ko theo gridview setup -->
+          <!-- <codx-label
+            name="lblTaskName"
+            formName=""
+            default="Tên lịch làm việc"
+          ></codx-label> -->
+        </label>
         <div class="col-4">
-          <codx-input type="text" field="calendarName" placeholder="Lịch làm việc"
-            (valueChange)="valueChange($event, 'calendar')">
+          <codx-input
+            type="text"
+            field="calendarName"
+            placeholder="Lịch làm việc"
+            (valueChange)="valueChange($event, 'calendar')"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-4 col-form-label">{{
           "Diễn giải" | lang: "Calendar":"lblCalendarName":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-8">
-          <codx-input type="text" dataformat="ed3" field="description" placeholder="Diễn giải"
-            (valueChange)="valueChange($event, 'calendar')">
+          <codx-input
+            type="text"
+            field="description"
+            placeholder="Diễn giải"
+            (valueChange)="valueChange($event, 'calendar')"
+          >
           </codx-input>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close()">
+    <button type="button" class="btn btn-primary" (click)="saveCalendar()">
       Save
     </button>
   </div>
 </ng-template>
 
 <!-- modal setting calendar -->
-<ng-template #editCalendar let-modal>
+<ng-template #editCalendar>
   <div class="modal-body">
     <div class="list-week">
       <table class="table bg-header">
@@ -110,16 +181,27 @@
           <tr>
             <td>
               <div class="d-flex align-items-center">
-                <span class="icon-brightness_5 icon-18 mr-2 text-warning"></span>
+                <span
+                  class="icon-brightness_5 icon-18 mr-2 text-warning"
+                ></span>
                 <div class="text-dark-75">
                   {{ stShift?.startTime }} - {{ stShift?.endTime }}
                 </div>
                 <div class="dropdown ml-2 dropdown-customv2">
-                  <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                  <button
+                    class="btn btn-icon btn-xs"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
                     <span class="icon-more_vert icon-18 hoverIcon"></span>
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
                     <a class="dropdown-item">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -131,8 +213,13 @@
               </div>
             </td>
             <td class="text-center" *ngFor="let item of stShift?.data">
-              <codx-input class="test-check" type="checkbox" field="stweekday" [checked]="item.checked"
-                (valueChange)="weekdayChange($event, item)">
+              <codx-input
+                class="test-check"
+                type="checkbox"
+                field="stweekday"
+                [checked]="item.checked"
+                (valueChange)="weekdayChange($event, item)"
+              >
               </codx-input>
               <p>{{ item.checked }}</p>
             </td>
@@ -145,11 +232,20 @@
                   {{ ndShift?.startTime }} - {{ ndShift.endTime }}
                 </div>
                 <div class="dropdown ml-2 dropdown-customv2">
-                  <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                  <button
+                    class="btn btn-icon btn-xs"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
                     <span class="icon-more_vert icon-18 hoverIcon"></span>
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
                     <a class="dropdown-item">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -161,8 +257,13 @@
               </div>
             </td>
             <td class="text-center" *ngFor="let item of ndShift?.data">
-              <codx-input class="text-check" type="checkbox" field="ndweekday" [checked]="item.checked"
-                (valueChange)="weekdayChange($event, item)">
+              <codx-input
+                class="text-check"
+                type="checkbox"
+                field="ndweekday"
+                [checked]="item.checked"
+                (valueChange)="weekdayChange($event, item)"
+              >
               </codx-input>
               <p>{{ item.checked }}</p>
             </td>
@@ -196,14 +297,28 @@
               <div class="text-dark" [innerHTML]="item.note"></div>
             </td>
             <td class="text-center">
-              <codx-input class="text-check" type="checkbox" name="checkbox" [disable]="true" filed="dayOff"
-                [checked]="item.calendar == '1'">
+              <codx-input
+                class="text-check"
+                type="checkbox"
+                name="checkbox"
+                [disable]="true"
+                filed="dayOff"
+                [checked]="item.calendar == '1'"
+              >
               </codx-input>
+              <p>{{ item.calendar == "1" }}</p>
             </td>
             <td class="text-center">
-              <codx-input class="text-check" type="checkbox" name="checkbox" [disable]="true" filed="dayOff"
-                [checked]="item.calendar == '2' ? true : false">
+              <codx-input
+                class="text-check"
+                type="checkbox"
+                name="checkbox"
+                [disable]="true"
+                filed="dayOff"
+                [checked]="item.calendar == '2' ? true : false"
+              >
               </codx-input>
+              <p>{{ item.calendar == "2" ? true : false }}</p>
             </td>
             <td class="text-center">{{ item.day }}/{{ item.month }}</td>
 
@@ -217,11 +332,17 @@
             <td class="text-center">
               <div class="d-flex align-items-center">
                 <div class="dropdown ml-2">
-                  <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                  <button
+                    class="btn btn-icon btn-xs"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
                     <span class="icon-more_vert icon-18"></span>
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div>
                     <a class="dropdown-item" (click)="openDayOffs(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -268,9 +389,12 @@
               <div class="text-dark">{{ item.calendarDate | fmDT: "dmy" }}</div>
             </td>
             <td class="text-center">
-              <span class="pic-color h-20 w-20" [style.background-color]="
+              <span
+                class="pic-color h-20 w-20"
+                [style.background-color]="
                   item.dayOffColor ? item.dayOffColor : '#0078FF'
-                "></span>
+                "
+              ></span>
             </td>
             <td class="text-center">
               <span class="{{ item.symbol }}"></span>
@@ -278,11 +402,17 @@
             <td class="text-center">
               <div class="d-flex align-items-center">
                 <div class="dropdown ml-2">
-                  <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                  <button
+                    class="btn btn-icon btn-xs"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
                     <span class="icon-more_vert icon-18"></span>
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div>
                     <a class="dropdown-item" (click)="openCalendarDate(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -307,81 +437,122 @@
 </ng-template>
 
 <!-- add or edit dayoff -->
-<ng-template #editEvent let-modal>
+<ng-template #editEvent>
   <div class="modal-body">
     <form>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Loại ngày" | lang: "Calendar":"lblShiftType":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4">
-          <codx-input class="cotrol-vll" type="valuelist" field="calendar" refValue="L1461" placeholder=""
-            [crrValue]="evtData?.calendar" (valueChange)="valueChange($event, 'dayoff', null)">
+          <codx-input
+            class="cotrol-vll"
+            type="valuelist"
+            field="calendar"
+            refValue="L1461"
+            placeholder=""
+            [crrValue]="evtData?.calendar"
+            (valueChange)="valueChange($event, 'dayoff', null)"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Tháng" | lang: "Calendar":"lblMonth":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4">
-          <codx-input type="text" field="month" placeholder="" [value]="evtData.month"
-            (valueChange)="valueChange($event, 'dayoff')">
+          <codx-input
+            type="text"
+            field="month"
+            placeholder=""
+            [crrValue]="evtData.month"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Ngày" | lang: "Calendar":"lblDay":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4">
-          <codx-input type="text" field="day" placeholder="" [value]="evtData.day"
-            (valueChange)="valueChange($event, 'dayoff')">
+          <codx-input
+            type="text"
+            field="day"
+            placeholder=""
+            [crrValue]="evtData.day"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
           </codx-input>
         </div>
       </div>
       <div #group class="form-group row">
         <label class="col-2 col-form-label">{{
           "Màu" | lang: "Calendar":"lblColor":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4">
-          <codx-colorpicker #elm class="form-control text-white color-large" field="color" dataformat="hex"
-            [value]="evtData.color" (valueChange)="valueChange($event, 'dayoff', elm)">
+          <codx-colorpicker
+            #elm
+            class="form-control text-white color-large"
+            field="color"
+            dataformat="hex"
+            [crrValue]="evtData.color"
+            (valueChange)="valueChange($event, 'dayoff', elm)"
+          >
           </codx-colorpicker>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Symbol" | lang: "Calendar":"lblSymbol":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-2 input-symbol">
-          <codx-input type="valuelist" refValue="L1470" field="symbolDayOff"
-            (valueChange)="valueChange($event, 'dayoff')">
+          <codx-input
+            type="valuelist"
+            refValue="L1470"
+            field="symbolDayOff"
+            [crrValue]="evtData.symbol"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Diễn giải" | lang: "Calendar":"lblNote":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-10">
-          <codx-input type="textarea" field="note1" dataformat="ed2" [crrValue]="evtData.note1" ngDefaultControl
-            (valueChange)="valueChange($event, 'dayoff')" placeholder="Diễn giải">
+          <codx-input
+            type="textarea"
+            field="note1"
+            dataformat="ed2"
+            [crrValue]="evtData.note ? evtData.note : ''"
+            (valueChange)="valueChange($event, 'dayoff')"
+            placeholder="Diễn giải"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <div class="col-12">
-          <codx-input type="checkbox" name="checkbox" class="text-dark" label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
-            [disabled]="evtData.recID ? true : false" field="set" [checked]="set"
-            (valueChange)="valueChange($event, 'dayoff')">
+          <codx-input
+            type="checkbox"
+            name="checkbox"
+            class="text-dark"
+            label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
+            [disabled]="evtData.recID ? true : false"
+            field="set"
+            [checked]="set"
+            (valueChange)="valueChange($event, 'dayoff')"
+          >
           </codx-input>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="savaDayOff()">
+    <button type="button" class="btn btn-primary" (click)="saveDayOff()">
       Save
     </button>
   </div>
@@ -394,49 +565,68 @@
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Ngày nghỉ" | lang: "Calendar":"lblCalendarDate":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4">
-          <!-- <lvInput class="" datatype="datetime" dataformat="d" field="calendarDate"
-                        (valueChange)="changeTime($event,'calendarDate')" [value]="evtCDDate?.calendarDate"></lvInput> -->
-          <codx-input type="datetime" dataformat="d" field="calendarDate" [value]="evtCDDate?.calendarDate"
-            (valueChange)="changeTime($event, 'calendarDate')">
+          <codx-input
+            type="datetime"
+            dataformat="d"
+            field="calendarDate"
+            [crrValue]="evtCDDate?.calendarDate"
+            (valueChange)="changeTime($event, 'calendarDate')"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Màu" | lang: "Calendar":"lblColor":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-4" #group1>
-          <codx-colorpicker class="form-control text-white color-large" field="dayoffColor" dataformat="hex"
-            [value]="evtCDDate.dayoffColor">
+          <codx-colorpicker
+            class="form-control text-white color-large"
+            field="dayoffColor"
+            dataformat="hex"
+            [crrValue]="evtCDDate.dayoffColor"
+          >
           </codx-colorpicker>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Symbol" | lang: "Calendar":"lblSymbol":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-2 input-symbol">
-          <codx-input type="valuelist" refValue="L1470" field="symbolCld" [value]="evtCDDate.symbol"
-            (valueChange)="valueChange($event, 'calendarDate')">
+          <codx-input
+            type="valuelist"
+            refValue="L1470"
+            field="symbolCld"
+            [crrValue]="evtCDDate.symbol ? evtCDDate.symbol : ''"
+            (valueChange)="valueChange($event, 'calendarDate')"
+          >
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">{{
           "Diễn giải" | lang: "Calendar":"lblNote":"grvCalendar" | async
-          }}</label>
+        }}</label>
         <div class="col-10">
-          <codx-input type="textarea" field="note2" dataformat="ed2" ngDefaultControl [crrValue]="evtCDDate.note2"
-            (valueChange)="valueChange($event, 'calendarDate')" placeholder="Diễn giải">
+          <codx-input
+            type="textarea"
+            field="note2"
+            dataformat="ed2"
+            ngDefaultControl
+            [crrValue]="evtCDDate.note ? evtCDDate.note : ''"
+            (valueChange)="valueChange($event, 'calendarDate')"
+            placeholder="Diễn giải"
+          >
           </codx-input>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="savaCalendarDate()">
+    <button type="button" class="btn btn-primary" (click)="saveCalendarDate()">
       Save
     </button>
   </div>

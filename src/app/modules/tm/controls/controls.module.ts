@@ -15,7 +15,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
   imports: [
     CodxCoreModule.forRoot({ environment }),
     TabModule,
-    FormsModule,CommonModule
+    FormsModule,CommonModule,SharedModule
   ]
 })
 export class ControlsModule { }

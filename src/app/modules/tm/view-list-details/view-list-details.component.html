@@ -54,7 +54,7 @@
                     " [style.color]="
                       itemSelected?.status | vll: 'L0614':'color' | async
                     " style="border: none">
-                    {{ itemSelected?.status | vll: "L0614":"text" | async }}{{itemSelected?.status}}
+                    {{ itemSelected?.status | vll: "L0614":"text" | async }}
                   </div>
                 </div>
               </div>
@@ -557,7 +557,7 @@
           {{ item.userNameCreate }}
         </div>
         <span class="icon-15 me-2">
-          <span *ngIf="item?.dueDate < today" class=" icon-18 icon-watch_later"></span>
+          <span *ngIf="item.isTimeOut" class=" icon-18 icon-watch_later"></span>
           <span [class]="item?.priority | vll: 'L0186':'icon' | async"
             [style.color]="item?.priority | vll: 'L0186':'color' | async">{{item?.priority}}</span>
         </span>

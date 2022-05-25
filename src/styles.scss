@@ -1048,3 +1048,30 @@ codx-wrapper ::-webkit-scrollbar-thumb {
     width: 25px;
     height: 25px;
 }
+
+/* file upload */
+/***/
+.viewfile-toolbar span.icon-24:hover {
+    cursor: pointer;
+    color: #fffca2 !important;
+}
+
+.upload-popup {
+    min-height: 300px;
+}
+
+.drop-zoon {
+    background-color: #eee !important;
+}
+
+.dms-dropzoon {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.dms-dropzoon .btn-choose-file {
+    position: absolute;
+    left: 50%;
+    margin-left: -38px;
+    bottom: 24px;
+}
