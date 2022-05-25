@@ -20,21 +20,20 @@
             {{ data?.taskName }}</div>
         </td>
         <td class="w-100px">
-          <div class="priority mb-1 max-h-70px" [class]="data?.priority|vll:'L0186':'icon'|async"
-            [style.color]="(data?.priority|vll:'L0186':'color'|async)">{{ data?.priority }}</div>
+          <div [class]="data?.priority | vll: 'L0186':'icon' | async"
+          [style.color]="data?.priority | vll: 'L0186':'color' | async">{{ data?.priority }}</div>
         </td>
         <td class="w-150px">
-          <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
-            [style.border-color]="
-                      (data?.status | vll: 'L0614':'color' | async) +
-                      '30'
-                    " [style.background-color]="
-                      (data?.status | vll: 'L0614':'color' | async) +
-                      '30'
-                    " [style.color]="
-                    data?.status | vll: 'L0614':'color' | async
-                    " style="border: none">
-            {{ data?.status | vll: "L0614":"text" | async }}
+          <div class="task-status d-flex">
+            <div class="badge badge-danger me-2" [style.border-color]="
+          (data?.status | vll: 'L0614':'color' | async) + '30'
+        " [style.background-color]="
+          (data?.status | vll: 'L0614':'color' | async) + '30'
+        " [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
+            {{ data?.status | vll: "L0614":"text" | async }}{{data?.status}}
+          </div>
+          <span class="text-gray-600 fs-7">
+            {{ data?.createdOn | fmDT: "dmy" }}</span>
           </div>
         </td>
         <td>
