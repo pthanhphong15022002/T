@@ -25,7 +25,7 @@
 
 <div class="cal-container">
   <codx-schedule
-  isTimelineView="false"
+    isTimelineView="false"
     height="100%"
     #schedule
     [eventTemplate]="eventTemplate"
@@ -116,11 +116,21 @@
   <div class="modal-body">
     <form>
       <div class="form-group row">
-        <label class="col-4 col-form-label">{{
-          "Tên lịch làm việc"
-            | lang: "Calendar":"lblCalendarName":"grvCalendar"
-            | async
-        }}</label>
+        <label class="col-4 col-form-label">
+          <!-- theo gridview setup -->
+          <codx-label
+            fiedName="TaskName"
+            gridViewName=""
+            formName=""
+            default="Tên lịch làm việc"
+          ></codx-label>
+          <!--Ko theo gridview setup -->
+          <!-- <codx-label
+            name="lblTaskName"
+            formName=""
+            default="Tên lịch làm việc"
+          ></codx-label> -->
+        </label>
         <div class="col-4">
           <codx-input
             type="text"
@@ -296,7 +306,7 @@
                 [checked]="item.calendar == '1'"
               >
               </codx-input>
-              <p>{{ item.calendar == '1' }}</p>
+              <p>{{ item.calendar == "1" }}</p>
             </td>
             <td class="text-center">
               <codx-input
@@ -308,7 +318,7 @@
                 [checked]="item.calendar == '2' ? true : false"
               >
               </codx-input>
-              <p>{{ item.calendar == '2' ? true : false }}</p>
+              <p>{{ item.calendar == "2" ? true : false }}</p>
             </td>
             <td class="text-center">{{ item.day }}/{{ item.month }}</td>
 
@@ -332,9 +342,7 @@
                   >
                     <span class="icon-more_vert icon-18"></span>
                   </button>
-                  <div
-                    
-                  >
+                  <div>
                     <a class="dropdown-item" (click)="openDayOffs(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -404,10 +412,7 @@
                   >
                     <span class="icon-more_vert icon-18"></span>
                   </button>
-                  <div
-                    class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                  >
+                  <div>
                     <a class="dropdown-item" (click)="openCalendarDate(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>
@@ -492,7 +497,7 @@
             class="form-control text-white color-large"
             field="color"
             dataformat="hex"
-            [value]="evtData.color"
+            [crrValue]="evtData.color"
             (valueChange)="valueChange($event, 'dayoff', elm)"
           >
           </codx-colorpicker>
@@ -566,7 +571,7 @@
             type="datetime"
             dataformat="d"
             field="calendarDate"
-            [value]="evtCDDate?.calendarDate"
+            [crrValue]="evtCDDate?.calendarDate"
             (valueChange)="changeTime($event, 'calendarDate')"
           >
           </codx-input>
@@ -581,7 +586,7 @@
             class="form-control text-white color-large"
             field="dayoffColor"
             dataformat="hex"
-            [value]="evtCDDate.dayoffColor"
+            [crrValue]="evtCDDate.dayoffColor"
           >
           </codx-colorpicker>
         </div>
@@ -595,7 +600,7 @@
             type="valuelist"
             refValue="L1470"
             field="symbolCld"
-            [value]="evtCDDate.symbol ? evtCDDate.symbol : ''"
+            [crrValue]="evtCDDate.symbol ? evtCDDate.symbol : ''"
             (valueChange)="valueChange($event, 'calendarDate')"
           >
           </codx-input>

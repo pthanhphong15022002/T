@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -25,14 +24,9 @@ import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../models/task.model';
 import { TmService } from '../tm.service';
 import * as moment from 'moment';
-import { EventSettingsModel } from '@syncfusion/ej2-angular-schedule';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { CbxpopupComponent } from '../controls/cbxpopup/cbxpopup.component';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewListDetailsComponent } from '../view-list-details/view-list-details.component';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { Calendar } from '@syncfusion/ej2-angular-calendars';
 import {
   CalendarDateModel,
   CalendarModel,
@@ -390,7 +384,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         _this.evtData.day = data?.day || 1;
         _this.evtData.month = data?.month || 1;
         _this.evtData.color = data?.color || '#0078ff';
-        console.log(_this.evtData);
         _this.getDayOff();
         res.close = this.close;
       });
@@ -485,49 +478,39 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   removeDayOff(item) {
-    const t = this;
-    this.mainSv.confirmDialog('E0327').then((res) => {
-      if (res) {
-        t.api
-          .exec(
-            APICONSTANT.ASSEMBLY.BS,
-            APICONSTANT.BUSINESS.BS.DaysOff,
-            'DeleteAsync',
-            item
-          )
-          .subscribe((res) => {
-            if (res) {
-              t.dayOff = _.filter(t.dayOff, function (o) {
-                return o.recID != item.recID;
-              });
-              t.mainSv.notifyByMessageCode('E0408');
-            }
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.DaysOff,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayOff = _.filter(this.dayOff, function (o) {
+            return o.recID != item.recID;
           });
-      }
-    });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
 
   removeCalendarDate(item) {
-    // const t = this;
-    // this.mainSv.confirmDialog('E0327').then((res) => {
-    //   if (res) {
-    //     t.api
-    //       .exec(
-    //         APICONSTANT.ASSEMBLY.BS,
-    //         APICONSTANT.BUSINESS.BS.CalendarDate,
-    //         'DeleteAsync',
-    //         item
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           t.calendateDate = _.filter(t.calendateDate, function (o) {
-    //             return o.recID != item.recID;
-    //           });
-    //           t.mainSv.notifyByMessageCode('E0408');
-    //         }
-    //       });
-    //   }
-    // });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendateDate = _.filter(this.calendateDate, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
   //Method
 
@@ -575,7 +558,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(e, entity, element = null) {
-    debugger;
     //Param for Calendars
     if (e.field == 'description' && entity == this.entity.Calendars)
       this.modelCalendar.description = e.data;
