@@ -30,7 +30,6 @@ export class TmService {
     private authStore: AuthStore,
     //private dmDialog: CustomdialogService,    //nam trong share
 
-<<<<<<< HEAD
   ) {
     this.user = this.authStore.get();
   }
@@ -106,81 +105,6 @@ export class TmService {
         }
       })
       this.changeData.next(new DataSv(this.data, ''));
-=======
-    loadColumnsKanban(data){
-      return this.execTM(APICONSTANT.BUSINESS.TM.Task,'GetColumnsKanbanAsync', data)
-    }
-  
-    addTask(data) {
-      return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddTaskAsync', data);
-    }
-    addTaskGroup(data) {
-      return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'AddTaskGroupsAsync', data);
-    }
-    updateTaskGroup(data) {
-      return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'UpdateTaskGroupsAsync', data);
-    }
-    update(data) {
-      return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateTaskAsync', data);
-    }
-  
-    updateDrap(data) {
-      return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data);
-    }
-  
-    getValueCMParameter(predicate, dataValue) {
-      return this.api.execSv("SYS", "CM", "ParametersBusiness", "GetByPredicate", [predicate, dataValue]);
-    }
-  
-    getGridViewSetup(predicate, dataValue?) {
-      return this.api.execSv("SYS", "SYS", "GridViewSetupBusiness", "GetByPredicate", [predicate, dataValue]);
-    }
-  
-
-    setStatusTask(id: string, status: string, datacomplete: Date, hour: string, comment: string) {
-      return this.api.execSv<any>("TM", "TM", "TaskBusiness", "SetStatusTaskAsync", [id, status, datacomplete, hour, comment]);
-    }
-  
-    setTaskGroupTask(id: string, taskGroupID: string) {
-      return this.api.execSv<any>("TM", "TM", "TaskBusiness", "SetTaskGroupAsync", [id, taskGroupID]);
-    }
-    setChangeData(data) {
-        this.data = data.data;
-        this.changeData.next(data);
-      }
-    updateListData(listTaskUpdate: Array<any>) {
-      if (listTaskUpdate.length > 0) {
-        listTaskUpdate.forEach((item: any) => {
-          let index = this.data.findIndex(p => p.id == item.id);
-          if (index >= 0) {
-            this.data[index] = item;
-          }
-          else {
-            this.data.unshift(item);
-          }
-        })
-        this.changeData.next(new DataSv(this.data, ''));
-      }
-    }
-  
-    onChangeStatusTask(taskID, status) {
-      let item = this.data.find(p => p.id == taskID);
-      if (item) {
-        item.status = status;
-        this.updateDrap(item).subscribe((result) => {
-          this.updateListData([item]);
-        });
-      }
-    }
-    getTaskGroup(data){
-      return this.api.execSv<any>("TM", "TM", "TaskGroupBusiness", "AddEditTaskGroupsAsync", data);
-    }
-    getTask(id) {
-      return this.execTM(APICONSTANT.BUSINESS.TM.Task, "GetTaskByIdAsync", id);
-    }
-    deleteTask(taskID) {
-      return this.execTM(APICONSTANT.BUSINESS.TM.Task, "DeleteTaskAsync", taskID);
->>>>>>> b953217c2f9d3c4b571271c613915898517fb5e4
     }
   }
 
