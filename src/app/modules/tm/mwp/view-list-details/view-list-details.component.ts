@@ -61,13 +61,14 @@ export class ViewListDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   tabSt = '1';
+  predicate = 'Status=@0';
+  dataValue = '1';
   @Input('viewBase') viewBase: ViewsComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
   @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
   @ViewChild('listviewPostpone') listviewPostpone: CodxListviewComponent;
   @ViewChild('listviewRefuse') listviewRefuse: CodxListviewComponent;
-  @ViewChild('listview') listview: CodxListviewComponent;
-
 
   constructor(
     private tmSv: TmService,
@@ -82,32 +83,34 @@ export class ViewListDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    // this.tabStatus('1');
+    this.isFinishLoad = true;
   }
 
   ngAfterViewInit(): void {
     const t = this;
+
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
         this.listviewAdd.addHandler(res, true, 'recID');
-        this.data.push(res);
-        this.dataAddNew.push(res);
+        if (this.dataValue == '1') this.data = this.listviewAdd.data;
       }
     });
-    // this.taskInfo.isUpdate.subscribe((res) => {
-    //   if (res) {
-    //     var index = this.data.findIndex((x) => x.taskID == res.taskID);
-    //     if (index != -1) {
-    //       this.listview.addHandler(res, false, 'recID');
-    //     } else {
-    //       this.listview.addHandler(res, true, 'recID');
-    //     }
-    //     this.data = this.listview.data;
-    //     if (t.itemSelected.taskID == res.taskID) {
-    //       t.getOneItem(this.itemSelected.taskID);
-    //       t.dt.detectChanges();
-    //     }
-    //   }
-    // });
+    this.taskInfo.isUpdate.subscribe((res) => {
+      if (res) {
+        var index = this.data.findIndex((x) => x.taskID == res.taskID);
+        if (index != -1) {
+          this.updateListView(res);
+        } else {
+          this.addListView(res);
+        }
+        this.data = this.listview.data;
+        if (t.itemSelected.taskID == res.taskID) {
+          t.getOneItem(this.itemSelected.taskID);
+          t.dt.detectChanges();
+        }
+      }
+    });
   }
 
   loadData() {
@@ -116,12 +119,9 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    // model.predicate = '';
     model.funcID = 'WPT036';
     model.page = 1;
-    model.pageSize = 100;
-    // model.predicate = 'Owner=@0';
-    // model.dataValue = this.user.userID;
+    // model.pageSize = 20;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('5/31/2022').toDate();
@@ -132,21 +132,21 @@ export class ViewListDetailsComponent implements OnInit {
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    let dataObj = { view: this.view, viewBoardID: '' }; 
+    let dataObj = { view: this.view, viewBoardID: '' };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
-    const t = this;
-    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-      if (res && res.length) {
-        this.data = res[0];
-        this.classifyStatus(this.data);
-        this.itemSelected = res[0][0];
-        this.loadDetailTask(this.itemSelected);
-      } else {
-        this.data = [];
-      }
-      t.dt.detectChanges();
-    });
+    //const t = this;
+    // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
+    //   if (res && res.length) {
+    //     this.data = res[0];
+    //     // this.classifyStatus(this.data);
+    //     // this.itemSelected = res[0][0];
+    //     // this.loadDetailTask(this.itemSelected);
+    //   } else {
+    //     this.data = [];
+    //   }
+    //   t.dt.detectChanges();
+    // });
   }
 
   trackByFn(index: number, item): string {
@@ -282,28 +282,24 @@ export class ViewListDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var data = t.dataOfStatus(lstTaskDelete[i].status)
-                    var taskDelete = data.find(
+                    var taskDelete = t.data.find(
                       (x) => x.taskID == lstTaskDelete[i].taskID
                     );
-                    var lv = t.lvOfStatus(taskDelete.status)
-                    lv.removeHandler(taskDelete, 'recID');
-
+                    t.removeListView(taskDelete);
                   }
                   t.notiService.notify('Xóa task thành công !');
                   if (res[1] != null) {
-                    var dt = t.dataOfStatus(res[i].status)
+                    var dt = t.dataOfStatus(res[i].status);
                     var parent = dt.find((x) => x.taskID == res[1].taskID);
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
-                    var lv = t.lvOfStatus(parent.status)
-                   lv.addHandler(parent, false, 'recID');
+                    t.updateListView(parent);
                   }
                   // t.notiService.notifyCode("TM004")
-                
-                  // t.data = t.listview.data;
-                  // t.itemSelected = t.data[0];
-                  // t.getOneItem(t.itemSelected.taskID);
+                  var lv = t.lvOfStatus(this.dataValue);
+                  t.data = lv.data;
+                  t.itemSelected = t.data[0];
+                  t.getOneItem(t.itemSelected.taskID);
                   return;
                 }
                 t.notiService.notify(
@@ -372,6 +368,7 @@ export class ViewListDetailsComponent implements OnInit {
       status: status,
       taskAction: taskAction,
     };
+    var oldSt = this.dataValue;
     this.callfc
       .openForm(
         UpdateStatusPopupComponent,
@@ -382,22 +379,24 @@ export class ViewListDetailsComponent implements OnInit {
         obj
       )
       .subscribe((dt: any) => {
-        dt.close = this.closePopup;
+        var that = this;
+        dt.close = function (e) {
+          that.closePopup(e, oldSt, that);
+        };
       });
   }
 
-  closePopup(e: any) {
+  closePopup(e: any, oldSt: string, t: ViewListDetailsComponent) {
     if (e.closedBy == 'user action') {
       var task = e.event;
-      var lv = this.lvOfStatus(task.status)
-      var crrLv = this.lvOfStatus(this.tabSt)
-      if(task.status!=this.tabSt){
-        crrLv.removeHandler(task, 'recID');
-        lv.addHandler(task, false, 'recID');
-      }else{
-        crrLv.addHandler(task, false, 'recID');
+      var oldTask = task;
+      oldTask.status = oldSt;
+      if (task.status != oldSt) {
+        t.addListView(task);
+        t.removeListView(oldTask);
+      } else {
+        t.updateListView(task);
       }
-    
     }
   }
 
@@ -405,83 +404,136 @@ export class ViewListDetailsComponent implements OnInit {
     this.openNode = !this.openNode;
   }
 
-  classifyStatus(data) {
-    for (var i = 0; i < data.length; i++) {
-      var obj = this.data[i];
-      switch (obj.status) {
-        case '1':
-          this.dataAddNew.push(obj);
-          break;
-        case '9':
-          this.dataCompleted.push(obj);
-          break;
-        case '5':
-          this.dataPostpone.push(obj);
-          break;
-        case '8':
-          this.dataRefuse.push(obj);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  tabStatus(st:string){
-    switch (st) {
+  addListView(obj) {
+    switch (obj.status) {
       case '1':
-        this.itemSelected = this.dataAddNew[0];
-        this.tabSt ='1' ;
+        this.listviewAdd.addHandler(obj, true, 'recID');
+        this.dataAddNew.push(obj);
         break;
       case '9':
-        this.itemSelected = this.dataCompleted[0];
-        this.tabSt ='9' ;
+        this.listviewCompleted.addHandler(obj, true, 'recID');
+        this.dataCompleted.push(obj);
         break;
       case '5':
-        this.itemSelected = this.dataPostpone[0];
-        this.tabSt ='5' ;
+        this.listviewPostpone.addHandler(obj, true, 'recID');
+        this.dataPostpone.push(obj);
         break;
       case '8':
-        this.itemSelected = this.dataRefuse[0];
-        this.tabSt ='8' ;
+        this.listviewRefuse.addHandler(obj, true, 'recID');
+        this.dataRefuse.push(obj);
         break;
       default:
         break;
     }
-   this.loadDetailTask(this.itemSelected);
-    
   }
-
-  lvOfStatus(st) : any{
-    switch (st) {
+  updateListView(obj) {
+    switch (obj.status) {
       case '1':
-      return this.listviewAdd
+        this.listviewAdd.addHandler(obj, false, 'recID');
+        this.dataAddNew.push(obj);
+        break;
       case '9':
-        return this.listviewCompleted
+        this.listviewCompleted.addHandler(obj, false, 'recID');
+        this.dataCompleted.push(obj);
+        break;
       case '5':
-        return this.listviewPostpone
+        this.listviewPostpone.addHandler(obj, false, 'recID');
+        this.dataPostpone.push(obj);
+        break;
       case '8':
-        return this.listviewRefuse
+        this.listviewRefuse.addHandler(obj, false, 'recID');
+        this.dataRefuse.push(obj);
+        break;
+      default:
+        break;
     }
   }
-  dataOfStatus(st) : any{
+  removeListView(obj) {
+    switch (obj.status) {
+      case '1':
+        this.listviewAdd.removeHandler(obj, 'recID');
+        this.dataAddNew.push(obj);
+        break;
+      case '9':
+        this.listviewCompleted.removeHandler(obj, 'recID');
+        this.dataCompleted.push(obj);
+        break;
+      case '5':
+        this.listviewPostpone.removeHandler(obj, 'recID');
+        this.dataPostpone.push(obj);
+        break;
+      case '8':
+        this.listviewRefuse.removeHandler(obj, 'recID');
+        this.dataRefuse.push(obj);
+        break;
+      default:
+        break;
+    }
+  }
+  tabStatus(st: string) {
     switch (st) {
       case '1':
-      return this.dataAddNew
+        this.data = this.listviewAdd?.data;
+        if(this.data!=null)
+        this.itemSelected = this.data[0];
+        this.dataValue = '1';
+        this.tabSt = '1';
+        break;
       case '9':
-        return this.dataCompleted
+        this.data = this.listviewCompleted?.data;
+        if(this.data!=null)
+        this.itemSelected = this.data[0];
+        this.dataValue = '9';
+        this.tabSt = '9';
+        break;
       case '5':
-        return this.dataPostpone
+        this.data = this.listviewPostpone?.data;
+        if(this.data!=null)
+        this.itemSelected = this.data[0];
+        this.dataValue = '5';
+        this.tabSt = '5';
+        break;
       case '8':
-        return this.dataRefuse
+        this.data = this.listviewRefuse?.data;
+        if(this.data!=null)
+        this.itemSelected = this.data[0];
+        this.dataValue = '8';
+        this.tabSt = '8';
+        break;
+      default:
+        break;
+    }
+    if(this.itemSelected!=null)
+    this.loadDetailTask(this.itemSelected);
+  }
+
+  lvOfStatus(st): any {
+    switch (st) {
+      case '1':
+        return this.listviewAdd;
+      case '9':
+        return this.listviewCompleted;
+      case '5':
+        return this.listviewPostpone;
+      case '8':
+        return this.listviewRefuse;
+    }
+  }
+  dataOfStatus(st): any {
+    switch (st) {
+      case '1':
+        return this.dataAddNew;
+      case '9':
+        return this.dataCompleted;
+      case '5':
+        return this.dataPostpone;
+      case '8':
+        return this.dataRefuse;
     }
   }
 
-  loadDetailTask(task){
-    if (
-      task.category == '3' ||
-      task.category == '4'
-    ) {
+  loadDetailTask(task) {
+    if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
           'TM',
@@ -516,6 +568,6 @@ export class ViewListDetailsComponent implements OnInit {
           this.listNode = res;
         });
     }
-    this.isFinishLoad = true ;
+    this.isFinishLoad = true;
   }
 }

@@ -18,7 +18,13 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './modules/tm/controls/update-status-popup/update-status-popup.component';
+<<<<<<< HEAD
 
+=======
+import { AssignComponent } from './modules/tm/assign/assign.component';
+
+import { RangesKanbanComponent } from './modules/tm/ranges-kanban/ranges-kanban.component';
+>>>>>>> b953217c2f9d3c4b571271c613915898517fb5e4
 import { SettingsComponent } from './modules/tm/settings/settings/settings.component';
 
 

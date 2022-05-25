@@ -1,3 +1,4 @@
+
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +20,7 @@ import { OwnerTaskCalendarComponent } from './ownertasks/onwer-task-calendar/onw
 import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TaskGroupComponent } from './task-group/task-group.component';
-import { FuncTaskGroupComponent } from './controls/func-task-group/func-task-group.component';
+
 import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
 import { SettingsComponent } from './settings/settings/settings.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
@@ -79,10 +80,9 @@ const routes: Routes = [
     TreeviewComponent,
     CalendarComponent,
     TaskGroupComponent,
-    FuncTaskGroupComponent,
     RangesKanbanComponent,
     LayoutComponent,
-    AssignTaskComponent
+    AssignTaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

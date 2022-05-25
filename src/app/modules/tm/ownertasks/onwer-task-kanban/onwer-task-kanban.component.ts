@@ -23,7 +23,10 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
   styleUrls: ['./onwer-task-kanban.component.scss'],
 })
 export class KanbanComponent implements OnInit {
+  @ViewChild('kanban') kanban!: CoDxKanbanComponent;
+  @ViewChild('popupAdd') modalContent: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
+
   dataSource: any = [];
   data: any;
   setCalendar: boolean = true;
@@ -61,10 +64,11 @@ export class KanbanComponent implements OnInit {
       { key: 'Summary', type: 'TextArea' },
     ],
   };
+  swimlaneSettings: SwimlaneSettingsModel = {
+    keyField: 'userName',
+    showEmptyRow: false,
+  };
   cardId: string;
-
-  @ViewChild('kanban') kanban!: CoDxKanbanComponent;
-  @ViewChild('popupAdd') modalContent: any;
 
   constructor(
     private tmSv: TmService,
@@ -74,10 +78,6 @@ export class KanbanComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
   }
-  public swimlaneSettings: SwimlaneSettingsModel = {
-    keyField: 'userName',
-    showEmptyRow: false,
-  };
 
   ngOnInit() {
     this.cache.viewSettings('TMT02').subscribe((res) => {
