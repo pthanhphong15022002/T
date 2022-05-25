@@ -52,7 +52,7 @@ export class SettingComponent implements OnInit {
     private authStore: AuthStore
   ) {
     this.user = this.authStore.get();
-    this.cache.functionList('TM001').subscribe((res) => {
+    this.cache.functionList('TMT02').subscribe((res) => {
       if (res) {
         this.functionList = res;
       }
