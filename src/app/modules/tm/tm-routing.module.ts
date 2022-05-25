@@ -1,8 +1,10 @@
+import { ControlsModule } from './controls/controls.module';
+import { CalendarComponent } from './calendar/calendar.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { CodxCoreModule } from 'codx-core';
+import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
 import { TmComponent } from './tm.component';
@@ -15,13 +17,16 @@ import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { TaskInfoComponent } from './controls/task-info/task-info.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KanbanComponent } from './kanban/kanban.component';
-import { SettingComponent } from './setting/setting.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TaskGroupComponent } from './task-group/task-group.component';
+import { FuncTaskGroupComponent } from './controls/func-task-group/func-task-group.component';
+import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
+import { SettingsComponent } from './settings/settings/settings.component';
+import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 
 const routes: Routes = [
   {
@@ -41,9 +46,23 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
+        path: 'setting',
+        component: SettingsComponent,
+      },
+      {
+          path:'task-group',
+          component:TaskGroupComponent
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
+      },
+      {
+        path: 'assign',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('./assign/_layout/layout.modules').then((m) => m.LayoutModule),
       },
       {
         path: '**',
@@ -62,10 +81,14 @@ const routes: Routes = [
     ListTasksComponent,
     MoreFuntionComponent,
     ScheduleComponent,
-    TaskInfoComponent,
     DashboardComponent,
     SettingComponent,
     TreeviewComponent,
+    CalendarComponent,
+    TaskGroupComponent,
+    FuncTaskGroupComponent,
+    RangesKanbanComponent
+    
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -76,7 +99,7 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    DatePickerModule,TabModule
+    DatePickerModule, TabModule, ControlsModule
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

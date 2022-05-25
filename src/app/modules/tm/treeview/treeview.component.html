@@ -1,14 +1,20 @@
-<codx-listview #listview [itemTemplate]="templateTreeView" funcId="" [pageSize]="10" service="TM"
+<codx-treeview #treeview id="tree" [itemTemplate]="templateTreeView" funcId="" [pageSize]="100" service="TM"
   assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [gridViewName]="'grvTasks'"
-  entityName="TM_Tasks" groupBy="fieldGroup">
-</codx-listview>
-<codx-treeview id="tree" #tree [itemTemplate]="templateTreeView" [data]="listNode" [enableCheck]=false idField="recID"
-  parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+  entityName="TM_Tasks" groupBy="fieldGroup" type="treeview" [data]="listNode" [enableCheck]=false idField="recID"
+  [autoLoad]="false" [isOutput]="true" [isLoadChild]="false" parentIdField="parentID">
 </codx-treeview>
+<div class="d-flex flex-wrap align-items-top" (click)="openShowNode()"></div>
 <ng-template #templateTreeView let-data>
   <div class="task-row py-3 px-6 ">
     <table class="table w-100 table-action-menu">
       <tbody>
+        <td>
+          <div *ngIf="data.items.length >0">
+            <span class="icon-18 icon-remove me-2 align-items-start" *ngIf="openNode"></span>
+            <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="!openNode"></span>
+          </div>
+        </td>
+
         <td class="w-200px">
           <div class="priority mb-1 max-h-70px" [class]="data?.priority|vll:'L0186':'icon'|async"
             [style.color]="(data?.priority|vll:'L0186':'color'|async)">{{ data?.priority }}</div>

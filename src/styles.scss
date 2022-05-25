@@ -86,11 +86,7 @@
     color: var(--test);
 }
 
-/**** custom layout ****/
-body {
-    font-family: Roboto, Helvetica, "sans-serif" !important;
-    font-size: 1.025rem !important;
-}
+
 
 /**** custom boostrap ****/
 .btn.btn-pill {
@@ -843,14 +839,239 @@ codx-img img {
     bottom: 10px;
 }
 
-/******* temp ******/
-codx-imgs img {
-    margin-left: 2px;
-    margin-right: 2px;
+
+
+
+
+
+
+/***********  DA CHUAN *****************/
+
+/***** custom layout all codx  ****/
+/**** custom layout ****/
+:root {
+    --bs-body-line-height: 1.4;
+    --kt-toolbar-height: 45px;
 }
 
-/*********** TM *****************/
+body {
+    font-family: Roboto, Helvetica, "sans-serif" !important;
+    font-size: 13px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #e4e6ed !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #cdced4 !important;
+}
+
+codx-wrapper {
+    background-color: #F7F7F9;
+    height: calc(100vh - 65px) !important;
+    padding: 10px;
+}
+
+#codx_master {
+    background-color: #fff;
+    border-radius: 6px !important;
+    padding: 4px;
+}
+
+#codx_master .codx_master_container {
+    padding: 0 3px;
+    overflow: auto;
+}
+
+#codx_detail {
+    background-color: #fff;
+    border-radius: 6px !important;
+    margin-left: 10px;
+    padding: 4px !important;
+}
+
+#codx_detail .codx_detail_container {
+    padding: 16px !important;
+    overflow: auto;
+}
+
+#codx_master .codx_master_container,
+#codx_detail .codx_detail_container {
+    height: calc(100vh - 65px) !important;
+
+}
+
+
+codx-header+codx-wrapper {
+    height: calc(100vh - 120px) !important;
+}
+
+codx-header+codx-wrapper #codx_master .codx_master_container,
+codx-header+codx-wrapper #codx_detail .codx_detail_container {
+    height: calc(100vh - 130px) !important;
+}
+
+codx-wrapper ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+}
+
+.container,
+.container-xxl,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
+    padding: 0 20px;
+}
+
+
+
+@media (min-width: 992px) {
+    .header-fixed .header {
+        height: 52px;
+        box-shadow: none;
+    }
+
+    .header codx-img img {
+        width: 31px !important;
+        height: 31px !important;
+        border: 1px #eee solid;
+    }
+
+    .header-fixed.toolbar-fixed .toolbar {
+        top: 52px;
+    }
+
+    .header-fixed.toolbar-fixed .wrapper {
+        padding-top: calc(52px + 45px);
+    }
+
+    .header .w-30px.h-30px {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    codx-toolbar .w-30px.h-30px {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    codx-toolbar .dropdown-toggle:before {
+        border-color: #ffffff57 !important;
+    }
+
+    .toolbar-fixed .toolbar {
+        height: 45px;
+    }
+
+    .aside .aside-logo {
+        height: 52px;
+        padding-right: 5px;
+    }
+}
+
+/**** custom bootstrap all codx ***/
 .e-splitter.e-splitter-horizontal,
 .e-splitter.e-splitter-vertical {
     border: 0;
+}
+
+.fs-6 {
+    font-size: 14px !important;
+}
+
+.e-listview,
+.e-listview * {
+    font-size: 13px !important;
+}
+
+.e-listview .e-list-group-item {
+    background-color: transparent;
+    color: var(--primary-darker);
+    padding: 0;
+    border-bottom: 1px #eee solid;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 3px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    padding-left: 6px;
+}
+
+.card-with-dropdown-item {
+    border-radius: 6px !important;
+    margin-bottom: 2px;
+}
+
+.e-listview .e-list-group-item span {
+    font-size: 14px !important;
+}
+
+.e-listview .e-list-group-item {
+    border-top: 0;
+}
+
+.e-listview .e-list-item.e-hover,
+.e-listview .e-list-item.e-hover.e-active.e-checklist {
+    background-color: #f1f4f8;
+}
+
+.e-pane {
+    font-size: 13px !important;
+}
+
+/** dropdown menu **/
+.dropdown-menu {
+    min-width: 12rem;
+}
+
+.dropdown-item {
+    padding: 0.45rem 1rem;
+}
+
+
+/********* custom core codx / custom control all codx  *****/
+.symbol-group>div {
+    margin-right: 3px;
+}
+
+.symbol-group .symbol {
+    margin-left: 0;
+    border: 0;
+}
+
+.symbol-25px img,
+.symbol-25px codx-img,
+.symbol-25px .symbol-label {
+    width: 25px;
+    height: 25px;
+}
+
+/* file upload */
+/***/
+.viewfile-toolbar span.icon-24:hover {
+    cursor: pointer;
+    color: #fffca2 !important;
+}
+
+.upload-popup {
+    min-height: 300px;
+}
+
+.drop-zoon {
+    background-color: #eee !important;
+}
+
+.dms-dropzoon {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.dms-dropzoon .btn-choose-file {
+    position: absolute;
+    left: 50%;
+    margin-left: -38px;
+    bottom: 24px;
 }

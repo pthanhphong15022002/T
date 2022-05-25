@@ -303,7 +303,6 @@
                     <div class="mb-3 text-primary">Column</div>
                     <div class="mb-4">
                       <div class="form-group" *ngIf="functionList">
-
                         <codx-input
                           type="combobox"
                           name="combobox"
@@ -374,20 +373,22 @@
                         [checked]="kanbanSetting?.SwimlanesControl"
                         labelPosition="Before"
                         [disabled]="false"
-                        (valueChange)="onKanbanValueChange($event, 'SwimlanesControl')"
+                        (valueChange)="
+                          onKanbanValueChange($event, 'SwimlanesControl')
+                        "
                       ></codx-input>
                     </div>
                     <div class="mb-4">
                       <div class="form-group" *ngIf="functionList">
                         <codx-combobox
-                        [crrValue]="kanbanSetting?.SwimlanesField"
-                        service="BS"
-                        refValue="Swimlances"
-                        [model]="functionList"
-                        field="swimlanes"
-                        (valueChange)="onKanbanCbxChange($event)"
-                      >
-                      </codx-combobox>
+                          [crrValue]="kanbanSetting?.SwimlanesField"
+                          service="BS"
+                          refValue="Swimlances"
+                          [model]="functionList"
+                          field="swimlanes"
+                          (valueChange)="onKanbanCbxChange($event)"
+                        >
+                        </codx-combobox>
                       </div>
                     </div>
                   </div>
@@ -495,7 +496,8 @@
                   </div>
                   <div class="mt-6">
                     <div
-                      class="d-flex align-items-center justify-content-between mb-4">
+                      class="d-flex align-items-center justify-content-between mb-4"
+                    >
                       <span><label for="switch">Dùng mặc định</label></span>
                       <codx-input
                         #checkbox

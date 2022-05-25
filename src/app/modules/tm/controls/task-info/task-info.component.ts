@@ -30,6 +30,8 @@ import { SidebarComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { CbxpopupComponent } from '../cbxpopup/cbxpopup.component';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AttachmentService } from '@shared/components/attachment/attachment.service';
+import { AttachmentComponent } from '@shared/components/attachment/attachment.component';
 
 declare var _, $: any;
 @Component({
@@ -72,13 +74,15 @@ export class TaskInfoComponent implements OnInit {
   isAddNew = this.dataAddNew.asObservable();
   updateData = new BehaviorSubject<any>(null);
   isUpdate = this.updateData.asObservable();
-  showPlan = true ;
+  showPlan = true;
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  // @ViewChild("attachment") attachmentComponent: AttachmentComponent;
+  @ViewChild('attachment') attachment:AttachmentComponent
+
+ 
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -88,7 +92,8 @@ export class TaskInfoComponent implements OnInit {
     private tmSv: TmService,
     private cache: CacheService,
     private notiService: NotificationsService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    public atSV: AttachmentService,
   ) {
     this.user = this.authStore.get();
   }
@@ -179,11 +184,11 @@ export class TaskInfoComponent implements OnInit {
       };
       this.listMemo2OfUser.push(memo2OfUser);
     }
-  } 
-  changeMemo(event:any){
+  }
+  changeMemo(event: any) {
     var field = event.field;
     var dt = event.data;
-    this.task.memo = dt?.value ? dt.value : dt;  
+    this.task.memo = dt?.value ? dt.value : dt;
   }
 
   onOpenTodo() {
@@ -244,30 +249,35 @@ export class TaskInfoComponent implements OnInit {
       // this.notiService.notifyCode('TM002');
       return;
     }
-    // if (
-    //   this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-    //   (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
-    //     !this.isConfirm)
-    // ) {
-    //   if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
-    //     this.message =
-    //       'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-    //   } else
-    //     this.message =
-    //       'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-    //   this.notiService
-    //     .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
-    //     .subscribe((dialog: Dialog) => {
-    //       var that = this;
-    //       dialog.close = function (e) {
-    //         return that.close(e, that, id);
-    //       };
-    //     });
-    // } else {
-    this.confirmDueTime();
+    if (this.task.startDate == null && this.task.endDate == null) {
+      this.actionSave(id);
+      return;
+    }
+    if (
+      this.task.dueDate.getDate() < this.task.startDate.getDate() ||
+        this.task.dueDate.getDate() < this.task.endDate.getDate()
+    ) {
+      if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
+        this.message =
+          'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
+        this.message =
+          'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      this.notiService
+        .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.closeConfirm(e, that, id);
+          };
+        });
+    } else {
+      this.actionSave(id);
+    }
+  }
+  actionSave(id) {
     if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
     var checkLogic =
-      !this.isConfirm ||
       this.isCheckProjectControl ||
       this.isCheckCheckListControl ||
       this.isCheckAttachmentControl;
@@ -317,7 +327,7 @@ export class TaskInfoComponent implements OnInit {
               this.dataAddNew.next(data);
             });
           }
-          this.closeTask() ;
+          this.closeTask();
           // if (isCloseFormTask) {
           //   this.closeTask();
           // } else {
@@ -349,7 +359,7 @@ export class TaskInfoComponent implements OnInit {
           res.data.forEach((dt) => {
             var data = dt;
             this.updateData.next(data);
-          }) ;
+          });
           this.closeTask();
         } else {
           this.notiService.notify('TM002');
@@ -409,13 +419,13 @@ export class TaskInfoComponent implements OnInit {
   }
 
   checkLogicTime() {
-    if (!this.task.startDate && !this.task.endDate ) {
-      this.isCheckTime = true ;
+    if (!this.task.startDate && !this.task.endDate) {
+      this.isCheckTime = true;
       return;
     }
-    if (!this.task.startDate && this.task.endDate ) {
-      this.notiService.notify("Phải nhập ngày bắt đầu công việc !");
-      this.isCheckTime = false ;
+    if (!this.task.startDate && this.task.endDate) {
+      this.notiService.notify('Phải nhập ngày bắt đầu công việc !');
+      this.isCheckTime = false;
       return;
     }
     if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
@@ -427,7 +437,7 @@ export class TaskInfoComponent implements OnInit {
     }
   }
   confirmDueTime() {
-    if (this.task.startDate  && this.task.endDate) {
+    if (this.task.startDate && this.task.endDate) {
       if (
         this.task.dueDate.getDate() < this.task.startDate.getDate() ||
         (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
@@ -436,7 +446,7 @@ export class TaskInfoComponent implements OnInit {
         if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
           this.message =
             'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-        } else
+        } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
           this.message =
             'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
 
@@ -449,7 +459,7 @@ export class TaskInfoComponent implements OnInit {
           else $('#endDate').focus();
         }
       }
-    }else   this.isConfirm = true;
+    } else this.isConfirm = true;
   }
 
   checkLogicTaskGroup(idTaskGroup) {
@@ -562,15 +572,14 @@ export class TaskInfoComponent implements OnInit {
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null && t.task.assignTo != '') 
+        if (t.task.assignTo != null && t.task.assignTo != '')
           t.listUser = t.task.assignTo.split(';');
         else {
-           //thêm giá trị đê add thử copy -sau nay xóa đi 
-           if(action =="edit"){
+          //thêm giá trị đê add thử copy -sau nay xóa đi
+          if (action == 'edit') {
             this.task.assignTo = 'TQHOAN'; ///tesst
             this.getListUser(this.task.assignTo);
-           }
-       
+          }
         }
         t.changeDetectorRef.detectChanges();
         this.showPanel();
@@ -582,27 +591,27 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        t.copyListTodo(res[2]) ;
+        t.copyListTodo(res[2]);
         t.beforeCopy(res[0]);
       }
     });
   }
 
-  copyListTodo(listTodoCopy){
+  copyListTodo(listTodoCopy) {
     const t = this;
-    t.listTodo = [] ;
-    if (listTodoCopy != null){
-      listTodoCopy.forEach(td =>{
+    t.listTodo = [];
+    if (listTodoCopy != null) {
+      listTodoCopy.forEach((td) => {
         var todo = new TaskGoal();
         todo.status = td.status;
         todo.text = td.text;
         t.listTodo.push(Object.assign({}, todo));
-      })
+      });
     }
   }
 
   beforeCopy(data) {
-    this.title = "Copy công việc "
+    this.title = 'Copy công việc ';
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
@@ -612,7 +621,7 @@ export class TaskInfoComponent implements OnInit {
     this.listUser = [];
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi 
+    //thêm giá trị đê add thử copy -sau nay xóa đi
     this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
     this.getListUser(this.task.assignTo);
 
@@ -629,28 +638,6 @@ export class TaskInfoComponent implements OnInit {
   // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
   //   this.listUserDetail = res ;
   // })
-  // }
-
-  // getListUser(listUser) {
-  //   while (listUser.includes(' ')) {
-  //     listUser = listUser.replace(' ', '');
-  //   }
-  //   this.listUser = listUser.split(';');
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetListUserDetailAsync',
-  //       listUser
-  //     )
-  //     .subscribe((res) => {
-  //       this.listUserDetail = res;
-  //       this.listUserDetail.forEach((u) => {
-  //         var obj = { userID: u.userID, memo2: null };
-  //         this.listMemo2OfUser.push(obj);
-  //       });
-  //     });
   // }
 
   getListUser(listUser) {
@@ -675,11 +662,11 @@ export class TaskInfoComponent implements OnInit {
       });
   }
   extendShow() {
-    // this.panelTask.nativeElement.classList.toggle('extend-show');
+    // this.viewBase.currentView.
   }
 
-  extendShowPlan(){
-    this.showPlan = !this.showPlan
+  extendShowPlan() {
+    this.showPlan = !this.showPlan;
   }
 
   closeTask(): void {
@@ -702,7 +689,7 @@ export class TaskInfoComponent implements OnInit {
     this.listTodo = [];
     this.listUser = [];
     this.listUserDetail = [];
-    this.listMemo2OfUser =[] ;
+    this.listMemo2OfUser = [];
     this.task.status = '1';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -785,30 +772,16 @@ export class TaskInfoComponent implements OnInit {
     this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', obj);
   }
 
-  close(e: any, t: TaskInfoComponent, id: string) {
+  closeConfirm(e: any, t: TaskInfoComponent, id: string) {
     if (e?.event?.status == 'Y') {
-      t.isConfirm = true;
-    } else {
-      t.isConfirm = false;
-      if (t.task.dueDate.getDate() < t.task.startDate.getDate())
-        $('#startDate').focus();
-      else $('#endDate').focus();
-    }
-    if (t.task.taskGroupID) t.checkLogicTaskGroup(t.task.taskGroupID);
-    var checkLogic =
-      !t.isConfirm ||
-      t.isCheckProjectControl ||
-      t.isCheckCheckListControl ||
-      t.isCheckAttachmentControl;
-    if (checkLogic) {
-      t.notiService.notifyCode('TM002');
-      t.notiService.notify('Mã lỗi TM002');
-      return;
-    }
-
-    t.task.taskType = t.param['TaskType'];
-    if (id) t.updateTask();
-    else t.addTask();
-    t.viewBase.currentView.closeSidebarRight();
+      t.actionSave(id)
+     }
+   }
+   popup(evt: any){    
+    this.attachment.openPopup();
   }
+  fileAdded(e){
+    console.log(e)
+  }
+
 }

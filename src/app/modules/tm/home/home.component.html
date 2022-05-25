@@ -9,6 +9,8 @@
   <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
 </ng-template>
 
+
+
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
 
 <ng-template #kanban>
@@ -18,7 +20,6 @@
 <ng-template #settingPanel>
   <!-- <app-setting [viewBase]="viewBase"></app-setting> -->
 </ng-template>
-
 
 <!-- list-task-detail -->
 <ng-template #listDetails>
@@ -35,5 +36,15 @@
 </ng-template>
 
 <ng-template #treeViews let-data>
-  <app-treeview [viewBase]="viewBase"></app-treeview>
+  <app-treeview [viewBase]="viewBase" [taskInfo]="taskInfo"></app-treeview>
+</ng-template>
+
+<ng-template #calendar let-data>
+  <app-calendar [viewBase]="viewBase" [taskInfo]="taskInfo"></app-calendar>
+</ng-template>
+<ng-template #taskGroup let-data>
+  <app-task-group [viewBase]="viewBase"></app-task-group>
+</ng-template>
+<ng-template #rangesKanban let-data>
+  <app-ranges-kanban [viewBase]="viewBase"></app-ranges-kanban>
 </ng-template>

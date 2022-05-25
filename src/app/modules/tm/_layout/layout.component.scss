@@ -5,6 +5,12 @@
   .flex-root {
     height: 100%;
   }
+
+  .e-listview,
+  .e-listview * {
+    font-size: 13px !important;
+  }
+
 }
 
 .page-loaded {
@@ -12,4 +18,9 @@
     opacity: 1;
     transition: opacity 1s ease-in-out;
   }
+}
+
+div.flex-root {
+  background-color: #fff;
+  font-size: 13px;
 }

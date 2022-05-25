@@ -1,0 +1,337 @@
+<codx-toolbar [buttons]="buttons" (buttonClick)="clickButton($event,popup)">
+</codx-toolbar>
+<div class="" id="kt_content">
+  <div class="list-table" *ngIf="searchType == '0' || searchType == '1'">
+    <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="TM"
+      entityName="TM_TaskGroups" type="listView" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
+      method="GetListTaskGroupsAsync" [gridViewName]="'grvTaskGroups'" [predicate]="''" [dataValue]="''"
+      [pageSize]="100" [formName]="formName" [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle"
+      [gridViewName]="gridViewName" (onAddNew)="addRow()" [data]="data">
+    </codx-gridview>
+  </div>
+</div>
+<div id="canvas_nhomcongviec" #popup class="bg-body drawer drawer-end" style="display: none; width: 750px;">
+  <div class="card w-100 rounded-0 border-0">
+    <div class="card-header pe-5">
+      <div class="card-title">
+        <h2 class="m-0">{{title}}</h2>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
+          id="kt_engage_demos_close">
+          <span (click)="Close(popup)" class="icon-close icon-18"></span>
+        </button>
+      </div>
+    </div>
+    <div class="card-body" *ngIf="isAfterRender">
+      <form>
+        <div class="row">
+          <div class="form-group">
+            <div class="form-group mt-3">
+              <label>
+                <codx-label fiedName="taskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups">Mã nhóm công việc
+                </codx-label>
+              </label>
+
+              <input #taskGroupID name="taskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
+                class="form-control" [(ngModel)]="taskGroups.TaskGroupID" placeholder="" style="width: 400px" />
+            </div>
+            <div class="form-group mt-3">
+              <label>Nhóm công việc</label>
+              <input #taskGroupName name="taskGroupName" [(ngModel)]="taskGroups.TaskGroupName" type="text"
+                class="form-control" placeholder="Nhóm công việc" />
+
+            </div>
+            <div class="form-group mt-3">
+              <label>Ghi chú</label>
+              <textarea #note name="note" [(ngModel)]="taskGroups.Note" type="textarea" class="form-control"
+                placeholder="Ghi chú"></textarea>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-4">
+              <div class="d-flex align-items-center">
+                <div class="fw-bold fs-6 text-primary">Kiểm soát nhập dữ liệu</div>
+              </div>
+            </div>
+            <div class="form-group row mt-3">
+              <div class="form-group col-8">
+                <label>
+                  <codx-label fiedName="approvalControl" default="Xét duyệt"></codx-label>
+                </label>
+                <div>
+                  <label class="text-dark-50">Kiểm soát xét duyệt khi tạo mới công việc</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-input name="approvalControl" type="combobox" refValue="L1433" field="approvalControl"
+                  placeholder="" [crrValue]="taskGroups.ApprovalControl" (valueChange)="valueApp($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="form-group row mt-3">
+              <div class="form-group col-8">
+                <codx-label fiedName="projectControl" default="Chọn dự án"></codx-label>
+                <div>
+                  <label class="text-dark-50">Ràng buộc chọn thông tin dự án khi tạo công việc</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-input name="projectControl" type="combobox" refValue="L1462" field="projectControl" placeholder=""
+                  [crrValue]="taskGroups.ProjectControl" (valueChange)="valuePro($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="form-group row mt-3">
+              <div class="form-group col-8">
+                <codx-label fiedName="attachmentControl" default="Đính kèm file"></codx-label>
+                <div>
+                  <label class="text-dark-50">Kiểm soát file đính kèm khi tạo công việc</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-input name="attachmentControl" type="combobox" refValue="L1462" field="attachmentControl"
+                  placeholder="" [crrValue]="taskGroups.AttachmentControl" (valueChange)="valueAtt($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="form-group row mt-3">
+              <div class="form-group col-8">
+                <label>
+                  <codx-label fiedName="checkListControl" default="Nhập việc cần làm"></codx-label>
+                </label>
+                <div>
+                  <label class="text-dark-50">Kiểm soát nhập liệu checklist</label>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-input name="checkListControl" type="combobox" refValue="L1463" field="checkListControl"
+                  placeholder="" [crrValue]="taskGroups.CheckListControl" (valueChange)="valueCheck($event)">
+                </codx-input>
+              </div>
+            </div>
+            <div class="workToDo" *ngIf="taskGroups.CheckListControl == '2'">
+              <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+                <div class="d-flex align-items-center">
+                  <span class="text-primary font-weight-bold">Công việc cần làm</span>
+                </div>
+                <div class="d-flex mt-2">
+                  <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
+                    <i class="icon-add icon-16 text-dark-75"></i>
+                    <span>Add to do list</span>
+                  </a>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="checkbox-list">
+                  <ng-container *ngFor="let item of listTodo; index as i;">
+                    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+                      <label class="checkbox checkbox-square checkbox-sm mb-0">
+                        <input #checkShareRight1 type="checkbox" [checked]="item.status" id="checkShareRight1"
+                          (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
+
+                        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
+                        <span></span>{{item.text}}
+                      </label>
+                      <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="add-control mt-2" *ngIf="enableAddtodolist">
+                  <div class="input-group">
+                    <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
+                      [ngModelOptions]="{standalone: true}" required matInput class="form-control"
+                      placeholder="Add..." />
+                    <div class="input-group-append">
+                      <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
+                        <span class="icon-add icon-20"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #GiftIDCell let-dataItem>
+  <div class="Box-tools pull-right" style="vertical-align: middle;">
+    <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="openForm(dataItem,false)">
+      <i class="fa fa-edit text-primary"></i>
+    </a>
+    <a class="btn btn-xs btn-flat btn-danger" (click)="deleteTaskGroup(dataItem)">
+      <i class="fa fa-remove "></i>
+    </a>
+  </div>
+</ng-template>
+<ng-template #itemCreateBy let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg" placement="bottom" [ngbTooltip]="dataItem.createName">
+      {{dataItem.createName}}
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemCreate let-data>
+  {{data.createdOn | fmDT:'dmy'}}
+</ng-template>
+<ng-template #itemApprovalControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.approvalControl|vll:"L1433":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemProjectControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.projectControl|vll:"L1462":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemAttachmentControl let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.attachmentControl|vll:"L1462":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemCheckListControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.checkListControl|vll:"L1463":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemCheckList let-data>
+  <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
+    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
+      *ngIf=" (i<3 || data.disableReadmore) ">
+      <label class="checkbox checkbox-square checkbox-sm mb-0">
+        <input type="checkbox" checked="checked" disabled>
+        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
+        <span></span> {{item}}
+      </label>
+    </div>
+  </ng-container>
+  <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
+      (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+</ng-template>
+<!-- <ng-template #itemTemplate let-data> 
+  <div class="task-row py-3 px-6 ">
+    <table class="table w-100 table-action-menu ">
+      <thead>
+        <tr>
+          <th scope="col" class="w-100px">
+            <span>
+              <codx-label fiedName="taskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups"  default="Mã nhóm">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-200px">
+            <span>
+              <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Nhóm công việc">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-200px">
+            <span>
+              <codx-label fiedName="TaskGroupName2" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Tên khác">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-180px">
+            <span>
+              <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-140px">
+            <span>
+              <codx-label fiedName="ApprovalControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Xét duyệt?">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-140px">
+            <span>
+              <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Chọn dự án">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-140px">
+            <span>
+              <codx-label fiedName="AttachmentControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Đính kèm file">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-180px">
+            <span>
+              <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+                default="Nhập việc cần làm">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-100px">
+            <span>
+              <codx-label fiedName="CheckList" formName="TaskGroups" gridViewName="grvTaskGroups" default="CheckList">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-200px">
+            <span>
+              <codx-label fiedName="CreateName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Người tạo">
+              </codx-label>
+            </span>
+          </th>
+          <th scope="col" class="w-100px">
+            <span>
+                <codx-label fiedName="CreatedOn" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ngày tạo">
+                </codx-label>
+              </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td scope="col" class="w-100px">
+            {{data.TaskGroupID}}
+          </td>
+          <td scope="col" class="w-200px">
+            {{data.TaskGroupName}}
+          </td >
+          <td scope="col" class="w-200px">
+            {{data.TaskGroupName2}}
+          </td>
+          <td scope="col" class="w-180px">
+            {{data.Note}}
+          </td>
+          <td scope="col" class="w-140px">
+            {{data.ApprovalControl}}
+          </td>
+          <td scope="col" class="w-140px">
+            {{data.ProjectControl}}
+          </td>
+          <td scope="col" class="w-140px">
+            {{data.AttachmentControl}}
+          </td>
+          <td scope="col" class="w-180px">
+            {{data.CheckListControl}}
+          </td>
+          <td scope="col" class="w-100px">
+            {{data.CheckList}}
+          </td>
+          <td scope="col" class="w-200px">
+            {{data.CreatedBy}}
+          </td>
+          <td scope="col" class="w-100px">
+            {{data.CreatedOn}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template> -->

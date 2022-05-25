@@ -1,12 +1,8 @@
 <div class="row">
   <codx-kanban #kanban keyField="status" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
-    [cardTemplate]="cardTemplate" [resourceModel]="" [popupTemplate]="content" [swimlanes]="swimlaneSettings"
-    [cardSettings]="cardSettings" (popupData)="openPopup($event,'edit')" (onDrag)="onDataDrag($event)">
+    [cardTemplate]="cardTemplate" [popupTemplate]="content" [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings"
+    (onDrag)="onDataDrag($event)">
   </codx-kanban>
-  <!-- <input type="checkbox" [(ngModel)]="showSumary" /> -->
-  <!-- <button class="btn btn-sm btn-success" (click)="openPopup($event)">
-    Thêm
-  </button> -->
 </div>
 <ng-template #cardTemplate let-data>
   <!-- <div class="card-template">

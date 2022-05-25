@@ -131,7 +131,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.predicate = '';
-    this.model.funcID = "TM003"//this.viewBase.funcID ;
+   // this.model.funcID = "TM003"//this.viewBase.funcID ;
     this.model.page = 1;
     this.model.pageSize = 100;
     if (this.startDate && this.endDate) {
@@ -143,36 +143,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
         ],
       };
     }
-
-    const t = this;
-    // this.lstItems = [];
-    t.tmSv.loadTaskByAuthen(this.model).subscribe((res) => {
-      if (res && res.length) {
-        this.data = res[0];
-        this.itemSelected = res[0][0];
-        this.api
-          .execSv<any>(
-            'TM',
-            'ERM.Business.TM',
-            'TaskBusiness',
-            'GetTaskByParentIDAsync',
-            [this.itemSelected?.id]
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) {
-              let objectId = res[0].owner;
-              let objectState = res[0].status;
-              for (let i = 1; i < res?.length; i++) {
-                objectId += ';' + res[i].owner;
-                objectState += ';' + res[i].status;
-              }
-              this.objectAssign = objectId;
-            }
-          });
-
-      }
-    });
-
+    
   }
 
   getParams() {

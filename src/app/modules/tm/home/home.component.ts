@@ -10,6 +10,7 @@ import {
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { TaskGroupComponent } from '../task-group/task-group.component';
 
 @Component({
   selector: 'app-home',
@@ -28,14 +29,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('listTasks') listTasks: TemplateRef<any>;
   @ViewChild('schedule') schedule: TemplateRef<any>;
 
+  @ViewChild('calendar') calendar: TemplateRef<any>;
+
   @ViewChild('treeViews') treeViews: TemplateRef<any>;
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any> | null;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
   @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
+  @ViewChild('calendarPanel') calendarPanel: TemplateRef<any> | null;
+  @ViewChild('taskGroup') taskGroup: TemplateRef<any>;
+  @ViewChild('rangesKanban') rangesKanban: TemplateRef<any>;
+
 
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
+  @ViewChild('TaskGroup') TaskGroup: TaskGroupComponent;
+
   public showBackdrop: boolean = true;
   public type: string = 'Push';
   public width: string = '550px';
@@ -151,6 +160,43 @@ export class HomeComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
+    {
+      id: '7',
+      type: 'calendar',
+      text: 'calendar',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.calendar,
+        widthAsideRight: '550px'
+      }
+    },
+    {
+      id: '8',
+      type: 'grid',
+      text: 'Task-Group',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.taskGroup,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '9',
+      type: 'grid',
+      text: 'Ranges-kanban',
+      sameData: false,
+      active: false,
+      model: {
+        panelLeftRef: this.rangesKanban,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
     ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();
@@ -162,6 +208,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
       case 'add':
         this.taskInfo.openTask();
         this.taskInfo.title = 'Tạo mới công việc';
+        this.viewBase.currentView.openSidebarRight();
+        break;
+      case 'add1':
+        this.TaskGroup.openTask();
+        this.TaskGroup.title = 'Tạo mới nhóm làm việc';
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':

@@ -95,6 +95,14 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       comingSoon: false,
       separator: false,
       childs: []
+    },
+    {
+      functionID: 'TM006',
+      customName: 'Thiết lập',
+      smallIcon: 'icon-gear icon-18',
+      comingSoon: false,
+      separator: false,
+      childs: []
     }]
   );
 }

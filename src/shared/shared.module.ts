@@ -21,6 +21,8 @@ import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-in
 import { CoreModule } from '@core/core.module';
 import { TagsComponent } from './layout/tags/tags.component';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
+import { AttachmentComponent } from './components/attachment/attachment.component';
+import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -34,6 +36,8 @@ const T_Component: Type<any>[] = [
   NoteDrawerComponent,
   TagsComponent,
   SelectweekComponent,
+  AttachmentComponent,
+  BreadcumbComponent
 ]
 
 const T_Moudule: Type<any>[] = [

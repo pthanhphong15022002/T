@@ -1,144 +1,200 @@
-import { Injectable } from '@angular/core';
-import { ApiHttpService, UploadFile } from 'codx-core';
-import { FileDownload, FileInfo, FolderInfo } from '@shared/models/file.model';
-import { Observable, of } from 'rxjs';
-import { finalize, share, tap } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { map, catchError, switchMap, finalize } from 'rxjs/operators';
+import { HttpClient, HttpBackend, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { provideRoutes, Router } from '@angular/router';
+import { A } from '@angular/cdk/keycodes';
+import { ApiHttpService, DataRequest } from 'codx-core';
+// import { DataReturn } from '@modules/od/models/info.model';
+import { DataReturn, FileDownload, FileInfo, FileUpload } from '@shared/models/file.model';
+//import { AESCryptoService } from '../aescrypto/aescrypto.service';
+//import { ApiHttpService } from '..';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
-export class FilesService {
-  private caches = new Map<string, Map<string, any>>();
-  private cachedObservables = new Map<string, Observable<any>>();
+export class FileService implements OnDestroy {
+    //private API_DM_URL = `${environment.apiUrl}/dm`;
 
-  constructor(private api: ApiHttpService) { }
+    options = new DataRequest();
 
-  uploadAvatar(file: UploadFile, funcID: string, objectID: string, objectType: string): Observable<any> {
-    file.category = "0";
-    var keyRoot = funcID + objectID + objectType;
-    if (this.caches.has(keyRoot))
-      this.caches.delete(keyRoot);
+    ngOnDestroy() {
 
-    return this.api.exec("DM", "FileBussiness", "UploadFilesAsync", [funcID, objectID, objectType], [file]);
-  }
+    }
 
-  loadAvatar(id: string = "", funcID: string = "", objectID: string = "", objectType: string = "", type: string = "", width: number = 0, objectName = ""): Observable<any> {
-    var paras = [id, funcID, objectID, objectType, type, width, objectName];
-    var keyRoot = funcID + objectID + objectType;
-    var key = JSON.stringify(paras).toLowerCase();
+    constructor(
+        // private httpBackend: HttpBackend,
+        //private http: HttpClient,
+        private router: Router,
+        //  private aesCrypto: AESCryptoService,
+        private api: ApiHttpService
+    ) {
+        this.options.pageLoading = false;
+        this.options.pageSize = 1;
+        this.options.funcID = "";
+        this.options.srtDirections
+    }
 
-    //Get from CacheData
-    if (this.caches.has(keyRoot)) {
-      var c = this.caches.get(keyRoot);
-      if (c && c.has(key)) {
-        return of(c.get(key));
-      }
-    } else
-      this.caches.set(keyRoot, new Map<string, any>());
+    getModeStore(): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "GetModeStoreAsync", [""]);
+    }
 
-    //Get from CacheObservable
-    if (this.cachedObservables.has(key))
-      return this.cachedObservables.get(key);
+    isAllowAddFile(fizeSize): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "AllowAddAsync", [fizeSize]);
+    }
 
-    const observable = this.api.execSv<FileDownload>("DM", "DM", "FileBussiness", "GetAvatarAsync", paras).pipe(
-      tap(res => {
-        if (res) {
-          var c = this.caches.get(keyRoot);
-          c.set(key, res);
-          return res;
+    searchFile(textSearch: string, pageNo: number, PageSize: number): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, pageNo, PageSize]);
+    }
+
+    searchFileAdv(textSearch: string, pageNo: number, PageSize: number): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, pageNo, PageSize]);
+    }
+
+    getTotalHdd(): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "GetTernantHddAsync", [""]);
+    }
+
+    deleteFileToTrash(id: string, folderId: string, deleted: boolean): Observable<any> {
+        return this.api.exec<boolean>("DM", "FileBussiness", "DeleteFileToTrashAsync", [id, folderId, deleted]);
+    }
+
+    restoreFile(id: string, fileName: string, rewrite: string = "0"): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "RestoreFileAsync", [id, fileName, rewrite]);
+    }
+
+    setViewFile(id: string, rating: string, comment: string): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "SetViewAsync", [id, rating, comment]);
+    }
+
+    bookmarkFile(id: string): Observable<any> {
+        return this.api.exec<FileInfo>("DM", "FileBussiness", "BookmarkFileAsync", id);
+    }
+
+    getFile(id: string, isHistory: boolean = true): Observable<any> {
+        return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory]);
+    }
+
+    downloadFile(id: string): Observable<any> {
+        return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
+    }
+
+    arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
         }
-      }),
-      share(),
-      finalize(() => this.cachedObservables.delete(key))
-    );
-    this.cachedObservables.set(key, observable);
-    return observable;
-  }
-
-  loadAvatarMultiple(id: string = "", funcID: string = "", objectID: string = "", objectType: string = "", type: string = "", width: number = 0, numberImages = 1): Observable<any> {
-    return this.api.execSv<FileDownload>("DM", "DM", "FileBussiness", "GetAvatarMultipleAsync", [id, funcID, objectID, objectType, type, width, numberImages]);
-  }
-
-  addFile(file: any): Observable<any> {
-    return this.api.execSv<FileInfo>("DM", "DM", "FileBussiness", "AddFileAsync", file);
-  }
-
-  addFolder(folderName: string, parentId: string): Observable<any> {
-    return this.api.exec<FolderInfo>("DM", "FolderBussiness", "AddFolderAsync", [folderName, parentId]);
-  }
-
-  deleteFile(id: any): Observable<any> {
-    return this.api.execSv<any>("DM", "DM", "FileBussiness", "DeleteFileAsync", [id, true]);
-  }
-
-  downloadFile(id: string): Observable<any> {
-    return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
-  }
-
-  arrayBufferToBase64(buffer: any) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
+        return window.btoa(binary);
     }
-    return window.btoa(binary);
-  }
 
-  base64ToArrayBuffer(base64: string) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-      var ascii = binaryString.charCodeAt(i);
-      bytes[i] = ascii;
+    getFileDuplicate(fileName: string, folderId): Observable<any> {
+        return this.api.exec<string>("DM", "FileBussiness", "GetFileNameDuplicateAsync", [fileName, folderId]);
     }
-    return bytes;
-  }
 
-  getAvatar(filename: string) {
-    var ext = filename.substring(filename.lastIndexOf('.'), filename.length) || filename;
-
-    if (ext == null) {
-      // alert(1);
-      return "file.svg";
+    copyFile(id: string, fileName: string, id_to: string, move: number = 0, rewrite: number = 0): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "CopyFileAsync", [id, fileName, id_to, move, rewrite]);
     }
-    else {
-      switch (ext) {
-        case ".txt":
-          return "txt.svg";
-        case ".doc":
-        case ".docx":
-          return "doc.svg";
-        case ".7z":
-        case ".rar":
-        case ".zip":
-          return "zip.svg";
-        case ".jpg":
-          return "jpg.svg";
-        case ".mp4":
-          return "mp4.svg";
-        case ".xls":
-        case ".xlsx":
-          return "xls.svg";
-        case ".pdf":
-          return "pdf.svg";
-        case ".png":
-          return "png.svg";
-        case ".js":
-          return "javascript.svg";
-        default:
-          return "file.svg";
-      }
-    }
-  }
 
-  getNow() {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    var ret = dd + '/' + mm + '/' + yyyy;
-    return ret;
-  }
+    // updateFile(id: string, fileName: string): Observable<any> { 
+    //     return this.api.exec<FileInfo[]>("DM", "FileBussiness", "UpdateFileAsync", [id, fileName]);
+    // }  
+
+    // updateFile(id: string, folderID: string, objectID: string, objectType: string, cate: string, fileName: string, data: ArrayBuffer): Observable<any> {    
+    //     var bytes = new Int8Array(data as ArrayBuffer);  
+    //     var item = this.arrayBufferToBase64(data);
+    //     return this.api.exec<FileInfo>("DM", "FileBussiness", "UpdateFileAsync", [id, folderID, objectID, objectType, cate, item, fileName]);        
+    // }   
+
+    requestOrShareFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        return this.api.execSv<FileInfo>("DM", "DM", "FileBussiness", "RequestOrShareFileAsync", file);
+    }
+
+    updateFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateFileAsync", file);
+    }
+
+    // uploadFile(file: FileUpload): Observable<any> {
+    //     //  var bytes = new Int8Array(data as ArrayBuffer); 
+    //     //  var item = this.arrayBufferToBase64(data);
+    //     return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateFileAsync", file);
+    // }
+
+    getThumbnail(id: string, pathDisk: string): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "GetThumbnailAsync", [id, pathDisk]);
+    }
+
+    renameFile(id: string, fileName: string): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
+    }
+
+    addMultiFile(list: FileUpload[]): Observable<DataReturn[]> {
+        //var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        let data = JSON.stringify(list);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", data);
+    }
+
+    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive]);
+    }
+
+    updateVersionFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateVersionFileAsync", file);
+    }
+
+    getChunkFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);        
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "GetChunkInfoFileAsync", file);
+    }
+
+    addChunkFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);        
+        return this.api.execSv<string>("DM", "DM", "FileBussiness", "CreateChunkFileAsync", file);
+    }
+
+    //Observable<any>
+    addFile(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);        
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
+    }
+
+    addFileTemp(folderID: string, objectID: string, objectType: string, cate: string, fileName: string, data: ArrayBuffer): Observable<any> {
+        var bytes = new Int8Array(data as ArrayBuffer);
+        var item = this.arrayBufferToBase64(data);
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "AddFileAsync", [folderID, objectID, objectType, cate, item, fileName]);
+    }
+
+    getListActiveFiles(parentId: string, folderType: any): Observable<any> {
+        /* const request = {
+             IsJson: true,
+             Data: parentId,
+         };
+         return this.http.post<FileInfo[]>(`${this.API_DM_URL}/GetListActiveFiles`, request).pipe(
+             map((data: FileInfo[]) => {
+                 return data;
+             }),
+             catchError((err) => {
+                 return of(undefined);
+             })
+         );*/
+        //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
+        this.options.entityName = "DM_FileInfo";
+        //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
+        var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, folderType, parentId]);
+        // var fileIbfo = data[0]
+        console.log(data);
+        return data;
+    }
 }
