@@ -55,7 +55,6 @@ export class SettingComponent implements OnInit {
     this.cache.functionList('TM001').subscribe((res) => {
       if (res) {
         this.functionList = res;
-        this.df.detectChanges();
       }
     });
   }
@@ -258,7 +257,7 @@ export class SettingComponent implements OnInit {
   //     }
   //   }
   // }
-  tabChange(a: string) {}
+  tabChange(a: string) { }
 
   ngOnDestroy() {
     this.tmSv.myTaskComponent = true;

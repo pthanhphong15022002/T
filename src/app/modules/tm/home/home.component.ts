@@ -1,3 +1,4 @@
+import { CacheService, ViewsComponent } from 'codx-core';
 import {
   Component,
   OnInit,
@@ -6,21 +7,9 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import {
-  AccPoints,
-  AccumulationChart,
-  AccumulationChartComponent,
-  ChartTheme,
-  IAccAnimationCompleteEventArgs,
-  IAccTextRenderEventArgs,
-  IAxisLabelRenderEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-charts';
-import { ViewsComponent, CacheService } from 'codx-core';
+import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { SettingComponent } from '../setting/setting.component';
 
 @Component({
   selector: 'app-home',
@@ -88,6 +77,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
     this.views = [{
       id: '1',
       type: 'content',
