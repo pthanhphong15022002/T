@@ -1,8 +1,9 @@
+import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { TmService } from '@modules/tm/tm.service';
-import { Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
-import { DataRequest, ApiHttpService, CacheService, AuthStore, UserModel, CodxGridviewComponent, CodxListviewComponent, ViewsComponent } from 'codx-core';
+import { Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
+import { DataRequest, ApiHttpService, CacheService, AuthStore, UserModel, CodxGridviewComponent, CodxListviewComponent, ViewsComponent, CodxFormDynamicComponent, CallFuncService, NotificationsService } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ToDo } from '../models/task.model';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 
@@ -13,8 +14,9 @@ import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 })
 export class TaskGroupComponent implements OnInit {
   @Input() data: [];
+  
   @Input() taskGroups = new TM_TaskGroups();
-
+  dataAddNew = new BehaviorSubject<any>(null);
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
@@ -27,20 +29,26 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
+
   user: UserModel;
 
-  formName ="";
-  gridViewName="";
+
+  formName = "";
+  gridViewName = "";
   functionID = "";
   entity = "";
   listTodo: any;
   model: DataRequest;
   searchType = "0";
+  dataItem: any;
   addEditForm: FormGroup;
   isAfterRender = false;
   isAddMode = true;
   enableAddtodolist: boolean = false;
   todoAddText: any;
+  isAddNew = this.dataAddNew.asObservable();
+  totalRow = 1;
+  total: number;
   title = 'Tạo mới nhóm công việc';
 
   columnsGrid = [];
@@ -56,17 +64,25 @@ export class TaskGroupComponent implements OnInit {
     fontWeight: 400,
     lineHeight: 1.4
   }
+
+  buttons: Array<ButtonModel> = [{
+    id: '1',
+    text: 'Thêm'
+  }]
   constructor(private tmSv: TmService, private api: ApiHttpService,
     private cache: CacheService, private auth: AuthStore, private fb: FormBuilder,
-    private dt: ChangeDetectorRef,
+    private dt: ChangeDetectorRef, private callfc: CallFuncService,
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+    private notiService: NotificationsService,
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-   this.initForm();
+    this.initForm();
     this.columnsGrid = [
-      { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
-      { field: 'taskGroupID', headerText: 'Mã nhóm',width: 100 },
+      //     { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
+      { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 200 },
       { field: 'note', headerText: 'Ghi chú', width: 180 },
@@ -80,25 +96,51 @@ export class TaskGroupComponent implements OnInit {
     ];
   }
 
+  ngAfterViewInit(): void {
+  
+  }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.addEditForm = item;
       this.isAfterRender = true;
-      // this.getAutonumber(this.functionID, this.entity, "TaskGroupID").subscribe(key => {
-      //   this.addEditForm.patchValue({
-      //     taskGroupID: key,
-      //     approvalControl: "0",
-      //     projectControl: "0",
-      //     attachmentControl: "0",
-      //     checkListControl: "0"
-      //   })
-
-      //   this.listTodo = [];
-      // })
+      this.getAutonumber("TM00632","TM_TaskGroups","TaskGroupID").subscribe(key => {
+        // this.addEditForm.patchValue({
+        //   taskGroupID: key,
+        //   approvalControl: "0",
+        //   projectControl: "0",
+        //   attachmentControl: "0",
+        //   checkListControl: "0"
+        // })
+        this.taskGroups.TaskGroupID = key;
+        this.taskGroups.ApprovalControl = "0";
+        this.taskGroups.ProjectControl = "0";
+        this.taskGroups.AttachmentControl = "0";
+        this.taskGroups.CheckListControl = "0";
+        this.listTodo = [];
+      })
     })
   }
 
+  public addHandler(dataItem: any, isNew: boolean, key: string) {
+    var t = this;
+    if (!dataItem) return null;
+    if (isNew) {
+      this.gridView.data = [...[dataItem], ...this.gridView.data];
+      this.total = this.gridView.data.length;
+      this.totalRow = this.gridView.data.length;
+    }
+    else {
+      const index =
+        this.gridView.data.findIndex(
+          x => x[key] === dataItem[key]
+        )
+      this.gridView.data[index] = {};
+      this.dt.detectChanges();
+      this.gridView.data[index] = dataItem;
+    }
+    this.dt.detectChanges();
+  }
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
@@ -154,9 +196,100 @@ export class TaskGroupComponent implements OnInit {
     });
 
   }
+
+  clickButton(evt: any, popup: TemplateRef<any>) {
+    console.log(popup);
+    if (this.isAddMode == true) {
+      this.isAddMode = true;
+      this.initForm();
+    } else {
+      this.isAddMode = false;
+      if (evt.checkList) {
+        for (let item of evt.checkList.split(";")) {
+          if (this.listTodo == null)
+            this.listTodo = []
+          var todo = new ToDo;
+          todo.status = true;
+          todo.text = item;
+          this.listTodo.push(Object.assign({}, todo));
+        }
+      }
+    }
+    this.renderer.addClass(popup, 'drawer-on');
+
+  }
+
+  Close(popup: TemplateRef<any>) {
+    this.listTodo = [];
+    this.renderer.removeClass(popup, 'drawer-on');
+  }
+
+  valueApp(data) {
+
+    this.taskGroups.ApprovalControl = data.data;
+
+    console.log(this.taskGroups.ApprovalControl);
+  }
+  valuePro(data) {
+    this.taskGroups.ProjectControl = data.data;
+  }
+  valueAtt(data){
+    this.taskGroups.AttachmentControl = data.data;
+
+  }
+  valueCheck(data){
+    this.taskGroups.CheckListControl = data.data
+  }
+  onChangeToDoStatus(value, index) {
+    this.listTodo[index].status = value;
+  }
+
+  onDeleteTodo(index) {
+    this.listTodo.splice(index, 1);//remove element from array
+    this.dt.detectChanges();
+  }
+
+  onAddToDo() {
+    if (this.listTodo == null)
+      this.listTodo = [];
+    var todo = new ToDo;
+    todo.status = false;
+    todo.text = this.todoAddText;
+    this.listTodo.push(Object.assign({}, todo));
+    //this.listTodo.push(this.todoAddText);
+    this.enableAddtodolist = !this.enableAddtodolist;
+    this.todoAddText = "";
+    this.dt.detectChanges();
+  }
+
+  addTodolist() {
+
+  }
+
+  openTask(): void {
+    const t = this;
+    var obj = {
+      gridViewName: 'grvTaskGroups',
+      formName: 'TaskGroups',
+      functionID: 'TM00632',
+      entityName: 'TM_TaskGroups',
+      // model: this.model,
+      // text: this.text,
+      // oldTitle: this.oldTitle,
+      // id: this.id,
+      // isEdit: this.isEdit,
+      // name: this.name,
+      // fiedName: this.fiedName,
+      // formName: this.formName,
+      // gridViewName: this.gridViewName,
+    };
+
+    this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
+  }
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
-    this.api.execSv<any>("SYS", "AD", "AutoNumbersBusiness",
+    this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
       "GenAutoNumberAsync", [functionID, entityName, fieldName, null])
       .subscribe(item => {
         if (item)
@@ -167,12 +300,47 @@ export class TaskGroupComponent implements OnInit {
     return subject.asObservable();
   }
 
-  deleteTaskGroup(item){
-    
-  }
-  addRow(){
+  deleteTaskGroup(item) {
 
   }
+  addRow() {
+    this.tmSv.addTaskGroup(this.taskGroups)
+    .subscribe((res)=>{
+      if(res){
+        this.notiService.notify(res.message);
+        if (res.data) {
+          res.data.forEach((dt) => {
+            var data = dt;
+            this.dataAddNew.next(data);   
+            this.addHandler(data, this.isAddMode, "taskGroupID")        
+          })}
+        
+      }
+    })
+  }
+
+  lstSavecheckList: any = [];
+
+  OnSaveForm() {
+    this.lstSavecheckList = [];
+    if (this.taskGroups.CheckListControl == '2') {
+      for (let item of this.listTodo) {
+        if (item.status == true) {
+          this.lstSavecheckList.push(item.text)
+        }
+      }
+
+      this.taskGroups.CheckList = this.lstSavecheckList.join(";");
+      debugger
+      if (this.taskGroups.CheckList == "")
+        this.taskGroups.CheckList = null;
+    }
+    else {
+      this.taskGroups.CheckList = null;
+    }
+    this.addRow();
+  }
+
   getCheckList(checkList) {
     if (checkList != null) {
       return checkList.split(";");
