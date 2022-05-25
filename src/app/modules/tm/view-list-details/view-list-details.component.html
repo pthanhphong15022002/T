@@ -58,7 +58,9 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div>  
+          </div>
+          <div class="mt-2">
             <div class="d-flex mt-1">
               <div class="d-flex me-6">
                 <span class="fw-bold me-1">Ngày hết hạn:</span>
@@ -135,9 +137,7 @@
           <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
             {{ itemSelected?.taskName }}
           </div>
-          <div class="text-gray-600">
-            {{ itemSelected?.memo }}
-            <div id=showMemo></div>
+          <div class="text-gray-600" [innerHTML]="itemSelected?.memo">
           </div>
           <div class="task-detail mt-5" *ngIf="itemSelected?.listTaskGoals?.length > 0">
             <div class="text-primary fw-bold mt-4 mb-2">Chọn</div>
