@@ -92,7 +92,7 @@ export class KanbanComponent implements OnInit {
     this.getListDetailTask();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   viewMemo(id: string) {
     this.cardId = id;
@@ -114,7 +114,7 @@ export class KanbanComponent implements OnInit {
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => {});
+      .subscribe((res) => { });
     modal.close(true);
   }
 
@@ -255,7 +255,7 @@ export class KanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-        this.kanban.columns = res.column;
+        // this.kanban.columns = res.column;
         this.cr.detectChanges();
       }
     });
@@ -275,7 +275,7 @@ export class KanbanComponent implements OnInit {
       ((date.getTime() - janFirst.getTime()) / 86400000 +
         janFirst.getDay() +
         1) /
-        7
+      7
     );
   }
 

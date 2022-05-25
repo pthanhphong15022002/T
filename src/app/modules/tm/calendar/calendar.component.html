@@ -14,42 +14,15 @@
 </div>
 
 <div class="cal-container">
-  <codx-schedule
-    height="100%"
-    #schedule
-    [eventTemplate]="eventTemplate"
-    service="TM"
-    assemblyName="TM"
-    [templateResourceHeader]="resourceHeader"
-    className="TaskBusiness"
-    method="GetListDetailTasksAsync"
-    methodResource="GetUserByTasksAsync"
-    [cellFooterTemplate]="cellFooter"
-    [fields]="fields"
-    [selectedDate]="selectedDate"
-    [StartDate]="startDate"
-    [EndDate]="endDate"
-    [options]="model"
-    [optionsResource]="model"
-    entityName="TM_Tasks"
-    funcId=""
-    (onViewChange)="viewChange($event)"
-    [viewPreset]="viewPreset"
-    [minHeight]="minHeight"
-    eventStyle="colored"
-    [resourceTooltipTemplate]="resourceTootip"
-    (onEventClick)="onCellDblClickScheduler($event)"
-    (onAddNew)="addNew($event)"
-    (onEdit)="edit($event)"
-    (onDelete)="deleteTask($event)"
-    [statusColor]="status"
-    [eventEditFeature]="false"
-    [readOnly]="true"
-    [resourceField]="resourceField"
-    [templateCell]="cellTemplate"
-    currentView="Month"
-    isTimelineView="false"
-  >
+  <codx-schedule height="100%" #schedule [eventTemplate]="eventTemplate" service="TM" assemblyName="TM"
+    [templateResourceHeader]="resourceHeader" className="TaskBusiness" method="GetListDetailTasksAsync"
+    methodResource="GetUserByTasksAsync" [cellFooterTemplate]="cellFooter" [fields]="fields"
+    [selectedDate]="selectedDate" [StartDate]="startDate" [EndDate]="endDate" [options]="model"
+    [optionsResource]="model" entityName="TM_Tasks" funcId="" (onViewChange)="viewChange($event)"
+    [viewPreset]="viewPreset" [minHeight]="minHeight" eventStyle="colored" [resourceTooltipTemplate]="resourceTootip"
+    (onEventClick)="onCellDblClickScheduler($event)" (onAddNew)="addNew($event)" (onEdit)="edit($event)"
+    (onDelete)="deleteTask($event)" [statusColor]="status" [eventEditFeature]="false" [readOnly]="true"
+    [resourceField]="resourceField" [templateCell]="cellTemplate" currentView="Month" isTimelineView="false">
   </codx-schedule>
   <app-setting-calendar></app-setting-calendar>
   <ng-template #cellTemplate let-data>
@@ -89,8 +62,8 @@
 <ng-template #add>
   <div class="modal-body">
     <form>
-      <div class="form-group row">
-        <label class="col-4 col-form-label">
+      <div class="form-group">
+        <label class="col-form-label">
           <!-- theo gridview setup -->
           <!-- <codx-label
             fiedName="TaskName"
@@ -99,32 +72,20 @@
             default="Tên lịch làm việc"
           ></codx-label> -->
           <!--Ko theo gridview setup -->
-          <codx-label
-            name="lblCalendarName"
-            formName="Calendars"
-            default="Tên lịch làm việc"
-          ></codx-label>
+          <codx-label name="lblCalendarName" formName="Calendars" default="Tên lịch làm việc"></codx-label>
         </label>
-        <div class="col-4">
-          <codx-input type="text" field="calendarName" placeholder="Lịch làm việc"
-            (valueChange)="valueChange($event, 'calendar')">
-          </codx-input>
-        </div>
+        <codx-input type="text" field="calendarName" placeholder="Lịch làm việc"
+          (valueChange)="valueChange($event, 'calendar')">
+        </codx-input>
       </div>
-      <div class="form-group row">
-        <label class="col-4 col-form-label">
-          <codx-label
-            name="lblCalendarName"
-            formName="Calendars"
-            default="Diễn giải"
-          >
+      <div class="form-group">
+        <label class="col-form-label">
+          <codx-label name="lblCalendarName" formName="Calendars" default="Diễn giải">
           </codx-label>
         </label>
-        <div class="col-8">
-          <codx-input type="text" field="description" placeholder="Diễn giải"
-            (valueChange)="valueChange($event, 'calendar')">
-          </codx-input>
-        </div>
+        <codx-input type="text" field="description" placeholder="Diễn giải"
+          (valueChange)="valueChange($event, 'calendar')">
+        </codx-input>
       </div>
     </form>
   </div>
@@ -356,11 +317,7 @@
     <form>
       <div class="form-group row">
         <label class="col-2 col-form-label">
-          <codx-label
-            name="lblShiftType"
-            formName="Calendars"
-            default="Loại ngày"
-          >
+          <codx-label name="lblShiftType" formName="Calendars" default="Loại ngày">
           </codx-label>
         </label>
         <div class="col-4">
@@ -448,11 +405,7 @@
       <div class="form-group row">
         <label class="col-2 col-form-label">
           <label class="col-2 col-form-label">
-            <codx-label
-              name="lblCalendarDate"
-              formName="Calendars"
-              default="Ngày nghỉ"
-            >
+            <codx-label name="lblCalendarDate" formName="Calendars" default="Ngày nghỉ">
             </codx-label>
           </label>
         </label>

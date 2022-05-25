@@ -335,7 +335,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   // modal
   addCalendar() {
     this.callfc
-      .openForm(this.add, 'Tạo lịch làm việc', 800, 500)
+      .openForm(this.add, 'Tạo lịch làm việc', 500, 400)
       .subscribe((res: Dialog) => {
         var _this = this;
         res.close = function (e) {
@@ -423,7 +423,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         'SaveCalendarAsync',
         [test]
       )
-      .subscribe((res) => {});
+      .subscribe((res) => { });
   }
 
   saveDayOff() {
