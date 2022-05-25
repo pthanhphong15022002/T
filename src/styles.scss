@@ -828,18 +828,11 @@ codx-img img {
     border-radius: 50%;
 }
 
-/*** for news ***/
-.news-card-img {
-    position: relative;
+/*** for module  ***/
+
+.e-multiselect {
+    width: 250px;
 }
-
-.news-category {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-}
-
-
 
 
 
@@ -998,6 +991,11 @@ body .btn {
     font-size: 1rem;
     padding: calc(0.415rem + 1px) calc(0.8rem + 1px) !important;
     font-weight: 400;
+}
+
+.btn.btn-icon {
+    height: 32px;
+    width: 32px;
 }
 
 body .btn.btn-sm {
