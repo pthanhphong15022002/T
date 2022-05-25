@@ -65,6 +65,9 @@ export class TmService {
     addTaskGroup(data) {
       return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'AddTaskGroupsAsync', data);
     }
+    updateTaskGroup(data) {
+      return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'UpdateTaskGroupsAsync', data);
+    }
     update(data) {
       return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateTaskAsync', data);
     }
@@ -116,6 +119,9 @@ export class TmService {
           this.updateListData([item]);
         });
       }
+    }
+    getTaskGroup(data){
+      return this.api.execSv<any>("TM", "TM", "TaskGroupBusiness", "AddEditTaskGroupsAsync", data);
     }
     getTask(id) {
       return this.execTM(APICONSTANT.BUSINESS.TM.Task, "GetTaskByIdAsync", id);
