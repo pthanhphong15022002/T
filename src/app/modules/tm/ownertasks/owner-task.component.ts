@@ -102,7 +102,8 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       active: true,
       model: {
         panelLeftRef: this.kanban,
-        sideBarRightRef: this.settingPanel,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
       }
     },
@@ -112,7 +113,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: true,
-
       model: {
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
