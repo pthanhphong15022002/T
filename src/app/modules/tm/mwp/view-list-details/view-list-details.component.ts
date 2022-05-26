@@ -452,19 +452,15 @@ export class ViewListDetailsComponent implements OnInit {
     switch (obj.status) {
       case '1':
         this.listviewAdd.removeHandler(obj, 'recID');
-        this.dataAddNew.push(obj);
         break;
       case '9':
         this.listviewCompleted.removeHandler(obj, 'recID');
-        this.dataCompleted.push(obj);
         break;
       case '5':
         this.listviewPostpone.removeHandler(obj, 'recID');
-        this.dataPostpone.push(obj);
         break;
       case '8':
         this.listviewRefuse.removeHandler(obj, 'recID');
-        this.dataRefuse.push(obj);
         break;
       default:
         break;
