@@ -88,7 +88,7 @@ export class AssignTaskDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = "TM003";
+    model.funcID = "TMT03";
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -377,6 +377,7 @@ export class AssignTaskDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
+            this.countOwner = res.length
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {

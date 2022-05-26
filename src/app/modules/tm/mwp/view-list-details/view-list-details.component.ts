@@ -430,19 +430,15 @@ export class ViewListDetailsComponent implements OnInit {
     switch (obj.status) {
       case '1':
         this.listviewAdd.addHandler(obj, false, 'recID');
-        this.dataAddNew.push(obj);
         break;
       case '9':
         this.listviewCompleted.addHandler(obj, false, 'recID');
-        this.dataCompleted.push(obj);
         break;
       case '5':
         this.listviewPostpone.addHandler(obj, false, 'recID');
-        this.dataPostpone.push(obj);
         break;
       case '8':
         this.listviewRefuse.addHandler(obj, false, 'recID');
-        this.dataRefuse.push(obj);
         break;
       default:
         break;
