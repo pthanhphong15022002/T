@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './modules/tm/controls/update-status-popup/update-status-popup.component';
-import { SettingsComponent } from './modules/tm/settings/settings/settings.component';
+import { SettingsComponent } from './modules/tm/settings/settings.component';
 
 
 
