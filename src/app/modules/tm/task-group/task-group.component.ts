@@ -371,19 +371,19 @@ export class TaskGroupComponent implements OnInit {
 
   updateRow() {
     var t = this;
-    this.tmSv.updateTaskGroup(this.taskGroups)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
-          if (t.data) {
-            let item = t.data;
-            this.addHandler(item, this.isAddMode, "taskGroupID");
-            this.updateAddNew.next(item);
-          }
-        }
-        this.Close();
-      })
+    // this.tmSv.updateTaskGroup(this.taskGroups)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.notiService.notify(res[0].message);
+    //       t.data = res[1];
+    //       if (t.data) {
+    //         let item = t.data;
+    //         this.addHandler(item, this.isAddMode, "taskGroupID");
+    //         this.updateAddNew.next(item);
+    //       }
+    //     }
+    //     this.Close();
+    //   })
   }
 
   lstSavecheckList: any = [];

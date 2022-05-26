@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
   // Public variables
+  title = "Quản lý công việc";
   contentContainerClasses = '';
   headerCSSClasses: string;
   headerHTMLAttributes: any = {};
@@ -75,14 +76,22 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   public funcs$: Observable<any> = of([
     {
-      functionID: 'TM002',
+      functionID: 'TMT01',
       customName: 'Dashboard',
       smallIcon: 'icon-person icon-18',
       comingSoon: false,
       separator: false,
       childs: []
+    },
+    {
+      functionID: 'TMT02',
+      customName: 'Công việc của tôi',
+      smallIcon: 'icon-groups icon-18',
+      comingSoon: false,
+      separator: false,
+      childs: []
     }, {
-      functionID: 'TM003',
+      functionID: 'TMT03',
       customName: 'Công việc nhóm',
       smallIcon: 'icon-groups icon-18',
       comingSoon: false,

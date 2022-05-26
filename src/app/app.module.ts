@@ -18,9 +18,6 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { CbxpopupComponent } from './modules/tm/controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './modules/tm/controls/update-status-popup/update-status-popup.component';
-import { AssignComponent } from './modules/tm/assign/assign.component';
-
-import { RangesKanbanComponent } from './modules/tm/ranges-kanban/ranges-kanban.component';
 import { SettingsComponent } from './modules/tm/settings/settings/settings.component';
 
 
@@ -74,9 +71,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CbxpopupComponent,
     UpdateStatusPopupComponent,
     SettingsComponent,
-    
-   
-    
     //ReportComponent,
   ],
   imports: [
