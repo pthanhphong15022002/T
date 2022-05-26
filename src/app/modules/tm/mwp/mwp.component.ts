@@ -6,7 +6,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   templateUrl: './mwp.component.html',
   styleUrls: ['./mwp.component.scss']
 })
-export class MwpComponent implements  OnInit, AfterViewInit {
+export class MwpComponent implements OnInit, AfterViewInit {
 
   @ViewChild('panelTemplate') panelLeft: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -17,6 +17,7 @@ export class MwpComponent implements  OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '1',
+      viewInput: null,
       active: false,
       sameData: false,
       model: {
@@ -39,6 +40,7 @@ export class MwpComponent implements  OnInit, AfterViewInit {
       text: '',
       id: '2',
       sameData: false,
+      viewInput: null,
       active: false,
       model: {
         service: 'TM',

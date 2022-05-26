@@ -113,6 +113,7 @@ export class TaskGroupComponent implements OnInit {
       type: 'grid',
       sameData: false,
       active: true,
+      viewInput: null,
       model: {
         panelLeftRef: this.main,
         sideBarRightRef: this.sidebarRight,
@@ -405,11 +406,11 @@ export class TaskGroupComponent implements OnInit {
       this.taskGroups.checkList = null;
     }
     if (this.isAddMode == true) {
-       this.addRow();
-    }else{
+      this.addRow();
+    } else {
       this.updateRow();
     }
-    
+
     this.Close();
 
   }
