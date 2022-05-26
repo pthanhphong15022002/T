@@ -20,7 +20,7 @@ import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { OwnerTaskCalendarComponent } from './ownertasks/onwer-task-calendar/onwer-task-calendar.component';
 import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
-import { TaskGroupComponent } from './task-group/task-group.component';
+import { TaskGroupComponent } from './settings/task-group/task-group.component';
 
 import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
 import { SettingsComponent } from './settings/settings.component';

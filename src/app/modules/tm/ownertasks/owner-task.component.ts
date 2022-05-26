@@ -12,7 +12,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 
-import { TaskGroupComponent } from '../task-group/task-group.component';
+import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 
 @Component({
   selector: 'onwer-task',
@@ -88,7 +88,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: true,
+      active: false,
       model: {
         //panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
@@ -99,7 +99,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     {
       id: '2',
       type: 'kanban',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.kanban,
         sideBarRightRef: this.settingPanel,
