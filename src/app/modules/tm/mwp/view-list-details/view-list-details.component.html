@@ -4,9 +4,9 @@
       <div class="codx_master_container">
         <ejs-tab>
           <e-tabitems>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('1')">
               <ng-template #headerText>
-                <div (click)="tabStatus('1')">Tạo mới</div>
+                <div >Tạo mới</div>
               </ng-template>
               <ng-template #content>
                 <!-- <codx-listview #listviewAdd service="TM" [itemTemplate]="templateItem" [data]="dataAddNew"
@@ -20,9 +20,9 @@
                   (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('9')">
               <ng-template #headerText>
-                <div (click)="tabStatus('9')">Đã hoàn thành</div>
+                <div >Đã hoàn thành</div>
               </ng-template>
               <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
@@ -34,9 +34,9 @@
                   (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('5')"> 
               <ng-template #headerText>
-                <div (click)="tabStatus('5')">Hoãn lại</div>
+                <div >Hoãn lại</div>
               </ng-template>
               <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container>  -->
@@ -47,9 +47,9 @@
                   (changeRowSelected)="changeRowSelected($event)" handelCole> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('8')">
               <ng-template #headerText>
-                <div (click)="tabStatus('8')">Hủy</div>
+                <div >Hủy</div>
               </ng-template>
               <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
