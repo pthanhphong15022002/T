@@ -104,7 +104,8 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
  //     viewInput: null,
       model: {
         panelLeftRef: this.kanban,
-        sideBarRightRef: this.settingPanel,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
       }
     },
