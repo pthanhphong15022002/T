@@ -845,51 +845,9 @@ codx-wrapper ::-webkit-scrollbar-thumb {
     }
 }
 
-/*** aside theme default ***/
-#kt_aside_menu_wrapper {
-    height: calc(100vh - 72px) !important;
-}
-
-#kt_aside.aside {
-    background-color: var(--primary-darker);
-}
-
-#kt_aside.aside .menu-item .menu-link .menu-title {
-    color: #fff;
-}
-
-#kt_aside.aside .menu-item .menu-link {
-    color: #fff;
-}
-
-#kt_aside.aside .menu-item .menu-link:hover,
-#kt_aside.aside .menu-item .menu-link:hover * {
-    color: var(--primary-light) !important;
-}
-
-#kt_aside.aside .svg-icon svg [fill]:not(.permanent):not(g) {
-    fill: #fff;
-}
-
-#kt_aside.aside .text-muted {
-    color: var(--primary-light) !important;
-}
-
 .icon-gear:before {
     content: "\ee1d";
 }
-
-#kt_aside.aside ::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.10) !important;
-    border-radius: 2px !important;
-    width: 5px !important;
-}
-
-#kt_aside.aside ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.25) !important;
-}
-
-/******* end aside ******/
 
 .codx_e-container {
     height: calc(100vh - 154px) !important;
@@ -1443,4 +1401,14 @@ div[class*="e-"] {
     color: #fff;
     height: 34px;
     padding-left: 10px;
+}
+
+/****** temp / tm calendar *****/
+.list-calendar td {
+    padding: 5px !important;
+    border-bottom: 1px #eee solid;
+}
+
+.table> :not(caption)>*>* {
+    padding: 0;
 }
