@@ -428,9 +428,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   saveDayOff() {
     const _this = this;
-    _this.evtData.day = 2;
+    _this.evtData.day = 1;
     _this.evtData.month = 5;
-    _this.evtData.note = 'Test'
+    _this.evtData.note = 'Quốc tế Lao động';
     let data = _this.evtData;
     this.api
       .execSv<any>(
@@ -451,6 +451,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           }
         }
       });
+    this.schedule.reloadDataSource();
   }
 
   saveCalendarDate() {
@@ -597,7 +598,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   changeCombobox(e) {
-    this.calendarID = e[0];
+    e[0] == '' ? this.calendarID == 'STD' : (this.calendarID = e[0]);
     this.getDayOff(this.calendarID);
   }
 
