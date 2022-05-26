@@ -22,5 +22,5 @@ export class TM_TaskGroups {
     bUID: String;
     owner: String;
     stop: boolean;
-
+    createName: String;
 }
