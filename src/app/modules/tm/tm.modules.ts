@@ -22,7 +22,7 @@ import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanba
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TaskGroupComponent } from './settings/task-group/task-group.component';
 
-import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
+import { RangesKanbanComponent } from './settings/ranges-kanban/ranges-kanban.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { DashboardComponent } from './tmdashnoard/dashboard/dashboard.component';
@@ -54,6 +54,10 @@ const routes: Routes = [
       {
         path: 'task-group',
         component: TaskGroupComponent
+      },
+      {
+        path: 'ranges-kanban',
+        component: RangesKanbanComponent
       },
       {
         path: '',

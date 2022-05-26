@@ -12,7 +12,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Calendar } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
-  selector: 'onwer-task-canlendar',
+  selector: 'onwer-task-calendar',
   templateUrl: './onwer-task-calendar.component.html',
   styleUrls: ['./onwer-task-calendar.component.scss']
 })
@@ -23,9 +23,9 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
   @Input('listview') listview: CodxListviewComponent;
 
   moment = moment().locale("en");
-  today: Date = new Date();
-  startDate: Date = new Date();
-  endDate: Date = new Date();
+  today: Date;
+  startDate: Date;
+  endDate: Date;
   daySelected: Date;
   user: any;
   minHeight = 525;
@@ -139,7 +139,7 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
         ],
       };
     }
-
+    
   }
 
   getParams() {

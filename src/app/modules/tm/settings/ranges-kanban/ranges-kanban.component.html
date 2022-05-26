@@ -1,0 +1,33 @@
+<codx-views #view funcID="TMT02" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
+  (buttonClick)="clickButton($event,true)"> </codx-views>
+
+<ng-template #main>
+  <div class="" id="kt_content">
+    <div class="list-table" *ngIf="searchType == '0' || searchType == '1'">
+      <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="BS"
+        entityName="BS_RangesKanban" type="listview" assemblyName="ERM.Business.BS" className="RangesKanbanBusiness"
+        method="GetListRangesKanbanAsync" [gridViewName]="'grvRangesKanban'" [predicate]="''" [dataValue]="''"
+        [pageSize]="100" [formName]="formName" [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle"
+        [gridViewName]="gridViewName" [data]="data">
+      </codx-gridview>
+    </div>
+  </div>
+</ng-template>
+
+<!--<div id="canvas_nhomcongviec" #popup class="bg-body drawer drawer-end" style="display: none; width: 750px;"> -->
+<ng-template #sidebarRight>
+
+  <div class="card w-100 rounded-0 border-0">
+    <div class="card-header pe-5">
+      <div class="card-title">
+        <h2 class="m-0">{{title}}</h2>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
+          id="kt_engage_demos_close">
+          <span (click)="Close()" class="icon-close icon-18"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
