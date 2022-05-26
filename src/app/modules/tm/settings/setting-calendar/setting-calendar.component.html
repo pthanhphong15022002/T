@@ -178,7 +178,7 @@
                 class="test-check"
                 type="checkbox"
                 field="stweekday"
-                [checked]="item.checked"
+                [checked]="item.checked || true"
                 (valueChange)="weekdayChange($event, item)"
               >
               </codx-input>
@@ -300,10 +300,11 @@
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
+                    (click)="toggleMoreFunc(item.recID)"
                   >
                     <span class="icon-more_vert icon-18"></span>
                   </button>
-                  <div>
+                  <div *ngIf="dayOffId == item.recID">
                     <a class="dropdown-item" (click)="openDayOffs(item)">
                       <div class="d-flex align-items-center">
                         <span class="icon-edit icon-16"></span>

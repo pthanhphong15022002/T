@@ -125,7 +125,7 @@ export class TaskGroupComponent implements OnInit {
     }];
   }
 
-  loadData(){
+  loadData() {
     let model = new DataRequest();
     model.formName = 'TaskGroups';
     model.gridViewName = 'grvTaskGroups';
@@ -183,10 +183,10 @@ export class TaskGroupComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  removeHandler(dataItem: any, key: string){
-    if(!key) return null;
-    this.gridView.data = this.gridView.data.filter(function (e, index){
-      return(e[key] !== dataItem[key]);
+  removeHandler(dataItem: any, key: string) {
+    if (!key) return null;
+    this.gridView.data = this.gridView.data.filter(function (e, index) {
+      return (e[key] !== dataItem[key]);
     });
     this.total = this.gridView.data.length;
     this.totalRow = this.gridView.data.length;
@@ -379,19 +379,19 @@ export class TaskGroupComponent implements OnInit {
 
   deleteTaskGroup(item) {
     var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var t = this;
-          dialog.close = function (e) {
-            return t.api.callSv('TM','TM','TaskGroupBusiness','DeleteTaskGroupAsync',item.taskGroupID).subscribe((res)=>{
-              if(res){
-                t.notiService.notify(res[2].message);
-                t.removeHandler(item,"taskGroupID");
-              }
-            })
-          };
-        });
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var t = this;
+        dialog.close = function (e) {
+          return t.api.callSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
+            if (res) {
+              t.notiService.notify(res[2].message);
+              t.removeHandler(item, "taskGroupID");
+            }
+          })
+        };
+      });
   }
 
   addRow() {
@@ -408,7 +408,7 @@ export class TaskGroupComponent implements OnInit {
           }
         }
       })
-      this.Close();
+    this.Close();
   }
 
   updateRow() {
@@ -421,12 +421,12 @@ export class TaskGroupComponent implements OnInit {
           if (t.data) {
             let item = t.data;
             this.addHandler(item, this.isAddMode, "taskGroupID");
-          //  item = this.listView.data;
+            //  item = this.listView.data;
             this.data = this.listView.data;
-          } 
+          }
         }
       })
-      this.Close();
+    this.Close();
   }
 
   lstSavecheckList: any = [];
@@ -449,10 +449,10 @@ export class TaskGroupComponent implements OnInit {
     }
 
     if (this.isAddMode == true) {
-       return this.addRow();
+      return this.addRow();
     }
-     return this.updateRow();
-     
+    return this.updateRow();
+
   }
 
   getCheckList(checkList) {

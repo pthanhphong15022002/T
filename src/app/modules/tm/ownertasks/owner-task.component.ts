@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import {  ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 
@@ -89,7 +89,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       id: '1',
       type: 'content',
       active: true,
-  //    viewInput: null,
+      //    viewInput: null,
       model: {
         //panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
@@ -101,7 +101,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       id: '2',
       type: 'kanban',
       active: false,
- //     viewInput: null,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.kanban,
         sideBarLeftRef: this.asideLeft,
@@ -115,7 +115,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
-   //   viewInput: null,
+      //   viewInput: null,
       model: {
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
@@ -130,7 +130,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
- //     viewInput: null,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
@@ -143,7 +143,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'schedule',
       text: 'schedule',
       active: false,
-   //   viewInput: null,
+      //   viewInput: null,
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
@@ -157,7 +157,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'treeViews',
       sameData: false,
       active: false,
-    //  viewInput: null,
+      //  viewInput: null,
       model: {
         panelLeftRef: this.treeViews,
         sideBarLeftRef: this.asideLeft,
@@ -171,7 +171,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'calendar',
       sameData: false,
       active: false,
- //     viewInput: null,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.calendar,
         widthAsideRight: '550px'
@@ -183,7 +183,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'Task-Group',
       sameData: false,
       active: false,
- //     viewInput: null,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.taskGroup,
         sideBarLeftRef: this.asideLeft,
