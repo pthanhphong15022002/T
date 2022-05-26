@@ -130,9 +130,9 @@
             </div>
             <div class="d-flex align-items-center text-gray-700 me-6">
               <span class="fw-bold me-1">Ưu tiên:</span>
-              <span class="icon-14 me-2">
+              <span class="icon-18 me-2">
                 <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
-                  [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"></span>
+                  [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"><span class="icon-18 icon-outlined_flag"></span></span>
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async
                 }}</span>
@@ -597,7 +597,7 @@
         <span class="icon-15 me-2">
           <span *ngIf="item.isTimeOut" class=" icon-18 icon-watch_later"></span>
           <span [class]="item?.priority | vll: 'L0186':'icon' | async"
-            [style.color]="item?.priority | vll: 'L0186':'color' | async">{{item?.priority}}</span>
+            [style.color]="item?.priority | vll: 'L0186':'color' | async"><span class="icon-18 icon-outlined_flag"></span></span>
         </span>
       </div>
       <span class="text-gray-400">{{ item.positionNameCreate }}</span>
@@ -609,7 +609,7 @@
         " [style.background-color]="
           (item?.status | vll: 'L0614':'color' | async) + '30'
         " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
-            {{ item?.status | vll: "L0614":"text" | async }}{{item?.status}}
+            {{ item?.status | vll: "L0614":"text" | async }}
           </div>
           <span class="text-gray-600 fs-7">
             {{ item?.createdOn | fmDT: "dmy" }}</span>
@@ -683,7 +683,7 @@
           '30'
         " [style.color]="
           data?.status | vll: 'L0614':'color' | async
-        " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}{{data?.status}}</span>
+        " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}</span>
           <!--end::Btn-->
         </div>
         <!--end::Section-->
