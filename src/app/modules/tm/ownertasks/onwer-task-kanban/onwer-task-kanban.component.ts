@@ -102,7 +102,7 @@ export class KanbanComponent implements OnInit {
   ngAfterViewInit() {}
 
   viewMemo(id: string) {
-    this.cardId = id;
+    this.cardId == id ? (this.cardId = '') : (this.cardId = id);
   }
 
   getString(assignee: any) {
@@ -117,7 +117,6 @@ export class KanbanComponent implements OnInit {
       return;
     }
     this.item = evt;
-   
   }
 
   onDataDrop(evt: Event) {
