@@ -307,23 +307,6 @@ export class TaskInfoComponent implements OnInit {
           if (res.data) {
             res.data.forEach((dt) => {
               var data = dt;
-              if (data.priorityColor == null && data.priorityIcon == null) {
-                switch (data.priority) {
-                  case '1':
-                    data.priorityColor = '#66a3ff';
-                    data.priorityIcon = 'fa fa-flag-o';
-                    break;
-                  case '2':
-                    data.priorityColor = '#ffd11a';
-                    data.priorityIcon = 'fa fa-flag-o';
-                    break;
-                  case '3': {
-                    data.priorityColor = '#ff6600';
-                    data.priorityIcon = 'fa fa-flag-o';
-                    break;
-                  }
-                }
-              }
               this.dataAddNew.next(data);
             });
           }
@@ -572,14 +555,18 @@ export class TaskInfoComponent implements OnInit {
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null && t.task.assignTo != '')
+        if (t.task.assignTo != null){
           t.listUser = t.task.assignTo.split(';');
-        else {
-          //thêm giá trị đê add thử copy -sau nay xóa đi
-          if (action == 'edit') {
-            this.task.assignTo = 'TQHOAN'; ///tesst
-            this.getListUser(this.task.assignTo);
-          }
+          this.getListUser(this.task.assignTo);
+        }else{
+          this.listUser=[];
+          this.listMemo2OfUser=[];
+          this.listMemo2OfUser=[];
+           //thêm giá trị đê add thử copy -sau nay xóa đi
+        //   if (action == 'edit') {
+        //     this.task.assignTo = 'TQHOAN'; ///tesst
+        //     this.getListUser(this.task.assignTo);
+        //   }
         }
         t.changeDetectorRef.detectChanges();
         this.showPanel();
@@ -615,6 +602,9 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
+    t.task.dueDate = moment(new Date(data.dataValue)).toDate() ;
+    t.task.startDate = moment(new Date(data.startDate)).toDate() ;
+    t.task.endDate = moment(new Date(data.endDate)).toDate() ;
     t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
@@ -622,8 +612,8 @@ export class TaskInfoComponent implements OnInit {
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
     //thêm giá trị đê add thử copy -sau nay xóa đi
-    this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    this.getListUser(this.task.assignTo);
+    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
+    // this.getListUser(this.task.assignTo);
 
     t.changeDetectorRef.detectChanges();
     this.showPanel();

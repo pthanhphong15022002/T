@@ -467,7 +467,7 @@ export class ViewListDetailsComponent implements OnInit {
       case '1':
         this.data = this.listviewAdd?.data;
         if (this.data != null) this.itemSelected = this.data[0];
-    
+
         break;
       case '9':
         this.data = this.listviewCompleted?.data;
@@ -486,7 +486,11 @@ export class ViewListDetailsComponent implements OnInit {
     }
     this.dataValue = st;
     this.tabSt = st;
-    if (this.itemSelected != null) this.loadDetailTask(this.itemSelected);
+
+    if (this.itemSelected != null) {
+      this.loadDetailTask(this.itemSelected);
+      this.isFinishLoad = true;
+    } else this.isFinishLoad = false;
   }
 
   lvOfStatus(st): any {
@@ -575,6 +579,8 @@ export class ViewListDetailsComponent implements OnInit {
         break;
     }
     this.dataValue = event.status;
-    this.isFinishLoad = true;
+    if (this.itemSelected != null) {
+      this.isFinishLoad = true;
+    } else this.isFinishLoad = false;
   }
 }
