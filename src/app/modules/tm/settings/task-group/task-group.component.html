@@ -1,5 +1,5 @@
 
-<codx-views #view funcID="TM001" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="clickButton($event)"> </codx-views>
+<codx-views #view funcID="TM001" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="clickButton($event,true)"> </codx-views>
 
 <ng-template #main>
 <div class="" id="kt_content">
@@ -38,7 +38,7 @@
                 <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
                 </codx-label>
               </label>
-              <input #taskGroupID name="taskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
+              <input #taskGroupID name="TaskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
                 class="form-control" [(ngModel)]="taskGroups.taskGroupID" placeholder="" style="width: 400px" />
             </div>
             <div class="form-group mt-3">
@@ -46,7 +46,7 @@
                 <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
                 </codx-label>
               </label>
-              <input #taskGroupName name="taskGroupName" [(ngModel)]="taskGroups.taskGroupName" type="text"
+              <input #taskGroupName name="TaskGroupName" [(ngModel)]="taskGroups.taskGroupName" type="text"
                 class="form-control" placeholder="Nhóm công việc" />
 
             </div>
@@ -70,7 +70,7 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="approvalControl" type="combobox" [refValue]="gridViewSetup.ApprovalControl.refValue" field="approvalControl"
+                <codx-input name="ApprovalControl" type="combobox" [refValue]="gridViewSetup.ApprovalControl.refValue" field="approvalControl"
                   placeholder="" [crrValue]="taskGroups.approvalControl" (valueChange)="valueApp($event)">
                 </codx-input>
               </div>
@@ -83,7 +83,7 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="projectControl" type="combobox"  [refValue]="gridViewSetup.ProjectControl.refValue"  field="projectControl" placeholder=""
+                <codx-input name="ProjectControl" type="combobox"  [refValue]="gridViewSetup.ProjectControl.refValue"  field="projectControl" placeholder=""
                   [crrValue]="taskGroups.projectControl" (valueChange)="valuePro($event)">
                 </codx-input>
               </div>
@@ -96,7 +96,7 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="attachmentControl" type="combobox" [refValue]="gridViewSetup.AttachmentControl.refValue" field="AttachmentControl"
+                <codx-input name="AttachmentControl" type="combobox" [refValue]="gridViewSetup.AttachmentControl.refValue" field="AttachmentControl"
                   placeholder="" [crrValue]="taskGroups.attachmentControl" (valueChange)="valueAtt($event)">
                 </codx-input>
               </div>
@@ -111,7 +111,7 @@
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="checkListControl" type="combobox" [refValue]="gridViewSetup.CheckListControl.refValue" field="CheckListControl"
+                <codx-input name="CheckListControl" type="combobox" [refValue]="gridViewSetup.CheckListControl.refValue" field="CheckListControl"
                   placeholder="" [crrValue]="taskGroups.checkListControl" (valueChange)="valueCheck($event)">
                 </codx-input>
               </div>

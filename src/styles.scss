@@ -1357,4 +1357,50 @@ div[class*="e-"] {
 
 .item-tree>div {
     width: 100% !important;
+    /* file css Lịch sử */
+}
+
+.symbol-icon {
+    position: relative;
+    height: 30px;
+}
+
+.symbol-icon .icon-circle {
+    position: absolute;
+    right: -10px;
+    bottom: -8px;
+    display: block;
+    width: 22px;
+    height: 22px;
+    line-height: 18px;
+    border-radius: 22px;
+    text-align: center;
+    background-color: var(--gray);
+}
+
+.symbol-icon [class*=" icon-"] {
+    color: #fff;
+}
+
+.primary-group .symbol-icon .icon-circle,
+.icon-circle.bg-primary {
+    background-color: #3699ff;
+}
+
+.warning-group .symbol-icon .icon-circle,
+.icon-circle.bg-warning {
+    background-color: var(--warning);
+}
+
+.success-group .symbol-icon .icon-circle,
+.icon-circle.bg-success {
+    background-color: var(--success);
+}
+
+.icon-circle.bg-gray {
+    background-color: #8d8d97;
+}
+
+.icon-circle.bg-info {
+    background-color: var(--info);
 }

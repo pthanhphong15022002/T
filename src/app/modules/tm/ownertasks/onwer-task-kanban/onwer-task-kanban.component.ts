@@ -12,7 +12,12 @@ import {
   DialogSettingsModel,
   SwimlaneSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
-import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
+import {
+  CoDxKanbanComponent,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+} from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { KanbanSetting } from '../../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
@@ -25,6 +30,7 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 export class KanbanComponent implements OnInit {
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
+  @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
 
   dataSource: any = [];
@@ -74,13 +80,14 @@ export class KanbanComponent implements OnInit {
     private tmSv: TmService,
     private authStore: AuthStore,
     private cache: CacheService,
-    private cr: ChangeDetectorRef
+    private cr: ChangeDetectorRef,
+    private cf: CallFuncService
   ) {
     this.user = this.authStore.get();
   }
 
   ngOnInit() {
-    this.cache.viewSettings('TMT02').subscribe((res) => {
+    this.cache.viewSettings('TM001').subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
         this.getColumnKanban();
@@ -92,7 +99,7 @@ export class KanbanComponent implements OnInit {
     this.getListDetailTask();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   viewMemo(id: string) {
     this.cardId = id;
@@ -105,17 +112,25 @@ export class KanbanComponent implements OnInit {
       .toUpperCase();
   }
 
-  onDataDrag(evt: any) {
+  onDataDrag(evt: Event) {
+    if (!this.kanbanSetting.AllowDrag) {
+      return;
+    }
     this.item = evt;
+   
   }
 
-  submit(e: any, modal: any) {
-    const completed = new Date(2022, 5, 11, 18, 0, 0);
+  onDataDrop(evt: Event) {
+    this.item = evt;
+    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => {});
+  }
+
+  submit(e: any) {
+    const completed = new Date(2022, 5, 26, 18, 0, 0);
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => { });
-    modal.close(true);
+      .subscribe((res) => {});
   }
 
   getListDetailTask() {
@@ -255,7 +270,7 @@ export class KanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-      //  this.kanban.columns = res.column;
+        this.kanban.columns = res.column;
         this.cr.detectChanges();
       }
     });
@@ -275,7 +290,7 @@ export class KanbanComponent implements OnInit {
       ((date.getTime() - janFirst.getTime()) / 86400000 +
         janFirst.getDay() +
         1) /
-      7
+        7
     );
   }
 

@@ -12,7 +12,7 @@ import * as moment from 'moment';
   templateUrl: './assign-tasks-details.component.html',
   styleUrls: ['./assign-tasks-details.component.scss'],
 })
-export class ViewListDetailsComponent implements OnInit {
+export class AssignTaskDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() data = [];
   taskChild = [];
@@ -88,7 +88,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = "TM003";
+    model.funcID = "TMT03";
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -225,7 +225,7 @@ export class ViewListDetailsComponent implements OnInit {
     p.open();
   }
 
-  confirmDelete(e: any, t: ViewListDetailsComponent) {
+  confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
       t.api
@@ -377,6 +377,7 @@ export class ViewListDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
+            this.countOwner = res.length
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {

@@ -38,7 +38,8 @@ export const APICONSTANT = {
             Parameters: 'ParametersBusiness'
         },
         TM: {
-            Task: 'TaskBusiness'
+            Task: 'TaskBusiness',
+            TaskGroups: 'TaskGroupBusiness'
         },
         SYS: {
             MoreFunctions: 'MoreFunctionsBusiness'

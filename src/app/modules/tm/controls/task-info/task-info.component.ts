@@ -100,7 +100,7 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = 'TM001'; //this.viewBase.funcID ;
+    this.functionID = this.viewBase.funcID ;
     this.getParam(); //bật tắt set param
     this.openTask();
 
