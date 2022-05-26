@@ -91,6 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
+      viewInput: null,
       active: true,
       model: {
         panelLeftRef: this.chart,
@@ -101,6 +102,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '2',
+      viewInput: null,
       type: 'kanban',
       active: false,
       model: {
@@ -113,6 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '3',
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
+      viewInput: null,
       text: 'List-details',
       active: false,
       model: {
@@ -125,6 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '4',
+      viewInput: null,
       type: 'list',
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
@@ -136,42 +140,42 @@ export class HomeComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
-    // {
-    //   id: '5',
-    //   type: 'schedule',
-    //   text: 'schedule',
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.schedule,
-    //     sideBarLeftRef: this.asideLeft,
-    //     sideBarRightRef: this.sidebarRight,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
-    // {
-    //   id: '6',
-    //   type: 'list',
-    //   text: 'treeViews',
-    //   sameData: false,
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.treeViews,
-    //     sideBarLeftRef: this.asideLeft,
-    //     sideBarRightRef: this.sidebarRight,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
-    // {
-    //   id: '7',
-    //   type: 'calendar',
-    //   text: 'calendar',
-    //   sameData: false,
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.calendar,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
+      // {
+      //   id: '5',
+      //   type: 'schedule',
+      //   text: 'schedule',
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.schedule,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
+      // {
+      //   id: '6',
+      //   type: 'list',
+      //   text: 'treeViews',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.treeViews,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
+      // {
+      //   id: '7',
+      //   type: 'calendar',
+      //   text: 'calendar',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.calendar,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
     ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();

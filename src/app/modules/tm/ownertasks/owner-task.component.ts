@@ -8,7 +8,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { ViewKanban, ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 
@@ -89,7 +89,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       id: '1',
       type: 'content',
       active: true,
-
       model: {
         //panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
@@ -101,7 +100,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       id: '2',
       type: 'kanban',
       active: false,
-
       model: {
         panelLeftRef: this.kanban,
         sideBarRightRef: this.settingPanel,
@@ -129,7 +127,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
-
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
@@ -142,7 +139,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'schedule',
       text: 'schedule',
       active: false,
-
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,
@@ -156,7 +152,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'treeViews',
       sameData: false,
       active: false,
-
       model: {
         panelLeftRef: this.treeViews,
         sideBarLeftRef: this.asideLeft,
@@ -170,7 +165,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'calendar',
       sameData: false,
       active: false,
-
       model: {
         panelLeftRef: this.calendar,
         widthAsideRight: '550px'
@@ -182,7 +176,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       text: 'Task-Group',
       sameData: false,
       active: false,
-
       model: {
         panelLeftRef: this.taskGroup,
         sideBarLeftRef: this.asideLeft,
