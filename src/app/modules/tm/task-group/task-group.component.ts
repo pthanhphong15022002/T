@@ -404,10 +404,12 @@ export class TaskGroupComponent implements OnInit {
     else {
       this.taskGroups.checkList = null;
     }
-    if (this.isAddNew) {
-      return this.addRow();
+    if (this.isAddMode == true) {
+       this.addRow();
+    }else{
+      this.updateRow();
     }
-    this.updateRow();
+    
     this.Close();
 
   }
