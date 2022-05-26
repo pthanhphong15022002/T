@@ -13,10 +13,10 @@
                   groupBy="fieldGroup">
                 </codx-listview> -->
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-                <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
+                <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true"  funcId="" [pageSize]="100"
                 service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
                 [predicate]="predicate" [dataValue]="'1'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup">  </codx-listview>   
+                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">  </codx-listview>   
               </ng-template>
             </e-tabitem>
             <e-tabitem>
@@ -29,7 +29,7 @@
                 <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
                 service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
                 [predicate]="predicate" [dataValue]="'9'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup">  </codx-listview>   
+                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">  </codx-listview>   
               </ng-template>
             </e-tabitem>
             <e-tabitem>
@@ -41,7 +41,7 @@
                 <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
                 service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
                 [predicate]="predicate" [dataValue]="'5'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup">  </codx-listview>           
+                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">  </codx-listview>           
               </ng-template>
             </e-tabitem>
             <e-tabitem>
@@ -53,7 +53,7 @@
               <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
               service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
               [predicate]="predicate" [dataValue]="'8'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-              entityName="TM_Tasks" groupBy="fieldGroup">
+              entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">
             </codx-listview>
               </ng-template>
             </e-tabitem>

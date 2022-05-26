@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      viewInput: null,
+      // viewInput: null,
       active: true,
       model: {
         panelLeftRef: this.chart,
@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '2',
-      viewInput: null,
+      // viewInput: null,
       type: 'kanban',
       active: false,
       model: {
@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       id: '3',
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
-      viewInput: null,
+      // viewInput: null,
       text: 'List-details',
       active: false,
       model: {
@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       id: '4',
-      viewInput: null,
+      // viewInput: null,
       type: 'list',
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',

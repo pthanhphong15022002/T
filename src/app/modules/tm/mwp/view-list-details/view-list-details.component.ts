@@ -570,4 +570,8 @@ export class ViewListDetailsComponent implements OnInit {
     }
     this.isFinishLoad = true;
   }
+  changeRowSelected(event){
+    this.itemSelected = event ;
+    this.loadDetailTask(this.itemSelected)
+  }
 }
