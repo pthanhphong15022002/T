@@ -389,13 +389,14 @@ export class ViewListDetailsComponent implements OnInit {
   closePopup(e: any, oldSt: string, t: ViewListDetailsComponent) {
     if (e.closedBy == 'user action') {
       var task = e.event;
+      var oldStatus =  e.event.status ;
       var oldTask = task;
       oldTask.status = oldSt;
-      if (task.status != oldSt) {
-        t.addListView(task);
-        t.removeListView(oldTask);
+      if (oldStatus != oldSt) {
+        this.addListView(task);
+        this.removeListView(oldTask);
       } else {
-        t.updateListView(task);
+        this.updateListView(task);
       }
     }
   }
