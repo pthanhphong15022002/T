@@ -10,7 +10,7 @@
     [swimlanes]="swimlaneSettings"
     [cardSettings]="cardSettings"
     (onDrag)="onDataDrag($event)"
-    (onDrop)="onDataDrag($event)"
+    (onDrop)="onDataDrop($event)"
   >
   </codx-kanban>
 </div>
@@ -130,16 +130,7 @@
   </div>
 </ng-template>
 
-<ng-template #content let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Drag & Drop</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
-  </div>
+<ng-template #content>
   <div class="modal-body">
     <p>Bạn chắc chắn với hành động này không ?</p>
   </div>
@@ -147,14 +138,14 @@
     <button
       type="button"
       class="btn btn-outline-dark"
-      (click)="submit($event, modal)"
+      (click)="submit($event)"
     >
       Đồng ý
     </button>
   </div>
 </ng-template>
 
-<ng-template #popupAdd let-modal>
+<!-- <ng-template #popupAdd let-modal>
   <div class="modal-header">
     <h4 class="modal-title">View</h4>
     <button
@@ -176,4 +167,4 @@
       Đồng ý
     </button>
   </div>
-</ng-template>
+</ng-template> -->
