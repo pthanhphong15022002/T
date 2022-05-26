@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { TmService } from '@modules/tm/tm.service';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, Renderer2, RendererFactory2, Inject } from '@angular/core';
 import { AuthService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, UserModel } from 'codx-core';
 import { Observable, of } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'codx-layout',
@@ -28,7 +30,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     private initService: LayoutInitService,
     private layout: LayoutService,
     private auth: AuthService,
-    public codxService: CodxService
+    public codxService: CodxService,
+    public tmService: TmService,
+    private change: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     this.layout.initConfig();
     var cfg = this.layout.getConfig();
@@ -38,7 +43,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     cfg.toolbar.display = true;
     cfg.header.left = 'menu';
     cfg.pageTitle.breadCrumbs = false;
-
     this.initService.init();
   }
 
@@ -62,6 +66,23 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         }
       }
     }
+
+    this.tmService.layoutChange.subscribe(res => {
+      if (res && res.isChange) {
+        if (res.title != this.title)
+          this.title = res.title;
+        if (!res.asideDisplay) {
+          this.asideDisplay = res.asideDisplay;
+          this.document.body.classList.remove("aside-enabled");
+          this.document.body.classList.remove("aside-fixed");
+
+        }
+      } else {
+        this.asideDisplay = res.asideDisplay;
+        this.document.body.classList.add("aside-enabled");
+        this.document.body.classList.add("aside-fixed");
+      }
+    })
   }
 
   public reloadAvatar(data: any): void {
@@ -80,6 +101,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       customName: 'Dashboard',
       smallIcon: 'icon-person icon-18',
       comingSoon: false,
+      url: '',
       separator: false,
       childs: []
     },
@@ -88,13 +110,15 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       customName: 'Công việc của tôi',
       smallIcon: 'icon-groups icon-18',
       comingSoon: false,
+      url: '',
       separator: false,
       childs: []
     }, {
       functionID: 'TMT03',
-      customName: 'Công việc nhóm',
+      customName: 'Giao việc',
       smallIcon: 'icon-groups icon-18',
       comingSoon: false,
+      url: '',
       separator: false,
       childs: []
     }, {
@@ -103,14 +127,16 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       smallIcon: 'icon-style icon-18',
       comingSoon: false,
       separator: false,
+      url: '',
       childs: []
     },
     {
-      functionID: 'TM006',
+      functionID: '',
       customName: 'Thiết lập',
       smallIcon: 'icon-gear icon-18',
       comingSoon: false,
       separator: false,
+      url: 'tm/setting',
       childs: []
     }]
   );

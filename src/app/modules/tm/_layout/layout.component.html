@@ -80,7 +80,7 @@
 <ng-template #asideMenu>
   <ng-container *ngFor="let f of funcs$ | async">
     <div class="menu-item" *ngIf="!f.separator && (!f.childs || f.childs.length==0)">
-      <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
+      <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID,f.url)"
         [ngbTooltip]="f.comingSoon?'Coming soon':''" routerLinkActive="active">
         <span class="menu-icon">
           <span class="{{f.smallIcon}} icon-20"></span>

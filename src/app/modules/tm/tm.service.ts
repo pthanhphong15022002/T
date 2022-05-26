@@ -20,8 +20,10 @@ export class TmService {
   isShowPanel = this.showPanel.asObservable();
   public copyTask = new BehaviorSubject<CopyForm>(null);
   isCopy = this.copyTask.asObservable();
-  user: UserModel;
+  layoutcpn = new BehaviorSubject<LayoutModel>(null);
+  layoutChange = this.layoutcpn.asObservable();
 
+  user: UserModel;
   myTaskComponent = false;
   taskGroupComponent = false;
   constructor(
@@ -45,7 +47,6 @@ export class TmService {
   loadTask(calendar, fromeDate, toDate, view, modeView) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetMyTasksAsync', ['TMT02', 'grvTasks', calendar, fromeDate, toDate, view, modeView]);
   }
-
 
   loadTaskByAuthen(data) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetListDetailTasksAsync', [data]);
@@ -124,29 +125,19 @@ export class TmService {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, "DeleteTaskAsync", taskID);
   }
 
-  //model nam trong dm
-  // openAttach(entity, objectID, functionID) {
-  //   var data = new DataItem();
-  //   data.recID = "";
-  //   data.type = "file";
-  //   data.fullName = "";
-  //   data.copy = false;
-  //   data.dialog = "edit";
-  //   data.id_to = "";
-  //   data.remote = true;
-  //   data.objectType = entity;
-  //   data.objectID = objectID;
-  //   data.functionID = functionID;
-  //   this.dmDialog.OpenDialog(data);
-  //   this.dmDialog.CloseDialog();
-
-  // }
-  // CloseDialogAttach() {
-  //   this.dmDialog.CloseDialog();
-
-  // }
   convertListToObject(list: Array<object>, fieldName: string, fieldValue: string) {
     if (!Array.isArray(list) || list.length == 0) return {};
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
+  }
+}
+
+export class LayoutModel {
+  isChange: boolean = false;
+  title: string = '';
+  asideDisplay: boolean = true;
+  constructor(isChange, title, asideDisplay) {
+    this.isChange = isChange;
+    this.title = title;
+    this.asideDisplay = asideDisplay;
   }
 }
