@@ -10,7 +10,7 @@ import {
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
+import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.component';
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 
@@ -151,49 +151,44 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
-    {
-      id: '6',
-      type: 'list',
-      text: 'treeViews',
-      sameData: false,
-      active: false,
-      //  viewInput: null,
-      model: {
-        panelLeftRef: this.treeViews,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    },
-    {
-      id: '7',
-      type: 'calendar',
-      text: 'calendar',
-      sameData: false,
-      active: false,
-      //     viewInput: null,
-      model: {
-        panelLeftRef: this.calendar,
-        widthAsideRight: '550px'
-      }
-    },
-    {
-      id: '8',
-      type: 'grid',
-      text: 'Task-Group',
-      sameData: false,
-      active: false,
-      //     viewInput: null,
-      model: {
-        panelLeftRef: this.taskGroup,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    },
-
+      // {
+      //   id: '6',
+      //   type: 'list',
+      //   text: 'treeViews',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.treeViews,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
+      // {
+      //   id: '7',
+      //   type: 'calendar',
+      //   text: 'calendar',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.calendar,
+      //     widthAsideRight: '550px'
+      //   }
+      // },
+      // {
+      //   id: '8',
+      //   type: 'grid',
+      //   text: 'Task-Group',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.taskGroup,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
     ];
-    console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();
   }
 

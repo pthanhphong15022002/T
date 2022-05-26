@@ -1,3 +1,4 @@
+import { HomeSettingComponent } from './settings/home-setting/home-setting.component';
 import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -20,15 +21,17 @@ import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { OwnerTaskCalendarComponent } from './ownertasks/onwer-task-calendar/onwer-task-calendar.component';
 import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
-import { TaskGroupComponent } from './settings/task-group/task-group.component';
-
 import { RangesKanbanComponent } from './settings/ranges-kanban/ranges-kanban.component';
-import { SettingsComponent } from './settings/settings.component';
-import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { DashboardComponent } from './tmdashnoard/dashboard/dashboard.component';
 import { ControlsModule } from './controls/controls.module';
 import { SettingCalendarComponent } from './settings/setting-calendar/setting-calendar.component';
 import { AssignTaskComponent } from './assign-tasks/assign-tasks.component';
+import { TaskGroupComponent } from './settings/task-group/task-group.component';
+import { SettingsComponent } from './settings/settings.component';
+import { CbxpopupComponent } from './controls/cbxpopup/cbxpopup.component';
+import { UpdateStatusPopupComponent } from './controls/update-status-popup/update-status-popup.component';
+import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
+
 
 const routes: Routes = [
   {
@@ -50,14 +53,20 @@ const routes: Routes = [
       {
         path: 'setting',
         component: SettingsComponent,
-      },
-      {
-        path: 'task-group',
-        component: TaskGroupComponent
-      },
-      {
-        path: 'ranges-kanban',
-        component: RangesKanbanComponent
+        children: [
+          {
+            path: '',
+            component: HomeSettingComponent
+          },
+          {
+            path: 'task-group',
+            component: TaskGroupComponent
+          },
+          {
+            path: 'ranges-kanban',
+            component: RangesKanbanComponent
+          }
+        ]
       },
       {
         path: '',
@@ -81,14 +90,19 @@ const routes: Routes = [
     MoreFuntionComponent,
     OwnerTaskCalendarComponent,
     DashboardComponent,
-    SettingComponent,
     TreeviewComponent,
     SettingCalendarComponent,
-    TaskGroupComponent,
     RangesKanbanComponent,
     LayoutComponent,
     AssignTaskComponent,
-    AssignTaskDetailsComponent
+    AssignTaskDetailsComponent,
+    HomeSettingComponent,
+    TaskGroupComponent,
+    RangesKanbanComponent,
+    SettingsComponent,
+    CbxpopupComponent,
+    UpdateStatusPopupComponent,
+    SettingPanelComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -99,7 +113,9 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    DatePickerModule, TabModule, ControlsModule
+    DatePickerModule,
+    TabModule,
+    ControlsModule,
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

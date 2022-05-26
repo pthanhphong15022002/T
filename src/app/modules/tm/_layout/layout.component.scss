@@ -10,7 +10,6 @@
   .e-listview * {
     font-size: 13px !important;
   }
-
 }
 
 .page-loaded {
@@ -23,4 +22,14 @@
 div.flex-root {
   background-color: #fff;
   font-size: 13px;
+}
+:root {
+  .aside-hide {
+    .wrapper {
+      padding-left: 0 !important;
+    }
+    .header {
+      left: 0 !important;
+    }
+  }
 }

@@ -1,21 +1,20 @@
-
-<codx-views #view funcID="TM001" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="clickButton($event,true)"> </codx-views>
+<codx-views #view funcID="TM001" entityName="TM_Tasks" [views]="views"></codx-views>
 
 <ng-template #main>
-<div class="" id="kt_content">
-  <div class="list-table" *ngIf="searchType == '0' || searchType == '1'">
-    <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="TM"
-      entityName="TM_TaskGroups" type="listview" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
-      method="GetListTaskGroupsAsync" [gridViewName]="'grvTaskGroups'" [predicate]="''" [dataValue]="''"
-      [pageSize]="100" [formName]="formName" [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle"
-      [gridViewName]="gridViewName" (onAddNew)="addRow()" [data]="data">
-    </codx-gridview>
+  <div class="" id="kt_content">
+    <div class="list-table" *ngIf="searchType == '0' || searchType == '1'">
+      <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="TM"
+        entityName="TM_TaskGroups" type="listview" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
+        method="GetListTaskGroupsAsync" [gridViewName]="'grvTaskGroups'" [predicate]="''" [dataValue]="''"
+        [pageSize]="100" [formName]="formName" [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle"
+        [gridViewName]="gridViewName" (onAddNew)="addRow()" [data]="data">
+      </codx-gridview>
+    </div>
   </div>
-</div>
 </ng-template>
 <!--<div id="canvas_nhomcongviec" #popup class="bg-body drawer drawer-end" style="display: none; width: 750px;"> -->
-    <ng-template #sidebarRight>
-  
+<ng-template #sidebarRight>
+
   <div class="card w-100 rounded-0 border-0">
     <div class="card-header pe-5">
       <div class="card-title">
@@ -28,14 +27,15 @@
         </button>
       </div>
     </div>
-    
+
     <div class="card-body" *ngIf="isAfterRender && gridViewSetup">
       <form>
         <div class="row">
           <div class="form-group">
             <div class="form-group mt-3">
               <label>
-                <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
+                <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups"
+                  default="Mã nhóm công việc">
                 </codx-label>
               </label>
               <input #taskGroupID name="TaskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
@@ -43,7 +43,8 @@
             </div>
             <div class="form-group mt-3">
               <label>
-                <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
+                <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups"
+                  default="Nhóm công việc">
                 </codx-label>
               </label>
               <input #taskGroupName name="TaskGroupName" [(ngModel)]="taskGroups.taskGroupName" type="text"
@@ -63,56 +64,63 @@
             <div class="form-group row mt-3">
               <div class="form-group col-8">
                 <label>
-                  <codx-label fiedName="ApprovalControl" default="Xét duyệt" formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
+                  <codx-label fiedName="ApprovalControl" default="Xét duyệt" formName="TaskGroups"
+                    gridViewName="grvTaskGroups"></codx-label>
                 </label>
                 <div>
                   <label class="text-dark-50">Kiểm soát xét duyệt khi tạo mới công việc</label>
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="ApprovalControl" type="combobox" [refValue]="gridViewSetup.ApprovalControl.refValue" field="approvalControl"
-                  placeholder="" [crrValue]="taskGroups.approvalControl" (valueChange)="valueApp($event)">
+                <codx-input name="approvalControl" type="combobox" [refValue]="gridViewSetup.ApprovalControl.refValue"
+                  field="approvalControl" placeholder="" [crrValue]="taskGroups.approvalControl"
+                  (valueChange)="valueApp($event)">
                 </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
               <div class="form-group col-8">
-                <codx-label fiedName="ProjectControl" default="Chọn dự án" formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
+                <codx-label fiedName="ProjectControl" default="Chọn dự án" formName="TaskGroups"
+                  gridViewName="grvTaskGroups"></codx-label>
                 <div>
                   <label class="text-dark-50">Ràng buộc chọn thông tin dự án khi tạo công việc</label>
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="ProjectControl" type="combobox"  [refValue]="gridViewSetup.ProjectControl.refValue"  field="projectControl" placeholder=""
-                  [crrValue]="taskGroups.projectControl" (valueChange)="valuePro($event)">
+                <codx-input name="projectControl" type="combobox" [refValue]="gridViewSetup.ProjectControl.refValue"
+                  field="projectControl" placeholder="" [crrValue]="taskGroups.projectControl"
+                  (valueChange)="valuePro($event)">
                 </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
               <div class="form-group col-8">
-                <codx-label fiedName="AttachmentControl" default="Đính kèm file" formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
+                <codx-label fiedName="AttachmentControl" default="Đính kèm file" formName="TaskGroups"
+                  gridViewName="grvTaskGroups"></codx-label>
                 <div>
                   <label class="text-dark-50">Kiểm soát file đính kèm khi tạo công việc</label>
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="AttachmentControl" type="combobox" [refValue]="gridViewSetup.AttachmentControl.refValue" field="AttachmentControl"
-                  placeholder="" [crrValue]="taskGroups.attachmentControl" (valueChange)="valueAtt($event)">
+                <codx-input name="attachmentControl" type="combobox"
+                  [refValue]="gridViewSetup.AttachmentControl.refValue" field="AttachmentControl" placeholder=""
+                  [crrValue]="taskGroups.attachmentControl" (valueChange)="valueAtt($event)">
                 </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
               <div class="form-group col-8">
                 <label>
-                  <codx-label fiedName="CheckListControl" default="Nhập việc cần làm" ></codx-label>
+                  <codx-label fiedName="CheckListControl" default="Nhập việc cần làm"></codx-label>
                 </label>
                 <div>
                   <label class="text-dark-50">Kiểm soát nhập liệu checklist</label>
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="CheckListControl" type="combobox" [refValue]="gridViewSetup.CheckListControl.refValue" field="CheckListControl"
-                  placeholder="" [crrValue]="taskGroups.checkListControl" (valueChange)="valueCheck($event)">
+                <codx-input name="checkListControl" type="combobox" [refValue]="gridViewSetup.CheckListControl.refValue"
+                  field="CheckListControl" placeholder="" [crrValue]="taskGroups.checkListControl"
+                  (valueChange)="valueCheck($event)">
                 </codx-input>
               </div>
             </div>
@@ -226,7 +234,7 @@
   <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
       (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
 </ng-template>
-<!-- <ng-template #itemTemplate let-data> 
+<!-- <ng-template #itemTemplate let-data>
   <div class="task-row py-3 px-6 ">
     <table class="table w-100 table-action-menu ">
       <thead>

@@ -16,7 +16,7 @@ import { TmService } from '../../tm.service';
   templateUrl: './setting-panel.component.html',
   styleUrls: ['./setting-panel.component.scss'],
 })
-export class SettingComponent implements OnInit {
+export class SettingPanelComponent implements OnInit {
   const_modes = { d: 'day', w: 'week', m: 'month', y: 'year' };
 
   data: any;
