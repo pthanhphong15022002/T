@@ -384,19 +384,19 @@ export class TaskGroupComponent implements OnInit {
 
   deleteTaskGroup(item) {
     var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var t = this;
-          dialog.close = function (e) {
-            return t.api.callSv('TM','TM','TaskGroupBusiness','DeleteTaskGroupAsync',item.taskGroupID).subscribe((res)=>{
-              if(res){
-                t.notiService.notify(res[2].message);   
-                t.gridView.removeHandler(item,"taskGroupID");
-              }
-            })
-          };
-        });
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var t = this;
+        dialog.close = function (e) {
+          return t.api.callSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
+            if (res) {
+              t.notiService.notify(res[2].message);
+              t.gridView.removeHandler(item, "taskGroupID");
+            }
+          })
+        };
+      });
   }
 
   addRow() {
@@ -406,11 +406,14 @@ export class TaskGroupComponent implements OnInit {
         if (res) {
           this.notiService.notify(res[0].message);
           t.data = res[1];
-          
-          if (t.data) {
-            let item = t.data;
-            this.gridView.addHandler(item, this.isAddMode, "taskGroupID");
-          }
+          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
+
+          // if (t.data) {
+          //   let item = t.data;
+          //   this.api.callSv('TM','ERM.Business.TM','TaskGroupBusiness','GetListTaskGroupsDetailAsync').subscribe((res)=>{
+          //     this.gridView.data = res;
+          //   })
+          // }
         }
       })
     this.Close();
@@ -423,12 +426,7 @@ export class TaskGroupComponent implements OnInit {
         if (res) {
           this.notiService.notify(res[0].message);
           t.data = res[1];
-          if (t.data) {
-            let item = t.data;
-           
-            this.gridView.addHandler(item, this.isAddMode, "taskGroupID");
-          
-          } 
+          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
         }
       })
     this.Close();
@@ -452,12 +450,10 @@ export class TaskGroupComponent implements OnInit {
     else {
       this.taskGroups.checkList = null;
     }
-
-    if (this.isAddMode == true) {
+    if (this.isAddMode) {
       return this.addRow();
     }
     return this.updateRow();
-
   }
 
   getCheckList(checkList) {
