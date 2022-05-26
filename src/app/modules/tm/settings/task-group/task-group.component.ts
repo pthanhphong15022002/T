@@ -113,10 +113,6 @@ export class TaskGroupComponent implements OnInit {
       type: 'grid',
       sameData: false,
       active: true,
-<<<<<<< HEAD:src/app/modules/tm/settings/task-group/task-group.component.ts
-=======
-      // viewInput: null,
->>>>>>> e4fb0d4f536afbc9505217bad5ff3c43e99d6d8e:src/app/modules/tm/task-group/task-group.component.ts
       model: {
         panelLeftRef: this.main,
         sideBarRightRef: this.sidebarRight,
