@@ -92,7 +92,7 @@ export class KanbanComponent implements OnInit {
     this.getListDetailTask();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   viewMemo(id: string) {
     this.cardId = id;
@@ -105,8 +105,17 @@ export class KanbanComponent implements OnInit {
       .toUpperCase();
   }
 
-  onDataDrag(evt: any) {
+  onDataDrag(evt: Event) {
+    if(!this.kanbanSetting.AllowDrag){
+      return;
+    }
+    console.log(evt);
     this.item = evt;
+  }
+
+  onDataDrop(evt: Event){
+    this.item = evt;
+    console.log("Drop: ",this.item)
   }
 
   submit(e: any, modal: any) {
@@ -114,7 +123,7 @@ export class KanbanComponent implements OnInit {
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => { });
+      .subscribe((res) => {});
     modal.close(true);
   }
 
@@ -275,7 +284,7 @@ export class KanbanComponent implements OnInit {
       ((date.getTime() - janFirst.getTime()) / 86400000 +
         janFirst.getDay() +
         1) /
-      7
+        7
     );
   }
 
