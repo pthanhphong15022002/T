@@ -1190,11 +1190,12 @@ div[class*="e-"] {
 }
 
 .e-listview .e-list-group-item span {
-    font-size: 14px !important;
+    font-size: 13.4px !important;
 }
 
 .e-listview .e-list-group-item {
     border-top: 0;
+    padding-left: 10px;
 }
 
 .e-listview .e-list-item.e-hover,
@@ -1337,6 +1338,10 @@ div[class*="e-"] {
 
 /****** task user ***/
 /*** for TM / dashboard ***/
+
+
+
+/***** view list-detail / chep vo list-detail.scss ****/
 .taskbox-user {
     background-color: #f7f7f9;
     border-radius: 8px;
@@ -1348,6 +1353,12 @@ div[class*="e-"] {
 
 .taskbox-list .task-item {
     border-bottom: 1px #e7e7e7 solid;
+}
+
+
+
+.tab_container {
+    padding-top: 15px;
 }
 
 /***** tm tham chieu ***/
@@ -1403,4 +1414,33 @@ div[class*="e-"] {
 
 .icon-circle.bg-info {
     background-color: var(--info);
+}
+
+
+
+/***** temp / tm view kanban / chep vo view-kanban.scss ****/
+.e-card {
+    line-height: inherit;
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container {
+    padding: 0;
+}
+
+.e-kanban .e-kanban-table {
+    border-spacing: 2px;
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card {
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.e-kanban .e-kanban-table .e-header-cells {
+    background-color: var(--primary-dark);
+    color: #fff;
+    height: 34px;
+    padding-left: 10px;
 }
