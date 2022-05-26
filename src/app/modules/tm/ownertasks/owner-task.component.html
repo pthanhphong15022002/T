@@ -1,0 +1,44 @@
+<codx-views #view funcID="TMT02" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"> </codx-views>
+
+<ng-template #sidebarRight>
+  <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
+</ng-template>
+
+<!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
+
+<ng-template #kanban>
+  <onwer-task-kanban [viewBase]="viewBase"></onwer-task-kanban>
+</ng-template>
+
+<ng-template #settingPanel>
+  <!-- <app-setting [viewBase]="viewBase"></app-setting> -->
+</ng-template>
+
+<!-- list-task-detail -->
+<ng-template #listDetails>
+  <owner-task-details [viewBase]="viewBase" [taskInfo]="taskInfo"></owner-task-details>
+</ng-template>
+<!-- end list-task-detail -->
+<!-- list-task -->
+<ng-template #listTasks>
+  <owner-list-tasks [viewBase]="viewBase" [taskInfo]="taskInfo"></owner-list-tasks>
+</ng-template>
+<!-- end list-task -->
+<ng-template #schedule let-data>
+  <onwer-task-calendar [viewBase]="viewBase" [taskInfo]="taskInfo"></onwer-task-calendar>
+</ng-template>
+
+<ng-template #treeViews let-data>
+  <app-treeview [viewBase]="viewBase" [taskInfo]="taskInfo"></app-treeview>
+</ng-template>
+
+<ng-template #calendar let-data>
+  <app-calendar [viewBase]="viewBase" [taskInfo]="taskInfo"></app-calendar>
+</ng-template>
+<ng-template #taskGroup let-data>
+  <app-task-group [viewBase]="viewBase"></app-task-group>
+</ng-template>
+<ng-template #rangesKanban let-data>
+  <app-ranges-kanban [viewBase]="viewBase"></app-ranges-kanban>
+</ng-template>

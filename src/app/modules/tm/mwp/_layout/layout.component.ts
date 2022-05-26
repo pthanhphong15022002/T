@@ -75,7 +75,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   public funcs$: Observable<any> = of([
     {
-      functionID: 'TM002',
+      functionID: 'TMT01',
       customName: 'Dashboard',
       smallIcon: 'icon-person icon-18',
       comingSoon: false,

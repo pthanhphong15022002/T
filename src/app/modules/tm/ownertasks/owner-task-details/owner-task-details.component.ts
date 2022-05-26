@@ -1,19 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
-  Injector,
   Input,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
-
-import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
-import { TmService } from '@modules/tm/tm.service';
-import { HomeComponent } from '@pages/home/home.component';
-import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
@@ -23,22 +15,20 @@ import {
   NotificationsService,
   ViewsComponent,
 } from 'codx-core';
-import { mode } from 'crypto-js';
 import * as moment from 'moment';
+import { TaskInfoComponent } from '../../controls/task-info/task-info.component';
+import { UpdateStatusPopupComponent } from '../../controls/update-status-popup/update-status-popup.component';
+import { TmService } from '../../tm.service';
 
 @Component({
-  selector: 'app-view-list-details',
-  templateUrl: './view-list-details.component.html',
-  styleUrls: ['./view-list-details.component.scss'],
+  selector: 'owner-task-details',
+  templateUrl: './owner-task-details.component.html',
+  styleUrls: ['./owner-task-details.component.scss'],
 })
-export class ViewListDetailsComponent implements OnInit {
+export class OnwerTaskDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() data = [];
-  @Input() dataAddNew = [];
-  @Input() dataCompleted = [];
-  @Input() dataPostpone = [];
-  @Input() dataRefuse = [];
-
+  taskChild = [];
   view: string;
   user: any;
   objectAssign: any;
@@ -60,15 +50,9 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  tabSt = '1';
-  predicate = 'Status=@0';
-  dataValue = '1';
+  innerHTML = ''
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
-  @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
-  @ViewChild('listviewPostpone') listviewPostpone: CodxListviewComponent;
-  @ViewChild('listviewRefuse') listviewRefuse: CodxListviewComponent;
 
   constructor(
     private tmSv: TmService,
@@ -83,26 +67,23 @@ export class ViewListDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    // this.tabStatus('1');
-    this.isFinishLoad = true;
   }
 
   ngAfterViewInit(): void {
     const t = this;
-
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
-        this.listviewAdd.addHandler(res, true, 'recID');
-        if (this.dataValue == '1') this.data = this.listviewAdd.data;
+        this.listview.addHandler(res, true, 'recID');
+        this.data.push(res);
       }
     });
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
-        var index = this.data.findIndex((x) => x.taskID == res.taskID);
+        var index = this.data.findIndex(x => x.taskID == res.taskID);
         if (index != -1) {
-          this.updateListView(res);
+          this.listview.addHandler(res, false, 'recID');
         } else {
-          this.addListView(res);
+          this.listview.addHandler(res, true, 'recID');
         }
         this.data = this.listview.data;
         if (t.itemSelected.taskID == res.taskID) {
@@ -119,9 +100,12 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    model.funcID = 'WPT036';
+    model.predicate = '';
+    // model.funcID = "TM001" ;
     model.page = 1;
-    // model.pageSize = 20;
+    model.pageSize = 100;
+    // model.predicate = 'Owner=@0';
+    // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('5/31/2022').toDate();
@@ -135,18 +119,52 @@ export class ViewListDetailsComponent implements OnInit {
     let dataObj = { view: this.view, viewBoardID: '' };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
-    //const t = this;
-    // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-    //   if (res && res.length) {
-    //     this.data = res[0];
-    //     // this.classifyStatus(this.data);
-    //     // this.itemSelected = res[0][0];
-    //     // this.loadDetailTask(this.itemSelected);
-    //   } else {
-    //     this.data = [];
-    //   }
-    //   t.dt.detectChanges();
-    // });
+    const t = this;
+    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
+      if (res && res.length) {
+        this.data = res[0];
+        this.itemSelected = res[0][0];
+        if (this.itemSelected.category == "3" || this.itemSelected.category == "4") {
+          this.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskBusiness',
+              'GetTaskByParentIDAsync',
+              [this.itemSelected?.recID]
+            )
+            .subscribe((data) => {
+              if (data && data.length > 0) {
+                let objectId = data[0].owner;
+                let objectState = data[0].status;
+                for (let i = 1; i < data?.length; i++) {
+                  objectId += ';' + data[i].owner;
+                  objectState += ';' + data[i].status;
+                }
+                this.objectAssign = objectId;
+                this.objectState = objectState;
+              }
+            });
+        }
+        this.isFinishLoad = true;
+        if (this.itemSelected?.category != '1') {
+          this.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskBusiness',
+              'GetListTasksTreeAsync',
+              this.itemSelected?.id
+            )
+            .subscribe((res) => {
+              this.listNode = res;
+            });
+        }
+      } else {
+        this.data = [];
+      }
+      t.dt.detectChanges();
+    });
   }
 
   trackByFn(index: number, item): string {
@@ -164,7 +182,42 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-    this.loadDetailTask(this.itemSelected);
+
+    if (this.itemSelected.category == "3" || this.itemSelected.category == "4") {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetTaskByParentIDAsync',
+          [this.itemSelected?.recID]
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            let objectId = res[0].owner;
+            let objectState = res[0].status;
+            for (let i = 1; i < res?.length; i++) {
+              objectId += ';' + res[i].owner;
+              objectState += ';' + res[i].status;
+            }
+            this.objectAssign = objectId;
+            this.objectState = objectState;
+          }
+        });
+    }
+    if (this.itemSelected?.category != '1') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTasksTreeAsync',
+          this.itemSelected?.id
+        )
+        .subscribe((res) => {
+          this.listNode = res;
+        });
+    }
   }
 
   getByParentID(task) {
@@ -242,8 +295,11 @@ export class ViewListDetailsComponent implements OnInit {
             return that.confirmDelete(e, that);
           };
         });
-    } else this.notiService.notify('Bạn chưa được cấp quyền này !');
+
+    } else
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
+
 
   viewItem(taskAction) {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
@@ -253,7 +309,7 @@ export class ViewListDetailsComponent implements OnInit {
     p.open();
   }
 
-  confirmDelete(e: any, t: ViewListDetailsComponent) {
+  confirmDelete(e: any, t: OnwerTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
       t.api
@@ -282,24 +338,20 @@ export class ViewListDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(
-                      (x) => x.taskID == lstTaskDelete[i].taskID
-                    );
-                    t.removeListView(taskDelete);
+                    var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
+                    t.listview.removeHandler(taskDelete, 'recID');
                   }
-                  t.notiService.notify('Xóa task thành công !');
                   if (res[1] != null) {
-                    var dt = t.dataOfStatus(res[i].status);
-                    var parent = dt.find((x) => x.taskID == res[1].taskID);
+                    var parent = t.data.find(x => x.taskID == res[1].taskID);
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
-                    t.updateListView(parent);
+                    t.listview.addHandler(parent, false, 'recID');
                   }
                   // t.notiService.notifyCode("TM004")
-                  var lv = t.lvOfStatus(this.dataValue);
-                  t.data = lv.data;
+                  t.notiService.notify('Xóa task thành công !');
+                  t.data = t.listview.data;
                   t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID);
+                  t.getOneItem(t.itemSelected.taskID)
                   return;
                 }
                 t.notiService.notify(
@@ -368,7 +420,6 @@ export class ViewListDetailsComponent implements OnInit {
       status: status,
       taskAction: taskAction,
     };
-    var oldSt = this.dataValue;
     this.callfc
       .openForm(
         UpdateStatusPopupComponent,
@@ -379,24 +430,15 @@ export class ViewListDetailsComponent implements OnInit {
         obj
       )
       .subscribe((dt: any) => {
-        var that = this;
-        dt.close = function (e) {
-          that.closePopup(e, oldSt, that);
-        };
+        dt.close = this.closePopup;
       });
   }
 
-  closePopup(e: any, oldSt: string, t: ViewListDetailsComponent) {
+  closePopup(e: any) {
     if (e.closedBy == 'user action') {
       var task = e.event;
-      var oldTask = task;
-      oldTask.status = oldSt;
-      if (task.status != oldSt) {
-        t.addListView(task);
-        t.removeListView(oldTask);
-      } else {
-        t.updateListView(task);
-      }
+
+      this.listview.addHandler(task, false, 'recID');
     }
   }
 
@@ -404,170 +446,23 @@ export class ViewListDetailsComponent implements OnInit {
     this.openNode = !this.openNode;
   }
 
-  addListView(obj) {
-    switch (obj.status) {
-      case '1':
-        this.listviewAdd.addHandler(obj, true, 'recID');
-        this.dataAddNew.push(obj);
-        break;
-      case '9':
-        this.listviewCompleted.addHandler(obj, true, 'recID');
-        this.dataCompleted.push(obj);
-        break;
-      case '5':
-        this.listviewPostpone.addHandler(obj, true, 'recID');
-        this.dataPostpone.push(obj);
-        break;
-      case '8':
-        this.listviewRefuse.addHandler(obj, true, 'recID');
-        this.dataRefuse.push(obj);
-        break;
-      default:
-        break;
-    }
-  }
-  updateListView(obj) {
-    switch (obj.status) {
-      case '1':
-        this.listviewAdd.addHandler(obj, false, 'recID');
-        this.dataAddNew.push(obj);
-        break;
-      case '9':
-        this.listviewCompleted.addHandler(obj, false, 'recID');
-        this.dataCompleted.push(obj);
-        break;
-      case '5':
-        this.listviewPostpone.addHandler(obj, false, 'recID');
-        this.dataPostpone.push(obj);
-        break;
-      case '8':
-        this.listviewRefuse.addHandler(obj, false, 'recID');
-        this.dataRefuse.push(obj);
-        break;
-      default:
-        break;
-    }
-  }
-  removeListView(obj) {
-    switch (obj.status) {
-      case '1':
-        this.listviewAdd.removeHandler(obj, 'recID');
-        this.dataAddNew.push(obj);
-        break;
-      case '9':
-        this.listviewCompleted.removeHandler(obj, 'recID');
-        this.dataCompleted.push(obj);
-        break;
-      case '5':
-        this.listviewPostpone.removeHandler(obj, 'recID');
-        this.dataPostpone.push(obj);
-        break;
-      case '8':
-        this.listviewRefuse.removeHandler(obj, 'recID');
-        this.dataRefuse.push(obj);
-        break;
-      default:
-        break;
-    }
-  }
-  tabStatus(st: string) {
-    switch (st) {
-      case '1':
-        this.data = this.listviewAdd?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '1';
-        this.tabSt = '1';
-        break;
-      case '9':
-        this.data = this.listviewCompleted?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '9';
-        this.tabSt = '9';
-        break;
-      case '5':
-        this.data = this.listviewPostpone?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '5';
-        this.tabSt = '5';
-        break;
-      case '8':
-        this.data = this.listviewRefuse?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '8';
-        this.tabSt = '8';
-        break;
-      default:
-        break;
-    }
-    if(this.itemSelected!=null)
-    this.loadDetailTask(this.itemSelected);
-  }
 
-  lvOfStatus(st): any {
-    switch (st) {
-      case '1':
-        return this.listviewAdd;
-      case '9':
-        return this.listviewCompleted;
-      case '5':
-        return this.listviewPostpone;
-      case '8':
-        return this.listviewRefuse;
-    }
-  }
-  dataOfStatus(st): any {
-    switch (st) {
-      case '1':
-        return this.dataAddNew;
-      case '9':
-        return this.dataCompleted;
-      case '5':
-        return this.dataPostpone;
-      case '8':
-        return this.dataRefuse;
-    }
-  }
-
-  loadDetailTask(task) {
-    if (task.category == '3' || task.category == '4') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.recID]
-        )
-        .subscribe((res) => {
-          if (res && res.length > 0) {
-            let objectId = res[0].owner;
-            let objectState = res[0].status;
-            for (let i = 1; i < res?.length; i++) {
-              objectId += ';' + res[i].owner;
-              objectState += ';' + res[i].status;
-            }
-            this.objectAssign = objectId;
-            this.objectState = objectState;
-          }
-        });
-    }
-    if (task?.category != '1') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTasksTreeAsync',
-          task?.id
-        )
-        .subscribe((res) => {
-          this.listNode = res;
-        });
-    }
-    this.isFinishLoad = true;
-  }
+  // getValueCMParameter() {
+  //   const perdicate =
+  //     "FieldName=@0 or FieldName=@1 or FieldName=@2 or FieldName=@3";
+  //   const fieldName =
+  //     "ProjectControl;LocationControl;UpdateControl;PlanControl";
+  //   this.tmSv
+  //     .getValueCMParameter(
+  //       `FormName = 'TM_Parameters' AND (${perdicate})`,
+  //       fieldName
+  //     )
+  //     .subscribe((result) => {
+  //       this.configParam = this.mainService.convertListToObject(
+  //         result as [],
+  //         "fieldName",
+  //         "fieldValue"
+  //       );
+  //     });
+  // }
 }
