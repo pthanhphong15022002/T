@@ -12,7 +12,7 @@ import * as moment from 'moment';
   templateUrl: './assign-tasks-details.component.html',
   styleUrls: ['./assign-tasks-details.component.scss'],
 })
-export class ViewListDetailsComponent implements OnInit {
+export class AssignTaskDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() data = [];
   taskChild = [];
@@ -225,7 +225,7 @@ export class ViewListDetailsComponent implements OnInit {
     p.open();
   }
 
-  confirmDelete(e: any, t: ViewListDetailsComponent) {
+  confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
       t.api

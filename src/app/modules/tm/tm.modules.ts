@@ -1,3 +1,4 @@
+import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -83,6 +84,7 @@ const routes: Routes = [
     RangesKanbanComponent,
     LayoutComponent,
     AssignTaskComponent,
+    AssignTaskDetailsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

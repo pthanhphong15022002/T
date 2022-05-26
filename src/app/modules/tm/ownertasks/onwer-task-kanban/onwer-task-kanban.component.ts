@@ -80,7 +80,7 @@ export class KanbanComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cache.viewSettings('TMT02').subscribe((res) => {
+    this.cache.viewSettings('TM001').subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
         this.getColumnKanban();
@@ -255,7 +255,7 @@ export class KanbanComponent implements OnInit {
     this.kanbanSetting.GrvName = 'grvTasks';
     this.tmSv.loadColumnsKanban(this.kanbanSetting).subscribe((res) => {
       if (res) {
-      //  this.kanban.columns = res.column;
+        this.kanban.columns = res.column;
         this.cr.detectChanges();
       }
     });

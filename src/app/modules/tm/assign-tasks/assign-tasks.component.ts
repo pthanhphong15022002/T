@@ -33,7 +33,7 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '2',
       type: 'content',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.listDetails,
         sideBarRightRef: this.sidebarRight,
