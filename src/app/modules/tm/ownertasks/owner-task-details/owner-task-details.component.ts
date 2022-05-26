@@ -101,7 +101,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    // model.funcID = "TM001" ;
+    model.funcID = "TMT02" ;
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';

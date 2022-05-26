@@ -12,7 +12,12 @@ import {
   DialogSettingsModel,
   SwimlaneSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
-import { CoDxKanbanComponent, AuthStore, CacheService } from 'codx-core';
+import {
+  CoDxKanbanComponent,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+} from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { KanbanSetting } from '../../models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
@@ -25,6 +30,7 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 export class KanbanComponent implements OnInit {
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
   @ViewChild('popupAdd') modalContent: any;
+  @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
 
   dataSource: any = [];
@@ -74,7 +80,8 @@ export class KanbanComponent implements OnInit {
     private tmSv: TmService,
     private authStore: AuthStore,
     private cache: CacheService,
-    private cr: ChangeDetectorRef
+    private cr: ChangeDetectorRef,
+    private cf: CallFuncService
   ) {
     this.user = this.authStore.get();
   }
@@ -95,7 +102,7 @@ export class KanbanComponent implements OnInit {
   ngAfterViewInit() {}
 
   viewMemo(id: string) {
-    this.cardId = id;
+    this.cardId == id ? (this.cardId = '') : (this.cardId = id);
   }
 
   getString(assignee: any) {
@@ -106,25 +113,23 @@ export class KanbanComponent implements OnInit {
   }
 
   onDataDrag(evt: Event) {
-    if(!this.kanbanSetting.AllowDrag){
+    if (!this.kanbanSetting.AllowDrag) {
       return;
     }
-    console.log(evt);
     this.item = evt;
   }
 
-  onDataDrop(evt: Event){
+  onDataDrop(evt: Event) {
     this.item = evt;
-    console.log("Drop: ",this.item)
+    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => {});
   }
 
-  submit(e: any, modal: any) {
-    const completed = new Date(2022, 5, 11, 18, 0, 0);
+  submit(e: any) {
+    const completed = new Date(2022, 5, 26, 18, 0, 0);
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
       .subscribe((res) => {});
-    modal.close(true);
   }
 
   getListDetailTask() {

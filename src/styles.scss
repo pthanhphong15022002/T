@@ -50,6 +50,9 @@
     --primary-lightest: #fff4fe;
 }
 
+/***** genaral ***/
+
+
 
 /** custom control / chinh trong core - control **/
 .e-input-group-icon.e-date-icon,
@@ -352,8 +355,7 @@ input.form-control {
 }
 
 /**** icon ***/
-[class^="icon-"],
-[class*=" icon-"] {
+.page-content [class^="icon-"] {
     font-size: 1.45rem;
     color: var(--gray-darker);
 }
@@ -689,13 +691,8 @@ codx-img img {
 /*** for module  ***/
 
 .e-multiselect {
-    width: 250px;
+    width: 100%;
 }
-
-
-
-
-
 
 
 
@@ -725,7 +722,12 @@ body {
 label {
     display: block;
     font-weight: 500;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
+}
+
+codx-label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
 }
 
 .col-form-label {
@@ -734,18 +736,16 @@ label {
 
 codx-wrapper {
     background-color: #F4F4F6;
-    height: calc(100vh - 65px) !important;
     padding: 16px;
 }
 
 #codx_master {
     background-color: #fff;
     border-radius: 8px !important;
-    padding: 4px;
+    padding: 4px 0;
 }
 
 #codx_master .codx_master_container {
-    padding: 0 3px;
     overflow: auto;
 }
 
@@ -768,9 +768,9 @@ codx-wrapper {
 }
 
 
-codx-header+codx-wrapper {
-    height: calc(100vh - 120px) !important;
-}
+// codx-header+codx-wrapper {
+//     height: calc(100vh - 120px) !important;
+// }
 
 codx-header+codx-wrapper #codx_master .codx_master_container,
 codx-header+codx-wrapper #codx_detail .codx_detail_container {
@@ -796,7 +796,7 @@ codx-wrapper ::-webkit-scrollbar-thumb {
 @media (min-width: 992px) {
     .header-fixed .header {
         height: 52px;
-        box-shadow: none;
+        box-shadow: 0px 2px 12px 0px rgb(82 63 105 / 5%) !important;
     }
 
     .header codx-img img {
@@ -807,6 +807,7 @@ codx-wrapper ::-webkit-scrollbar-thumb {
 
     .header-fixed.toolbar-fixed .toolbar {
         top: 52px;
+        border-top-color: transparent;
     }
 
     .header-fixed.toolbar-fixed .wrapper {
@@ -834,10 +835,61 @@ codx-wrapper ::-webkit-scrollbar-thumb {
     .aside .aside-logo {
         height: 52px;
     }
+
+    .header-fixed .wrapper {
+        padding-top: 52px;
+    }
+
+    codx-wrapper {
+        height: calc(100vh - 52px) !important;
+    }
 }
 
+/*** aside theme default ***/
+#kt_aside_menu_wrapper {
+    height: calc(100vh - 72px) !important;
+}
 
+#kt_aside.aside {
+    background-color: var(--primary-darker);
+}
 
+#kt_aside.aside .menu-item .menu-link .menu-title {
+    color: #fff;
+}
+
+#kt_aside.aside .menu-item .menu-link {
+    color: #fff;
+}
+
+#kt_aside.aside .menu-item .menu-link:hover,
+#kt_aside.aside .menu-item .menu-link:hover * {
+    color: var(--primary-light) !important;
+}
+
+#kt_aside.aside .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: #fff;
+}
+
+#kt_aside.aside .text-muted {
+    color: var(--primary-light) !important;
+}
+
+.icon-gear:before {
+    content: "\ee1d";
+}
+
+#kt_aside.aside ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.10) !important;
+    border-radius: 2px !important;
+    width: 5px !important;
+}
+
+#kt_aside.aside ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/******* end aside ******/
 
 .codx_e-container {
     height: calc(100vh - 154px) !important;
@@ -873,7 +925,6 @@ div[class*="e-"] {
 }
 
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-    border-radius: 0.3rem;
     font-size: 13px;
     padding: calc(0.405rem + 1px) calc(1rem + 3px) !important;
     font-weight: 400;
@@ -1253,6 +1304,10 @@ div[class*="e-"] {
 
 /*** DACHUAN 25/5/2022 ***/
 
+
+
+
+/************ CSS For FUNCTION *********/
 /* file upload */
 /***/
 .viewfile-toolbar span.icon-24:hover {
@@ -1280,7 +1335,30 @@ div[class*="e-"] {
     bottom: 24px;
 }
 
-/* file css Lịch sử */
+/****** task user ***/
+/*** for TM / dashboard ***/
+.taskbox-user {
+    background-color: #f7f7f9;
+    border-radius: 8px;
+}
+
+.task-weekbox {
+    border-bottom: 2px #C9C9D4 solid;
+}
+
+.taskbox-list .task-item {
+    border-bottom: 1px #e7e7e7 solid;
+}
+
+/***** tm tham chieu ***/
+.content-tree .menu-nav {
+    margin-left: 30px;
+}
+
+.item-tree>div {
+    width: 100% !important;
+    /* file css Lịch sử */
+}
 
 .symbol-icon {
     position: relative;
