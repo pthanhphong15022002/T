@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ToDo } from '../models/task.model';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'app-task-group',
@@ -30,6 +31,8 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemCheckListControlVll', { static: true }) itemCheckListControlVll: TemplateRef<any>;
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
+  @ViewChild('listView') listView: CodxListviewComponent;
+
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
@@ -87,6 +90,7 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.loadData();
     this.columnsGrid = [
       { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
@@ -119,6 +123,22 @@ export class TaskGroupComponent implements OnInit {
         widthAsideRight: '900px'
       }
     }];
+  }
+
+  loadData(){
+    let model = new DataRequest();
+    model.formName = 'TaskGroups';
+    model.gridViewName = 'grvTaskGroups';
+    model.entityName = 'TM_TaskGroups';
+    model.predicate = '';
+    model.page = 1;
+    model.pageSize = 100;
+    this.tmSv.loadTaskGroupByAuthen(model).subscribe((res) => {
+      if (res && res.length) {
+        this.data = res[0];
+        this.listView.data = this.data;
+      }
+    })
   }
 
   initForm() {
@@ -160,6 +180,16 @@ export class TaskGroupComponent implements OnInit {
       this.dt.detectChanges();
       this.gridView.data[index] = dataItem;
     }
+    this.dt.detectChanges();
+  }
+
+  removeHandler(dataItem: any, key: string){
+    if(!key) return null;
+    this.gridView.data = this.gridView.data.filter(function (e, index){
+      return(e[key] !== dataItem[key]);
+    });
+    this.total = this.gridView.data.length;
+    this.totalRow = this.gridView.data.length;
     this.dt.detectChanges();
   }
 
@@ -218,10 +248,10 @@ export class TaskGroupComponent implements OnInit {
 
   }
 
-  clickButton(evt: any,) {
+  clickButton(evt: any, isAddMode) {
 
     //  this.openTask()
-    if (this.isAddMode == true) {
+    if (isAddMode == true) {
       this.isAddMode = true;
       this.title = 'Thêm nhóm công việc';
       this.initForm();
@@ -238,6 +268,7 @@ export class TaskGroupComponent implements OnInit {
 
   openForm(data, isAddMode) {
     if (isAddMode == false) {
+      this.isAddMode = false;
       this.taskGroups = new TM_TaskGroups();
       this.title = 'Chỉnh sửa nhóm công việc';
       this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'GetTaskGroupByIdAsync', data.taskGroupID).subscribe((res) => {
@@ -347,8 +378,22 @@ export class TaskGroupComponent implements OnInit {
   }
 
   deleteTaskGroup(item) {
-
+    var message = 'Bạn có chắc chắn muốn xóa task này !';
+      this.notiService
+        .alert('Cảnh báo', message, { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var t = this;
+          dialog.close = function (e) {
+            return t.api.callSv('TM','TM','TaskGroupBusiness','DeleteTaskGroupAsync',item.taskGroupID).subscribe((res)=>{
+              if(res){
+                t.notiService.notify(res[2].message);
+                t.removeHandler(item,"taskGroupID");
+              }
+            })
+          };
+        });
   }
+
   addRow() {
     var t = this;
     this.tmSv.addTaskGroup(this.taskGroups)
@@ -358,32 +403,30 @@ export class TaskGroupComponent implements OnInit {
           t.data = res[1];
           if (t.data) {
             let item = t.data;
-
             this.addHandler(item, this.isAddMode, "taskGroupID");
-            this.dataAddNew.next(item);
-
+            this.data = this.listView.data;
           }
         }
-        this.Close();
-
       })
+      this.Close();
   }
 
   updateRow() {
     var t = this;
-    // this.tmSv.updateTaskGroup(this.taskGroups)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify(res[0].message);
-    //       t.data = res[1];
-    //       if (t.data) {
-    //         let item = t.data;
-    //         this.addHandler(item, this.isAddMode, "taskGroupID");
-    //         this.updateAddNew.next(item);
-    //       }
-    //     }
-    //     this.Close();
-    //   })
+    this.tmSv.updateTaskGroup(this.taskGroups)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notify(res[0].message);
+          t.data = res[1];
+          if (t.data) {
+            let item = t.data;
+            this.addHandler(item, this.isAddMode, "taskGroupID");
+          //  item = this.listView.data;
+            this.data = this.listView.data;
+          } 
+        }
+      })
+      this.Close();
   }
 
   lstSavecheckList: any = [];
@@ -404,14 +447,12 @@ export class TaskGroupComponent implements OnInit {
     else {
       this.taskGroups.checkList = null;
     }
-    if (this.isAddMode == true) {
-       this.addRow();
-    }else{
-      this.updateRow();
-    }
-    
-    this.Close();
 
+    if (this.isAddMode == true) {
+       return this.addRow();
+    }
+     return this.updateRow();
+     
   }
 
   getCheckList(checkList) {
