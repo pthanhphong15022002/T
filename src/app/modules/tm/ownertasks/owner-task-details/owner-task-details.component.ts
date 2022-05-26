@@ -135,6 +135,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
             )
             .subscribe((data) => {
               if (data && data.length > 0) {
+                this.countOwner = data.length
                 let objectId = data[0].owner;
                 let objectState = data[0].status;
                 for (let i = 1; i < data?.length; i++) {
@@ -194,6 +195,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
+            this.countOwner = res.length
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {
