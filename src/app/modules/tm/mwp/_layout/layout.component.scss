@@ -13,3 +13,48 @@
     transition: opacity 1s ease-in-out;
   }
 }
+
+
+/*** aside theme default ***/
+#kt_aside_menu_wrapper {
+  height: calc(100vh - 72px) !important;
+}
+
+#kt_aside.aside {
+  background-color: var(--primary-darker);
+}
+
+#kt_aside.aside .menu-item .menu-link .menu-title {
+  color: #fff;
+}
+
+#kt_aside.aside .menu-item .menu-link {
+  color: #fff;
+}
+
+#kt_aside.aside .menu-item .menu-link:hover,
+#kt_aside.aside .menu-item .menu-link:hover * {
+  color: var(--primary-light) !important;
+}
+
+#kt_aside.aside .svg-icon svg [fill]:not(.permanent):not(g) {
+  fill: #fff;
+}
+
+#kt_aside.aside .text-muted {
+  color: var(--primary-light) !important;
+}
+
+
+
+#kt_aside.aside ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+  border-radius: 2px !important;
+  width: 5px !important;
+}
+
+#kt_aside.aside ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/******* end aside ******/
