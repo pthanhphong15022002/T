@@ -28,6 +28,10 @@ import { SettingCalendarComponent } from './settings/setting-calendar/setting-ca
 import { AssignTaskComponent } from './assign-tasks/assign-tasks.component';
 import { TaskGroupComponent } from './settings/task-group/task-group.component';
 import { SettingsComponent } from './settings/settings.component';
+import { CbxpopupComponent } from './controls/cbxpopup/cbxpopup.component';
+import { UpdateStatusPopupComponent } from './controls/update-status-popup/update-status-popup.component';
+import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
+
 
 const routes: Routes = [
   {
@@ -95,7 +99,10 @@ const routes: Routes = [
     HomeSettingComponent,
     TaskGroupComponent,
     RangesKanbanComponent,
-    SettingsComponent
+    SettingsComponent,
+    CbxpopupComponent,
+    UpdateStatusPopupComponent,
+    SettingPanelComponent
   ],
   imports: [
     RouterModule.forChild(routes),

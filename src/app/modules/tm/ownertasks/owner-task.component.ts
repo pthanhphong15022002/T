@@ -10,7 +10,7 @@ import {
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
-import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
+import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.component';
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 
