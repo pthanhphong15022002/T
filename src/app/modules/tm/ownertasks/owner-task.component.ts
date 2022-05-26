@@ -88,7 +88,8 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: false,
+      active: true,
+      //    viewInput: null,
       model: {
         //panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
@@ -99,10 +100,12 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     {
       id: '2',
       type: 'kanban',
-      active: true,
+      active: false,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.kanban,
-        sideBarRightRef: this.settingPanel,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
       }
     },
@@ -111,8 +114,8 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: true,
-
+      active: false,
+      //   viewInput: null,
       model: {
         panelLeftRef: this.listDetails,
         itemTemplate: this.templateTask,
@@ -127,6 +130,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
+      //     viewInput: null,
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
@@ -139,6 +143,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'schedule',
       text: 'schedule',
       active: false,
+      //   viewInput: null,
       model: {
         panelLeftRef: this.schedule,
         sideBarLeftRef: this.asideLeft,

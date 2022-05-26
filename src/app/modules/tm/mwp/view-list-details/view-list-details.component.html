@@ -4,57 +4,61 @@
       <div class="codx_master_container">
         <ejs-tab>
           <e-tabitems>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('1')">
               <ng-template #headerText>
-                <div (click)="tabStatus('1')">Tạo mới</div>
+                <div >Tạo mới</div>
               </ng-template>
               <ng-template #content>
                 <!-- <codx-listview #listviewAdd service="TM" [itemTemplate]="templateItem" [data]="dataAddNew"
                   groupBy="fieldGroup">
                 </codx-listview> -->
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-                <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true"  funcId="" [pageSize]="100"
-                service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-                [predicate]="predicate" [dataValue]="'1'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">  </codx-listview>   
+                <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true" funcId=""
+                  [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'1'" type="listView"
+                  [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
+                  (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('9')">
               <ng-template #headerText>
-                <div (click)="tabStatus('9')">Đã hoàn thành</div>
+                <div >Đã hoàn thành</div>
               </ng-template>
               <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-             
-                <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
-                service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-                [predicate]="predicate" [dataValue]="'9'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">  </codx-listview>   
+
+                <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId=""
+                  [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'9'" type="listView"
+                  [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
+                  (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('5')"> 
               <ng-template #headerText>
-                <div (click)="tabStatus('5')">Hoãn lại</div>
+                <div >Hoãn lại</div>
               </ng-template>
               <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container>  -->
-                <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
-                service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-                [predicate]="predicate" [dataValue]="'5'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-                entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)" handelCole>  </codx-listview>           
+                <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId=""
+                  [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'5'" type="listView"
+                  [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
+                  (changeRowSelected)="changeRowSelected($event)" handelCole> </codx-listview>
               </ng-template>
             </e-tabitem>
-            <e-tabitem>
+            <e-tabitem (click)="tabStatus('8')">
               <ng-template #headerText>
-                <div (click)="tabStatus('8')">Hủy</div>
+                <div >Hủy</div>
               </ng-template>
-              <ng-template #content>        
-              <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-              <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
-              service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
-              [predicate]="predicate" [dataValue]="'8'" type="listView" [gridViewName]="'grvTasks'" autoLoad="true"
-              entityName="TM_Tasks" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">
-            </codx-listview>
+              <ng-template #content>
+                <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
+                <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId=""
+                  [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'8'" type="listView"
+                  [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
+                  (changeRowSelected)="changeRowSelected($event)">
+                </codx-listview>
               </ng-template>
             </e-tabitem>
           </e-tabitems>
@@ -130,9 +134,9 @@
             </div>
             <div class="d-flex align-items-center text-gray-700 me-6">
               <span class="fw-bold me-1">Ưu tiên:</span>
-              <span class="icon-14 me-2">
+              <span class="icon-18 me-2">
                 <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
-                  [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"></span>
+                  [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async"><span class="icon-18 icon-outlined_flag"></span></span>
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async
                 }}</span>
@@ -211,7 +215,7 @@
         </div>
 
         <!--menu -->
-        <div class="bg-white py-4 d-flex flex-lg-column" >
+        <div class="bg-white py-4 d-flex flex-lg-column">
           <ejs-tab *ngIf="isFinishLoad">
             <e-tabitems>
               <e-tabitem>
@@ -508,15 +512,16 @@
                 </ng-template>
                 <!-- tree view -->
                 <ng-template #content>
-                    <div class="tab_container">
-                      <div class="his-group primary-group">
-                        <div class="tab_body" *ngIf="itemSelected?.category != '1'">
-                          <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode"
-                            [enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false"
-                            [isOutput]="true" [isLoadChild]="false">
-                          </codx-treeview>
-                        </div>
-                      </div></div>
+                  <div class="tab_container">
+                    <div class="his-group primary-group">
+                      <div class="tab_body" *ngIf="itemSelected?.category != '1'">
+                        <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode"
+                          [enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false"
+                          [isOutput]="true" [isLoadChild]="false">
+                        </codx-treeview>
+                      </div>
+                    </div>
+                  </div>
                 </ng-template>
               </e-tabitem>
               <e-tabitem>
@@ -581,7 +586,7 @@
 </div>
 <div class="offcanvas-overlay"></div>
 <ng-template #templateItem let-item>
-  <div class="d-flex px-2 p-3 flex-grow-1 border-bottom task-active item-active" [style.background-color]="
+  <div class="d-flex p-3 flex-grow-1 task-item" [style.background-color]="
   item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (dblclick)="showControl(p,item)"
     [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body"
     autoClose="outside" triggers="manual">
@@ -597,19 +602,19 @@
         <span class="icon-15 me-2">
           <span *ngIf="item.isTimeOut" class=" icon-18 icon-watch_later"></span>
           <span [class]="item?.priority | vll: 'L0186':'icon' | async"
-            [style.color]="item?.priority | vll: 'L0186':'color' | async">{{item?.priority}}</span>
+            [style.color]="item?.priority | vll: 'L0186':'color' | async"><span class="icon-18 icon-outlined_flag"></span></span>
         </span>
       </div>
       <span class="text-gray-400">{{ item.positionNameCreate }}</span>
       <div class="task-name mb-1 max-h-36px">{{ item?.taskName }}</div>
       <div class="d-flex align-items-center justify-content-between">
         <div class="task-status d-flex">
-          <div class="badge badge-danger me-2" [style.border-color]="
+          <div class="me-2" [style.border-color]="
           (item?.status | vll: 'L0614':'color' | async) + '30'
         " [style.background-color]="
           (item?.status | vll: 'L0614':'color' | async) + '30'
         " [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">
-            {{ item?.status | vll: "L0614":"text" | async }}{{item?.status}}
+            {{ item?.status | vll: "L0614":"text" | async }}
           </div>
           <span class="text-gray-600 fs-7">
             {{ item?.createdOn | fmDT: "dmy" }}</span>
@@ -617,7 +622,7 @@
         <div class="symbol-group symbol-hover justify-content-end"
           *ngIf="item?.category == '3' || item?.category == '4'">
           <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.assignTo" objectName="AD_Users"
-            [numberImages]="countOwner>2?2:countOwner">
+            [numberImages]="2">
           </codx-imgs>
         </div>
       </div>
@@ -632,9 +637,9 @@
 
 
 <ng-template #templatetree let-data>
-  <div class="list-group p-0 mt-5">
-    <div class="d-flex align-items-center justify-content-between list-title">
-      <div class="d-flex flex-wrap align-items-top" (click)="openShowNode()">
+  <div class="list-group w-100 p-0 mt-5">
+    <div class="d-flex w-100 align-items-center justify-content-between list-title">
+      <div class="d-flex w-100 align-items-top" (click)="openShowNode()">
         <div *ngIf="data.items.length >0">
           <span class="icon-18 icon-remove me-2 align-items-start" *ngIf="openNode"></span>
           <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="!openNode"></span>
@@ -643,11 +648,11 @@
         </codx-img>
         <!--end::Symbol-->
         <!--begin::Title-->
-        <div class="d-flex flex-column align-items-center me-2 w-50">
-          <div class="text-dark fw-bold fs-7">
+        <div class="d-flex flex-column me-6 w-100">
+          <div class="text-dark fw-bold fs-6">
             {{data?.userName}}
           </div>
-          <div class="text-gray-600">{{data.positionName}}</div>
+          <div class="text-gray-600 mb-1">{{data.positionName}}</div>
           <div class="text-dark" *ngIf="data?.category == '1' || data?.category == '3'">{{data.taskName}}
           </div>
           <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
@@ -657,33 +662,34 @@
         <!--begin::Section-->
         <div class="d-flex align-items-center mt-lg-0 mt-3 ms-auto">
           <!--begin::Label-->
-          <div class="me-6">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16 icon-person me-1 text-primary "></span>
-            <span class="text-gray-700 fw-bolder">{{data.items.length}}</span>
+            <span class="text-gray-800 fw-bold">{{data.items.length}}</span>
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <div class="me-6">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16 icon-message me-1 text-primary "></span>
-            <span class="text-gray-700 fw-bolder">{{data.comments}}</span>
+            <span class="text-gray-800 fw-bold">{{data.comments}}</span>
           </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <div class="me-6">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16  icon-attach_file me-1 text-primary "></span>
-            <span class="text-gray-700 fw-bolder">3</span>
+            <span class="text-gray-800 fw-bold">3</span>
           </div>
           <!--end::Label-->
           <!--begin::Btn-->
-          <span class="label  px-3 py-5 min-w-45px" [style.border-color]="
-          (data?.status | vll: 'L0614':'color' | async) +
-          '30'
-        " [style.background-color]="
-          (data?.status | vll: 'L0614':'color' | async) +
-          '30'
-        " [style.color]="
-          data?.status | vll: 'L0614':'color' | async
-        " style="border: none"> {{ data?.status | vll: "L0614":"text" | async }}{{data?.status}}</span>
+
+          <div class="task-status d-flex">
+            <div class="badge badge-danger me-2" [style.border-color]="
+  (data?.status | vll: 'L0614':'color' | async) + '30'
+" [style.background-color]="
+  (data?.status | vll: 'L0614':'color' | async) + '30'
+" [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
+              {{ data?.status | vll: "L0614":"text" | async }}
+            </div>
+          </div>
           <!--end::Btn-->
         </div>
         <!--end::Section-->

@@ -84,7 +84,8 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
   calendateDate: any;
   dayOff: any;
   scheduleObj: any = undefined;
-  dialog: any;
+  dialog: Dialog;
+  dayOffId: string;
 
   vlls: any;
   set = false;
@@ -602,5 +603,9 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
 
   changeTime(e, entity) {
     if (e.field == 'calendarDate') this.evtCDDate.calendarDate = e.data;
+  }
+
+  toggleMoreFunc(id:string){
+    this.dayOffId == id ? (this.dayOffId = '') : (this.dayOffId = id);
   }
 }

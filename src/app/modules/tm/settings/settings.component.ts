@@ -12,31 +12,17 @@ import { LayoutComponent } from '../_layout/layout.component';
 export class SettingsComponent implements OnInit, OnDestroy {
   @ViewChild('main') main: TemplateRef<any>;
   constructor(
-    private dt: ChangeDetectorRef,
     public codxService: CodxService,
-    private tmService: TmService
+    private tmService: TmService,
   ) { }
 
   views: Array<ViewModel> = [];
 
   ngOnInit(): void {
-    this.tmService.layoutcpn.next(new LayoutModel(true, 'Thiết lập', false));
-  }
-
-  ngAfterViewInit(): void {
-    this.views = [{
-      id: '1',
-      type: 'grid',
-      sameData: false,
-      active: true,
-      model: {
-        panelLeftRef: this.main,
-      }
-    }];
-    this.dt.detectChanges();
+    this.tmService.layoutcpn.next(new LayoutModel(true, 'Thiết lập', false, false));
   }
 
   ngOnDestroy(): void {
-    this.tmService.layoutcpn.next(new LayoutModel(false, 'Quản lý công việc', true));
+    this.tmService.layoutcpn.next(new LayoutModel(false, 'Quản lý công việc', true, false));
   }
 }

@@ -68,19 +68,21 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     }
 
     this.tmService.layoutChange.subscribe(res => {
-      if (res && res.isChange) {
-        if (res.title != this.title)
-          this.title = res.title;
-        if (!res.asideDisplay) {
-          this.asideDisplay = res.asideDisplay;
-          this.document.body.classList.remove("aside-enabled");
-          this.document.body.classList.remove("aside-fixed");
+      if (res) {
+        if (res.isChange) {
+          if (res.title != this.title)
+            this.title = res.title;
+          if (!res.asideDisplay) {
+            this.asideDisplay = res.asideDisplay;
+            this.document.body.classList.remove("aside-enabled");
+            this.document.body.classList.remove("aside-fixed");
 
+          }
+        } else {
+          this.asideDisplay = res.asideDisplay;
+          this.document.body.classList.add("aside-enabled");
+          this.document.body.classList.add("aside-fixed");
         }
-      } else {
-        this.asideDisplay = res.asideDisplay;
-        this.document.body.classList.add("aside-enabled");
-        this.document.body.classList.add("aside-fixed");
       }
     })
   }
