@@ -32,8 +32,7 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '2',
-      type: 'content',
-      viewInput: null,
+      type: 'kanban',
       active: false,
       model: {
         panelLeftRef: this.listDetails,

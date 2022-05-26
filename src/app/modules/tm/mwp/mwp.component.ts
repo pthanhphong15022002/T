@@ -17,7 +17,7 @@ export class MwpComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '1',
-      viewInput: null,
+
       active: false,
       sameData: false,
       model: {
@@ -40,7 +40,7 @@ export class MwpComponent implements OnInit, AfterViewInit {
       text: '',
       id: '2',
       sameData: false,
-      viewInput: null,
+
       active: false,
       model: {
         service: 'TM',
