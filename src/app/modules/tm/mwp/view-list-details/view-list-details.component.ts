@@ -60,7 +60,6 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  tabSt = '1';
   predicate = 'Status=@0';
   dataValue = '1';
 
@@ -493,7 +492,6 @@ export class ViewListDetailsComponent implements OnInit {
         break;
     }
     this.dataValue = st;
-    this.tabSt = st;
     if (this.itemSelected != null) {
       this.loadDetailTask(this.itemSelected);
       this.isFinishLoad = true;
