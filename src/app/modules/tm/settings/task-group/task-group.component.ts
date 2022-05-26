@@ -4,8 +4,8 @@ import { Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef, Re
 import { DataRequest, ApiHttpService, CacheService, AuthStore, UserModel, CodxGridviewComponent, CodxListviewComponent, ViewsComponent, CodxFormDynamicComponent, CallFuncService, NotificationsService } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { ToDo } from '../models/task.model';
-import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
+import { ToDo } from '../../models/task.model';
+import { TM_TaskGroups } from '../../models/TM_TaskGroups.model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 

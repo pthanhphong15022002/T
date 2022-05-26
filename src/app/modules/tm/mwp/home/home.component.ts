@@ -136,42 +136,42 @@ export class HomeComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
-    // {
-    //   id: '5',
-    //   type: 'schedule',
-    //   text: 'schedule',
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.schedule,
-    //     sideBarLeftRef: this.asideLeft,
-    //     sideBarRightRef: this.sidebarRight,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
-    // {
-    //   id: '6',
-    //   type: 'list',
-    //   text: 'treeViews',
-    //   sameData: false,
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.treeViews,
-    //     sideBarLeftRef: this.asideLeft,
-    //     sideBarRightRef: this.sidebarRight,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
-    // {
-    //   id: '7',
-    //   type: 'calendar',
-    //   text: 'calendar',
-    //   sameData: false,
-    //   active: false,
-    //   model: {
-    //     panelLeftRef: this.calendar,
-    //     widthAsideRight: '900px'
-    //   }
-    // },
+      // {
+      //   id: '5',
+      //   type: 'schedule',
+      //   text: 'schedule',
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.schedule,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
+      // {
+      //   id: '6',
+      //   type: 'list',
+      //   text: 'treeViews',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.treeViews,
+      //     sideBarLeftRef: this.asideLeft,
+      //     sideBarRightRef: this.sidebarRight,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
+      // {
+      //   id: '7',
+      //   type: 'calendar',
+      //   text: 'calendar',
+      //   sameData: false,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.calendar,
+      //     widthAsideRight: '900px'
+      //   }
+      // },
     ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();

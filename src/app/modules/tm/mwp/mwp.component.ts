@@ -6,7 +6,7 @@ import { ViewModel } from 'codx-core/lib/layout/views/view-model';
   templateUrl: './mwp.component.html',
   styleUrls: ['./mwp.component.scss']
 })
-export class MwpComponent implements  OnInit, AfterViewInit {
+export class MwpComponent implements OnInit, AfterViewInit {
 
   @ViewChild('panelTemplate') panelLeft: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;

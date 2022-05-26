@@ -12,7 +12,7 @@ import {  ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingComponent } from '../controls/setting-panel/setting-panel.component';
 
-import { TaskGroupComponent } from '../task-group/task-group.component';
+import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 
 @Component({
   selector: 'onwer-task',
@@ -54,7 +54,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  constructor(private cf: ChangeDetectorRef, private cache: CacheService) {}
+  constructor(private cf: ChangeDetectorRef, private cache: CacheService) { }
 
   ngOnInit(): void {
     this.buttons = [
@@ -190,7 +190,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
-    
+
     ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();

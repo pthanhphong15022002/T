@@ -1,3 +1,4 @@
+import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,14 +20,14 @@ import { MoreFuntionComponent } from './more-funtion/more-funtion.component';
 import { OwnerTaskCalendarComponent } from './ownertasks/onwer-task-calendar/onwer-task-calendar.component';
 import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
-import { TaskGroupComponent } from './task-group/task-group.component';
+import { TaskGroupComponent } from './settings/task-group/task-group.component';
 
 import { RangesKanbanComponent } from './ranges-kanban/ranges-kanban.component';
-import { SettingsComponent } from './settings/settings/settings.component';
+import { SettingsComponent } from './settings/settings.component';
 import { SettingComponent } from './controls/setting-panel/setting-panel.component';
 import { DashboardComponent } from './tmdashnoard/dashboard/dashboard.component';
 import { ControlsModule } from './controls/controls.module';
-import { CalendarComponent } from './calendar/calendar.component';
+import { SettingCalendarComponent } from './settings/setting-calendar/setting-calendar.component';
 import { AssignTaskComponent } from './assign-tasks/assign-tasks.component';
 
 const routes: Routes = [
@@ -78,11 +79,12 @@ const routes: Routes = [
     DashboardComponent,
     SettingComponent,
     TreeviewComponent,
-    CalendarComponent,
+    SettingCalendarComponent,
     TaskGroupComponent,
     RangesKanbanComponent,
     LayoutComponent,
     AssignTaskComponent,
+    AssignTaskDetailsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

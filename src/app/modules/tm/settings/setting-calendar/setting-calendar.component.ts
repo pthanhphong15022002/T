@@ -21,28 +21,28 @@ import {
   DialogData,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { InfoOpenForm } from '../models/task.model';
-import { TmService } from '../tm.service';
+import { InfoOpenForm } from '../../models/task.model';
+import { TmService } from '../../tm.service';
 import * as moment from 'moment';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { TaskInfoComponent } from '../../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   CalendarDateModel,
   CalendarModel,
   CalendarWeekModel,
   DaysOffModel,
-} from '../models/calendar.model';
+} from '../../models/calendar.model';
 import { APICONSTANT } from '@shared/constant/api-const';
 import 'lodash';
 declare var _;
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
+  selector: 'setting-calendar',
+  templateUrl: './setting-calendar.component.html',
+  styleUrls: ['./setting-calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit, AfterViewInit {
+export class SettingCalendarComponent implements OnInit, AfterViewInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() calendarID: string;
@@ -233,7 +233,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   deleteTask(taskAction) {
     if (!taskAction.delete) {
       if (taskAction.status == 9) {
-        // this.notiService.notifyCode("TM001")
         this.notiService.notify(
           'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
         );
@@ -269,7 +268,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.schedule.reloadResource();
   }
   close(e: any, t) {
-    //alert('PopUp close');
     if (e.closedBy == 'user action') {
     }
   }
