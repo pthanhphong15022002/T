@@ -212,390 +212,368 @@
 
         <!--menu -->
         <div class="bg-white py-4 d-flex flex-lg-column" *ngIf="isFinishLoad">
-          <!--begin::Container-->
-          <div class="card-toolbar">
-            <ul class="nav nav-tabs nav-tabs-line">
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab_his">
-                  <span class="nav-text">Lịch sử</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab_att">
-                  <span class="nav-text">Đính kèm</span><span class="ms-1">(3)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab_com">
-                  <span class="nav-text">Bình luận</span><span class="ms-1">(3)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#tab_ref">
-                  <span class="nav-text">Tham chiếu</span><span class="ms-1">(3)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab_his_review">
-                  <span class="nav-text">Lịch sử xét duyệt</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" style="float: right;cursor: pointer;" href="#controlView" data-toggle="collapse">
-                  <i class="icon-keyboard_arrow_down icon-16 nav-text"></i>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <!--end::Container collapse-->
-        </div>
-        <div id="controlView" class="master-more mt-6 container " *ngIf="itemSelected?.taskID">
-          <div class="tab-content mt-3">
-            <div class="tab-pane pt-2 fade " id="tab_his" role="tabpanel">
-              <div class="tab_container">
-                <div class="his-group primary-group">
-                  <span class="label label-sm label-primary label-inline mb-5">
-                    Tạo
-                    mới </span>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-add icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Lê
-                          Thị
-                          Mùi</div>
-                        <div class="text-gray-600">2021/08/31 4:38</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Tạo mới mẫu
-                        phiếu
-                      </div>
-                    </div>
-                  </div>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-create icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Hoàng
-                          Ngọc Châu Bảo</div>
-                        <div class="text-gray-600">2 giờ trước</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Chỉnh sửa mẫu
-                        phiếu
-                      </div>
-                    </div>
-                  </div>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-mode_comment icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Bùi
-                          Thái
-                          Tú</div>
-                        <div class="text-gray-600">1 giờ trước</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Thank you...</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="his-group warning-group mt-3">
-                  <span class="label label-sm label-warning label-inline mb-5">
-                    Chờ
-                    xét duyệt
-                  </span>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-create icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Lê
-                          Thị
-                          Mùi</div>
-                        <div class="text-gray-600">2021/08/31 4:38</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Update status
-                      </div>
-                    </div>
-                  </div>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-mode_comment icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Hoàng
-                          Ngọc Châu Bảo</div>
-                        <div class="text-gray-600">2 giờ trước</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Hợp đồng chưa
-                        đúng,
-                        kiểm tra
-                        lại
-                        phụ
-                        lục hợp đồng</div>
-                    </div>
-                  </div>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-attach_file icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Bùi
-                          Thái
-                          Tú</div>
-                        <div class="text-gray-600">1 giờ trước</div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="task-name text-gray-600 mt-1">
-                          Laboco_Contract.xsls</div>
-                        <span class="icon-download icon-18 ms-3"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="his-group success-group mt-3">
-                  <span class="label label-sm label-success label-inline mb-5"> Đã
-                    duyệt </span>
-                  <div class="d-flex history-item pb-6 line-hor">
-                    <div class="symbol symbol-40px symbol-circle me-6 symbol-icon">
-                      <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                      <span class="icon-circle">
-                        <span class="icon-check icon-12"></span>
-                      </span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="d-flex justify-content-between">
-                        <div class="text-dark text-hover-primary fw-bold">
-                          Hoàng
-                          Ngọc Châu Bảo</div>
-                        <div class="text-gray-600">2 giờ trước</div>
-                      </div>
-                      <div class="task-name text-gray-600 mt-1">Ok duyệt nha!
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="tab_com" role="tabpanel">
-              <div class="tab_container">
-                <div class="tab_body">
-                  <div class="d-flex flex-column py-3 flex-grow-1">
-                    <div class="d-flex align-items-center">
-                      <div class="symbol symbol-40px symbol-circle me-3">
-                        <img alt="Pic" src="../../../assets/demos/user/user9.jpg">
-                      </div>
-                      <div class="d-flex flex-column flex-grow-1">
-                        <div class="text-dark fw-bold">
-                          Phạm Thị Mỹ
-                          Duyên
+          <ejs-tab *ngIf="isFinishLoad">
+            <e-tabitems>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <span>Lịch sử</span><span class="ms-1">(3)</span>
+                </ng-template>
+                <ng-template #content>
+                  <div class="tab_container">
+                    <div class="tab_his">
+                      <div class="his-group primary-group">
+                        <span class="badge badge-primary fw-normal badge-lg my-3">Tạo
+                          mới </span>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-add icon-14"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Lê Thị Mùi</div>
+                              <div class="text-gray-700">2021/08/31 4:38</div>
+                            </div>
+                            <div class="text-gray-700">Tạo mới mẫu phiếu</div>
+                          </div>
                         </div>
-                        <span class="text-gray-400">Business Analyst</span>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-create icon-12"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Nguyễn Thị Bích Vân</div>
+                              <div class="text-gray-700">2 giờ trước</div>
+                            </div>
+                            <div class="text-gray-700">Tạo mới mẫu phiếu</div>
+                          </div>
+                        </div>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-mode_comment icon-12"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Nguyễn Vũ Hảo</div>
+                              <div class="text-gray-700">1 giờ trước</div>
+                            </div>
+                            <div class="text-gray-700">Thank you so mucj.</div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="text-gray-600">2 giờ trước</div>
-                    </div>
-                    <div class="mt-1 text-gray-700">Nhận xét đánh giá, đánh đánh
-                      giá
-                      giá,..
-                    </div>
-                    <div class="d-flex align-items-center group-action mt-1">
-                      <span class="btn-action d-flex align-items-center">
-                        <span class="icon-favorite_border icon-18 text-danger me-1"></span>
-                        <span></span>
-                      </span>
-                      <span class="btn-action d-flex align-items-center ms-4">
-                        <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
-                        <span></span>
-                      </span>
+                      <div class="his-group warning-group">
+                        <span class="badge badge-warning fw-normal badge-lg my-3">Chờ
+                          xét duyệt</span>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-add icon-14"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Lê Thị Mùi</div>
+                              <div class="text-gray-700">2021/08/31 4:38</div>
+                            </div>
+                            <div class="text-gray-700">Tạo mới mẫu phiếu</div>
+                          </div>
+                        </div>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-create icon-12"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Nguyễn Thị Bích Vân</div>
+                              <div class="text-gray-700">2 giờ trước</div>
+                            </div>
+                            <div class="text-gray-700">Tạo mới mẫu phiếu</div>
+                          </div>
+                        </div>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-attach_file icon-12"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Nguyễn Vũ Hảo</div>
+                              <div class="text-gray-700">1 giờ trước</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                              <div class="task-name text-gray-700">
+                                Laboco_Contract.xsls</div>
+                              <span class="icon-download icon-18 ms-3"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="his-group success-group">
+                        <span class="badge badge-success fw-normal badge-lg my-3">Đã duyệt</span>
+                        <div class="d-flex history-item pb-6 line-hor">
+                          <div class="symbol-icon me-6">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            <span class="icon-circle">
+                              <span class="icon-check icon-12"></span>
+                            </span>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                              <div class="text-dark fw-bold fs-6">
+                                Lê Thị Mùi</div>
+                              <div class="text-gray-700">1 giờ trước</div>
+                            </div>
+                            <div class="text-gray-700">Ok duyệt nha!</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="d-flex flex-column py-3 flex-grow-1">
-                    <div class="d-flex align-items-center">
-                      <div class="symbol symbol-40px symbol-circle me-3">
-                        <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                      </div>
-                      <div class="d-flex flex-column flex-grow-1">
-                        <div class="text-dark fw-bold">
-                          Nguyễn Thanh
-                          Thức
-                        </div>
-                        <span class="text-gray-400">Business Analyst</span>
-                      </div>
-                      <div class="text-gray-600">2 giờ trước</div>
-                    </div>
-                    <div class="mt-1 text-gray-700">Bài viết rất hay, tuyệt vời!
-                    </div>
-                    <div class="d-flex align-items-center group-action mt-1">
-                      <span class="btn-action d-flex align-items-center">
-                        <span class="icon-favorite_border icon-18 text-danger me-1"></span>
-                        <span>31</span>
-                      </span>
-                      <span class="btn-action d-flex align-items-center ms-4">
-                        <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
-                        <span>1</span>
-                      </span>
-                    </div>
-                    <div class="comment-level-2 ms-5 ps-2 border-left mt-4">
-                      <div class="d-flex align-items-start py-3 flex-grow-1">
-                        <div class="symbol symbol-30px symbol-circle me-2">
-                          <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
-                        </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div>Đính kèm</div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="tab_container">
+                    <div class="tab_body">
+                      <app-attachment [entityName]="'TM_Tasks'"
+                        [objectId]="itemSelected?.taskID + ';' + itemSelected?.parentID" [isFooter]="false">
+                      </app-attachment>
+                      <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
+                        <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
                         <div class="d-flex flex-column flex-grow-1">
-                          <div class="text-dark fw-bold">Trần
-                            Quốc
-                            Hoàn
-                          </div>
-                          <div class="text-gray-700 font-size-sm">You’re
-                            welcome!</div>
-                          <div class="d-flex align-items-center mt-1">
-                            <span class="text-gray-600 text-hover-primary me-3">Thích</span>
-                            <span class="text-gray-600 text-hover-primary">Trả
-                              lời</span>
+                          <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                          <span class="text-gray-600">Bảng báo giá quà tặng của nhà
+                            cung cấp</span>
+                          <div class="d-flex mt-1 justify-content-end">
+                            <div class="text-gray-400 text-italic me-2">LHThuong
+                            </div>
+                            <div class="text-gray-400">20/07/2021</div>
                           </div>
                         </div>
-                        <div class="text-gray-600">2 giờ trước</div>
                       </div>
-                      <div class="d-flex align-items-start py-3 flex-grow-1">
-                        <div class="symbol symbol-30px symbol-circle me-2">
-                          <img alt="Pic" src="../../../assets/demos/user/user3.jpg">
-                        </div>
-                        <div class="d-flex flex-column flex-grow-1">
-                          <div class="text-dark fw-bold">Lê Thị
-                            Mơ
-                          </div>
-                          <div class="text-gray-700 font-size-sm">You’re
-                            welcome!</div>
-                          <div class="d-flex align-items-center mt-1">
-                            <span class="text-gray-600 text-hover-primary me-3">Thích</span>
-                            <span class="text-gray-600 text-hover-primary">Trả
-                              lời</span>
-                          </div>
-                        </div>
-                        <div class="text-gray-600">2 giờ trước</div>
-                      </div>
+                    </div>
+                    <div class="tab_footer">
+                      <button type="button" class="btn btn-sm btn-outline-primary mb-4">
+                        <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
+                      </button>
                     </div>
                   </div>
-                </div>
-                <div class="tab_footer">
-                  <form class="position-relative feed-box">
-                    <textarea class="form-control border-0 p-0 pe-26 resize-none" rows="1"
-                      placeholder="Bình luận..."></textarea>
-                    <div class="feed-icon">
-                      <span class="btn btn-icon btn-sm px-0 text-gray-600 text-hover-primary">
-                        <span class="icon-attach_file icon-18"></span>
-                      </span>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="tab-pane pt-3 fade" id="tab_att" role="tabpanel">
-              <div class="tab_container">
-                <div class="tab_body">
-                  <app-attachment [entityName]="'TM_Tasks'"
-                    [objectId]="itemSelected?.taskID + ';' + itemSelected?.parentID" [isFooter]="false">
-                  </app-attachment>
-                  <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                    <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
-                    <div class="d-flex flex-column flex-grow-1">
-                      <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                      <span class="text-gray-600">Bảng báo giá quà tặng của nhà
-                        cung cấp</span>
-                      <div class="d-flex mt-1 justify-content-end">
-                        <div class="text-gray-400 text-italic me-2">LHThuong
-                        </div>
-                        <div class="text-gray-400">20/07/2021</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="tab_footer">
-                  <button type="button" class="btn btn-sm btn-outline-primary mb-4">
-                    <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- trew view ///////////////////////////////////////////////////////////////////////////-->
-            <div class="tab-pane pt-3 fade show active" id="tab_ref" role="tabpanel">
-              <div class="tab_container">
-                <div class="tab_body" *ngIf="itemSelected?.category != '1'">
-                  <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode" [enableCheck]=false
-                    idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-                  </codx-treeview>
-                </div>
-              </div>
-            </div>
-            <div class="tab-pane pt-3 fade" id="tab_his_review" role="tabpanel">
-              <div class="tab_container">
-                <div class="tab_body">
 
-                  <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                    <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
-                    <div class="d-flex flex-column flex-grow-1">
-                      <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                      <span class="text-gray-600">Bảng báo giá quà tặng của nhà
-                        cung cấp</span>
-                      <div class="d-flex mt-1 justify-content-end">
-                        <div class="text-gray-400 text-italic me-2">LHThuong
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <span>Bình luận </span><span class="ms-1">(3)</span>
+                </ng-template>
+                <ng-template #content>
+                  <div class="tab_container">
+                    <div class="tab_body">
+                      <div class="d-flex flex-column py-3 flex-grow-1">
+                        <div class="d-flex align-items-center">
+                          <div class="symbol symbol-40px symbol-circle me-3">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark fw-bold">
+                              Phạm Thị Mỹ
+                              Duyên
+                            </div>
+                            <span class="text-gray-400">Business Analyst</span>
+                          </div>
+                          <div class="text-gray-600">2 giờ trước</div>
                         </div>
-                        <div class="text-gray-400">20/07/2021</div>
+                        <div class="mt-1 text-gray-700">Nhận xét đánh giá, đánh đánh
+                          giá
+                          giá,..
+                        </div>
+                        <div class="d-flex align-items-center group-action mt-1">
+                          <span class="btn-action d-flex align-items-center">
+                            <span class="icon-favorite_border icon-18 text-danger me-1"></span>
+                            <span></span>
+                          </span>
+                          <span class="btn-action d-flex align-items-center ms-4">
+                            <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
+                            <span></span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="d-flex flex-column py-3 flex-grow-1">
+                        <div class="d-flex align-items-center">
+                          <div class="symbol symbol-40px symbol-circle me-3">
+                            <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                          </div>
+                          <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark fw-bold">
+                              Nguyễn Thanh
+                              Thức
+                            </div>
+                            <span class="text-gray-400">Business Analyst</span>
+                          </div>
+                          <div class="text-gray-600">2 giờ trước</div>
+                        </div>
+                        <div class="mt-1 text-gray-700">Bài viết rất hay, tuyệt vời!
+                        </div>
+                        <div class="d-flex align-items-center group-action mt-1">
+                          <span class="btn-action d-flex align-items-center">
+                            <span class="icon-favorite_border icon-18 text-danger me-1"></span>
+                            <span>31</span>
+                          </span>
+                          <span class="btn-action d-flex align-items-center ms-4">
+                            <span class="icon-chat_bubble_outline icon-18 text-info me-1"></span>
+                            <span>1</span>
+                          </span>
+                        </div>
+                        <div class="comment-level-2 ms-5 ps-2 border-left mt-4">
+                          <div class="d-flex align-items-start py-3 flex-grow-1">
+                            <div class="symbol symbol-30px symbol-circle me-2">
+                              <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                              <div class="text-dark fw-bold">Trần
+                                Quốc
+                                Hoàn
+                              </div>
+                              <div class="text-gray-700 font-size-sm">You’re
+                                welcome!</div>
+                              <div class="d-flex align-items-center mt-1">
+                                <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                                <span class="text-gray-600 text-hover-primary">Trả
+                                  lời</span>
+                              </div>
+                            </div>
+                            <div class="text-gray-600">2 giờ trước</div>
+                          </div>
+                          <div class="d-flex align-items-start py-3 flex-grow-1">
+                            <div class="symbol symbol-30px symbol-circle me-2">
+                              <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                              <div class="text-dark fw-bold">Lê Thị
+                                Mơ
+                              </div>
+                              <div class="text-gray-700 font-size-sm">You’re
+                                welcome!</div>
+                              <div class="d-flex align-items-center mt-1">
+                                <span class="text-gray-600 text-hover-primary me-3">Thích</span>
+                                <span class="text-gray-600 text-hover-primary">Trả
+                                  lời</span>
+                              </div>
+                            </div>
+                            <div class="text-gray-600">2 giờ trước</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                    <img alt="" class="max-h-35px me-2" src="../../../assets/demos/dms/pdf.svg">
-                    <div class="d-flex flex-column flex-grow-1">
-                      <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                      <span class="text-gray-600">Bảng báo giá quà tặng của nhà
-                        cung cấp</span>
-                      <div class="d-flex mt-1 justify-content-end">
-                        <div class="text-gray-400 text-italic me-2">LHThuong
+                    <div class="tab_footer">
+                      <form class="position-relative feed-box">
+                        <textarea class="form-control border-0 p-0 pe-26 resize-none" rows="1"
+                          placeholder="Bình luận..."></textarea>
+                        <div class="feed-icon">
+                          <span class="btn btn-icon btn-sm px-0 text-gray-600 text-hover-primary">
+                            <span class="icon-attach_file icon-18"></span>
+                          </span>
                         </div>
-                        <div class="text-gray-400">20/07/2021</div>
-                      </div>
+                      </form>
                     </div>
                   </div>
-                </div>
-                <div class="tab_footer">
-                  <button type="button" class="btn btn-sm btn-outline-primary mb-4">
-                    <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <span class="nav-text">Tham chiếu</span><span class="ms-1">(3)</span>
+                </ng-template>
+                <!-- tree view -->
+                <ng-template #content>
+                    <div class="tab_container">
+                      <div class="his-group primary-group">
+                        <div class="tab_body" *ngIf="itemSelected?.category != '1'">
+                          <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNode"
+                            [enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false"
+                            [isOutput]="true" [isLoadChild]="false">
+                          </codx-treeview>
+                        </div>
+                      </div></div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <span class="nav-text">Lịch sử xét duyệt</span>
+                </ng-template>
+                <ng-template #content>
+                  <div class="tab_container">
+                    <div class="tab_body">
+                      <div class="">
+                        <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                        <div class="d-flex flex-column flex-grow-1">
+                          <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                          <span class="text-gray-600">Bảng báo giá quà tặng của nhà
+                            cung cấp</span>
+                          <div class="d-flex mt-1 justify-content-end">
+                            <div class="text-gray-400 text-italic me-2">LHThuong
+                            </div>
+                            <div class="text-gray-400">20/07/2021</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="">
+                        <codx-img class="symbol symbol-40px symbol-circle"></codx-img>
+                        <div class="d-flex flex-column flex-grow-1">
+                          <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
+                          <span class="text-gray-600">Bảng báo giá quà tặng của nhà
+                            cung cấp</span>
+                          <div class="d-flex mt-1 justify-content-end">
+                            <div class="text-gray-400 text-italic me-2">LHThuong
+                            </div>
+                            <div class="text-gray-400">20/07/2021</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab_footer">
+                      <button type="button" class="btn btn-sm btn-outline-primary mb-4">
+                        <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <!-- <ng-template #headerText>
+                  <a class="nav-link" style="float: right;cursor: pointer;"
+                    data-toggle="collapse">
+                    <i class="icon-keyboard_arrow_down icon-16 nav-text"></i>
+                  </a>
+                </ng-template>
+                <ng-template #content>
+
+                </ng-template> -->
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
         </div>
       </div>
     </div>
