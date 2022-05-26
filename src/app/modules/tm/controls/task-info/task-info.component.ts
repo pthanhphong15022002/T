@@ -304,7 +304,7 @@ export class TaskInfoComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.notiService.notify(res.message);
-          if (res.data) {
+          if (res.data && res.data.length) {
             res.data.forEach((dt) => {
               var data = dt;
               this.dataAddNew.next(data);
