@@ -38,6 +38,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       id: '1',
       type: 'content',
       active: true,
+<<<<<<< HEAD
+=======
+      // viewInput: null,
+>>>>>>> e4fb0d4f536afbc9505217bad5ff3c43e99d6d8e
       model: {
         panelLeftRef: this.dashboard
       }

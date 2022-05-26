@@ -17,7 +17,11 @@ export class MwpComponent implements OnInit, AfterViewInit {
       icon: '',
       text: '',
       id: '1',
+<<<<<<< HEAD
 
+=======
+     // viewInput: null,
+>>>>>>> e4fb0d4f536afbc9505217bad5ff3c43e99d6d8e
       active: false,
       sameData: false,
       model: {
@@ -40,7 +44,11 @@ export class MwpComponent implements OnInit, AfterViewInit {
       text: '',
       id: '2',
       sameData: false,
+<<<<<<< HEAD
 
+=======
+     // viewInput: null,
+>>>>>>> e4fb0d4f536afbc9505217bad5ff3c43e99d6d8e
       active: false,
       model: {
         service: 'TM',

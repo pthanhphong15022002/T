@@ -63,6 +63,7 @@ export class ViewListDetailsComponent implements OnInit {
   tabSt = '1';
   predicate = 'Status=@0';
   dataValue = '1';
+
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
@@ -84,12 +85,11 @@ export class ViewListDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     // this.tabStatus('1');
-    this.isFinishLoad = true;
+    // this.isFinishLoad = true;
   }
 
   ngAfterViewInit(): void {
     const t = this;
-
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
         this.listviewAdd.addHandler(res, true, 'recID');
@@ -474,37 +474,27 @@ export class ViewListDetailsComponent implements OnInit {
     switch (st) {
       case '1':
         this.data = this.listviewAdd?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '1';
-        this.tabSt = '1';
+        if (this.data != null) this.itemSelected = this.data[0];
+    
         break;
       case '9':
         this.data = this.listviewCompleted?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '9';
-        this.tabSt = '9';
+        if (this.data != null) this.itemSelected = this.data[0];
         break;
       case '5':
         this.data = this.listviewPostpone?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '5';
-        this.tabSt = '5';
+        if (this.data != null) this.itemSelected = this.data[0];
         break;
       case '8':
         this.data = this.listviewRefuse?.data;
-        if(this.data!=null)
-        this.itemSelected = this.data[0];
-        this.dataValue = '8';
-        this.tabSt = '8';
+        if (this.data != null) this.itemSelected = this.data[0];
         break;
       default:
         break;
     }
-    if(this.itemSelected!=null)
-    this.loadDetailTask(this.itemSelected);
+    this.dataValue = st;
+    this.tabSt = st;
+    if (this.itemSelected != null) this.loadDetailTask(this.itemSelected);
   }
 
   lvOfStatus(st): any {
@@ -544,6 +534,7 @@ export class ViewListDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
+            this.countOwner = res.length;
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {
@@ -554,6 +545,8 @@ export class ViewListDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
+    } else {
+      this.countOwner = 1;
     }
     if (task?.category != '1') {
       this.api
@@ -568,6 +561,28 @@ export class ViewListDetailsComponent implements OnInit {
           this.listNode = res;
         });
     }
+    this.isFinishLoad = true;
+  }
+  changeRowSelected(event) {
+    this.itemSelected = event;
+    this.loadDetailTask(this.itemSelected);
+    switch (event.status) {
+      case '1':
+        this.data = this.listviewAdd?.data;
+        break;
+      case '9':
+        this.data = this.listviewCompleted?.data;
+        break;
+      case '5':
+        this.data = this.listviewPostpone?.data;
+        break;
+      case '8':
+        this.data = this.listviewRefuse?.data;
+        break;
+      default:
+        break;
+    }
+    this.dataValue = event.status;
     this.isFinishLoad = true;
   }
 }
