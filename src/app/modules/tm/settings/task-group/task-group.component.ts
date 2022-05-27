@@ -389,9 +389,10 @@ export class TaskGroupComponent implements OnInit {
       .subscribe((dialog: Dialog) => {
         var t = this;
         dialog.close = function (e) {
-          return t.api.callSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
+          return t.api.execSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
             if (res) {
-              t.notiService.notify(res[2].message);
+              item = res;
+        //      t.notiService.notify(res[2].message);
               t.gridView.removeHandler(item, "taskGroupID");
             }
           })
