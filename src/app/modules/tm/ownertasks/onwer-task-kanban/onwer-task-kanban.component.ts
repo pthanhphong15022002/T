@@ -5,8 +5,9 @@ import {
   ViewChild,
   Input,
   ChangeDetectorRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
   DialogSettingsModel,
@@ -17,10 +18,12 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  NotificationsService,
+  CodxListviewComponent,
 } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
-import { KanbanSetting } from '../../models/settings.model';
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
+import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
+import { KanbanSetting } from '@modules/tm/models/settings.model';
 
 @Component({
   selector: 'onwer-task-kanban',
@@ -29,9 +32,13 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class KanbanComponent implements OnInit {
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('popupAdd') modalContent: any;
   @ViewChild('content') content: any;
-  @Input('viewBase') viewBase: ViewBaseComponent;
+
+  //@Input('taskInfo') taskInfo: TaskInfoComponent;
+
+  @Output() taskInfo = new EventEmitter();
 
   dataSource: Object[] = [];
   data: any;
@@ -51,6 +58,7 @@ export class KanbanComponent implements OnInit {
   Sumary: string = '';
   columns: any = [];
   settings: any;
+  taskAction: any;
   kanbanSetting: KanbanSetting = new KanbanSetting();
   contextMenuSetting = {
     enable: true,
@@ -81,7 +89,8 @@ export class KanbanComponent implements OnInit {
     private authStore: AuthStore,
     private cache: CacheService,
     private cr: ChangeDetectorRef,
-    private cf: CallFuncService
+    private cf: CallFuncService,
+    private notiService: NotificationsService
   ) {
     this.user = this.authStore.get();
   }
@@ -99,7 +108,7 @@ export class KanbanComponent implements OnInit {
     this.getListDetailTask();
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   viewMemo(id: string) {
     this.cardId == id ? (this.cardId = '') : (this.cardId = id);
@@ -112,6 +121,27 @@ export class KanbanComponent implements OnInit {
       .toUpperCase();
   }
 
+  editTask(data) {
+    this.taskAction = data;
+    if (!this.taskAction.write) {
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
+    }
+    if (this.taskAction.status < 8) {
+      this.taskInfo.emit({ id: 'edit', data: this.taskAction });
+      this.cr.detectChanges();
+    } else {
+      var message = 'Không thể chỉnh sửa công việc này !';
+      if (this.taskAction.status == 8) {
+        message = 'Công việc này đã bị hủy ! ' + message;
+      }
+      if (this.taskAction.status == 9) {
+        message = 'Công việc này đã hoàn thành ! ' + message;
+      }
+      this.notiService.notify(message);
+    }
+  }
+
   onDataDrag(evt: Event) {
     if (!this.kanbanSetting.AllowDrag) {
       return;
@@ -121,7 +151,7 @@ export class KanbanComponent implements OnInit {
 
   onDataDrop(evt: Event) {
     this.item = evt;
-    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
+    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => {});
   }
 
   submit(e: any) {
@@ -129,7 +159,7 @@ export class KanbanComponent implements OnInit {
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => { });
+      .subscribe((res) => {});
   }
 
   getListDetailTask() {
@@ -289,7 +319,7 @@ export class KanbanComponent implements OnInit {
       ((date.getTime() - janFirst.getTime()) / 86400000 +
         janFirst.getDay() +
         1) /
-      7
+        7
     );
   }
 
