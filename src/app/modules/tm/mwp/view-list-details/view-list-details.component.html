@@ -107,9 +107,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="d-flex">
-                    <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
-                      [style.border-color]="
+                  <div class="d-status">
+                    <div class="badge badge-danger me-2 label-status" [style.border-color]="
                       (itemSelected?.status | vll: 'L0614':'color' | async) +
                       '30'
                     " [style.background-color]="
