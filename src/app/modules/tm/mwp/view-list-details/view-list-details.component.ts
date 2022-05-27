@@ -118,7 +118,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    model.funcID = 'WPT036';
+    // model.funcID = 'WPT036';
     model.page = 1;
     // model.pageSize = 20;
     // set max dinh
