@@ -86,22 +86,10 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.views = [{
-      id: '1',
-      type: 'content',
-      active: true,
-      //    viewInput: null,
-      model: {
-        //panelLeftRef: this.chart,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideLeft: '550px',
-        widthAsideRight: '900px'
-      }
-    },
-    {
       id: '2',
       type: 'kanban',
-      active: false,
-      //     viewInput: null,
+      active: true,
+
       model: {
         panelLeftRef: this.kanban,
         sideBarLeftRef: this.asideLeft,
@@ -130,7 +118,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
-      //     viewInput: null,
+
       model: {
         panelLeftRef: this.listTasks,
         sideBarLeftRef: this.asideLeft,
@@ -151,43 +139,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         widthAsideRight: '900px'
       }
     },
-      // {
-      //   id: '6',
-      //   type: 'list',
-      //   text: 'treeViews',
-      //   sameData: false,
-      //   active: false,
-      //   model: {
-      //     panelLeftRef: this.treeViews,
-      //     sideBarLeftRef: this.asideLeft,
-      //     sideBarRightRef: this.sidebarRight,
-      //     widthAsideRight: '900px'
-      //   }
-      // },
-      // {
-      //   id: '7',
-      //   type: 'calendar',
-      //   text: 'calendar',
-      //   sameData: false,
-      //   active: false,
-      //   model: {
-      //     panelLeftRef: this.calendar,
-      //     widthAsideRight: '550px'
-      //   }
-      // },
-      // {
-      //   id: '8',
-      //   type: 'grid',
-      //   text: 'Task-Group',
-      //   sameData: false,
-      //   active: false,
-      //   model: {
-      //     panelLeftRef: this.taskGroup,
-      //     sideBarLeftRef: this.asideLeft,
-      //     sideBarRightRef: this.sidebarRight,
-      //     widthAsideRight: '900px'
-      //   }
-      // },
     ];
     this.cf.detectChanges();
   }
