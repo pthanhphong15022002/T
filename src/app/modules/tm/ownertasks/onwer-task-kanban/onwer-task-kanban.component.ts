@@ -33,7 +33,7 @@ export class KanbanComponent implements OnInit {
   @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
 
-  dataSource: any = [];
+  dataSource: Object[] = [];
   data: any;
   setCalendar: boolean = true;
   mode: string;
@@ -59,7 +59,7 @@ export class KanbanComponent implements OnInit {
   cardSettings: CardSettingsModel = {
     headerField: 'taskID',
     template: '#cardTemplate',
-    selectionType: 'Multiple',
+    selectionType: 'Single',
   };
   dialogSettings: DialogSettingsModel = {
     fields: [

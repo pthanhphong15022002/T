@@ -1,7 +1,7 @@
 <div class="row">
   <codx-kanban #kanban keyField="status" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
     [cardTemplate]="cardTemplate" [popupTemplate]="content" [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings"
-    (onDrag)="onDataDrag($event)" (onDrop)="onDataDrop($event)">
+    (onDrag)="onDataDrag($event)" [contextMenu]="" (onDrop)="onDataDrop($event)">
   </codx-kanban>
 </div>
 <ng-template #cardTemplate let-data>
