@@ -20,8 +20,8 @@
             {{ data?.taskName }}</div>
         </td>
         <td class="w-100px">
-          <div class="icon-flag icon-20"  [class]="data?.priority | vll: 'L0186':'icon' | async"
-          [style.color]="data?.priority | vll: 'L0186':'color' | async">{{ data?.priority }}</div>
+          <div class="icon-flag icon-20" [class]="data?.priority | vll: 'L0186':'icon' | async"
+            [style.color]="data?.priority | vll: 'L0186':'color' | async"></div>
           <!-- <div>
             <span class="icon-14 me-2">
               <span [class]="data?.priority | vll: 'L0186':'icon' | async"
@@ -39,10 +39,10 @@
         " [style.background-color]="
           (data?.status | vll: 'L0614':'color' | async) + '30'
         " [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
-            {{ data?.status | vll: "L0614":"text" | async }}{{data?.status}}
-          </div>
-          <span class="text-gray-600 fs-7">
-            {{ data?.createdOn | fmDT: "dmy" }}</span>
+              {{ data?.status | vll: "L0614":"text" | async }}{{data?.status}}
+            </div>
+            <span class="text-gray-600 fs-7">
+              {{ data?.createdOn | fmDT: "dmy" }}</span>
           </div>
         </td>
         <td>
@@ -114,7 +114,7 @@
 
   <!-- <div class="d-flex p-3 flex-grow-1 border-bottom task-active item-active">
      <more-funtion [data]="data" (clickAction)="onChangeStatusTask($event)">
-    </more-funtion> 
+    </more-funtion>
     <div class="task-name mb-1 max-h-36px">{{ data?.taskName }}</div>
     <div class="priority mb-1 max-h-36px">
       <span class="icon-15 mr-2">
@@ -145,12 +145,12 @@
           {{ data.userName }}
         </div>
 
-        
+
       </div>
       <span class="text-muted">{{ data.positionName }}</span>
-      
+
       <div class="d-flex align-items-center justify-content-between">
-        
+
         <div class="symbol-group symbol-hover justify-content-end"
           *ngIf="data?.category == '3' || data?.category == '4'">
           <lv-imageviewers class="symbol symbol-30 symbol-circle ml-1" [objectId]="data?.assignTo" objectName="AD_Users"
@@ -252,7 +252,7 @@
                 [style.border-color]="(data?.status | vll: 'L0614':'color' | async) + '30'"
                 [style.background-color]="(data?.status | vll: 'L0614':'color' | async) + '30'"
                 [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">{{
-                  data?.status | vll: "L0614":"text" | async }}
+                data?.status | vll: "L0614":"text" | async }}
               </div>
             </div>
           </div>

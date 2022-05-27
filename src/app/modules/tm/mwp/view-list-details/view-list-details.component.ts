@@ -60,7 +60,6 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  tabSt = '1';
   predicate = 'Status=@0';
   dataValue = '1';
 
@@ -369,6 +368,7 @@ export class ViewListDetailsComponent implements OnInit {
       taskAction: taskAction,
     };
     var oldSt = this.dataValue;
+    var oldTask = taskAction;
     this.callfc
       .openForm(
         UpdateStatusPopupComponent,
@@ -381,17 +381,18 @@ export class ViewListDetailsComponent implements OnInit {
       .subscribe((dt: any) => {
         var that = this;
         dt.close = function (e) {
-          that.closePopup(e, oldSt, that);
+          that.closePopup(e, oldSt,oldTask, that);
         };
       });
   }
 
-  closePopup(e: any, oldSt: string, t: ViewListDetailsComponent) {
+  closePopup(e: any, oldSt: string,taskAction: any, t: ViewListDetailsComponent) {
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
         this.addListView(task);
-        this.removeListView(this.taskAction);
+        taskAction.status = oldSt;
+        this.removeListView(taskAction);
       } else {
         this.updateListView(task);
       }
@@ -405,20 +406,20 @@ export class ViewListDetailsComponent implements OnInit {
   addListView(obj) {
     switch (obj.status) {
       case '1':
+        if(this.listviewAdd !=undefined)
         this.listviewAdd.addHandler(obj, true, 'recID');
-        this.dataAddNew.push(obj);
         break;
       case '9':
+        if(this.listviewCompleted !=undefined)
         this.listviewCompleted.addHandler(obj, true, 'recID');
-        this.dataCompleted.push(obj);
         break;
       case '5':
+        if(this.listviewPostpone !=undefined)
         this.listviewPostpone.addHandler(obj, true, 'recID');
-        this.dataPostpone.push(obj);
         break;
       case '8':
+        if(this.listviewRefuse !=undefined)
         this.listviewRefuse.addHandler(obj, true, 'recID');
-        this.dataRefuse.push(obj);
         break;
       default:
         break;
@@ -427,15 +428,19 @@ export class ViewListDetailsComponent implements OnInit {
   updateListView(obj) {
     switch (obj.status) {
       case '1':
+        if(this.listviewAdd !=undefined)
         this.listviewAdd.addHandler(obj, false, 'recID');
         break;
       case '9':
+        if(this.listviewCompleted !=undefined)
         this.listviewCompleted.addHandler(obj, false, 'recID');
         break;
       case '5':
+        if(this.listviewPostpone !=undefined)
         this.listviewPostpone.addHandler(obj, false, 'recID');
         break;
       case '8':
+        if(this.listviewRefuse !=undefined)
         this.listviewRefuse.addHandler(obj, false, 'recID');
         break;
       default:
@@ -445,15 +450,19 @@ export class ViewListDetailsComponent implements OnInit {
   removeListView(obj) {
     switch (obj.status) {
       case '1':
+        if(this.listviewAdd !=undefined)
         this.listviewAdd.removeHandler(obj, 'recID');
         break;
       case '9':
+        if(this.listviewCompleted !=undefined)
         this.listviewCompleted.removeHandler(obj, 'recID');
         break;
       case '5':
+        if(this.listviewPostpone !=undefined)
         this.listviewPostpone.removeHandler(obj, 'recID');
         break;
       case '8':
+        if(this.listviewRefuse !=undefined)
         this.listviewRefuse.removeHandler(obj, 'recID');
         break;
       default:
@@ -483,8 +492,6 @@ export class ViewListDetailsComponent implements OnInit {
         break;
     }
     this.dataValue = st;
-    this.tabSt = st;
-
     if (this.itemSelected != null) {
       this.loadDetailTask(this.itemSelected);
       this.isFinishLoad = true;
