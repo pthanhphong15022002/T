@@ -363,6 +363,8 @@ export class AssignTaskDetailsComponent implements OnInit {
   }
 
   loadDetailTask(task) {
+    this.objectAssign = "";
+    this.objectState = "";
     if (
       task.category == '3' ||
       task.category == '4'
@@ -388,7 +390,10 @@ export class AssignTaskDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
+    }else{
+      this.countOwner = 1
     }
+    this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(

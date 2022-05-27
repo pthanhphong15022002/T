@@ -183,7 +183,8 @@ export class OnwerTaskDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-
+    this.objectAssign = "";
+    this.objectState = "";
     if (this.itemSelected.category == "3" || this.itemSelected.category == "4") {
       this.api
         .execSv<any>(
@@ -206,7 +207,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
+    }else{
+      this.countOwner =1
     }
+    this.listNode = []
     if (this.itemSelected?.category != '1') {
       this.api
         .execSv<any>(

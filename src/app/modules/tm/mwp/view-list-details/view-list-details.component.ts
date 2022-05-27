@@ -524,6 +524,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   loadDetailTask(task) {
+    this.objectAssign = "";
+    this.objectState = "";
     if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
@@ -549,6 +551,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
+     this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(
