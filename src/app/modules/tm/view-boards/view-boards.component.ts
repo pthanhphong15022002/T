@@ -1,18 +1,19 @@
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ViewsComponent } from 'codx-core';
-import { TaskInfoComponent } from '../controls/task-info/task-info.component';
+import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
+import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ViewBoardInfoComponent } from './view-board-info/view-board-info.component';
 
 @Component({
-  selector: 'assign-task',
-  templateUrl: './assign-tasks.component.html',
-  styleUrls: ['./assign-tasks.component.scss']
+  selector: 'app-view-boards',
+  templateUrl: './view-boards.component.html',
+  styleUrls: ['./view-boards.component.scss']
 })
-export class AssignTaskComponent implements OnInit, AfterViewInit {
+export class ViewBoardsComponent implements OnInit {
+
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('listDetails') listDetails: TemplateRef<any>;
-  @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
+
+  @ViewChild('viewBoardInfo') viewBoardInfo: ViewBoardInfoComponent;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
   constructor(private cf: ChangeDetectorRef) { }
@@ -35,9 +36,9 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
       type: 'content',
       active: true,
       model: {
-        panelLeftRef: this.listDetails,
+        // panelLeftRef: this.listDetails,
         sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        widthAsideRight: '600px'
       }
     }];
     this.cf.detectChanges();
@@ -47,8 +48,8 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
     console.log(evt.id);
     switch (evt.id) {
       case 'add':
-        this.taskInfo.openTask();
-        this.taskInfo.title = 'Tạo mới công việc';
+        // this.viewBoardInfo.();
+        this.viewBoardInfo.title = 'Task Board';
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
@@ -59,3 +60,4 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
     }
   }
 }
+

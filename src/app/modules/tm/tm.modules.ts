@@ -31,6 +31,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { CbxpopupComponent } from './controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './controls/update-status-popup/update-status-popup.component';
 import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
+import { ViewBoardsComponent } from './view-boards/view-boards.component';
+import { ViewBoardInfoComponent } from './view-boards/view-board-info/view-board-info.component';
 
 
 const routes: Routes = [
@@ -49,6 +51,10 @@ const routes: Routes = [
       {
         path: 'assigntasks',
         component: AssignTaskComponent,
+      },
+      {
+        path: 'viewdboards',
+        component: ViewBoardsComponent,
       },
       {
         path: 'setting',
@@ -102,7 +108,9 @@ const routes: Routes = [
     SettingsComponent,
     CbxpopupComponent,
     UpdateStatusPopupComponent,
-    SettingPanelComponent
+    SettingPanelComponent,
+    ViewBoardsComponent,
+    ViewBoardInfoComponent
   ],
   imports: [
     RouterModule.forChild(routes),
