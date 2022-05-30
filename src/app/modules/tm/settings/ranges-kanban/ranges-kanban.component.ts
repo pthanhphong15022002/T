@@ -1,10 +1,13 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, CacheService, ApiHttpService, ViewsComponent } from 'codx-core';
+import { InfoOpenForm } from './../../models/task.model';
+import { BS_Ranges } from './../../models/BS_Ranges.model';
+import { Component, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { AuthStore, CacheService, ApiHttpService, ViewsComponent, CodxFormDynamicComponent, CallFuncService } from 'codx-core';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { RangeLineFormGroup } from '@modules/tm/models/task.model';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ranges-kanban',
@@ -19,12 +22,16 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('addLines') addLines: TemplateRef<any>;
+  @ViewChild("add", { static: true }) add;
 
   @Input() data: [];
 
   itemRangeLine: FormGroup;
   addEditForm: FormGroup;
+  lstRangeLine: any;
 
+  @Input() ranges = new BS_Ranges();;
   columnsGrid=[];
   headerStyle = {
     textAlign: 'center',
@@ -47,9 +54,13 @@ export class RangesKanbanComponent implements OnInit {
   searchType = "0";
   isAddMode = true;
   title="";
+  isAdd: boolean = true;
+  index = null;
+  isAddLine: boolean = true;
 
   constructor(private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
-    private api: ApiHttpService
+    private api: ApiHttpService, private dt: ChangeDetectorRef, private callfc: CallFuncService, private renderer: Renderer2,
+    private modalService: NgbModal,
     ) { }
 
 
@@ -89,16 +100,18 @@ export class RangesKanbanComponent implements OnInit {
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
       }
-    }];
+    },
+    
+  ];
+    
   }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      // this.getAutonumber("TM00634", "BS_RangesKanban", "RangeID").subscribe(key => {
-      //   this.addEditForm.patchValue({rangeID: key});
-      //  // this.taskGroups.taskGroupID = key;
-      // })
+      this.getAutonumber("TM00634", "BS_RangesKanban", "RangeID").subscribe(key => {
+        this.ranges.RangeID = key;
+      })
     })
   }
 
@@ -114,6 +127,61 @@ export class RangesKanbanComponent implements OnInit {
           BreakValue: null,
         });
       });
+  }
+  openRangeLine(): void {
+    const t = this;
+    var obj = {
+      gridViewName: 'grvRangeLines',
+      formName: 'RangeLines',
+      functionID: 'TM00634',
+      entityName: 'BS_RangeLines',
+      // model: this.model,
+      // text: this.text,
+      // oldTitle: this.oldTitle,
+      // id: this.id,
+      // isEdit: this.isEdit,
+      // name: this.name,
+      // fiedName: this.fiedName,
+      // formName: this.formName,
+      // gridViewName: this.gridViewName,
+    };
+    this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
+  }
+  openPopup(itemdata, isAdd, index){
+    this.isAdd = isAdd;
+    if (isAdd) {
+      this.initPopup();
+    }else {
+      this.itemRangeLine = this.fb.group(RangeLineFormGroup);
+      this.itemRangeLine.patchValue(itemdata);
+      this.index = index;
+    }
+
+    this.modalService
+      .open(this.add, { centered: true, size: "sm" })
+      .result.then(
+        (result) => {
+          if (isAdd) {
+            this.lstRangeLine.push(result.value);
+          } else {
+            this.lstRangeLine[index].BreakName = result.value.BreakName;
+            this.lstRangeLine[index].BreakValue = result.value.BreakValue;
+            this.dt.detectChanges();
+          }
+        },
+        (reason) => {
+          console.log("reason", this.getDismissReason(reason));
+        }
+      );
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return "by pressing ESC";
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return "by clicking on a backdrop";
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
@@ -193,6 +261,19 @@ export class RangesKanbanComponent implements OnInit {
     this.showPanel();
     //  this.renderer.addClass(popup, 'drawer-on');
   }
+
+  clickAddLine(evt: any, isAddLine, pop: TemplateRef<any>) {
+
+    //  this.openTask()
+    if (isAddLine == true) {
+      this.isAddLine = true;
+      this.title = 'Thêm chi tiết khoảng thời gian';
+      this.initPopup();
+    }
+ //    this.showPanel();
+      this.renderer.addClass(pop, 'drawer-on');
+  }
+
   showPanel() {
     this.viewBase.currentView.openSidebarRight();
   }
@@ -200,5 +281,11 @@ export class RangesKanbanComponent implements OnInit {
   Close() {
     // this.renderer.removeClass(popup, 'drawer-on');
     this.viewBase.currentView.closeSidebarRight();
+  }
+
+  readMore(dataItem) {
+    dataItem.disableReadmore = !dataItem.disableReadmore;
+    this.dt.detectChanges();
+    //this.tableView.addHandler(dataItem, false, "taskGroupID");
   }
 }
