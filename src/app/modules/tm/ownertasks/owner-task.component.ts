@@ -141,7 +141,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   click(evt: any) {
-    console.log(evt);
     switch (evt.id) {
       case 'add':
         this.taskInfo.openTask();
