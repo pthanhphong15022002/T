@@ -53,7 +53,7 @@ const routes: Routes = [
         component: AssignTaskComponent,
       },
       {
-        path: 'viewdboards',
+        path: 'viewboards/:funcID',
         component: ViewBoardsComponent,
       },
       {
