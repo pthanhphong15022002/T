@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { TmService } from '../../tm.service';
 import {
   Component,
@@ -24,6 +25,7 @@ import {
 import { DataRequest } from '@shared/models/data.request';
 import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
 import { KanbanSetting } from '@modules/tm/models/settings.model';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
   selector: 'onwer-task-kanban',
@@ -35,6 +37,8 @@ export class KanbanComponent implements OnInit {
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('popupAdd') modalContent: any;
   @ViewChild('content') content: any;
+  @Input('viewBase') viewBase: ViewBaseComponent;
+  funtionID: string = "";
 
   //@Input('taskInfo') taskInfo: TaskInfoComponent;
 
@@ -90,13 +94,18 @@ export class KanbanComponent implements OnInit {
     private cache: CacheService,
     private cr: ChangeDetectorRef,
     private cf: CallFuncService,
+    private router: ActivatedRoute,
     private notiService: NotificationsService
   ) {
     this.user = this.authStore.get();
+    this.funtionID = this.router.snapshot.params["funcID"];
   }
 
   ngOnInit() {
-    this.cache.viewSettings('TM001').subscribe((res) => {
+  }
+
+  ngAfterViewInit() {
+    this.cache.viewSettings(this.funtionID).subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
         this.getColumnKanban();
@@ -107,8 +116,6 @@ export class KanbanComponent implements OnInit {
     }
     this.getListDetailTask();
   }
-
-  ngAfterViewInit() {}
 
   viewMemo(id: string) {
     this.cardId == id ? (this.cardId = '') : (this.cardId = id);
@@ -151,7 +158,7 @@ export class KanbanComponent implements OnInit {
 
   onDataDrop(evt: Event) {
     this.item = evt;
-    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => {});
+    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
   }
 
   submit(e: any) {
@@ -159,7 +166,7 @@ export class KanbanComponent implements OnInit {
     const { id, status, comment } = this.item;
     this.tmSv
       .setStatusTask(id, status, completed, '8', comment)
-      .subscribe((res) => {});
+      .subscribe((res) => { });
   }
 
   getListDetailTask() {
@@ -319,7 +326,7 @@ export class KanbanComponent implements OnInit {
       ((date.getTime() - janFirst.getTime()) / 86400000 +
         janFirst.getDay() +
         1) /
-        7
+      7
     );
   }
 

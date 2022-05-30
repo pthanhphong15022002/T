@@ -54,7 +54,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  constructor(private cf: ChangeDetectorRef, private cache: CacheService) {}
+  constructor(private cf: ChangeDetectorRef, private cache: CacheService) { }
 
   ngOnInit(): void {
     this.buttons = [
@@ -85,63 +85,65 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '2',
-        type: 'kanban',
-        active: true,
-        model: {
-          panelLeftRef: this.kanban,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
-      {
-        id: '3',
-        type: 'kanban',
-        icon: 'icon-chrome_reader_mode1',
-        text: 'List-details',
-        active: false,
-        model: {
-          panelLeftRef: this.listDetails,
-          itemTemplate: this.templateTask,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
-      {
-        id: '4',
-        type: 'list',
-        icon: 'icon-format_list_bulleted',
-        text: 'List-tasks',
-        active: false,
-        model: {
-          panelLeftRef: this.listTasks,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
-      {
-        id: '5',
-        type: 'schedule',
-        text: 'schedule',
-        active: false,
-        model: {
-          panelLeftRef: this.schedule,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
+    this.views = [{
+      id: '2',
+      type: 'kanban',
+      active: false,
+
+      model: {
+        panelLeftRef: this.kanban,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '3',
+      type: 'kanban',
+      icon: 'icon-chrome_reader_mode1',
+      text: 'List-details',
+      active: true,
+      //   viewInput: null,
+      model: {
+        panelLeftRef: this.listDetails,
+        itemTemplate: this.templateTask,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '4',
+      type: 'list',
+      icon: 'icon-format_list_bulleted',
+      text: 'List-tasks',
+      active: false,
+
+      model: {
+        panelLeftRef: this.listTasks,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '5',
+      type: 'schedule',
+      text: 'schedule',
+      active: false,
+      //   viewInput: null,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarLeftRef: this.asideLeft,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
     ];
     this.cf.detectChanges();
   }
 
   click(evt: any) {
-    console.log(evt);
     switch (evt.id) {
       case 'add':
         this.taskInfo.openTask();
