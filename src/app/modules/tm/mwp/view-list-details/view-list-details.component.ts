@@ -118,7 +118,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    model.funcID = 'WPT036';
+   // model.funcID = 'WPT036';
     model.page = 1;
     // model.pageSize = 20;
     // set max dinh
@@ -134,18 +134,6 @@ export class ViewListDetailsComponent implements OnInit {
     let dataObj = { view: this.view, viewBoardID: '' };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
-    //const t = this;
-    // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-    //   if (res && res.length) {
-    //     this.data = res[0];
-    //     // this.classifyStatus(this.data);
-    //     // this.itemSelected = res[0][0];
-    //     // this.loadDetailTask(this.itemSelected);
-    //   } else {
-    //     this.data = [];
-    //   }
-    //   t.dt.detectChanges();
-    // });
   }
 
   trackByFn(index: number, item): string {
@@ -524,6 +512,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   loadDetailTask(task) {
+    this.objectAssign = "";
+    this.objectState = "";
     if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
@@ -549,6 +539,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
+     this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(

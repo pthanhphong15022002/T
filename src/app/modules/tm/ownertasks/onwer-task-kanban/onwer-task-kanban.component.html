@@ -1,11 +1,11 @@
 <div class="row">
   <codx-kanban #kanban keyField="status" [dataSource]="dataSource" [columns]="columns" [columnTemplate]="columTemplate"
     [cardTemplate]="cardTemplate" [popupTemplate]="content" [swimlanes]="swimlaneSettings" [cardSettings]="cardSettings"
-    (onDrag)="onDataDrag($event)" (onDrop)="onDataDrop($event)">
+    (onDrag)="onDataDrag($event)" [contextMenu]="" (onDrop)="onDataDrop($event)">
   </codx-kanban>
 </div>
 <ng-template #cardTemplate let-data>
-  <div class="card-template">
+  <div class="card-template"  (dblclick)="editTask(data)" >
     <div class="content-box tm-box p-2">
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center tm-date me-2">

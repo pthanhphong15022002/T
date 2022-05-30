@@ -614,6 +614,7 @@ export class TaskInfoComponent implements OnInit {
     t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
+    t.task.completedOn = null;
     this.listUser = [];
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
@@ -693,7 +694,6 @@ export class TaskInfoComponent implements OnInit {
   }
 
   valueChangeTags(tags: string) {
-    console.log('tags', tags);
     this.task.tags = tags;
   }
   clickOpenFormAttach(taskID) {
