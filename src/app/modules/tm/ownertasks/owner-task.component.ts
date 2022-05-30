@@ -88,7 +88,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '2',
       type: 'kanban',
-      active: true,
+      active: false,
 
       model: {
         panelLeftRef: this.kanban,
@@ -102,7 +102,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: false,
+      active: true,
       //   viewInput: null,
       model: {
         panelLeftRef: this.listDetails,

@@ -39,15 +39,15 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home',
+        path: 'home/:funcID',
         component: DashboardComponent,
       },
       {
-        path: 'mytasks',
+        path: 'mytasks/:funcID',
         component: OwnerTaskComponent,
       },
       {
-        path: 'assigntasks',
+        path: 'assigntasks/:funcID',
         component: AssignTaskComponent,
       },
       {
@@ -59,11 +59,15 @@ const routes: Routes = [
             component: HomeSettingComponent
           },
           {
-            path: 'task-group',
+            path: 'settingcalendar/:funcID',
+            component: SettingCalendarComponent
+          },
+          {
+            path: 'taskgroups/:funcID',
             component: TaskGroupComponent
           },
           {
-            path: 'ranges-kanban',
+            path: 'rangeskanban/:funcID',
             component: RangesKanbanComponent
           }
         ]

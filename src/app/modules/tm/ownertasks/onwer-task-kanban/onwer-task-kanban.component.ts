@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { TmService } from '../../tm.service';
 import {
   Component,
@@ -32,7 +33,7 @@ export class KanbanComponent implements OnInit {
   @ViewChild('popupAdd') modalContent: any;
   @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
-
+  funtionID: string = "";
   dataSource: Object[] = [];
   data: any;
   setCalendar: boolean = true;
@@ -81,13 +82,18 @@ export class KanbanComponent implements OnInit {
     private authStore: AuthStore,
     private cache: CacheService,
     private cr: ChangeDetectorRef,
-    private cf: CallFuncService
+    private cf: CallFuncService,
+    private router: ActivatedRoute
   ) {
     this.user = this.authStore.get();
+    this.funtionID = this.router.snapshot.params["funcID"];
   }
 
   ngOnInit() {
-    this.cache.viewSettings('TM001').subscribe((res) => {
+  }
+
+  ngAfterViewInit() {
+    this.cache.viewSettings(this.funtionID).subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
         this.getColumnKanban();
@@ -98,8 +104,6 @@ export class KanbanComponent implements OnInit {
     }
     this.getListDetailTask();
   }
-
-  ngAfterViewInit() { }
 
   viewMemo(id: string) {
     this.cardId == id ? (this.cardId = '') : (this.cardId = id);
