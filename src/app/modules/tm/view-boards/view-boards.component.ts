@@ -12,7 +12,7 @@ import { ViewBoardInfoComponent } from './view-board-info/view-board-info.compon
 export class ViewBoardsComponent implements OnInit {
 
   @ViewChild('view') viewBase: ViewsComponent;
-
+  @ViewChild('listViewBoards') listViewBoards : TemplateRef<any>|null
   @ViewChild('viewBoardInfo') viewBoardInfo: ViewBoardInfoComponent;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
@@ -36,7 +36,7 @@ export class ViewBoardsComponent implements OnInit {
       type: 'content',
       active: true,
       model: {
-        // panelLeftRef: this.listDetails,
+        panelLeftRef: this.listViewBoards,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '600px'
       }

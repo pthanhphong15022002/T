@@ -63,6 +63,9 @@ export class TmService {
   addTask(data) {
     return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddTaskAsync', data);
   }
+  addTaskBoard(data) {
+    return this.api.execSv<any>('TM', 'TM', 'SprintsBusiness', 'AddEditSprintAsync', data);
+  }
   addTaskGroup(data) {
     return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'AddTaskGroupsAsync', data);
   }
@@ -143,6 +146,7 @@ export class TmService {
     if (!Array.isArray(list) || list.length == 0) return {};
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
   }
+  
 }
 
 export class LayoutModel {

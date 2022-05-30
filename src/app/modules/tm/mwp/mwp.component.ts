@@ -22,8 +22,8 @@ export class MwpComponent implements OnInit, AfterViewInit {
       model: {
         service: 'TM',
         assemblyName: 'TM',
-        method: 'TaskBusiness',
-        className: 'GetListDetailTasksAsync',
+        method: 'GetListDetailTasksAsync',
+        className: 'TaskBusiness',
         panelLeftRef: this.panelLeft,
         panelRightRef: null,
         sideBarLeftRef: null,
@@ -43,8 +43,8 @@ export class MwpComponent implements OnInit, AfterViewInit {
       model: {
         service: 'TM',
         assemblyName: 'TM',
-        method: 'TaskBusiness',
-        className: 'GetListDetailTasksAsync',
+        method: 'GetListDetailTasksAsync',
+        className: 'TaskBusiness',
         panelLeftRef: this.panelLeft,
         panelRightRef: null,
         sideBarLeftRef: null,

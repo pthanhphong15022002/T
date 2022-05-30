@@ -33,6 +33,7 @@ import { UpdateStatusPopupComponent } from './controls/update-status-popup/updat
 import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
 import { ViewBoardsComponent } from './view-boards/view-boards.component';
 import { ViewBoardInfoComponent } from './view-boards/view-board-info/view-board-info.component';
+import { ListViewBoardsComponent } from './view-boards/list-view-boards/list-view-boards.component';
 
 
 const routes: Routes = [
@@ -45,7 +46,7 @@ const routes: Routes = [
         component: DashboardComponent,
       },
       {
-        path: 'mytasks',
+        path: 'mytasks/:funcID',
         component: OwnerTaskComponent,
       },
       {
@@ -110,7 +111,8 @@ const routes: Routes = [
     UpdateStatusPopupComponent,
     SettingPanelComponent,
     ViewBoardsComponent,
-    ViewBoardInfoComponent
+    ViewBoardInfoComponent,
+    ListViewBoardsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

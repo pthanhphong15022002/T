@@ -1,6 +1,6 @@
 export class TM_Sprints {
   iterationID: string;
-  iterationType: string;
+  iterationType: string ='1';
   iterationName: string;
   interval: string;
   year: number;

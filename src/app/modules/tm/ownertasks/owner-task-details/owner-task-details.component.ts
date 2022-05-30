@@ -39,8 +39,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
   fromDate: Date = moment(this.today).startOf('day').toDate();
   toDate: Date = moment(this.today).endOf('day').toDate();
   configParam = null;
-  dateNow: string = '';
-  yesterday = '';
   dataObj = { view: 'listDetails', viewBoardID: '' };
   gridView: any;
   listUserTask = [];
@@ -50,7 +48,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  innerHTML = ''
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
 

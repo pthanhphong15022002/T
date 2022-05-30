@@ -44,7 +44,6 @@ export class TaskInfoComponent implements OnInit {
   user: any;
   readOnly = false;
   listUser: any[];
-  // listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[];
   listTodo: TaskGoal[];

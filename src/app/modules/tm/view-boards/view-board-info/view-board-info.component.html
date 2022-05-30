@@ -23,27 +23,39 @@
         <div class="card-body">
             <div class="form-group row">
                 <span class="col-10">
-                    <codx-input type="text"></codx-input>
-                </span><span class="col-2"> UpAnh</span>
+                <codx-input type="text" field="iterationName" [(ngModel)]="taskBoard.iterationName" (valueChange)="changText($event)"  placeholder="Tên view board" [width]="50"></codx-input>
+                </span><span class="col-2">
+                  <div class="form-group">
+                    <div class="image-input image-input-outline" id="kt_user_add_avatar">
+                      <div >
+                        <codx-img #imageAvatar class="symbol symbol-50 symbol-circle"
+                        [objectId]="taskBoard?taskBoard.iterationID:''"
+                          [objectName]="taskBoard?taskBoard.iterationName:''"
+                          objectType="TM_Sprints"
+                          funcId="TMT04" isAllowEdit="true" updateDirect="true" [width]="50"  [height]="50">
+                        </codx-img>
+                      </div>
+                    </div>
+                  </div>
+                </span>
             </div>
             <div class="form-group">
                 <label>Dự án</label>
                 <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
                     ngDefaultControl refValue="Projects" loadFull="true" field="projectID"
-                    (valueChange)="cbxChange($event)" [disabled]="readOnly">
-                    <!-- [value]="task.projectID" -->
+                    (valueChange)="cbxChange($event)" [disabled]="readOnly" [value]="taskBoard.projectID">
                 </codx-combobox>
             </div>
             <div class="form-group ">
                 <label>Lưu mặc định</label>
-                <codx-input type="valuelist" field="priority" refValue="L1469" [disabled]="readOnly"
+                <codx-input type="valuelist" field="viewMode" [crrValue]="taskBoard.viewMode" refValue="L1469" [disabled]="readOnly"
                     [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
 
             </div>
             <div class="form-group">
                 <label>Mô tả công việc</label>
-                <textarea [readonly]="!readOnly" class="form-control" rows="2"></textarea>
+                <textarea [readonly]="readOnly" class="form-control" rows="2" [(ngModel)]="taskBoard.memo"></textarea>
                 <!-- [(ngModel)]="task.memo"  -->
             </div>
             <div class="d-flex align-items-center justify-content-between mt-4">
@@ -104,19 +116,18 @@
             </div>
             <div class="card-footer pt-4">
                 <div class="d-flex justify-content-end row">
-                    <div class="col-8">
+                    <div class="col-10">
                         <!-- <codx-input type="checkbox"  (valueChange)="valueChange($event)" labelPosition="Before" label="sdsdsd"></codx-input> -->
-                        <span><input type="checkbox" [checked]="true" value="1"></span>
+                        <span><input type="checkbox" [(ngModel)]="taskBoard.isShared"> </span>  
                         <span>
                             <codx-label name="lblCheck" formName="Tasks" default="Chia sẽ board cho nguồn lực">
                             </codx-label>
                         </span>
                     </div>
-                    <div class="col-4">
-                        <button type="button" class="btn btn-primary">Lưu</button>
+                    <div class="col-2" >
+                        <!-- <button type="button" class="btn btn-primary">Lưu</button> -->
+                        <button type="button" class="btn btn-primary" (click)="saveData(taskBoard.iterationID)" *ngIf="!readOnly">Lưu</button> 
                     </div>
-
-                    <!-- <button type="button" class="btn btn-primary" (click)="saveData(taskBoard.taskID)" *ngIf="!readOnly">Lưu</button> -->
                 </div>
             </div>
         </div>
