@@ -106,17 +106,6 @@ export class AssignTaskDetailsComponent implements OnInit {
     let dataObj = { view: this.view, viewBoardID: '' };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
-    const t = this;
-    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-      if (res && res.length) {
-        this.data = res[0];
-        this.itemSelected = res[0][0];
-        this.loadDetailTask(this.itemSelected)
-      } else {
-        this.data = [];
-      }
-      t.dt.detectChanges();
-    });
   }
 
   trackByFn(index: number, item): string {
@@ -365,10 +354,7 @@ export class AssignTaskDetailsComponent implements OnInit {
   loadDetailTask(task) {
     this.objectAssign = "";
     this.objectState = "";
-    if (
-      task.category == '3' ||
-      task.category == '4'
-    ) {
+    if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
           'TM',
@@ -379,7 +365,7 @@ export class AssignTaskDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
-            this.countOwner = res.length
+            this.countOwner = res.length;
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {
@@ -390,10 +376,10 @@ export class AssignTaskDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
-    }else{
-      this.countOwner = 1
+    } else {
+      this.countOwner = 1;
     }
-    this.listNode = []
+     this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(
@@ -408,5 +394,14 @@ export class AssignTaskDetailsComponent implements OnInit {
         });
     }
     this.isFinishLoad = true;
+  }
+
+  changeRowSelected(event) {
+    this.itemSelected = event;
+    this.loadDetailTask(this.itemSelected);
+    this.data = this.listview?.data;
+    if (this.itemSelected != null) {
+      this.isFinishLoad = true;
+    } else this.isFinishLoad = false;
   }
 }
