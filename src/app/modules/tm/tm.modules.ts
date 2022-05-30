@@ -33,6 +33,7 @@ import { UpdateStatusPopupComponent } from './controls/update-status-popup/updat
 import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
 import { ViewBoardsComponent } from './view-boards/view-boards.component';
 import { ViewBoardInfoComponent } from './view-boards/view-board-info/view-board-info.component';
+import { ProjectComponent } from './settings/project/project.component';
 
 
 const routes: Routes = [
@@ -71,6 +72,10 @@ const routes: Routes = [
           {
             path: 'ranges-kanban',
             component: RangesKanbanComponent
+          },
+          {
+            path: 'project',
+            component: ProjectComponent
           }
         ]
       },
@@ -110,7 +115,9 @@ const routes: Routes = [
     UpdateStatusPopupComponent,
     SettingPanelComponent,
     ViewBoardsComponent,
-    ViewBoardInfoComponent
+    ViewBoardInfoComponent,
+    ProjectComponent,
+    TaskGroupComponent
   ],
   imports: [
     RouterModule.forChild(routes),

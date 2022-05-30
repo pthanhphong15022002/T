@@ -1,13 +1,15 @@
-import { InfoOpenForm } from './../../models/task.model';
-import { BS_Ranges } from './../../models/BS_Ranges.model';
+import { InfoOpenForm, RangeLine, rangeLine } from './../../models/task.model';
+import { BS_RangeLines, BS_Ranges } from './../../models/BS_Ranges.model';
 import { Component, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Renderer2 } from '@angular/core';
-import { AuthStore, CacheService, ApiHttpService, ViewsComponent, CodxFormDynamicComponent, CallFuncService } from 'codx-core';
+import { AuthStore, CacheService, ApiHttpService, ViewsComponent, CodxFormDynamicComponent, CallFuncService, NotificationsService, CodxGridviewComponent } from 'codx-core';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { RangeLineFormGroup } from '@modules/tm/models/task.model';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TmService } from '@modules/tm/tm.service';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'app-ranges-kanban',
@@ -23,16 +25,20 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('addLines') addLines: TemplateRef<any>;
-  @ViewChild("add", { static: true }) add;
+  @ViewChild("add", { static: true }) add: TemplateRef<any>;
+  @ViewChild('gridView') gridView: CodxGridviewComponent;
 
   @Input() data: [];
 
   itemRangeLine: FormGroup;
   addEditForm: FormGroup;
   lstRangeLine: any;
+  lstSaveRangeLine: any;
 
-  @Input() ranges = new BS_Ranges();;
-  columnsGrid=[];
+  @Input() ranges = new BS_Ranges();
+  @Input() rangeLines = new RangeLine();
+
+  columnsGrid = [];
   headerStyle = {
     textAlign: 'center',
     backgroundColor: '#F1F2F3',
@@ -53,15 +59,16 @@ export class RangesKanbanComponent implements OnInit {
   isAfterRender = false;
   searchType = "0";
   isAddMode = true;
-  title="";
+  title = "";
   isAdd: boolean = true;
   index = null;
   isAddLine: boolean = true;
 
   constructor(private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
     private api: ApiHttpService, private dt: ChangeDetectorRef, private callfc: CallFuncService, private renderer: Renderer2,
-    private modalService: NgbModal,
-    ) { }
+    private modalService: NgbModal, private tmSv: TmService, private notiService: NotificationsService
+
+  ) { }
 
 
   views: Array<ViewModel> = [];
@@ -81,7 +88,7 @@ export class RangesKanbanComponent implements OnInit {
       { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore, width: 140 },
       { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy, width: 140 },
       { field: 'createOn', headerText: 'ngày tạo', template: this.itemCreate, width: 140 },
-      
+
     ];
     this.cache.gridViewSetup('RangesKanban', 'grvRangesKanban').subscribe(res => {
       if (res)
@@ -101,16 +108,16 @@ export class RangesKanbanComponent implements OnInit {
         widthAsideRight: '900px'
       }
     },
-    
-  ];
-    
+
+    ];
+
   }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
       this.getAutonumber("TM00634", "BS_RangesKanban", "RangeID").subscribe(key => {
-        this.ranges.RangeID = key;
+        this.ranges.rangeID = key;
       })
     })
   }
@@ -119,46 +126,23 @@ export class RangesKanbanComponent implements OnInit {
     this
       .getFormGroup("RangeLines", "grvRangeLines")
       .then((item) => {
-        this.itemRangeLine = this.fb.group(RangeLineFormGroup);
-        this.itemRangeLine.patchValue({
-          RecID: item.value.recID,
-          RangeID: "",
-          BreakName: null,
-          BreakValue: null,
-        });
+        this.fb.group(RangeLineFormGroup);
+        this.rangeLines.RecID = item.value.recID;
+        this.rangeLines.RangeID = "";
+        this.rangeLines.BreakName = null;
+        this.rangeLines.BreakValue = null;
       });
   }
-  openRangeLine(): void {
-    const t = this;
-    var obj = {
-      gridViewName: 'grvRangeLines',
-      formName: 'RangeLines',
-      functionID: 'TM00634',
-      entityName: 'BS_RangeLines',
-      // model: this.model,
-      // text: this.text,
-      // oldTitle: this.oldTitle,
-      // id: this.id,
-      // isEdit: this.isEdit,
-      // name: this.name,
-      // fiedName: this.fiedName,
-      // formName: this.formName,
-      // gridViewName: this.gridViewName,
-    };
-    this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
-  }
-  openPopup(itemdata, isAdd, index){
+
+
+
+  openPopup(itemdata, isAdd, index) {
     this.isAdd = isAdd;
     if (isAdd) {
       this.initPopup();
-    }else {
-      this.itemRangeLine = this.fb.group(RangeLineFormGroup);
-      this.itemRangeLine.patchValue(itemdata);
-      this.index = index;
     }
-
     this.modalService
-      .open(this.add, { centered: true, size: "sm" })
+      .open(this.add, { centered: true })
       .result.then(
         (result) => {
           if (isAdd) {
@@ -173,7 +157,20 @@ export class RangesKanbanComponent implements OnInit {
           console.log("reason", this.getDismissReason(reason));
         }
       );
+    // if(isAdd==true){
+    //   this.callfc
+    //   .openForm(
+    //     RangeLinesComponent,
+    //     'Khoảng thời gian',
+    //     500,
+    //     350,
+    //   )
+    //   .subscribe((dt: any) => {
+    //   });
+    // }
+
   }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return "by pressing ESC";
@@ -262,17 +259,38 @@ export class RangesKanbanComponent implements OnInit {
     //  this.renderer.addClass(popup, 'drawer-on');
   }
 
-  clickAddLine(evt: any, isAddLine, pop: TemplateRef<any>) {
+  openForm(data, isAddMode) {
+    if (isAddMode == false) {
+      this.isAddMode = false;
+      this.rangeLines = new RangeLine();
+      this.ranges = new BS_Ranges();
 
-    //  this.openTask()
-    if (isAddLine == true) {
-      this.isAddLine = true;
-      this.title = 'Thêm chi tiết khoảng thời gian';
-      this.initPopup();
+      this.title = 'Chỉnh sửa khoảng thời gian công việc';
+      this.api.execSv<any>("BS", "BS", "RangesKanbanBusiness", "GetRangesKanbanAndLinesByIdAsync", data.rangeID).subscribe((res) => {
+        if (res) {
+          data = res;
+          this.ranges = data[0];
+          this.lstRangeLine = data[1];
+          if (this.lstRangeLine == null) {
+            this.lstRangeLine = [];
+          }
+          // for (let item of data.rangeLines) {
+          //   var rangeline = new RangeLine();
+          //   rangeline.RecID = item.recID;
+          //   rangeline.RangeID = item.rangeID;
+          //   rangeline.BreakValue = item.breakValue;
+          //   rangeline.BreakName = item.breakName;
+          //   this.lstRangeLine.push(Object.assign({}, rangeline));
+          // }
+          this.dt.detectChanges();
+          this.showPanel();
+        }
+
+      })
     }
- //    this.showPanel();
-      this.renderer.addClass(pop, 'drawer-on');
+    // this.renderer.addClass(popup, 'drawer-on');
   }
+
 
   showPanel() {
     this.viewBase.currentView.openSidebarRight();
@@ -287,5 +305,108 @@ export class RangesKanbanComponent implements OnInit {
     dataItem.disableReadmore = !dataItem.disableReadmore;
     this.dt.detectChanges();
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
+  }
+
+  addRanges() {
+    var t = this;
+    this.api.execSv("BS", "BS", "RangesKanbanBusiness", "AddRangeKanbanAsync", [this.ranges, this.rangeLines])
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notify(res[0].message);
+          t.data = res[1];
+          this.lstSaveRangeLine = [];
+          if (this.lstRangeLine != null) {
+            for (let item1 of this.lstRangeLine) {
+              var rangeline = new rangeLine(
+                item1.RecID,
+                item1.RangeID,
+                item1.BreakName,
+                item1.BreakValue
+              );
+            }
+          }
+          this.lstSaveRangeLine.push(rangeline);
+          t.data = this.lstRangeLine;
+          this.gridView.addHandler(t.data, this.isAddMode, "rangeID");
+
+        }
+      });
+    this.Close();
+  }
+
+  updateRanges() {
+
+  }
+
+  deleteRange(data) {
+    var message = 'Bạn có chắc chắn muốn xóa khoảng thời gian này !';
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var t = this;
+        dialog.close = function (e) {
+          return t.api.execSv("BS",
+            "BS",
+            "RangesKanbanBusiness",
+            "DeleteRangesKanbanAsync", data.rangeID).subscribe((res) => {
+              if (res) {
+                data = res;
+                //      t.notiService.notify(res[2].message);
+                t.gridView.removeHandler(data, "rangeID");
+
+              }
+              t.data = t.gridView.data;
+            })
+        };
+      });
+  }
+
+  OnSaveForm() {
+    // if(this.isAddMode==true){
+    //   return this.addRanges();
+    // }
+    //   return this.updateRanges();
+
+    return this.api
+      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeAsync", [
+        this.ranges,
+        this.lstRangeLine,
+        this.isAddMode,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.data = res[2];
+          let item = this.data
+          this.lstSaveRangeLine = [];
+          if (this.lstRangeLine != null) {
+            for (let item1 of this.lstRangeLine) {
+              var rangeline = new rangeLine(
+                item1.RecID,
+                item1.RangeID,
+                item1.BreakName,
+                item1.BreakValue
+              );
+              this.lstSaveRangeLine.push(rangeline);
+            }
+          }
+          this.gridView.addHandler(item, this.isAddMode, "rangeID");
+          this.Close();
+        }
+      });
+  }
+
+  OnSaveLines() {
+    
+  }
+
+  deletePopup(index) {
+    this.lstRangeLine.splice(index, 1);
+  }
+
+  valueValue(data) {
+    this.rangeLines.BreakValue = data.data;
+  }
+  valueName(data) {
+    this.rangeLines.BreakName = data.data;
   }
 }

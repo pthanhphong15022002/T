@@ -66,6 +66,7 @@ export class TmService {
   addTaskGroup(data) {
     return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'AddTaskGroupsAsync', data);
   }
+
   updateTaskGroup(data) {
     return this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'UpdateTaskGroupsAsync', data);
 
