@@ -37,8 +37,8 @@ const T_Component: Type<any>[] = [
   TagsComponent,
   SelectweekComponent,
   AttachmentComponent,
-  BreadcumbComponent
-]
+  BreadcumbComponent,
+];
 
 const T_Moudule: Type<any>[] = [
   CoreModule,
@@ -51,18 +51,11 @@ const T_Moudule: Type<any>[] = [
   RouterModule,
   InlineSVGModule,
   NgxSkeletonLoaderModule,
-  FormsModule
-]
+  FormsModule,
+];
 @NgModule({
-  imports: [
-    T_Moudule
-  ],
-  declarations: [
-    T_Component
-  ],
-  exports: [
-    T_Moudule,
-    T_Component
-  ],
+  imports: [T_Moudule],
+  declarations: [T_Component],
+  exports: [T_Moudule, T_Component],
 })
-export class SharedModule { }
+export class SharedModule {}

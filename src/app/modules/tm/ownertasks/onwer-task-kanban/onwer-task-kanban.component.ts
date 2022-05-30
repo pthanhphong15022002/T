@@ -6,8 +6,9 @@ import {
   ViewChild,
   Input,
   ChangeDetectorRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CardSettingsModel,
   DialogSettingsModel,
@@ -18,9 +19,12 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  NotificationsService,
+  CodxListviewComponent,
 } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
-import { KanbanSetting } from '../../models/settings.model';
+import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
+import { KanbanSetting } from '@modules/tm/models/settings.model';
 import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
@@ -30,10 +34,16 @@ import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-bas
 })
 export class KanbanComponent implements OnInit {
   @ViewChild('kanban') kanban!: CoDxKanbanComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('popupAdd') modalContent: any;
   @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
   funtionID: string = "";
+
+  //@Input('taskInfo') taskInfo: TaskInfoComponent;
+
+  @Output() taskInfo = new EventEmitter();
+
   dataSource: Object[] = [];
   data: any;
   setCalendar: boolean = true;
@@ -52,6 +62,7 @@ export class KanbanComponent implements OnInit {
   Sumary: string = '';
   columns: any = [];
   settings: any;
+  taskAction: any;
   kanbanSetting: KanbanSetting = new KanbanSetting();
   contextMenuSetting = {
     enable: true,
@@ -83,7 +94,8 @@ export class KanbanComponent implements OnInit {
     private cache: CacheService,
     private cr: ChangeDetectorRef,
     private cf: CallFuncService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private notiService: NotificationsService
   ) {
     this.user = this.authStore.get();
     this.funtionID = this.router.snapshot.params["funcID"];
@@ -114,6 +126,27 @@ export class KanbanComponent implements OnInit {
       .match(/\b(\w)/g)
       .join('')
       .toUpperCase();
+  }
+
+  editTask(data) {
+    this.taskAction = data;
+    if (!this.taskAction.write) {
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
+    }
+    if (this.taskAction.status < 8) {
+      this.taskInfo.emit({ id: 'edit', data: this.taskAction });
+      this.cr.detectChanges();
+    } else {
+      var message = 'Không thể chỉnh sửa công việc này !';
+      if (this.taskAction.status == 8) {
+        message = 'Công việc này đã bị hủy ! ' + message;
+      }
+      if (this.taskAction.status == 9) {
+        message = 'Công việc này đã hoàn thành ! ' + message;
+      }
+      this.notiService.notify(message);
+    }
   }
 
   onDataDrag(evt: Event) {

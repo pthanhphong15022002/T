@@ -144,7 +144,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   click(evt: any) {
-    console.log(evt.id);
     switch (evt.id) {
       case 'add':
         this.taskInfo.openTask();
@@ -154,6 +153,10 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       case 'add1':
         this.TaskGroup.openTask();
         this.TaskGroup.title = 'Tạo mới nhóm làm việc';
+        this.viewBase.currentView.openSidebarRight();
+        break;
+      case 'edit':
+        this.taskInfo.openInfo(evt.data.taskID, 'edit');
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
