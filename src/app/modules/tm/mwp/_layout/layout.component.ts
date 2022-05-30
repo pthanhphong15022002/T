@@ -72,7 +72,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     //   console.log(JSON.stringify(size));
     // }
   }
-
+/// Chỗ này nữa sẽ có hàm load ra lun k gắn chết như vầy nữa. h chưa có xài tạm nv 
   public funcs$: Observable<any> = of([
     {
       functionID: 'TMT01',
@@ -89,7 +89,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       separator: false,
       childs: []
     }, {
-      functionID: 'TM004',
+      functionID: 'TMT04',
       customName: 'View board',
       smallIcon: 'icon-style icon-18',
       comingSoon: false,

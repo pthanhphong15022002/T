@@ -8,7 +8,7 @@
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
 
 <ng-template #kanban>
-  <onwer-task-kanban [viewBase]="viewBase"></onwer-task-kanban>
+  <onwer-task-kanban [viewBase]="viewBase" (taskInfo)="click($event)"></onwer-task-kanban>
 </ng-template>
 
 <ng-template #settingPanel>
@@ -17,7 +17,7 @@
 
 <!-- list-task-detail -->
 <ng-template #listDetails>
-  <owner-task-details [viewBase]="viewBase" [taskInfo]="taskInfo"></owner-task-details>
+  <owner-task-details [funcID]="funcID" [viewBase]="viewBase" [taskInfo]="taskInfo"></owner-task-details>
 </ng-template>
 <!-- end list-task-detail -->
 <!-- list-task -->

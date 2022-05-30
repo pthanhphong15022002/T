@@ -693,7 +693,6 @@ export class TaskInfoComponent implements OnInit {
   }
 
   valueChangeTags(tags: string) {
-    console.log('tags', tags);
     this.task.tags = tags;
   }
   clickOpenFormAttach(taskID) {

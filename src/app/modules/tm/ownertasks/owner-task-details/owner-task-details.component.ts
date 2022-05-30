@@ -49,6 +49,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   @Input('viewBase') viewBase: ViewsComponent;
+  @Input() funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
@@ -76,7 +77,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     });
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
-        var index = this.data.findIndex(x => x.taskID == res.taskID);
+        var index = this.data.findIndex((x) => x.taskID == res.taskID);
         if (index != -1) {
           this.listview.addHandler(res, false, 'recID');
         } else {
@@ -98,7 +99,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = "TMT02" ;
+    model.funcID = this.funcID;
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -121,7 +122,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
       if (res && res.length) {
         this.data = res[0];
         this.itemSelected = res[0][0];
-        if (this.itemSelected.category == "3" || this.itemSelected.category == "4") {
+        if (
+          this.itemSelected.category == '3' ||
+          this.itemSelected.category == '4'
+        ) {
           this.api
             .execSv<any>(
               'TM',
@@ -132,7 +136,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
             )
             .subscribe((data) => {
               if (data && data.length > 0) {
-                this.countOwner = data.length
+                this.countOwner = data.length;
                 let objectId = data[0].owner;
                 let objectState = data[0].status;
                 for (let i = 1; i < data?.length; i++) {
@@ -180,9 +184,12 @@ export class OnwerTaskDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-    this.objectAssign = "";
-    this.objectState = "";
-    if (this.itemSelected.category == "3" || this.itemSelected.category == "4") {
+    this.objectAssign = '';
+    this.objectState = '';
+    if (
+      this.itemSelected.category == '3' ||
+      this.itemSelected.category == '4'
+    ) {
       this.api
         .execSv<any>(
           'TM',
@@ -193,7 +200,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
-            this.countOwner = res.length
+            this.countOwner = res.length;
             let objectId = res[0].owner;
             let objectState = res[0].status;
             for (let i = 1; i < res?.length; i++) {
@@ -204,10 +211,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
-    }else{
-      this.countOwner =1
+    } else {
+      this.countOwner = 1;
     }
-    this.listNode = []
+    this.listNode = [];
     if (this.itemSelected?.category != '1') {
       this.api
         .execSv<any>(
@@ -298,11 +305,8 @@ export class OnwerTaskDetailsComponent implements OnInit {
             return that.confirmDelete(e, that);
           };
         });
-
-    } else
-      this.notiService.notify('Bạn chưa được cấp quyền này !');
+    } else this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
-
 
   viewItem(taskAction) {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
@@ -341,11 +345,13 @@ export class OnwerTaskDetailsComponent implements OnInit {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
+                    var taskDelete = t.data.find(
+                      (x) => x.taskID == lstTaskDelete[i].taskID
+                    );
                     t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if (res[1] != null) {
-                    var parent = t.data.find(x => x.taskID == res[1].taskID);
+                    var parent = t.data.find((x) => x.taskID == res[1].taskID);
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
                     t.listview.addHandler(parent, false, 'recID');
@@ -354,7 +360,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
                   t.notiService.notify('Xóa task thành công !');
                   t.data = t.listview.data;
                   t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID)
+                  t.getOneItem(t.itemSelected.taskID);
                   return;
                 }
                 t.notiService.notify(
@@ -448,7 +454,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
   openShowNode() {
     this.openNode = !this.openNode;
   }
-
 
   // getValueCMParameter() {
   //   const perdicate =

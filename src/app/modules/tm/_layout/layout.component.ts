@@ -124,8 +124,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       separator: false,
       childs: []
     }, {
-      functionID: 'TM004',
-      customName: 'View board',
+      functionID: 'TMT04',
+      customName: 'Bảng công việc',
       smallIcon: 'icon-style icon-18',
       comingSoon: false,
       separator: false,

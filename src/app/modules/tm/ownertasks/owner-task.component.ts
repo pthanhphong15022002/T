@@ -13,6 +13,7 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.component';
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'onwer-task',
@@ -53,10 +54,12 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
+  funcID: any;
 
-  constructor(private cf: ChangeDetectorRef, private cache: CacheService) { }
+  constructor(private cf: ChangeDetectorRef, private cache: CacheService, private activedRouter: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params["funcID"];
     this.buttons = [
       {
         id: '1',
@@ -88,7 +91,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '2',
       type: 'kanban',
-      active: true,
+      active: false,
 
       model: {
         panelLeftRef: this.kanban,
@@ -102,7 +105,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: false,
+      active: true,
       //   viewInput: null,
       model: {
         panelLeftRef: this.listDetails,
@@ -144,7 +147,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   click(evt: any) {
-    console.log(evt.id);
     switch (evt.id) {
       case 'add':
         this.taskInfo.openTask();
@@ -154,6 +156,10 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       case 'add1':
         this.TaskGroup.openTask();
         this.TaskGroup.title = 'Tạo mới nhóm làm việc';
+        this.viewBase.currentView.openSidebarRight();
+        break;
+      case 'edit':
+        this.taskInfo.openInfo(evt.data.taskID, 'edit');
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':

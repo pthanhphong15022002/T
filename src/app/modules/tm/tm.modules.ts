@@ -34,6 +34,7 @@ import { SettingPanelComponent } from './controls/setting-panel/setting-panel.co
 import { ViewBoardsComponent } from './view-boards/view-boards.component';
 import { ViewBoardInfoComponent } from './view-boards/view-board-info/view-board-info.component';
 import { ListViewBoardsComponent } from './view-boards/list-view-boards/list-view-boards.component';
+import { ProjectComponent } from './settings/project/project.component';
 
 
 const routes: Routes = [
@@ -42,7 +43,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home',
+        path: 'home/:funcID',
         component: DashboardComponent,
       },
       {
@@ -50,11 +51,11 @@ const routes: Routes = [
         component: OwnerTaskComponent,
       },
       {
-        path: 'assigntasks',
+        path: 'assigntasks/:funcID',
         component: AssignTaskComponent,
       },
       {
-        path: 'viewdboards',
+        path: 'viewboards/:funcID',
         component: ViewBoardsComponent,
       },
       {
@@ -66,12 +67,20 @@ const routes: Routes = [
             component: HomeSettingComponent
           },
           {
-            path: 'task-group',
+            path: 'settingcalendar/:funcID',
+            component: SettingCalendarComponent
+          },
+          {
+            path: 'taskgroups/:funcID',
             component: TaskGroupComponent
           },
           {
-            path: 'ranges-kanban',
+            path: 'rangeskanban/:funcID',
             component: RangesKanbanComponent
+          },
+          {
+            path: 'project',
+            component: ProjectComponent
           }
         ]
       },
@@ -112,7 +121,9 @@ const routes: Routes = [
     SettingPanelComponent,
     ViewBoardsComponent,
     ViewBoardInfoComponent,
-    ListViewBoardsComponent
+    ListViewBoardsComponent,
+    ProjectComponent,
+    TaskGroupComponent
   ],
   imports: [
     RouterModule.forChild(routes),

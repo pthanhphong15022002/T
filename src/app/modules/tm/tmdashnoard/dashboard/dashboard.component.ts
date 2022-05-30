@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
@@ -31,7 +32,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   taskRemind: TaskRemind = new TaskRemind();
   model: DataRequest;
   user: any;
-  constructor(private api: ApiHttpService, private changeDetectorRef: ChangeDetectorRef, private authStore: AuthStore) { }
+  constructor(private api: ApiHttpService, private changeDetectorRef: ChangeDetectorRef, private authStore: AuthStore, private route: ActivatedRoute) { }
   public ngUnsubscribe = new Subject<void>();
   ngAfterViewInit(): void {
     this.views = [{
@@ -50,10 +51,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
     this.daySelectedTo = this.selectweekComponent.daySelectedTo;
     this.getGenaralData();
-
   }
 
   ngOnInit(): void {
+    console.log(this.route.snapshot.params["funcID"]);
     this.user = this.authStore.get();
     this.model = new DataRequest();
     this.model.formName = "Tasks";
