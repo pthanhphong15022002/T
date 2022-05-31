@@ -43,12 +43,12 @@
 
 
 <ng-template let-item #itemViewBoard>
-    <div class="task-card card-with-dropdown-item">
-        <div class="d-flex align-items-center justify-content-between">
+    <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;">
+        <div class="align-items-center justify-content-between">
             <!-- <span class="card-more">
                 <base-item-menu [data]="item" ></base-item-menu> 
             </span> -->
-            <span style="float: right;" *ngIf="item.resources" class="icon-share text-primary icon-20 "></span>
+            <span  *ngIf="item.isShared" class="icon-share text-primary icon-20 " style="float: right;"></span>
         </div>
         <div class="d-flex justify-content-center mt-3">
             <codx-img class="symbol symbol-50 symbol-circle" [objectId]="item.iterationID" objectType="TM_Sprints"
