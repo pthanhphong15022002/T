@@ -8,7 +8,7 @@
                     <ng-container *ngTemplateOutlet="itemViewBoard ;context: {item:item}">
                     </ng-container>
                 </div> -->
-                <codx-listcard #lstViewBoard [pageSize]="6" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
+                <codx-listcard #lstViewBoard [pageSize]="5" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
                     className="SprintsBusiness" method="GetListSprintAsync" autoLoad="true" entityName="TM_Sprints"
                     [predicate]="predicateViewBoards" [dataValue]="" [gridViewName]="'grvSprints'" class="h-100"
                     [cartTemp]="itemViewBoard">
@@ -24,7 +24,7 @@
             <div class="font-size-h2 font-weight-bold text-dark mt-6">Project board</div>
             <div class="text-muted mb-6">Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ</div>
             <div class="view-listbox pl-6">
-                <codx-listcard #lstProjectBoard  [pageSize]="7" funcId="TMT04" service="TM"
+                <codx-listcard #lstProjectBoard  [pageSize]="5" funcId="TMT04" service="TM"
                     assemblyName="ERM.Business.TM" className="SprintsBusiness" method="GetListSprintAsync"
                     autoLoad="true" entityName="TM_Sprints" [predicate]="predicateProjectBoards"
                     [gridViewName]="'grvSprints'" class="h-100" [cartTemp]="itemViewBoard">

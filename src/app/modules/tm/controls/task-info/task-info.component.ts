@@ -259,13 +259,13 @@ export class TaskInfoComponent implements OnInit {
       return;
     }
     if (
-      this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-        this.task.dueDate.getDate() < this.task.endDate.getDate()
+      this.task.dueDate < this.task.startDate ||
+        this.task.dueDate < this.task.endDate
     ) {
-      if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
+      if (this.task.dueDate < this.task.startDate) {
         this.message =
           'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
+      } else if (this.task.dueDate < this.task.endDate)
         this.message =
           'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
       this.notiService
@@ -416,7 +416,7 @@ export class TaskInfoComponent implements OnInit {
       this.isCheckTime = false;
       return;
     }
-    if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
+    if (this.task.startDate > this.task.endDate) {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
       this.notiService.notify(message);
@@ -427,14 +427,14 @@ export class TaskInfoComponent implements OnInit {
   confirmDueTime() {
     if (this.task.startDate && this.task.endDate) {
       if (
-        this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-        (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
+        this.task.dueDate < this.task.startDate ||
+        (this.task.dueDate < this.task.endDate &&
           !this.isConfirm)
       ) {
-        if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
+        if (this.task.dueDate < this.task.startDate) {
           this.message =
             'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-        } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
+        } else if (this.task.dueDate< this.task.endDate)
           this.message =
             'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
 
@@ -442,7 +442,7 @@ export class TaskInfoComponent implements OnInit {
           this.isConfirm = true;
         } else {
           this.isConfirm = false;
-          if (this.task.dueDate.getDate() < this.task.startDate.getDate())
+          if (this.task.dueDate < this.task.startDate)
             $('#startDate').focus();
           else $('#endDate').focus();
         }
@@ -509,13 +509,15 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          var toDo = res.checkList.split(';');
-          toDo.forEach((tx) => {
-            var taskG = new TaskGoal();
-            taskG.status = this.STATUS_TASK_GOAL.NotChecked;
-            taskG.text = tx;
-            this.listTodo.push(taskG);
-          });
+          if(res.checkList !=null){
+            var toDo = res.checkList.split(';');
+            toDo.forEach((tx) => {
+              var taskG = new TaskGoal();
+              taskG.status = this.STATUS_TASK_GOAL.NotChecked;
+              taskG.text = tx;
+              this.listTodo.push(taskG);
+            });
+          }   
         }
       });
   }
@@ -608,6 +610,7 @@ export class TaskInfoComponent implements OnInit {
     t.task = new TM_Tasks();
     t.task = data;
     t.task.dueDate = moment(new Date(data.dataValue)).toDate() ;
+    if(data.startDate !=null)
     t.task.startDate = moment(new Date(data.startDate)).toDate() ;
     t.task.endDate = moment(new Date(data.endDate)).toDate() ;
     t.task.taskID = null;

@@ -248,9 +248,11 @@ export class AssignTaskDetailsComponent implements OnInit {
                   }
                   if (res[1] != null) {
                     var parent = t.data.find(x => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    t.listview.addHandler(parent, false, 'recID');
+                    if(parent){
+                      parent.assignTo = res[1].assignTo;
+                      parent.category = res[1].category;
+                      t.listview.addHandler(parent, false, 'recID');
+                    }
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');

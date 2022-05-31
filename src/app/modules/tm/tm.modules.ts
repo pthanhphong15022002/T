@@ -55,7 +55,7 @@ const routes: Routes = [
         component: AssignTaskComponent,
       },
       {
-        path: 'sprints/:funcID',
+        path: 'viewboards/:funcID',
         component: SprintsComponent,
       },
       {

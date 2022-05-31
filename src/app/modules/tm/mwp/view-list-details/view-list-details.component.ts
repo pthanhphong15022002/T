@@ -278,9 +278,11 @@ export class ViewListDetailsComponent implements OnInit {
                   if (res[1] != null) {
                     var dt = t.dataOfStatus(res[i].status);
                     var parent = dt.find((x) => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    t.updateListView(parent);
+                    if(parent){
+                      parent.assignTo = res[1].assignTo;
+                      parent.category = res[1].category;
+                      t.updateListView(parent);
+                    }
                   }
                   // t.notiService.notifyCode("TM004")
                   var lv = t.lvOfStatus(this.dataValue);

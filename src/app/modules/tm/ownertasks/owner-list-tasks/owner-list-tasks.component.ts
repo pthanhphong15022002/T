@@ -128,7 +128,7 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
     model.entityName = 'TM_Tasks';
     model.predicate = '';
     this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('5/25/2022').toDate();
+    this.toDate = moment('6/30/2022').toDate();
     model.page = 1;
     model.pageSize = 100;
     model.filter = {
@@ -139,13 +139,12 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
       ],
     };
     const t = this;
-    t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
-      if (res && res.length) {
-        this.data = res[0];
-        this.itemSelected = res[0][0];
-
-      }
-    })
+    // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
+    //   if (res && res.length) {
+    //     this.data = res[0];
+    //     this.itemSelected = res[0][0];
+    //   }
+    // })
   }
   PopoverDetail(p: any, emp) {
     if (emp != null) {
@@ -163,7 +162,6 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
     if (emp != null) {
       this.api.callSv("TM", "ERM.Business.TM", "TaskBusiness", "GetTaskByParentIDAsync", this.itemSelected?.id
       ).subscribe(res => {
-
         if (res && res.msgBodyData[0].length > 0) {
           this.lstTaskbyParent = res.msgBodyData[0];
           console.log("data123", this.lstTaskbyParent)
@@ -180,39 +178,7 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
     return (el.offsetWidth < el.scrollWidth);
   }
 
-  // clickItem(item) {
-  //   this.getOneItem(item.id);
-  // }
-  // getOneItem(id) {
-  //   var itemDefault = this.data.find((item) => item.id == id);
-  //   if (itemDefault != null) {
-  //     this.data = itemDefault;
-  //   } else {
-  //     this.data = this.data[0];
-  //   }
-
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetTaskByParentIDAsync',
-  //       [this.data.id]
-  //     )
-  //     .subscribe((res) => {
-  //       if (res && res.length > 0) {
-  //         let objectId = res[0].owner;
-  //         let objectState = res[0].status;
-  //         for (let i = 1; i < res?.length; i++) {
-  //           objectId += ';' + res[i].owner;
-  //           objectState += ';' + res[i].status;
-  //         }
-  //         this.objectAssign = objectId;
-  //         this.objectState = objectState;
-  //       }
-  //     });
-  //   console.log(this.data);
-  // }
+  
 
   setupStatus(p, item) {
     p.open();
@@ -246,7 +212,11 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
   }
 
   copyDetailTask(taskAction) {
-    alert('copy data');
+    if (!taskAction.share) {
+      this.notiService.notify('Bạn chưa được cấp quyền này !');
+      return;
+    }
+    this.taskInfo.getTaskCoppied(taskAction.taskID);
   }
 
   clickDelete(taskAction) {
@@ -307,9 +277,11 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
                   }
                   if (res[1] != null) {
                     var parent = t.data.find(x => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    t.listview.addHandler(parent, false, 'recID');
+                     if(parent){
+                      parent.assignTo = res[1].assignTo;
+                      parent.category = res[1].category;
+                      t.listview.addHandler(parent, false, 'recID');
+                    }
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');
@@ -400,5 +372,9 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
       var task = e.event;
       this.listview.addHandler(task, false, 'recID');
     }
+  }
+  changeRowSelected(event) {
+    this.itemSelected = event;
+    this.data = this.listview?.data; 
   }
 }
