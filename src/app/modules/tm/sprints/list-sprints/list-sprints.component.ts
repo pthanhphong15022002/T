@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ApiHttpService, CodxListviewComponent, DataRequest, ListCardComponent } from 'codx-core';
 import * as moment from 'moment';
-import { ViewBoardInfoComponent } from '../view-board-info/view-board-info.component';
+import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
 
 @Component({
-  selector: 'app-list-view-boards',
-  templateUrl: './list-view-boards.component.html',
-  styleUrls: ['./list-view-boards.component.scss']
+  selector: 'app-list-sprints',
+  templateUrl: './list-sprints.component.html',
+  styleUrls: ['./list-sprints.component.scss']
 })
-export class ListViewBoardsComponent implements OnInit{
-  @Input('viewBoardInfo') viewBoardInfo: ViewBoardInfoComponent;
+export class ListSprintsComponent implements OnInit{
+  @Input('sprintsInfo') sprintsInfo: SprintsInfoComponent;
   fromDate: Date 
   toDate: Date 
   view: string; 
@@ -28,8 +28,8 @@ export class ListViewBoardsComponent implements OnInit{
 
   }
   ngAfterViewInit(){
-  this.viewBoardInfo.isAddNew.subscribe(res=>{
-    if(res.projectID){
+  this.sprintsInfo.isAddNew.subscribe(res=>{
+    if(res?.projectID!=null){
       this.lstProjectBoard.addHandler(res,true,'iterationID') ;
     }else{
       this.lstViewBoard.addHandler(res,true,'iterationID') ;

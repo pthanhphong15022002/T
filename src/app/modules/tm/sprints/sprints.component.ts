@@ -2,18 +2,18 @@ import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@a
 import { ViewsComponent } from 'codx-core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { ViewBoardInfoComponent } from './view-board-info/view-board-info.component';
+import { SprintsInfoComponent } from './sprints-info/sprints-info.component';
 
 @Component({
-  selector: 'app-view-boards',
-  templateUrl: './view-boards.component.html',
-  styleUrls: ['./view-boards.component.scss']
+  selector: 'app-sprints',
+  templateUrl: './sprints.component.html',
+  styleUrls: ['./sprints.component.scss']
 })
-export class ViewBoardsComponent implements OnInit {
+export class SprintsComponent implements OnInit {
 
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('listViewBoards') listViewBoards : TemplateRef<any>|null
-  @ViewChild('viewBoardInfo') viewBoardInfo: ViewBoardInfoComponent;
+  @ViewChild('listSprints') listSprints : TemplateRef<any>|null
+  @ViewChild('sprintsInfo') sprintsInfo: SprintsInfoComponent;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
   constructor(private cf: ChangeDetectorRef) { }
@@ -36,7 +36,7 @@ export class ViewBoardsComponent implements OnInit {
       type: 'content',
       active: true,
       model: {
-        panelLeftRef: this.listViewBoards,
+        panelLeftRef: this.listSprints,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '600px'
       }
@@ -48,7 +48,7 @@ export class ViewBoardsComponent implements OnInit {
     console.log(evt.id);
     switch (evt.id) {
       case 'add':
-        this.viewBoardInfo.title = 'Task Board';
+        this.sprintsInfo.title = 'Task Board';
         this.viewBase.currentView.openSidebarRight();
         break;
       case '1':

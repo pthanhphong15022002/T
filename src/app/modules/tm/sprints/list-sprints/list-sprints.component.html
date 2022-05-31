@@ -24,7 +24,7 @@
             <div class="font-size-h2 font-weight-bold text-dark mt-6">Project board</div>
             <div class="text-muted mb-6">Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ</div>
             <div class="view-listbox pl-6">
-                <codx-listcard #lstProjectBoard  [pageSize]="6" funcId="TMT04" service="TM"
+                <codx-listcard #lstProjectBoard  [pageSize]="7" funcId="TMT04" service="TM"
                     assemblyName="ERM.Business.TM" className="SprintsBusiness" method="GetListSprintAsync"
                     autoLoad="true" entityName="TM_Sprints" [predicate]="predicateProjectBoards"
                     [gridViewName]="'grvSprints'" class="h-100" [cartTemp]="itemViewBoard">
@@ -56,7 +56,8 @@
             </codx-img>
         </div>
         <div class="mt-3 text-center">
-            <div class="font-weight-bold font-size-h5 text-dard card-name"><codx-label  name="lblIterationName" formName="Tasks" default="{{item.iterationName}}" ></codx-label  ></div>
+            <div class="font-weight-bold font-size-h5 text-dard card-name"><codx-label  name="lblIterationName" formName="Tasks" default="{{item.iterationName}}" ></codx-label></div>
+            <div class="text-muted font-size-sm card-des" *ngIf="item.projectName" ><codx-label  name="lblProjectName" formName="Tasks" default= "{{item.projectName}}" ></codx-label  ></div>
             <div class="text-muted font-size-sm card-des"><codx-label  name="lblMemo" formName="Tasks" default= "{{item.memo}}" ></codx-label  ></div>
             
         </div>
