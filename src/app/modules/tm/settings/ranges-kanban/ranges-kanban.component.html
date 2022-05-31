@@ -82,19 +82,26 @@
               <tbody>
                 <tr *ngFor="let item of lstRangeLine; let index = index">
                   <td class="text-left">
-                    <label>{{item.BreakName}}</label>
+                    <label>{{item.breakName}}</label>
                   </td>
                   <td class="text-left">
-                    <label>{{item.BreakValue}}</label>
+                    <label>{{item.breakValue}}</label>
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <div class="dropdown ml-2">
+                      <div class="Box-tools pull-right" style="vertical-align: middle;">
+                        <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="openPopup2(item, false, index)">
+                          <i class="fa fa-edit text-primary"></i>
+                        </a>
+                        <a class="btn btn-xs btn-flat btn-danger" (click)="deletePopup(index)">
+                          <i class="fa fa-remove "></i>
+                        </a>
+                      </div>
+                      <!-- <div class="dropdown ml-2">
                         <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">
                           <span class="icon-more_vert icon-18"></span>
                         </button>
-
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <a class="dropdown-item" (click)="openPopup(item, false, index)">
                             <div class="d-flex align-items-center">
@@ -109,7 +116,7 @@
                             </div>
                           </a>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </td>
                 </tr>
@@ -141,7 +148,7 @@
       </div>
       <div class="col-8">
         <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control"
-          placeholder="Diễn giải" [crrValue]="rangeLines.BreakName"></codx-input>
+          placeholder="Diễn giải" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)"></codx-input>
         <!-- <codx-input name="BreakName" type="combobox" [refValue]="gridViewSetup.BreakName.refValue" field="BreakName"
           placeholder="" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)">
         </codx-input> -->
@@ -154,7 +161,7 @@
       </div>
       <div class="col-8 ">
         <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control"
-          placeholder="Số ngày" [crrValue]="rangeLines.BreakValue"></codx-input>
+          placeholder="Số ngày" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)"></codx-input>
         <!-- <codx-input name="BreakValue" type="combobox" [refValue]="gridViewSetup.BreakValue.refValue" field="breakValue"
           placeholder="" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)">
         </codx-input> -->
@@ -164,8 +171,8 @@
       nhập số dương (+) khi thiết lập khoảng thời gian tương lai
     </div>
   </div>
-  <div class="modal-footer" (click)="modal.close()">
-    <button type="button" class="btn btn-primary">Lưu</button>
+  <div class="modal-footer" (click)="modal.close(lstRangeLine)">
+    <button type="button" class="btn btn-primary" >Lưu</button>
   </div>
 </ng-template>
 

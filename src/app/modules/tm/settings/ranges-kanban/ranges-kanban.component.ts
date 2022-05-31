@@ -32,7 +32,7 @@ export class RangesKanbanComponent implements OnInit {
 
   itemRangeLine: FormGroup;
   addEditForm: FormGroup;
-  lstRangeLine: any;
+  lstRangeLine: RangeLine[];
   lstSaveRangeLine: any;
 
   @Input() ranges = new BS_Ranges();
@@ -135,21 +135,25 @@ export class RangesKanbanComponent implements OnInit {
   }
 
 
-
-  openPopup(itemdata, isAdd, index) {
-    this.isAdd = isAdd;
-    if (isAdd) {
-      this.initPopup();
+  openPopup2(itemdata, isAddLine, index){
+    this.isAddLine = isAddLine;
+    if(isAddLine==false){
+      this.api.execSv<any>("BS", "BS", "RangesKanbanBusiness", "GetLinesByIdAsync", itemdata.recID).subscribe((res) => {
+        if (res) {
+          itemdata = res;
+          this.rangeLines = itemdata;
+          this.dt.detectChanges();
+          this.showPanel();
+        }
+      })
     }
     this.modalService
       .open(this.add, { centered: true })
       .result.then(
         (result) => {
-          if (isAdd) {
-            this.lstRangeLine.push(result.value);
-          } else {
-            this.lstRangeLine[index].BreakName = result.value.BreakName;
-            this.lstRangeLine[index].BreakValue = result.value.BreakValue;
+          if (isAddLine==false) {
+            this.lstRangeLine[index].BreakName = this.rangeLines.BreakName;
+            this.lstRangeLine[index].BreakValue = this.rangeLines.BreakValue;
             this.dt.detectChanges();
           }
         },
@@ -157,18 +161,27 @@ export class RangesKanbanComponent implements OnInit {
           console.log("reason", this.getDismissReason(reason));
         }
       );
-    // if(isAdd==true){
-    //   this.callfc
-    //   .openForm(
-    //     RangeLinesComponent,
-    //     'Khoảng thời gian',
-    //     500,
-    //     350,
-    //   )
-    //   .subscribe((dt: any) => {
-    //   });
-    // }
+  }
 
+
+  openPopup(itemdata, isAddLine, index) {
+    this.isAddLine = isAddLine;
+    if (isAddLine) {
+      this.initPopup();
+    }
+    this.modalService
+      .open(this.add, { centered: true })
+      .result.then(
+        (result) => {
+          if (isAddLine) {
+            this.lstRangeLine.push(this.rangeLines);
+            this.rangeLines = new RangeLine();
+          }
+        },
+        (reason) => {
+          console.log("reason", this.getDismissReason(reason));
+        }
+      );
   }
 
   private getDismissReason(reason: any): string {
@@ -216,16 +229,6 @@ export class RangesKanbanComponent implements OnInit {
               } else {
                 model[element.fieldName].push(null);
               }
-
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(Validators.compose([
-              //     Validators.required,
-              //   ]));
-              // }
-              // else {
-              //   model[element.fieldName].push(Validators.compose([
-              //   ]));
-              // }
             }
           }
         }
@@ -248,10 +251,9 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   clickButton(evt: any, isAddMode) {
-
-    //  this.openTask()
     if (isAddMode == true) {
       this.isAddMode = true;
+      this.lstRangeLine = [];
       this.title = 'Thêm khoảng thời gian';
       this.initForm();
     }
@@ -274,7 +276,6 @@ export class RangesKanbanComponent implements OnInit {
           if (this.lstRangeLine == null) {
             this.lstRangeLine = [];
           }
-         
           this.dt.detectChanges();
           this.showPanel();
         }
@@ -290,6 +291,8 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   Close() {
+    this.lstRangeLine = [];
+
     // this.renderer.removeClass(popup, 'drawer-on');
     this.viewBase.currentView.closeSidebarRight();
   }
@@ -353,9 +356,6 @@ export class RangesKanbanComponent implements OnInit {
       });
   }
 
-  OnSaveLines() {
-    
-  }
 
   deletePopup(index) {
     this.lstRangeLine.splice(index, 1);
