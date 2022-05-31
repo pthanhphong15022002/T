@@ -1,8 +1,11 @@
-import { Subject } from 'rxjs';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { AuthStore, CacheService, ViewsComponent } from 'codx-core';
+import { AuthStore, CacheService, CallFuncService, CodxFormDynamicComponent, ViewsComponent, ApiHttpService, CodxGridviewComponent, UserModel } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
+import { TM_Projects } from '@modules/tm/models/TM_Projects.model';
+
 
 @Component({
   selector: 'app-project',
@@ -23,16 +26,33 @@ export class ProjectComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('gridView') gridView: CodxGridviewComponent;
+
+  user: UserModel;
 
   views: Array<ViewModel> = [];
+  buttons: Array<ButtonModel> = [{
+    id: '1',
+    text: 'Thêm'
+  }];
+
+  addEditForm: FormGroup;
 
   columnsGrid = [];
   formName = "";
   gridViewName = "";
   isAfterRender = false;
   gridViewSetup: any;
+  isAddMode : boolean = true;
+  title= "";
+  dataItem: any = {};
+  isOpen = false;
+  startDate: any;
 
-  constructor( private cache: CacheService, private auth: AuthStore, private fb: FormBuilder,) { }
+  @Input() projects = new TM_Projects();
+
+  constructor( private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private callfc: CallFuncService, private api: ApiHttpService
+    , private dt: ChangeDetectorRef) { }
 
   headerStyle = {
     textAlign: 'center',
@@ -88,7 +108,15 @@ export class ProjectComponent implements OnInit {
 
   initFrom(){
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
+      this.addEditForm = item;
       this.isAfterRender = true;
+      this.getAutonumber("TM00631", "TM_Projects", "ProjectID").subscribe(key => {
+        //  this.addEditForm.patchValue({
+        //    projectID : key
+        //  });
+        
+       this.projects.projectID = key;
+      })
     })
   }
 
@@ -130,11 +158,132 @@ export class ProjectComponent implements OnInit {
             }
           }
         }
-
         resolve(this.fb.group(model, { updateOn: 'blur' }));
       });
     });
-
   }
   
+  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+    var subject = new Subject<any>();
+    this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
+      "GenAutoNumberAsync", [functionID, entityName, fieldName, null])
+      .subscribe(item => {
+        if (item)
+          subject.next(item);
+        else
+          subject.next(null);
+      });
+    return subject.asObservable();
+  }
+
+  openForm(dataItem, isAddMode) {
+    this.isOpen = true;
+    if (isAddMode == true) {
+      this.isAddMode = true;
+      this.dataItem = {};
+      this.dt.detectChanges();
+      this.openTask();
+    }
+    else {
+      this.isAddMode = false;
+      this.api
+        .callSv(
+          "TM",
+          "ERM.Business.TM",
+          "ProjectsBusiness",
+          "GetAsync",
+          [dataItem.projectID]
+        )
+        .subscribe((res) => {
+          if (res && res.msgBodyData.length > 0) {
+            this.dataItem = res.msgBodyData[0];
+            this.dt.detectChanges();
+            this.openTask();
+          }
+        });
+      // this.startDate = this.addEditForm.value.startDate;
+    }
+  }
+
+  setDefaultValue(e) {
+    this.getAutonumber("TM00631", "TM_Projects", "ProjectID").subscribe(key => {
+      e.projectID = key;
+      e.isGroup = true;
+      e.autoCode = false;
+      e.projectDate = new Date();
+      this.dataItem = e;
+      this.dt.detectChanges();
+    })
+  }
+
+  saveAfter(e) {
+    this.Close();
+    var t = this;
+    t.gridView.loadData();
+  }
+
+  OnSaveForm() {
+    this.addEditForm.value.isGroup = true;
+    this.addEditForm.value.autoCode = true;
+    this.addEditForm.value.projectDate = "05/31/2022"
+    this.addEditForm.value.startDate = this.startDate;
+    return this.api
+      .execSv("TM", "TM", "ProjectsBusiness", "AddEditProjectsAsync", [
+        this.addEditForm.value, this.isAddMode
+      ])
+      .subscribe((res) => {
+        if (res) {
+
+          let item = this.addEditForm.value;
+          item.createName = this.user.userName;
+          item.createdBy = this.user.userID;
+          this.gridView.addHandler(item, this.isAddMode, "projectID");
+          this.Close();
+        }
+      });
+  }
+
+  clickButton(evt: any, isAddMode) {
+
+  //    this.openTask()
+    if (isAddMode == true) {
+      this.isAddMode = true;
+      this.title = 'Thêm dự án';
+      this.initFrom();
+      this.showPanel();
+    }
+    
+    //  this.renderer.addClass(popup, 'drawer-on');
+  }
+
+  showPanel() {
+    this.viewBase.currentView.openSidebarRight();
+  }
+
+  openTask(): void {
+    const t = this;
+    var obj = {
+      gridViewName: 'grvProjects',
+      formName: 'Projects',
+      functionID: 'TM00631',
+      entityName: 'TM_Projects',
+      // model: this.model,
+      // text: this.text,
+      // oldTitle: this.oldTitle,
+      // id: this.id,
+      // isEdit: this.isEdit,
+      // name: this.name,
+      // fiedName: this.fiedName,
+      // formName: this.formName,
+      // gridViewName: this.gridViewName,
+    };
+
+    this.callfc.openForm(CodxFormDynamicComponent, 'Thêm nhóm công việc', 900, 900, '', obj);
+  }
+
+  Close() {
+    this.dataItem = null;
+    // this.renderer.removeClass(popup, 'drawer-on');
+    this.viewBase.currentView.closeSidebarRight();
+  }
 }
