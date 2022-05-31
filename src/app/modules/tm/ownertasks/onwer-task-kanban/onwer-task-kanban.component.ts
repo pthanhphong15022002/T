@@ -52,7 +52,7 @@ export class KanbanComponent implements OnInit {
   isAdd = false;
   today: Date = new Date();
   fromDate: Date = new Date(2022, 3, 1);
-  toDate: Date = new Date(2022, 5, 31);
+  toDate: Date = new Date(2022, 12, 30);
   configParam = null;
   gridView: any;
   grvSetup: any;

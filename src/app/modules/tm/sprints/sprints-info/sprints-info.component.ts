@@ -7,11 +7,11 @@ import { ApiHttpService, CallFuncService, NotificationsService, ViewsComponent }
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-view-board-info',
-  templateUrl: './view-board-info.component.html',
-  styleUrls: ['./view-board-info.component.scss']
+  selector: 'app-sprints-info',
+  templateUrl: './sprints-info.component.html',
+  styleUrls: ['./sprints-info.component.scss']
 })
-export class ViewBoardInfoComponent implements OnInit {
+export class SprintsInfoComponent implements OnInit {
   @Input() taskBoard = new TM_Sprints ;
   title = "Task Board" ;
   readOnly = false ;
@@ -111,7 +111,6 @@ export class ViewBoardInfoComponent implements OnInit {
       });
   }
   onDeleteUser(userID) {
-    var listUser = [];
     var listUserDetail = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
       if (this.listUserDetail[i].userID != userID) {
@@ -120,9 +119,9 @@ export class ViewBoardInfoComponent implements OnInit {
     }
     this.listUserDetail = listUserDetail;
     var resources = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
-        resources += idUser + ';';
+    if (listUserDetail.length > 0) {
+      listUserDetail.forEach((user) => {
+        resources += user.userID + ';';
       });
       resources = resources.slice(0, -1);
       this.taskBoard.resources = resources;
