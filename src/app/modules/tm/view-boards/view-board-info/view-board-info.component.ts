@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CbxpopupComponent } from '@modules/tm/controls/cbxpopup/cbxpopup.component';
 import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
 import { TmService } from '@modules/tm/tm.service';
-import { CallFuncService, NotificationsService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, CallFuncService, NotificationsService, ViewsComponent } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ export class ViewBoardInfoComponent implements OnInit {
   @Input() taskBoard = new TM_Sprints ;
   title = "Task Board" ;
   readOnly = false ;
-  listUser = [];
+  listUserDetail= [];
   dataAddNew = new BehaviorSubject<any>(null);
   isAddNew = this.dataAddNew.asObservable();
   updateData = new BehaviorSubject<any>(null);
@@ -23,17 +23,20 @@ export class ViewBoardInfoComponent implements OnInit {
 
 
 
+
   @Input('viewBase') viewBase: ViewsComponent;
-  constructor(private tmSv: TmService , private notiService : NotificationsService, private callfc: CallFuncService) { }
+  constructor(private tmSv: TmService , private notiService : NotificationsService, private callfc: CallFuncService,private api :ApiHttpService) { }
 
   ngOnInit(): void {
+    //data user để test
+    this.taskBoard.resources = "PMNHI;NVHAO;NTLOI" //test
+    this.getListUser(this.taskBoard.resources);
   }
   
 
   saveData(id){
     if(this.taskBoard.iterationName == null || this.taskBoard.iterationName.trim()=="") return this.notiService.notify("Tên Task Board không được để trống !")
     if(this.taskBoard.projectID == "" )  this.taskBoard.projectID = null ;
-   this.taskBoard.resources = "PMNHI" //test
    if(id){
     this.addTaskBoard(this.taskBoard,false)
    }else  this.addTaskBoard(this.taskBoard,true);
@@ -51,16 +54,19 @@ export class ViewBoardInfoComponent implements OnInit {
   }
 
   closeTaskBoard(){
-    //lam gif ddos
+    this.listUserDetail= [];
+    this.taskBoard = new TM_Sprints ;
+       //data user để test
+    this.taskBoard.resources = "PMNHI;NVHAO;NTLOI" //test
+    this.getListUser(this.taskBoard.resources);
     this.viewBase.currentView.closeSidebarRight();
   }
 
   showPanel() {
     this.viewBase.currentView.openSidebarRight();
   }
-  closePanel() {
-    this.viewBase.currentView.closeSidebarRight();
-  }
+  
+ 
   openDialog() {
     // let obj = {
     //   formName: 'demo',
@@ -81,5 +87,45 @@ export class ViewBoardInfoComponent implements OnInit {
   }
   changText(e:any){
       this.taskBoard.iterationName = e.data ;
+  }
+  changeShare(e:any){
+   if(!this.taskBoard.isShared)  {
+     this.taskBoard.resources = null ;
+     this.listUserDetail =[] ;
+  }}
+
+  getListUser(listUser) {
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        listUser
+      )
+      .subscribe((res) => {
+        this.listUserDetail = res;
+      });
+  }
+  onDeleteUser(userID) {
+    var listUser = [];
+    var listUserDetail = [];
+    for (var i = 0; i < this.listUserDetail.length; i++) {
+      if (this.listUserDetail[i].userID != userID) {
+        listUserDetail.push(this.listUserDetail[i]);
+      }
+    }
+    this.listUserDetail = listUserDetail;
+    var resources = '';
+    if (listUser.length > 0) {
+      listUser.forEach((idUser) => {
+        resources += idUser + ';';
+      });
+      resources = resources.slice(0, -1);
+      this.taskBoard.resources = resources;
+    } else this.taskBoard.resources = '';
   }
 }

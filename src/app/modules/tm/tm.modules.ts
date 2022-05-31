@@ -22,7 +22,7 @@ import { OwnerTaskCalendarComponent } from './ownertasks/onwer-task-calendar/onw
 import { KanbanComponent } from './ownertasks/onwer-task-kanban/onwer-task-kanban.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { RangesKanbanComponent } from './settings/ranges-kanban/ranges-kanban.component';
-import { DashboardComponent } from './tmdashnoard/dashboard/dashboard.component';
+import { DashboardComponent } from './tmdashboard/dashboard/dashboard.component';
 import { ControlsModule } from './controls/controls.module';
 import { SettingCalendarComponent } from './settings/setting-calendar/setting-calendar.component';
 import { AssignTaskComponent } from './assign-tasks/assign-tasks.component';

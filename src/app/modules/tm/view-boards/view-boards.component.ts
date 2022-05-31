@@ -48,7 +48,6 @@ export class ViewBoardsComponent implements OnInit {
     console.log(evt.id);
     switch (evt.id) {
       case 'add':
-        // this.viewBoardInfo.();
         this.viewBoardInfo.title = 'Task Board';
         this.viewBase.currentView.openSidebarRight();
         break;
