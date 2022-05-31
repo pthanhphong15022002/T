@@ -128,7 +128,7 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
     model.entityName = 'TM_Tasks';
     model.predicate = '';
     this.fromDate = moment('4/15/2022').toDate();
-    this.toDate = moment('6/30/2022').toDate();
+    this.toDate = moment('12/30/2022').toDate();
     model.page = 1;
     model.pageSize = 100;
     model.filter = {
