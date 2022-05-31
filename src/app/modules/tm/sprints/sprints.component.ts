@@ -48,6 +48,7 @@ export class SprintsComponent implements OnInit {
     console.log(evt.id);
     switch (evt.id) {
       case 'add':
+        this.sprintsInfo.openSprints() ;
         this.sprintsInfo.title = 'Task Board';
         this.viewBase.currentView.openSidebarRight();
         break;

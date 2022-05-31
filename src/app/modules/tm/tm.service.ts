@@ -142,6 +142,12 @@ export class TmService {
   deleteTask(taskID) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, "DeleteTaskAsync", taskID);
   }
+  getSprints(id) {
+    return this.api.execSv<any>("TM", "TM", "SprintsBusiness", "GetSprintByIDAsync", id);
+  }
+  deleteSprints(id) {
+    return this.api.execSv<any>("TM", "TM", "SprintsBusiness", "DeleteSprintsByIDAsync", id)
+  }
 
   convertListToObject(list: Array<object>, fieldName: string, fieldValue: string) {
     if (!Array.isArray(list) || list.length == 0) return {};
