@@ -79,7 +79,7 @@ const routes: Routes = [
             component: RangesKanbanComponent
           },
           {
-            path: 'project',
+            path: 'project/:funcID',
             component: ProjectComponent
           }
         ]

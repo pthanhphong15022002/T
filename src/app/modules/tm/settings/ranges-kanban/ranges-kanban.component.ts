@@ -274,14 +274,7 @@ export class RangesKanbanComponent implements OnInit {
           if (this.lstRangeLine == null) {
             this.lstRangeLine = [];
           }
-          // for (let item of data.rangeLines) {
-          //   var rangeline = new RangeLine();
-          //   rangeline.RecID = item.recID;
-          //   rangeline.RangeID = item.rangeID;
-          //   rangeline.BreakValue = item.breakValue;
-          //   rangeline.BreakName = item.breakName;
-          //   this.lstRangeLine.push(Object.assign({}, rangeline));
-          // }
+         
           this.dt.detectChanges();
           this.showPanel();
         }
@@ -305,37 +298,6 @@ export class RangesKanbanComponent implements OnInit {
     dataItem.disableReadmore = !dataItem.disableReadmore;
     this.dt.detectChanges();
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
-  }
-
-  addRanges() {
-    var t = this;
-    this.api.execSv("BS", "BS", "RangesKanbanBusiness", "AddRangeKanbanAsync", [this.ranges, this.rangeLines])
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
-          this.lstSaveRangeLine = [];
-          if (this.lstRangeLine != null) {
-            for (let item1 of this.lstRangeLine) {
-              var rangeline = new rangeLine(
-                item1.RecID,
-                item1.RangeID,
-                item1.BreakName,
-                item1.BreakValue
-              );
-            }
-          }
-          this.lstSaveRangeLine.push(rangeline);
-          t.data = this.lstRangeLine;
-          this.gridView.addHandler(t.data, this.isAddMode, "rangeID");
-
-        }
-      });
-    this.Close();
-  }
-
-  updateRanges() {
-
   }
 
   deleteRange(data) {
@@ -362,11 +324,6 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   OnSaveForm() {
-    // if(this.isAddMode==true){
-    //   return this.addRanges();
-    // }
-    //   return this.updateRanges();
-
     return this.api
       .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeAsync", [
         this.ranges,
@@ -389,6 +346,7 @@ export class RangesKanbanComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
+     //     item.push = this.lstSaveRangeLine;
           this.gridView.addHandler(item, this.isAddMode, "rangeID");
           this.Close();
         }
@@ -408,5 +366,14 @@ export class RangesKanbanComponent implements OnInit {
   }
   valueName(data) {
     this.rangeLines.BreakName = data.data;
+  }
+
+  hover(ctrl) {
+    ctrl.click();
+    // console.log(ctrl);
+  }
+
+  showControl(p, item){
+    p.open();
   }
 }

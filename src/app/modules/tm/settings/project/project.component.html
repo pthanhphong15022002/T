@@ -1,1 +1,91 @@
-<p>project works!</p>
+<codx-views #view funcID="TMS031" entityName="TM_Projects" [views]="views"> </codx-views>
+
+<ng-template #main>
+  <div class="" id="kt_content">
+    <div class="list-table">
+      <codx-gridview #gridView [columnsGrid]="columnsGrid" [pageSize]="100" service="TM" entityName="TM_Projects"
+        type="listview" assemblyName="ERM.Business.TM" className="ProjectsBusiness" method="GetListProjectsAsync"
+        [gridViewName]="'grvProjects'" [predicate]="''" [dataValue]="''" [pageSize]="100" [formName]="formName"
+        [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle" [gridViewName]="gridViewName">
+      </codx-gridview>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #itemCreateBy let-dataItem>
+    <div class="d-flex align-items-center" #itemCreateBy>
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy"
+            objectType="AD_Users">
+        </codx-img>
+        <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+    </div>
+</ng-template>
+<ng-template #itemManager let-dataItem>
+    <div class="d-flex align-items-center" #itemCreateBy>
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.projectManeger"
+            objectType="AD_Users">
+        </codx-img>
+        <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
+    </div>
+</ng-template>
+<ng-template #GiftIDCell let-dataItem>
+    <div>
+        <div class="dropdown">
+            <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="icon-more_vert icon-20"></span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" >
+                    <div class="d-flex align-items-center">
+                        <span class="icon-create icon-18"></span>
+                        <span class="ml-3">Chỉnh sửa</span>
+                    </div>
+                </a>
+                <a class="dropdown-item" >
+                    <div class="d-flex align-items-center">
+                        <span class="icon-delete icon-18"></span>
+                        <span class="ml-3">Xóa</span>
+                    </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item">
+                    <div class="d-flex align-items-center">
+                        <span class="icon-extension icon-18"></span>
+                        <span class="ml-3">Chức năng mở rộng</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #itemCreate let-data>
+    {{data.createdOn | fmDT:'dmy'}}
+</ng-template>
+<ng-template #itemStartdate let-data>
+    <div *ngIf="data.startDate==null">
+        {{data?.startDate }}
+    </div>
+    <div  *ngIf="data.startDate!=null">
+        {{data?.startDate |fmDT:'dmy'}}
+    </div>
+</ng-template>
+<ng-template #itemEnddate let-data>
+    <div *ngIf="data.finishDate==null">
+        {{data?.finishDate }}
+    </div>
+    <div  *ngIf="data.finishDate!=null">
+        {{data?.finishDate |fmDT:'dmy'}}
+    </div>
+</ng-template>
+
+<ng-template #itemProjectCategoryVll let-data>
+    <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
+        [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+        {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+</ng-template>
+<ng-template #itemStatusVll let-data>
+    <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
+        [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
+        {{data?.status|vll:"L0614":"text"|async}}</div>
+</ng-template>
