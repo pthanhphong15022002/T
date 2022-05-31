@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMT02" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
+<codx-views #view funcID="TMS034" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
   (buttonClick)="clickButton($event,true)"> </codx-views>
 
 <ng-template #main>
@@ -52,10 +52,9 @@
 
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban"
-                default="Ghi chú">
-              </codx-label>
-              <textarea #note name="Rote" [(ngModel)]="ranges.note" type="textarea" class="form-control"
+            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ghi chú">
+            </codx-label>
+            <textarea #note name="Rote" [(ngModel)]="ranges.note" type="textarea" class="form-control"
               placeholder="Ghi chú"></textarea>
           </div>
           <div class="workToDo">
@@ -141,8 +140,8 @@
         </codx-label>
       </div>
       <div class="col-8">
-        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control" placeholder="Diễn giải"
-          [crrValue]="rangeLines.BreakName"></codx-input>
+        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control"
+          placeholder="Diễn giải" [crrValue]="rangeLines.BreakName"></codx-input>
         <!-- <codx-input name="BreakName" type="combobox" [refValue]="gridViewSetup.BreakName.refValue" field="BreakName"
           placeholder="" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)">
         </codx-input> -->
@@ -150,12 +149,12 @@
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-4">
-        <codx-label fiedName="BreakValue"  default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
+        <codx-label fiedName="BreakValue" default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
         </codx-label>
       </div>
       <div class="col-8 ">
-        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control" placeholder="Số ngày"
-          [crrValue]="rangeLines.BreakValue"></codx-input>
+        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control"
+          placeholder="Số ngày" [crrValue]="rangeLines.BreakValue"></codx-input>
         <!-- <codx-input name="BreakValue" type="combobox" [refValue]="gridViewSetup.BreakValue.refValue" field="breakValue"
           placeholder="" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)">
         </codx-input> -->
@@ -165,10 +164,11 @@
       nhập số dương (+) khi thiết lập khoảng thời gian tương lai
     </div>
   </div>
-  <div class="modal-footer" (click)="modal.close(lstSaveRangeLine)">
+  <div class="modal-footer" (click)="modal.close()">
     <button type="button" class="btn btn-primary">Lưu</button>
   </div>
 </ng-template>
+
 
 <ng-template #GiftIDCell let-dataItem>
   <div class="Box-tools pull-right" style="vertical-align: middle;">
