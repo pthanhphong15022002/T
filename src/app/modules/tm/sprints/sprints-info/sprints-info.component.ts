@@ -32,7 +32,7 @@ export class SprintsInfoComponent implements OnInit {
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +56,7 @@ export class SprintsInfoComponent implements OnInit {
     )
       return this.notiService.notify('Tên Task Board không được để trống !');
     if (this.taskBoard.projectID == '') this.taskBoard.projectID = null;
+    if(!this.taskBoard.isShared) this.taskBoard.resources = null;
     if (id) {
       this.addTaskBoard(this.taskBoard, false);
     } else this.addTaskBoard(this.taskBoard, true);
@@ -64,7 +65,9 @@ export class SprintsInfoComponent implements OnInit {
   addTaskBoard(taskBoard, isAdd: boolean) {
     this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
       if (res) {
-        // this.notiService.notify("Thêm mới thành công !") ;
+        if(taskBoard.iterationID){
+          this.updateData.next(res);
+        }else
         this.dataAddNew.next(res);
         this.closeTaskBoard();
       }
@@ -177,4 +180,6 @@ export class SprintsInfoComponent implements OnInit {
       }
     });
   }
+
+  
 }

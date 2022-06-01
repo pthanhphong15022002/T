@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -10,12 +11,14 @@ import { TmService } from '@modules/tm/tm.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
+  CallFuncService,
   CodxListviewComponent,
   DataRequest,
   ListCardComponent,
   NotificationsService,
 } from 'codx-core';
 import * as moment from 'moment';
+import { PopupShareSprintsComponent } from '../popup-share-sprints/popup-share-sprints.component';
 import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
 
 @Component({
@@ -45,8 +48,8 @@ export class ListSprintsComponent implements OnInit {
     gridViewName: 'grvSprints',
     formName: 'Sprints',
   };
-  totalRowMyBoard: number = 5;
-  totalRowProjectBoard: number = 5;
+  totalRowMyBoard: number = 6;
+  totalRowProjectBoard: number = 6;
   totalViewBoards: number = 0;
   totalProjectBoards: number = 0;
   boardAction: any;
@@ -55,9 +58,10 @@ export class ListSprintsComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
-    private tmSv : TmService,
+    private tmSv: TmService,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService : NotificationsService
+    private notiService: NotificationsService,
+    private callfc: CallFuncService
   ) {}
 
   ngOnInit(): void {}
@@ -68,6 +72,13 @@ export class ListSprintsComponent implements OnInit {
         this.lstProjectBoard.addHandler(res, true, 'iterationID');
       } else {
         this.lstViewBoard.addHandler(res, true, 'iterationID');
+      }
+    });
+    this.sprintsInfo.isUpdate.subscribe((res) => {
+      if (res?.projectID != null) {
+        this.lstProjectBoard.addHandler(res, false, 'iterationID');
+      } else {
+        this.lstViewBoard.addHandler(res, false, 'iterationID');
       }
     });
     this.loadDataMyBoards();
@@ -127,33 +138,80 @@ export class ListSprintsComponent implements OnInit {
     this.sprintsInfo.getSprintsCoppied(boardAction.iterationID);
   }
   deleteTaskBoard(boardAction) {
-        var message = 'Bạn có chắc chắn muốn xóa task này !';
-        this.notiService
-          .alert('Cảnh báo', message, { type: 'YesNo' })
-          .subscribe((dialog: Dialog) => {
-            var that = this;
-            dialog.close = function (e) {
-              return that.confirmDelete(e, that,boardAction);
-            };
-          });
-    }
-  
-  confirmDelete(e: any, t: ListSprintsComponent,boardAction) {
+    var message = 'Bạn có chắc chắn muốn xóa task này !';
+    this.notiService
+      .alert('Cảnh báo', message, { type: 'YesNo' })
+      .subscribe((dialog: Dialog) => {
+        var that = this;
+        dialog.close = function (e) {
+          return that.confirmDelete(e, that, boardAction);
+        };
+      });
+  }
+
+  confirmDelete(e: any, t: ListSprintsComponent, boardAction) {
     if (e?.event?.status == 'Y') {
-      t.tmSv.deleteSprints(t.boardAction.iterationID).subscribe(res=>{
-        if(res){
+      t.tmSv.deleteSprints(t.boardAction.iterationID).subscribe((res) => {
+        if (res) {
           if (boardAction?.projectID != null) {
             this.lstProjectBoard.removeHandler(boardAction, 'iterationID');
           } else {
             this.lstViewBoard.removeHandler(boardAction, 'iterationID');
           }
-          this.notiService.notify("Xoá task board thành công !")
+          this.notiService.notify('Xoá task board thành công !');
         }
-      })
+      });
     }
   }
 
   viewTaskBoard(boardAction) {
     this.sprintsInfo.openInfo(boardAction.iterationID, 'view');
+  }
+
+  shareTaskBoard(boardAction) {
+     var listUserDetail = [];
+    if(boardAction.resources){
+      this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        boardAction.resources
+      )
+      .subscribe((res) => {
+        this.openPopupShare(res)
+      });
+    }else{
+      this.openPopupShare(listUserDetail)
+    }
+      
+  }
+  openPopupShare(listUserDetail){
+    this.callfc
+      .openForm(
+        PopupShareSprintsComponent,
+        'Chia sẻ view board',
+        350,
+        510,
+        '',
+        // boardAction
+        listUserDetail
+      )
+      .subscribe((dt: any) => {
+        dt.close = this.closePopup;
+      });
+  }
+
+  closePopup(e: any) {
+    if (e.closedBy == 'user action') {
+      var boardAction = e.event;
+
+      if (boardAction?.projectID != null) {
+        this.lstProjectBoard.removeHandler(boardAction, 'iterationID');
+      } else {
+        this.lstViewBoard.removeHandler(boardAction, 'iterationID');
+      }
+    }
   }
 }
