@@ -128,10 +128,10 @@ export class RangesKanbanComponent implements OnInit {
       .getFormGroup("RangeLines", "grvRangeLines")
       .then((item) => {
         this.fb.group(RangeLineFormGroup);
-        this.rangeLines.RecID = item.value.RecID;
-        this.rangeLines.RangeID = "";
-        this.rangeLines.BreakName = null;
-        this.rangeLines.BreakValue = null;
+        this.rangeLines.recID = item.value.recID;
+        this.rangeLines.rangeID = "";
+        this.rangeLines.breakName = null;
+        this.rangeLines.breakValue = null;
       });
   }
 
@@ -153,8 +153,8 @@ export class RangesKanbanComponent implements OnInit {
       .result.then(
         (result) => {
           if (isAddLine==false) {
-            this.lstRangeLine[index].BreakName = this.rangeLines.BreakName;
-            this.lstRangeLine[index].BreakValue = this.rangeLines.BreakValue;
+            this.lstRangeLine[index].breakName = this.rangeLines.breakName;
+            this.lstRangeLine[index].breakValue = this.rangeLines.breakValue;
             this.dt.detectChanges();
           }
         },
@@ -350,10 +350,10 @@ export class RangesKanbanComponent implements OnInit {
           if (this.lstRangeLine != null) {
             for (let item1 of this.lstRangeLine) {
               var rangeline = new rangeLine(
-                item1.RecID,
-                item1.RangeID,
-                item1.BreakName,
-                item1.BreakValue
+                item1.recID,
+                item1.rangeID,
+                item1.breakName,
+                item1.breakValue
               );
               this.lstSaveRangeLine.push(rangeline);
             }
@@ -371,10 +371,10 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   valueValue(data) {
-    this.rangeLines.BreakValue = data.data;
+    this.rangeLines.breakValue = data.data;
   }
   valueName(data) {
-    this.rangeLines.BreakName = data.data;
+    this.rangeLines.breakName = data.data;
   }
 
   hover(ctrl) {
