@@ -7,7 +7,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
@@ -37,6 +40,7 @@ import { SprintsComponent } from './sprints/sprints.component';
 import { SprintsInfoComponent } from './sprints/sprints-info/sprints-info.component';
 import { ListSprintsComponent } from './sprints/list-sprints/list-sprints.component';
 import { ProjectComponent } from './settings/project/project.component';
+import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 
 
 const routes: Routes = [
@@ -66,19 +70,19 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: HomeSettingComponent
+            component: HomeSettingComponent,
           },
           {
             path: 'settingcalendar/:funcID',
-            component: SettingCalendarComponent
+            component: SettingCalendarComponent,
           },
           {
             path: 'taskgroups/:funcID',
-            component: TaskGroupComponent
+            component: TaskGroupComponent,
           },
           {
             path: 'rangeskanban/:funcID',
-            component: RangesKanbanComponent
+            component: RangesKanbanComponent,
           },
           {
             path: 'project/:funcID',
@@ -146,6 +150,6 @@ const routes: Routes = [
     ControlsModule,
   ],
   exports: [RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class TMModule { }
+export class TMModule {}

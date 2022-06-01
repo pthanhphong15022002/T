@@ -8,34 +8,34 @@
                     <ng-container *ngTemplateOutlet="itemViewBoard ;context: {item:item}">
                     </ng-container>
                 </div> -->
-                <codx-listcard #lstViewBoard [pageSize]="5" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
+                <codx-listcard #lstViewBoard [pageSize]="totalRowMyBoard" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
                     className="SprintsBusiness" method="GetListSprintAsync" autoLoad="true" entityName="TM_Sprints"
                     [predicate]="predicateViewBoards" [dataValue]="" [gridViewName]="'grvSprints'" class="h-100"
                     [cartTemp]="itemViewBoard">
                 </codx-listcard>
             </div>
             <div class="clear mb-6 d-flex justify-content-end pr-9">
-                <!-- <div (click)="viewMoreMyBoard()" class="read-more d-flex align-items-center"
-                    *ngIf="listMyBoard.length < totalRowMyBoard">
+                <div (click)="viewMoreMyBoard()" class="read-more d-flex align-items-center"
+                    *ngIf="totalRowMyBoard <= totalViewBoards">
                     <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
                     <span class="text-primary">Read more</span>
-                </div> -->
+                </div>
             </div>
             <div class="font-size-h2 font-weight-bold text-dark mt-6">Project board</div>
             <div class="text-muted mb-6">Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ</div>
             <div class="view-listbox pl-6">
-                <codx-listcard #lstProjectBoard  [pageSize]="5" funcId="TMT04" service="TM"
+                <codx-listcard #lstProjectBoard  [pageSize]="6" funcId="TMT04" service="TM"
                     assemblyName="ERM.Business.TM" className="SprintsBusiness" method="GetListSprintAsync"
                     autoLoad="true" entityName="TM_Sprints" [predicate]="predicateProjectBoards"
                     [gridViewName]="'grvSprints'" class="h-100" [cartTemp]="itemViewBoard">
                 </codx-listcard>
             </div>
             <div class="clear mb-6 d-flex justify-content-end pr-9">
-                <!-- <div (click)="viewMoreProjectBoard()" class="read-more d-flex align-items-center"
+                <div (click)="viewMoreProjectBoard()" class="read-more d-flex align-items-center"
                     *ngIf="listProjectBoard.length < totalRowProjectBoard">
                     <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
                     <span class="text-primary">Read more</span>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -43,7 +43,9 @@
 
 
 <ng-template let-item #itemViewBoard>
-    <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;">
+    <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;" (dblclick)="showControl(p,item)"
+    [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body"
+    autoClose="outside" triggers="manual">
         <div class="align-items-center justify-content-between">
             <!-- <span class="card-more">
                 <base-item-menu [data]="item" ></base-item-menu> 
@@ -56,9 +58,9 @@
             </codx-img>
         </div>
         <div class="mt-3 text-center">
-            <div class="font-weight-bold font-size-h5 text-dard card-name"><codx-label  name="lblIterationName" formName="Tasks" default="{{item.iterationName}}" ></codx-label></div>
-            <div class="text-muted font-size-sm card-des" *ngIf="item.projectName" ><codx-label  name="lblProjectName" formName="Tasks" default= "{{item.projectName}}" ></codx-label  ></div>
-            <div class="text-muted font-size-sm card-des"><codx-label  name="lblMemo" formName="Tasks" default= "{{item.memo}}" ></codx-label  ></div>
+            <div class="font-weight-bold font-size-h5 text-dard card-name">{{item.iterationName}}</div>
+            <div class="text-muted font-size-sm card-des" *ngIf="item.projectName" >{{item.projectName}}</div>
+            <div class="text-muted font-size-sm card-des">{{item.memo}}</div>
             
         </div>
         <div class="d-flex justify-content-center symbol-group mt-6">
@@ -67,3 +69,38 @@
         </div>
     </div>
 </ng-template>
+
+<!-- // dung de tesst -->
+<ng-template #popContent>
+    <a class="action-item" (click)="editTaskBoard(boardAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-edit icon-18 ml-2 mr-2"></span>
+        <span class="tooltiptext">Edit</span>
+      </div>
+    </a>
+    <a class="action-item" (click)="copyTaskBoard(boardAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-content_copy icon-16 text-warning ml-2 mr-2"></span>
+        <span class="tooltiptext">Copy</span>
+      </div>
+    </a>
+    <a class="action-item" (click)="deleteTaskBoard(boardAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+        <span class="tooltiptext">Delete</span>
+      </div>
+    </a>
+    <a class="action-item" (click)="viewTaskBoard(boardAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-visibility icon-20 text-primary ml-2 mr-2"></span>
+        <span class="tooltiptext">Xem</span>
+      </div>
+    </a>
+    <a class="action-item" (click)="shareTaskBoard(boardAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center btn-tooltip">
+        <span class="icon-share icon-20 text-dark ml-2 mr-2"></span>
+        <span class="tooltiptext">Chia sẻ view board </span>
+      </div>
+    </a>
+  </ng-template>
+  

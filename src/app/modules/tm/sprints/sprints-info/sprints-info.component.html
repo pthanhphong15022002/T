@@ -23,15 +23,15 @@
     <div class="card-body">
       <div class="form-group row">
         <span class="col-10">
-          <codx-input type="text" field="iterationName" [(ngModel)]="taskBoard.iterationName"
+          <codx-input [disabled]="readOnly" type="text" field="iterationName" [crrValue]="taskBoard.iterationName"
             (valueChange)="changText($event)" placeholder="Tên view board" [width]="50"></codx-input>
         </span><span class="col-2">
           <div class="form-group">
-            <div class="image-input image-input-outline" id="kt_user_add_avatar">
+            <div class="image-input image-input-outline" id="kt_user_add_avatar" >
               <div>
                 <codx-img #imageAvatar class="symbol symbol-50 symbol-circle"
                   [objectId]="taskBoard?taskBoard.iterationID:''" [objectName]="taskBoard?taskBoard.iterationName:''"
-                  objectType="TM_Sprints" funcId="TMT04" isAllowEdit="true" updateDirect="true" [width]="50"
+                  objectType="TM_Sprints" funcId="TMT04" isAllowEdit="true" updateDirect="true" [width]="50" [disabled]="readOnly"
                   [height]="50">
                 </codx-img>
               </div>
@@ -41,21 +41,21 @@
       </div>
       <div class="form-group">
         <label>Dự án</label>
-        <codx-combobox service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
+        <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
           ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
-          [disabled]="readOnly" [value]="taskBoard.projectID">
-        </codx-combobox>
+          [disabled]="readOnly" [crrValue]="taskBoard.projectID">
+        </codx-input>
       </div>
       <div class="form-group ">
         <label>Lưu mặc định</label>
         <codx-input type="valuelist" field="viewMode" [crrValue]="taskBoard.viewMode" refValue="L1469"
-          [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+          [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)" [disabled]="readOnly">
         </codx-input>
 
       </div>
       <div class="form-group">
         <label>Mô tả công việc</label>
-        <textarea [readonly]="readOnly" class="form-control" rows="2" [(ngModel)]="taskBoard.memo"></textarea>
+        <textarea [readonly]="readOnly" class="form-control" rows="2" [(ngModel)]="taskBoard.memo" [readOnly]="readOnly"></textarea>
         <!-- [(ngModel)]="task.memo"  -->
       </div>
       <div class="d-flex align-items-center justify-content-between mt-4">
@@ -68,7 +68,7 @@
         </button>
       </div>
       <div>
-        <ng-container *ngFor="let item of listUserDetail; index as i">
+        <ng-container *ngFor="let item of listUserDetail; index as i" >
             <div class="badge me-2 flex align-items-center" style="background-color:#F4F7FF">
               <span>
                 <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="item?.userID" objectType="AD_Users">
@@ -85,7 +85,7 @@
         <div class="d-flex justify-content-end row">
           <div class="col-10">
             <!-- <codx-input type="checkbox"  (valueChange)="valueChange($event)" labelPosition="Before" label="sdsdsd"></codx-input> -->
-            <span><input type="checkbox" [(ngModel)]="taskBoard.isShared" (change)="changeShare($event)"> </span>
+            <span><input type="checkbox" [readOnly]="readOnly" [(ngModel)]="taskBoard.isShared" (change)="changeShare($event)"> </span>
             <span>
               <codx-label name="lblCheck" formName="Tasks" default="Chia sẽ board cho nguồn lực" >
               </codx-label>
@@ -93,7 +93,7 @@
           </div>
           <div class="col-2">
             <!-- <button type="button" class="btn btn-primary">Lưu</button> -->
-            <button type="button" class="btn btn-primary" (click)="saveData(taskBoard.iterationID)"
+            <button type="button" class="btn btn-primary"  (click)="saveData(taskBoard.iterationID)"
               *ngIf="!readOnly">Lưu</button>
           </div>
         </div>
