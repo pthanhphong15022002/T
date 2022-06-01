@@ -243,14 +243,13 @@ export class ProjectComponent implements OnInit {
       });
   }
 
-  clickButton(evt: any, isAddMode) {
-
-  //    this.openTask()
+  clickButton(evt: any, isAddMode) {   
     if (isAddMode == true) {
-      this.isAddMode = true;
-      this.title = 'Thêm dự án';
-      this.initFrom();
-      this.showPanel();
+      this.openTask();
+      // this.isAddMode = true;
+      // this.title = 'Thêm dự án';
+      // this.initFrom();
+      // this.showPanel();
     }
     
     //  this.renderer.addClass(popup, 'drawer-on');
@@ -267,15 +266,7 @@ export class ProjectComponent implements OnInit {
       formName: 'Projects',
       functionID: 'TM00631',
       entityName: 'TM_Projects',
-      // model: this.model,
-      // text: this.text,
-      // oldTitle: this.oldTitle,
-      // id: this.id,
-      // isEdit: this.isEdit,
-      // name: this.name,
-      // fiedName: this.fiedName,
-      // formName: this.formName,
-      // gridViewName: this.gridViewName,
+      data: this.dataItem
     };
 
     this.callfc.openForm(CodxFormDynamicComponent, 'Thêm nhóm công việc', 900, 900, '', obj);

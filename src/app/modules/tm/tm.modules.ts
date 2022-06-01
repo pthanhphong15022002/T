@@ -1,3 +1,5 @@
+import { ProjectGroupComponent } from './settings/project-group/project-group.component';
+
 import { HomeSettingComponent } from './settings/home-setting/home-setting.component';
 import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
@@ -81,6 +83,10 @@ const routes: Routes = [
           {
             path: 'project/:funcID',
             component: ProjectComponent
+          },
+          {
+            path: 'projectgroup/:funcID',
+            component: ProjectGroupComponent
           }
         ]
       },
@@ -123,7 +129,8 @@ const routes: Routes = [
     SprintsInfoComponent,
     ListSprintsComponent,
     ProjectComponent,
-    TaskGroupComponent
+    TaskGroupComponent,
+    ProjectGroupComponent
   ],
   imports: [
     RouterModule.forChild(routes),

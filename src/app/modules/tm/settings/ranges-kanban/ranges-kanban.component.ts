@@ -34,6 +34,7 @@ export class RangesKanbanComponent implements OnInit {
   addEditForm: FormGroup;
   lstRangeLine: RangeLine[];
   lstSaveRangeLine: any;
+  itemSelected: any;
 
   @Input() ranges = new BS_Ranges();
   @Input() rangeLines = new RangeLine();
@@ -127,7 +128,7 @@ export class RangesKanbanComponent implements OnInit {
       .getFormGroup("RangeLines", "grvRangeLines")
       .then((item) => {
         this.fb.group(RangeLineFormGroup);
-        this.rangeLines.RecID = item.value.recID;
+        this.rangeLines.RecID = item.value.RecID;
         this.rangeLines.RangeID = "";
         this.rangeLines.BreakName = null;
         this.rangeLines.BreakValue = null;
@@ -276,6 +277,14 @@ export class RangesKanbanComponent implements OnInit {
           if (this.lstRangeLine == null) {
             this.lstRangeLine = [];
           }
+          // for (let item of data.rangeLine) {
+          //   var rangeline = new RangeLine();
+          //   rangeline.RecID = item.recID;
+          //   rangeline.RangeID = item.rangeID;
+          //   rangeline.BreakValue = item.breakValue;
+          //   rangeline.BreakName = item.breakName;
+          //   this.lstRangeLine.push(Object.assign({}, rangeline));
+          // }
           this.dt.detectChanges();
           this.showPanel();
         }
@@ -372,8 +381,10 @@ export class RangesKanbanComponent implements OnInit {
     ctrl.click();
     // console.log(ctrl);
   }
-
+  taskAction: any;
   showControl(p, item){
+    this.taskAction = item;
+
     p.open();
   }
 }
