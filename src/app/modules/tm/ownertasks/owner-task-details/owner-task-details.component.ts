@@ -100,13 +100,13 @@ export class OnwerTaskDetailsComponent implements OnInit {
     model.entityName = 'TM_Tasks';
     model.predicate = '';
     model.funcID = this.funcID;
-    model.page = 1;
-    model.pageSize = 100;
+    // model.page = 1;
+    // model.pageSize = 100;
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
-    this.toDate = moment('5/31/2022').toDate();
+    this.toDate = moment('12/30/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -259,9 +259,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
                   }
                   if (res[1] != null) {
                     var parent = t.data.find((x) => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    t.listview.addHandler(parent, false, 'recID');
+                    if(parent){
+                      parent.assignTo = res[1].assignTo;
+                      parent.category = res[1].category;
+                      t.listview.addHandler(parent, false, 'recID');
+                    }
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');

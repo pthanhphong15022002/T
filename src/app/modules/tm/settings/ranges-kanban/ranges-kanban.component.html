@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMT02" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
+<codx-views #view funcID="TMS034" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
   (buttonClick)="clickButton($event,true)"> </codx-views>
 
 <ng-template #main>
@@ -52,10 +52,9 @@
 
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban"
-                default="Ghi chú">
-              </codx-label>
-              <textarea #note name="Rote" [(ngModel)]="ranges.note" type="textarea" class="form-control"
+            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ghi chú">
+            </codx-label>
+            <textarea #note name="Rote" [(ngModel)]="ranges.note" type="textarea" class="form-control"
               placeholder="Ghi chú"></textarea>
           </div>
           <div class="workToDo">
@@ -83,19 +82,27 @@
               <tbody>
                 <tr *ngFor="let item of lstRangeLine; let index = index">
                   <td class="text-left">
-                    <label>{{item.BreakName}}</label>
+                    <label>{{item.breakName}}</label>
                   </td>
                   <td class="text-left">
-                    <label>{{item.BreakValue}}</label>
+                    <label>{{item.breakValue}}</label>
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <div class="dropdown ml-2">
+                      <div class="Box-tools pull-right" style="vertical-align: middle;">
+                        <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;"
+                          (click)="openPopup2(item, false, index)">
+                          <i class="fa fa-edit text-primary"></i>
+                        </a>
+                        <a class="btn btn-xs btn-flat btn-danger" (click)="deletePopup(index)">
+                          <i class="fa fa-remove "></i>
+                        </a>
+                      </div>
+                      <!-- <div class="dropdown ml-2">
                         <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">
                           <span class="icon-more_vert icon-18"></span>
                         </button>
-
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                           <a class="dropdown-item" (click)="openPopup(item, false, index)">
                             <div class="d-flex align-items-center">
@@ -110,7 +117,7 @@
                             </div>
                           </a>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </td>
                 </tr>
@@ -141,8 +148,8 @@
         </codx-label>
       </div>
       <div class="col-8">
-        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control" placeholder="Diễn giải"
-          [crrValue]="rangeLines.BreakName"></codx-input>
+        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control"
+          placeholder="Diễn giải" [crrValue]="rangeLines.breakName" (valueChange)="valueName($event)"></codx-input>
         <!-- <codx-input name="BreakName" type="combobox" [refValue]="gridViewSetup.BreakName.refValue" field="BreakName"
           placeholder="" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)">
         </codx-input> -->
@@ -150,12 +157,12 @@
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-4">
-        <codx-label fiedName="BreakValue"  default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
+        <codx-label fiedName="BreakValue" default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
         </codx-label>
       </div>
       <div class="col-8 ">
-        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control" placeholder="Số ngày"
-          [crrValue]="rangeLines.BreakValue"></codx-input>
+        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control"
+          placeholder="Số ngày" [crrValue]="rangeLines.breakValue" (valueChange)="valueValue($event)"></codx-input>
         <!-- <codx-input name="BreakValue" type="combobox" [refValue]="gridViewSetup.BreakValue.refValue" field="breakValue"
           placeholder="" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)">
         </codx-input> -->
@@ -165,20 +172,35 @@
       nhập số dương (+) khi thiết lập khoảng thời gian tương lai
     </div>
   </div>
-  <div class="modal-footer" (click)="modal.close(lstSaveRangeLine)">
+  <div class="modal-footer" (click)="modal.close(lstRangeLine)">
     <button type="button" class="btn btn-primary">Lưu</button>
   </div>
 </ng-template>
+<ng-template #popContent let-dataItem>
+  <a class="action-item" (click)="openForm(taskAction,false)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ms-2 me-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="deleteRange(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+</ng-template>
+
 
 <ng-template #GiftIDCell let-dataItem>
-  <div class="Box-tools pull-right" style="vertical-align: middle;">
-    <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="openForm(dataItem,false)">
-      <i class="fa fa-edit text-primary"></i>
-    </a>
-    <a class="btn btn-xs btn-flat btn-danger" (click)="deleteRange(dataItem)">
-      <i class="fa fa-remove "></i>
-    </a>
+  <div class="dropdown" (dblclick)="showControl(p2,dataItem)" [ngbPopover]="popContent" popoverClass="empPopoverClass"
+    #p2="ngbPopover" placement="right left" container="body" autoClose="outside" triggers="manual">
+    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-more_vert icon-20"></span>
+    </button>
   </div>
+
 </ng-template>
 
 

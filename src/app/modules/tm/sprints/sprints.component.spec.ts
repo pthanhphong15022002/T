@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListViewBoardsComponent } from './list-view-boards.component';
+import { SprintsComponent } from './sprints.component';
 
-describe('ListViewBoardsComponent', () => {
-  let component: ListViewBoardsComponent;
-  let fixture: ComponentFixture<ListViewBoardsComponent>;
+describe('SprintsComponent', () => {
+  let component: SprintsComponent;
+  let fixture: ComponentFixture<SprintsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListViewBoardsComponent ]
+      declarations: [ SprintsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListViewBoardsComponent);
+    fixture = TestBed.createComponent(SprintsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

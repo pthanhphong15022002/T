@@ -72,10 +72,10 @@ export class DataSv {
 }
 //Guid->string
 export class RangeLine {
-  RecID: string;
-  RangeID: string;
-  BreakName: string;
-  BreakValue: number ;
+  recID: string;
+  rangeID: string;
+  breakName: string;
+  breakValue: number ;
 }
 
 export class rangeLine {

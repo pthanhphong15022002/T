@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewBoardInfoComponent } from './view-board-info.component';
+import { PopupShareSprintsComponent } from './popup-share-sprints.component';
 
-describe('ViewBoardInfoComponent', () => {
-  let component: ViewBoardInfoComponent;
-  let fixture: ComponentFixture<ViewBoardInfoComponent>;
+describe('PopupShareSprintsComponent', () => {
+  let component: PopupShareSprintsComponent;
+  let fixture: ComponentFixture<PopupShareSprintsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewBoardInfoComponent ]
+      declarations: [ PopupShareSprintsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewBoardInfoComponent);
+    fixture = TestBed.createComponent(PopupShareSprintsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

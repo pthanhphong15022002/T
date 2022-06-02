@@ -53,6 +53,8 @@ export class TaskGroupComponent implements OnInit {
   isAfterRender = false;
   isAddMode = true;
   enableAddtodolist: boolean = false;
+  itemSelected: any;
+  
   todoAddText: any;
   isAddNew = this.dataAddNew.asObservable();
   totalRow = 1;
@@ -90,7 +92,6 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadData();
     this.columnsGrid = [
       { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
@@ -136,7 +137,7 @@ export class TaskGroupComponent implements OnInit {
     this.tmSv.loadTaskGroupByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.listView.data = this.data;
+        this.gridView.data = this.data;
       }
     })
   }
@@ -163,37 +164,37 @@ export class TaskGroupComponent implements OnInit {
     })
   }
 
-  addHandler(dataItem: any, isNew: boolean, key: string) {
-    var t = this;
-    if (!dataItem) return null;
-    if (isNew) {
-      this.gridView.data = [...dataItem, ...this.gridView.data];
-      this.total = this.gridView.data.length;
-      this.totalRow = this.gridView.data.length;
-    }
-    else {
-      const index =
-        this.gridView.data.findIndex(
-          x => x[key] === dataItem[key]
-        )
-      this.gridView.data[index] = {};
-      this.dt.detectChanges();
-      this.gridView.data[index] = dataItem;
-    }
-    this.dt.detectChanges();
-  }
+  // addHandler(dataItem: any, isNew: boolean, key: string) {
+  //   var t = this;
+  //   if (!dataItem) return null;
+  //   if (isNew) {
+  //     this.gridView.data = [...dataItem, ...this.gridView.data];
+  //     this.total = this.gridView.data.length;
+  //     this.totalRow = this.gridView.data.length;
+  //   }
+  //   else {
+  //     const index =
+  //       this.gridView.data.findIndex(
+  //         x => x[key] === dataItem[key]
+  //       )
+  //     this.gridView.data[index] = {};
+  //     this.dt.detectChanges();
+  //     this.gridView.data[index] = dataItem;
+  //   }
+  //   this.dt.detectChanges();
+  // }
 
-  removeHandler(dataItem: any, key: string) {
-    if (!key) return null;
-    this.gridView.data = this.gridView.data.filter(function (e, index) {
-      return (e[key] !== dataItem[key]);
-    });
-    this.total = this.gridView.data.length;
-    this.totalRow = this.gridView.data.length;
-    this.dt.detectChanges();
-  }
+  // removeHandler(dataItem: any, key: string) {
+  //   if (!key) return null;
+  //   this.gridView.data = this.gridView.data.filter(function (e, index) {
+  //     return (e[key] !== dataItem[key]);
+  //   });
+  //   this.total = this.gridView.data.length;
+  //   this.totalRow = this.gridView.data.length;
+  //   this.dt.detectChanges();
+  // }
 
-  getFormGroup(formName, gridView): Promise<FormGroup> {
+   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
         var model = {};
@@ -369,7 +370,7 @@ export class TaskGroupComponent implements OnInit {
     this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
   }
 
-  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
       "GenAutoNumberAsync", [functionID, entityName, fieldName, null])
@@ -468,5 +469,11 @@ export class TaskGroupComponent implements OnInit {
     dataItem.disableReadmore = !dataItem.disableReadmore;
     this.dt.detectChanges();
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
+  }
+  taskAction: any;
+
+  showControl(p, item) {
+    this.taskAction = item;
+    p.open();
   }
 }

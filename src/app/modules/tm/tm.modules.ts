@@ -1,3 +1,5 @@
+import { ProjectGroupComponent } from './settings/project-group/project-group.component';
+
 import { HomeSettingComponent } from './settings/home-setting/home-setting.component';
 import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
@@ -5,7 +7,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
@@ -31,10 +36,11 @@ import { SettingsComponent } from './settings/settings.component';
 import { CbxpopupComponent } from './controls/cbxpopup/cbxpopup.component';
 import { UpdateStatusPopupComponent } from './controls/update-status-popup/update-status-popup.component';
 import { SettingPanelComponent } from './controls/setting-panel/setting-panel.component';
-import { ViewBoardsComponent } from './view-boards/view-boards.component';
-import { ViewBoardInfoComponent } from './view-boards/view-board-info/view-board-info.component';
-import { ListViewBoardsComponent } from './view-boards/list-view-boards/list-view-boards.component';
+import { SprintsComponent } from './sprints/sprints.component';
+import { SprintsInfoComponent } from './sprints/sprints-info/sprints-info.component';
+import { ListSprintsComponent } from './sprints/list-sprints/list-sprints.component';
 import { ProjectComponent } from './settings/project/project.component';
+import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 
 
 const routes: Routes = [
@@ -56,7 +62,7 @@ const routes: Routes = [
       },
       {
         path: 'viewboards/:funcID',
-        component: ViewBoardsComponent,
+        component: SprintsComponent,
       },
       {
         path: 'setting',
@@ -64,23 +70,27 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            component: HomeSettingComponent
+            component: HomeSettingComponent,
           },
           {
             path: 'settingcalendar/:funcID',
-            component: SettingCalendarComponent
+            component: SettingCalendarComponent,
           },
           {
             path: 'taskgroups/:funcID',
-            component: TaskGroupComponent
+            component: TaskGroupComponent,
           },
           {
             path: 'rangeskanban/:funcID',
-            component: RangesKanbanComponent
+            component: RangesKanbanComponent,
           },
           {
-            path: 'project',
+            path: 'project/:funcID',
             component: ProjectComponent
+          },
+          {
+            path: 'projectgroup/:funcID',
+            component: ProjectGroupComponent
           }
         ]
       },
@@ -119,11 +129,12 @@ const routes: Routes = [
     CbxpopupComponent,
     UpdateStatusPopupComponent,
     SettingPanelComponent,
-    ViewBoardsComponent,
-    ViewBoardInfoComponent,
-    ListViewBoardsComponent,
+    SprintsComponent,
+    SprintsInfoComponent,
+    ListSprintsComponent,
     ProjectComponent,
-    TaskGroupComponent
+    TaskGroupComponent,
+    ProjectGroupComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -139,6 +150,6 @@ const routes: Routes = [
     ControlsModule,
   ],
   exports: [RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class TMModule { }
+export class TMModule {}

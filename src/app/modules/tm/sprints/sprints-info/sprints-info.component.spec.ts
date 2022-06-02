@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewBoardsComponent } from './view-boards.component';
+import { SprintsInfoComponent } from './sprints-info.component';
 
-describe('ViewBoardsComponent', () => {
-  let component: ViewBoardsComponent;
-  let fixture: ComponentFixture<ViewBoardsComponent>;
+describe('SprintsInfoComponent', () => {
+  let component: SprintsInfoComponent;
+  let fixture: ComponentFixture<SprintsInfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewBoardsComponent ]
+      declarations: [ SprintsInfoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewBoardsComponent);
+    fixture = TestBed.createComponent(SprintsInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,64 @@
+<div>
+    <div class="card-body align-items-center justify-content-between">
+        <!-- <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm" /> -->
+    </div>
+    <div style="height:300px">
+        <ng-container *ngFor="let item of data">
+            <div class=" align-items-center row">
+                <div class="col-10">
+                    <span>
+                        <!-- <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="item?.userID"
+                            objectType="AD_Users">
+                        </codx-img> -->
+                    </span><span class="text-dark fw-bold fs-7">
+                        {{item?.userName}}
+                    </span>
+                </div>
+                <div class="dropdown col-2">
+                    <!-- <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+                        <span class="icon-more_vert icon-20 text-danger ml-2 mr-2"></span>
+                    </a> -->
+                    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="icon-more_vert icon-20"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <span class="icon-create icon-18"></span>
+                                <span class="ml-3">Chỉnh sửa</span>
+                            </div>
+                        </a>
+                        <a class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <span class="icon-delete icon-18"></span>
+                                <span class="ml-3">Xóa</span>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <span class="icon-extension icon-18"></span>
+                                <span class="ml-3">Chức năng mở rộng</span>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </ng-container>
+    </div>
+    <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end row">
+            <div class="col-6">
+                <button type="button" class="btn btn-light-primary" (click)="openDialog()">
+                    <i class="icon-person_add_alt fs-5 me-1"></i>
+                </button>
+            </div>
+            <div class="col-6">
+                <button style="float: right;" type="button" class="btn btn-primary" (click)="saveData()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 <codx-listview #listview [itemTemplate]="templateTask" funcId="" [pageSize]="100" service="TM"
   assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [gridViewName]="'grvTasks'"
-  entityName="TM_Tasks" title="group" groupBy="fieldGroup" type="listView" [selectFirst]="true" [data]="data">
+  entityName="TM_Tasks" title="group" groupBy="fieldGroup" type="listView" [selectFirst]="true" [data]="data" (changeRowSelected)="changeRowSelected($event)">
 </codx-listview>
 <!-- <codx-listview #listview [itemTemplate]="templateTask" [selectFirst]="true" funcId="" [pageSize]="10"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
