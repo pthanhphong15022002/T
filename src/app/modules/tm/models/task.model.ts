@@ -75,7 +75,8 @@ export class RangeLine {
   recID: string;
   rangeID: string;
   breakName: string;
-  breakValue: number ;
+  breakValue: number;
+  id:number;
 }
 
 export class rangeLine {

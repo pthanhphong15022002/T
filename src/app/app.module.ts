@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 
 
+
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
@@ -63,6 +64,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+
     
   ],
   imports: [

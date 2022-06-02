@@ -82,13 +82,13 @@ export class RangesKanbanComponent implements OnInit {
     this.initForm();
     this.initPopup();
     this.columnsGrid = [
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
-      { field: 'rangeID', headerText: 'Mã', width: 100 },
-      { field: 'rangeName', headerText: 'Mô tả', width: 200 },
-      { field: 'note', headerText: 'Ghi chú', width: 180 },
-      { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore, width: 140 },
-      { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy, width: 140 },
-      { field: 'createOn', headerText: 'ngày tạo', template: this.itemCreate, width: 140 },
+      { field: 'noName', headerText: '', template: this.GiftIDCell},
+      { field: 'rangeID', headerText: 'Mã'},
+      { field: 'rangeName', headerText: 'Mô tả'},
+      { field: 'note', headerText: 'Ghi chú' },
+      { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore},
+      { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy },
+      { field: 'createOn', headerText: 'ngày tạo', template: this.itemCreate },
 
     ];
     this.cache.gridViewSetup('RangesKanban', 'grvRangesKanban').subscribe(res => {
@@ -123,7 +123,20 @@ export class RangesKanbanComponent implements OnInit {
     })
   }
 
-  initPopup() {
+  initPopup(dataItem = null) {
+    if(dataItem){
+      this
+      .getFormGroup("RangeLines", "grvRangeLines")
+      .then((item) => {
+        this.fb.group(RangeLineFormGroup);
+        this.rangeLines.recID = item.value.recID;
+        this.rangeLines.rangeID = dataItem.rangeID;
+        this.rangeLines.breakName = dataItem.breakName;
+        this.rangeLines.breakValue = dataItem.breakValue;
+        this.rangeLines.id =dataItem.breakValue;
+      });
+    }
+    else 
     this
       .getFormGroup("RangeLines", "grvRangeLines")
       .then((item) => {
@@ -132,6 +145,7 @@ export class RangesKanbanComponent implements OnInit {
         this.rangeLines.rangeID = "";
         this.rangeLines.breakName = null;
         this.rangeLines.breakValue = null;
+        this.rangeLines.id = this.lstRangeLine.length + 1;
       });
   }
 
@@ -158,8 +172,11 @@ export class RangesKanbanComponent implements OnInit {
 
   openPopup(itemdata, isAddLine, index) {
     this.isAddLine = isAddLine;
-    if (isAddLine) {
+    if(!itemdata)
       this.initPopup();
+      else if (!itemdata.recID) {
+      var item = this.lstRangeLine.find(x=>x.id == itemdata.id);
+      this.initPopup(item);
     } else {
       this.api.execSv<any>("BS", "BS", "RangeLinesBusiness", "GetAsync", itemdata.recID).subscribe((res) => {
         if (res) {
@@ -168,6 +185,7 @@ export class RangesKanbanComponent implements OnInit {
         }
       })
     }
+
     this.modalService
       .open(this.add, { centered: true })
       .result.then(
@@ -331,7 +349,7 @@ export class RangesKanbanComponent implements OnInit {
 
   OnSaveLine(){
     return this.api
-      .execSv("BS", "BS", "RangeLinesBusiness", "AddEditRangeLineAsync", [
+      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeLineAsync", [
         this.rangeLines,
         this.isAddLine,
       ])

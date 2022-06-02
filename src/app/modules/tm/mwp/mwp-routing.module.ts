@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { ControlsModule } from '../controls/controls.module';
 
 import { HomeComponent } from './home/home.component';
+import { ListTasksComponent } from './list-tasks/list-tasks.component';
 import { MwpComponent } from './mwp.component';
 
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
