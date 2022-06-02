@@ -163,7 +163,6 @@ export class RangesKanbanComponent implements OnInit {
     } else {
       this.api.execSv<any>("BS", "BS", "RangeLinesBusiness", "GetAsync", itemdata.recID).subscribe((res) => {
         if (res) {
-        //  itemdata = res;
           this.rangeLines = res;
           this.dt.detectChanges();
         }
@@ -332,7 +331,7 @@ export class RangesKanbanComponent implements OnInit {
 
   OnSaveLine(){
     return this.api
-      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeLineAsync", [
+      .execSv("BS", "BS", "RangeLinesBusiness", "AddEditRangeLineAsync", [
         this.rangeLines,
         this.isAddLine,
       ])

@@ -41,6 +41,8 @@ import { SprintsInfoComponent } from './sprints/sprints-info/sprints-info.compon
 import { ListSprintsComponent } from './sprints/list-sprints/list-sprints.component';
 import { ProjectComponent } from './settings/project/project.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
+import { AssignTasksCalendarComponent } from './assign-tasks/assign-tasks-calendar/assign-tasks-calendar.component';
+import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assign-list-tasks.component';
 
 
 const routes: Routes = [
@@ -122,6 +124,8 @@ const routes: Routes = [
     LayoutComponent,
     AssignTaskComponent,
     AssignTaskDetailsComponent,
+    AssignTasksCalendarComponent,
+    AssignListTasksComponent,
     HomeSettingComponent,
     TaskGroupComponent,
     RangesKanbanComponent,
