@@ -136,26 +136,17 @@ export class RangesKanbanComponent implements OnInit {
   }
 
 
-  openPopup2(itemdata, isAddLine, index){
+  openPopup2(itemdata, isAddLine, index) {
     this.isAddLine = isAddLine;
-    if(isAddLine==false){
-      this.api.execSv<any>("BS", "BS", "RangesKanbanBusiness", "GetLinesByIdAsync", itemdata.recID).subscribe((res) => {
-        if (res) {
-          itemdata = res;
-          this.rangeLines = itemdata;
-          this.dt.detectChanges();
-          this.showPanel();
-        }
-      })
+    if (isAddLine == false) {
+
     }
     this.modalService
       .open(this.add, { centered: true })
       .result.then(
         (result) => {
-          if (isAddLine==false) {
-            this.lstRangeLine[index].breakName = this.rangeLines.breakName;
-            this.lstRangeLine[index].breakValue = this.rangeLines.breakValue;
-            this.dt.detectChanges();
+          if (isAddLine == false) {
+
           }
         },
         (reason) => {
@@ -169,6 +160,14 @@ export class RangesKanbanComponent implements OnInit {
     this.isAddLine = isAddLine;
     if (isAddLine) {
       this.initPopup();
+    } else {
+      this.api.execSv<any>("BS", "BS", "RangeLinesBusiness", "GetAsync", itemdata.recID).subscribe((res) => {
+        if (res) {
+        //  itemdata = res;
+          this.rangeLines = res;
+          this.dt.detectChanges();
+        }
+      })
     }
     this.modalService
       .open(this.add, { centered: true })
@@ -177,7 +176,11 @@ export class RangesKanbanComponent implements OnInit {
           if (isAddLine) {
             this.lstRangeLine.push(this.rangeLines);
             this.rangeLines = new RangeLine();
-          }
+          } else {
+            this.lstRangeLine[index].breakName = this.rangeLines.breakName;
+            this.lstRangeLine[index].breakValue = this.rangeLines.breakValue;
+            this.dt.detectChanges()
+          };
         },
         (reason) => {
           console.log("reason", this.getDismissReason(reason));
@@ -277,14 +280,6 @@ export class RangesKanbanComponent implements OnInit {
           if (this.lstRangeLine == null) {
             this.lstRangeLine = [];
           }
-          // for (let item of data.rangeLine) {
-          //   var rangeline = new RangeLine();
-          //   rangeline.RecID = item.recID;
-          //   rangeline.RangeID = item.rangeID;
-          //   rangeline.BreakValue = item.breakValue;
-          //   rangeline.BreakName = item.breakName;
-          //   this.lstRangeLine.push(Object.assign({}, rangeline));
-          // }
           this.dt.detectChanges();
           this.showPanel();
         }
@@ -335,16 +330,30 @@ export class RangesKanbanComponent implements OnInit {
       });
   }
 
+  OnSaveLine(){
+    return this.api
+      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeLineAsync", [
+        this.rangeLines,
+        this.isAddLine,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.data = res[2];
+         
+        }
+      });
+  }
+
   OnSaveForm() {
     return this.api
-      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeAsync", [
+      .execSv<any>("BS", "BS", "RangesKanbanBusiness", "AddEditRangeAsync", [
         this.ranges,
         this.lstRangeLine,
         this.isAddMode,
       ])
       .subscribe((res) => {
         if (res) {
-          this.data = res[2];
+          this.data = res;
           let item = this.data
           this.lstSaveRangeLine = [];
           if (this.lstRangeLine != null) {
@@ -358,7 +367,7 @@ export class RangesKanbanComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
-     //     item.push = this.lstSaveRangeLine;
+          //     item.push = this.lstSaveRangeLine;
           this.gridView.addHandler(item, this.isAddMode, "rangeID");
           this.Close();
         }
@@ -382,7 +391,7 @@ export class RangesKanbanComponent implements OnInit {
     // console.log(ctrl);
   }
   taskAction: any;
-  showControl(p, item){
+  showControl(p, item) {
     this.taskAction = item;
 
     p.open();

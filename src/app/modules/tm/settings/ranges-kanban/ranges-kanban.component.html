@@ -91,7 +91,7 @@
                     <div class="d-flex align-items-center">
                       <div class="Box-tools pull-right" style="vertical-align: middle;">
                         <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;"
-                          (click)="openPopup2(item, false, index)">
+                          (click)="openPopup(item, false, index)">
                           <i class="fa fa-edit text-primary"></i>
                         </a>
                         <a class="btn btn-xs btn-flat btn-danger" (click)="deletePopup(index)">
@@ -173,7 +173,7 @@
     </div>
   </div>
   <div class="modal-footer" (click)="modal.close(lstRangeLine)">
-    <button type="button" class="btn btn-primary">Lưu</button>
+    <button type="button" class="btn btn-primary" (click)="OnSaveLine()">Lưu</button>
   </div>
 </ng-template>
 <ng-template #popContent let-dataItem>

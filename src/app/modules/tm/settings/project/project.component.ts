@@ -277,4 +277,10 @@ export class ProjectComponent implements OnInit {
     // this.renderer.removeClass(popup, 'drawer-on');
     this.viewBase.currentView.closeSidebarRight();
   }
+
+  taskAction: any;
+  showControl(p, item) {
+    this.taskAction = item;
+    p.open();
+  }
 }
