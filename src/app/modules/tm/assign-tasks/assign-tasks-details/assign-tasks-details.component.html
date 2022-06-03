@@ -2,7 +2,7 @@
   <div class="d-flex flex-row">
     <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
-        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
+        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="TMT03" [pageSize]="100"
           service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
           [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
           entityName="TM_Tasks" [data]="data" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">

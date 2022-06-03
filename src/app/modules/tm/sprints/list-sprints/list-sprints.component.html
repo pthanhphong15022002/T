@@ -32,7 +32,7 @@
             </div>
             <div class="clear mb-6 d-flex justify-content-end pr-9">
                 <div (click)="viewMoreProjectBoard()" class="read-more d-flex align-items-center"
-                    *ngIf="listProjectBoard.length < totalRowProjectBoard">
+                    *ngIf="totalRowProjectBoard < totalProjectBoards">
                     <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
                     <span class="text-primary">Read more</span>
                 </div>
@@ -50,7 +50,7 @@
             <!-- <span class="card-more">
                 <base-item-menu [data]="item" ></base-item-menu> 
             </span> -->
-            <span  *ngIf="item.isShared" class="icon-share text-primary icon-20 " style="float: right;"></span>
+            <span  *ngIf="item.resources?.includes(user.userID)" class="icon-share text-primary icon-20 " style="float: right;"></span>
         </div>
         <div class="d-flex justify-content-center mt-3">
             <codx-img class="symbol symbol-50 symbol-circle" [objectId]="item.iterationID" objectType="TM_Sprints"

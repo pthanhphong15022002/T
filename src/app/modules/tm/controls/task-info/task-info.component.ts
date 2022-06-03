@@ -1,4 +1,4 @@
-import { TM_Tasks } from './../../models/TM_Tasks.model';
+import {tmpTaskResource, TM_Tasks } from './../../models/TM_Tasks.model';
 import { TmService } from './../../tm.service';
 import { APICONSTANT } from '@shared/constant/api-const';
 
@@ -47,6 +47,7 @@ export class TaskInfoComponent implements OnInit {
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[];
   listTodo: TaskGoal[];
+  listTaskResources: tmpTaskResource[] =[] ;
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -281,6 +282,7 @@ export class TaskInfoComponent implements OnInit {
     }
   }
   actionSave(id) {
+    
     if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
     var checkLogic =
       this.isCheckProjectControl ||
@@ -291,8 +293,8 @@ export class TaskInfoComponent implements OnInit {
       // this.notiService.notify('Mã lỗi TM002');
       return;
     }
+    this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-
     if (id) this.updateTask();
     else this.addTask();
     this.viewBase.currentView.closeSidebarRight();
@@ -304,7 +306,7 @@ export class TaskInfoComponent implements OnInit {
         this.task,
         this.listTodo,
         this.functionID,
-        this.listMemo2OfUser,
+        this.listTaskResources,
       ])
       .subscribe((res) => {
         if (res) {
@@ -339,7 +341,7 @@ export class TaskInfoComponent implements OnInit {
         null,
         this.functionID,
         this.recIDTodoDelete,
-        this.listMemo2OfUser,
+        this.listTaskResources,
       ])
       .subscribe((res) => {
         if (res) {
@@ -567,7 +569,7 @@ export class TaskInfoComponent implements OnInit {
           this.getListUser(this.task.assignTo);
         }else{
           this.listUser=[];
-          this.listMemo2OfUser=[];
+          this.listUserDetail=[];
           this.listMemo2OfUser=[];
            //thêm giá trị đê add thử copy -sau nay xóa đi
         //   if (action == 'edit') {
@@ -640,6 +642,7 @@ export class TaskInfoComponent implements OnInit {
   // }
 
   getListUser(listUser) {
+    this.listMemo2OfUser=[]
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
@@ -780,6 +783,17 @@ export class TaskInfoComponent implements OnInit {
   }
   fileAdded(e){
     console.log(e)
+  }
+
+  convertToListTaskResources(){
+    var listTaskResources: tmpTaskResource[] =[];
+    this.listMemo2OfUser.forEach(obj=>{
+      var tmpTR= new tmpTaskResource();
+      tmpTR.resourceID = obj.userID ;
+      tmpTR.memo = obj.memo2 ;
+       listTaskResources.push(tmpTR);
+    })
+    this.listTaskResources= listTaskResources ;
   }
 
 }

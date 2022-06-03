@@ -13,64 +13,51 @@ export class PopupShareSprintsComponent implements OnInit {
   data: any;
   dialog: any;
   searchField = "";
-  listUserDetail = [];
+  listUserDetailOld = [];
+  listIdUser = [];
+  userID = '';
   constructor(private api : ApiHttpService, private callfc: CallFuncService,private changeDetectorRef: ChangeDetectorRef,@Optional() dt?: DialogData, @Optional() dialog?: Dialog) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.listUserDetailOld = this.data;
+    for (var i = 0; i < this.data.length; i++) {
+      this.listIdUser.push(this.data.userID);
+    }
   }
   ngOnInit(): void {
-    if(this.data.resources){
-     this.getListUser(this.data.resources) ;
-    }
+  
   }
 
-  getListUser(listUser) {
-    while (listUser.includes(' ')) {
-      listUser = listUser.replace(' ', '');
-    }
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        listUser
-      )
-      .subscribe((res) => {
-        this.listUserDetail = res;
-        console.log(this.listUserDetail)
-      });
-      this.changeDetectorRef.detectChanges();
-  }
+
   onDeleteUser(userID) {
     var listUserDetail = [];
-    for (var i = 0; i < this.listUserDetail.length; i++) {
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
+    var listIdUser = [];
+    for (var i = 0; i < this.data.length; i++) {
+      if (this.data[i].userID != userID) {
+        listUserDetail.push(this.data[i]);
+        listIdUser.push(this.data[i])
       }
     }
-    this.listUserDetail = listUserDetail;
-    var resources = '';
-    if (listUserDetail.length > 0) {
-      listUserDetail.forEach((user) => {
-        resources += user.userID + ';';
-      });
-      resources = resources.slice(0, -1);
-      this.data.resources = resources;
-    } else this.data.resources = '';
+    this.data = listUserDetail;
+    this.listIdUser = listIdUser;
   }
   saveData(){
-
+    this.api.execSv<any>("TM", "TM", "SprintsBusiness", "DeleteSprintsByIDAsync", [])
+    this.dialog.hide();
   }
 
   openDialog() {
-    const t = this
+    // const t = this
     // let obj = {
     //   formName: 'demo',
     //   control: '1',
     //   value: '5',
     //   text: 'demo nè',
     // };
-    t.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+    this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+  }
+  showControl(p, userID) {
+    this.userID = userID;
+    p.open();
   }
 }
