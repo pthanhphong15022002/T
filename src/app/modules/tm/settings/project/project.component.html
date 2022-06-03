@@ -74,44 +74,31 @@
     <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
   </div>
 </ng-template>
+
+<ng-template #popContent let-dataItem>
+  <a class="action-item" (click)="openForm(taskAction,false)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ms-2 me-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+</ng-template>
+
 <ng-template #GiftIDCell let-dataItem>
-  <div class="Box-tools pull-right" style="vertical-align: middle;">
-    <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="openForm(dataItem,false)">
-      <i class="fa fa-edit text-primary"></i>
-    </a>
-    <a class="btn btn-xs btn-flat btn-danger">
-      <i class="fa fa-remove "></i>
-    </a>
+  <div class="dropdown" (dblclick)="showControl(p2,dataItem)" [ngbPopover]="popContent" popoverClass="empPopoverClass"
+    #p2="ngbPopover" placement="right left" container="body" autoClose="outside" triggers="manual">
+    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-more_vert icon-20"></span>
+    </button>
   </div>
-  <!-- <div>
-        <div class="dropdown">
-            <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="icon-more_vert icon-20"></span>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" >
-                    <div class="d-flex align-items-center">
-                        <span class="icon-create icon-18"></span>
-                        <span class="ml-3">Chỉnh sửa</span>
-                    </div>
-                </a>
-                <a class="dropdown-item" >
-                    <div class="d-flex align-items-center">
-                        <span class="icon-delete icon-18"></span>
-                        <span class="ml-3">Xóa</span>
-                    </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                        <span class="icon-extension icon-18"></span>
-                        <span class="ml-3">Chức năng mở rộng</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div> -->
+
 </ng-template>
 <ng-template #itemCreate let-data>
   {{data.createdOn | fmDT:'dmy'}}
@@ -133,10 +120,10 @@
   </div>
 </ng-template>
 
-<ng-template #itemProjectCategoryVll let-data>
+<ng-template #itemApprovalControlVll let-data>
   <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
-    [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
-    {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+      [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+      {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
 </ng-template>
 <ng-template #itemStatusVll let-data>
   <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"

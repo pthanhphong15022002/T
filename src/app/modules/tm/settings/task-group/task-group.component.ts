@@ -53,6 +53,8 @@ export class TaskGroupComponent implements OnInit {
   isAfterRender = false;
   isAddMode = true;
   enableAddtodolist: boolean = false;
+  itemSelected: any;
+  
   todoAddText: any;
   isAddNew = this.dataAddNew.asObservable();
   totalRow = 1;
@@ -90,7 +92,6 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadData();
     this.columnsGrid = [
       { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
@@ -136,7 +137,7 @@ export class TaskGroupComponent implements OnInit {
     this.tmSv.loadTaskGroupByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.listView.data = this.data;
+        this.gridView.data = this.data;
       }
     })
   }
@@ -468,5 +469,11 @@ export class TaskGroupComponent implements OnInit {
     dataItem.disableReadmore = !dataItem.disableReadmore;
     this.dt.detectChanges();
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
+  }
+  taskAction: any;
+
+  showControl(p, item) {
+    this.taskAction = item;
+    p.open();
   }
 }

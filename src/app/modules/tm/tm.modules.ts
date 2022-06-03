@@ -1,3 +1,5 @@
+import { ProjectGroupComponent } from './settings/project-group/project-group.component';
+
 import { HomeSettingComponent } from './settings/home-setting/home-setting.component';
 import { AssignTaskDetailsComponent } from './assign-tasks/assign-tasks-details/assign-tasks-details.component';
 
@@ -39,6 +41,8 @@ import { SprintsInfoComponent } from './sprints/sprints-info/sprints-info.compon
 import { ListSprintsComponent } from './sprints/list-sprints/list-sprints.component';
 import { ProjectComponent } from './settings/project/project.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
+import { AssignTasksCalendarComponent } from './assign-tasks/assign-tasks-calendar/assign-tasks-calendar.component';
+import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assign-list-tasks.component';
 
 
 const routes: Routes = [
@@ -84,9 +88,13 @@ const routes: Routes = [
           },
           {
             path: 'project/:funcID',
-            component: ProjectComponent,
+            component: ProjectComponent
           },
-        ],
+          {
+            path: 'projectgroup/:funcID',
+            component: ProjectGroupComponent
+          }
+        ]
       },
       {
         path: '',
@@ -116,6 +124,8 @@ const routes: Routes = [
     LayoutComponent,
     AssignTaskComponent,
     AssignTaskDetailsComponent,
+    AssignTasksCalendarComponent,
+    AssignListTasksComponent,
     HomeSettingComponent,
     TaskGroupComponent,
     RangesKanbanComponent,
@@ -128,7 +138,7 @@ const routes: Routes = [
     ListSprintsComponent,
     ProjectComponent,
     TaskGroupComponent,
-    PopupShareSprintsComponent
+    ProjectGroupComponent
   ],
   imports: [
     RouterModule.forChild(routes),

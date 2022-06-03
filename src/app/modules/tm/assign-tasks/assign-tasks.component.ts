@@ -12,6 +12,9 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 export class AssignTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
+  @ViewChild('listTasks') listTasks: TemplateRef<any>;
+  @ViewChild('schedule') schedule: TemplateRef<any>;
+
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
@@ -39,7 +42,32 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'
       }
-    }];
+    },
+    {
+      id: '3',
+      type: 'list',
+      icon: 'icon-format_list_bulleted',
+      text: 'List-tasks',
+      active: false,
+
+      model: {
+        panelLeftRef: this.listTasks,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '4',
+      type: 'schedule',
+      text: 'schedule',
+      active: false,
+      //   viewInput: null,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },];
     this.cf.detectChanges();
   }
 
