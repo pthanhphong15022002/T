@@ -304,9 +304,9 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv
       .addTask([
         this.task,
-        this.listTodo,
         this.functionID,
         this.listTaskResources,
+        this.listTodo,
       ])
       .subscribe((res) => {
         if (res) {
@@ -337,11 +337,11 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv
       .update([
         this.task,
+        this.functionID,
+        this.listTaskResources,
         this.listTodo,
         null,
-        this.functionID,
         this.recIDTodoDelete,
-        this.listTaskResources,
       ])
       .subscribe((res) => {
         if (res) {

@@ -14,15 +14,21 @@ export class PopupShareSprintsComponent implements OnInit {
   dialog: any;
   searchField = "";
   listUserDetailOld = [];
+  listIdUserOld = [];
   listIdUser = [];
   userID = '';
+  listUserDetail = [] ;
+  taskBoard :any
   constructor(private api : ApiHttpService, private callfc: CallFuncService,private changeDetectorRef: ChangeDetectorRef,@Optional() dt?: DialogData, @Optional() dialog?: Dialog) {
     this.data = dt?.data;
     this.dialog = dialog;
-    this.listUserDetailOld = this.data;
-    for (var i = 0; i < this.data.length; i++) {
-      this.listIdUser.push(this.data.userID);
+    this.taskBoard = this.data.boardAction;
+    this.listUserDetailOld = this.data.listUserDetail;
+    this.listUserDetail = this.listUserDetailOld 
+    for (var i = 0; i < this.listUserDetail.length; i++) {
+      this.listIdUser.push(this.listUserDetail[i].userID);
     }
+    this.listIdUserOld = this.listIdUser ;
   }
   ngOnInit(): void {
   
@@ -32,18 +38,28 @@ export class PopupShareSprintsComponent implements OnInit {
   onDeleteUser(userID) {
     var listUserDetail = [];
     var listIdUser = [];
-    for (var i = 0; i < this.data.length; i++) {
-      if (this.data[i].userID != userID) {
-        listUserDetail.push(this.data[i]);
-        listIdUser.push(this.data[i])
+    for (var i = 0; i < this.listUserDetail.length; i++) {
+      if (this.listUserDetail[i].userID != userID) {
+        listUserDetail.push(this.listUserDetail[i]);
+        listIdUser.push(this.listUserDetail[i])
       }
     }
-    this.data = listUserDetail;
+    this.listUserDetail = listUserDetail;
     this.listIdUser = listIdUser;
+    this.changeDetectorRef.detectChanges();
   }
   saveData(){
-    this.api.execSv<any>("TM", "TM", "SprintsBusiness", "DeleteSprintsByIDAsync", [])
-    this.dialog.hide();
+    var strIdUser ="";
+    if(this.listIdUser.length > 0){
+      strIdUser = this.listIdUser[0];
+      for(var i=1; i<this.listIdUser.length ;i++){
+        strIdUser+=";"+this.listIdUser[i];
+      }
+    }
+    this.api.execSv("TM","TM","SprintsBusiness","AddShareOfSprintsAsync",[this.taskBoard.iterationID,strIdUser]).subscribe(res=>{
+       console.log(res)
+    })
+    this.dialog.hide(this.listIdUser);
   }
 
   openDialog() {

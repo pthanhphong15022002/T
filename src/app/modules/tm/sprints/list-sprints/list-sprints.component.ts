@@ -174,6 +174,10 @@ export class ListSprintsComponent implements OnInit {
   shareTaskBoard(boardAction) {
     var listUserDetail = [];
     if (boardAction.iterationID) {
+      var obj = {
+        boardAction : boardAction ,
+        listUserDetail: listUserDetail,
+      }
       this.api
         .execSv<any>(
           'TM',
@@ -183,12 +187,12 @@ export class ListSprintsComponent implements OnInit {
           boardAction.iterationID
         )
         .subscribe((res) => {
-          if (res) this.openPopupShare(res);
-          else this.openPopupShare(listUserDetail);
+          if (res) obj.listUserDetail= res;
+         this.openPopupShare(obj);
         });
     }
   }
-  openPopupShare(listUserDetail) {
+  openPopupShare(obj) {
     this.callfc
       .openForm(
         PopupShareSprintsComponent,
@@ -197,7 +201,7 @@ export class ListSprintsComponent implements OnInit {
         510,
         '',
         // boardAction
-        listUserDetail
+        obj
       )
       .subscribe((dt: any) => {
         dt.close = this.closePopup;
