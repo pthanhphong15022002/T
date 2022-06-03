@@ -41,7 +41,7 @@ export class PopupShareSprintsComponent implements OnInit {
     for (var i = 0; i < this.listUserDetail.length; i++) {
       if (this.listUserDetail[i].userID != userID) {
         listUserDetail.push(this.listUserDetail[i]);
-        listIdUser.push(this.listUserDetail[i])
+        listIdUser.push(this.listUserDetail[i].userID)
       }
     }
     this.listUserDetail = listUserDetail;
@@ -57,9 +57,13 @@ export class PopupShareSprintsComponent implements OnInit {
       }
     }
     this.api.execSv("TM","TM","SprintsBusiness","AddShareOfSprintsAsync",[this.taskBoard.iterationID,strIdUser]).subscribe(res=>{
-       console.log(res)
+      if(res){
+        this.dialog.hide(res);
+      }else{
+        this.dialog.hide(false);
+      }
     })
-    this.dialog.hide(this.listIdUser);
+    
   }
 
   openDialog() {

@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
 import { TmService } from '@modules/tm/tm.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -204,19 +205,26 @@ export class ListSprintsComponent implements OnInit {
         obj
       )
       .subscribe((dt: any) => {
-        dt.close = this.closePopup;
+        var that = this;
+          dt.close = function (e) {
+            return that.closePopup(e, that);
+          };
       });
   }
 
-  closePopup(e: any) {
+  closePopup(e: any,t : ListSprintsComponent) {
     if (e.closedBy == 'user action') {
-      var boardAction = e.event;
-
-      if (boardAction?.projectID != null) {
-        this.lstProjectBoard.removeHandler(boardAction, 'iterationID');
-      } else {
-        this.lstViewBoard.removeHandler(boardAction, 'iterationID');
+      var boardAction = new TM_Sprints() ;
+      if(e.event){
+        boardAction= e.event;
+        if (boardAction?.projectID != null) {
+          t.lstProjectBoard.addHandler(boardAction,false, 'iterationID');
+        } else {
+          t.lstViewBoard.addHandler(boardAction,false, 'iterationID');
+        }
+        this.notiService.notify("Share board thành công !")
       }
+     
     }
   }
 }

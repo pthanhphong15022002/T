@@ -40,7 +40,7 @@ export class TreeviewComponent implements OnInit {
     model.entityName = 'TM_Tasks';
     model.predicate = '';
     this.fromDate = moment('3/01/2022').toDate();
-    this.toDate = moment('5/31/2022').toDate();
+    this.toDate = moment('12/30/2022').toDate();
     model.page = 1;
     model.pageSize = 100;
     model.filter = {
