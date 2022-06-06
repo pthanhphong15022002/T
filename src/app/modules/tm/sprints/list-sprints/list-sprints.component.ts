@@ -7,10 +7,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
 import { TmService } from '@modules/tm/tm.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
+  AuthStore,
   CallFuncService,
   CodxListviewComponent,
   DataRequest,
@@ -53,6 +55,7 @@ export class ListSprintsComponent implements OnInit {
   totalViewBoards: number = 0;
   totalProjectBoards: number = 0;
   boardAction: any;
+  user:any ;
   @ViewChild('lstViewBoard') lstViewBoard: ListCardComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: ListCardComponent;
 
@@ -61,8 +64,9 @@ export class ListSprintsComponent implements OnInit {
     private tmSv: TmService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
-    private callfc: CallFuncService
-  ) {}
+    private callfc: CallFuncService,
+    private authStore:AuthStore
+  ) {this.user = this.authStore.get();}
 
   ngOnInit(): void {}
 
@@ -169,25 +173,27 @@ export class ListSprintsComponent implements OnInit {
   }
 
   shareTaskBoard(boardAction) {
-     var listUserDetail = [];
-    if(boardAction.resources){
+    var listUserDetail = [];
+    if (boardAction.iterationID) {
+      var obj = {
+        boardAction : boardAction ,
+        listUserDetail: listUserDetail,
+      }
       this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        boardAction.resources
-      )
-      .subscribe((res) => {
-        this.openPopupShare(res)
-      });
-    }else{
-      this.openPopupShare(listUserDetail)
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'SprintsBusiness',
+          'GetListUserSharingOfSprintsByIDAsync',
+          boardAction.iterationID
+        )
+        .subscribe((res) => {
+          if (res) obj.listUserDetail= res;
+         this.openPopupShare(obj);
+        });
     }
-      
   }
-  openPopupShare(listUserDetail){
+  openPopupShare(obj) {
     this.callfc
       .openForm(
         PopupShareSprintsComponent,
@@ -196,22 +202,29 @@ export class ListSprintsComponent implements OnInit {
         510,
         '',
         // boardAction
-        listUserDetail
+        obj
       )
       .subscribe((dt: any) => {
-        dt.close = this.closePopup;
+        var that = this;
+          dt.close = function (e) {
+            return that.closePopup(e, that);
+          };
       });
   }
 
-  closePopup(e: any) {
+  closePopup(e: any,t : ListSprintsComponent) {
     if (e.closedBy == 'user action') {
-      var boardAction = e.event;
-
-      if (boardAction?.projectID != null) {
-        this.lstProjectBoard.removeHandler(boardAction, 'iterationID');
-      } else {
-        this.lstViewBoard.removeHandler(boardAction, 'iterationID');
+      var boardAction = new TM_Sprints() ;
+      if(e.event){
+        boardAction= e.event;
+        if (boardAction?.projectID != null) {
+          t.lstProjectBoard.addHandler(boardAction,false, 'iterationID');
+        } else {
+          t.lstViewBoard.addHandler(boardAction,false, 'iterationID');
+        }
+        this.notiService.notify("Share board thành công !")
       }
+     
     }
   }
 }

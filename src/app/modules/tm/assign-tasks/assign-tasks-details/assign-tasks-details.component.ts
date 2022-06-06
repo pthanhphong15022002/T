@@ -87,10 +87,10 @@ export class AssignTaskDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    model.predicate = '';
-    model.funcID = "TMT03";
-    model.page = 1;
-    model.pageSize = 100;
+    // model.predicate = '';
+    // model.funcID = "TMT03";
+    // model.page = 1;
+    // model.pageSize = 100;
     // model.predicate = 'Owner=@0';
     // model.dataValue = this.user.userID;
     // set max dinh

@@ -138,7 +138,8 @@ const routes: Routes = [
     ListSprintsComponent,
     ProjectComponent,
     TaskGroupComponent,
-    ProjectGroupComponent
+    ProjectGroupComponent,
+    PopupShareSprintsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
