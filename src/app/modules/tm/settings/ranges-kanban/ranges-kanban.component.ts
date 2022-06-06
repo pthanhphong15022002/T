@@ -82,11 +82,11 @@ export class RangesKanbanComponent implements OnInit {
     this.initForm();
     this.initPopup();
     this.columnsGrid = [
-      { field: 'noName', headerText: '', template: this.GiftIDCell},
-      { field: 'rangeID', headerText: 'Mã'},
-      { field: 'rangeName', headerText: 'Mô tả'},
+      { field: 'noName', headerText: '', template: this.GiftIDCell },
+      { field: 'rangeID', headerText: 'Mã' },
+      { field: 'rangeName', headerText: 'Mô tả' },
       { field: 'note', headerText: 'Ghi chú' },
-      { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore},
+      { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore },
       { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy },
       { field: 'createOn', headerText: 'ngày tạo', template: this.itemCreate },
 
@@ -124,66 +124,43 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   initPopup(dataItem = null) {
-    if(dataItem){
+    if (dataItem) {
       this
-      .getFormGroup("RangeLines", "grvRangeLines")
-      .then((item) => {
-        this.fb.group(RangeLineFormGroup);
-        this.rangeLines.recID = item.value.recID;
-        this.rangeLines.rangeID = dataItem.rangeID;
-        this.rangeLines.breakName = dataItem.breakName;
-        this.rangeLines.breakValue = dataItem.breakValue;
-        this.rangeLines.id =dataItem.breakValue;
-      });
+        .getFormGroup("RangeLines", "grvRangeLines")
+        .then((item) => {
+          this.fb.group(RangeLineFormGroup);
+          this.rangeLines.recID = item.value.recID;
+          this.rangeLines.rangeID = dataItem.rangeID;
+          this.rangeLines.breakName = dataItem.breakName;
+          this.rangeLines.breakValue = dataItem.breakValue;
+          this.rangeLines.id = dataItem.breakValue;
+        });
     }
-    else 
-    this
-      .getFormGroup("RangeLines", "grvRangeLines")
-      .then((item) => {
-        this.fb.group(RangeLineFormGroup);
-        this.rangeLines.recID = item.value.recID;
-        this.rangeLines.rangeID = "";
-        this.rangeLines.breakName = null;
-        this.rangeLines.breakValue = null;
-        this.rangeLines.id = this.lstRangeLine.length + 1;
-      });
-  }
-
-
-  openPopup2(itemdata, isAddLine, index) {
-    this.isAddLine = isAddLine;
-    if (isAddLine == false) {
-
-    }
-    this.modalService
-      .open(this.add, { centered: true })
-      .result.then(
-        (result) => {
-          if (isAddLine == false) {
-
-          }
-        },
-        (reason) => {
-          console.log("reason", this.getDismissReason(reason));
-        }
-      );
+    else
+      this
+        .getFormGroup("RangeLines", "grvRangeLines")
+        .then((item) => {
+          this.fb.group(RangeLineFormGroup);
+          this.rangeLines.recID = item.value.recID;
+          this.rangeLines.rangeID = "";
+          this.rangeLines.breakName = null;
+          this.rangeLines.breakValue = null;
+          this.rangeLines.id = this.lstRangeLine.length + 1;
+        });
   }
 
 
   openPopup(itemdata, isAddLine, index) {
     this.isAddLine = isAddLine;
-    if(!itemdata)
+    if (!itemdata)
       this.initPopup();
-      else if (!itemdata.recID) {
-      var item = this.lstRangeLine.find(x=>x.id == itemdata.id);
+    else if (!itemdata.recID) {
+      var item = this.lstRangeLine.find(x => x.id == itemdata.id);
       this.initPopup(item);
     } else {
-      this.api.execSv<any>("BS", "BS", "RangeLinesBusiness", "GetAsync", itemdata.recID).subscribe((res) => {
-        if (res) {
-          this.rangeLines = res;
-          this.dt.detectChanges();
-        }
-      })
+      if (itemdata.recID) {
+        this.initPopup(itemdata);
+      }
     }
 
     this.modalService
@@ -344,20 +321,6 @@ export class RangesKanbanComponent implements OnInit {
               t.data = t.gridView.data;
             })
         };
-      });
-  }
-
-  OnSaveLine(){
-    return this.api
-      .execSv("BS", "BS", "RangesKanbanBusiness", "AddEditRangeLineAsync", [
-        this.rangeLines,
-        this.isAddLine,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.data = res[2];
-         
-        }
       });
   }
 
