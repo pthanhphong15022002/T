@@ -43,6 +43,9 @@ import { ProjectComponent } from './settings/project/project.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { AssignTasksCalendarComponent } from './assign-tasks/assign-tasks-calendar/assign-tasks-calendar.component';
 import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assign-list-tasks.component';
+import { StatisticalComponent } from './statistical/statistical.component';
+import { StatisticalViewlistComponent } from './statistical/statistical-viewlist/statistical-viewlist.component';
+import { HomeStatisticalComponent } from './statistical/home-statistical/home-statistical.component';
 import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
 
 
@@ -106,6 +109,20 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'statistical',
+        component: StatisticalComponent,
+        children:[
+          {
+            path: '',
+            component: HomeStatisticalComponent,
+          },
+          {
+            path: 'statisticalviewlist/:funcID',
+            component: StatisticalViewlistComponent
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
@@ -149,6 +166,9 @@ const routes: Routes = [
     TaskGroupComponent,
     ProjectGroupComponent,
     PopupShareSprintsComponent,
+    StatisticalComponent,
+    HomeStatisticalComponent,
+    StatisticalViewlistComponent, 
     ViewDetailsSprintsComponent
   ],
   imports: [

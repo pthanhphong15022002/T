@@ -140,6 +140,15 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       separator: false,
       url: 'tm/setting',
       childs: []
+    },
+    {
+      functionID: '',
+      customName: 'Thống kê - báo cáo',
+      smallIcon: 'icon-gear icon-18',
+      comingSoon: false,
+      separator: false,
+      url: 'tm/statistical',
+      childs: []
     }]
   );
 }

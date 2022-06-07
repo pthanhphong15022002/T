@@ -1,0 +1,13 @@
+<codx-views #view funcID="TMR01" entityName="TM_sprTaskDaily" [views]="views"> </codx-views>
+
+<ng-template #main>
+    <div class="" id="kt_content">
+      <div class="list-table">
+        <codx-gridview #gridView [columnsGrid]="columnsGrid" [pageSize]="100" service="TM" entityName="TM_sprTaskDaily"
+          type="listview" assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportTasksAsync"
+          [gridViewName]="'grvTaskDaily'" [predicate]="''" [dataValue]="''" [pageSize]="100" [formName]="formName"
+          [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle" [gridViewName]="gridViewName" [data]="data">
+        </codx-gridview>
+      </div>
+    </div>
+  </ng-template>
