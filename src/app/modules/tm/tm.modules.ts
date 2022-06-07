@@ -43,6 +43,7 @@ import { ProjectComponent } from './settings/project/project.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { AssignTasksCalendarComponent } from './assign-tasks/assign-tasks-calendar/assign-tasks-calendar.component';
 import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assign-list-tasks.component';
+import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
 
 
 const routes: Routes = [
@@ -64,8 +65,16 @@ const routes: Routes = [
       },
       {
         path: 'viewboards/:funcID',
-        component: SprintsComponent,
+        component: SprintsComponent
       },
+      {
+        path: 'sprinttasks/:funcID',
+        component: ViewDetailsSprintsComponent,
+      },  
+      {
+        path: 'sprinttasks/:id',
+        component: ViewDetailsSprintsComponent,
+      },  
       {
         path: 'setting',
         component: SettingsComponent,
@@ -139,7 +148,8 @@ const routes: Routes = [
     ProjectComponent,
     TaskGroupComponent,
     ProjectGroupComponent,
-    PopupShareSprintsComponent
+    PopupShareSprintsComponent,
+    ViewDetailsSprintsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
