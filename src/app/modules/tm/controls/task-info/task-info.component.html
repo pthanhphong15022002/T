@@ -150,23 +150,24 @@
                   </div>
                 </div>
               </ng-container>
-
-              <div class="d-flex align-items-center justify-content-between mt-6">
-                <div class="d-flex align-items-center mb-3">
-                  <span class="icon-person icon-18 me-2 text-primary"></span>
-                  <div class="fw-bold fs-6 text-primary">Phân công cho</div>
+              <ng-container *ngIf="showAssignTo">
+                <div class="d-flex align-items-center justify-content-between mt-6">
+                  <div class="d-flex align-items-center mb-3">
+                    <span class="icon-person icon-18 me-2 text-primary"></span>
+                    <div class="fw-bold fs-6 text-primary">Phân công cho</div>
+                  </div>
+                  <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
+                    <i class="icon-person_add_alt fs-5 me-1"></i>
+                  </button>
                 </div>
-                <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
-                  <i class="icon-person_add_alt fs-5 me-1"></i>
-                </button>
-              </div>
-              <div class="symbol-group">
-                <ng-container *ngFor="let item of listUser">
-                  <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">
-                  </codx-img>
-                </ng-container>
-              </div>
-
+                <div class="symbol-group">
+                  <ng-container *ngFor="let item of listUser">
+                    <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item"
+                      objectType="AD_Users">
+                    </codx-img>
+                  </ng-container>
+                </div>
+              </ng-container>
               <div class="d-flex align-items-center justify-content-between mt-6">
                 <div class="d-flex align-items-center mb-3">
                   <span class="icon-attach icon-18 me-2 text-primary"></span>
@@ -266,7 +267,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem>
+          <e-tabitem  *ngIf="showAssignTo">
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <span class="icon-person_outline icon-18 me-2"></span>

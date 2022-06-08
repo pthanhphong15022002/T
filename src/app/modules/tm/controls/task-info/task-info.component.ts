@@ -1,4 +1,4 @@
-import {tmpTaskResource, TM_Tasks } from './../../models/TM_Tasks.model';
+import { tmpTaskResource, TM_Tasks } from './../../models/TM_Tasks.model';
 import { TmService } from './../../tm.service';
 import { APICONSTANT } from '@shared/constant/api-const';
 
@@ -32,6 +32,7 @@ import { CbxpopupComponent } from '../cbxpopup/cbxpopup.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AttachmentService } from '@shared/components/attachment/attachment.service';
 import { AttachmentComponent } from '@shared/components/attachment/attachment.component';
+import { ActivatedRoute } from '@angular/router';
 
 declare var _, $: any;
 @Component({
@@ -47,7 +48,7 @@ export class TaskInfoComponent implements OnInit {
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[];
   listTodo: TaskGoal[];
-  listTaskResources: tmpTaskResource[] =[] ;
+  listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -80,9 +81,8 @@ export class TaskInfoComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  @ViewChild('attachment') attachment:AttachmentComponent
-
- 
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  showAssignTo = false;
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -100,44 +100,12 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = this.viewBase.funcID ;
+    this.functionID = this.viewBase.funcID;
+    if(this.functionID =="TMT03"){
+      this.showAssignTo = true;
+    }
     this.getParam(); //bật tắt set param
     this.openTask();
-
-    // this.api.execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness","GetListEmployeesByUserIDAsync","PMNHI").subscribe(res=>{
-    //   console.log(res)})
-    // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
-    //   if (res) t.grvSetup = res;
-    // });
-    //this.getParam();
-    // this.dMService.islistFiles.subscribe((result) => {
-    //   if (result) {
-    //     this.attachmentComponent.loadAttachment();
-    //   }
-    // });
-    // this.tmSv.isShowPanel.subscribe((res) => {
-    //   if (res?.taskID) {
-    //     this.functionID = res.funtionID;
-    //     this.view = res.view;
-    //     this.action = res.action;
-    //     this.openInfo(res.taskID, res.action);
-    //     return;
-    //   }
-    //   if (res?.funtionID) {
-    //     this.functionID = res.funtionID;
-    //     this.view = res.view;
-    //     this.openTask();
-    //     return;
-    //   }
-    // });
-
-    // this.tmSv.isCopy.subscribe((res) => {
-    //   if (res) {
-    //     t.view = res.view;
-    //     t.functionID = res.functionID;
-    //     t.getTaskCoppied(res.id);
-    //   }
-    // });
   }
 
   getParam(callback = null) {
@@ -244,11 +212,11 @@ export class TaskInfoComponent implements OnInit {
   }
 
   saveData(id) {
-    if(this.task.taskName == null  ||this.task.taskName.trim() ==''){
+    if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
-      this.notiService.notify("Tên công việc không được để trống !");
-      $('#taskNameInput').focus()
-      return ;
+      this.notiService.notify('Tên công việc không được để trống !');
+      $('#taskNameInput').focus();
+      return;
     }
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -261,7 +229,7 @@ export class TaskInfoComponent implements OnInit {
     }
     if (
       this.task.dueDate < this.task.startDate ||
-        this.task.dueDate < this.task.endDate
+      this.task.dueDate < this.task.endDate
     ) {
       if (this.task.dueDate < this.task.startDate) {
         this.message =
@@ -282,7 +250,6 @@ export class TaskInfoComponent implements OnInit {
     }
   }
   actionSave(id) {
-    
     if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
     var checkLogic =
       this.isCheckProjectControl ||
@@ -430,13 +397,12 @@ export class TaskInfoComponent implements OnInit {
     if (this.task.startDate && this.task.endDate) {
       if (
         this.task.dueDate < this.task.startDate ||
-        (this.task.dueDate < this.task.endDate &&
-          !this.isConfirm)
+        (this.task.dueDate < this.task.endDate && !this.isConfirm)
       ) {
         if (this.task.dueDate < this.task.startDate) {
           this.message =
             'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-        } else if (this.task.dueDate< this.task.endDate)
+        } else if (this.task.dueDate < this.task.endDate)
           this.message =
             'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
 
@@ -444,8 +410,7 @@ export class TaskInfoComponent implements OnInit {
           this.isConfirm = true;
         } else {
           this.isConfirm = false;
-          if (this.task.dueDate < this.task.startDate)
-            $('#startDate').focus();
+          if (this.task.dueDate < this.task.startDate) $('#startDate').focus();
           else $('#endDate').focus();
         }
       }
@@ -511,7 +476,7 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          if(res.checkList !=null){
+          if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
@@ -519,12 +484,15 @@ export class TaskInfoComponent implements OnInit {
               taskG.text = tx;
               this.listTodo.push(taskG);
             });
-          }   
+          }
         }
       });
   }
 
   openTask(): void {
+    if(this.functionID =="TMT03"){
+      this.showAssignTo = true;
+    }
     const t = this;
     this.task.estimated = 0;
     this.readOnly = false;
@@ -564,20 +532,23 @@ export class TaskInfoComponent implements OnInit {
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null){
+        if (t.task.assignTo != null) {
           t.listUser = t.task.assignTo.split(';');
           this.getListUser(this.task.assignTo);
-        }else{
-          this.listUser=[];
-          this.listUserDetail=[];
-          this.listMemo2OfUser=[];
-           //thêm giá trị đê add thử copy -sau nay xóa đi
-        //   if (action == 'edit') {
-        //     this.task.assignTo = 'TQHOAN'; ///tesst
-        //     this.getListUser(this.task.assignTo);
-        //   }
+        } else {
+          this.listUser = [];
+          this.listUserDetail = [];
+          this.listMemo2OfUser = [];
+          //thêm giá trị đê add thử copy -sau nay xóa đi
+          //   if (action == 'edit') {
+          //     this.task.assignTo = 'TQHOAN'; ///tesst
+          //     this.getListUser(this.task.assignTo);
+          //   }
         }
         t.changeDetectorRef.detectChanges();
+        if(this.functionID =="TMT03"){
+          this.showAssignTo = true;
+        }
         this.showPanel();
       }
     });
@@ -585,6 +556,9 @@ export class TaskInfoComponent implements OnInit {
 
   getTaskCoppied(id) {
     const t = this;
+    if(this.functionID =="TMT03"){
+      this.showAssignTo = true;
+    }
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         t.copyListTodo(res[2]);
@@ -611,10 +585,10 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
-    t.task.dueDate = moment(new Date(data.dataValue)).toDate() ;
-    if(data.startDate !=null)
-    t.task.startDate = moment(new Date(data.startDate)).toDate() ;
-    t.task.endDate = moment(new Date(data.endDate)).toDate() ;
+    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+    if (data.startDate != null)
+      t.task.startDate = moment(new Date(data.startDate)).toDate();
+    t.task.endDate = moment(new Date(data.endDate)).toDate();
     t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
@@ -642,7 +616,7 @@ export class TaskInfoComponent implements OnInit {
   // }
 
   getListUser(listUser) {
-    this.listMemo2OfUser=[]
+    this.listMemo2OfUser = [];
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
@@ -675,6 +649,7 @@ export class TaskInfoComponent implements OnInit {
     // if (this.tagsComponent.isOpen) this.tagsComponent.close()
     this.required.taskName = false;
     this.disableAddToDo = true;
+    this.showAssignTo=false;
     this.resetTask();
     this.closePanel();
   }
@@ -775,25 +750,24 @@ export class TaskInfoComponent implements OnInit {
 
   closeConfirm(e: any, t: TaskInfoComponent, id: string) {
     if (e?.event?.status == 'Y') {
-      t.actionSave(id)
-     }
-   }
-   popup(evt: any){    
+      t.actionSave(id);
+    }
+  }
+  popup(evt: any) {
     this.attachment.openPopup();
   }
-  fileAdded(e){
-    console.log(e)
+  fileAdded(e) {
+    console.log(e);
   }
 
-  convertToListTaskResources(){
-    var listTaskResources: tmpTaskResource[] =[];
-    this.listMemo2OfUser.forEach(obj=>{
-      var tmpTR= new tmpTaskResource();
-      tmpTR.resourceID = obj.userID ;
-      tmpTR.memo = obj.memo2 ;
-       listTaskResources.push(tmpTR);
-    })
-    this.listTaskResources= listTaskResources ;
+  convertToListTaskResources() {
+    var listTaskResources: tmpTaskResource[] = [];
+    this.listMemo2OfUser.forEach((obj) => {
+      var tmpTR = new tmpTaskResource();
+      tmpTR.resourceID = obj.userID;
+      tmpTR.memo = obj.memo2;
+      listTaskResources.push(tmpTR);
+    });
+    this.listTaskResources = listTaskResources;
   }
-
 }
