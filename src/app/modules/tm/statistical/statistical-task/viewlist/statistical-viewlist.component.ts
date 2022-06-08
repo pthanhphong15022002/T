@@ -16,6 +16,7 @@ export class StatisticalViewlistComponent implements OnInit {
   @ViewChild("itemStatusVll", { static: true }) itemStatusVll: TemplateRef<any>;
   @ViewChild("itemMemo", { static: true }) itemMemo: TemplateRef<any>;
   @ViewChild("itemCompletedOn", { static: true }) itemCompletedOn: TemplateRef<any>;
+  @ViewChild("itemActive", { static: true }) itemActive: TemplateRef<any>;
 
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any>;
@@ -51,7 +52,6 @@ export class StatisticalViewlistComponent implements OnInit {
   views: Array<ViewModel> = [];
   
   ngOnInit(): void {
-    this.loadData();
     this.columnsGrid = [
       { field: 'priority', headerText: '', template: this.GiftIDCell },
       { field: 'taskName', headerText: 'Tên công việc' },
@@ -62,9 +62,10 @@ export class StatisticalViewlistComponent implements OnInit {
       { field: 'completedOn', headerText: 'Ngày hoàn tất', template: this.itemCompletedOn },
       { field: 'taskGroupName', headerText: 'Nhóm công việc' },
       { field: 'projectName', headerText: 'Dự án' },
+      { field: 'active', headerText: 'Hoạt động', template: this.itemActive},
       { field: 'buid', headerText: 'Bộ phận người thực hiện' }
     ];
-    this.cache.gridViewSetup('TaskDaily', 'grvTaskDaily').subscribe(res => {
+    this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
       if (res)
         this.gridViewSetup = res
     })
@@ -83,23 +84,17 @@ export class StatisticalViewlistComponent implements OnInit {
     },
     ];
   }
-
-  loadData(){
-    let model = new DataRequest();
-    model.formName = 'TaskDaily';
-    model.gridViewName = 'grvTaskDaily';
-    model.entityName = 'TM_sprTaskDaily';
-    model.predicate = '';
-
-    model.page = 1;
-    model.pageSize = 100;
-   
-    const t = this;
-    t.api.execSv<any>("TM","TM","ReportBusiness","ListReportTasksAsync",this.model).subscribe((res)=>{
-      if(res){
-        this.data = res;
-      }
-    })
+  popoverList: any;
+  popoverDetail: any;
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null || emp.memo2 != null)
+        p.open();
+    }
+    else
+      p.close();
   }
 
   initForm(){

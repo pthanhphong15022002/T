@@ -117,7 +117,7 @@ export class RangesKanbanComponent implements OnInit {
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber("TM00634", "BS_RangesKanban", "RangeID").subscribe(key => {
+      this.getAutonumber("TMS034", "BS_RangesKanban", "RangeID").subscribe(key => {
         this.ranges.rangeID = key;
       })
     })

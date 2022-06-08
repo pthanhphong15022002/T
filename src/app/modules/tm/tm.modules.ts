@@ -44,8 +44,10 @@ import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-
 import { AssignTasksCalendarComponent } from './assign-tasks/assign-tasks-calendar/assign-tasks-calendar.component';
 import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assign-list-tasks.component';
 import { StatisticalComponent } from './statistical/statistical.component';
-import { StatisticalViewlistComponent } from './statistical/statistical-viewlist/statistical-viewlist.component';
 import { HomeStatisticalComponent } from './statistical/home-statistical/home-statistical.component';
+import { StatisticalProjectComponent } from './statistical/statistical-project/statistical-project.component';
+import { StatisticalViewlistComponent } from './statistical/statistical-task/viewlist/statistical-viewlist.component';
+import { StatisticalChartComponent } from './statistical/statistical-task/chart/statistical-chart.component';
 
 
 
@@ -111,7 +113,15 @@ const routes: Routes = [
           {
             path: 'statisticalviewlist/:funcID',
             component: StatisticalViewlistComponent
-          }
+          },
+          {
+            path: 'statisticalproject/:funcID',
+            component: StatisticalProjectComponent
+          },    
+          {
+            path: 'statisticalchart/:funcID',
+            component: StatisticalChartComponent
+          },        
         ]
       },
       {
@@ -160,7 +170,9 @@ const routes: Routes = [
     PopupShareSprintsComponent,
     StatisticalComponent,
     HomeStatisticalComponent,
-    StatisticalViewlistComponent
+    StatisticalProjectComponent,
+    StatisticalViewlistComponent,
+    StatisticalChartComponent
   ],
   imports: [
     RouterModule.forChild(routes),
