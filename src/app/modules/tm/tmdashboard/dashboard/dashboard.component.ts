@@ -1,16 +1,34 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  TemplateRef,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm/models/dashboard.model';
+import {
+  ChartTaskRemind,
+  RemiderOnDay,
+  TaskRemind,
+} from '@modules/tm/models/dashboard.model';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { AccPoints, IAccAnimationCompleteEventArgs, ILoadedEventArgs, AccumulationChartComponent, AccumulationChart, AnimationModel } from '@syncfusion/ej2-angular-charts';
+import {
+  AccPoints,
+  IAccAnimationCompleteEventArgs,
+  ILoadedEventArgs,
+  AccumulationChartComponent,
+  AccumulationChart,
+  AnimationModel,
+} from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   fromDate: Date;
@@ -18,10 +36,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   daySelected: Date;
   daySelectedFrom: Date;
   daySelectedTo: Date;
-  monthSelected: Date;
+  monthSelected: any;
   beginMonth: Date;
   endMonth: Date;
   week: number;
+  rateTotalChangeValue: number = null;
   rateTotalChange: string;
 
   views: Array<ViewModel> = [];
@@ -32,17 +51,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   taskRemind: TaskRemind = new TaskRemind();
   model: DataRequest;
   user: any;
-  constructor(private api: ApiHttpService, private changeDetectorRef: ChangeDetectorRef, private authStore: AuthStore, private route: ActivatedRoute) { }
+  constructor(
+    private api: ApiHttpService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private authStore: AuthStore,
+    private route: ActivatedRoute
+  ) {}
   public ngUnsubscribe = new Subject<void>();
   ngAfterViewInit(): void {
-    this.views = [{
-      id: '1',
-      type: 'content',
-      active: true,
-      model: {
-        panelLeftRef: this.dashboard
-      }
-    }];
+    this.views = [
+      {
+        id: '1',
+        type: 'content',
+        active: true,
+        model: {
+          panelLeftRef: this.dashboard,
+        },
+      },
+    ];
 
     this.week = this.selectweekComponent.week;
     this.fromDate = this.selectweekComponent.fromDate;
@@ -50,37 +76,35 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.daySelected = this.selectweekComponent.daySelected;
     this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
     this.daySelectedTo = this.selectweekComponent.daySelectedTo;
-    this.getGenaralData();
+    this.monthSelected = this.selectweekComponent.month;
+    this.getGeneralData();
   }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.params["funcID"]);
     this.user = this.authStore.get();
     this.model = new DataRequest();
-    this.model.formName = "Tasks";
-    this.model.gridViewName = "grvTasks";
-    this.model.entityName = "TM_Tasks";
+    this.model.formName = 'Tasks';
+    this.model.gridViewName = 'grvTasks';
+    this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
     this.doughnutData = this.doughnutEmpty;
   }
 
-
-  getGenaralData() {
+  getGeneralData() {
     this.api
-      .exec("TM", "TaskBusiness", "GetGenaralDataAsync", [
+      .exec('TM', 'TaskBusiness', 'GetGeneralDataAsync', [
         this.model,
         this.daySelectedFrom,
         this.daySelectedTo,
         this.fromDate,
         this.toDate,
         this.selectweekComponent.beginMonth,
-        this.selectweekComponent.endMonth
+        this.selectweekComponent.endMonth,
       ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: TaskRemind) => {
         this.taskRemind = data;
         this.remiderOnDay = data.listTaskByDay['result'];
-
         //set data Chart
         this.setDataChart(data.chartData);
 
@@ -91,14 +115,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   getChartData() {
     let option = this.model;
-    option.predicate = "DueDate.Value >= @0 and DueDate.Value <= @1";
+    option.predicate = 'DueDate.Value >= @0 and DueDate.Value <= @1';
     option.dataValue = `${this.fromDate.toISOString()};${this.toDate.toISOString()}`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataChartAsync", [option, this.fromDate,
-        this.toDate,])
-      .pipe(takeUntil(this.ngUnsubscribe)).subscribe((data: any) => {
+      .exec('TM', 'TaskBusiness', 'GetDataChartAsync', [
+        option,
+        this.fromDate,
+        this.toDate,
+      ])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((data: any) => {
         if (data) this.setDataChart(data);
-      })
+      });
   }
 
   getDataBarChart(beginMonth: Date, endMonth: Date) {
@@ -106,22 +134,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     // option.predicate = "CompletedOn.Value >= @0 and CompletedOn.Value <=@1 and Owner == @2 and Status == @3";
     // option.dataValue = `${beginMonth.toISOString()};${endMonth.toISOString()};${this.user.userID};9`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataBarChartAsync", [option, beginMonth,
-        endMonth,])
+      .exec('TM', 'TaskBusiness', 'GetDataBarChartAsync', [
+        option,
+        beginMonth,
+        endMonth,
+      ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: any) => {
-        if (data)
-          this.setDataChartBar(data);
+        if (data) this.setDataChartBar(data);
       });
   }
 
   GetDataWorkOnDay() {
     let option = this.model;
-    option.predicate = "DueDate.Value >= @0 and DueDate.Value <= @1";
+    option.predicate = 'DueDate.Value >= @0 and DueDate.Value <= @1';
     option.dataValue = `${this.daySelectedFrom.toISOString()};${this.daySelectedTo.toISOString()}`;
     this.api
-      .exec("TM", "TaskBusiness", "GetDataWorkOnDayAsync", [option, this.daySelectedFrom,
-        this.daySelectedTo,])
+      .exec('TM', 'TaskBusiness', 'GetDataWorkOnDayAsync', [
+        option,
+        this.daySelectedFrom,
+        this.daySelectedTo,
+      ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: any) => {
         this.remiderOnDay = data.result as RemiderOnDay[];
@@ -141,23 +174,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.getChartData();
     }
     if (this.monthSelected != data.month) {
-      this.monthSelected = data.month;
+      this.monthSelected = data.month + 1;
       this.getDataBarChart(data.beginMonth, data.endMonth);
     }
   }
 
   getTitleRateChange(rateTotalChange: number) {
-    switch (rateTotalChange) {
-      case 1:
-        return "Bằng số công việc so với tuần trước";
-      case 2:
-        return "Tăng 100% công việc so với tuần trước";
-      case -2:
-        return "Giảm 100% công việc so với tuần trước";
-    }
-    let title = rateTotalChange > 1 ? "Tăng" : "Giảm";
-    console.log("rateTotalChange", rateTotalChange);
-    let rate = (Math.abs(1 - rateTotalChange) * 100).toFixed(2);
+    let title = rateTotalChange >= 100 ? 'Tăng' : 'Giảm';
+    let rate = rateTotalChange >= 100 ? Math.abs(100 - rateTotalChange) : Math.abs(rateTotalChange - 100);
+    this.rateTotalChangeValue = rateTotalChange;
     return title + ` ${rate}% công việc so với tuần trước`;
   }
 
@@ -167,25 +192,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
       this.doughnutData = this.doughnutEmpty;
       this.palettes = this.palettesEmpty;
-      this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
+      this.rateTotalChange = this.getTitleRateChange(
+        data.chartPerformance.rateTotalChange
+      );
     } else {
       this.doughnutData = data.chartPerformance.doughnutData;
-      this.rateTotalChange = this.getTitleRateChange(data.chartPerformance.rateTotalChange);
+      this.rateTotalChange = this.getTitleRateChange(
+        data.chartPerformance.rateTotalChange
+      );
       // this.renderMiddleText(data.chartPerformance.rateTotalChange);
     }
-
     //trending chart
     this.dataLineTrend = data.trendChart.result;
     this.changeDetectorRef.detectChanges();
-
   }
 
   setDataChartBar(data: any) {
-    if (data.hasOwnProperty("barChart")) {
+    if (data.hasOwnProperty('barChart')) {
       this.dataColumn = data.barChart;
     }
-    if (data.hasOwnProperty("lineChart")) {
-      this.dataLine = data.lineChart
+    if (data.hasOwnProperty('lineChart')) {
+      this.dataLine = data.lineChart;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -199,8 +226,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     majorTickLines: { width: 0 },
     lineStyle: { width: 0 },
     labelStyle: {
-      color: 'transparent'
-    }
+      color: 'transparent',
+    },
   };
 
   public lineYAxis: Object = {
@@ -208,18 +235,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     majorTickLines: { width: 0 },
     majorGridLines: { width: 0 },
     labelStyle: {
-      color: 'transparent'
-    }
+      color: 'transparent',
+    },
   };
   public markerLine: Object = {
     visible: false,
     height: 5,
-    width: 5
+    width: 5,
   };
   public tooltip: Object = {
-    enable: false
+    enable: false,
   };
-  public titleLine: string = 'Inflation - Consumer Price';
   public legendLine: Object = {
     visible: false,
   };
@@ -241,28 +267,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     majorTickLines: { width: 0 },
     lineStyle: { width: 0 },
     labelStyle: {
-      color: 'dark'
-    }
+      color: 'dark',
+    },
   };
 
   columnYAxis: Object = {
-    minimum: 1,
-    interval: 2,
+    minimum: 0,
+    interval: 10,
     labelStyle: {
-      color: 'gray'
-    }
+      color: 'gray',
+    },
   };
+
   chartArea: Object = {
     border: {
-      width: 0
-    }
+      width: 0,
+    },
   };
-  markerColumn: Object = {
-    visible: false,
-    height: 5,
-    width: 5
+
+  radius: Object = {
+    topLeft: 10,
+    topRight: 10,
   };
-  title: string = 'Inflation - Consumer Price';
+
   //#endregion chartcolumn
 
   //#region donut
@@ -271,12 +298,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   count = 0;
   startAngle: number = 0;
   endAngle: number = 360;
-  doughnutEmpty = [
-    { label: '', value: 100 },
-  ];
+  doughnutEmpty = [{ label: '', value: 100 }];
   doughnutData = [];
   palettesEmpty = ['#deeeeee'];
-  palettes: string[] = ["#005DC7", "#06DDB8"];
+  palettes: string[] = ['#005DC7', '#06DDB8'];
 
   //Initializing Datalabel
   public dataLabel: Object = {
@@ -286,25 +311,39 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     font: {
       color: 'white',
       fontWeight: 'Bold',
-      size: '14px'
-    }
+      size: '14px',
+    },
   };
 
   public onAnimationComplete(args: IAccAnimationCompleteEventArgs): void {
-    let centerTitle: HTMLDivElement = document.getElementById('center_title') as HTMLDivElement;
-    centerTitle.style.fontSize = this.getFontSize(args.accumulation.initialClipRect.width);
+    let centerTitle: HTMLDivElement = document.getElementById(
+      'center_title'
+    ) as HTMLDivElement;
+    centerTitle.style.fontSize = this.getFontSize(
+      args.accumulation.initialClipRect.width
+    );
     let rect: ClientRect = centerTitle.getBoundingClientRect();
-    centerTitle.style.top = (args.accumulation.origin.y + args.accumulation.element.offsetTop - (rect.height / 2)) + 'px';
-    centerTitle.style.left = (args.accumulation.origin.x + args.accumulation.element.offsetLeft - (rect.width / 2)) + 'px';
+    centerTitle.style.top =
+      args.accumulation.origin.y +
+      args.accumulation.element.offsetTop -
+      rect.height / 2 +
+      'px';
+    centerTitle.style.left =
+      args.accumulation.origin.x +
+      args.accumulation.element.offsetLeft -
+      rect.width / 2 +
+      'px';
     centerTitle.style.visibility = 'visible';
     let points: AccPoints[] = args.accumulation.visibleSeries[0].points;
     for (let point of points) {
       if (point.labelPosition === 'Outside' && point.labelVisible) {
-        let label: Element = document.getElementById('doughnut-container_datalabel_Series_0_text_' + point.index);
+        let label: Element = document.getElementById(
+          'doughnut-container_datalabel_Series_0_text_' + point.index
+        );
         label.setAttribute('fill', 'black');
       }
     }
-  };
+  }
 
   public getFontSize(width: number): string {
     if (width > 300) {
@@ -314,7 +353,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     } else {
       return '6px';
     }
-  };
+  }
   public loaded(args: ILoadedEventArgs): void {
     args.chart.refresh();
   }

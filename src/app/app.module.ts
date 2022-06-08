@@ -5,7 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClipboardModule } from 'ngx-clipboard';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { HoverPreloadModule } from 'ngx-hover-preload';
-import { NgxUiLoaderModule, SPINNER, NgxUiLoaderConfig, NgxUiLoaderRouterModule, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
+import {
+  NgxUiLoaderModule,
+  SPINNER,
+  NgxUiLoaderConfig,
+  NgxUiLoaderRouterModule,
+  NgxUiLoaderHttpModule,
+} from 'ngx-ui-loader';
 import { AppRoutingModule, routes } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -17,17 +23,15 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 
-
-
-
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
-
 
 function appInitializer(authService: AuthService) {
   return () => {
     return new Promise((resolve) => {
-      authService.getUserByToken().subscribe(v => { resolve(v); });
+      authService.getUserByToken().subscribe((v) => {
+        resolve(v);
+      });
     });
   };
 }
@@ -63,9 +67,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -75,7 +77,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     InlineSVGModule.forRoot(),
 
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
-    NgxUiLoaderRouterModule,//.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
+    NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule,
 
     SharedModule,
@@ -84,13 +86,21 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxCoreModule.forRoot({ environment }),
     AppRoutingModule,
     HoverPreloadModule,
-    NgxSkeletonLoaderModule.forRoot({ animation: 'pulse', loadingText: 'This item is actually loading...' }),
+    NgxSkeletonLoaderModule.forRoot({
+      animation: 'pulse',
+      loadingText: 'This item is actually loading...',
+    }),
   ],
   exports: [],
   providers: [
-    { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthService] },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializer,
+      multi: true,
+      deps: [AuthService],
+    },
     { provide: LOCALE_ID, useValue: 'vi-VN' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

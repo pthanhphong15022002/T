@@ -46,8 +46,7 @@ import { AssignListTasksComponent } from './assign-tasks/assign-list-tasks/assig
 import { StatisticalComponent } from './statistical/statistical.component';
 import { StatisticalViewlistComponent } from './statistical/statistical-viewlist/statistical-viewlist.component';
 import { HomeStatisticalComponent } from './statistical/home-statistical/home-statistical.component';
-
-
+import { OwnerTaskDashboardComponent } from './ownertasks/owner-task-dashboard/owner-task-dashboard.component';
 
 const routes: Routes = [
   {
@@ -92,27 +91,27 @@ const routes: Routes = [
           },
           {
             path: 'project/:funcID',
-            component: ProjectComponent
+            component: ProjectComponent,
           },
           {
             path: 'projectgroup/:funcID',
-            component: ProjectGroupComponent
-          }
-        ]
+            component: ProjectGroupComponent,
+          },
+        ],
       },
       {
         path: 'statistical',
         component: StatisticalComponent,
-        children:[
+        children: [
           {
             path: '',
             component: HomeStatisticalComponent,
           },
           {
             path: 'statisticalviewlist/:funcID',
-            component: StatisticalViewlistComponent
-          }
-        ]
+            component: StatisticalViewlistComponent,
+          },
+        ],
       },
       {
         path: '',
@@ -135,6 +134,7 @@ const routes: Routes = [
     OwnerListTasksComponent,
     MoreFuntionComponent,
     OwnerTaskCalendarComponent,
+    OwnerTaskDashboardComponent,
     DashboardComponent,
     TreeviewComponent,
     SettingCalendarComponent,
@@ -160,7 +160,7 @@ const routes: Routes = [
     PopupShareSprintsComponent,
     StatisticalComponent,
     HomeStatisticalComponent,
-    StatisticalViewlistComponent
+    StatisticalViewlistComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
