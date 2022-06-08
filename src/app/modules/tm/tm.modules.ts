@@ -47,7 +47,6 @@ import { StatisticalComponent } from './statistical/statistical.component';
 import { StatisticalViewlistComponent } from './statistical/statistical-viewlist/statistical-viewlist.component';
 import { HomeStatisticalComponent } from './statistical/home-statistical/home-statistical.component';
 import { OwnerTaskDashboardComponent } from './ownertasks/owner-task-dashboard/owner-task-dashboard.component';
-import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
 
 const routes: Routes = [
   {
@@ -68,16 +67,8 @@ const routes: Routes = [
       },
       {
         path: 'viewboards/:funcID',
-        component: SprintsComponent
+        component: SprintsComponent,
       },
-      {
-        path: 'sprinttasks/:funcID',
-        component: ViewDetailsSprintsComponent,
-      },  
-      {
-        path: 'sprinttasks/:id',
-        component: ViewDetailsSprintsComponent,
-      },  
       {
         path: 'setting',
         component: SettingsComponent,
@@ -169,8 +160,7 @@ const routes: Routes = [
     PopupShareSprintsComponent,
     StatisticalComponent,
     HomeStatisticalComponent,
-    StatisticalViewlistComponent, 
-    ViewDetailsSprintsComponent
+    StatisticalViewlistComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

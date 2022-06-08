@@ -7,7 +7,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
+import { TM_Tasks } from '@modules/tm/models/TM_Tasks.model';
 import { TmService } from '@modules/tm/tm.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -15,6 +17,7 @@ import {
   AuthStore,
   CallFuncService,
   CodxListviewComponent,
+  CodxService,
   DataRequest,
   ListCardComponent,
   NotificationsService,
@@ -22,6 +25,7 @@ import {
 import * as moment from 'moment';
 import { PopupShareSprintsComponent } from '../popup-share-sprints/popup-share-sprints.component';
 import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
+import { ViewDetailsSprintsComponent } from '../view-details-sprints/view-details-sprints.component';
 
 @Component({
   selector: 'app-list-sprints',
@@ -30,6 +34,7 @@ import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
 })
 export class ListSprintsComponent implements OnInit {
   @Input('sprintsInfo') sprintsInfo: SprintsInfoComponent;
+  @Input('viewDetailsSprint') viewDetailsSprint: ViewDetailsSprintsComponent;
   fromDate: Date;
   toDate: Date;
   view: string;
@@ -56,6 +61,8 @@ export class ListSprintsComponent implements OnInit {
   totalProjectBoards: number = 0;
   boardAction: any;
   user:any ;
+  sprintDefault : TM_Sprints ;
+  @Input() funcID: string;
   @ViewChild('lstViewBoard') lstViewBoard: ListCardComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: ListCardComponent;
 
@@ -65,10 +72,24 @@ export class ListSprintsComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private authStore:AuthStore
-  ) {this.user = this.authStore.get();}
+    private authStore:AuthStore,
+    public codxService: CodxService,
+  ) {
+    this.user = this.authStore.get() ;
+  
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  //  this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'GetListTaskTreeByRefIDAsync', [
+  // "629482f84906d065602ee2ea"
+  // ]).subscribe(res=>{
+  //   console.log(res)
+  // })
+   //this.sprintDefault.iterationID == this.user.userID
+  }
+  clickViewDetailSprint(sprint){
+    // this.viewDetailsSprint.showSprint(sprint)
+  }
 
   ngAfterViewInit() {
     this.sprintsInfo.isAddNew.subscribe((res) => {
@@ -87,8 +108,8 @@ export class ListSprintsComponent implements OnInit {
     });
     this.loadDataMyBoards();
     this.loadDataProjectBoards();
-    console.log(this.totalViewBoards);
-    console.log(this.totalProjectBoards);
+    // console.log(this.totalViewBoards);
+    // console.log(this.totalProjectBoards);
   }
   loadDataMyBoards() {
     this.gridModel.predicate =
@@ -224,7 +245,6 @@ export class ListSprintsComponent implements OnInit {
         }
         this.notiService.notify("Share board thành công !")
       }
-     
     }
   }
 }

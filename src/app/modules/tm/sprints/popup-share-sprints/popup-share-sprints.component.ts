@@ -56,6 +56,7 @@ export class PopupShareSprintsComponent implements OnInit {
         strIdUser+=";"+this.listIdUser[i];
       }
     }
+    var strIdUser ='ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI'; //danh sach add de share demo sau phai xoa
     this.api.execSv("TM","TM","SprintsBusiness","AddShareOfSprintsAsync",[this.taskBoard.iterationID,strIdUser]).subscribe(res=>{
       if(res){
         this.dialog.hide(res);
@@ -67,17 +68,39 @@ export class PopupShareSprintsComponent implements OnInit {
   }
 
   openDialog() {
-    // const t = this
-    // let obj = {
-    //   formName: 'demo',
-    //   control: '1',
-    //   value: '5',
-    //   text: 'demo nè',
-    // };
-    this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+   
+    this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', this.listIdUser).subscribe((dt: any) => {
+        var that = this;
+        dt.close = function (e) {
+          return that.addUser(e, that);
+        };
+    });;
   }
   showControl(p, userID) {
     this.userID = userID;
     p.open();
+  }
+
+  addUser(e,t:PopupShareSprintsComponent ){
+   var resultListUser = 'ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI' ; //danh sach add de shre
+   t.getListUser(resultListUser);
+   t.changeDetectorRef.detectChanges() ;
+  }
+
+  getListUser(listUser) {
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        listUser
+      )
+      .subscribe((res) => {
+        this.listUserDetail = res;
+      });
   }
 }
