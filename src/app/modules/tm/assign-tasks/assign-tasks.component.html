@@ -1,8 +1,4 @@
-<codx-views #view funcID="TMT03" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"> </codx-views>
-
-<ng-template #sidebarRight>
-  <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
-</ng-template>
+<codx-views #view funcID="TMT03" entityName="TM_Tasks" [views]="views" [buttons]="buttons"> </codx-views>
 
 <ng-template #listDetails>
   <assign-tasks-details [viewBase]="viewBase" [taskInfo]="taskInfo"></assign-tasks-details>
@@ -16,4 +12,6 @@
   <assign-tasks-calendar [viewBase]="viewBase" [taskInfo]="taskInfo"></assign-tasks-calendar>
 </ng-template>
 
-
+<ng-template #sidebarRight>
+  <app-task-info #taskInfo [viewBase]="viewBase"></app-task-info>
+</ng-template>
