@@ -19,7 +19,7 @@ export class AssignTaskDetailsComponent implements OnInit {
   view: string;
   user: any;
   objectAssign: any;
-  objectState: any;
+  objectRoleType: any;
   itemSelected = null;
   moment = moment().locale('en');
   today: Date = new Date();
@@ -126,30 +126,30 @@ export class AssignTaskDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected)
   }
 
-  getByParentID(task) {
-    let objectId = '';
-    let objectState = '';
-    if (task != null) {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.id]
-        )
-        .subscribe((res) => {
-          if (res && res?.length > 0) {
-            res.forEach((element) => {
-              objectId += ';' + element.owner;
-              objectState += ';' + element.status;
-            });
-          }
-        });
-    }
-    this.objectAssign = objectId;
-    return objectState;
-  }
+  // getByParentID(task) {
+  //   let objectId = '';
+  //   let objectState = '';
+  //   if (task != null) {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'ERM.Business.TM',
+  //         'TaskBusiness',
+  //         'GetTaskByParentIDAsync',
+  //         [task?.id]
+  //       )
+  //       .subscribe((res) => {
+  //         if (res && res?.length > 0) {
+  //           res.forEach((element) => {
+  //             objectId += ';' + element.owner;
+  //             objectState += ';' + element.status;
+  //           });
+  //         }
+  //       });
+  //   }
+  //   this.objectAssign = objectId;
+  //   return objectState;
+  // }
 
   showControl(p, item) {
     this.taskAction = item;
@@ -355,27 +355,27 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   loadDetailTask(task) {
     this.objectAssign = "";
-    this.objectState = "";
-    if (task.category == '3' || task.category == '4') {
+    this.objectRoleType = "";
+    if (task.isAssign)  {
       this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.recID]
+          'TaskResourcesBusiness',
+          'GetListTaskResourcesByTaskIDAsync',
+          [task?.taskID]
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
             this.countOwner = res.length;
-            let objectId = res[0].owner;
-            let objectState = res[0].status;
+            let objectId = res[0].resourceID;
+            let objectRoleType = res[0].roleType;
             for (let i = 1; i < res?.length; i++) {
-              objectId += ';' + res[i].owner;
-              objectState += ';' + res[i].status;
+              objectId += ';' + res[i].resourceID;
+              objectRoleType += ';' + res[i].roleType;
             }
             this.objectAssign = objectId;
-            this.objectState = objectState;
+            this.objectRoleType = objectRoleType;
           }
         });
     } else {
@@ -400,10 +400,10 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }

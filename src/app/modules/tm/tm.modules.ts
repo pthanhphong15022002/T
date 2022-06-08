@@ -73,11 +73,12 @@ const routes: Routes = [
       {
         path: 'sprinttasks/:funcID',
         component: ViewDetailsSprintsComponent,
-      },  
-      {
-        path: 'sprinttasks/:id',
-        component: ViewDetailsSprintsComponent,
-      },  
+        children: [
+          {
+            path: ':id',
+            component: ViewDetailsSprintsComponent,
+          }]
+      },   
       {
         path: 'setting',
         component: SettingsComponent,

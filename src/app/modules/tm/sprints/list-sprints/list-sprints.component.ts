@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
 import { TM_Tasks } from '@modules/tm/models/TM_Tasks.model';
@@ -65,7 +66,9 @@ export class ListSprintsComponent implements OnInit {
   @Input() funcID: string;
   @ViewChild('lstViewBoard') lstViewBoard: ListCardComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: ListCardComponent;
-
+  urlShare ="";
+  urlView ="";
+  moreFunc : any[];
   constructor(
     private api: ApiHttpService,
     private tmSv: TmService,
@@ -74,6 +77,7 @@ export class ListSprintsComponent implements OnInit {
     private callfc: CallFuncService,
     private authStore:AuthStore,
     public codxService: CodxService,
+    private activedRouter :ActivatedRoute
   ) {
     this.user = this.authStore.get() ;
   
@@ -85,10 +89,15 @@ export class ListSprintsComponent implements OnInit {
   // ]).subscribe(res=>{
   //   console.log(res)
   // })
-   //this.sprintDefault.iterationID == this.user.userID
-  }
-  clickViewDetailSprint(sprint){
-    // this.viewDetailsSprint.showSprint(sprint)
+   this.funcID =this.activedRouter.snapshot.params["funcID"];;
+    this.api.execSv<any>("SYS","SYS","MoreFunctionsBusiness","GetWithPermAsync",[ this.funcID ,"Sprints","grvSprints"]).subscribe((res)=>{
+    if(res){
+      this.moreFunc =res ;
+      for(var i=0; i<this.moreFunc.length ;i++){
+        if(this.moreFunc[i].functionID=="TMT042")this.urlView =this.moreFunc[i].url;
+      }
+    }
+    })
   }
 
   ngAfterViewInit() {

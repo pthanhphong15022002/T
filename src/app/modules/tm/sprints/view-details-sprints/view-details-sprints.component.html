@@ -2,10 +2,10 @@
     <div class="d-flex flex-row">
       <div id="codx_master" class="min-w-325px w-325px">
         <div class="codx_master_container">
-          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" funcId="TMT042"
+          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" [funcId]="funcID"
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [dataObj]="model.dataObj"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvSprints'" autoLoad="false"
-            entityName="TM_Sprints"  groupBy="fieldGroup"  (changeRowSelected)="changeRowSelected($event)">
+            [predicate]="" [dataValue]="" type="listView" [gridViewName]="model.gridViewName" autoLoad="false"
+          [formName]="model.formName"  [entityName]="model.entityName"  groupBy="fieldGroup"  (changeRowSelected)="changeRowSelected($event)">
           </codx-listview>
         </div>
       </div>

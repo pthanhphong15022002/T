@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -49,7 +50,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   @Input('viewBase') viewBase: ViewsComponent;
-  @Input() funcID: string;
+  funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
@@ -58,9 +59,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
+    this.funcID =this.activedRouter.snapshot.params["funcID"];
   }
 
   ngOnInit(): void {
@@ -367,7 +370,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   loadDetailTask(task) {
     this.objectAssign = "";
     this.objectState = "";
-    if (task.category == '3' || task.category == '4') {
+    if (task.isAssign) {
       this.api
         .execSv<any>(
           'TM',
@@ -411,10 +414,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
 
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }

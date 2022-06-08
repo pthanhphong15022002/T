@@ -216,8 +216,13 @@ export class TaskInfoComponent implements OnInit {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
       $('#taskNameInput').focus();
-      return;
     }
+    if(this.functionID =="TMT03" && (this.task.assignTo==""||this.task.assignTo==null)){
+        this.notiService.notify('Phải nhập danh sách người được phân công !');
+        // this.notiService.notifyCode('mã code');
+        return;
+      }
+    
     this.checkLogicTime();
     if (!this.isCheckTime) {
       // this.notiService.notifyCode('TM002');
@@ -262,6 +267,10 @@ export class TaskInfoComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
+    if(this.functionID =="TMT03"){
+      //cai nay thêm để test
+    //  this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    }
     if (id) this.updateTask();
     else this.addTask();
     this.viewBase.currentView.closeSidebarRight();
@@ -492,14 +501,15 @@ export class TaskInfoComponent implements OnInit {
   openTask(): void {
     if(this.functionID =="TMT03"){
       this.showAssignTo = true;
+      //cai nay thêm để test
+      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+      this.getListUser(this.task.assignTo);
     }
     const t = this;
     this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
-    this.listTodo = [];
-    this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    this.getListUser(this.task.assignTo);
+    this.listTodo = []; 
     this.task.status = '1';
     this.task.priority = '1';
     this.task.memo = '';
@@ -676,23 +686,6 @@ export class TaskInfoComponent implements OnInit {
   valueChangeTags(tags: string) {
     this.task.tags = tags;
   }
-  clickOpenFormAttach(taskID) {
-    // if (!taskID) {
-    //   this.confirmationDialogService
-    //     .confirm("Thông báo", "Công việc sẽ được lưu, bạn có muốn tiếp tục?")
-    //     .then((confirmed) => {
-    //       if (confirmed) {
-    //         this.addTask(false);
-    //       } else {
-    //       }
-    //     });
-    // } else {
-    //   this.openFormAttach(taskID);
-    // }
-  }
-  // openFormAttach(taskID) {
-  //   this.tmSv.openAttach("TM_Tasks", taskID, "TM001");
-  // }
 
   textboxChange(e) {
     console.log('task-info.comp', e);
@@ -766,6 +759,7 @@ export class TaskInfoComponent implements OnInit {
       var tmpTR = new tmpTaskResource();
       tmpTR.resourceID = obj.userID;
       tmpTR.memo = obj.memo2;
+      tmpTR.roleType="R" ;
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;
