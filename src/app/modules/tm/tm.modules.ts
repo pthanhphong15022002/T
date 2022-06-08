@@ -72,6 +72,14 @@ const routes: Routes = [
         path: 'viewboards/:funcID',
         component: SprintsComponent,
       },
+      // {
+      //   path: 'sprinttasks/:funcID',
+      //   component: ViewDetailsSprintsComponent,
+      // },  
+      // {
+      //   path: 'sprinttasks/:id',
+      //   component: ViewDetailsSprintsComponent,
+      // },  
       {
         path: 'setting',
         component: SettingsComponent,
@@ -94,18 +102,18 @@ const routes: Routes = [
           },
           {
             path: 'project/:funcID',
-            component: ProjectComponent
+            component: ProjectComponent,
           },
           {
             path: 'projectgroup/:funcID',
-            component: ProjectGroupComponent
-          }
-        ]
+            component: ProjectGroupComponent,
+          },
+        ],
       },
       {
         path: 'statistical',
         component: StatisticalComponent,
-        children:[
+        children: [
           {
             path: '',
             component: HomeStatisticalComponent,
@@ -145,6 +153,7 @@ const routes: Routes = [
     OwnerListTasksComponent,
     MoreFuntionComponent,
     OwnerTaskCalendarComponent,
+    // OwnerTaskDashboardComponent,
     DashboardComponent,
     TreeviewComponent,
     SettingCalendarComponent,
