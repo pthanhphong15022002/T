@@ -1,0 +1,123 @@
+<codx-views #view funcID="TMR01" entityName="TM_Tasks" [views]="views"> </codx-views>
+
+<ng-template #main>
+  <div class="" id="kt_content">
+    <div class="list-table">
+      <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="TM" entityName="TM_Tasks"
+        type="listview" assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportTasksAsync"
+        [gridViewName]="'grvTasks'" [predicate]="''" [dataValue]="''" [pageSize]="100" [formName]="formName"
+        [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle" [gridViewName]="gridViewName">
+      </codx-gridview>
+
+    </div>
+  </div>
+</ng-template>
+<ng-template #GiftIDCell let-data>
+  <div class="icon-flag icon-20" [class]="data?.priority | vll: 'L0186':'icon' | async"
+    [style.color]="data?.priority | vll: 'L0186':'color' | async"></div>
+</ng-template>
+<ng-template #itemStatusVll let-data>
+  <div class="task-status d-flex">
+    <div class="badge badge-danger me-2" [style.border-color]="
+  (data?.status | vll: 'L0614':'color' | async) + '30'
+" [style.background-color]="
+  (data?.status | vll: 'L0614':'color' | async) + '30'
+" [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
+      {{ data?.status | vll: "L0614":"text" | async }}
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemMemo let-data>
+  <div class="dropdown ml-2" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+    [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom"
+    autoClose="outside">
+    <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-assignment icon-16 text-dark-50 mr-1"></span>
+      <span class="task-des">Mô tả công
+        việc</span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #popDetail let-data>
+  <div>
+    <ng-container>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="result-title text-dark font-size-h5 mb-2">Mô tả chi tiết</div>
+        <div class="text-dark-75 font-size-md">
+          {{popoverDetail?.memo}}
+          <div class="d-flex align-items-center mt-2">
+            <div class="d-flex align-items-center me-2">
+              <span class="icon-create icon-18 text-dark-50"></span>
+              <span class="text-dark-50 text-italic"> {{popoverDetail?.memo2}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #itemOwner let-data>
+  <div class="d-flex align-items-center" #itemOwner>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.owner" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg" style="margin-left: 20px;">{{data.owner}}</div>
+  </div>
+</ng-template>
+<ng-template #itemDueDate let-data>
+  <div *ngIf="data.dueDate==null">
+    {{data?.dueDate }}
+  </div>
+  <div *ngIf="data.dueDate!=null">
+    {{data?.dueDate |fmDT:'dmy'}}
+  </div>
+</ng-template>
+<ng-template #itemCompletedOn let-data>
+  <div *ngIf="data.completedOn==null">
+    {{data?.completedOn }}
+  </div>
+  <div *ngIf="data.completedOn!=null">
+    {{data?.completedOn |fmDT:'dmy'}}
+  </div>
+</ng-template>
+<ng-template #itemActive let-data>
+  <div class="d-flex align-items-center w-100px">
+    <div class="d-flex align-items-center mr-3 {{data?.comments  ? 'text-success' : 'text-dark-50'}}">
+      <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
+      <span class="ml-1"> {{data?.comments}}</span>
+    </div>
+    <div class="d-flex align-items-center mr-3 {{data?.todo ? 'text-success' : 'text-dark-50'}}">
+      <span class="text-hover-primary icon-check-correct icon-16"></span>
+      <span class="ml-1">
+        {{data?.todo}}</span>
+    </div>
+    <div class="d-flex align-items-center {{data?.attachments ? 'text-success' : 'text-dark-50'}}">
+      <span class="text-hover-primary icon-attach_file icon-16"></span>
+      <span>
+        {{data?.attachments}}
+      </span>
+    </div>
+  </div>
+</ng-template>
+<!-- <codx-listview #listview [itemTemplate]="templateTask" funcId="" [pageSize]="100" service="TM"
+  assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportTasksAsync" [gridViewName]="'grvTasks'"
+  entityName="TM_Tasks" type="listView" [selectFirst]="true" [data]="data" >
+</codx-listview>
+<ng-template #templateTask let-data>
+  <div class="task-row py-3 px-6 ">
+    <table class="table w-100 table-action-menu">
+      <thead>
+        <td></td>
+      </thead>
+      <tbody>
+        <td class="w-100px">
+          <div class="icon-flag icon-20" [class]="data?.priority | vll: 'L0186':'icon' | async"
+            [style.color]="data?.priority | vll: 'L0186':'color' | async"></div>
+        </td>
+      </tbody>
+    </table>
+  </div>
+</ng-template> -->
