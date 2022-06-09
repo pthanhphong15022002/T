@@ -1,6 +1,6 @@
 <div class="page-home page-master">
   <div class="d-flex flex-row">
-    <div id="codx_master" class="min-w-325px w-325px">
+    <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
         <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" [funcId]="funcID"
           service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
@@ -668,6 +668,12 @@
         <div class="d-flex align-items-center btn-tooltip">
           <span class="icon-visibility icon-20 text-primary ms-2 me-2"></span>
           <span class="tooltiptext">Xem</span>
+        </div>
+      </a>
+      <a class="action-item" (click)="assignItem(taskAction)" style="cursor: pointer">
+        <div class="d-flex align-items-center btn-tooltip">
+          <span class=" icon-m_hr icon-20 text-primary ms-2 me-2"></span>
+          <span class="tooltiptext">Giao việc</span>
         </div>
       </a>
       <a class="action-item" (click)="setupStatus(p2,taskAction)" [ngbPopover]="setupStatusTask"

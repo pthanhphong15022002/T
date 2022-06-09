@@ -54,7 +54,7 @@ const T_Moudule: Type<any>[] = [
   FormsModule,
 ];
 @NgModule({
-  imports: [T_Moudule],
+  imports: [T_Moudule ],
   declarations: [T_Component],
   exports: [T_Moudule, T_Component],
 })

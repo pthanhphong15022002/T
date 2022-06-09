@@ -47,7 +47,7 @@ export class ViewDetailsSprintsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  iterationID: string=''
+  iterationID: string='';
   @Input('viewBase') viewBase: ViewsComponent;
   @Input() funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;

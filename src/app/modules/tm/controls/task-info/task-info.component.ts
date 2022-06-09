@@ -210,8 +210,125 @@ export class TaskInfoComponent implements OnInit {
           : this.STATUS_TASK_GOAL.Checked;
     }
   }
+  openTask(): void {
+    const t = this;
+   if(this.functionID =="TMT03"){
+     this.showAssignTo = true;
+     //cai nay thêm để test
+     this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+     this.getListUser(this.task.assignTo);
+   }
+  
+   this.task.estimated = 0;
+   this.readOnly = false;
+   this.task = new TM_Tasks();
+   this.listTodo = []; 
+   this.task.status = '1';
+   this.task.priority = '1';
+   this.task.memo = '';
+   this.task.dueDate = moment(new Date())
+     .set({ hour: 23, minute: 59, second: 59 })
+     .toDate();
+   this.changeDetectorRef.detectChanges();
+   if (!this.param)
+     this.getParam(function (o) {
+       //if (o) t.showPanel();
+     });
+   else {
+     this.closePanel();
+   }
+ }
+
+ openInfo(id, action) {
+   this.getParam();
+   const t = this;
+
+   t.task = new TM_Tasks();
+   t.readOnly = action === 'edit' ? false : true;
+   t.title =
+     action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
+   t.disableAddToDo = true;
+
+   this.tmSv.getTask(id).subscribe((res) => {
+     if (res && res.length) {
+       t.task = res[0];
+       t.listUserDetail = res[1] || [];
+       t.listTodo = res[2];
+       t.listMemo2OfUser = res[3];
+       if (t.task.assignTo != null) {
+         t.listUser = t.task.assignTo.split(';');
+         this.getListUser(this.task.assignTo);
+       } else {
+         this.listUser = [];
+         this.listUserDetail = [];
+         this.listMemo2OfUser = [];
+         //thêm giá trị đê add thử copy -sau nay xóa đi
+         //   if (action == 'edit') {
+         //     this.task.assignTo = 'TQHOAN'; ///tesst
+         //     this.getListUser(this.task.assignTo);
+         //   }
+       }
+       t.changeDetectorRef.detectChanges();
+       if(this.functionID =="TMT03"){
+         this.showAssignTo = true;
+       }
+       this.showPanel();
+     }
+   });
+ }
+
+ getTaskCoppied(id) {
+   const t = this;
+   if(this.functionID =="TMT03"){
+     this.showAssignTo = true;
+   }
+   this.tmSv.getTask(id).subscribe((res) => {
+     if (res && res.length) {
+       t.copyListTodo(res[2]);
+       t.beforeCopy(res[0]);
+     }
+   });
+ }
+
+ copyListTodo(listTodoCopy) {
+   const t = this;
+   t.listTodo = [];
+   if (listTodoCopy != null) {
+     listTodoCopy.forEach((td) => {
+       var todo = new TaskGoal();
+       todo.status = td.status;
+       todo.text = td.text;
+       t.listTodo.push(Object.assign({}, todo));
+     });
+   }
+ }
+
+ beforeCopy(data) {
+   this.title = 'Copy công việc ';
+   const t = this;
+   t.task = new TM_Tasks();
+   t.task = data;
+   t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+   if (data.startDate != null)
+     t.task.startDate = moment(new Date(data.startDate)).toDate();
+   t.task.endDate = moment(new Date(data.endDate)).toDate();
+   t.task.taskID = null;
+   t.task.parentID = null;
+   t.task.assignTo = null;
+   t.task.completedOn = null;
+   this.listUser = [];
+   this.listUserDetail = [];
+   this.listMemo2OfUser = [];
+   //thêm giá trị đê add thử copy -sau nay xóa đi
+   //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
+   // this.getListUser(this.task.assignTo);
+
+   t.changeDetectorRef.detectChanges();
+   this.showPanel();
+ }
 
   saveData(id) {
+   // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
@@ -267,10 +384,6 @@ export class TaskInfoComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-    if(this.functionID =="TMT03"){
-      //cai nay thêm để test
-    //  this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    }
     if (id) this.updateTask();
     else this.addTask();
     this.viewBase.currentView.closeSidebarRight();
@@ -498,121 +611,7 @@ export class TaskInfoComponent implements OnInit {
       });
   }
 
-  openTask(): void {
-    if(this.functionID =="TMT03"){
-      this.showAssignTo = true;
-      //cai nay thêm để test
-      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-      this.getListUser(this.task.assignTo);
-    }
-    const t = this;
-    this.task.estimated = 0;
-    this.readOnly = false;
-    this.task = new TM_Tasks();
-    this.listTodo = []; 
-    this.task.status = '1';
-    this.task.priority = '1';
-    this.task.memo = '';
-    this.task.dueDate = moment(new Date())
-      .set({ hour: 23, minute: 59, second: 59 })
-      .toDate();
-    this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        //if (o) t.showPanel();
-      });
-    else {
-      t.closePanel();
-    }
-  }
-
-  openInfo(id, action) {
-    this.getParam();
-    const t = this;
-
-    t.task = new TM_Tasks();
-    t.readOnly = action === 'edit' ? false : true;
-    t.title =
-      action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
-    t.disableAddToDo = true;
-
-    this.tmSv.getTask(id).subscribe((res) => {
-      if (res && res.length) {
-        t.task = res[0];
-        t.listUserDetail = res[1] || [];
-        t.listTodo = res[2];
-        t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null) {
-          t.listUser = t.task.assignTo.split(';');
-          this.getListUser(this.task.assignTo);
-        } else {
-          this.listUser = [];
-          this.listUserDetail = [];
-          this.listMemo2OfUser = [];
-          //thêm giá trị đê add thử copy -sau nay xóa đi
-          //   if (action == 'edit') {
-          //     this.task.assignTo = 'TQHOAN'; ///tesst
-          //     this.getListUser(this.task.assignTo);
-          //   }
-        }
-        t.changeDetectorRef.detectChanges();
-        if(this.functionID =="TMT03"){
-          this.showAssignTo = true;
-        }
-        this.showPanel();
-      }
-    });
-  }
-
-  getTaskCoppied(id) {
-    const t = this;
-    if(this.functionID =="TMT03"){
-      this.showAssignTo = true;
-    }
-    this.tmSv.getTask(id).subscribe((res) => {
-      if (res && res.length) {
-        t.copyListTodo(res[2]);
-        t.beforeCopy(res[0]);
-      }
-    });
-  }
-
-  copyListTodo(listTodoCopy) {
-    const t = this;
-    t.listTodo = [];
-    if (listTodoCopy != null) {
-      listTodoCopy.forEach((td) => {
-        var todo = new TaskGoal();
-        todo.status = td.status;
-        todo.text = td.text;
-        t.listTodo.push(Object.assign({}, todo));
-      });
-    }
-  }
-
-  beforeCopy(data) {
-    this.title = 'Copy công việc ';
-    const t = this;
-    t.task = new TM_Tasks();
-    t.task = data;
-    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
-    if (data.startDate != null)
-      t.task.startDate = moment(new Date(data.startDate)).toDate();
-    t.task.endDate = moment(new Date(data.endDate)).toDate();
-    t.task.taskID = null;
-    t.task.parentID = null;
-    t.task.assignTo = null;
-    t.task.completedOn = null;
-    this.listUser = [];
-    this.listUserDetail = [];
-    this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi
-    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    // this.getListUser(this.task.assignTo);
-
-    t.changeDetectorRef.detectChanges();
-    this.showPanel();
-  }
+ 
 
   // valueChangeUser(event) {
   //   if (event?.valueSeleteds) {

@@ -217,37 +217,39 @@ export class AssignTaskDetailsComponent implements OnInit {
   confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          t.taskAction.taskID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((element) => {
-              if (element.status != '1') {
-                isCanDelete = false;
-                return;
-              }
-            });
-            if (!isCanDelete) {
-              // this.notiService.notifyCode("TM001")
-              t.notiService.notify(
-                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-              );
-            } else {
+      // t.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'ERM.Business.TM',
+      //     'TaskBusiness',
+      //     'GetListTaskChildDetailAsync',
+      //     t.taskAction.taskID
+      //   )
+      //   .subscribe((res: any) => {
+      //     if (res) {
+      //       res.forEach((element) => {
+      //         if (element.status != '1') {
+      //           isCanDelete = false;
+      //           return;
+      //         }
+      //       });
+      //       if (!isCanDelete) {
+      //         // this.notiService.notifyCode("TM001")
+      //         t.notiService.notify(
+      //           'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+      //         );
+      //       } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
+                    var taskDelete = t.data.find(
+                      (x) => x.taskID == lstTaskDelete[i].taskID
+                    );
                     t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if (res[1] != null) {
-                    var parent = t.data.find(x => x.taskID == res[1].taskID);
+                    var parent = t.data.find((x) => x.taskID == res[1].taskID);
                     if(parent){
                       parent.assignTo = res[1].assignTo;
                       parent.category = res[1].category;
@@ -258,7 +260,7 @@ export class AssignTaskDetailsComponent implements OnInit {
                   t.notiService.notify('Xóa task thành công !');
                   t.data = t.listview.data;
                   t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID)
+                  t.getOneItem(t.itemSelected.taskID);
                   return;
                 }
                 t.notiService.notify(
@@ -267,9 +269,9 @@ export class AssignTaskDetailsComponent implements OnInit {
               });
             }
           }
-        });
-    }
-  }
+  //       });
+  //   }
+  // }
 
   ChangeStatusTask(status, taskAction) {
     const fromName = 'TM_Parameters';
