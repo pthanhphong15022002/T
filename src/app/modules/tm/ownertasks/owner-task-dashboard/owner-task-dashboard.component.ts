@@ -4,6 +4,7 @@ import {
   RemiderOnDay,
   TaskRemind,
 } from '@modules/tm/models/dashboard.model';
+import { TmService } from '@modules/tm/tm.service';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
 import {
   AccPoints,
@@ -32,7 +33,10 @@ export class OwnerTaskDashboardComponent implements OnInit {
   daySelectedTo: Date;
   week: number;
   monthSelected: number;
+  rateDoneOnTime: number;
+  rate: number;
   rateTotalChange: string;
+  positive: boolean;
   rateTotalChangeValue: number = 0;
   remiderOnDay: RemiderOnDay[] = [];
   taskRemind: TaskRemind = new TaskRemind();
@@ -186,6 +190,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
   @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
 
   constructor(
+    private tmService: TmService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore
@@ -208,24 +213,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
     this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
     this.daySelectedTo = this.selectweekComponent.daySelectedTo;
     this.monthSelected = this.selectweekComponent.month + 1;
-    this.getGeneralData();
-  }
-
-  getGeneralData() {
-    this.api
-      .exec('TM', 'TaskBusiness', 'GetGeneralDataAsync', [
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.selectweekComponent.beginMonth,
-        this.selectweekComponent.endMonth,
-      ])
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((task: TaskRemind) => {
-        this.taskRemind = task;
-      });
+    this.getInitData();
   }
 
   onChangeValueSelectedWeek(data) {
@@ -234,78 +222,87 @@ export class OwnerTaskDashboardComponent implements OnInit {
     this.daySelected = data.daySelected;
     this.daySelectedFrom = data.daySelectedFrom;
     this.daySelectedTo = data.daySelectedTo;
+    this.getGeneralData();
     if (this.week != data.week) {
       this.week = data.week;
-      this.getDataDonutChart(data.week);
+      this.getGeneralData();
     }
     if (this.monthSelected != data.month + 1) {
       this.monthSelected = data.month + 1;
-      this.getDataCombineChart(data.beginMonth, data.endMonth);
+      this.getGeneralData();
     }
   }
 
-  //#region get/set data chart A1.3
-  getDataTrendChart() {
-    this.dataLineTrend;
-  }
-
-  setDataTrendChart(data) {
-    this.chartTaskRemind = data.chartTaskRemind;
-  }
-  //#endregion Chart A1.3
-
-  //#region get/set data chart  A1.4
-  getDataProcessBar() {}
-
-  setDataProcessBar() {}
-  //#endregion Chart A1.4
-
-  //#region get/set data chart A1.5
-  getDataDonutChart(week: Date) {
-    this.doughnutData;
-  }
-
-  setDataDonutChart(data) {
-    if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
-      //this.palettes = this.palettesEmpty;
-      // this.rateTotalChange = this.getTitleRateChange(
-      //   data.chartPerformance.rateTotalChange
-      // );
-    } else {
-      this.doughnutData = data.chartPerformance.doughnutData;
-      // this.rateTotalChange = this.getTitleRateChange(
-      //   data.chartPerformance.rateTotalChange
-      // );
-    }
-    this.dataLineTrend = data.trendChart.result;
-    this.changeDetectorRef.detectChanges();
-  }
-  //#endregion Chart A1.5
-
-  //#region get/set data chart A1.6
-  getDataCombineChart(beginMonth: Date, endMonth: Date) {
-    let option = this.model;
-    option.predicate =
-      'CompletedOn.Value >= @0 and CompletedOn.Value <=@1 and Owner == @2 and Status == @3';
-    option.dataValue = `${beginMonth.toISOString()};${endMonth.toISOString()};${
-      this.user.userID
-    };9`;
-
-    this.api
-      .exec('TM', 'TaskBusiness', 'GetDataBarChartAsync', [
-        option,
-        beginMonth,
-        endMonth,
-      ])
+  private getInitData() {
+    this.tmService
+      .getChartData(
+        this.model,
+        this.daySelectedFrom,
+        this.daySelectedTo,
+        this.fromDate,
+        this.toDate,
+        this.selectweekComponent.beginMonth,
+        this.selectweekComponent.endMonth
+      )
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((data: any) => {
-        if (data) {
-          this.setDataCombineChart(data);
-        }
+      .subscribe((task: TaskRemind) => {
+        this.taskRemind = task;
+        this.remiderOnDay = task.listTaskByDay['result'];
+        this.setDataTrendChart(task.trendChart);
+        this.setDataProgressBar(task.rateDoneAllTime);
+        this.setDataDonutChart(task.donutChart);
+        this.setDataCombineChart(task.barChart);
       });
   }
 
-  setDataCombineChart(data) {
+  private getGeneralData() {
+    this.tmService
+      .getChartData(
+        this.model,
+        this.daySelectedFrom,
+        this.daySelectedTo,
+        this.fromDate,
+        this.toDate,
+        this.selectweekComponent.beginMonth,
+        this.selectweekComponent.endMonth
+      )
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((task: TaskRemind) => {
+        this.taskRemind = task;
+        this.remiderOnDay = task.listTaskByDay['result'];
+        this.setDataDonutChart(task.donutChart);
+        this.setDataCombineChart(task.barChart);
+      });
+  }
+
+  //#region A1.3
+  private setDataTrendChart(data) {
+    this.rateDoneOnTime = data.rateDoneOnTime;
+    this.dataLineTrend = data.result;
+  }
+  //#endregion A1.3
+
+  //#region A1.4
+  private setDataProgressBar(data) {
+    this.taskRemind.rateDoneAllTime = data;
+  }
+  //#endregion A1.4
+
+  //#region A1.5
+  private setDataDonutChart(data) {
+    if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
+      this.setTitleRateChange(data.rateTotalChange);
+    } else {
+      this.doughnutData = data.chartPerformance;
+      this.setTitleRateChange(data.rateTotalChange);
+      this.taskRemind.totalTaskInWeek = data.count;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  //#endregion A1.5
+
+  //#region A1.6
+  private setDataCombineChart(data) {
     if (data.hasOwnProperty('barChart')) {
       this.dataColumn = data.barChart;
     }
@@ -314,5 +311,12 @@ export class OwnerTaskDashboardComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
-  //#endregion Chart A1.6
+  //#endregion A1.6
+  private setTitleRateChange(data) {
+    this.positive = data.positive;
+    this.rateTotalChangeValue = data.rate;
+    let title = this.positive ? 'Tăng' : 'Giảm';
+    console.log(this.rateTotalChangeValue);
+    this.rateTotalChange = `${title} hơn ${this.rateTotalChangeValue} % so với tuần trước`;
+  }
 }
