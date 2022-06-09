@@ -6,8 +6,8 @@
 </ng-template>  
 
 <ng-template #sidebarRight>
-  <app-task-info [ngIf]="!isAssign" #taskInfo [viewBase]="viewBase"></app-task-info>
-  <app-task-info [ngIf]="isAssign"  #assignInfo [viewBase]="viewBase" [widthSidebar]="widthSidebar"></app-task-info>
+  <app-task-info  #taskInfo [viewBase]="viewBase"></app-task-info>
+  <!-- <app-task-info [ngIf]="isAssign"  #assignInfo [viewBase]="viewBase" [widthSidebar]="widthSidebar"></app-task-info> -->
 </ng-template>
 
 <!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
