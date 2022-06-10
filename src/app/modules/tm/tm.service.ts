@@ -63,6 +63,9 @@ export class TmService {
   addTask(data) {
     return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddTaskAsync', data);
   }
+  saveAssign(data) {
+    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddAssignToTaskAsync', data);
+  }
   addTaskBoard(data) {
     return this.api.execSv<any>('TM', 'TM', 'SprintsBusiness', 'AddEditSprintAsync', data);
   }
@@ -84,6 +87,9 @@ export class TmService {
 
   getValueCMParameter(predicate, dataValue) {
     return this.api.execSv("SYS", "CM", "ParametersBusiness", "GetByPredicate", [predicate, dataValue]);
+  }
+  getMoreFunction(data){
+    return this.api.execSv<any>("SYS","SYS","MoreFunctionsBusiness","GetWithPermAsync",data)
   }
 
   getGridViewSetup(predicate, dataValue?) {

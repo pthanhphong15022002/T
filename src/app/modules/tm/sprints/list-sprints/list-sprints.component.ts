@@ -84,13 +84,8 @@ export class ListSprintsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  //  this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'GetListTaskTreeByRefIDAsync', [
-  // "629482f84906d065602ee2ea"
-  // ]).subscribe(res=>{
-  //   console.log(res)
-  // })
-   this.funcID =this.activedRouter.snapshot.params["funcID"];;
-    this.api.execSv<any>("SYS","SYS","MoreFunctionsBusiness","GetWithPermAsync",[ this.funcID ,"Sprints","grvSprints"]).subscribe((res)=>{
+    this.funcID =this.activedRouter.snapshot.params["funcID"];;
+    this.tmSv.getMoreFunction([this.funcID ,null,null]).subscribe((res)=>{
     if(res){
       this.moreFunc =res ;
       for(var i=0; i<this.moreFunc.length ;i++){

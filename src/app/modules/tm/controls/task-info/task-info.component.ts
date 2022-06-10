@@ -630,6 +630,10 @@ export class TaskInfoComponent implements OnInit {
       listUser = listUser.replace(' ', '');
     }
     this.listUser = listUser.split(';');
+    this.listUser.forEach((u) => {
+      var obj = { userID: u.userID, memo2: null };
+      this.listMemo2OfUser.push(obj);
+    });
     this.api
       .execSv<any>(
         'TM',
@@ -640,10 +644,7 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         this.listUserDetail = res;
-        this.listUserDetail.forEach((u) => {
-          var obj = { userID: u.userID, memo2: null };
-          this.listMemo2OfUser.push(obj);
-        });
+        
       });
   }
   extendShow() {

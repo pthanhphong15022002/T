@@ -6,11 +6,12 @@
 </ng-template>  
 
 <ng-template #sidebarRight>
-  <app-task-info  #taskInfo [viewBase]="viewBase"></app-task-info>
-  <!-- <app-task-info [ngIf]="isAssign"  #assignInfo [viewBase]="viewBase" [widthSidebar]="widthSidebar"></app-task-info> -->
+  <app-task-info *ngIf="!isAssign" #taskInfo [viewBase]="viewBase"></app-task-info>
+  <app-assign-info *ngIf="isAssign"  #assignInfo [viewBase]="viewBase" ></app-assign-info>
 </ng-template>
-
-<!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
+<!-- <ng-template #sidebarRightToAssign>
+  <app-assign-info  #assignInfo [viewBase]="viewBase" ></app-assign-info>
+</ng-template> -->
 
 <ng-template #kanban>
   <onwer-task-kanban [viewBase]="viewBase" (taskInfo)="click($event)"></onwer-task-kanban>
@@ -22,7 +23,7 @@
 
 <!-- list-task-detail -->
 <ng-template #listDetails>
-  <owner-task-details  [viewBase]="viewBase" [taskInfo]="taskInfo" [assignInfo]="assignInfo"></owner-task-details>
+  <owner-task-details  [viewBase]="viewBase" [taskInfo]="taskInfo" [assignInfo]="assignInfo" (actionIsAssign)="receiveActionAssign($event)" ></owner-task-details>
 </ng-template>
 <!-- end list-task-detail -->
 <!-- list-task -->

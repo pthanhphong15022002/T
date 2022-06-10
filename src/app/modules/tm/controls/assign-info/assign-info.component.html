@@ -1,4 +1,4 @@
-<div class="card w-100 h-100 rounded-0 border-0">
+<div class="card w-100 h-100 rounded-0 border-0" style="padding: 0px 10px;">
     <div class="card-header pe-5">
         <div class="card-title">
             <div class="d-flex flex-column">
@@ -8,7 +8,7 @@
         </div>
         <div class="card-toolbar">         
             <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
-                id="kt_engage_demos_close">
+                id="kt_engage_demos_close" (click)="closePanel()">
                 <span class="icon-close icon-18"></span>
             </button>
         </div>
@@ -32,10 +32,11 @@
                     <div class="d-flex align-items-center w-100" >
                         <codx-input
                             [refValue]="'Users'"
+                            [crrValue]="task.assignTo"
                             placeholder="Chọn tài khoản"
                             type="combobox"
                             style="width:100%"
-                            
+                            (valueChange)="changeUser($event)"
                             >
                     </codx-input> 
                     </div>  
@@ -72,8 +73,11 @@
                 <div class="d-flex align-items-center w-100">
                     <codx-input 
                         type="text"
-                        style="width:100%"
+                        style="width:100%"  name="taskName" field="taskName" [crrValue]="task.taskName"  [(ngModel)]="task.taskName"
                     ></codx-input>
+                    <!-- <input #taskNameInput style="width:100%" name="taskName" [(ngModel)]="task.taskName"
+                  [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
+                   /> -->
                 </div>
             </div>
             <div class="dropdown">
@@ -160,15 +164,15 @@
                     </div>
                 </div>
             </div>
-            <codx-input type="textarea" field="textarea" placeholder="" [crrValue]="''" (valueChange)="changeValueDescription($event)" >
-            </codx-input>
+            <codx-input type="textarea" field="memo" [crrValue]="task.memo" 
+            class="form-control" (valueChange)="changeMemo($event)"></codx-input>
         </div>
         <div class="row p-4">            
             <div class="d-flex align-items-center flex-grow-1">
                 <div class="w-100px">Thời hạn xử lý</div>
-                <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                    dataformat="d" >
-                </codx-input>
+                <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
+                [crrValue]="task.dueDate" dataformat="d" (valueChange)="changeTime($event)">
+              </codx-input>
 
                 <div class="col-6 d-flex align-items-center">    
                     <div class="d-flex flex-stack l-30px ms-3">
@@ -196,8 +200,8 @@
                 <div class="ms-2">Lưu làm template</div>
             </div>                        
             <div class="d-flex">
-                <button type="button" class="btn btn-primary me-3" >Lưu và tiếp tục</button>                                        
-                <button type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-primary me-3" (click)="saveAssign(task.taskID,true)">Lưu và tiếp tục</button>                                        
+                <button type="button" class="btn btn-primary" (click)="saveAssign(task.taskID,false)">Lưu</button>
             </div>
         </div>
     </div>
