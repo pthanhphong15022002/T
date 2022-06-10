@@ -6,6 +6,7 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
@@ -15,6 +16,7 @@ import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.c
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 import { ActivatedRoute } from '@angular/router';
 import { AssignInfoComponent } from '../controls/assign-info/assign-info.component';
+import { OnwerTaskDetailsComponent } from './owner-task-details/owner-task-details.component';
 
 @Component({
   selector: 'onwer-task',
@@ -44,11 +46,11 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('taskGroup') taskGroup: TemplateRef<any>;
   @ViewChild('rangesKanban') rangesKanban: TemplateRef<any>;
 
-  // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
+  @ViewChild(OnwerTaskDetailsComponent) ownerDetails   ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   @ViewChild('TaskGroup') TaskGroup: TaskGroupComponent;
   @ViewChild('assignInfo') assignInfo: AssignInfoComponent;
-
+  @ViewChild('sidebarRightToAssign') sidebarRightToAssign: TemplateRef<any> | null;
   // public showBackdrop: boolean = true;
   // public type: string = 'Push';
    widthSidebar: string = '900px';
@@ -95,6 +97,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+   this.isAssign = false ;
     this.views = [
       {
         id: '1',
@@ -124,10 +127,9 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         active: true,
         model: {
           panelLeftRef: this.listDetails,
-          itemTemplate: this.templateTask,
           sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: this.widthSidebar,
+          sideBarRightRef:this.sidebarRight, //this.isAssign?  this.sidebarRightToAssign: this.sidebarRight,
+          widthAsideRight: '900px',
         },
       },
       {
@@ -160,6 +162,13 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     ];
     this.cf.detectChanges();
   }
+
+  receiveActionAssign($event) {
+    this.isAssign = $event;
+  // this.viewBase.currentView.openSidebarRight();;
+  }
+ 
+
 
   click(evt: any) {
     switch (evt.id) {

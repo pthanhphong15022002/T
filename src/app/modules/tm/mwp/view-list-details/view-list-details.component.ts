@@ -390,7 +390,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   openShowNode() {
-    this.openNode = !this.openNode;
+    //dang fail
+   // this.openNode = !this.openNode;
   }
 
   addListView(obj) {

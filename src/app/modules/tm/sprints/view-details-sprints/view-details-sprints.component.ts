@@ -59,16 +59,18 @@ export class ViewDetailsSprintsComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
-    // this.iterationID = this.activedRouter.snapshot.params["id"];
+    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
+    this.funcID =this.activedRouter.snapshot.params["funcID"];
+    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
+    this.model.dataObj = JSON.stringify(dataObj);
   }
 
   ngOnInit(): void {
-   
     this.loadData();
   }
   loadData() {
-    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    this.funcID =this.activedRouter.snapshot.params["funcID"];
+    // this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
+    // this.funcID =this.activedRouter.snapshot.params["funcID"];
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'SprintsTasks';
@@ -156,6 +158,7 @@ export class ViewDetailsSprintsComponent implements OnInit {
     } else this.isFinishLoad = false;
   }
   openShowNode() {
-    this.openNode = !this.openNode;
+    //đang fail
+   // this.openNode = !this.openNode;
   }
 }

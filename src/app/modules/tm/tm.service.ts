@@ -98,6 +98,9 @@ export class TmService {
       data
     );
   }
+  saveAssign(data) {
+    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddAssignToTaskAsync', data);
+  }
   addTaskBoard(data) {
     return this.api.execSv<any>(
       'TM',
@@ -154,6 +157,9 @@ export class TmService {
       'GetByPredicate',
       [predicate, dataValue]
     );
+  }
+  getMoreFunction(data){
+    return this.api.execSv<any>("SYS","SYS","MoreFunctionsBusiness","GetWithPermAsync",data)
   }
 
   getGridViewSetup(predicate, dataValue?) {
