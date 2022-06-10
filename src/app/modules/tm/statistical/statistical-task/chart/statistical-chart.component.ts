@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartTaskRemind, TaskRemind } from '@modules/tm/models/dashboard.model';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
@@ -11,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./statistical-chart.component.scss']
 })
 export class StatisticalChartComponent implements OnInit, AfterViewInit {
+  @Input() data = [];
 
   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
   @ViewChild('dashboard') dashboard: TemplateRef<any>;
@@ -18,7 +19,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   taskRemind: TaskRemind = new TaskRemind();
   views: Array<ViewModel> = [];
 
-  model: DataRequest;
+  model= new DataRequest();
   user: any;
   doughnutData = [];
   doughnutEmpty = [
@@ -53,13 +54,13 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
 
   getGenaralData() {
     this.api
-      .exec("TM", "TaskBusiness", "GetGenaralDataAsync", [
+      .exec("TM", "ReportBusiness", "GetGenaralDataAsync", [
         this.model,
       ])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: TaskRemind) => {
         this.taskRemind = data;
-        this.setDataChart(data.chartData);
+        //this.setDataChart(data.chartData);
 
       });
   }
