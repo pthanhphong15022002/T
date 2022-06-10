@@ -1,6 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { TM_Tasks } from './../../models/TM_Tasks.model';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { DataRequest, CacheService, AuthStore } from 'codx-core';
+import { DataRequest, CacheService, AuthStore, ApiHttpService } from 'codx-core';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 
 @Component({
@@ -13,10 +14,12 @@ export class StatisticalProjectComponent implements OnInit {
   @ViewChild("itemOwner", { static: true }) itemOwner: TemplateRef<any>;
   @ViewChild("buttonPupop", { static: true }) buttonPupop: TemplateRef<any>;
   @ViewChild('main') main: TemplateRef<any>;
+  @Input() data= [];
 
+  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private api: ApiHttpService) { }
+  model = new DataRequest();
+  @Input() report = new TM_Tasks();
 
-  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder) { }
-  model= new DataRequest();
   columnsGrid = [];
   headerStyle = {
     textAlign: 'center',
@@ -43,11 +46,11 @@ export class StatisticalProjectComponent implements OnInit {
     this.columnsGrid = [
       { field: 'projectName', headerText: 'Danh sách dự án' },
       { field: 'owner', headerText: 'Nguồn lực', template: this.itemOwner },
-      { field: 'totalTask', headerText: 'Tổng số công việc'},
+      { field: 'totalTask', headerText: 'Tổng số công việc' },
       { field: 'totalDoneTask', headerText: 'Đã hoàn tất' },
       { field: 'taskUnCompelete', headerText: 'Chưa thực hiện' },
       { field: 'rateDone', headerText: 'Tỉ lệ hoàn thành' },
-      { field: 'active', headerText: 'Tỉ lệ hoàn thành đúng hạn'},
+      { field: 'active', headerText: 'Tỉ lệ hoàn thành đúng hạn' },
       { field: '', headerText: '', template: this.buttonPupop }
     ];
     this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
@@ -69,7 +72,15 @@ export class StatisticalProjectComponent implements OnInit {
     ];
   }
 
-  initForm(){
+  loadData() {
+    this.api.execSv<any>("TM", "TM", "RepostBusiness", "ListReportProjectAsync", this.model).subscribe((res)=>{
+      if(res){
+        this.data = res;
+      }
+    })
+  }
+
+  initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
     })
