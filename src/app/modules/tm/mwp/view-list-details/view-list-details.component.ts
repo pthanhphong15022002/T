@@ -559,7 +559,6 @@ export class ViewListDetailsComponent implements OnInit {
   }
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     switch (event.status) {
       case '1':
         this.data = this.listviewAdd?.data;
@@ -579,6 +578,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.dataValue = event.status;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }

@@ -35,6 +35,7 @@ export class TM_Tasks {
   startTime: string;
   endDate: Date;
   startedOn: Date;
+  percentage: number
   completed: number;
   completedOn: any;
   completedTime: string;
@@ -69,6 +70,9 @@ export class TM_Tasks {
   orgUnitID: string;
   divisionID: string;
   write: boolean;
+  extended :boolean;
+  isAssign:boolean;
+  isOverdue:boolean;
 }
 
 export class tmpTaskResource {

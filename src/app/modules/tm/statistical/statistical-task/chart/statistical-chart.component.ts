@@ -60,7 +60,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data: TaskRemind) => {
         this.taskRemind = data;
-        this.setDataChart(data.chartData);
+        //this.setDataChart(data.chartData);
 
       });
   }

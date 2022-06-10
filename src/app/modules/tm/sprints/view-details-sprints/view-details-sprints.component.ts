@@ -47,7 +47,7 @@ export class ViewDetailsSprintsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  iterationID: string=''
+  iterationID: string='';
   @Input('viewBase') viewBase: ViewsComponent;
   @Input() funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
@@ -59,7 +59,7 @@ export class ViewDetailsSprintsComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
-    this.iterationID = this.activedRouter.snapshot.params["id"];
+    // this.iterationID = this.activedRouter.snapshot.params["id"];
   }
 
   ngOnInit(): void {
@@ -67,13 +67,13 @@ export class ViewDetailsSprintsComponent implements OnInit {
     this.loadData();
   }
   loadData() {
-    this.iterationID = this.activedRouter.snapshot.params["id"];
+    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
+    this.funcID =this.activedRouter.snapshot.params["funcID"];
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
-    model.formName = 'Sprints';
-    this.funcID ="TMT042"
-    model.gridViewName = 'grvSprints';
-    model.entityName = 'TM_Sprints';
+    model.formName = 'SprintsTasks';
+    model.gridViewName = 'grvSprintTasks';
+    model.entityName = 'TM_SprintTasks';
     model.predicate = '';
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('12/30/2022').toDate();
@@ -84,10 +84,7 @@ export class ViewDetailsSprintsComponent implements OnInit {
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    
-     var dataObj = { view: "",calendarID:"", viewBoardID: this.iterationID };
- 
-   
+    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
   }

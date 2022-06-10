@@ -49,6 +49,7 @@ import { StatisticalProjectComponent } from './statistical/statistical-project/s
 import { StatisticalViewlistComponent } from './statistical/statistical-task/viewlist/statistical-viewlist.component';
 import { StatisticalChartComponent } from './statistical/statistical-task/chart/statistical-chart.component';
 import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
+import { OwnerTaskDashboardComponent } from './ownertasks/owner-task-dashboard/owner-task-dashboard.component';
 
 
 
@@ -76,11 +77,12 @@ const routes: Routes = [
       {
         path: 'sprinttasks/:funcID',
         component: ViewDetailsSprintsComponent,
-      },  
-      {
-        path: 'sprinttasks/:id',
-        component: ViewDetailsSprintsComponent,
-      },  
+        children: [
+          {
+            path: ':id',
+            component: ViewDetailsSprintsComponent,
+          }]
+      },   
       {
         path: 'setting',
         component: SettingsComponent,
@@ -154,7 +156,7 @@ const routes: Routes = [
     OwnerListTasksComponent,
     MoreFuntionComponent,
     OwnerTaskCalendarComponent,
-    // OwnerTaskDashboardComponent,
+    OwnerTaskDashboardComponent,
     DashboardComponent,
     TreeviewComponent,
     SettingCalendarComponent,

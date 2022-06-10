@@ -14,6 +14,7 @@ import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.c
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 import { ActivatedRoute } from '@angular/router';
+import { AssignInfoComponent } from '../controls/assign-info/assign-info.component';
 
 @Component({
   selector: 'onwer-task',
@@ -46,17 +47,18 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   @ViewChild('TaskGroup') TaskGroup: TaskGroupComponent;
+  @ViewChild('assignInfo') assignInfo: AssignInfoComponent;
 
-  public showBackdrop: boolean = true;
-  public type: string = 'Push';
-  public width: string = '550px';
-  public closeOnDocumentClick: boolean = true;
+  // public showBackdrop: boolean = true;
+  // public type: string = 'Push';
+   widthSidebar: string = '900px';
+   closeOnDocumentClick: boolean = true;
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
   funcID: any;
-
+  isAssign : boolean = false ;
   constructor(
     private cf: ChangeDetectorRef,
     private cache: CacheService,
@@ -97,7 +99,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       {
         id: '1',
         type: 'chart',
-        active: true,
+        active: false,
         text: 'Dashboard',
         model: {
           panelLeftRef: this.dashboard,
@@ -119,13 +121,13 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         type: 'kanban',
         icon: 'icon-chrome_reader_mode1',
         text: 'List-details',
-        active: false,
+        active: true,
         model: {
           panelLeftRef: this.listDetails,
           itemTemplate: this.templateTask,
           sideBarLeftRef: this.asideLeft,
           sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
+          widthAsideRight: this.widthSidebar,
         },
       },
       {

@@ -1,11 +1,11 @@
 <div class="page-home page-master">
   <div class="d-flex flex-row">
-    <div id="codx_master" class="min-w-325px w-325px">
+    <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
-        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100"
+        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" [funcId]="funcID"
           service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
           [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
-          entityName="TM_Tasks" [data]="data" groupBy="fieldGroup"   (changeRowSelected)="changeRowSelected($event)">
+          entityName="TM_Tasks"  groupBy="fieldGroup"   (changeRowSelected)="changeRowSelected($event)">
         </codx-listview>
       </div>
     </div>
@@ -564,6 +564,12 @@
               [numberImages]="countOwner >2?2:countOwner">
             </codx-imgs>
           </div>
+          <div class="symbol-group symbol-hover justify-content-end"
+            *ngIf="item?.category == '1' || item?.category == '2'">
+            <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.owner" objectName="AD_Users"
+              [numberImages]="1">
+            </codx-imgs>
+          </div>
         </div>
       </div>
     </ng-template>
@@ -664,6 +670,12 @@
           <span class="tooltiptext">Xem</span>
         </div>
       </a>
+      <a class="action-item" (click)="assignItem(taskAction)" style="cursor: pointer">
+        <div class="d-flex align-items-center btn-tooltip">
+          <span class=" icon-m_hr icon-20 text-primary ms-2 me-2"></span>
+          <span class="tooltiptext">Giao việc</span>
+        </div>
+      </a>
       <a class="action-item" (click)="setupStatus(p2,taskAction)" [ngbPopover]="setupStatusTask"
         popoverClass="empPopoverClass" #p2="ngbPopover" placement="right left" container="body" autoClose="outside"
         triggers="manual" style="cursor: pointer">
@@ -702,44 +714,5 @@
             </div>
           </a>
         </div>
-        <!-- <div class="dropdown-divider"></div> -->
-        <!--
-        <a *ngFor="let f of menuAppend" class="dropdown-item" (click)="Click(f.id,f.funcID)">
-            <div class="d-flex align-items-center">
-                <span class="{{f.icon}} icon-18"></span>
-                <span class="ms-3">{{f.text}}</span>
-            </div>
-        </a> -->
-        <!-- <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-attachment icon-18"></span>
-                <span class="ms-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-archive icon-18"></span>
-                <span class="ms-3">{{'Export File' | lang : 'Common' : 'ExportFile'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-email icon-18"></span>
-                <span class="ms-3">{{'Gửi mail' | lang : 'Common' : 'SendMail'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-share icon-18"></span>
-                <span class="ms-3">{{'Chia sẽ' | lang : 'Common' : 'Share'|async}}</span>
-            </div>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-extension icon-18"></span>
-                <span class="ms-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
-            </div>
-        </a> -->
       </div>
     </ng-template>

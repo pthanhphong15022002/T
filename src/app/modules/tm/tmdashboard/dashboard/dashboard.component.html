@@ -1,10 +1,9 @@
 <codx-views
   #view
-  funcID="TMT01"
+  funcID="TMT02"
   [showToolBar]="false"
   entityName="TM_Tasks"
 ></codx-views>
-<!-- <ng-template #dashboard> -->
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-100 container pe-9">
     <div class="taskbox-left" *ngIf="taskRemind">
@@ -81,7 +80,7 @@
           <div>
             <div class="d-flex flex-grow-1 mb-3">
               <div class="font-size-h2 font-weight-bold mr-3">
-                {{ chartTaskRemind.rateDoneOnTime | percent }}
+                {{ this.rateDoneOnTime | percent }}
               </div>
               <div class="d-flex w-100 h-50px">
                 <ejs-chart
@@ -150,11 +149,11 @@
         <div class="col-4">
           <div class="text-dark fw-bold">Tuần {{ week }}</div>
           <div class="text-dark font-size-h1 font-weight-bold mt-2">
-            {{ chartTaskRemind.totalTaskInWeek }}
+            {{ taskRemind.totalTaskInWeek }}
           </div>
 
           <div class="text-dark-50">
-            {{ this.rateTotalChange }}
+            {{ rateTotalChange }}
           </div>
         </div>
         <div class="col-8" [style.position]="'relative'">
@@ -188,7 +187,7 @@
             <div class="text-dark-50">
               <div
                 *ngIf="
-                  this.rateTotalChange && this.rateTotalChangeValue >= 100 
+                this.positive == true
                 "
               >
                 <span
@@ -196,13 +195,13 @@
                   [style.color]="'#06DDB8'"
                 ></span>
                 <span
-                  >{{ this.rateTotalChangeValue }} %
+                  >{{ this.rateTotalChangeValue}} %
                   <p>Task</p>
                 </span>
               </div>
               <div
                 *ngIf="
-                  this.rateTotalChange && this.rateTotalChangeValue < 100
+                this.positive == false
                 "
               >
                 <span
@@ -223,16 +222,6 @@
       <div class="text-dark fw-bold fs-4">
         Task by days - {{ daySelected | date: "MMMM yyyy" }}
       </div>
-      <!-- <div class="d-flex align-items-center">
-          <div class="d-flex align-items-center m-6">
-            <span class="square-blue me-2"></span>
-            <div class="text-dark">Task</div>
-          </div>
-          <div class="d-flex align-items-center">
-            <span class="dat-red me-2"></span>
-            <div class="text-dark">WorkHours</div>
-          </div>
-        </div> -->
     </div>
     <div class="p-6 w-100" style="height: 600px">
       <ejs-chart
@@ -244,8 +233,8 @@
         id="chartbar"
         [primaryXAxis]="columnXAxis"
         [primaryYAxis]="columnYAxis"
-        [title]=""
         [tooltip]="tooltip"
+        [legendSettings]="legendSettings"
       >
         <e-axes>
           <e-axis
@@ -330,4 +319,3 @@
     </div>
   </div>
 </div>
-<!-- </ng-template> -->

@@ -5,6 +5,8 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AssignInfoComponent } from '@modules/tm/controls/assign-info/assign-info.component';
 import { DataRequest } from '@shared/models/data.request';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -27,6 +29,9 @@ import { TmService } from '../../tm.service';
 })
 export class OnwerTaskDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
+  @Input('assignInfo') assignInfo: AssignInfoComponent;
+  @Input() isAssign = false;
+  @Input() widthSidebar = "900px";
   @Input() data = [];
   taskChild = [];
   view: string;
@@ -49,7 +54,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   @Input('viewBase') viewBase: ViewsComponent;
-  @Input() funcID: string;
+  funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
@@ -58,9 +63,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
+    this.funcID =this.activedRouter.snapshot.params["funcID"];
   }
 
   ngOnInit(): void {
@@ -219,35 +226,42 @@ export class OnwerTaskDetailsComponent implements OnInit {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
 
+  assignItem(taskAction){
+   this.isAssign = true ;
+   this.widthSidebar = "1500px" ;
+   this.assignInfo.openInfo(taskAction)
+  }
+
   setupStatus(p, item) {
     p.open();
   }
-
+  
   confirmDelete(e: any, t: OnwerTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          t.taskAction.taskID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((element) => {
-              if (element.status != '1') {
-                isCanDelete = false;
-                return;
-              }
-            });
-            if (!isCanDelete) {
-              // this.notiService.notifyCode("TM001")
-              t.notiService.notify(
-                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-              );
-            } else {
+      //khúc này đã có trong back end (nhớ fix sau )
+      // t.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'ERM.Business.TM',
+      //     'TaskBusiness',
+      //     'GetListTaskChildDetailAsync',
+      //     t.taskAction.taskID
+      //   )
+      //   .subscribe((res: any) => {
+      //     if (res) {
+      //       res.forEach((element) => {
+      //         if (element.status != '1') {
+      //           isCanDelete = false;
+      //           return;
+      //         }
+      //       });
+      //       if (!isCanDelete) {
+      //         // this.notiService.notifyCode("TM001")
+      //         t.notiService.notify(
+      //           'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+      //         );
+      //       } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
@@ -278,9 +292,9 @@ export class OnwerTaskDetailsComponent implements OnInit {
               });
             }
           }
-        });
-    }
-  }
+  //       });
+  //   }
+  // }
 
   ChangeStatusTask(status, taskAction) {
     const fromName = 'TM_Parameters';
@@ -367,7 +381,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   loadDetailTask(task) {
     this.objectAssign = "";
     this.objectState = "";
-    if (task.category == '3' || task.category == '4') {
+    if (task.isAssign) {
       this.api
         .execSv<any>(
           'TM',
@@ -411,10 +425,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
 
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }

@@ -1,12 +1,17 @@
 <div class="page-home page-master">
     <div class="d-flex flex-row">
-      <div id="codx_master" class="min-w-325px w-325px">
+      <div id="codx_master" class="min-w-375px w-375px">
         <div class="codx_master_container">
-          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" funcId="TMT042"
+          <!-- <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" [funcId]="funcID"   [predicate]="" [dataValue]=""
             service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [dataObj]="model.dataObj"
-            [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvSprints'" autoLoad="false"
-            entityName="TM_Sprints"  groupBy="fieldGroup"  (changeRowSelected)="changeRowSelected($event)">
-          </codx-listview>
+            type="listView" [gridViewName]="model.gridViewName" autoLoad="false"
+          [formName]="model.formName"  [entityName]="model.entityName"  groupBy="fieldGroup"  (changeRowSelected)="changeRowSelected($event)">
+          </codx-listview> -->
+          <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100" [funcId]="funcID"
+          service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
+          [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
+          entityName="TM_Tasks"  groupBy="fieldGroup"   (changeRowSelected)="changeRowSelected($event)">
+        </codx-listview>
         </div>
       </div>
       <div class="w-100 d-flex flex-column" id="codx_detail">
@@ -556,12 +561,18 @@
                   {{ item?.createdOn | fmDT: "dmy" }}</span>
               </div>
             </div>
-            <div class="symbol-group symbol-hover justify-content-end"
-              *ngIf="item?.category == '3' || item?.category == '4'">
-              <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.assignTo" objectName="AD_Users"
-                [numberImages]="countOwner >2?2:countOwner">
-              </codx-imgs>
-            </div>
+            <!-- <div class="symbol-group symbol-hover justify-content-end"
+            *ngIf="item?.category == '3' || item?.category == '4'">
+            <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.assignTo" objectName="AD_Users"
+              [numberImages]="countOwner >2?2:countOwner">
+            </codx-imgs>
+          </div> -->
+          <div class="symbol-group symbol-hover justify-content-end"
+            *ngIf="item?.category == '1' || item?.category == '2'">
+            <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.owner" objectName="AD_Users"
+              [numberImages]="1">
+            </codx-imgs>
+          </div>
           </div>
         </div>
       </ng-template>

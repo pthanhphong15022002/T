@@ -6,7 +6,7 @@
             <div class="view-listbox card-with-dropdown pl-6 row">
                 <ng-container >
                   <div class="task-card card-with-dropdown-item col-2 flex " style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;"  
-                  (click)="codxService.navigate('','tm/sprinttasks/TMT042')" >
+                  (click)="codxService.navigate('',urlView)" >
                     <div class="d-flex justify-content-center mt-3">
                         <codx-img class="symbol symbol-50 symbol-circle" [objectId]="user.userID" objectType="TM_Sprints"
                             [objectName]="user.na">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 </ng-container>
-                <codx-listcard #lstViewBoard [pageSize]="14" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
+                <codx-listcard #lstViewBoard [pageSize]="6" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
                     className="SprintsBusiness" method="GetListSprintAsync" autoLoad="true" entityName="TM_Sprints"
                     [predicate]="predicateViewBoards" [dataValue]="" [gridViewName]="'grvSprints'" class="h-100"
                     [cartTemp]="itemViewBoard">
@@ -129,7 +129,7 @@
         <span class="tooltiptext">Chia sẻ view board </span>
       </div>
     </a>
-    <a class="action-item" (click)="codxService.navigate('','tm/sprinttasks/'+boardAction.iterationID)"  style="cursor: pointer">
+    <a class="action-item" (click)="codxService.navigate('',urlView+'/'+boardAction.iterationID)"  style="cursor: pointer">
       <div class="d-flex align-items-center btn-tooltip">
         <span class=" icon-pageview icon-20 text-dark ml-2 mr-2"></span>
         <span class="tooltiptext">Xem chi tiết view board </span>

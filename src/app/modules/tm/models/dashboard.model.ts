@@ -7,8 +7,9 @@ export class TaskRemind {
   totalTaskInWeek: number = 0;
   listTaskByDay: Array<RemiderOnDay> = [];
   rateDoneAllTime: number = 0;
-  chartData: any;
-  barChart: any;
+  trendChart: object;
+  donutChart: object;
+  barChart: object;
 }
 export class ChartTaskRemind {
   rateDoneOnTime: number = 0;

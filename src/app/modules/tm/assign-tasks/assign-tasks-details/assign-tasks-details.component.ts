@@ -19,7 +19,7 @@ export class AssignTaskDetailsComponent implements OnInit {
   view: string;
   user: any;
   objectAssign: any;
-  objectState: any;
+  objectRoleType: any;
   itemSelected = null;
   moment = moment().locale('en');
   today: Date = new Date();
@@ -126,30 +126,30 @@ export class AssignTaskDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected)
   }
 
-  getByParentID(task) {
-    let objectId = '';
-    let objectState = '';
-    if (task != null) {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.id]
-        )
-        .subscribe((res) => {
-          if (res && res?.length > 0) {
-            res.forEach((element) => {
-              objectId += ';' + element.owner;
-              objectState += ';' + element.status;
-            });
-          }
-        });
-    }
-    this.objectAssign = objectId;
-    return objectState;
-  }
+  // getByParentID(task) {
+  //   let objectId = '';
+  //   let objectState = '';
+  //   if (task != null) {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'ERM.Business.TM',
+  //         'TaskBusiness',
+  //         'GetTaskByParentIDAsync',
+  //         [task?.id]
+  //       )
+  //       .subscribe((res) => {
+  //         if (res && res?.length > 0) {
+  //           res.forEach((element) => {
+  //             objectId += ';' + element.owner;
+  //             objectState += ';' + element.status;
+  //           });
+  //         }
+  //       });
+  //   }
+  //   this.objectAssign = objectId;
+  //   return objectState;
+  // }
 
   showControl(p, item) {
     this.taskAction = item;
@@ -217,37 +217,39 @@ export class AssignTaskDetailsComponent implements OnInit {
   confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
       var isCanDelete = true;
-      t.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          t.taskAction.taskID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((element) => {
-              if (element.status != '1') {
-                isCanDelete = false;
-                return;
-              }
-            });
-            if (!isCanDelete) {
-              // this.notiService.notifyCode("TM001")
-              t.notiService.notify(
-                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-              );
-            } else {
+      // t.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'ERM.Business.TM',
+      //     'TaskBusiness',
+      //     'GetListTaskChildDetailAsync',
+      //     t.taskAction.taskID
+      //   )
+      //   .subscribe((res: any) => {
+      //     if (res) {
+      //       res.forEach((element) => {
+      //         if (element.status != '1') {
+      //           isCanDelete = false;
+      //           return;
+      //         }
+      //       });
+      //       if (!isCanDelete) {
+      //         // this.notiService.notifyCode("TM001")
+      //         t.notiService.notify(
+      //           'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
+      //         );
+      //       } else {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res[0]) {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
+                    var taskDelete = t.data.find(
+                      (x) => x.taskID == lstTaskDelete[i].taskID
+                    );
                     t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if (res[1] != null) {
-                    var parent = t.data.find(x => x.taskID == res[1].taskID);
+                    var parent = t.data.find((x) => x.taskID == res[1].taskID);
                     if(parent){
                       parent.assignTo = res[1].assignTo;
                       parent.category = res[1].category;
@@ -258,7 +260,7 @@ export class AssignTaskDetailsComponent implements OnInit {
                   t.notiService.notify('Xóa task thành công !');
                   t.data = t.listview.data;
                   t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID)
+                  t.getOneItem(t.itemSelected.taskID);
                   return;
                 }
                 t.notiService.notify(
@@ -267,9 +269,9 @@ export class AssignTaskDetailsComponent implements OnInit {
               });
             }
           }
-        });
-    }
-  }
+  //       });
+  //   }
+  // }
 
   ChangeStatusTask(status, taskAction) {
     const fromName = 'TM_Parameters';
@@ -355,27 +357,27 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   loadDetailTask(task) {
     this.objectAssign = "";
-    this.objectState = "";
-    if (task.category == '3' || task.category == '4') {
+    this.objectRoleType = "";
+    if (task.isAssign)  {
       this.api
         .execSv<any>(
           'TM',
           'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.recID]
+          'TaskResourcesBusiness',
+          'GetListTaskResourcesByTaskIDAsync',
+          [task?.taskID]
         )
         .subscribe((res) => {
           if (res && res.length > 0) {
             this.countOwner = res.length;
-            let objectId = res[0].owner;
-            let objectState = res[0].status;
+            let objectId = res[0].resourceID;
+            let objectRoleType = res[0].roleType;
             for (let i = 1; i < res?.length; i++) {
-              objectId += ';' + res[i].owner;
-              objectState += ';' + res[i].status;
+              objectId += ';' + res[i].resourceID;
+              objectRoleType += ';' + res[i].roleType;
             }
             this.objectAssign = objectId;
-            this.objectState = objectState;
+            this.objectRoleType = objectRoleType;
           }
         });
     } else {
@@ -400,10 +402,10 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }
