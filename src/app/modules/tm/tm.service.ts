@@ -268,7 +268,7 @@ export class TmService {
     beginMonth: Date,
     endMonth: Date
   ) {
-    return this.api.exec('TM', 'TaskBusiness', 'GetGeneralDataAsync', [
+    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'GetGeneralDataAsync', [
       model,
       daySelectedFrom,
       daySelectedTo,
