@@ -15,7 +15,7 @@
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
                 <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
-                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'1'" type="listView"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'1'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
                   (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
@@ -29,7 +29,7 @@
 
                 <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
-                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'9'" type="listView"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'9'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
                   (changeRowSelected)="changeRowSelected($event)"> </codx-listview>
               </ng-template>
@@ -42,7 +42,7 @@
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container>  -->
                 <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
-                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'5'" type="listView"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'5'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
                   (changeRowSelected)="changeRowSelected($event)" handelCole> </codx-listview>
               </ng-template>
@@ -55,7 +55,7 @@
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
                 <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
-                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'8'" type="listView"
+                  method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'8'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
                   (changeRowSelected)="changeRowSelected($event)">
                 </codx-listview>
@@ -730,13 +730,13 @@
     triggers="manual" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
       <span class="icon-add_box icon-20 text-dark ml-2 mr-2"></span>
-      <span class="tooltiptext">Setup trạng thái </span>
+      <span class="tooltiptext">Mở rộng chức năng </span>
     </div>
   </a>
 </ng-template>
 
 <ng-template #setupStatusTask>
-  <div>
+  <!-- <div>
     <div>
       <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
@@ -763,44 +763,14 @@
         </div>
       </a>
     </div>
-    <!-- <div class="dropdown-divider"></div> -->
-    <!-- 
-        <a *ngFor="let f of menuAppend" class="dropdown-item" (click)="Click(f.id,f.funcID)">
-            <div class="d-flex align-items-center">
-                <span class="{{f.icon}} icon-18"></span>
-                <span class="ml-3">{{f.text}}</span>
-            </div>
-        </a> -->
-    <!-- <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-attachment icon-18"></span>
-                <span class="ml-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-archive icon-18"></span>
-                <span class="ml-3">{{'Export File' | lang : 'Common' : 'ExportFile'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-email icon-18"></span>
-                <span class="ml-3">{{'Gửi mail' | lang : 'Common' : 'SendMail'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-share icon-18"></span>
-                <span class="ml-3">{{'Chia sẽ' | lang : 'Common' : 'Share'|async}}</span>
-            </div>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-extension icon-18"></span>
-                <span class="ml-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
-            </div>
-        </a> -->
-  </div>
+  </div> -->
+
+  <ng-container *ngFor="let moreFunc of moreFuncList" >
+    <a class="dropdown-item" (click)="moreActionTask(moreFunc,taskAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center">
+         <span class="{{moreFunc.largeIcon}}"></span>
+        <span class="ms-3">{{moreFunc.customName}}</span>
+      </div>
+    </a>
+  </ng-container>
 </ng-template>

@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.views = [{
       id: '1',
       type: 'content',
-      active: true,
+      active: false,
       model: {
         panelLeftRef: this.chart,
         sideBarRightRef: this.sidebarRight,
@@ -114,10 +114,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       type: 'kanban',
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
-      active: false,
+      active: true,
       model: {
         panelLeftRef: this.listDetails,
-        itemTemplate: this.templateTask,
+        // itemTemplate: this.templateTask,
         sideBarLeftRef: this.asideLeft,
         sideBarRightRef: this.sidebarRight,
         widthAsideRight: '900px'

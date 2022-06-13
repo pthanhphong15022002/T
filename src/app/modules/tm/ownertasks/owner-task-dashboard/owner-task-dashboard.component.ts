@@ -191,18 +191,20 @@ export class OwnerTaskDashboardComponent implements OnInit {
 
   constructor(
     private tmService: TmService,
-    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore
   ) {}
-
+    
   ngOnInit(): void {
     this.user = this.authStore.get();
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
+    this.model.predicate = 'Owner=@0'
+    this.model.dataValue = this.user.userID
     this.model.pageLoading = false;
+    console.log(this.model)
   }
 
   ngAfterViewInit(): void {

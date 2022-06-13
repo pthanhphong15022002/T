@@ -1,10 +1,25 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
 import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
 import { TmService } from '@modules/tm/tm.service';
 import { DataRequest } from '@shared/models/data.request';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthStore, CallFuncService, CodxListviewComponent, NotificationsService, ViewsComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CallFuncService,
+  CodxListviewComponent,
+  NotificationsService,
+  UrlUtil,
+  ViewsComponent,
+} from 'codx-core';
 import * as moment from 'moment';
 
 @Component({
@@ -37,7 +52,9 @@ export class AssignTaskDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  innerHTML = ''
+  innerHTML = '';
+  funcID  : string ;
+  moreFuncList : any[] =[];
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -47,9 +64,14 @@ export class AssignTaskDetailsComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
+      if(res){this.moreFuncList = res} ;
+     })
   }
 
   ngOnInit(): void {
@@ -66,7 +88,7 @@ export class AssignTaskDetailsComponent implements OnInit {
     });
     this.taskInfo.isUpdate.subscribe((res) => {
       if (res) {
-        var index = this.data.findIndex(x => x.taskID == res.taskID);
+        var index = this.data.findIndex((x) => x.taskID == res.taskID);
         if (index != -1) {
           this.listview.addHandler(res, false, 'recID');
         } else {
@@ -87,12 +109,6 @@ export class AssignTaskDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-    // model.predicate = '';
-    // model.funcID = "TMT03";
-    // model.page = 1;
-    // model.pageSize = 100;
-    // model.predicate = 'Owner=@0';
-    // model.dataValue = this.user.userID;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('12/30/2022').toDate();
@@ -123,33 +139,8 @@ export class AssignTaskDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-    this.loadDetailTask(this.itemSelected)
+    this.loadDetailTask(this.itemSelected);
   }
-
-  // getByParentID(task) {
-  //   let objectId = '';
-  //   let objectState = '';
-  //   if (task != null) {
-  //     this.api
-  //       .execSv<any>(
-  //         'TM',
-  //         'ERM.Business.TM',
-  //         'TaskBusiness',
-  //         'GetTaskByParentIDAsync',
-  //         [task?.id]
-  //       )
-  //       .subscribe((res) => {
-  //         if (res && res?.length > 0) {
-  //           res.forEach((element) => {
-  //             objectId += ';' + element.owner;
-  //             objectState += ';' + element.status;
-  //           });
-  //         }
-  //       });
-  //   }
-  //   this.objectAssign = objectId;
-  //   return objectState;
-  // }
 
   showControl(p, item) {
     this.taskAction = item;
@@ -185,26 +176,21 @@ export class AssignTaskDetailsComponent implements OnInit {
   clickDelete(taskAction) {
     if (taskAction.delete) {
       if (taskAction.status == 9) {
-        // this.notiService.notifyCode("TM001")
-        this.notiService.notify(
-          'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
-        );
+        this.notiService.notifyCode('TM001');
         return;
       }
-      var message = 'Bạn có chắc chắn muốn xóa task này !';
+      //  var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
+        //.alert('Cảnh báo', message, { type: 'YesNo' })
+        .alertCode('TM003', { type: 'YesNo' })
         .subscribe((dialog: Dialog) => {
           var that = this;
           dialog.close = function (e) {
             return that.confirmDelete(e, that);
           };
         });
-
-    } else
-      this.notiService.notify('Bạn chưa được cấp quyền này !');
+    } else this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
-
 
   viewItem(taskAction) {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
@@ -216,64 +202,38 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
-      var isCanDelete = true;
-      // t.api
-      //   .execSv<any>(
-      //     'TM',
-      //     'ERM.Business.TM',
-      //     'TaskBusiness',
-      //     'GetListTaskChildDetailAsync',
-      //     t.taskAction.taskID
-      //   )
-      //   .subscribe((res: any) => {
-      //     if (res) {
-      //       res.forEach((element) => {
-      //         if (element.status != '1') {
-      //           isCanDelete = false;
-      //           return;
-      //         }
-      //       });
-      //       if (!isCanDelete) {
-      //         // this.notiService.notifyCode("TM001")
-      //         t.notiService.notify(
-      //           'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-      //         );
-      //       } else {
-              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
-                if (res[0]) {
-                  var lstTaskDelete = res[0];
-                  for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(
-                      (x) => x.taskID == lstTaskDelete[i].taskID
-                    );
-                    t.listview.removeHandler(taskDelete, 'recID');
-                  }
-                  if (res[1] != null) {
-                    var parent = t.data.find((x) => x.taskID == res[1].taskID);
-                    if(parent){
-                      parent.assignTo = res[1].assignTo;
-                      parent.category = res[1].category;
-                      t.listview.addHandler(parent, false, 'recID');
-                    }
-                  }
-                  // t.notiService.notifyCode("TM004")
-                  t.notiService.notify('Xóa task thành công !');
-                  t.data = t.listview.data;
-                  t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID);
-                  return;
-                }
-                t.notiService.notify(
-                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
-                );
-              });
+      t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
+        if (res[0]) {
+          var lstTaskDelete = res[0];
+          for (var i = 0; i < lstTaskDelete.length; i++) {
+            var taskDelete = t.data.find(
+              (x) => x.taskID == lstTaskDelete[i].taskID
+            );
+            t.listview.removeHandler(taskDelete, 'recID');
+          }
+          if (res[1] != null) {
+            var parent = t.data.find((x) => x.taskID == res[1].taskID);
+            if (parent) {
+              parent.assignTo = res[1].assignTo;
+              parent.category = res[1].category;
+              t.listview.addHandler(parent, false, 'recID');
             }
           }
-  //       });
-  //   }
-  // }
+          t.notiService.notifyCode('TM004');
+          //   t.notiService.notify('Xóa task thành công !');
+          t.data = t.listview.data;
+          t.itemSelected = t.data[0];
+          t.getOneItem(t.itemSelected.taskID);
+          return;
+        }
+        t.notiService.notify(
+          'Xóa task không thành công. Vui lòng kiểm tra lại !'
+        );
+      });
+    }
+  }
 
-  ChangeStatusTask(status, taskAction) {
+  ChangeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     this.api
@@ -288,13 +248,17 @@ export class AssignTaskDetailsComponent implements OnInit {
         if (res) {
           var fieldValue = res.fieldValue;
           if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, status, taskAction);
+            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
             var startDate = moment(new Date(taskAction.startDate)).toDate();
             var estimated = moment(completedOn).diff(
               moment(startDate),
               'hours'
+            );
+            var status = UrlUtil.getUrl(
+              "defaultValue",
+              moreFunc.url,
             );
             this.tmSv
               .setStatusTask(
@@ -323,10 +287,10 @@ export class AssignTaskDetailsComponent implements OnInit {
       });
   }
 
-  openPopupUpdateStatus(fieldValue, status, taskAction) {
+  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
-      status: status,
+      moreFunc: moreFunc,
       taskAction: taskAction,
     };
     this.callfc
@@ -353,13 +317,13 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   openShowNode() {
     //dang fail
-  //  this.openNode = !this.openNode;
+    //  this.openNode = !this.openNode;
   }
 
   loadDetailTask(task) {
-    this.objectAssign = "";
-    this.objectRoleType = "";
-    if (task.isAssign)  {
+    this.objectAssign = '';
+    this.objectRoleType = '';
+    if (task.category =='3') {
       this.api
         .execSv<any>(
           'TM',
@@ -384,7 +348,7 @@ export class AssignTaskDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
-     this.listNode = []
+    this.listNode = [];
     if (task?.category != '1') {
       this.api
         .execSv<any>(

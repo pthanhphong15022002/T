@@ -21,6 +21,7 @@ import {
   CallFuncService,
   CodxListviewComponent,
   NotificationsService,
+  UrlUtil,
   ViewsComponent,
 } from 'codx-core';
 import { mode } from 'crypto-js';
@@ -60,9 +61,10 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  predicate = 'Status=@0';
+  predicate = 'Status=@0 and Owner =@1';
   dataValue = '1';
-
+  moreFuncList : any[] =[] ;
+  funcID :string ;
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
@@ -79,12 +81,15 @@ export class ViewListDetailsComponent implements OnInit {
     private callfc: CallFuncService
   ) {
     this.user = this.authStore.get();
+    this.funcID ="WPT036" ;
+    //this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
+      if(res){this.moreFuncList = res} ;
+     })
   }
 
   ngOnInit(): void {
     this.loadData();
-    // this.tabStatus('1');
-    // this.isFinishLoad = true;
   }
 
   ngAfterViewInit(): void {
@@ -118,7 +123,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-   // model.funcID = 'WPT036';
+    // model.funcID = 'WPT036';
     model.page = 1;
     // model.pageSize = 20;
     // set max dinh
@@ -278,13 +283,13 @@ export class ViewListDetailsComponent implements OnInit {
                   if (res[1] != null) {
                     var dt = t.dataOfStatus(res[i].status);
                     var parent = dt.find((x) => x.taskID == res[1].taskID);
-                    if(parent){
+                    if (parent) {
                       parent.assignTo = res[1].assignTo;
                       parent.category = res[1].category;
                       t.updateListView(parent);
                     }
                   }
-                  // t.notiService.notifyCode("TM004")
+                  t.notiService.notifyCode('TM004');
                   var lv = t.lvOfStatus(this.dataValue);
                   t.data = lv.data;
                   t.itemSelected = t.data[0];
@@ -300,8 +305,11 @@ export class ViewListDetailsComponent implements OnInit {
         });
     }
   }
+  moreActionTask(moreFunc, taskAction){
 
-  ChangeStatusTask(status, taskAction) {
+  }
+
+  ChangeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     this.api
@@ -316,7 +324,7 @@ export class ViewListDetailsComponent implements OnInit {
         if (res) {
           var fieldValue = res.fieldValue;
           if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, status, taskAction);
+            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
             var startDate = moment(new Date(taskAction.startDate)).toDate();
@@ -324,6 +332,11 @@ export class ViewListDetailsComponent implements OnInit {
               moment(startDate),
               'hours'
             );
+            var status = UrlUtil.getUrl(
+              "defaultValue",
+              moreFunc.url,
+            );
+            
             this.tmSv
               .setStatusTask(
                 taskAction.taskID,
@@ -351,14 +364,12 @@ export class ViewListDetailsComponent implements OnInit {
       });
   }
 
-  openPopupUpdateStatus(fieldValue, status, taskAction) {
+  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
-      status: status,
+      moreFunc: moreFunc,
       taskAction: taskAction,
     };
-    var oldSt = this.dataValue;
-    var oldTask = taskAction;
     this.callfc
       .openForm(
         UpdateStatusPopupComponent,
@@ -369,48 +380,51 @@ export class ViewListDetailsComponent implements OnInit {
         obj
       )
       .subscribe((dt: any) => {
-        var that = this;
-        dt.close = function (e) {
-          that.closePopup(e, oldSt,oldTask, that);
-        };
+        dt.close = this.closePopup;
       });
   }
 
-  closePopup(e: any, oldSt: string,taskAction: any, t: ViewListDetailsComponent) {
+  closePopup(
+    e: any,
+    oldSt: string,
+    taskAction: any,
+    t: ViewListDetailsComponent, newStatus
+  ) {
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
-        this.addListView(task);
-        taskAction.status = oldSt;
-        this.removeListView(taskAction);
+        t.addListView(task)
+       taskAction.status = oldSt;
+       t.removeListView(taskAction);
+       task.status = newStatus ;
       } else {
-        this.updateListView(task);
+        t.updateListView(task);
       }
     }
   }
 
   openShowNode() {
     //dang fail
-   // this.openNode = !this.openNode;
+    // this.openNode = !this.openNode;
   }
 
   addListView(obj) {
     switch (obj.status) {
       case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.addHandler(obj, true, 'recID');
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.addHandler(obj, true, 'recID');
         break;
       case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.addHandler(obj, true, 'recID');
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.addHandler(obj, true, 'recID');
         break;
       case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.addHandler(obj, true, 'recID');
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.addHandler(obj, true, 'recID');
         break;
       case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.addHandler(obj, true, 'recID');
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.addHandler(obj, true, 'recID');
         break;
       default:
         break;
@@ -419,20 +433,20 @@ export class ViewListDetailsComponent implements OnInit {
   updateListView(obj) {
     switch (obj.status) {
       case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.addHandler(obj, false, 'recID');
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.addHandler(obj, false, 'recID');
         break;
       case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.addHandler(obj, false, 'recID');
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.addHandler(obj, false, 'recID');
         break;
       case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.addHandler(obj, false, 'recID');
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.addHandler(obj, false, 'recID');
         break;
       case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.addHandler(obj, false, 'recID');
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.addHandler(obj, false, 'recID');
         break;
       default:
         break;
@@ -441,20 +455,20 @@ export class ViewListDetailsComponent implements OnInit {
   removeListView(obj) {
     switch (obj.status) {
       case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.removeHandler(obj, 'recID');
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.removeHandler(obj, 'recID');
         break;
       case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.removeHandler(obj, 'recID');
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.removeHandler(obj, 'recID');
         break;
       case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.removeHandler(obj, 'recID');
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.removeHandler(obj, 'recID');
         break;
       case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.removeHandler(obj, 'recID');
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.removeHandler(obj, 'recID');
         break;
       default:
         break;
@@ -515,8 +529,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   loadDetailTask(task) {
-    this.objectAssign = "";
-    this.objectState = "";
+    this.objectAssign = '';
+    this.objectState = '';
     if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
@@ -542,7 +556,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
-     this.listNode = []
+    this.listNode = [];
     if (task?.category != '1') {
       this.api
         .execSv<any>(
@@ -559,6 +573,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.isFinishLoad = true;
   }
   changeRowSelected(event) {
+    this.isFinishLoad = false;
     this.itemSelected = event;
     switch (event.status) {
       case '1':

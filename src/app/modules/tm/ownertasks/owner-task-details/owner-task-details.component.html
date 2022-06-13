@@ -680,7 +680,7 @@
     </ng-template>
 
     <ng-template #setupStatusTask>
-      <div>
+      <!-- <div>
         <div>
           <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
             <div class="d-flex align-items-center">
@@ -707,5 +707,13 @@
             </div>
           </a>
         </div>
-      </div>
+      </div> -->
+         <ng-container *ngFor="let moreFunc of moreFuncList" >
+          <a class="dropdown-item" (click)="moreActionTask(moreFunc,taskAction)" style="cursor: pointer">
+            <div class="d-flex align-items-center">
+               <span class="{{moreFunc.largeIcon}}"></span>
+              <span class="ms-3">{{moreFunc.customName}}</span>
+            </div>
+          </a>
+        </ng-container>
     </ng-template>
