@@ -1,3 +1,4 @@
+import { Owner } from './../../../models/dashboard.model';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm/models/dashboard.model';
@@ -29,7 +30,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   rateTotalChange: string;
   positive: boolean;
   rateTotalChangeValue: number = 0;
-  remiderOnDay: RemiderOnDay[] = [];
+  lstUser: Owner[] = [];
   taskCount: number;
   //#region chartline
   dataLineTrend: Object[] = [];
@@ -118,7 +119,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   startAngle: number = 0;
   endAngle: number = 360;
   doughnutData = [{ label: '', value: 100 }];
-  palettes: string[] = ['#005DC7', '#06DDB8'];
+  palettes: string[] = ['#005DC7', '#06DDB8', '#07523E','#099CC8'];
 
   //Initializing Datalabel
   dataLabel: Object = {
@@ -210,11 +211,12 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   }
 
   private getInitData() {
-    this.api.exec("TM","ReportBusiness","GetGeneralDataAsync", [this.model,'4/20/2022','6/10/2022','4/20/2022','6/10/2022','4/20/2022','6/10/2022'])
+    this.api.exec("TM","ReportBusiness","GetGeneralDataAsync", [this.model])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
-        this.remiderOnDay = task.listTaskByDay['result'];
+  //      this.lstUser = task.listUser['result'];
+
         this.setDataRateDoneOnTime(task.rateDoneOnTime);
         this.setDataProgressBar(task.rateDoneAllTime);
         this.setDataDonutChart(task.donutChart);
