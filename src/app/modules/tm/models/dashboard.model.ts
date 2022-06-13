@@ -5,6 +5,7 @@ export class TaskRemind {
   taskPrioritizedUnFinish: number = 0;
   rateDoneOnTime: number = 0;
   totalTaskInWeek: number = 0;
+  taskCount: number = 0;
   listTaskByDay: Array<RemiderOnDay> = [];
   rateDoneAllTime: number = 0;
   trendChart: object;
