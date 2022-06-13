@@ -2,7 +2,7 @@
   <div class="d-flex flex-row">
     <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
-        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="TMT03" [pageSize]="100"
+        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [funcId]="funcID" [pageSize]="100"
           service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
           [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
           entityName="TM_Tasks" [data]="data" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">
@@ -668,7 +668,7 @@
 </ng-template>
 
 <ng-template #setupStatusTask>
-  <div>
+  <!-- <div>
     <div>
       <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
@@ -695,5 +695,13 @@
         </div>
       </a>
     </div>
-  </div>
+  </div> -->
+  <ng-container *ngFor="let moreFunc of moreFuncList" >
+    <a class="dropdown-item" (click)="ChangeStatusTask(moreFunc,taskAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center">
+         <span class="{{moreFunc.largeIcon}}"></span>
+        <span class="ms-3">{{moreFunc.customName}}</span>
+      </div>
+    </a>
+  </ng-container>
 </ng-template>

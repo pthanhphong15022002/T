@@ -1,3 +1,4 @@
+import { C } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,6 +18,7 @@ import {
   CallFuncService,
   CodxListviewComponent,
   NotificationsService,
+  UrlUtil,
   ViewsComponent,
 } from 'codx-core';
 import * as moment from 'moment';
@@ -56,7 +58,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  moreFunc : any ;
+  moreFuncList : any[] =[] ;
   @Input('viewBase') viewBase: ViewsComponent;
   funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
@@ -74,6 +76,9 @@ export class OnwerTaskDetailsComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
+      if(res){this.moreFuncList = res} ;
+     })
   }
 
   ngOnInit(): void {
@@ -169,31 +174,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected);
   }
 
-  getByParentID(task) {
-    let objectId = '';
-    let objectState = '';
-    if (task != null) {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.id]
-        )
-        .subscribe((res) => {
-          if (res && res?.length > 0) {
-            res.forEach((element) => {
-              objectId += ';' + element.owner;
-              objectState += ';' + element.status;
-            });
-          }
-        });
-    }
-    this.objectAssign = objectId;
-    return objectState;
-  }
-
   ///test control
   showControl(p, item) {
     this.taskAction = item;
@@ -231,15 +211,13 @@ export class OnwerTaskDetailsComponent implements OnInit {
   clickDelete(taskAction) {
     if (taskAction.delete) {
       if (taskAction.status == 9) {
-       // this.notiService.notifyCode("TM001")
-        this.notiService.notify(
-          'Không thể xóa công việc này. Vui lòng kiểm tra lại!'
-        );
+        this.notiService.notifyCode("TM001")
         return;
       }
-      var message = 'Bạn có chắc chắn muốn xóa task này !';
+    //  var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
+        //.alert('Cảnh báo', message, { type: 'YesNo' })
+         .alertCode('TM003', { type: 'YesNo' })
         .subscribe((dialog: Dialog) => {
           var that = this;
           dialog.close = function (e) {
@@ -254,8 +232,12 @@ export class OnwerTaskDetailsComponent implements OnInit {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
 
+  actionSelectAssign(isAssign){
+     this.actionIsAssign.emit(isAssign);
+  }
+
   assignItem(taskAction) {
-   // this.actionIsAssign.emit([true,taskAction]);
+ //   this.actionSelectAssign(true) ;
     this.assignInfo.openInfo(taskAction);
   }
 
@@ -265,30 +247,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
 
   confirmDelete(e: any, t: OnwerTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
-      var isCanDelete = true;
-      //khúc này đã có trong back end (nhớ fix sau )
-      // t.api
-      //   .execSv<any>(
-      //     'TM',
-      //     'ERM.Business.TM',
-      //     'TaskBusiness',
-      //     'GetListTaskChildDetailAsync',
-      //     t.taskAction.taskID
-      //   )
-      //   .subscribe((res: any) => {
-      //     if (res) {
-      //       res.forEach((element) => {
-      //         if (element.status != '1') {
-      //           isCanDelete = false;
-      //           return;
-      //         }
-      //       });
-      //       if (!isCanDelete) {
-      //         // this.notiService.notifyCode("TM001")
-      //         t.notiService.notify(
-      //           'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-      //         );
-      //       } else {
       t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
         if (res[0]) {
           var lstTaskDelete = res[0];
@@ -306,24 +264,28 @@ export class OnwerTaskDetailsComponent implements OnInit {
               t.listview.addHandler(parent, false, 'recID');
             }
           }
-          t.notiService.notifyCode("T0001")
-          t.notiService.notify('Xóa task thành công !');
+          t.notiService.notifyCode('TM004');
+          // t.notiService.notify('Xóa task thành công !');
           t.data = t.listview.data;
           t.itemSelected = t.data[0];
           t.getOneItem(t.itemSelected.taskID);
           return;
         }
-        t.notiService.notify(
-          'Xóa task không thành công. Vui lòng kiểm tra lại !'
-        );
       });
     }
   }
-  //       });
-  //   }
-  // }
 
-  ChangeStatusTask(status, taskAction) {
+  moreActionTask(moreFunc, taskAction){
+   var fieldName = UrlUtil.getUrl(
+    "defaultField",
+    moreFunc.url,
+  );  
+  if(fieldName=="Status"){
+    this.ChangeStatusTask(moreFunc, taskAction)
+  }else  this.assignItem(taskAction) 
+  }
+  
+  ChangeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     this.api
@@ -338,7 +300,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
         if (res) {
           var fieldValue = res.fieldValue;
           if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, status, taskAction);
+            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
             var startDate = moment(new Date(taskAction.startDate)).toDate();
@@ -346,6 +308,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
               moment(startDate),
               'hours'
             );
+            var status = UrlUtil.getUrl(
+              "defaultValue",
+              moreFunc.url,
+            );
+            
             this.tmSv
               .setStatusTask(
                 taskAction.taskID,
@@ -373,10 +340,10 @@ export class OnwerTaskDetailsComponent implements OnInit {
       });
   }
 
-  openPopupUpdateStatus(fieldValue, status, taskAction) {
+  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
-      status: status,
+      moreFunc: moreFunc,
       taskAction: taskAction,
     };
     this.callfc

@@ -353,14 +353,15 @@ export class TaskInfoComponent implements OnInit {
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
-      if (this.task.dueDate < this.task.startDate) {
-        this.message =
-          'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      } else if (this.task.dueDate < this.task.endDate)
-        this.message =
-          'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      // if (this.task.dueDate < this.task.startDate) {
+      //   this.message =
+      //     'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      // } else if (this.task.dueDate < this.task.endDate)
+      //   this.message =
+      //     'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
       this.notiService
-        .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
+        //.alert('Cảnh báo !!', this.message, { type: 'YesNo' })
+        .alertCode("TM002", { type: 'YesNo' })
         .subscribe((dialog: Dialog) => {
           var that = this;
           dialog.close = function (e) {
@@ -514,29 +515,6 @@ export class TaskInfoComponent implements OnInit {
     } else {
       this.isCheckTime = true;
     }
-  }
-  confirmDueTime() {
-    if (this.task.startDate && this.task.endDate) {
-      if (
-        this.task.dueDate < this.task.startDate ||
-        (this.task.dueDate < this.task.endDate && !this.isConfirm)
-      ) {
-        if (this.task.dueDate < this.task.startDate) {
-          this.message =
-            'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-        } else if (this.task.dueDate < this.task.endDate)
-          this.message =
-            'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-
-        if (confirm(this.message)) {
-          this.isConfirm = true;
-        } else {
-          this.isConfirm = false;
-          if (this.task.dueDate < this.task.startDate) $('#startDate').focus();
-          else $('#endDate').focus();
-        }
-      }
-    } else this.isConfirm = true;
   }
 
   checkLogicTaskGroup(idTaskGroup) {
