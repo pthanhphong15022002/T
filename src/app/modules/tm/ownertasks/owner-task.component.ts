@@ -15,8 +15,8 @@ import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.c
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 import { ActivatedRoute } from '@angular/router';
-import { AssignInfoComponent } from '../controls/assign-info/assign-info.component';
 import { OnwerTaskDetailsComponent } from './owner-task-details/owner-task-details.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 
 @Component({
   selector: 'onwer-task',
@@ -26,7 +26,6 @@ import { OnwerTaskDetailsComponent } from './owner-task-details/owner-task-detai
 export class OwnerTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('dashboard') dashboard: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
   //List-detail
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
@@ -97,31 +96,11 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-   this.isAssign = false ;
+   //this.isAssign = false ;
     this.views = [
       {
         id: '1',
-        type: 'chart',
-        active: false,
-        text: 'Dashboard',
-        model: {
-          panelLeftRef: this.dashboard,
-        },
-      },
-      {
-        id: '2',
-        type: 'kanban',
-        active: false,
-        model: {
-          panelLeftRef: this.kanban,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
-      {
-        id: '3',
-        type: 'kanban',
+        type: 'listdetail',
         icon: 'icon-chrome_reader_mode1',
         text: 'List-details',
         active: true,
@@ -133,7 +112,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
       {
-        id: '4',
+        id: '2',
         type: 'list',
         icon: 'icon-format_list_bulleted',
         text: 'List-tasks',
@@ -147,7 +126,18 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
       {
-        id: '5',
+        id: '3',
+        type: 'kanban',
+        active: false,
+        model: {
+          panelLeftRef: this.kanban,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+      {
+        id: '4',
         type: 'schedule',
         text: 'schedule',
         active: false,
@@ -160,12 +150,14 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
     ];
-    this.cf.detectChanges();
+  
   }
 
   receiveActionAssign($event) {
     this.isAssign = $event;
-  // this.viewBase.currentView.openSidebarRight();;
+  
+    if(this.isAssign) this.assignInfo.showPanel();
+    this.cf.detectChanges();
   }
  
 

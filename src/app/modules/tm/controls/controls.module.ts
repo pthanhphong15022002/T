@@ -6,13 +6,12 @@ import { environment } from 'src/environments/environment';
 import { SharedModule } from '@shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { AssignInfoComponent } from './assign-info/assign-info.component';
 
 
 
 @NgModule({
-  declarations: [TaskInfoComponent, AssignInfoComponent],
-  exports:[TaskInfoComponent,AssignInfoComponent],
+  declarations: [TaskInfoComponent],
+  exports:[TaskInfoComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     TabModule,

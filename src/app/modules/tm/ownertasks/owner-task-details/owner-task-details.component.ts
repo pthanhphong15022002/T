@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignInfoComponent } from '@modules/tm/controls/assign-info/assign-info.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 import { DataRequest } from '@shared/models/data.request';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -58,12 +58,12 @@ export class OnwerTaskDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  moreFuncList : any[] =[] ;
+  moreFuncList: any[] = [];
   @Input('viewBase') viewBase: ViewsComponent;
   funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
 
-  @Output() actionIsAssign = new EventEmitter();
+  @Output() actionIsAssign = new EventEmitter<boolean>();
 
   constructor(
     private tmSv: TmService,
@@ -76,9 +76,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
-      if(res){this.moreFuncList = res} ;
-     })
+    this.tmSv.getMoreFunction([this.funcID, null, null]).subscribe((res) => {
+      if (res) {
+        this.moreFuncList = res;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -109,7 +111,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
         }
       }
     });
-  
+
     this.assignInfo?.isAddNew.subscribe((res) => {
       if (res) {
         this.listview.addHandler(res, true, 'recID');
@@ -141,7 +143,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     model.entityName = 'TM_Tasks';
     model.predicate = '';
     model.funcID = this.funcID;
-    // set max dinh
+    // set mac dinh
     this.fromDate = moment('4/20/2022').toDate();
     this.toDate = moment('12/30/2022').toDate();
     model.filter = {
@@ -200,7 +202,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
   }
 
   copyDetailTask(taskAction) {
-  //  this.actionIsAssign.emit(false);
+    //  this.actionIsAssign.emit(false);
     if (!taskAction.share) {
       this.notiService.notify('Bạn chưa được cấp quyền này !');
       return;
@@ -211,13 +213,13 @@ export class OnwerTaskDetailsComponent implements OnInit {
   clickDelete(taskAction) {
     if (taskAction.delete) {
       if (taskAction.status == 9) {
-        this.notiService.notifyCode("TM001")
+        this.notiService.notifyCode('TM001');
         return;
       }
-    //  var message = 'Bạn có chắc chắn muốn xóa task này !';
+      //  var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
         //.alert('Cảnh báo', message, { type: 'YesNo' })
-         .alertCode('TM003', { type: 'YesNo' })
+        .alertCode('TM003', { type: 'YesNo' })
         .subscribe((dialog: Dialog) => {
           var that = this;
           dialog.close = function (e) {
@@ -228,17 +230,19 @@ export class OnwerTaskDetailsComponent implements OnInit {
   }
 
   viewItem(taskAction) {
-  //  this.actionIsAssign.emit(false);
+    //  this.actionIsAssign.emit(false);
     this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
 
-  actionSelectAssign(isAssign){
-     this.actionIsAssign.emit(isAssign);
-  }
-
   assignItem(taskAction) {
- //   this.actionSelectAssign(true) ;
-    this.assignInfo.openInfo(taskAction);
+    const t = this
+    let p =  new Promise((resolve, reject) => {
+      this.actionIsAssign.emit(true);
+      resolve(true);
+    });
+    p.then(() => {
+      this.assignInfo.openInfo(taskAction);
+    });
   }
 
   setupStatus(p, item) {
@@ -265,7 +269,6 @@ export class OnwerTaskDetailsComponent implements OnInit {
             }
           }
           t.notiService.notifyCode('TM004');
-          // t.notiService.notify('Xóa task thành công !');
           t.data = t.listview.data;
           t.itemSelected = t.data[0];
           t.getOneItem(t.itemSelected.taskID);
@@ -275,16 +278,13 @@ export class OnwerTaskDetailsComponent implements OnInit {
     }
   }
 
-  moreActionTask(moreFunc, taskAction){
-   var fieldName = UrlUtil.getUrl(
-    "defaultField",
-    moreFunc.url,
-  );  
-  if(fieldName=="Status"){
-    this.ChangeStatusTask(moreFunc, taskAction)
-  }else  this.assignItem(taskAction) 
+  moreActionTask(moreFunc, taskAction) {
+    var fieldName = UrlUtil.getUrl('defaultField', moreFunc.url);
+    if (fieldName == 'Status') {
+      this.ChangeStatusTask(moreFunc, taskAction);
+    } else this.assignItem(taskAction);
   }
-  
+
   ChangeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
@@ -308,11 +308,8 @@ export class OnwerTaskDetailsComponent implements OnInit {
               moment(startDate),
               'hours'
             );
-            var status = UrlUtil.getUrl(
-              "defaultValue",
-              moreFunc.url,
-            );
-            
+            var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
+
             this.tmSv
               .setStatusTask(
                 taskAction.taskID,

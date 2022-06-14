@@ -219,7 +219,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
 
         this.setDataRateDoneOnTime(task.rateDoneOnTime);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.doughnutChart);
+        this.setDataDoughnutChart(task.doughnutChart);
         this.setDataTrendChart(task.trendChart);
       });
   }
@@ -235,7 +235,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   private setDataRateDoneOnTime(data) {
     this.taskRemind.rateDoneOnTime = data;
   }
-  private setDataDonutChart(data) {
+  private setDataDoughnutChart(data) {
     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
       this.setTitleRateChange(data.rateTotalChange);
     } else {

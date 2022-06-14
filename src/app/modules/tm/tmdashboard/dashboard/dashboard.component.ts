@@ -259,7 +259,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.remiderOnDay = task.listTaskByDay['result'];
         this.setDataTrendChart(task.trendChart);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.doughnutChart);
+        this.setDataDoughnutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -279,7 +279,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
         this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataDonutChart(task.doughnutChart);
+        this.setDataDoughnutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -298,7 +298,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //#endregion A1.4
 
   //#region A1.5
-  private setDataDonutChart(data) {
+  private setDataDoughnutChart(data) {
     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
       this.setTitleRateChange(data.rateTotalChange);
     } else {
