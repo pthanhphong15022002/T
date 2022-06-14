@@ -43,14 +43,15 @@ export class StatisticalProjectComponent implements OnInit {
   views: Array<ViewModel> = [];
 
   ngOnInit(): void {
+    
     this.columnsGrid = [
       { field: 'projectName', headerText: 'Danh sách dự án' },
       { field: 'owner', headerText: 'Nguồn lực', template: this.itemOwner },
       { field: 'totalTask', headerText: 'Tổng số công việc' },
       { field: 'totalDoneTask', headerText: 'Đã hoàn tất' },
       { field: 'taskUnCompelete', headerText: 'Chưa thực hiện' },
-      { field: 'rateDone', headerText: 'Tỉ lệ hoàn thành' },
-      { field: 'active', headerText: 'Tỉ lệ hoàn thành đúng hạn' },
+      { field: 'rateTaskDone', headerText: 'Tỉ lệ hoàn thành' },
+      { field: 'rateTaskDoneTime', headerText: 'Tỉ lệ hoàn thành đúng hạn' },
       { field: '', headerText: '', template: this.buttonPupop }
     ];
     this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
@@ -73,9 +74,15 @@ export class StatisticalProjectComponent implements OnInit {
   }
 
   loadData() {
-    this.api.execSv<any>("TM", "TM", "RepostBusiness", "ListReportProjectAsync", this.model).subscribe((res)=>{
+    let model = new DataRequest();
+    model.formName = 'Tasks';
+    model.gridViewName = 'grvTasks';
+    model.entityName = 'TM_Tasks';
+    model.page = 1;
+    model.pageSize = 100;
+    this.api.execSv<any>("TM", "TM", "RepostBusiness", "ListReportProjectAsync", model).subscribe((res)=>{
       if(res){
-        this.data = res;
+        this.data = res[0];
       }
     })
   }

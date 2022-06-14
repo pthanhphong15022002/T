@@ -1,10 +1,6 @@
 <codx-views #view funcID="TMT02" entityName="TM_Tasks" [views]="views" [buttons]="buttons" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"> </codx-views>
 
-<ng-template #dashboard>
-  <owner-task-dashboard [viewBase]="viewBase"></owner-task-dashboard>
-</ng-template>  
-
 <ng-template #sidebarRight>
   <app-task-info *ngIf="!isAssign" #taskInfo [viewBase]="viewBase"></app-task-info>
   <app-assign-info *ngIf="isAssign"  #assignInfo [viewBase]="viewBase" ></app-assign-info>

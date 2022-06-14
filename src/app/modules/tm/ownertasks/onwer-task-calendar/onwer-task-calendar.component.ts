@@ -61,17 +61,6 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
     Title: 'Resources',
   };
   selectedDate = new Date();
-  status = [
-    { id: 1, status: '0', color: '#ff0000' },
-    { id: 2, status: '1', color: '#ff8c1a' },
-    { id: 3, status: '2', color: '#3399ff' },
-    { id: 4, status: '3', color: '#ff0000' },
-    { id: 5, status: '4', color: '#ff0000' },
-    { id: 6, status: '5', color: '#010102' },
-    { id: 7, status: '9', color: '#030333' },
-    { id: 8, status: '8', color: '#420233' },
-
-  ]
 
   columns = [
     {

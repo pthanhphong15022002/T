@@ -26,7 +26,6 @@ import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.
 export class OwnerTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('dashboard') dashboard: TemplateRef<any>;
   @ViewChild('kanban') kanban: TemplateRef<any>;
   //List-detail
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
@@ -101,27 +100,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
     this.views = [
       {
         id: '1',
-        type: 'chart',
-        active: false,
-        text: 'Dashboard',
-        model: {
-          panelLeftRef: this.dashboard,
-        },
-      },
-      {
-        id: '2',
-        type: 'kanban',
-        active: false,
-        model: {
-          panelLeftRef: this.kanban,
-          sideBarLeftRef: this.asideLeft,
-          sideBarRightRef: this.sidebarRight,
-          widthAsideRight: '900px',
-        },
-      },
-      {
-        id: '3',
-        type: 'kanban',
+        type: 'listdetail',
         icon: 'icon-chrome_reader_mode1',
         text: 'List-details',
         active: true,
@@ -133,7 +112,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
       {
-        id: '4',
+        id: '2',
         type: 'list',
         icon: 'icon-format_list_bulleted',
         text: 'List-tasks',
@@ -147,7 +126,18 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
       {
-        id: '5',
+        id: '3',
+        type: 'kanban',
+        active: false,
+        model: {
+          panelLeftRef: this.kanban,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+      {
+        id: '4',
         type: 'schedule',
         text: 'schedule',
         active: false,

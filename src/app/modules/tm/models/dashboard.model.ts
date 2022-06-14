@@ -7,9 +7,10 @@ export class TaskRemind {
   totalTaskInWeek: number = 0;
   taskCount: number = 0;
   listTaskByDay: Array<RemiderOnDay> = [];
+  listUser : Array<Owner> = [];
   rateDoneAllTime: number = 0;
   trendChart: object;
-  donutChart: object;
+  doughnutChart: object;
   barChart: object;
 }
 export class ChartTaskRemind {
@@ -25,5 +26,9 @@ export class RemiderOnDay {
   createdBy: string;
   status: string;
   priority: string;
+  userName: string;
+}
+
+export class Owner{
   userName: string;
 }

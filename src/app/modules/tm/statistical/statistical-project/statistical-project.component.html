@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMR02" entityName="TM_Tasks" [views]="views"> </codx-views>
+ <codx-views #view funcID="TMR02" entityName="TM_Tasks" [views]="views"> </codx-views>
 
 <ng-template #main>
   <div class="" id="kt_content">
@@ -11,7 +11,7 @@
 
     </div>
   </div>
-</ng-template>
+</ng-template> 
 <!-- <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100"
 service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportProjectAsync"
 [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
@@ -62,8 +62,8 @@ entityName="TM_Tasks" [data]="data">
         </thead>
         <tbody class="e-hide" >
           <tr>
-            <td style="height: 40px;">data?.projectName</td>
-            <td style="height: 40px;">data?.Owner</td>
+            <td style="height: 40px;">{{data?.projectName}}</td>
+            <td style="height: 40px;">{{data?.Owner}}</td>
             <td style="height: 40px;">c</td>
             <td style="height: 40px;">d</td>
             <td style="height: 40px;">e</td>
