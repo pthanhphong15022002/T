@@ -62,7 +62,6 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   isAssign : boolean = false ;
   constructor(
     private cf: ChangeDetectorRef,
-    private cache: CacheService,
     private activedRouter: ActivatedRoute
   ) {}
 
