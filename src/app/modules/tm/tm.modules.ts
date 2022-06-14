@@ -48,10 +48,10 @@ import { HomeStatisticalComponent } from './statistical/home-statistical/home-st
 import { StatisticalProjectComponent } from './statistical/statistical-project/statistical-project.component';
 import { StatisticalViewlistComponent } from './statistical/statistical-task/viewlist/statistical-viewlist.component';
 import { StatisticalChartComponent } from './statistical/statistical-task/chart/statistical-chart.component';
-import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { SprintsTaskDetailsComponent } from './sprints/sprints-tasks/sprints-task-details/sprints-task-details.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { SprintsListTasksComponent } from './sprints/sprints-tasks/sprints-list-tasks/sprints-list-tasks.component';
 
 
 const routes: Routes = [
@@ -184,10 +184,11 @@ const routes: Routes = [
     HomeStatisticalComponent,
     StatisticalProjectComponent,
     StatisticalViewlistComponent,
-    StatisticalChartComponent,
-    ViewDetailsSprintsComponent,  
+    StatisticalChartComponent, 
     SprintsTasksComponent,
     SprintsTaskDetailsComponent,
+    SprintsListTasksComponent
+    
   ],
   imports: [
     RouterModule.forChild(routes),

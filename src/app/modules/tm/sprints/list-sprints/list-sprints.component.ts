@@ -26,8 +26,6 @@ import {
 import * as moment from 'moment';
 import { PopupShareSprintsComponent } from '../popup-share-sprints/popup-share-sprints.component';
 import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
-import { ViewDetailsSprintsComponent } from '../view-details-sprints/view-details-sprints.component';
-
 @Component({
   selector: 'app-list-sprints',
   templateUrl: './list-sprints.component.html',
@@ -35,7 +33,7 @@ import { ViewDetailsSprintsComponent } from '../view-details-sprints/view-detail
 })
 export class ListSprintsComponent implements OnInit {
   @Input('sprintsInfo') sprintsInfo: SprintsInfoComponent;
-  @Input('viewDetailsSprint') viewDetailsSprint: ViewDetailsSprintsComponent;
+
   fromDate: Date;
   toDate: Date;
   view: string;

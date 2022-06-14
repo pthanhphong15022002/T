@@ -69,8 +69,6 @@ export class SprintsTaskDetailsComponent implements OnInit {
     this.loadData();
   }
   loadData() {
-    // this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    // this.funcID =this.activedRouter.snapshot.params["funcID"];
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'SprintsTasks';
