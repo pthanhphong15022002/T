@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import {
   ChangeDetectorRef,
   Component,
@@ -159,30 +160,30 @@ export class ViewListDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected);
   }
 
-  getByParentID(task) {
-    let objectId = '';
-    let objectState = '';
-    if (task != null) {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.id]
-        )
-        .subscribe((res) => {
-          if (res && res?.length > 0) {
-            res.forEach((element) => {
-              objectId += ';' + element.owner;
-              objectState += ';' + element.status;
-            });
-          }
-        });
-    }
-    this.objectAssign = objectId;
-    return objectState;
-  }
+  // getByParentID(task) {
+  //   let objectId = '';
+  //   let objectState = '';
+  //   if (task != null) {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'ERM.Business.TM',
+  //         'TaskBusiness',
+  //         'GetTaskByParentIDAsync',
+  //         [task?.id]
+  //       )
+  //       .subscribe((res) => {
+  //         if (res && res?.length > 0) {
+  //           res.forEach((element) => {
+  //             objectId += ';' + element.owner;
+  //             objectState += ';' + element.status;
+  //           });
+  //         }
+  //       });
+  //   }
+  //   this.objectAssign = objectId;
+  //   return objectState;
+  // }
 
   ///test control
   showControl(p, item) {
@@ -336,7 +337,6 @@ export class ViewListDetailsComponent implements OnInit {
               "defaultValue",
               moreFunc.url,
             );
-            
             this.tmSv
               .setStatusTask(
                 taskAction.taskID,
@@ -347,11 +347,18 @@ export class ViewListDetailsComponent implements OnInit {
               )
               .subscribe((res) => {
                 if (res) {
+                  var taskOld = taskAction ;
                   taskAction.status = status;
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.listview.addHandler(taskAction, false, 'recID');
+                  if(taskAction.status!=status){
+                    this.removeListView(taskOld);
+                    this.addListView(taskAction)
+                  }else{
+                    this.updateListView(taskAction) ;
+                  }
+                 // this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(

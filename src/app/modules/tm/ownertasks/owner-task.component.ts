@@ -15,8 +15,8 @@ import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.c
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
 import { ActivatedRoute } from '@angular/router';
-import { AssignInfoComponent } from '../controls/assign-info/assign-info.component';
 import { OnwerTaskDetailsComponent } from './owner-task-details/owner-task-details.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 
 @Component({
   selector: 'onwer-task',
@@ -97,7 +97,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-   this.isAssign = false ;
+   //this.isAssign = false ;
     this.views = [
       {
         id: '1',
@@ -160,12 +160,14 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         },
       },
     ];
-    this.cf.detectChanges();
+  
   }
 
   receiveActionAssign($event) {
     this.isAssign = $event;
-  // this.viewBase.currentView.openSidebarRight();;
+  
+    if(this.isAssign) this.assignInfo.showPanel();
+    this.cf.detectChanges();
   }
  
 

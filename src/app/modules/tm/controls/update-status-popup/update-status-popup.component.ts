@@ -74,7 +74,7 @@ export class UpdateStatusPopupComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.task.status = this.data.status;
+          this.task.status = this.status;
           this.task.completedOn = this.completedOn;
           this.task.comment = this.comment;
           this.task.completed = this.estimated;

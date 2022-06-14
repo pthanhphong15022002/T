@@ -620,10 +620,10 @@
 
               <div class="task-status d-flex">
                 <div class="badge badge-danger me-2" [style.border-color]="
-      (data?.status | vll: 'L0614':'color' | async) + '30'
+      (data?.status | vll: 'L0614':'color' | async) + '60'
     " [style.background-color]="
-      (data?.status | vll: 'L0614':'color' | async) + '30'
-    " [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
+      (data?.status | vll: 'L0614':'color' | async) + '60'
+    " [style.color]="(data?.status | vll: 'L0614':'color' | async)+'30'" style="border: none">
                   {{ data?.status | vll: "L0614":"text" | async }}
                 </div>
               </div>
@@ -663,12 +663,12 @@
           <span class="tooltiptext">Xem</span>
         </div>
       </a>
-      <a class="action-item" (click)="assignItem(taskAction)" style="cursor: pointer">
+      <!-- <a class="action-item" (click)="assignItem(taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center btn-tooltip">
           <span class=" icon-m_hr icon-20 text-primary ms-2 me-2"></span>
           <span class="tooltiptext">Giao việc</span>
         </div>
-      </a>
+      </a> -->
       <a class="action-item" (click)="setupStatus(p2,taskAction)" [ngbPopover]="setupStatusTask"
         popoverClass="empPopoverClass" #p2="ngbPopover" placement="right left" container="body" autoClose="outside"
         triggers="manual" style="cursor: pointer">
