@@ -219,7 +219,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
 
         this.setDataRateDoneOnTime(task.rateDoneOnTime);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.donutChart);
+        this.setDataDonutChart(task.doughnutChart);
         this.setDataTrendChart(task.trendChart);
       });
   }

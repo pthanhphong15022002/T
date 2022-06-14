@@ -252,7 +252,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
         this.remiderOnDay = task.listTaskByDay['result'];
         this.setDataTrendChart(task.trendChart);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.donutChart);
+        this.setDataDonutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -272,7 +272,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
         this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataDonutChart(task.donutChart);
+        this.setDataDonutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }

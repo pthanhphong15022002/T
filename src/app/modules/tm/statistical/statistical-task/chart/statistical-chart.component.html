@@ -35,6 +35,25 @@
             </div>
           </div>
         </div>
+        <div class="p-6 w-100" style="height: 600px">
+          <ejs-chart style="display: block" background="transparent" [chartArea]="chartArea" width="100%" [align]="'center'"
+          id="chartbar" [primaryXAxis]="columnXAxis" [primaryYAxis]="columnYAxis" [tooltip]="tooltip"
+          [legendSettings]="legendSettings">
+          <e-axes>
+            <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" title="" labelFormat="" [minimum]="0"
+              [maximum]="50" [interval]="4">
+            </e-axis>
+          </e-axes>
+          <e-series-collection>
+            <e-series fill="#005DC7" [dataSource]="dataColumn" type="Column" name="Tasks" xName="label" yName="value"
+              [cornerRadius]="radius">
+            </e-series>
+            <e-series fill="#F9D923" [dataSource]="dataLine" type="Line" name="WorkHours" yName="value" xName="label"
+              yAxisName="WorkHours">
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+        </div>
       </div>
       
     </div>
