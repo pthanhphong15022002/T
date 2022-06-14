@@ -49,6 +49,8 @@ import { StatisticalProjectComponent } from './statistical/statistical-project/s
 import { StatisticalViewlistComponent } from './statistical/statistical-task/viewlist/statistical-viewlist.component';
 import { StatisticalChartComponent } from './statistical/statistical-task/chart/statistical-chart.component';
 import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
+import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
+import { SprintsTaskDetailsComponent } from './sprints/sprints-tasks/sprints-task-details/sprints-task-details.component';
 
 
 
@@ -75,11 +77,11 @@ const routes: Routes = [
       },
       {
         path: 'sprinttasks/:funcID',
-        component: ViewDetailsSprintsComponent,
+        component: SprintsTasksComponent,
         children: [
           {
             path: ':id',
-            component: ViewDetailsSprintsComponent,
+            component: SprintsTasksComponent,
           }]
       },   
       {
@@ -183,7 +185,9 @@ const routes: Routes = [
     StatisticalProjectComponent,
     StatisticalViewlistComponent,
     StatisticalChartComponent,
-    ViewDetailsSprintsComponent
+    ViewDetailsSprintsComponent,  
+    SprintsTasksComponent,
+    SprintsTaskDetailsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

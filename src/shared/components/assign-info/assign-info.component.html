@@ -73,7 +73,7 @@
                 <div class="d-flex align-items-center w-100">
                     <codx-input 
                         type="text"
-                        style="width:100%"  name="taskName" field="taskName" [crrValue]="task.taskName"  
+                        style="width:100%"  name="taskName" field="taskName" [crrValue]="task.taskName"   (valueChange)="changText($event)"
                     ></codx-input>
                     <!-- <input #taskNameInput style="width:100%" name="taskName" [(ngModel)]="task.taskName"
                   [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"

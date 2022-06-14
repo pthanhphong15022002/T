@@ -74,6 +74,10 @@ export class AssignInfoComponent implements OnInit {
    
   }
 
+  changText(e){
+  this.task.taskName = e.data ;
+  }
+
   changeTime(data) {
     if (!data.field) return;
     this.task[data.field] = data.data;
