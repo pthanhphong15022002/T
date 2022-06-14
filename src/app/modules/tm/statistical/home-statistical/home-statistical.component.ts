@@ -202,7 +202,7 @@ export class HomeStatisticalComponent implements OnInit, AfterViewInit {
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
     this.api
-      .execSv<any>('TM', 'TM', 'ReportBusiness', 'GetGenaralDataAsync', [
+      .execSv<any>('TM', 'TM', 'ReportBusiness', 'GetGeneralDataAsync', [
         this.model,
         new Date(2022, 5, 1),
         new Date(2022, 5, 31),
