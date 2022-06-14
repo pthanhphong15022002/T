@@ -1,37 +1,28 @@
-import { ActivatedRoute } from '@angular/router';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ViewChild,
-  TemplateRef,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import {
   ChartTaskRemind,
   RemiderOnDay,
   TaskRemind,
 } from '@modules/tm/models/dashboard.model';
-import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { TmService } from '@modules/tm/tm.service';
+import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
 import {
   AccPoints,
+  AccumulationChart,
+  AccumulationChartComponent,
+  AnimationModel,
   IAccAnimationCompleteEventArgs,
   ILoadedEventArgs,
-  AccumulationChartComponent,
-  AccumulationChart,
-  AnimationModel,
 } from '@syncfusion/ej2-angular-charts';
-import { TmService } from '@modules/tm/tm.service';
+import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: 'owner-task-dashboard',
+  templateUrl: './owner-task-dashboard.component.html',
+  styleUrls: ['./owner-task-dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class OwnerTaskDashboardComponent implements OnInit {
   ngUnsubscribe = new Subject<void>();
   user: UserModel;
   model: DataRequest;
@@ -200,17 +191,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private tmService: TmService,
-    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore
   ) {}
-
+    
   ngOnInit(): void {
+    this.user = this.authStore.get();
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
+    this.model.predicate = 'Owner=@0'
+    this.model.dataValue = this.user.userID
     this.model.pageLoading = false;
+    console.log(this.model)
   }
 
   ngAfterViewInit(): void {
@@ -258,7 +252,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.remiderOnDay = task.listTaskByDay['result'];
         this.setDataTrendChart(task.trendChart);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDoughnutChart(task.doughnutChart);
+        this.setDataDonutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -278,7 +272,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
         this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataDoughnutChart(task.doughnutChart);
+        this.setDataDonutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -297,7 +291,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //#endregion A1.4
 
   //#region A1.5
-  private setDataDoughnutChart(data) {
+  private setDataDonutChart(data) {
     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
       this.setTitleRateChange(data.rateTotalChange);
     } else {

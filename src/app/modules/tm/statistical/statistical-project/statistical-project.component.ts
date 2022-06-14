@@ -39,25 +39,27 @@ export class StatisticalProjectComponent implements OnInit {
   functionID = "";
   entity = "";
   isAfterRender = false;
-
+  lstOwner =[];
+  
   views: Array<ViewModel> = [];
 
   ngOnInit(): void {
-    
-    this.columnsGrid = [
-      { field: 'projectName', headerText: 'Danh sách dự án' },
-      { field: 'owner', headerText: 'Nguồn lực', template: this.itemOwner },
-      { field: 'totalTask', headerText: 'Tổng số công việc' },
-      { field: 'totalDoneTask', headerText: 'Đã hoàn tất' },
-      { field: 'taskUnCompelete', headerText: 'Chưa thực hiện' },
-      { field: 'rateTaskDone', headerText: 'Tỉ lệ hoàn thành' },
-      { field: 'rateTaskDoneTime', headerText: 'Tỉ lệ hoàn thành đúng hạn' },
-      { field: '', headerText: '', template: this.buttonPupop }
-    ];
-    this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
-      if (res)
-        this.gridViewSetup = res
-    })
+    this.loadData();
+
+    // this.columnsGrid = [
+    //   { field: 'projectName', headerText: 'Danh sách dự án' },
+    //   { field: 'owner', headerText: 'Nguồn lực', template: this.itemOwner },
+    //   { field: 'totalTask', headerText: 'Tổng số công việc' },
+    //   { field: 'totalDoneTask', headerText: 'Đã hoàn tất' },
+    //   { field: 'taskUnCompelete', headerText: 'Chưa thực hiện' },
+    //   { field: 'rateTaskDone', headerText: 'Tỉ lệ hoàn thành' },
+    //   { field: 'rateTaskDoneTime', headerText: 'Tỉ lệ hoàn thành đúng hạn' },
+    //   { field: '', headerText: '', template: this.buttonPupop }
+    // ];
+    // this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
+    //   if (res)
+    //     this.gridViewSetup = res
+    // })
   }
   ngAfterViewInit(): void {
     this.views = [{
@@ -67,6 +69,7 @@ export class StatisticalProjectComponent implements OnInit {
       active: true,
       model: {
         panelLeftRef: this.main,
+        
         widthAsideRight: '900px'
       }
     },
@@ -80,11 +83,16 @@ export class StatisticalProjectComponent implements OnInit {
     model.entityName = 'TM_Tasks';
     model.page = 1;
     model.pageSize = 100;
-    this.api.execSv<any>("TM", "TM", "RepostBusiness", "ListReportProjectAsync", model).subscribe((res)=>{
+    this.api.execSv<any>("TM", "TM", "ReportBusiness", "ListReportProjectAsync", model).subscribe((res)=>{
       if(res){
-        this.data = res[0];
+        this.data = res[1];
+        this.lstOwner = res[0];
       }
     })
+  }
+
+  setOwner(data){
+    
   }
 
   initForm() {

@@ -51,7 +51,7 @@ import { StatisticalChartComponent } from './statistical/statistical-task/chart/
 import { ViewDetailsSprintsComponent } from './sprints/view-details-sprints/view-details-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { SprintsTaskDetailsComponent } from './sprints/sprints-tasks/sprints-task-details/sprints-task-details.component';
-
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 
 const routes: Routes = [
@@ -198,6 +198,7 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
+    TreeMapModule,
     DatePickerModule,
     TabModule,
     ControlsModule,
