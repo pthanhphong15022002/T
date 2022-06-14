@@ -10,7 +10,7 @@ export class TaskRemind {
   listUser : Array<Owner> = [];
   rateDoneAllTime: number = 0;
   trendChart: object;
-  donutChart: object;
+  doughnutChart: object;
   barChart: object;
 }
 export class ChartTaskRemind {

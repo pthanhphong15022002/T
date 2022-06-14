@@ -1,28 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  ChartTaskRemind,
-  RemiderOnDay,
-  TaskRemind,
-} from '@modules/tm/models/dashboard.model';
+import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm/models/dashboard.model';
 import { TmService } from '@modules/tm/tm.service';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import {
-  AccPoints,
-  AccumulationChart,
-  AccumulationChartComponent,
-  AnimationModel,
-  IAccAnimationCompleteEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-charts';
+import { AccPoints, AccumulationChart, AccumulationChartComponent, AnimationModel, IAccAnimationCompleteEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'owner-task-dashboard',
-  templateUrl: './owner-task-dashboard.component.html',
-  styleUrls: ['./owner-task-dashboard.component.scss'],
+  selector: 'mwp-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
 })
-export class OwnerTaskDashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   ngUnsubscribe = new Subject<void>();
   user: UserModel;
   model: DataRequest;
@@ -191,10 +180,11 @@ export class OwnerTaskDashboardComponent implements OnInit {
 
   constructor(
     private tmService: TmService,
+    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore
   ) {}
-    
+
   ngOnInit(): void {
     this.user = this.authStore.get();
     this.model = new DataRequest();
@@ -204,10 +194,10 @@ export class OwnerTaskDashboardComponent implements OnInit {
     this.model.predicate = 'Owner=@0'
     this.model.dataValue = this.user.userID
     this.model.pageLoading = false;
-    console.log(this.model)
   }
 
   ngAfterViewInit(): void {
+    debugger;
     this.week = this.selectweekComponent.week;
     this.fromDate = this.selectweekComponent.fromDate;
     this.toDate = this.selectweekComponent.toDate;
@@ -252,7 +242,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
         this.remiderOnDay = task.listTaskByDay['result'];
         this.setDataTrendChart(task.trendChart);
         this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.donutChart);
+        this.setDataDoughnutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -272,7 +262,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
         this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataDonutChart(task.donutChart);
+        this.setDataDoughnutChart(task.doughnutChart);
         this.setDataCombineChart(task.barChart);
       });
   }
@@ -291,7 +281,7 @@ export class OwnerTaskDashboardComponent implements OnInit {
   //#endregion A1.4
 
   //#region A1.5
-  private setDataDonutChart(data) {
+  private setDataDoughnutChart(data) {
     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
       this.setTitleRateChange(data.rateTotalChange);
     } else {
