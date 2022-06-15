@@ -53,7 +53,7 @@ import { SprintsTaskDetailsComponent } from './sprints/sprints-tasks/sprints-tas
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { SprintsListTasksComponent } from './sprints/sprints-tasks/sprints-list-tasks/sprints-list-tasks.component';
 import { ProjectChartComponent } from './statistical/statistical-project/project-chart/project-chart.component';
-
+import { SprintsTaskCalendarComponent } from './sprints/sprints-tasks/sprints-task-calendar/sprints-task-calendar.component';
 
 const routes: Routes = [
   {
@@ -190,8 +190,8 @@ const routes: Routes = [
     SprintsTasksComponent,
     SprintsTaskDetailsComponent,
     SprintsListTasksComponent,
-    ProjectChartComponent
-    
+    ProjectChartComponent,
+    SprintsTaskCalendarComponent
   ],
   imports: [
     RouterModule.forChild(routes),

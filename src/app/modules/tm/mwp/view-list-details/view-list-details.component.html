@@ -1,4 +1,4 @@
-<!-- <div class="page-home page-master">
+<div class="page-home page-master">
   <div class="d-flex flex-row">
     <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
@@ -8,12 +8,12 @@
               <ng-template #headerText>
                 <div (click)="tabStatus('1')" >Tạo mới</div>
               </ng-template>
-              <ng-template #content> -->
+              <ng-template #content>
                 <!-- <codx-listview #listviewAdd service="TM" [itemTemplate]="templateItem" [data]="dataAddNew"
                   groupBy="fieldGroup">
-                </codx-listview>-->
+                </codx-listview> -->
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-                <!-- <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
+                <codx-listview #listviewAdd [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
                   method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'1'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
@@ -24,10 +24,10 @@
               <ng-template #headerText>
                 <div (click)="tabStatus('9')">Đã hoàn thành</div>
               </ng-template>
-              <ng-template #content> -->
+              <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
 
-                <!-- <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
+                <codx-listview #listviewCompleted [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
                   method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'9'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
@@ -38,9 +38,9 @@
               <ng-template #headerText>
                 <div (click)="tabStatus('5')">Hoãn lại</div>
               </ng-template>
-              <ng-template #content> -->
+              <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container>  -->
-                <!-- <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
+                <codx-listview #listviewPostpone [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
                   method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'5'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
@@ -51,9 +51,9 @@
               <ng-template #headerText>
                 <div (click)="tabStatus('8')">Hủy</div>
               </ng-template>
-              <ng-template #content> -->
+              <ng-template #content>
                 <!-- <ng-container *ngTemplateOutlet="listviewtmp"></ng-container> -->
-                <!-- <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
+                <codx-listview #listviewRefuse [itemTemplate]="templateItem" [selectFirst]="true" funcId="WPT036"
                   [pageSize]="100" service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
                   method="GetListDetailTasksAsync" [predicate]="predicate" [dataValue]="'8'+';' +user.userID" type="listView"
                   [gridViewName]="'grvTasks'" autoLoad="true" entityName="TM_Tasks" groupBy="fieldGroup"
@@ -62,7 +62,7 @@
               </ng-template>
             </e-tabitem>
           </e-tabitems>
-        </ejs-tab> -->
+        </ejs-tab>
 
         <!-- <ng-template #listviewtmp>
           <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="100"
@@ -71,7 +71,7 @@
           entityName="TM_Tasks" groupBy="fieldGroup">
         </codx-listview>
         </ng-template> -->
-      <!-- </div>
+      </div>
     </div>
     <div class="w-100 d-flex flex-column" id="codx_detail">
       <div class="codx_detail_container">
@@ -158,9 +158,9 @@
               <span class="fw-bold me-1">Ngày kết thúc:</span>
               <span [ngClass]="itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.endDate |
                 date:
-                'dd/MM/yyyy' }}</span> -->
+                'dd/MM/yyyy' }}</span>
               <!-- icon-flag -->
-            <!-- </div>
+            </div>
             <div class="d-flex">
               <span class="fw-bold me-1">Ngày hoàn tất:</span>
               <span [ngClass]="itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400' ">{{
@@ -211,10 +211,10 @@
               </label>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <!--menu -->
-        <!-- <div class="bg-white py-4 d-flex flex-lg-column">
+        <div class="bg-white py-4 d-flex flex-lg-column">
           <ejs-tab *ngIf="isFinishLoad">
             <e-tabitems>
               <e-tabitem>
@@ -508,9 +508,9 @@
               <e-tabitem>
                 <ng-template #headerText>
                   <span class="nav-text">Tham chiếu</span><span class="ms-1">(3)</span>
-                </ng-template> -->
+                </ng-template>
                 <!-- tree view -->
-                <!-- <ng-template #content>
+                <ng-template #content>
                   <div class="tab_container">
                     <div class="his-group primary-group">
                       <div class="tab_body" *ngIf="itemSelected?.category != '1'">
@@ -565,7 +565,7 @@
                   </div>
                 </ng-template>
               </e-tabitem>
-              <e-tabitem> -->
+              <e-tabitem>
                 <!-- <ng-template #headerText>
                   <a class="nav-link" style="float: right;cursor: pointer;"
                     data-toggle="collapse">
@@ -575,7 +575,7 @@
                 <ng-template #content>
 
                 </ng-template> -->
-              <!-- </e-tabitem>
+              </e-tabitem>
             </e-tabitems>
           </ejs-tab>
         </div>
@@ -588,10 +588,10 @@
   <div class="d-flex p-3 flex-grow-1 task-item" [style.background-color]="
   item?.taskID == itemSelected?.taskID ? '#F4F7FF' : '' " (click)="clickItem(item)" (dblclick)="showControl(p,item)"
     [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="right left" container="body"
-    autoClose="outside" triggers="manual"> -->
+    autoClose="outside" triggers="manual">
     <!-- <more-funtion [data]="item" (clickAction)="onChangeStatusTask($event)">
     </more-funtion> -->
-    <!-- <codx-img class="symbol symbol-35px symbol-circle me-3" [objectId]="item?.createdBy" objectType="AD_Users">
+    <codx-img class="symbol symbol-35px symbol-circle me-3" [objectId]="item?.createdBy" objectType="AD_Users">
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center justify-content-between">
@@ -644,10 +644,10 @@
           <span class="icon-18 icon-add_box me-2 align-items-start" *ngIf="!openNode"></span>
         </div>
         <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="data?.owner" objectType="AD_Users">
-        </codx-img> -->
+        </codx-img>
         <!--end::Symbol-->
         <!--begin::Title-->
-        <!-- <div class="d-flex flex-column me-6 w-100">
+        <div class="d-flex flex-column me-6 w-100">
           <div class="text-dark fw-bold fs-6">
             {{data?.userName}}
           </div>
@@ -656,31 +656,31 @@
           </div>
           <div class="text-dark" *ngIf="data?.category == '2' || data?.category == '4'">{{data.memo2}}
           </div>
-        </div> -->
+        </div>
         <!--end::Title-->
         <!--begin::Section-->
-        <!-- <div class="d-flex align-items-center mt-lg-0 mt-3 ms-auto"> -->
+        <div class="d-flex align-items-center mt-lg-0 mt-3 ms-auto">
           <!--begin::Label-->
-          <!-- <div class="d-flex align-item-center me-4">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16 icon-person me-1 text-primary "></span>
             <span class="text-gray-800 fw-bold">{{data.items.length}}</span>
-          </div> -->
+          </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <!-- <div class="d-flex align-item-center me-4">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16 icon-message me-1 text-primary "></span>
             <span class="text-gray-800 fw-bold">{{data.comments}}</span>
-          </div> -->
+          </div>
           <!--end::Label-->
           <!--begin::Label-->
-          <!-- <div class="d-flex align-item-center me-4">
+          <div class="d-flex align-item-center me-4">
             <span class="icon-16  icon-attach_file me-1 text-primary "></span>
             <span class="text-gray-800 fw-bold">3</span>
-          </div> -->
+          </div>
           <!--end::Label-->
           <!--begin::Btn-->
 
-          <!-- <div class="task-status d-flex">
+          <div class="task-status d-flex">
             <div class="badge badge-danger me-2" [style.border-color]="
   (data?.status | vll: 'L0614':'color' | async) + '30'
 " [style.background-color]="
@@ -688,19 +688,19 @@
 " [style.color]="data?.status | vll: 'L0614':'color' | async" style="border: none">
               {{ data?.status | vll: "L0614":"text" | async }}
             </div>
-          </div> -->
+          </div>
           <!--end::Btn-->
-        <!-- </div> -->
+        </div>
         <!--end::Section-->
-      <!-- </div>
+      </div>
     </div>
 
   </div>
-</ng-template> -->
+</ng-template>
 
 
 <!-- // dung de tesst -->
-<!-- <ng-template #popContent>
+<ng-template #popContent>
   <a class="action-item" (click)="editTask(taskAction)" style="cursor: pointer">
     <div class="d-flex align-items-center btn-tooltip">
       <span class="icon-edit icon-18 ml-2 mr-2"></span>
@@ -735,7 +735,7 @@
   </a>
 </ng-template>
 
-<ng-template #setupStatusTask> -->
+<ng-template #setupStatusTask>
   <!-- <div>
     <div>
       <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
@@ -765,7 +765,7 @@
     </div>
   </div> -->
 
-  <!-- <ng-container *ngFor="let moreFunc of moreFuncList" >
+  <ng-container *ngFor="let moreFunc of moreFuncList" >
     <a class="dropdown-item" (click)="moreActionTask(moreFunc,taskAction)" style="cursor: pointer">
       <div class="d-flex align-items-center">
          <span class="{{moreFunc.largeIcon}}"></span>
@@ -773,4 +773,4 @@
       </div>
     </a>
   </ng-container>
-</ng-template> -->
+</ng-template>
