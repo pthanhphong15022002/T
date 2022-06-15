@@ -624,6 +624,12 @@
             [numberImages]="2">
           </codx-imgs>
         </div>
+        <div class="symbol-group symbol-hover justify-content-end"
+          *ngIf="item?.category == '1' || item?.category == '2'">
+          <codx-imgs class="symbol symbol-25px symbol-circle" [objectId]="item?.owner" objectName="AD_Users"
+            [numberImages]="2">
+          </codx-imgs>
+        </div>
       </div>
     </div>
   </div>

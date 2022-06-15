@@ -2,9 +2,11 @@ import { ThisReceiver } from '@angular/compiler';
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
@@ -12,6 +14,7 @@ import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.comp
 import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
 import { TmService } from '@modules/tm/tm.service';
 import { HomeComponent } from '@pages/home/home.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -19,6 +22,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxListviewComponent,
   NotificationsService,
@@ -35,6 +39,7 @@ import * as moment from 'moment';
 })
 export class ViewListDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
+  @Input('assignInfo') assignInfo: AssignInfoComponent;
   @Input() data = [];
   @Input() dataAddNew = [];
   @Input() dataCompleted = [];
@@ -66,25 +71,32 @@ export class ViewListDetailsComponent implements OnInit {
   dataValue = '1';
   moreFuncList : any[] =[] ;
   funcID :string ;
+  func : any
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
   @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
   @ViewChild('listviewPostpone') listviewPostpone: CodxListviewComponent;
   @ViewChild('listviewRefuse') listviewRefuse: CodxListviewComponent;
-
+  @Output() actionIsAssign = new EventEmitter<boolean>();
+  
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private cacheServices : CacheService
   ) {
     this.user = this.authStore.get();
     this.funcID ="WPT036" ;
     //this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
+    
+    var url ='tm/mytasks/TMT02'
+    var funcIDArr = url.split('/')
+    var funcID = funcIDArr[funcIDArr.length-1]
+    this.tmSv.getMoreFunction([funcID, null,null]).subscribe(res=>{
       if(res){this.moreFuncList = res} ;
      })
   }
@@ -241,6 +253,16 @@ export class ViewListDetailsComponent implements OnInit {
   viewItem(taskAction) {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
+  assignItem(taskAction) {
+    const t = this
+    let p =  new Promise((resolve, reject) => {
+      this.actionIsAssign.emit(true);
+      resolve(true);
+    });
+    p.then(() => {
+      this.assignInfo.openInfo(taskAction);
+    });
+  }
 
   setupStatus(p, item) {
     p.open();
@@ -306,8 +328,12 @@ export class ViewListDetailsComponent implements OnInit {
         });
     }
   }
-  moreActionTask(moreFunc, taskAction){
 
+  moreActionTask(moreFunc, taskAction) {
+    var fieldName = UrlUtil.getUrl('defaultField', moreFunc.url);
+    if (fieldName == 'Status') {
+      this.ChangeStatusTask(moreFunc, taskAction);
+    } else this.assignItem(taskAction);
   }
 
   ChangeStatusTask(moreFunc, taskAction) {
