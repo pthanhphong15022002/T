@@ -28,12 +28,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./modules/tm/tm.modules').then((m) => m.TMModule),
       },
-      {
-        path: 'mwp',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
-      },
+      // {
+      //   path: 'mwp',
+      //   canActivate: [AuthGuard],
+      //   loadChildren: () =>
+      //     import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
+      // },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

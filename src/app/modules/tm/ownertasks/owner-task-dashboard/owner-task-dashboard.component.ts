@@ -1,324 +1,324 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  ChartTaskRemind,
-  RemiderOnDay,
-  TaskRemind,
-} from '@modules/tm/models/dashboard.model';
-import { TmService } from '@modules/tm/tm.service';
-import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import {
-  AccPoints,
-  AccumulationChart,
-  AccumulationChartComponent,
-  AnimationModel,
-  IAccAnimationCompleteEventArgs,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+// import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+// import {
+//   ChartTaskRemind,
+//   RemiderOnDay,
+//   TaskRemind,
+// } from '@modules/tm/models/dashboard.model';
+// import { TmService } from '@modules/tm/tm.service';
+// import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
+// import {
+//   AccPoints,
+//   AccumulationChart,
+//   AccumulationChartComponent,
+//   AnimationModel,
+//   IAccAnimationCompleteEventArgs,
+//   ILoadedEventArgs,
+// } from '@syncfusion/ej2-angular-charts';
+// import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
+// import { Subject, takeUntil } from 'rxjs';
 
-@Component({
-  selector: 'owner-task-dashboard',
-  templateUrl: './owner-task-dashboard.component.html',
-  styleUrls: ['./owner-task-dashboard.component.scss'],
-})
-export class OwnerTaskDashboardComponent implements OnInit {
-  ngUnsubscribe = new Subject<void>();
-  user: UserModel;
-  model: DataRequest;
-  fromDate: Date;
-  toDate: Date;
-  daySelected: Date;
-  daySelectedFrom: Date;
-  daySelectedTo: Date;
-  week: number;
-  monthSelected: number;
-  rateDoneOnTime: number;
-  rate: number;
-  rateTotalChange: string;
-  positive: boolean;
-  rateTotalChangeValue: number = 0;
-  remiderOnDay: RemiderOnDay[] = [];
-  taskRemind: TaskRemind = new TaskRemind();
-  chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
+// @Component({
+//   selector: 'owner-task-dashboard',
+//   templateUrl: './owner-task-dashboard.component.html',
+//   styleUrls: ['./owner-task-dashboard.component.scss'],
+// })
+// export class OwnerTaskDashboardComponent implements OnInit {
+//   ngUnsubscribe = new Subject<void>();
+//   user: UserModel;
+//   model: DataRequest;
+//   fromDate: Date;
+//   toDate: Date;
+//   daySelected: Date;
+//   daySelectedFrom: Date;
+//   daySelectedTo: Date;
+//   week: number;
+//   monthSelected: number;
+//   rateDoneOnTime: number;
+//   rate: number;
+//   rateTotalChange: string;
+//   positive: boolean;
+//   rateTotalChangeValue: number = 0;
+//   remiderOnDay: RemiderOnDay[] = [];
+//   taskRemind: TaskRemind = new TaskRemind();
+//   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
 
-  //#region chartline
-  dataLineTrend: Object[] = [];
-  lineXAxis: Object = {
-    valueType: 'Category',
-    labelFormat: 'y',
-    rangePadding: 'None',
-    majorGridLines: { width: 0 },
-    majorTickLines: { width: 0 },
-    lineStyle: { width: 0 },
-    labelStyle: {
-      color: 'transparent',
-    },
-  };
+//   //#region chartline
+//   dataLineTrend: Object[] = [];
+//   lineXAxis: Object = {
+//     valueType: 'Category',
+//     labelFormat: 'y',
+//     rangePadding: 'None',
+//     majorGridLines: { width: 0 },
+//     majorTickLines: { width: 0 },
+//     lineStyle: { width: 0 },
+//     labelStyle: {
+//       color: 'transparent',
+//     },
+//   };
 
-  lineYAxis: Object = {
-    lineStyle: { width: 0 },
-    majorTickLines: { width: 0 },
-    majorGridLines: { width: 0 },
-    labelStyle: {
-      color: 'transparent',
-    },
-  };
+//   lineYAxis: Object = {
+//     lineStyle: { width: 0 },
+//     majorTickLines: { width: 0 },
+//     majorGridLines: { width: 0 },
+//     labelStyle: {
+//       color: 'transparent',
+//     },
+//   };
 
-  markerLine: Object = {
-    visible: false,
-    height: 5,
-    width: 5,
-  };
+//   markerLine: Object = {
+//     visible: false,
+//     height: 5,
+//     width: 5,
+//   };
 
-  tooltip: Object = {
-    enable: false,
-  };
+//   tooltip: Object = {
+//     enable: false,
+//   };
 
-  legendLine: Object = {
-    visible: false,
-  };
-  //#endregion chartline
+//   legendLine: Object = {
+//     visible: false,
+//   };
+//   //#endregion chartline
 
-  //#region proccess bar
-  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
-  valPcb: number = 100;
-  //#endregion proccess bar
+//   //#region proccess bar
+//   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+//   valPcb: number = 100;
+//   //#endregion proccess bar
 
-  //#region chartcolumn
-  dataColumn: Object[] = [];
-  dataLine: Object[] = [];
-  columnXAxis: Object = {
-    interval: 1,
-    valueType: 'Category',
-    rangePadding: 'None',
-    majorGridLines: { width: 0 },
-    majorTickLines: { width: 0 },
-    lineStyle: { width: 0 },
-    labelStyle: {
-      color: 'dark',
-    },
-  };
+//   //#region chartcolumn
+//   dataColumn: Object[] = [];
+//   dataLine: Object[] = [];
+//   columnXAxis: Object = {
+//     interval: 1,
+//     valueType: 'Category',
+//     rangePadding: 'None',
+//     majorGridLines: { width: 0 },
+//     majorTickLines: { width: 0 },
+//     lineStyle: { width: 0 },
+//     labelStyle: {
+//       color: 'dark',
+//     },
+//   };
 
-  columnYAxis: Object = {
-    minimum: 0,
-    interval: 10,
-    labelStyle: {
-      color: 'gray',
-    },
-  };
+//   columnYAxis: Object = {
+//     minimum: 0,
+//     interval: 10,
+//     labelStyle: {
+//       color: 'gray',
+//     },
+//   };
 
-  chartArea: Object = {
-    border: {
-      width: 0,
-    },
-  };
+//   chartArea: Object = {
+//     border: {
+//       width: 0,
+//     },
+//   };
 
-  radius: Object = {
-    topLeft: 10,
-    topRight: 10,
-  };
+//   radius: Object = {
+//     topLeft: 10,
+//     topRight: 10,
+//   };
 
-  legendSettings: Object = { visible: true, position: 'Top', alignment: 'Far' };
-  //#endregion chartcolumn
+//   legendSettings: Object = { visible: true, position: 'Top', alignment: 'Far' };
+//   //#endregion chartcolumn
 
-  //#region donut
-  pie: AccumulationChartComponent | AccumulationChart;
-  execute = false;
-  count = 0;
-  startAngle: number = 0;
-  endAngle: number = 360;
-  doughnutData = [{ label: '', value: 100 }];
-  palettes: string[] = ['#005DC7', '#06DDB8'];
+//   //#region donut
+//   pie: AccumulationChartComponent | AccumulationChart;
+//   execute = false;
+//   count = 0;
+//   startAngle: number = 0;
+//   endAngle: number = 360;
+//   doughnutData = [{ label: '', value: 100 }];
+//   palettes: string[] = ['#005DC7', '#06DDB8'];
 
-  //Initializing Datalabel
-  dataLabel: Object = {
-    visible: true,
-    position: 'Inside',
-    name: '${point.y}',
-    font: {
-      color: 'white',
-      fontWeight: 'Bold',
-      size: '14px',
-    },
-  };
+//   //Initializing Datalabel
+//   dataLabel: Object = {
+//     visible: true,
+//     position: 'Inside',
+//     name: '${point.y}',
+//     font: {
+//       color: 'white',
+//       fontWeight: 'Bold',
+//       size: '14px',
+//     },
+//   };
 
-  onAnimationComplete(args: IAccAnimationCompleteEventArgs): void {
-    let centerTitle: HTMLDivElement = document.getElementById(
-      'center_title'
-    ) as HTMLDivElement;
-    centerTitle.style.fontSize = this.getFontSize(
-      args.accumulation.initialClipRect.width
-    );
-    let rect: ClientRect = centerTitle.getBoundingClientRect();
-    centerTitle.style.top =
-      args.accumulation.origin.y +
-      args.accumulation.element.offsetTop -
-      rect.height / 2 +
-      'px';
-    centerTitle.style.left =
-      args.accumulation.origin.x +
-      args.accumulation.element.offsetLeft -
-      rect.width / 2 +
-      'px';
-    centerTitle.style.visibility = 'visible';
-    let points: AccPoints[] = args.accumulation.visibleSeries[0].points;
-    for (let point of points) {
-      if (point.labelPosition === 'Outside' && point.labelVisible) {
-        let label: Element = document.getElementById(
-          'doughnut-container_datalabel_Series_0_text_' + point.index
-        );
-        label.setAttribute('fill', 'black');
-      }
-    }
-  }
+//   onAnimationComplete(args: IAccAnimationCompleteEventArgs): void {
+//     let centerTitle: HTMLDivElement = document.getElementById(
+//       'center_title'
+//     ) as HTMLDivElement;
+//     centerTitle.style.fontSize = this.getFontSize(
+//       args.accumulation.initialClipRect.width
+//     );
+//     let rect: ClientRect = centerTitle.getBoundingClientRect();
+//     centerTitle.style.top =
+//       args.accumulation.origin.y +
+//       args.accumulation.element.offsetTop -
+//       rect.height / 2 +
+//       'px';
+//     centerTitle.style.left =
+//       args.accumulation.origin.x +
+//       args.accumulation.element.offsetLeft -
+//       rect.width / 2 +
+//       'px';
+//     centerTitle.style.visibility = 'visible';
+//     let points: AccPoints[] = args.accumulation.visibleSeries[0].points;
+//     for (let point of points) {
+//       if (point.labelPosition === 'Outside' && point.labelVisible) {
+//         let label: Element = document.getElementById(
+//           'doughnut-container_datalabel_Series_0_text_' + point.index
+//         );
+//         label.setAttribute('fill', 'black');
+//       }
+//     }
+//   }
 
-  getFontSize(width: number): string {
-    if (width > 300) {
-      return '13px';
-    } else if (width > 250) {
-      return '8px';
-    } else {
-      return '6px';
-    }
-  }
-  loaded(args: ILoadedEventArgs): void {
-    args.chart.refresh();
-  }
-  //#endregion doughnut
+//   getFontSize(width: number): string {
+//     if (width > 300) {
+//       return '13px';
+//     } else if (width > 250) {
+//       return '8px';
+//     } else {
+//       return '6px';
+//     }
+//   }
+//   loaded(args: ILoadedEventArgs): void {
+//     args.chart.refresh();
+//   }
+//   //#endregion doughnut
 
-  @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
+//   @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
 
-  constructor(
-    private tmService: TmService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private authStore: AuthStore
-  ) {}
+//   constructor(
+//     private tmService: TmService,
+//     private changeDetectorRef: ChangeDetectorRef,
+//     private authStore: AuthStore
+//   ) {}
     
-  ngOnInit(): void {
-    this.user = this.authStore.get();
-    this.model = new DataRequest();
-    this.model.formName = 'Tasks';
-    this.model.gridViewName = 'grvTasks';
-    this.model.entityName = 'TM_Tasks';
-    this.model.predicate = 'Owner=@0'
-    this.model.dataValue = this.user.userID
-    this.model.pageLoading = false;
-    console.log(this.model)
-  }
+//   ngOnInit(): void {
+//     this.user = this.authStore.get();
+//     this.model = new DataRequest();
+//     this.model.formName = 'Tasks';
+//     this.model.gridViewName = 'grvTasks';
+//     this.model.entityName = 'TM_Tasks';
+//     this.model.predicate = 'Owner=@0'
+//     this.model.dataValue = this.user.userID
+//     this.model.pageLoading = false;
+//     console.log(this.model)
+//   }
 
-  ngAfterViewInit(): void {
-    this.week = this.selectweekComponent.week;
-    this.fromDate = this.selectweekComponent.fromDate;
-    this.toDate = this.selectweekComponent.toDate;
-    this.daySelected = this.selectweekComponent.daySelected;
-    this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
-    this.daySelectedTo = this.selectweekComponent.daySelectedTo;
-    this.monthSelected = this.selectweekComponent.month + 1;
-    this.getInitData();
-  }
+//   ngAfterViewInit(): void {
+//     this.week = this.selectweekComponent.week;
+//     this.fromDate = this.selectweekComponent.fromDate;
+//     this.toDate = this.selectweekComponent.toDate;
+//     this.daySelected = this.selectweekComponent.daySelected;
+//     this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
+//     this.daySelectedTo = this.selectweekComponent.daySelectedTo;
+//     this.monthSelected = this.selectweekComponent.month + 1;
+//     this.getInitData();
+//   }
 
-  onChangeValueSelectedWeek(data) {
-    this.fromDate = data.fromDate;
-    this.toDate = data.toDate;
-    this.daySelected = data.daySelected;
-    this.daySelectedFrom = data.daySelectedFrom;
-    this.daySelectedTo = data.daySelectedTo;
-    this.getGeneralData();
-    if (this.week != data.week) {
-      this.week = data.week;
-      this.getGeneralData();
-    }
-    if (this.monthSelected != data.month + 1) {
-      this.monthSelected = data.month + 1;
-      this.getGeneralData();
-    }
-  }
+//   onChangeValueSelectedWeek(data) {
+//     this.fromDate = data.fromDate;
+//     this.toDate = data.toDate;
+//     this.daySelected = data.daySelected;
+//     this.daySelectedFrom = data.daySelectedFrom;
+//     this.daySelectedTo = data.daySelectedTo;
+//     this.getGeneralData();
+//     if (this.week != data.week) {
+//       this.week = data.week;
+//       this.getGeneralData();
+//     }
+//     if (this.monthSelected != data.month + 1) {
+//       this.monthSelected = data.month + 1;
+//       this.getGeneralData();
+//     }
+//   }
 
-  private getInitData() {
-    this.tmService
-      .getChartData(
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.selectweekComponent.beginMonth,
-        this.selectweekComponent.endMonth
-      )
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((task: TaskRemind) => {
-        this.taskRemind = task;
-        this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataTrendChart(task.trendChart);
-        this.setDataProgressBar(task.rateDoneAllTime);
-        this.setDataDonutChart(task.doughnutChart);
-        this.setDataCombineChart(task.barChart);
-      });
-  }
+//   private getInitData() {
+//     this.tmService
+//       .getChartData(
+//         this.model,
+//         this.daySelectedFrom,
+//         this.daySelectedTo,
+//         this.fromDate,
+//         this.toDate,
+//         this.selectweekComponent.beginMonth,
+//         this.selectweekComponent.endMonth
+//       )
+//       .pipe(takeUntil(this.ngUnsubscribe))
+//       .subscribe((task: TaskRemind) => {
+//         this.taskRemind = task;
+//         this.remiderOnDay = task.listTaskByDay['result'];
+//         this.setDataTrendChart(task.trendChart);
+//         this.setDataProgressBar(task.rateDoneAllTime);
+//         this.setDataDonutChart(task.doughnutChart);
+//         this.setDataCombineChart(task.barChart);
+//       });
+//   }
 
-  private getGeneralData() {
-    this.tmService
-      .getChartData(
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.selectweekComponent.beginMonth,
-        this.selectweekComponent.endMonth
-      )
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((task: TaskRemind) => {
-        this.taskRemind = task;
-        this.remiderOnDay = task.listTaskByDay['result'];
-        this.setDataDonutChart(task.doughnutChart);
-        this.setDataCombineChart(task.barChart);
-      });
-  }
+//   private getGeneralData() {
+//     this.tmService
+//       .getChartData(
+//         this.model,
+//         this.daySelectedFrom,
+//         this.daySelectedTo,
+//         this.fromDate,
+//         this.toDate,
+//         this.selectweekComponent.beginMonth,
+//         this.selectweekComponent.endMonth
+//       )
+//       .pipe(takeUntil(this.ngUnsubscribe))
+//       .subscribe((task: TaskRemind) => {
+//         this.taskRemind = task;
+//         this.remiderOnDay = task.listTaskByDay['result'];
+//         this.setDataDonutChart(task.doughnutChart);
+//         this.setDataCombineChart(task.barChart);
+//       });
+//   }
 
-  //#region A1.3
-  private setDataTrendChart(data) {
-    this.rateDoneOnTime = data.rateDoneOnTime;
-    this.dataLineTrend = data.result;
-  }
-  //#endregion A1.3
+//   //#region A1.3
+//   private setDataTrendChart(data) {
+//     this.rateDoneOnTime = data.rateDoneOnTime;
+//     this.dataLineTrend = data.result;
+//   }
+//   //#endregion A1.3
 
-  //#region A1.4
-  private setDataProgressBar(data) {
-    this.taskRemind.rateDoneAllTime = data;
-  }
-  //#endregion A1.4
+//   //#region A1.4
+//   private setDataProgressBar(data) {
+//     this.taskRemind.rateDoneAllTime = data;
+//   }
+//   //#endregion A1.4
 
-  //#region A1.5
-  private setDataDonutChart(data) {
-    if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
-      this.setTitleRateChange(data.rateTotalChange);
-    } else {
-      this.doughnutData = data.chartPerformance;
-      this.setTitleRateChange(data.rateTotalChange);
-      this.taskRemind.totalTaskInWeek = data.count;
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-  //#endregion A1.5
+//   //#region A1.5
+//   private setDataDonutChart(data) {
+//     if (data.chartPerformance && data.chartPerformance.doughnutData == 0) {
+//       this.setTitleRateChange(data.rateTotalChange);
+//     } else {
+//       this.doughnutData = data.chartPerformance;
+//       this.setTitleRateChange(data.rateTotalChange);
+//       this.taskRemind.totalTaskInWeek = data.count;
+//       this.changeDetectorRef.detectChanges();
+//     }
+//   }
+//   //#endregion A1.5
 
-  //#region A1.6
-  private setDataCombineChart(data) {
-    if (data.hasOwnProperty('barChart')) {
-      this.dataColumn = data.barChart;
-    }
-    if (data.hasOwnProperty('lineChart')) {
-      this.dataLine = data.lineChart;
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-  //#endregion A1.6
-  private setTitleRateChange(data) {
-    this.positive = data.positive;
-    this.rateTotalChangeValue = data.rate;
-    let title = this.positive ? 'Tăng' : 'Giảm';
-    console.log(this.rateTotalChangeValue);
-    this.rateTotalChange = `${title} hơn ${this.rateTotalChangeValue} % so với tuần trước`;
-  }
-}
+//   //#region A1.6
+//   private setDataCombineChart(data) {
+//     if (data.hasOwnProperty('barChart')) {
+//       this.dataColumn = data.barChart;
+//     }
+//     if (data.hasOwnProperty('lineChart')) {
+//       this.dataLine = data.lineChart;
+//     }
+//     this.changeDetectorRef.detectChanges();
+//   }
+//   //#endregion A1.6
+//   private setTitleRateChange(data) {
+//     this.positive = data.positive;
+//     this.rateTotalChangeValue = data.rate;
+//     let title = this.positive ? 'Tăng' : 'Giảm';
+//     console.log(this.rateTotalChangeValue);
+//     this.rateTotalChange = `${title} hơn ${this.rateTotalChangeValue} % so với tuần trước`;
+//   }
+// }
