@@ -1,3 +1,184 @@
-<div class="page-content d-flex flex-row pt-4">
+<div class="row">
+  <div class="col-8">
+    <div class="row">
+      <div class="page-content flex flex-row pt-7">
+        <div class="pe-9">
+          <div class="taskbox-left">
+            <div class="row g-4 g-xl-4">
+              <div class="col-xl-2">
+                <!--begin::Statistics Widget 5-->
+                <a href="#" class="card bg-body hoverable card-xl-stretch mb-xl-8">
+                  <!--begin::Body-->
+                  <div class="card-body">
+                    <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
 
+                    </div>
+                    <div class="fw-bold text-gray-400">Quá hạn</div>
+                  </div>
+                  <!--end::Body-->
+                </a>
+                <!--end::Statistics Widget 5-->
+              </div>
+              <div class="col-xl-2">
+                <!--begin::Statistics Widget 5-->
+                <a href="#" class="card bg-dark hoverable card-xl-stretch mb-xl-8">
+                  <!--begin::Body-->
+                  <div class="card-body">
+                    <div class="text-gray-100 fs-2 mb-2 mt-5">
+
+                    </div>
+                    <div class="text-gray-100">Chưa thực hiện</div>
+                  </div>
+                  <!--end::Body-->
+                </a>
+                <!--end::Statistics Widget 5-->
+              </div>
+              <div class="col-xl-2">
+                <!--begin::Statistics Widget 5-->
+                <a href="#" class="card bg-warning hoverable card-xl-stretch mb-xl-8">
+                  <!--begin::Body-->
+                  <div class="card-body">
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">
+                    </div>
+                    <div class="fw-bold text-white">Ưu tiên cao chưa thực hiện</div>
+                  </div>
+                  <!--end::Body-->
+                </a>
+                <!--end::Statistics Widget 5-->
+              </div>
+              <div class="col-xl-2">
+                <!--begin::Statistics Widget 5-->
+                <a href="#" class="card bg-warning hoverable card-xl-stretch mb-xl-8">
+                  <!--begin::Body-->
+                  <div class="card-body">
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">
+                    </div>
+                    <div class="fw-bold text-white">Đã thực hiện</div>
+                  </div>
+                  <!--end::Body-->
+                </a>
+                <!--end::Statistics Widget 5-->
+              </div>
+              <div class="col-xl-2">
+                <!--begin::Statistics Widget 5-->
+                <a href="#" class="card bg-info hoverable card-xl-stretch mb-5 mb-xl-8">
+                  <!--begin::Body-->
+                  <div class="card-body">
+                    <div class="text-white fw-bolder fs-2 mb-2 mt-5">
+
+                    </div>
+                    <div class="fw-bold text-white">Hoãn lại</div>
+                  </div>
+                  <!--end::Body-->
+                </a>
+                <!--end::Statistics Widget 5-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row ">
+      <div class="col pe-0">
+        <div class="text-dark fw-bold mb-1 text-nowrap">Tỉ lệ hoàn thành đúng hạn</div>
+        <div class="row">
+          <div class="font-size-h2 font-weight-bold mr-3 col">
+            {{1 | percent}}
+            <!-- {{ taskRemind.rateDoneOnTime | percent }}</div> -->
+            <div class="d-flex w-100 col " style="margin-left: 100px;">
+              <ejs-progressbar #linear1 id="linear1" type="Linear" [maximum]="100" [minimum]="0" width="100%"
+                [trackThickness]="12" [progressThickness]="12" height="5">
+              </ejs-progressbar>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col pe-0">
+        aaaaaaa
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div [style.position]="'relative'">
+      <ejs-accumulationchart background="transparent" id="doughnut-container" #pie
+        style="display: block ; margin-left: 10px;" width="400" height="200" selectionMode="Point">
+        <e-accumulation-series-collection>
+          <e-accumulation-series name="Revenue" [palettes]="palettes" [dataSource]="doughnutData" xName="label"
+            yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="80%">
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+      <div id="center_title" style="position: absolute; top: 80px; left: 180px">
+        <div class="text-dark-50">
+          <div>
+            <span>
+              <p>Công việc</p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div></div>
+<div class="e-gridheader e-lib e-droppable" style="padding-right: 4px; padding-top: 15px;">
+  <div class="e-headercontent" style="border-right-width: 1px;">
+    <table class="e-table " style="border-collapse: collapse; ">
+      <thead style="height: 30px;">
+        <tr class="e-columnheader" style="border-bottom: 2px solid rgb(7, 7, 7); height: 100%;">
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext ">STT</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext">Tổng số công việc</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext">Đã hoàn tất</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext">Chưa thực hiện</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext">Hoàn tất trễ hạn</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-300px">
+            <div>
+              <span class="e-headertext ">Tỉ lệ hoàn thành</span>
+            </div>
+          </th>
+          <th class="e-headercell e-focus w-250px">
+            <div>
+              <span class="e-headertext ">Tỉ lệ hoàn thành đúng hạn</span>
+            </div>
+          </th>
+
+        </tr>
+      </thead>
+      <tbody class="e-hide">
+        <tr style="border-bottom: 1px solid #787; height: 100%;">
+          <td style="height: 40px;">1</td>
+          <td style="height: 40px;"> 
+            abc
+          </td>
+          <td style="height: 40px;">abc</td>
+          <td style="height: 40px;">abc</td>
+          <td style="height: 40px;">abc</td>
+          <td style="height: 40px;">abc</td>
+          <td style="height: 40px;">abc</td>
+
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
 </div>

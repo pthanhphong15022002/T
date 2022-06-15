@@ -86,15 +86,14 @@ export class StatisticalProjectComponent implements OnInit {
     model.pageSize = 100;
     this.api.execSv<any>("TM", "TM", "ReportBusiness", "ListReportProjectAsync", model).subscribe((res)=>{
       if(res){
-        this.data = res[1];
-        this.lstOwner = res[0];
+        this.data = res[0];
+     //   this.lstOwner = res[0];
       }
     })
   }
 
   openPopup(item: any){
-    
-    this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 0, 0, '', item);
+    this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 1500, 800, '', item);
   }
 
   initForm() {
