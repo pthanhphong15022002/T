@@ -79,7 +79,7 @@ entityName="TM_Tasks" [data]="data">
            <td style="height: 40px;">{{item.rateTaskDoneTime | percent}}</td>
            <td>
             <div>
-              <a class="action-item"  style="cursor: pointer">
+              <a class="action-item"  style="cursor: pointer" (click)="openPopup(item)">
                 <span class=" icon-launch icon-18 ms-2 me-2"></span>
               </a>   
             </div>
@@ -90,3 +90,7 @@ entityName="TM_Tasks" [data]="data">
      </table>
    </div>
  </div>
+
+ <ng-template>
+
+ </ng-template>

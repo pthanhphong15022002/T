@@ -52,6 +52,7 @@ import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.com
 import { SprintsTaskDetailsComponent } from './sprints/sprints-tasks/sprints-task-details/sprints-task-details.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { SprintsListTasksComponent } from './sprints/sprints-tasks/sprints-list-tasks/sprints-list-tasks.component';
+import { ProjectChartComponent } from './statistical/statistical-project/project-chart/project-chart.component';
 
 
 const routes: Routes = [
@@ -133,7 +134,8 @@ const routes: Routes = [
           {
             path: 'statisticalchart/:funcID',
             component: StatisticalChartComponent
-          },        
+          }, 
+              
         ]
       },
       {
@@ -187,7 +189,8 @@ const routes: Routes = [
     StatisticalChartComponent, 
     SprintsTasksComponent,
     SprintsTaskDetailsComponent,
-    SprintsListTasksComponent
+    SprintsListTasksComponent,
+    ProjectChartComponent
     
   ],
   imports: [

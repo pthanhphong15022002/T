@@ -1,8 +1,9 @@
 import { TM_Tasks } from './../../models/TM_Tasks.model';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { DataRequest, CacheService, AuthStore, ApiHttpService } from 'codx-core';
+import { DataRequest, CacheService, AuthStore, ApiHttpService, CallFuncService } from 'codx-core';
 import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ProjectChartComponent } from './project-chart/project-chart.component';
 
 @Component({
   selector: 'app-statistical-project',
@@ -16,7 +17,7 @@ export class StatisticalProjectComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @Input() data= [];
 
-  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private api: ApiHttpService) { }
+  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private api: ApiHttpService,   private callfc: CallFuncService,) { }
   model = new DataRequest();
   @Input() report = new TM_Tasks();
 
@@ -91,8 +92,9 @@ export class StatisticalProjectComponent implements OnInit {
     })
   }
 
-  setOwner(data){
+  openPopup(item: any){
     
+    this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 0, 0, '', item);
   }
 
   initForm() {

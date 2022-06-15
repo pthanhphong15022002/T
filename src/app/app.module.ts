@@ -71,6 +71,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+ 
   ],
   imports: [
     BrowserModule,
