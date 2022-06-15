@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewDetailsSprintsComponent } from './view-details-sprints.component';
+import { SprintsTasksComponent } from './sprints-tasks.component';
 
-describe('ViewDetailsSprintsComponent', () => {
-  let component: ViewDetailsSprintsComponent;
-  let fixture: ComponentFixture<ViewDetailsSprintsComponent>;
+describe('SprintsTasksComponent', () => {
+  let component: SprintsTasksComponent;
+  let fixture: ComponentFixture<SprintsTasksComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewDetailsSprintsComponent ]
+      declarations: [ SprintsTasksComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewDetailsSprintsComponent);
+    fixture = TestBed.createComponent(SprintsTasksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

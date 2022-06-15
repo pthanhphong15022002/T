@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TM_Sprints } from '@modules/tm/models/TM_Sprints.model';
+import { TmService } from '@modules/tm/tm.service';
 import { DataRequest } from '@shared/models/data.request';
 import {
   ApiHttpService,
@@ -17,15 +18,14 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import * as moment from 'moment';
-import { TmService } from '../../tm.service';
-
 
 @Component({
-  selector: 'app-view-details-sprints',
-  templateUrl: './view-details-sprints.component.html',
-  styleUrls: ['./view-details-sprints.component.scss']
+  selector: 'app-sprints-task-details',
+  templateUrl: './sprints-task-details.component.html',
+  styleUrls: ['./sprints-task-details.component.scss']
 })
-export class ViewDetailsSprintsComponent implements OnInit {
+export class SprintsTaskDetailsComponent implements OnInit {
+
   @Input() data = [];
   sprints : TM_Sprints ;
   view: string;
@@ -69,8 +69,6 @@ export class ViewDetailsSprintsComponent implements OnInit {
     this.loadData();
   }
   loadData() {
-    // this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    // this.funcID =this.activedRouter.snapshot.params["funcID"];
     let fied = this.gridView?.dateControl || 'DueDate';
     let model = new DataRequest();
     model.formName = 'SprintsTasks';
@@ -161,4 +159,5 @@ export class ViewDetailsSprintsComponent implements OnInit {
     //đang fail
    // this.openNode = !this.openNode;
   }
+
 }

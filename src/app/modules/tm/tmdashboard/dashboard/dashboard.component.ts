@@ -206,7 +206,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.authStore.get();
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
