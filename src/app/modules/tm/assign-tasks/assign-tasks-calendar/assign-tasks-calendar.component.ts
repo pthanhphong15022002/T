@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { VIEW_ACTIVE } from '@shared/constant/enum';
-import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest, CodxListviewComponent } from 'codx-core';
+import { AuthStore, ApiHttpService, CallFuncService, NotificationsService, CodxScheduleComponent, DataRequest, CodxListviewComponent, ViewsComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { InfoOpenForm } from '../../models/task.model';
 import { TmService } from '../../tm.service';
 import * as moment from "moment";
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import { TaskInfoComponent } from '../../controls/task-info/task-info.component';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Calendar } from '@syncfusion/ej2-angular-calendars';
+import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
+import { ActivatedRoute } from '@angular/router';
+import { TM_Tasks } from '@modules/tm/models/TM_Tasks.model';
 
 @Component({
   selector: 'assign-tasks-calendar',
@@ -22,6 +24,7 @@ export class AssignTasksCalendarComponent implements OnInit {
   @Input() viewPreset: string = "weekAndDay";
   @Input() calendarID: string;
   @Input('listview') listview: CodxListviewComponent;
+  @Input('viewBase') viewBase: ViewsComponent;
 
   moment = moment().locale("en");
   today: Date;
@@ -99,7 +102,7 @@ export class AssignTasksCalendarComponent implements OnInit {
   features: {
     headerZoom: false
   };
-  viewBase: any;
+  funcID:string ;
 
   constructor(
     private tmSv: TmService,
@@ -107,9 +110,14 @@ export class AssignTasksCalendarComponent implements OnInit {
     private auStore: AuthStore,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private activedRouter : ActivatedRoute
   ) {
     this.user = this.auStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
+    //   if(res){this.moreFuncList = res} ;
+    //  })
   }
   scheduleObj: any = undefined;
   ngAfterViewInit(): void {
@@ -167,7 +175,12 @@ export class AssignTasksCalendarComponent implements OnInit {
 
   addNew(evt: any) {
     console.log(evt);
-    this.taskInfo.openTask();
+    var task = new TM_Tasks() ;
+    task.startDate = evt.startTime ;
+     task.endDate = evt.endTime ;
+    this.taskInfo.openAssignSchedule(task);
+    this.taskInfo.title = 'Tạo mới công việc';
+    this.viewBase.currentView.openSidebarRight();
   }
 
   edit(taskAction) {

@@ -277,6 +277,35 @@ export class TaskInfoComponent implements OnInit {
    });
  }
 
+ openAssignSchedule(task): void {
+  const t = this;
+  this.task = task
+  if(this.functionID =="TMT03"){
+   this.showAssignTo = true;
+   //cai nay thêm để test
+   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+   this.getListUser(this.task.assignTo);
+ }
+
+// this.task.estimated = 0;
+ this.readOnly = false;
+ this.listTodo = []; 
+ this.task.status = '1';
+ this.task.priority = '1';
+ this.task.memo = '';
+ this.task.dueDate = moment(new Date())
+   .set({ hour: 23, minute: 59, second: 59 })
+   .toDate();
+ this.changeDetectorRef.detectChanges();
+ if (!this.param)
+   this.getParam(function (o) {
+     //if (o) t.showPanel();
+   });
+ else {
+   this.closePanel();
+ }
+}
+
  getTaskCoppied(id) {
    const t = this;
    if(this.functionID =="TMT03"){

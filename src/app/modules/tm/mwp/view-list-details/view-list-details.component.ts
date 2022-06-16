@@ -92,13 +92,17 @@ export class ViewListDetailsComponent implements OnInit {
     this.user = this.authStore.get();
     this.funcID ="WPT036" ;
     //this.funcID = this.activedRouter.snapshot.params['funcID'];
-    
-    var url ='tm/mytasks/TMT02'
-    var funcIDArr = url.split('/')
-    var funcID = funcIDArr[funcIDArr.length-1]
-    this.tmSv.getMoreFunction([funcID, null,null]).subscribe(res=>{
-      if(res){this.moreFuncList = res} ;
-     })
+    this.cacheServices.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+         var url =res.url
+        var funcIDArr = url.split('/')
+        var funcID = funcIDArr[funcIDArr.length-1]
+        this.tmSv.getMoreFunction([funcID, null,null]).subscribe(res=>{
+          if(res){this.moreFuncList = res} ;
+         })
+      }
+    });
+   
   }
 
   ngOnInit(): void {
@@ -403,6 +407,12 @@ export class ViewListDetailsComponent implements OnInit {
       moreFunc: moreFunc,
       taskAction: taskAction,
     };
+    var oldSt = this.dataValue;
+    var oldTask = taskAction;
+    var statusNew = UrlUtil.getUrl(
+      "defaultValue",
+      moreFunc.url,
+    );
     this.callfc
       .openForm(
         UpdateStatusPopupComponent,
@@ -413,7 +423,10 @@ export class ViewListDetailsComponent implements OnInit {
         obj
       )
       .subscribe((dt: any) => {
-        dt.close = this.closePopup;
+        var that = this;
+        dt.close = function (e) {
+          that.closePopup(e, oldSt,oldTask, that,statusNew);
+        };
       });
   }
 
@@ -426,6 +439,7 @@ export class ViewListDetailsComponent implements OnInit {
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
+        if(newStatus!='2')
         t.addListView(task)
        taskAction.status = oldSt;
        t.removeListView(taskAction);
