@@ -31,10 +31,9 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-<<<<<<< HEAD
     // this.views = [{
     //   id: '2',
-    //   type: 'content',
+    //    type: ViewType.content,
     //   active: true,
     //   model: {
     //     panelLeftRef: this.listDetails,
@@ -42,43 +41,6 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
     //     widthAsideRight: '900px'
     //   }
     // }];
-=======
-    this.views = [{
-      id: '2',
-      type: 'content',
-      active: true,
-      model: {
-        panelLeftRef: this.listDetails,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    },
-    {
-      id: '3',
-      type: 'list',
-      icon: 'icon-format_list_bulleted',
-      text: 'List-tasks',
-      active: false,
-
-      model: {
-        panelLeftRef: this.listTasks,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    },
-    {
-      id: '4',
-      type: 'schedule',
-      text: 'schedule',
-      active: false,
-      //   viewInput: null,
-      model: {
-        panelLeftRef: this.schedule,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    },];
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     this.cf.detectChanges();
   }
 

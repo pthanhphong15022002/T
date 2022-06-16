@@ -35,30 +35,30 @@ export class AssignInfoComponent implements OnInit {
   isAddNew = this.dataAddNew.asObservable();
   updateData = new BehaviorSubject<any>(null);
   isUpdate = this.updateData.asObservable();
-  constructor(  private authStore: AuthStore, private tmSv : TmService,private notiService: NotificationsService,private activedRouter: ActivatedRoute, private changeDetectorRef :ChangeDetectorRef) {
+  constructor(private authStore: AuthStore, private tmSv: TmService, private notiService: NotificationsService, private activedRouter: ActivatedRoute, private changeDetectorRef: ChangeDetectorRef) {
     this.user = this.authStore.get();
-    this.functionID =this.activedRouter.snapshot.params["funcID"];
-   }
+    this.functionID = this.activedRouter.snapshot.params["funcID"];
+  }
 
   ngOnInit(): void {
   }
 
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    //this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
     this.actionAssign.next(false);
-    this.viewBase.currentView.closeSidebarRight();
+    //this.viewBase.currentView.closeSidebarRight();
   }
 
-  openInfo(taskAction){
-    this.listUser =[] ;
-    this.listMemo2OfUser=[] ;
-    this.listTodo = [] ;
-    this.task = taskAction ;
-    if(this.task.memo == null) this.task.memo = '' ;
-    this.listTaskResources =[];
+  openInfo(taskAction) {
+    this.listUser = [];
+    this.listMemo2OfUser = [];
+    this.listTodo = [];
+    this.task = taskAction;
+    if (this.task.memo == null) this.task.memo = '';
+    this.listTaskResources = [];
     //this.functionID = "TMT02"
     // if(this.task.assignTo !=null || this.task.assignTo !=""){
     //   this.listUser =  this.task.assignTo.split(";");
@@ -68,14 +68,14 @@ export class AssignInfoComponent implements OnInit {
     //   });
     // }
     this.changeDetectorRef.detectChanges();
-    this.viewBase.currentView.openSidebarRight();
+    // this.viewBase.currentView.openSidebarRight();
   }
-  openTask(){
-   
+  openTask() {
+
   }
 
-  changText(e){
-  this.task.taskName = e.data ;
+  changText(e) {
+    this.task.taskName = e.data;
   }
 
   changeTime(data) {
@@ -89,44 +89,44 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
-  changeUser(e){
-    this.task.assignTo = e[0] ;
-    this.listMemo2OfUser=[] ;
-   this.listUser =  this.task.assignTo.split(";");
+  changeUser(e) {
+    this.task.assignTo = e[0];
+    this.listMemo2OfUser = [];
+    this.listUser = this.task.assignTo.split(";");
     this.listUser.forEach((u) => {
       var obj = { userID: u.userID, memo2: null };
       this.listMemo2OfUser.push(obj);
     });
   }
-  saveAssign(id,isContinue) {
-    if(this.task.assignTo ==null || this.task.assignTo =="") {
+  saveAssign(id, isContinue) {
+    if (this.task.assignTo == null || this.task.assignTo == "") {
       this.notiService.notify("Phải thêm người được giao việc !")
       this.notiService.notifyCode("T0001")
       return;
     }
     this.convertToListTaskResources();
-     this.tmSv.saveAssign([ this.task,
-      this.functionID,
-      this.listTaskResources,
-      this.listTodo,]).subscribe(res=>{
-          if (res.data && res.data.length) {
-            res.data.forEach((dt) => {
-              var data = dt;
-              if(data.taskID==id){
-                this.updateData.next(data);
-              }else
-              this.dataAddNew.next(data);  
-            });
-            this.notiService.notify("Giao việc thành công !")   
-        if(!isContinue){
+    this.tmSv.saveAssign([this.task,
+    this.functionID,
+    this.listTaskResources,
+    this.listTodo,]).subscribe(res => {
+      if (res.data && res.data.length) {
+        res.data.forEach((dt) => {
+          var data = dt;
+          if (data.taskID == id) {
+            this.updateData.next(data);
+          } else
+            this.dataAddNew.next(data);
+        });
+        this.notiService.notify("Giao việc thành công !")
+        if (!isContinue) {
           this.closePanel();
         }
         this.resetForm()
-        }else{
-          this.notiService.notifyCode('TM002'); /// call sau
-          return;
-        }
-      })
+      } else {
+        this.notiService.notifyCode('TM002'); /// call sau
+        return;
+      }
+    })
   }
 
   onDeleteUser(userID) {
@@ -163,19 +163,19 @@ export class AssignInfoComponent implements OnInit {
       var tmpTR = new tmpTaskResource();
       tmpTR.resourceID = obj.userID;
       tmpTR.memo = obj.memo2;
-      tmpTR.roleType="R" ;
+      tmpTR.roleType = "R";
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;
   }
 
-  resetForm(){
+  resetForm() {
     this.listUser = [];
     this.listMemo2OfUser = [];
     this.listUserDetail = [];
-    this.listTaskResources =[] ;
+    this.listTaskResources = [];
     this.listTodo = []
-    this.task = new TM_Tasks() ;
+    this.task = new TM_Tasks();
     this.task.status = '1';
   }
 }

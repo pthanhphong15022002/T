@@ -53,8 +53,8 @@ export class AssignTaskDetailsComponent implements OnInit {
   model = new DataRequest();
   openNode = false;
   innerHTML = '';
-  funcID  : string ;
-  moreFuncList : any[] =[];
+  funcID: string;
+  moreFuncList: any[] = [];
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -69,9 +69,9 @@ export class AssignTaskDetailsComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmSv.getMoreFunction([this.funcID, null,null]).subscribe(res=>{
-      if(res){this.moreFuncList = res} ;
-     })
+    this.tmSv.getMoreFunction([this.funcID, null, null]).subscribe(res => {
+      if (res) { this.moreFuncList = res };
+    })
   }
 
   ngOnInit(): void {
@@ -181,28 +181,15 @@ export class AssignTaskDetailsComponent implements OnInit {
       }
       //  var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
-<<<<<<< HEAD
-        .alert('Cảnh báo', message, { type: 'YesNo' })
+        //.alert('Cảnh báo', message, { type: 'YesNo' })
+        .alertCode('TM003', { type: 'YesNo' })
       // .subscribe((dialog: Dialog) => {
       //   var that = this;
       //   dialog.close = function (e) {
       //     return that.confirmDelete(e, that);
       //   };
       // });
-
-    } else
-      this.notiService.notify('Bạn chưa được cấp quyền này !');
-=======
-        //.alert('Cảnh báo', message, { type: 'YesNo' })
-        .alertCode('TM003', { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.confirmDelete(e, that);
-          };
-        });
     } else this.notiService.notify('Bạn chưa được cấp quyền này !');
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   }
 
   viewItem(taskAction) {
@@ -215,55 +202,6 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   confirmDelete(e: any, t: AssignTaskDetailsComponent) {
     if (e?.event?.status == 'Y') {
-<<<<<<< HEAD
-      var isCanDelete = true;
-      t.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListTaskChildDetailAsync',
-          t.taskAction.taskID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            res.forEach((element) => {
-              if (element.status != '1') {
-                isCanDelete = false;
-                return;
-              }
-            });
-            if (!isCanDelete) {
-              // this.notiService.notifyCode("TM001")
-              t.notiService.notify(
-                'Đã có phát sinh công việc liên quan, không thể xóa công việc này. Vui lòng kiểm tra lại!'
-              );
-            } else {
-              t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
-                if (res[0]) {
-                  var lstTaskDelete = res[0];
-                  for (var i = 0; i < lstTaskDelete.length; i++) {
-                    var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
-                    //t.listview.removeHandler(taskDelete, 'recID');
-                  }
-                  if (res[1] != null) {
-                    var parent = t.data.find(x => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    // t.listview.addHandler(parent, false, 'recID');
-                  }
-                  // t.notiService.notifyCode("TM004")
-                  t.notiService.notify('Xóa task thành công !');
-                  // t.data = t.listview.data;
-                  t.itemSelected = t.data[0];
-                  t.getOneItem(t.itemSelected.taskID)
-                  return;
-                }
-                t.notiService.notify(
-                  'Xóa task không thành công. Vui lòng kiểm tra lại !'
-                );
-              });
-=======
       t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
         if (res[0]) {
           var lstTaskDelete = res[0];
@@ -271,20 +209,19 @@ export class AssignTaskDetailsComponent implements OnInit {
             var taskDelete = t.data.find(
               (x) => x.taskID == lstTaskDelete[i].taskID
             );
-            t.listview.removeHandler(taskDelete, 'recID');
+            // t.listview.removeHandler(taskDelete, 'recID');
           }
           if (res[1] != null) {
             var parent = t.data.find((x) => x.taskID == res[1].taskID);
             if (parent) {
               parent.assignTo = res[1].assignTo;
               parent.category = res[1].category;
-              t.listview.addHandler(parent, false, 'recID');
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
+              //     t.listview.addHandler(parent, false, 'recID');
             }
           }
           t.notiService.notifyCode('TM004');
           //   t.notiService.notify('Xóa task thành công !');
-          t.data = t.listview.data;
+          //   t.data = t.listview.data;
           t.itemSelected = t.data[0];
           t.getOneItem(t.itemSelected.taskID);
           return;
@@ -386,7 +323,7 @@ export class AssignTaskDetailsComponent implements OnInit {
   loadDetailTask(task) {
     this.objectAssign = '';
     this.objectRoleType = '';
-    if (task.category =='3') {
+    if (task.category == '3') {
       this.api
         .execSv<any>(
           'TM',
@@ -409,11 +346,7 @@ export class AssignTaskDetailsComponent implements OnInit {
           }
         });
     } else {
-<<<<<<< HEAD
       this.countOwner = 1
-=======
-      this.countOwner = 1;
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     }
     this.listNode = [];
     if (task?.category != '1') {
@@ -434,7 +367,7 @@ export class AssignTaskDetailsComponent implements OnInit {
 
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.data = this.listview?.data;
+    //this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
       this.loadDetailTask(this.itemSelected);

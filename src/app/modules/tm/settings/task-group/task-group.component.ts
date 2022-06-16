@@ -51,7 +51,7 @@ export class TaskGroupComponent implements OnInit {
   isAddMode = true;
   enableAddtodolist: boolean = false;
   itemSelected: any;
-  
+
   todoAddText: any;
   isAddNew = this.dataAddNew.asObservable();
   totalRow = 1;
@@ -132,11 +132,7 @@ export class TaskGroupComponent implements OnInit {
     this.tmSv.loadTaskGroupByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-<<<<<<< HEAD
-        // this.listView.data = this.data;
-=======
         this.gridView.data = this.data;
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
       }
     })
   }
@@ -193,7 +189,7 @@ export class TaskGroupComponent implements OnInit {
   //   this.dt.detectChanges();
   // }
 
-   getFormGroup(formName, gridView): Promise<FormGroup> {
+  getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
         var model = {};
@@ -369,7 +365,7 @@ export class TaskGroupComponent implements OnInit {
     this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
   }
 
-   getAutonumber(functionID, entityName, fieldName): Observable<any> {
+  getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
       "GenAutoNumberAsync", [functionID, entityName, fieldName, null])

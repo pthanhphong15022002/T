@@ -27,7 +27,7 @@ import * as moment from 'moment';
 export class SprintsTaskDetailsComponent implements OnInit {
 
   @Input() data = [];
-  sprints : TM_Sprints ;
+  sprints: TM_Sprints;
   view: string;
   user: any;
   objectAssign: any;
@@ -47,11 +47,11 @@ export class SprintsTaskDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  iterationID: string='';
+  iterationID: string = '';
   @Input('viewBase') viewBase: ViewsComponent;
   @Input() funcID: string;
   @ViewChild('listview') listview: CodxListviewComponent;
-  constructor( private tmSv: TmService,
+  constructor(private tmSv: TmService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -59,9 +59,9 @@ export class SprintsTaskDetailsComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
-    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    this.funcID =this.activedRouter.snapshot.params["funcID"];
-    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
+    this.activedRouter.firstChild?.params.subscribe(data => this.iterationID = data.id);
+    this.funcID = this.activedRouter.snapshot.params["funcID"];
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.model.dataObj = JSON.stringify(dataObj);
   }
 
@@ -84,11 +84,11 @@ export class SprintsTaskDetailsComponent implements OnInit {
         { operator: 'lte', field: fied, value: this.toDate },
       ],
     };
-    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     model.dataObj = JSON.stringify(dataObj);
     this.model = model;
   }
-  
+
   clickItem(item) {
     this.openNode = false;
     this.getOneItem(item.id);
@@ -100,7 +100,7 @@ export class SprintsTaskDetailsComponent implements OnInit {
     } else {
       this.itemSelected = this.data[0];
     }
-   this.loadDetailTask(this.itemSelected) ;
+    this.loadDetailTask(this.itemSelected);
   }
   loadDetailTask(task) {
     this.objectAssign = "";
@@ -130,7 +130,7 @@ export class SprintsTaskDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
-     this.listNode = []
+    this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(
@@ -150,14 +150,14 @@ export class SprintsTaskDetailsComponent implements OnInit {
   changeRowSelected(event) {
     this.itemSelected = event;
     this.loadDetailTask(this.itemSelected);
-    this.data = this.listview?.data;
+    // this.data = this.listview?.data;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
     } else this.isFinishLoad = false;
   }
   openShowNode() {
     //đang fail
-   // this.openNode = !this.openNode;
+    // this.openNode = !this.openNode;
   }
 
 }

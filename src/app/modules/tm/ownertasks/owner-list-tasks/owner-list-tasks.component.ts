@@ -178,7 +178,7 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
     return (el.offsetWidth < el.scrollWidth);
   }
 
-  
+
 
   setupStatus(p, item) {
     p.open();
@@ -277,17 +277,9 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
                   }
                   if (res[1] != null) {
                     var parent = t.data.find(x => x.taskID == res[1].taskID);
-<<<<<<< HEAD
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
                     //    t.listview.addHandler(parent, false, 'recID');
-=======
-                     if(parent){
-                      parent.assignTo = res[1].assignTo;
-                      parent.category = res[1].category;
-                      t.listview.addHandler(parent, false, 'recID');
-                    }
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');
@@ -381,6 +373,6 @@ export class OwnerListTasksComponent implements OnInit, AfterViewInit {
   }
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.data = this.listview?.data; 
+    //this.data = this.listview?.data;
   }
 }

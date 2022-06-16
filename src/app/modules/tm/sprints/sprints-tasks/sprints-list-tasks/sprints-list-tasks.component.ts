@@ -54,7 +54,7 @@ export class SprintsListTasksComponent implements OnInit {
   listEmpInfo = [];
   lstTaskbyParent = [];
   taskAction: any;
-  iterationID : string = "";
+  iterationID: string = "";
   constructor(private tmSv: TmService,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
@@ -63,9 +63,9 @@ export class SprintsListTasksComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.user = this.authStore.get();
-    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    this.funcID =this.activedRouter.snapshot.params["funcID"];
-    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
+    this.activedRouter.firstChild?.params.subscribe(data => this.iterationID = data.id);
+    this.funcID = this.activedRouter.snapshot.params["funcID"];
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.model.dataObj = JSON.stringify(dataObj);
   }
 
@@ -79,7 +79,7 @@ export class SprintsListTasksComponent implements OnInit {
   trackByFn(index: number, item): string {
     return item.taskID;
   }
-  
+
   dropDetail(memo, memo2) {
     memo = memo ? memo : '';
     memo2 = memo2 ? memo2 : '';
@@ -102,7 +102,7 @@ export class SprintsListTasksComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-  
+
     this.fromDate = moment('4/15/2022').toDate();
     this.toDate = moment('12/30/2022').toDate();
     model.page = 1;
@@ -114,7 +114,7 @@ export class SprintsListTasksComponent implements OnInit {
         { operator: 'lte', field: field, value: this.toDate },
       ],
     };
-    this.model = model ;
+    this.model = model;
     const t = this;
     // t.tmSv.loadTaskByAuthen(model).subscribe((res) => {
     //   if (res && res.length) {
@@ -154,9 +154,9 @@ export class SprintsListTasksComponent implements OnInit {
   isTooltip(el) {
     return (el.offsetWidth < el.scrollWidth);
   }
-  
+
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.data = this.listview?.data; 
+    // this.data = this.listview?.data;
   }
 }

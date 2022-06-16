@@ -15,8 +15,8 @@ import {
   IAccAnimationCompleteEventArgs,
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-charts';
-import { CodxService, ApiHttpService, DataRequest } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { CodxService, ApiHttpService, DataRequest, ViewModel, ViewType } from 'codx-core';
+
 
 @Component({
   selector: 'app-home-statistical',
@@ -176,12 +176,12 @@ export class HomeStatisticalComponent implements OnInit, AfterViewInit {
     private dt: ChangeDetectorRef,
     public codxService: CodxService,
     private api: ApiHttpService
-  ) {}
+  ) { }
   ngAfterViewInit(): void {
     this.views = [
       {
         id: '1',
-        type: 'content',
+        type: ViewType.content,
         sameData: false,
         active: true,
         model: {

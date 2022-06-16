@@ -1,24 +1,18 @@
-import { ThisReceiver } from '@angular/compiler';
 import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Injector,
   Input,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
 import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
-
 import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
+
 import { TmService } from '@modules/tm/tm.service';
-import { HomeComponent } from '@pages/home/home.component';
 import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
-import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthStore,
@@ -29,7 +23,6 @@ import {
   UrlUtil,
   ViewsComponent,
 } from 'codx-core';
-import { mode } from 'crypto-js';
 import * as moment from 'moment';
 
 @Component({
@@ -69,9 +62,9 @@ export class ViewListDetailsComponent implements OnInit {
   openNode = false;
   predicate = 'Status=@0 and Owner =@1';
   dataValue = '1';
-  moreFuncList : any[] =[] ;
-  funcID :string ;
-  func : any
+  moreFuncList: any[] = [];
+  funcID: string;
+  func: any
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
@@ -79,7 +72,7 @@ export class ViewListDetailsComponent implements OnInit {
   @ViewChild('listviewPostpone') listviewPostpone: CodxListviewComponent;
   @ViewChild('listviewRefuse') listviewRefuse: CodxListviewComponent;
   @Output() actionIsAssign = new EventEmitter<boolean>();
-  
+
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
@@ -87,22 +80,22 @@ export class ViewListDetailsComponent implements OnInit {
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private cacheServices : CacheService
+    private cacheServices: CacheService
   ) {
     this.user = this.authStore.get();
-    this.funcID ="WPT036" ;
+    this.funcID = "WPT036";
     //this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheServices.functionList(this.funcID).subscribe((res) => {
       if (res) {
-         var url =res.url
+        var url = res.url
         var funcIDArr = url.split('/')
-        var funcID = funcIDArr[funcIDArr.length-1]
-        this.tmSv.getMoreFunction([funcID, null,null]).subscribe(res=>{
-          if(res){this.moreFuncList = res} ;
-         })
+        var funcID = funcIDArr[funcIDArr.length - 1]
+        this.tmSv.getMoreFunction([funcID, null, null]).subscribe(res => {
+          if (res) { this.moreFuncList = res };
+        })
       }
     });
-   
+
   }
 
   ngOnInit(): void {
@@ -259,7 +252,7 @@ export class ViewListDetailsComponent implements OnInit {
   }
   assignItem(taskAction) {
     const t = this
-    let p =  new Promise((resolve, reject) => {
+    let p = new Promise((resolve, reject) => {
       this.actionIsAssign.emit(true);
       resolve(true);
     });
@@ -377,22 +370,18 @@ export class ViewListDetailsComponent implements OnInit {
               )
               .subscribe((res) => {
                 if (res) {
-                  var taskOld = taskAction ;
+                  var taskOld = taskAction;
                   taskAction.status = status;
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-<<<<<<< HEAD
-                  //  this.listview.addHandler(taskAction, false, 'recID');
-=======
-                  if(taskAction.status!=status){
+                  if (taskAction.status != status) {
                     this.removeListView(taskOld);
                     this.addListView(taskAction)
-                  }else{
-                    this.updateListView(taskAction) ;
+                  } else {
+                    this.updateListView(taskAction);
                   }
-                 // this.listview.addHandler(taskAction, false, 'recID');
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
+                  // this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -413,26 +402,6 @@ export class ViewListDetailsComponent implements OnInit {
     };
     var oldSt = this.dataValue;
     var oldTask = taskAction;
-<<<<<<< HEAD
-    // this.callfc
-    //   .openForm(
-    //     UpdateStatusPopupComponent,
-    //     'Cập nhật tình trạng',
-    //     500,
-    //     350,
-    //     '',
-    //     obj
-    //   )
-    //   .subscribe((dt: any) => {
-    //     var that = this;
-    //     dt.close = function (e) {
-    //       that.closePopup(e, oldSt, oldTask, that);
-    //     };
-    //   });
-  }
-
-  closePopup(e: any, oldSt: string, taskAction: any, t: ViewListDetailsComponent) {
-=======
     var statusNew = UrlUtil.getUrl(
       "defaultValue",
       moreFunc.url,
@@ -446,12 +415,12 @@ export class ViewListDetailsComponent implements OnInit {
         '',
         obj
       )
-      .subscribe((dt: any) => {
-        var that = this;
-        dt.close = function (e) {
-          that.closePopup(e, oldSt,oldTask, that,statusNew);
-        };
-      });
+    // .subscribe((dt: any) => {
+    //   var that = this;
+    //   dt.close = function (e) {
+    //     that.closePopup(e, oldSt,oldTask, that,statusNew);
+    //   };
+    // });
   }
 
   closePopup(
@@ -460,15 +429,14 @@ export class ViewListDetailsComponent implements OnInit {
     taskAction: any,
     t: ViewListDetailsComponent, newStatus
   ) {
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
-        if(newStatus!='2')
-        t.addListView(task)
-       taskAction.status = oldSt;
-       t.removeListView(taskAction);
-       task.status = newStatus ;
+        if (newStatus != '2')
+          t.addListView(task)
+        taskAction.status = oldSt;
+        t.removeListView(taskAction);
+        task.status = newStatus;
       } else {
         t.updateListView(task);
       }
@@ -481,24 +449,23 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   addListView(obj) {
-<<<<<<< HEAD
     // switch (obj.status) {
     //   case '1':
     //     if (this.listviewAdd != undefined)
-    //       //    this.listviewAdd.addHandler(obj, true, 'recID');
-    //       break;
+    //       this.listviewAdd.addHandler(obj, true, 'recID');
+    //     break;
     //   case '9':
     //     if (this.listviewCompleted != undefined)
-    //       //     this.listviewCompleted.addHandler(obj, true, 'recID');
-    //       break;
+    //       this.listviewCompleted.addHandler(obj, true, 'recID');
+    //     break;
     //   case '5':
     //     if (this.listviewPostpone != undefined)
-    //       //      this.listviewPostpone.addHandler(obj, true, 'recID');
-    //       break;
+    //       this.listviewPostpone.addHandler(obj, true, 'recID');
+    //     break;
     //   case '8':
     //     if (this.listviewRefuse != undefined)
-    //       //    this.listviewRefuse.addHandler(obj, true, 'recID');
-    //       break;
+    //       this.listviewRefuse.addHandler(obj, true, 'recID');
+    //     break;
     //   default:
     //     break;
     // }
@@ -507,20 +474,20 @@ export class ViewListDetailsComponent implements OnInit {
     // switch (obj.status) {
     //   case '1':
     //     if (this.listviewAdd != undefined)
-    //       //   this.listviewAdd.addHandler(obj, false, 'recID');
-    //       break;
+    //       this.listviewAdd.addHandler(obj, false, 'recID');
+    //     break;
     //   case '9':
     //     if (this.listviewCompleted != undefined)
-    //       //         this.listviewCompleted.addHandler(obj, false, 'recID');
-    //       break;
+    //       this.listviewCompleted.addHandler(obj, false, 'recID');
+    //     break;
     //   case '5':
     //     if (this.listviewPostpone != undefined)
-    //       //        this.listviewPostpone.addHandler(obj, false, 'recID');
-    //       break;
+    //       this.listviewPostpone.addHandler(obj, false, 'recID');
+    //     break;
     //   case '8':
     //     if (this.listviewRefuse != undefined)
-    //       //         this.listviewRefuse.addHandler(obj, false, 'recID');
-    //       break;
+    //       this.listviewRefuse.addHandler(obj, false, 'recID');
+    //     break;
     //   default:
     //     break;
     // }
@@ -530,88 +497,22 @@ export class ViewListDetailsComponent implements OnInit {
     //   case '1':
     //     if (this.listviewAdd != undefined)
     //       this.listviewAdd.removeHandler(obj, 'recID');
-    //       break;
+    //     break;
     //   case '9':
     //     if (this.listviewCompleted != undefined)
-    //         this.listviewCompleted.removeHandler(obj, 'recID');
-    //       break;
+    //       this.listviewCompleted.removeHandler(obj, 'recID');
+    //     break;
     //   case '5':
     //     if (this.listviewPostpone != undefined)
-    //         this.listviewPostpone.removeHandler(obj, 'recID');
-    //       break;
+    //       this.listviewPostpone.removeHandler(obj, 'recID');
+    //     break;
     //   case '8':
     //     if (this.listviewRefuse != undefined)
-    //            this.listviewRefuse.removeHandler(obj, 'recID');
-    //       break;
+    //       this.listviewRefuse.removeHandler(obj, 'recID');
+    //     break;
     //   default:
     //     break;
     // }
-=======
-    switch (obj.status) {
-      case '1':
-        if (this.listviewAdd != undefined)
-          this.listviewAdd.addHandler(obj, true, 'recID');
-        break;
-      case '9':
-        if (this.listviewCompleted != undefined)
-          this.listviewCompleted.addHandler(obj, true, 'recID');
-        break;
-      case '5':
-        if (this.listviewPostpone != undefined)
-          this.listviewPostpone.addHandler(obj, true, 'recID');
-        break;
-      case '8':
-        if (this.listviewRefuse != undefined)
-          this.listviewRefuse.addHandler(obj, true, 'recID');
-        break;
-      default:
-        break;
-    }
-  }
-  updateListView(obj) {
-    switch (obj.status) {
-      case '1':
-        if (this.listviewAdd != undefined)
-          this.listviewAdd.addHandler(obj, false, 'recID');
-        break;
-      case '9':
-        if (this.listviewCompleted != undefined)
-          this.listviewCompleted.addHandler(obj, false, 'recID');
-        break;
-      case '5':
-        if (this.listviewPostpone != undefined)
-          this.listviewPostpone.addHandler(obj, false, 'recID');
-        break;
-      case '8':
-        if (this.listviewRefuse != undefined)
-          this.listviewRefuse.addHandler(obj, false, 'recID');
-        break;
-      default:
-        break;
-    }
-  }
-  removeListView(obj) {
-    switch (obj.status) {
-      case '1':
-        if (this.listviewAdd != undefined)
-          this.listviewAdd.removeHandler(obj, 'recID');
-        break;
-      case '9':
-        if (this.listviewCompleted != undefined)
-          this.listviewCompleted.removeHandler(obj, 'recID');
-        break;
-      case '5':
-        if (this.listviewPostpone != undefined)
-          this.listviewPostpone.removeHandler(obj, 'recID');
-        break;
-      case '8':
-        if (this.listviewRefuse != undefined)
-          this.listviewRefuse.removeHandler(obj, 'recID');
-        break;
-      default:
-        break;
-    }
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   }
   tabStatus(st: string) {
     switch (st) {
@@ -695,11 +596,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
-<<<<<<< HEAD
     this.listNode = []
-=======
-    this.listNode = [];
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     if (task?.category != '1') {
       this.api
         .execSv<any>(

@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // this.views = [{
     //   id: '1',
-    //   type: 'content',
+    //    type: ViewType.content,
     //   active: true,
     //   model: {
     //     panelLeftRef: this.chart,
@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // },
     // {
     //   id: '2',
-    //   type: 'kanban',
+    //  type: ViewType.kanban,
     //   active: false,
     //   model: {
     //     panelLeftRef: this.kanban,
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // },
     // {
     //   id: '3',
-    //   type: 'kanban',
+    //  type: ViewType.kanban,
     //   icon: 'icon-chrome_reader_mode1',
     //   text: 'List-details',
     //   active: false,
@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // },
     // {
     //   id: '4',
-    //   type: 'list',
+    //   type: ViewType.list,
     //   icon: 'icon-format_list_bulleted',
     //   text: 'List-tasks',
     //   active: false,
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // },
     //   // {
     //   //   id: '5',
-    //   //   type: 'schedule',
+    //   //  type: ViewType.schedule,
     //   //   text: 'schedule',
     //   //   active: false,
     //   //   model: {
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //   // },
     //   // {
     //   //   id: '6',
-    //   //   type: 'list',
+    //   //   type: ViewType.list,
     //   //   text: 'treeViews',
     //   //   sameData: false,
     //   //   active: false,
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //   // },
     //   // {
     //   //   id: '7',
-    //   //   type: 'calendar',
+    //   //  type: ViewType.calendar,
     //   //   text: 'calendar',
     //   //   sameData: false,
     //   //   active: false,

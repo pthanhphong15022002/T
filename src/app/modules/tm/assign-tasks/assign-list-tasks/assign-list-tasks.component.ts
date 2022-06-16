@@ -70,7 +70,7 @@ export class AssignListTasksComponent implements OnInit {
     const t = this;
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
-        this.listview.addHandler(res, true, 'recID');
+        //    this.listview.addHandler(res, true, 'recID');
         this.data.push(res);
       }
     });
@@ -78,12 +78,12 @@ export class AssignListTasksComponent implements OnInit {
       if (res) {
         var index = this.data.findIndex(x => x.taskID == res.taskID);
         if (index != -1) {
-          this.listview.addHandler(res, false, 'recID');
+          //    this.listview.addHandler(res, false, 'recID');
         } else {
-          this.listview.addHandler(res, true, 'recID');
+          //       this.listview.addHandler(res, true, 'recID');
         }
 
-        this.data = this.listview.data;
+        //   this.data = this.listview.data;
         if (t.itemSelected.taskID == res.taskID) {
           t.dt.detectChanges();
         }
@@ -178,7 +178,7 @@ export class AssignListTasksComponent implements OnInit {
     return (el.offsetWidth < el.scrollWidth);
   }
 
-  
+
 
   setupStatus(p, item) {
     p.open();
@@ -231,12 +231,12 @@ export class AssignListTasksComponent implements OnInit {
       var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
         .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.confirmDelete(e, that);
-          };
-        });
+      // .subscribe((dialog: Dialog) => {
+      //   var that = this;
+      //   dialog.close = function (e) {
+      //     return that.confirmDelete(e, that);
+      //   };
+      // });
 
     } else
       this.notiService.notify('Bạn chưa được cấp quyền này !');
@@ -273,19 +273,19 @@ export class AssignListTasksComponent implements OnInit {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
                     var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
-                    t.listview.removeHandler(taskDelete, 'recID');
+                    //    t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if (res[1] != null) {
                     var parent = t.data.find(x => x.taskID == res[1].taskID);
-                     if(parent){
+                    if (parent) {
                       parent.assignTo = res[1].assignTo;
                       parent.category = res[1].category;
-                      t.listview.addHandler(parent, false, 'recID');
+                      //   t.listview.addHandler(parent, false, 'recID');
                     }
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');
-                  t.data = t.listview.data;
+                  //t.data = t.listview.data;
                   t.itemSelected = t.data[0];
                   return;
                 }
@@ -335,7 +335,7 @@ export class AssignListTasksComponent implements OnInit {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.listview.addHandler(taskAction, false, 'recID');
+                  //   this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -362,19 +362,19 @@ export class AssignListTasksComponent implements OnInit {
         '',
         obj
       )
-      .subscribe((dt: any) => {
-        dt.close = this.closePopup;
-      });
+    // .subscribe((dt: any) => {
+    //   dt.close = this.closePopup;
+    // });
   }
 
   closePopup(e: any) {
     if (e.closedBy == 'user action') {
       var task = e.event;
-      this.listview.addHandler(task, false, 'recID');
+      //   this.listview.addHandler(task, false, 'recID');
     }
   }
   changeRowSelected(event) {
     this.itemSelected = event;
-    this.data = this.listview?.data; 
+    //this.data = this.listview?.data;
   }
 }

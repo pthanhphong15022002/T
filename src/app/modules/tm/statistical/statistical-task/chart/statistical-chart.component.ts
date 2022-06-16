@@ -4,8 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm/models/dashboard.model';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
 import { AccPoints, AccumulationChart, AccumulationChartComponent, AnimationModel, IAccAnimationCompleteEventArgs, ILoadedEventArgs } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ApiHttpService, AuthStore, DataRequest, UserModel, ViewModel } from 'codx-core';
+
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -119,7 +119,7 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   startAngle: number = 0;
   endAngle: number = 360;
   doughnutData = [{ label: '', value: 100 }];
-  palettes: string[] = ['#005DC7', '#06DDB8', '#07523E','#099CC8'];
+  palettes: string[] = ['#005DC7', '#06DDB8', '#07523E', '#099CC8'];
 
   //Initializing Datalabel
   dataLabel: Object = {
@@ -211,11 +211,11 @@ export class StatisticalChartComponent implements OnInit, AfterViewInit {
   }
 
   private getInitData() {
-    this.api.exec("TM","ReportBusiness","GetGeneralDataAsync", [this.model])
+    this.api.exec("TM", "ReportBusiness", "GetGeneralDataAsync", [this.model])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((task: TaskRemind) => {
         this.taskRemind = task;
-  //      this.lstUser = task.listUser['result'];
+        //      this.lstUser = task.listUser['result'];
 
         this.setDataRateDoneOnTime(task.rateDoneOnTime);
         this.setDataProgressBar(task.rateDoneAllTime);

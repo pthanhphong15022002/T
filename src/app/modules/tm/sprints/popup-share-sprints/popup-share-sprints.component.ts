@@ -17,21 +17,21 @@ export class PopupShareSprintsComponent implements OnInit {
   listIdUserOld = [];
   listIdUser = [];
   userID = '';
-  listUserDetail = [] ;
-  taskBoard :any
-  constructor(private api : ApiHttpService, private callfc: CallFuncService,private changeDetectorRef: ChangeDetectorRef,@Optional() dt?: DialogData, @Optional() dialog?: Dialog) {
+  listUserDetail = [];
+  taskBoard: any
+  constructor(private api: ApiHttpService, private callfc: CallFuncService, private changeDetectorRef: ChangeDetectorRef, @Optional() dt?: DialogData, @Optional() dialog?: Dialog) {
     this.data = dt?.data;
     this.dialog = dialog;
     this.taskBoard = this.data.boardAction;
     this.listUserDetailOld = this.data.listUserDetail;
-    this.listUserDetail = this.listUserDetailOld 
+    this.listUserDetail = this.listUserDetailOld
     for (var i = 0; i < this.listUserDetail.length; i++) {
       this.listIdUser.push(this.listUserDetail[i].userID);
     }
-    this.listIdUserOld = this.listIdUser ;
+    this.listIdUserOld = this.listIdUser;
   }
   ngOnInit(): void {
-  
+
   }
 
 
@@ -48,43 +48,44 @@ export class PopupShareSprintsComponent implements OnInit {
     this.listIdUser = listIdUser;
     this.changeDetectorRef.detectChanges();
   }
-  saveData(){
-    var strIdUser ="";
-    if(this.listIdUser.length > 0){
+  saveData() {
+    var strIdUser = "";
+    if (this.listIdUser.length > 0) {
       strIdUser = this.listIdUser[0];
-      for(var i=1; i<this.listIdUser.length ;i++){
-        strIdUser+=";"+this.listIdUser[i];
+      for (var i = 1; i < this.listIdUser.length; i++) {
+        strIdUser += ";" + this.listIdUser[i];
       }
     }
-    var strIdUser ='ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI'; //danh sach add de share demo sau phai xoa
-    this.api.execSv("TM","TM","SprintsBusiness","AddShareOfSprintsAsync",[this.taskBoard.iterationID,strIdUser]).subscribe(res=>{
-      if(res){
+    var strIdUser = 'ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI'; //danh sach add de share demo sau phai xoa
+    this.api.execSv("TM", "TM", "SprintsBusiness", "AddShareOfSprintsAsync", [this.taskBoard.iterationID, strIdUser]).subscribe(res => {
+      if (res) {
         this.dialog.hide(res);
-      }else{
+      } else {
         this.dialog.hide(false);
       }
     })
-    
+
   }
 
   openDialog() {
-   
-    this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', this.listIdUser).subscribe((dt: any) => {
-        var that = this;
-        dt.close = function (e) {
-          return that.addUser(e, that);
-        };
-    });;
+
+    this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', this.listIdUser);
+    // .subscribe((dt: any) => {
+    //     var that = this;
+    //     dt.close = function (e) {
+    //       return that.addUser(e, that);
+    //     };
+    // });;
   }
   showControl(p, userID) {
     this.userID = userID;
     p.open();
   }
 
-  addUser(e,t:PopupShareSprintsComponent ){
-   var resultListUser = 'ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI' ; //danh sach add de shre
-   t.getListUser(resultListUser);
-   t.changeDetectorRef.detectChanges() ;
+  addUser(e, t: PopupShareSprintsComponent) {
+    var resultListUser = 'ADMIN;PMNHI;VVQUANG;NVHAO;NTLOI'; //danh sach add de shre
+    t.getListUser(resultListUser);
+    t.changeDetectorRef.detectChanges();
   }
 
   getListUser(listUser) {

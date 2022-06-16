@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthStore, CacheService, CodxGridviewComponent, DataRequest, ViewsComponent, ApiHttpService } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { AuthStore, CacheService, CodxGridviewComponent, DataRequest, ViewsComponent, ApiHttpService, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'app-statistical-viewlist',
@@ -24,11 +23,11 @@ export class StatisticalViewlistComponent implements OnInit {
   @ViewChild('addLines') addLines: TemplateRef<any>;
   @ViewChild("add", { static: true }) add: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @Input() data=[];
+  @Input() data = [];
   constructor(private cache: CacheService, private auth: AuthStore, private dt: ChangeDetectorRef, private fb: FormBuilder,
     private api: ApiHttpService) { }
 
-  model= new DataRequest();
+  model = new DataRequest();
   columnsGrid = [];
   headerStyle = {
     textAlign: 'center',
@@ -50,7 +49,7 @@ export class StatisticalViewlistComponent implements OnInit {
   isAfterRender = false;
 
   views: Array<ViewModel> = [];
-  
+
   ngOnInit(): void {
     this.columnsGrid = [
       { field: 'priority', headerText: '', template: this.GiftIDCell },
@@ -62,7 +61,7 @@ export class StatisticalViewlistComponent implements OnInit {
       { field: 'completedOn', headerText: 'Ngày hoàn tất', template: this.itemCompletedOn },
       { field: 'taskGroupName', headerText: 'Nhóm công việc' },
       { field: 'projectName', headerText: 'Dự án' },
-      { field: 'active', headerText: 'Hoạt động', template: this.itemActive},
+      { field: 'active', headerText: 'Hoạt động', template: this.itemActive },
       { field: 'buid', headerText: 'Bộ phận người thực hiện' }
     ];
     this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe(res => {
@@ -74,12 +73,12 @@ export class StatisticalViewlistComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {
         panelLeftRef: this.main,
-        widthAsideRight: '900px'
+        //    widthAsideRight: '900px'
       }
     },
     ];
@@ -97,7 +96,7 @@ export class StatisticalViewlistComponent implements OnInit {
       p.close();
   }
 
-  initForm(){
+  initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
     })

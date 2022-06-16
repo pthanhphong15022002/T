@@ -33,15 +33,15 @@ export class SprintsInfoComponent implements OnInit {
     private callfc: CallFuncService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     //data user để test
     this.taskBoard.resources = 'PMNHI;NVHAO;NTLOI'; //test
     this.getListUser(this.taskBoard.resources);
   }
-  openSprints(){
-    this.readOnly = false ;
+  openSprints() {
+    this.readOnly = false;
     this.listUserDetail = [];
     this.taskBoard = new TM_Sprints();
     //data user để test
@@ -56,7 +56,7 @@ export class SprintsInfoComponent implements OnInit {
     )
       return this.notiService.notify('Tên Task Board không được để trống !');
     if (this.taskBoard.projectID == '') this.taskBoard.projectID = null;
-    if(!this.taskBoard.isShared) this.taskBoard.resources = null;
+    if (!this.taskBoard.isShared) this.taskBoard.resources = null;
     if (id) {
       this.addTaskBoard(this.taskBoard, false);
     } else this.addTaskBoard(this.taskBoard, true);
@@ -65,10 +65,10 @@ export class SprintsInfoComponent implements OnInit {
   addTaskBoard(taskBoard, isAdd: boolean) {
     this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
       if (res) {
-        if(taskBoard.iterationID){
+        if (taskBoard.iterationID) {
           this.updateData.next(res);
-        }else
-        this.dataAddNew.next(res);
+        } else
+          this.dataAddNew.next(res);
         this.closeTaskBoard();
       }
     });
@@ -80,11 +80,11 @@ export class SprintsInfoComponent implements OnInit {
     //data user để test
     this.taskBoard.resources = 'PMNHI;NVHAO;NTLOI'; //test
     this.getListUser(this.taskBoard.resources);
-    this.viewBase.currentView.closeSidebarRight();
+    //this.viewBase.currentView.closeSidebarRight();
   }
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    //this.viewBase.currentView.openSidebarRight();
   }
 
   openDialog() {
@@ -96,7 +96,7 @@ export class SprintsInfoComponent implements OnInit {
     // };
     this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
   }
-  valueChange(e: any) {}
+  valueChange(e: any) { }
   changeVLL(e: any) {
     this.taskBoard[e.field] = e.data;
   }
@@ -157,29 +157,29 @@ export class SprintsInfoComponent implements OnInit {
     t.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
         t.taskBoard = res;
-        if (t.taskBoard.resources) t.getListUser(t.taskBoard.resources);else this.listUserDetail =[] ;
+        if (t.taskBoard.resources) t.getListUser(t.taskBoard.resources); else this.listUserDetail = [];
         t.changeDetectorRef.detectChanges();
         t.showPanel();
       }
     });
   }
 
-  getSprintsCoppied(interationID){
+  getSprintsCoppied(interationID) {
     const t = this;
     t.title = "Copy task boads"
-    t.readOnly= false;
-    t.listUserDetail =[] 
+    t.readOnly = false;
+    t.listUserDetail = []
     t.taskBoard = new TM_Sprints();
     t.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
-        t.taskBoard.projectID = res.projectID ;
-        t.taskBoard.iterationName = res.iterationName ;
-        t.taskBoard.memo = res.memo ;
+        t.taskBoard.projectID = res.projectID;
+        t.taskBoard.iterationName = res.iterationName;
+        t.taskBoard.memo = res.memo;
         t.changeDetectorRef.detectChanges();
         t.showPanel();
       }
     });
   }
 
-  
+
 }

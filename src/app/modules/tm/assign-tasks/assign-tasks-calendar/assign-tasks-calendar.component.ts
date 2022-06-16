@@ -102,7 +102,7 @@ export class AssignTasksCalendarComponent implements OnInit {
   features: {
     headerZoom: false
   };
-  funcID:string ;
+  funcID: string;
 
   constructor(
     private tmSv: TmService,
@@ -111,7 +111,7 @@ export class AssignTasksCalendarComponent implements OnInit {
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
-    private activedRouter : ActivatedRoute
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.auStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -148,7 +148,7 @@ export class AssignTasksCalendarComponent implements OnInit {
         ],
       };
     }
-    
+
   }
 
   getParams() {
@@ -175,12 +175,12 @@ export class AssignTasksCalendarComponent implements OnInit {
 
   addNew(evt: any) {
     console.log(evt);
-    var task = new TM_Tasks() ;
-    task.startDate = evt.startTime ;
-     task.endDate = evt.endTime ;
+    var task = new TM_Tasks();
+    task.startDate = evt.startTime;
+    task.endDate = evt.endTime;
     this.taskInfo.openAssignSchedule(task);
     this.taskInfo.title = 'Tạo mới công việc';
-    this.viewBase.currentView.openSidebarRight();
+    // this.viewBase.currentView.openSidebarRight();
   }
 
   edit(taskAction) {
@@ -199,12 +199,12 @@ export class AssignTasksCalendarComponent implements OnInit {
       var message = 'Bạn có chắc chắn muốn xóa task này !';
       this.notiService
         .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.close(e, that);
-          };
-        });
+      // .subscribe((dialog: Dialog) => {
+      //   var that = this;
+      //   dialog.close = function (e) {
+      //     return that.close(e, that);
+      //   };
+      // });
 
     } else
       this.notiService.notify('Bạn chưa được cấp quyền này !');
@@ -225,8 +225,8 @@ export class AssignTasksCalendarComponent implements OnInit {
       ]
     }
     //reload data
-    this.schedule.reloadDataSource();
-    this.schedule.reloadResource();
+    // this.schedule.reloadDataSource();
+    //this.schedule.reloadResource();
 
   }
   close(e: any, t: AssignTasksCalendarComponent) {
@@ -257,7 +257,7 @@ export class AssignTasksCalendarComponent implements OnInit {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res) {
                   // this.notiService.notifyCode("TM004")
-                  this.listview.removeHandler(this.taskAction, 'recID');
+                  // this.listview.removeHandler(this.taskAction, 'recID');
                   this.notiService.notify('Xóa task thành công !');
                   return;
                 }

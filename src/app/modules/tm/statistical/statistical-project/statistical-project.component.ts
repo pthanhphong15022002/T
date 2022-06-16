@@ -1,8 +1,8 @@
 import { TM_Tasks } from './../../models/TM_Tasks.model';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { DataRequest, CacheService, AuthStore, ApiHttpService, CallFuncService } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { DataRequest, CacheService, AuthStore, ApiHttpService, CallFuncService, ViewModel, ViewType } from 'codx-core';
+
 import { ProjectChartComponent } from './project-chart/project-chart.component';
 
 @Component({
@@ -15,9 +15,9 @@ export class StatisticalProjectComponent implements OnInit {
   @ViewChild("itemOwner", { static: true }) itemOwner: TemplateRef<any>;
   @ViewChild("buttonPupop", { static: true }) buttonPupop: TemplateRef<any>;
   @ViewChild('main') main: TemplateRef<any>;
-  @Input() data= [];
+  @Input() data = [];
 
-  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private api: ApiHttpService,   private callfc: CallFuncService,) { }
+  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private api: ApiHttpService, private callfc: CallFuncService,) { }
   model = new DataRequest();
   @Input() report = new TM_Tasks();
 
@@ -40,8 +40,8 @@ export class StatisticalProjectComponent implements OnInit {
   functionID = "";
   entity = "";
   isAfterRender = false;
-  lstOwner =[];
-  
+  lstOwner = [];
+
   views: Array<ViewModel> = [];
 
   ngOnInit(): void {
@@ -65,13 +65,13 @@ export class StatisticalProjectComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {
         panelLeftRef: this.main,
-        
-        widthAsideRight: '900px'
+
+        // widthAsideRight: '900px'
       }
     },
     ];
@@ -84,15 +84,15 @@ export class StatisticalProjectComponent implements OnInit {
     model.entityName = 'TM_Tasks';
     model.page = 1;
     model.pageSize = 100;
-    this.api.execSv<any>("TM", "TM", "ReportBusiness", "ListReportProjectAsync", model).subscribe((res)=>{
-      if(res){
+    this.api.execSv<any>("TM", "TM", "ReportBusiness", "ListReportProjectAsync", model).subscribe((res) => {
+      if (res) {
         this.data = res[0];
-     //   this.lstOwner = res[0];
+        //   this.lstOwner = res[0];
       }
     })
   }
 
-  openPopup(item: any){
+  openPopup(item: any) {
     this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 1500, 800, '', item);
   }
 

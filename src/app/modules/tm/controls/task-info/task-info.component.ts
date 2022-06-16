@@ -76,19 +76,15 @@ export class TaskInfoComponent implements OnInit {
   updateData = new BehaviorSubject<any>(null);
   isUpdate = this.updateData.asObservable();
   showPlan = true;
+  showAssignTo = true;
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-<<<<<<< HEAD
   @ViewChild('attachment') attachment: AttachmentComponent
 
 
-=======
-  @ViewChild('attachment') attachment: AttachmentComponent;
-  showAssignTo = false;
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -107,12 +103,6 @@ export class TaskInfoComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = this.viewBase.funcID;
-<<<<<<< HEAD
-=======
-    if(this.functionID =="TMT03"){
-      this.showAssignTo = true;
-    }
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     this.getParam(); //bật tắt set param
     this.openTask();
   }
@@ -221,171 +211,163 @@ export class TaskInfoComponent implements OnInit {
   }
   openTask(): void {
     const t = this;
-   if(this.functionID =="TMT03"){
-     this.showAssignTo = true;
-     //cai nay thêm để test
-     this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-     this.getListUser(this.task.assignTo);
-   }
-  
-   this.task.estimated = 0;
-   this.readOnly = false;
-   this.task = new TM_Tasks();
-   this.listTodo = []; 
-   this.task.status = '1';
-   this.task.priority = '1';
-   this.task.memo = '';
-   this.task.dueDate = moment(new Date())
-     .set({ hour: 23, minute: 59, second: 59 })
-     .toDate();
-   this.changeDetectorRef.detectChanges();
-   if (!this.param)
-     this.getParam(function (o) {
-       //if (o) t.showPanel();
-     });
-   else {
-     this.closePanel();
-   }
- }
+    if (this.functionID == "TMT03") {
+      // this.showAssignTo = true;
+      //cai nay thêm để test
+      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+      this.getListUser(this.task.assignTo);
+    }
 
- openInfo(id, action) {
-   this.getParam();
-   const t = this;
+    this.task.estimated = 0;
+    this.readOnly = false;
+    this.task = new TM_Tasks();
+    this.listTodo = [];
+    this.task.status = '1';
+    this.task.priority = '1';
+    this.task.memo = '';
+    this.task.dueDate = moment(new Date())
+      .set({ hour: 23, minute: 59, second: 59 })
+      .toDate();
+    this.changeDetectorRef.detectChanges();
+    if (!this.param)
+      this.getParam(function (o) {
+        //if (o) t.showPanel();
+      });
+    else {
+      this.closePanel();
+    }
+  }
 
-   t.task = new TM_Tasks();
-   t.readOnly = action === 'edit' ? false : true;
-   t.title =
-     action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
-   t.disableAddToDo = true;
+  openInfo(id, action) {
+    this.getParam();
+    const t = this;
 
-   this.tmSv.getTask(id).subscribe((res) => {
-     if (res && res.length) {
-       t.task = res[0];
-       t.listUserDetail = res[1] || [];
-       t.listTodo = res[2];
-       t.listMemo2OfUser = res[3];
-       if (t.task.assignTo != null) {
-         t.listUser = t.task.assignTo.split(';');
-         this.getListUser(this.task.assignTo);
-       } else {
-         this.listUser = [];
-         this.listUserDetail = [];
-         this.listMemo2OfUser = [];
-         //thêm giá trị đê add thử copy -sau nay xóa đi
-         //   if (action == 'edit') {
-         //     this.task.assignTo = 'TQHOAN'; ///tesst
-         //     this.getListUser(this.task.assignTo);
-         //   }
-       }
-       t.changeDetectorRef.detectChanges();
-       if(this.functionID =="TMT03"){
-         this.showAssignTo = true;
-       }
-       this.showPanel();
-     }
-   });
- }
+    t.task = new TM_Tasks();
+    t.readOnly = action === 'edit' ? false : true;
+    t.title =
+      action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
+    t.disableAddToDo = true;
 
- openAssignSchedule(task): void {
-  const t = this;
-  this.task = task
-  if(this.functionID =="TMT03"){
-   this.showAssignTo = true;
-   //cai nay thêm để test
-   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-   this.getListUser(this.task.assignTo);
- }
+    this.tmSv.getTask(id).subscribe((res) => {
+      if (res && res.length) {
+        t.task = res[0];
+        t.listUserDetail = res[1] || [];
+        t.listTodo = res[2];
+        t.listMemo2OfUser = res[3];
+        if (t.task.assignTo != null) {
+          t.listUser = t.task.assignTo.split(';');
+          this.getListUser(this.task.assignTo);
+        } else {
+          this.listUser = [];
+          this.listUserDetail = [];
+          this.listMemo2OfUser = [];
+          //thêm giá trị đê add thử copy -sau nay xóa đi
+          //   if (action == 'edit') {
+          //     this.task.assignTo = 'TQHOAN'; ///tesst
+          //     this.getListUser(this.task.assignTo);
+          //   }
+        }
+        t.changeDetectorRef.detectChanges();
+        if (this.functionID == "TMT03") {
+          //    this.showAssignTo = true;
+        }
+        this.showPanel();
+      }
+    });
+  }
 
-// this.task.estimated = 0;
- this.readOnly = false;
- this.listTodo = []; 
- this.task.status = '1';
- this.task.priority = '1';
- this.task.memo = '';
- this.task.dueDate = moment(new Date())
-   .set({ hour: 23, minute: 59, second: 59 })
-   .toDate();
- this.changeDetectorRef.detectChanges();
- if (!this.param)
-   this.getParam(function (o) {
-     //if (o) t.showPanel();
-   });
- else {
-   this.closePanel();
- }
-}
+  openAssignSchedule(task): void {
+    const t = this;
+    this.task = task
+    if (this.functionID == "TMT03") {
+      // this.showAssignTo = true;
+      //cai nay thêm để test
+      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+      this.getListUser(this.task.assignTo);
+    }
 
- getTaskCoppied(id) {
-   const t = this;
-   if(this.functionID =="TMT03"){
-     this.showAssignTo = true;
-   }
-   this.tmSv.getTask(id).subscribe((res) => {
-     if (res && res.length) {
-       t.copyListTodo(res[2]);
-       t.beforeCopy(res[0]);
-     }
-   });
- }
+    // this.task.estimated = 0;
+    this.readOnly = false;
+    this.listTodo = [];
+    this.task.status = '1';
+    this.task.priority = '1';
+    this.task.memo = '';
+    this.task.dueDate = moment(new Date())
+      .set({ hour: 23, minute: 59, second: 59 })
+      .toDate();
+    this.changeDetectorRef.detectChanges();
+    if (!this.param)
+      this.getParam(function (o) {
+        //if (o) t.showPanel();
+      });
+    else {
+      this.closePanel();
+    }
+  }
 
- copyListTodo(listTodoCopy) {
-   const t = this;
-   t.listTodo = [];
-   if (listTodoCopy != null) {
-     listTodoCopy.forEach((td) => {
-       var todo = new TaskGoal();
-       todo.status = td.status;
-       todo.text = td.text;
-       t.listTodo.push(Object.assign({}, todo));
-     });
-   }
- }
+  getTaskCoppied(id) {
+    const t = this;
+    if (this.functionID == "TMT03") {
+      // this.showAssignTo = true;
+    }
+    this.tmSv.getTask(id).subscribe((res) => {
+      if (res && res.length) {
+        t.copyListTodo(res[2]);
+        t.beforeCopy(res[0]);
+      }
+    });
+  }
 
- beforeCopy(data) {
-   this.title = 'Copy công việc ';
-   const t = this;
-   t.task = new TM_Tasks();
-   t.task = data;
-   t.task.dueDate = moment(new Date(data.dataValue)).toDate();
-   if (data.startDate != null)
-     t.task.startDate = moment(new Date(data.startDate)).toDate();
-   t.task.endDate = moment(new Date(data.endDate)).toDate();
-   t.task.taskID = null;
-   t.task.parentID = null;
-   t.task.assignTo = null;
-   t.task.completedOn = null;
-   this.listUser = [];
-   this.listUserDetail = [];
-   this.listMemo2OfUser = [];
-   //thêm giá trị đê add thử copy -sau nay xóa đi
-   //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-   // this.getListUser(this.task.assignTo);
+  copyListTodo(listTodoCopy) {
+    const t = this;
+    t.listTodo = [];
+    if (listTodoCopy != null) {
+      listTodoCopy.forEach((td) => {
+        var todo = new TaskGoal();
+        todo.status = td.status;
+        todo.text = td.text;
+        t.listTodo.push(Object.assign({}, todo));
+      });
+    }
+  }
 
-   t.changeDetectorRef.detectChanges();
-   this.showPanel();
- }
+  beforeCopy(data) {
+    this.title = 'Copy công việc ';
+    const t = this;
+    t.task = new TM_Tasks();
+    t.task = data;
+    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+    if (data.startDate != null)
+      t.task.startDate = moment(new Date(data.startDate)).toDate();
+    t.task.endDate = moment(new Date(data.endDate)).toDate();
+    t.task.taskID = null;
+    t.task.parentID = null;
+    t.task.assignTo = null;
+    t.task.completedOn = null;
+    this.listUser = [];
+    this.listUserDetail = [];
+    this.listMemo2OfUser = [];
+    //thêm giá trị đê add thử copy -sau nay xóa đi
+    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
+    // this.getListUser(this.task.assignTo);
+
+    t.changeDetectorRef.detectChanges();
+    this.showPanel();
+  }
 
   saveData(id) {
-<<<<<<< HEAD
-    if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('TM002');
-      this.notiService.notify("Tên công việc không được để trống !");
-      $('#taskNameInput').focus()
-      return;
-=======
-   // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
       $('#taskNameInput').focus();
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     }
-    if(this.functionID =="TMT03" && (this.task.assignTo==""||this.task.assignTo==null)){
-        this.notiService.notify('Phải nhập danh sách người được phân công !');
-        // this.notiService.notifyCode('mã code');
-        return;
-      }
-    
+    if (this.functionID == "TMT03" && (this.task.assignTo == "" || this.task.assignTo == null)) {
+      this.notiService.notify('Phải nhập danh sách người được phân công !');
+      // this.notiService.notifyCode('mã code');
+      return;
+    }
+
     this.checkLogicTime();
     if (!this.isCheckTime) {
       // this.notiService.notifyCode('TM002');
@@ -396,25 +378,6 @@ export class TaskInfoComponent implements OnInit {
       return;
     }
     if (
-<<<<<<< HEAD
-      this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-      this.task.dueDate.getDate() < this.task.endDate.getDate()
-    ) {
-      if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
-        this.message =
-          'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
-        this.message =
-          'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      // this.notiService
-      //   .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
-      //   .subscribe((dialog: Dialog) => {
-      //     var that = this;
-      //     dialog.close = function (e) {
-      //       return that.closeConfirm(e, that, id);
-      //     };
-      //   });
-=======
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
@@ -427,13 +390,12 @@ export class TaskInfoComponent implements OnInit {
       this.notiService
         //.alert('Cảnh báo !!', this.message, { type: 'YesNo' })
         .alertCode("TM002", { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.closeConfirm(e, that, id);
-          };
-        });
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
+      // .subscribe((dialog: Dialog) => {
+      //   var that = this;
+      //   dialog.close = function (e) {
+      //     return that.closeConfirm(e, that, id);
+      //   };
+      // });
     } else {
       this.actionSave(id);
     }
@@ -642,71 +604,6 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-<<<<<<< HEAD
-          var toDo = res.checkList.split(';');
-          toDo.forEach((tx) => {
-            var taskG = new TaskGoal();
-            taskG.status = this.STATUS_TASK_GOAL.NotChecked;
-            taskG.text = tx;
-            this.listTodo.push(taskG);
-          });
-        }
-      });
-  }
-
-  openTask(): void {
-    const t = this;
-    this.task.estimated = 0;
-    this.readOnly = false;
-    this.task = new TM_Tasks();
-    this.listTodo = [];
-    this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    this.getListUser(this.task.assignTo);
-    this.task.status = '1';
-    this.task.priority = '1';
-    this.task.memo = '';
-    this.task.dueDate = moment(new Date())
-      .set({ hour: 23, minute: 59, second: 59 })
-      .toDate();
-    this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        //if (o) t.showPanel();
-      });
-    else {
-      t.closePanel();
-    }
-  }
-
-  openInfo(id, action) {
-    this.getParam();
-    const t = this;
-
-    t.task = new TM_Tasks();
-    t.readOnly = action === 'edit' ? false : true;
-    t.title =
-      action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
-    t.disableAddToDo = true;
-
-    this.tmSv.getTask(id).subscribe((res) => {
-      if (res && res.length) {
-        t.task = res[0];
-        t.listUserDetail = res[1] || [];
-        t.listTodo = res[2];
-        t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null) {
-          t.listUser = t.task.assignTo.split(';');
-          this.getListUser(this.task.assignTo);
-        } else {
-          this.listUser = [];
-          this.listMemo2OfUser = [];
-          this.listMemo2OfUser = [];
-          //thêm giá trị đê add thử copy -sau nay xóa đi
-          //   if (action == 'edit') {
-          //     this.task.assignTo = 'TQHOAN'; ///tesst
-          //     this.getListUser(this.task.assignTo);
-          //   }
-=======
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             toDo.forEach((tx) => {
@@ -716,37 +613,11 @@ export class TaskInfoComponent implements OnInit {
               this.listTodo.push(taskG);
             });
           }
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
         }
       });
   }
 
-<<<<<<< HEAD
-  beforeCopy(data) {
-    this.title = 'Copy công việc ';
-    const t = this;
-    t.task = new TM_Tasks();
-    t.task = data;
-    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
-    t.task.startDate = moment(new Date(data.startDate)).toDate();
-    t.task.endDate = moment(new Date(data.endDate)).toDate();
-    t.task.taskID = null;
-    t.task.parentID = null;
-    t.task.assignTo = null;
-    t.task.completedOn = null;
-    this.listUser = [];
-    this.listUserDetail = [];
-    this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi
-    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    // this.getListUser(this.task.assignTo);
 
-    t.changeDetectorRef.detectChanges();
-    this.showPanel();
-  }
-=======
- 
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
 
   // valueChangeUser(event) {
   //   if (event?.valueSeleteds) {
@@ -779,7 +650,7 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         this.listUserDetail = res;
-        
+
       });
   }
   extendShow() {
@@ -794,7 +665,7 @@ export class TaskInfoComponent implements OnInit {
     // if (this.tagsComponent.isOpen) this.tagsComponent.close()
     this.required.taskName = false;
     this.disableAddToDo = true;
-    this.showAssignTo=false;
+    //this.showAssignTo=false;
     this.resetTask();
     this.closePanel();
   }
@@ -878,22 +749,14 @@ export class TaskInfoComponent implements OnInit {
 
   closeConfirm(e: any, t: TaskInfoComponent, id: string) {
     if (e?.event?.status == 'Y') {
-<<<<<<< HEAD
       t.actionSave(id)
-=======
-      t.actionSave(id);
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     }
   }
   popup(evt: any) {
     this.attachment.openPopup();
   }
   fileAdded(e) {
-<<<<<<< HEAD
     console.log(e)
-=======
-    console.log(e);
->>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   }
 
   convertToListTaskResources() {
@@ -902,7 +765,7 @@ export class TaskInfoComponent implements OnInit {
       var tmpTR = new tmpTaskResource();
       tmpTR.resourceID = obj.userID;
       tmpTR.memo = obj.memo2;
-      tmpTR.roleType="R" ;
+      tmpTR.roleType = "R";
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;

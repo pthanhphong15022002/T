@@ -1,8 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthStore, CacheService, CallFuncService, CodxFormDynamicComponent } from 'codx-core';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { AuthStore, ButtonModel, CacheService, CallFuncService, CodxFormDynamicComponent, ViewModel, ViewType } from 'codx-core';
+
 
 @Component({
   selector: 'app-project-group',
@@ -38,13 +37,13 @@ export class ProjectGroupComponent implements OnInit {
     fontWeight: 400,
     lineHeight: 1.4
   }
-buttons: Array<ButtonModel> = [{
+  buttons: Array<ButtonModel> = [{
     id: '1',
     text: 'Thêm'
   }];
-  constructor( private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private callfc: CallFuncService,) { }
+  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private callfc: CallFuncService,) { }
 
-  columnsGrid =[];
+  columnsGrid = [];
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -66,13 +65,13 @@ buttons: Array<ButtonModel> = [{
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {
         panelLeftRef: this.main,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     }];
   }
@@ -82,9 +81,9 @@ buttons: Array<ButtonModel> = [{
       this.addEditForm = item;
       this.isAfterRender = true;
     })
-  } 
+  }
 
-  clickButton($event, isAddMode){
+  clickButton($event, isAddMode) {
     if (isAddMode == true) {
       this.isAddMode = true;
       this.openTask();

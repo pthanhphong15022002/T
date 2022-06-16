@@ -1,11 +1,8 @@
-import { ActivatedRoute } from '@angular/router';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import {
   Component,
   OnInit,
   AfterViewInit,
   ViewChild,
-  TemplateRef,
   ChangeDetectorRef,
 } from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
@@ -203,7 +200,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.model = new DataRequest();

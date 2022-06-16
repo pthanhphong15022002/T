@@ -20,7 +20,7 @@ export class MwpComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // this.views = [
     //   {
-    //     type: 'list',
+    //     type: ViewType.list,
     //     icon: '',
     //     text: '',
     //     id: '1',
@@ -41,7 +41,7 @@ export class MwpComponent implements OnInit, AfterViewInit {
     //     },
     //   },
     //   {
-    //     type: 'listdetail',
+    //     type: ViewType.listdetail,
     //     icon: '',
     //     text: '',
     //     id: '2',

@@ -62,8 +62,8 @@ export class SprintsTaskKanbanComponent implements OnInit {
     showEmptyRow: false,
   };
   cardId: string;
-  iterationID:string ='' ;
-  model  = new DataRequest() ;
+  iterationID: string = '';
+  model = new DataRequest();
   constructor(
     private tmSv: TmService,
     private authStore: AuthStore,
@@ -139,7 +139,7 @@ export class SprintsTaskKanbanComponent implements OnInit {
 
   onDataDrop(evt: Event) {
     this.item = evt;
-    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
+    //    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
   }
 
   submit(e: any) {
@@ -156,11 +156,11 @@ export class SprintsTaskKanbanComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
- //   model.predicate = 'Owner=@0';
+    //   model.predicate = 'Owner=@0';
     model.page = 1;
     model.pageSize = 100;
-    model.funcID = this.functionID ;
-  //  model.dataValue = this.user.userID;
+    model.funcID = this.functionID;
+    //  model.dataValue = this.user.userID;
     model.filter = {
       logic: 'and',
       filters: [
@@ -169,9 +169,9 @@ export class SprintsTaskKanbanComponent implements OnInit {
       ],
     };
 
-   let dataObj = { view: this.view, viewBoardID: this.iterationID };
-   model.dataObj = JSON.stringify(dataObj);
-   // model.dataObj = this.model.dataObj;
+    let dataObj = { view: this.view, viewBoardID: this.iterationID };
+    model.dataObj = JSON.stringify(dataObj);
+    // model.dataObj = this.model.dataObj;
 
     this.tmSv.loadTaskByAuthen(model).subscribe((res) => {
       if (res && res.length) {

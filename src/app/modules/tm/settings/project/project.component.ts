@@ -1,9 +1,8 @@
 import { Observable, Subject } from 'rxjs';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { AuthStore, CacheService, CallFuncService, CodxFormDynamicComponent, ViewsComponent, ApiHttpService, CodxGridviewComponent, UserModel } from 'codx-core';
+
+import { AuthStore, CacheService, CallFuncService, CodxFormDynamicComponent, ViewsComponent, ApiHttpService, CodxGridviewComponent, UserModel, ViewType, ViewModel, ButtonModel } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { TM_Projects } from '@modules/tm/models/TM_Projects.model';
 
 
@@ -43,15 +42,15 @@ export class ProjectComponent implements OnInit {
   gridViewName = "";
   isAfterRender = false;
   gridViewSetup: any;
-  isAddMode : boolean = true;
-  title= "";
+  isAddMode: boolean = true;
+  title = "";
   dataItem: any = {};
   isOpen = false;
   startDate: any;
 
   @Input() projects = new TM_Projects();
 
-  constructor( private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private callfc: CallFuncService, private api: ApiHttpService
+  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder, private callfc: CallFuncService, private api: ApiHttpService
     , private dt: ChangeDetectorRef) { }
 
   headerStyle = {
@@ -70,13 +69,13 @@ export class ProjectComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {
         panelLeftRef: this.main,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     }];
   }
@@ -106,7 +105,7 @@ export class ProjectComponent implements OnInit {
     })
   }
 
-  initFrom(){
+  initFrom() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.addEditForm = item;
       this.isAfterRender = true;
@@ -114,8 +113,8 @@ export class ProjectComponent implements OnInit {
         //  this.addEditForm.patchValue({
         //    projectID : key
         //  });
-        
-       this.projects.projectID = key;
+
+        this.projects.projectID = key;
       })
     })
   }
@@ -162,7 +161,7 @@ export class ProjectComponent implements OnInit {
       });
     });
   }
-  
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
@@ -243,7 +242,7 @@ export class ProjectComponent implements OnInit {
       });
   }
 
-  clickButton(evt: any, isAddMode) {   
+  clickButton(evt: any, isAddMode) {
     if (isAddMode == true) {
       this.openTask();
       // this.isAddMode = true;
@@ -251,12 +250,12 @@ export class ProjectComponent implements OnInit {
       // this.initFrom();
       // this.showPanel();
     }
-    
+
     //  this.renderer.addClass(popup, 'drawer-on');
   }
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    // this.viewBase.currentView.openSidebarRight();
   }
 
   openTask(): void {
@@ -275,7 +274,7 @@ export class ProjectComponent implements OnInit {
   Close() {
     this.dataItem = null;
     // this.renderer.removeClass(popup, 'drawer-on');
-    this.viewBase.currentView.closeSidebarRight();
+    //this.viewBase.currentView.closeSidebarRight();
   }
 
   taskAction: any;

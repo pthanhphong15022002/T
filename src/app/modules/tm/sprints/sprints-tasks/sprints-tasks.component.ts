@@ -12,9 +12,11 @@ import {
   AuthStore,
   DataRequest,
   NotificationsService,
+  ViewModel,
   ViewsComponent,
+  ViewType,
 } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+
 
 @Component({
   selector: 'app-sprints-tasks',
@@ -34,9 +36,9 @@ export class SprintsTasksComponent implements OnInit {
   iterationID: string = '';
   model = new DataRequest();
   views: Array<ViewModel> = [
-    
+
   ];
-  viewsActive : Array<ViewModel> = [];
+  viewsActive: Array<ViewModel> = [];
 
   constructor(
     private tmSv: TmService,
@@ -54,68 +56,68 @@ export class SprintsTasksComponent implements OnInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.model.dataObj = JSON.stringify(dataObj);
-    
+
   }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-      this.loadData() ;
+    this.loadData();
   }
-  loadData(){
+  loadData() {
     this.viewsActive = [{
       id: '1',
-      type: 'list',
+      type: ViewType.list,
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
       model: {
         panelLeftRef: this.sprintsListTasks,
-        sideBarLeftRef: this.asideLeft,
+        // sideBarLeftRef: this.asideLeft,
       },
     },
     {
       id: '2',
-      type: 'listdetail',
+      type: ViewType.listdetail,
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: false,
       model: {
         panelLeftRef: this.sprintsTaskDetails,
-        sideBarLeftRef: this.asideLeft,
+        // sideBarLeftRef: this.asideLeft,
       },
     },
     {
       id: '6',
-      type: 'kanban',
+      type: ViewType.kanban,
       active: false,
       model: {
         panelLeftRef: this.sprintsKanban,
-        sideBarLeftRef: this.asideLeft,
+        // sideBarLeftRef: this.asideLeft,
       },
     },
     {
       id: '7',
-      type: 'calendar',
+      type: ViewType.calendar,
       text: 'calendar',
       active: false,
       model: {
         panelLeftRef: this.sprintsCalendar,
-        sideBarLeftRef: this.asideLeft,
+        //sideBarLeftRef: this.asideLeft,
       },
     },
     {
       id: '8',
-      type: 'schedule',
+      type: ViewType.schedule,
       text: 'schedule',
       active: false,
       model: {
         panelLeftRef: this.sprintsSchedule,
-        sideBarLeftRef: this.asideLeft,
+        // sideBarLeftRef: this.asideLeft,
       },
     },
-  ];
+    ];
     if (this.iterationID == '') {
       this.viewsActive.forEach((obj) => {
         if (obj.id == '1') {

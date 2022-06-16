@@ -89,8 +89,8 @@ export class SprintsTaskCalendarComponent implements OnInit {
     headerZoom: false
   };
   viewBase: any;
-  iterationID:string ="" ;
-  funcID: string 
+  iterationID: string = "";
+  funcID: string
   group = {
     enableCompactView: false,
     resources: ['Resources'],
@@ -103,12 +103,12 @@ export class SprintsTaskCalendarComponent implements OnInit {
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
-    private activedRouter : ActivatedRoute
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.auStore.get();
-    this.activedRouter.firstChild?.params.subscribe(data=>this.iterationID=data.id);
-    this.funcID =this.activedRouter.snapshot.params["funcID"];
-    var dataObj = { view: '',calendarID:'', viewBoardID: this.iterationID };
+    this.activedRouter.firstChild?.params.subscribe(data => this.iterationID = data.id);
+    this.funcID = this.activedRouter.snapshot.params["funcID"];
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.model.dataObj = JSON.stringify(dataObj);
   }
 
@@ -129,12 +129,12 @@ export class SprintsTaskCalendarComponent implements OnInit {
       this.model.filter = {
         logic: 'and',
         filters: [
-          { operator: 'gte', field: fied, value: this.startDate, logic: 'and', }, 
+          { operator: 'gte', field: fied, value: this.startDate, logic: 'and', },
           { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
         ],
       };
     }
-    
+
   }
 
   getParams() {
@@ -206,8 +206,8 @@ export class SprintsTaskCalendarComponent implements OnInit {
       ]
     }
     //reload data
-    this.schedule.reloadDataSource();
-    this.schedule.reloadResource();
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
 
   }
   // close(e: any, t: SprintsTaskCalendarComponent) {

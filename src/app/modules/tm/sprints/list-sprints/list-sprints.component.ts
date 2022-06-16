@@ -20,9 +20,9 @@ import {
   CodxListviewComponent,
   CodxService,
   DataRequest,
-  ListCardComponent,
   NotificationsService,
 } from 'codx-core';
+import { AnyRecord } from 'dns';
 import * as moment from 'moment';
 import { PopupShareSprintsComponent } from '../popup-share-sprints/popup-share-sprints.component';
 import { SprintsInfoComponent } from '../sprints-info/sprints-info.component';
@@ -59,37 +59,37 @@ export class ListSprintsComponent implements OnInit {
   totalViewBoards: number = 0;
   totalProjectBoards: number = 0;
   boardAction: any;
-  user:any ;
-  sprintDefault : TM_Sprints ;
+  user: any;
+  sprintDefault: TM_Sprints;
   @Input() funcID: string;
-  @ViewChild('lstViewBoard') lstViewBoard: ListCardComponent;
-  @ViewChild('lstProjectBoard') lstProjectBoard: ListCardComponent;
-  urlShare ="";
-  urlView ="";
-  moreFunc : any[];
+  @ViewChild('lstViewBoard') lstViewBoard: any;
+  @ViewChild('lstProjectBoard') lstProjectBoard: any;
+  urlShare = "";
+  urlView = "";
+  moreFunc: any[];
   constructor(
     private api: ApiHttpService,
     private tmSv: TmService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private authStore:AuthStore,
+    private authStore: AuthStore,
     public codxService: CodxService,
-    private activedRouter :ActivatedRoute
+    private activedRouter: ActivatedRoute
   ) {
-    this.user = this.authStore.get() ;
-  
+    this.user = this.authStore.get();
+
   }
 
   ngOnInit(): void {
-    this.funcID =this.activedRouter.snapshot.params["funcID"];;
-    this.tmSv.getMoreFunction([this.funcID ,null,null]).subscribe((res)=>{
-    if(res){
-      this.moreFunc =res ;
-      for(var i=0; i<this.moreFunc.length ;i++){
-        if(this.moreFunc[i].functionID=="TMT042")this.urlView =this.moreFunc[i].url;
+    this.funcID = this.activedRouter.snapshot.params["funcID"];;
+    this.tmSv.getMoreFunction([this.funcID, null, null]).subscribe((res) => {
+      if (res) {
+        this.moreFunc = res;
+        for (var i = 0; i < this.moreFunc.length; i++) {
+          if (this.moreFunc[i].functionID == "TMT042") this.urlView = this.moreFunc[i].url;
+        }
       }
-    }
     })
   }
 
@@ -168,12 +168,12 @@ export class ListSprintsComponent implements OnInit {
     var message = 'Bạn có chắc chắn muốn xóa task này !';
     this.notiService
       .alert('Cảnh báo', message, { type: 'YesNo' })
-      .subscribe((dialog: Dialog) => {
-        var that = this;
-        dialog.close = function (e) {
-          return that.confirmDelete(e, that, boardAction);
-        };
-      });
+    // .subscribe((dialog: Dialog) => {
+    //   var that = this;
+    //   dialog.close = function (e) {
+    //     return that.confirmDelete(e, that, boardAction);
+    //   };
+    // });
   }
 
   confirmDelete(e: any, t: ListSprintsComponent, boardAction) {
@@ -199,7 +199,7 @@ export class ListSprintsComponent implements OnInit {
     var listUserDetail = [];
     if (boardAction.iterationID) {
       var obj = {
-        boardAction : boardAction ,
+        boardAction: boardAction,
         listUserDetail: listUserDetail,
       }
       this.api
@@ -211,8 +211,8 @@ export class ListSprintsComponent implements OnInit {
           boardAction.iterationID
         )
         .subscribe((res) => {
-          if (res) obj.listUserDetail= res;
-         this.openPopupShare(obj);
+          if (res) obj.listUserDetail = res;
+          this.openPopupShare(obj);
         });
     }
   }
@@ -227,23 +227,23 @@ export class ListSprintsComponent implements OnInit {
         // boardAction
         obj
       )
-      .subscribe((dt: any) => {
-        var that = this;
-          dt.close = function (e) {
-            return that.closePopup(e, that);
-          };
-      });
+    // .subscribe((dt: any) => {
+    //   var that = this;
+    //     dt.close = function (e) {
+    //       return that.closePopup(e, that);
+    //     };
+    // });
   }
 
-  closePopup(e: any,t : ListSprintsComponent) {
+  closePopup(e: any, t: ListSprintsComponent) {
     if (e.closedBy == 'user action') {
-      var boardAction = new TM_Sprints() ;
-      if(e.event){
-        boardAction= e.event;
+      var boardAction = new TM_Sprints();
+      if (e.event) {
+        boardAction = e.event;
         if (boardAction?.projectID != null) {
-          t.lstProjectBoard.addHandler(boardAction,false, 'iterationID');
+          t.lstProjectBoard.addHandler(boardAction, false, 'iterationID');
         } else {
-          t.lstViewBoard.addHandler(boardAction,false, 'iterationID');
+          t.lstViewBoard.addHandler(boardAction, false, 'iterationID');
         }
         this.notiService.notify("Share board thành công !")
       }
