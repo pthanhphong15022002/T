@@ -22,18 +22,18 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/_layout/layout.modules').then((m) => m.LayoutModule),
       },
-      {
-        path: 'tm',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./modules/tm/tm.modules').then((m) => m.TMModule),
-      },
-      {
-        path: 'mwp',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
-      },
+      // {
+      //   path: 'tm',
+      //   canActivate: [AuthGuard],
+      //   loadChildren: () =>
+      //     import('./modules/tm/tm.modules').then((m) => m.TMModule),
+      // },
+      // {
+      //   path: 'mwp',
+      //   canActivate: [AuthGuard],
+      //   loadChildren: () =>
+      //     import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
+      // },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

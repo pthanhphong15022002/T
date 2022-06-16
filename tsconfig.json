@@ -37,8 +37,16 @@
       "@core/*": [
         "src/core/*"
       ],
+      "codx-tm": [
+        "dist/codx-tm/codx-tm",
+        "dist/codx-tm"
+      ],
       "@shared/*": [
         "src/shared/*"
+      ],
+      "tm": [
+        "dist/tm/tm",
+        "dist/tm"
       ]
     }
   },

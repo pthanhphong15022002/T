@@ -20,10 +20,6 @@ import { RouterModule } from '@angular/router';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { CoreModule } from '@core/core.module';
 import { TagsComponent } from './layout/tags/tags.component';
-import { SelectweekComponent } from './components/selectweek/selectweek.component';
-import { AttachmentComponent } from './components/attachment/attachment.component';
-import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
-import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -35,11 +31,7 @@ const T_Component: Type<any>[] = [
   ChatBoxComponent,
   QuickLinksInnerComponent,
   NoteDrawerComponent,
-  TagsComponent,
-  SelectweekComponent,
-  AttachmentComponent,
-  BreadcumbComponent,
-  AssignInfoComponent,
+  TagsComponent
 ];
 
 const T_Moudule: Type<any>[] = [
@@ -56,8 +48,8 @@ const T_Moudule: Type<any>[] = [
   FormsModule
 ];
 @NgModule({
-  imports: [T_Moudule ],
+  imports: [T_Moudule],
   declarations: [T_Component],
   exports: [T_Moudule, T_Component],
 })
-export class SharedModule {}
+export class SharedModule { }
