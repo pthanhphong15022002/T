@@ -1,9 +1,12 @@
+import { ThisReceiver } from '@angular/compiler';
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.component';
@@ -11,6 +14,7 @@ import { TaskInfoComponent } from '@modules/tm/controls/task-info/task-info.comp
 import { UpdateStatusPopupComponent } from '@modules/tm/controls/update-status-popup/update-status-popup.component';
 import { TmService } from '@modules/tm/tm.service';
 import { HomeComponent } from '@pages/home/home.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
 import { DataRequest } from '@shared/models/data.request';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -18,9 +22,11 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxListviewComponent,
   NotificationsService,
+  UrlUtil,
   ViewsComponent,
 } from 'codx-core';
 import { mode } from 'crypto-js';
@@ -33,6 +39,7 @@ import * as moment from 'moment';
 })
 export class ViewListDetailsComponent implements OnInit {
   @Input('taskInfo') taskInfo: TaskInfoComponent;
+  @Input('assignInfo') assignInfo: AssignInfoComponent;
   @Input() data = [];
   @Input() dataAddNew = [];
   @Input() dataCompleted = [];
@@ -60,31 +67,46 @@ export class ViewListDetailsComponent implements OnInit {
   countOwner = 0;
   model = new DataRequest();
   openNode = false;
-  predicate = 'Status=@0';
+  predicate = 'Status=@0 and Owner =@1';
   dataValue = '1';
-
+  moreFuncList : any[] =[] ;
+  funcID :string ;
+  func : any
   @Input('viewBase') viewBase: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('listviewAdd') listviewAdd: CodxListviewComponent;
   @ViewChild('listviewCompleted') listviewCompleted: CodxListviewComponent;
   @ViewChild('listviewPostpone') listviewPostpone: CodxListviewComponent;
   @ViewChild('listviewRefuse') listviewRefuse: CodxListviewComponent;
-
+  @Output() actionIsAssign = new EventEmitter<boolean>();
+  
   constructor(
     private tmSv: TmService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private cacheServices : CacheService
   ) {
     this.user = this.authStore.get();
+    this.funcID ="WPT036" ;
+    //this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cacheServices.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+         var url =res.url
+        var funcIDArr = url.split('/')
+        var funcID = funcIDArr[funcIDArr.length-1]
+        this.tmSv.getMoreFunction([funcID, null,null]).subscribe(res=>{
+          if(res){this.moreFuncList = res} ;
+         })
+      }
+    });
+   
   }
 
   ngOnInit(): void {
     this.loadData();
-    // this.tabStatus('1');
-    // this.isFinishLoad = true;
   }
 
   ngAfterViewInit(): void {
@@ -123,7 +145,7 @@ export class ViewListDetailsComponent implements OnInit {
     // model.pageSize = 20;
     // set max dinh
     this.fromDate = moment('4/20/2022').toDate();
-    this.toDate = moment('5/31/2022').toDate();
+    this.toDate = moment('12/30/2022').toDate();
     model.filter = {
       logic: 'and',
       filters: [
@@ -154,30 +176,30 @@ export class ViewListDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected);
   }
 
-  getByParentID(task) {
-    let objectId = '';
-    let objectState = '';
-    if (task != null) {
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetTaskByParentIDAsync',
-          [task?.id]
-        )
-        .subscribe((res) => {
-          if (res && res?.length > 0) {
-            res.forEach((element) => {
-              objectId += ';' + element.owner;
-              objectState += ';' + element.status;
-            });
-          }
-        });
-    }
-    this.objectAssign = objectId;
-    return objectState;
-  }
+  // getByParentID(task) {
+  //   let objectId = '';
+  //   let objectState = '';
+  //   if (task != null) {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'ERM.Business.TM',
+  //         'TaskBusiness',
+  //         'GetTaskByParentIDAsync',
+  //         [task?.id]
+  //       )
+  //       .subscribe((res) => {
+  //         if (res && res?.length > 0) {
+  //           res.forEach((element) => {
+  //             objectId += ';' + element.owner;
+  //             objectState += ';' + element.status;
+  //           });
+  //         }
+  //       });
+  //   }
+  //   this.objectAssign = objectId;
+  //   return objectState;
+  // }
 
   ///test control
   showControl(p, item) {
@@ -235,6 +257,16 @@ export class ViewListDetailsComponent implements OnInit {
   viewItem(taskAction) {
     this.taskInfo.openInfo(taskAction.taskID, 'view');
   }
+  assignItem(taskAction) {
+    const t = this
+    let p =  new Promise((resolve, reject) => {
+      this.actionIsAssign.emit(true);
+      resolve(true);
+    });
+    p.then(() => {
+      this.assignInfo.openInfo(taskAction);
+    });
+  }
 
   setupStatus(p, item) {
     p.open();
@@ -278,11 +310,13 @@ export class ViewListDetailsComponent implements OnInit {
                   if (res[1] != null) {
                     var dt = t.dataOfStatus(res[i].status);
                     var parent = dt.find((x) => x.taskID == res[1].taskID);
-                    parent.assignTo = res[1].assignTo;
-                    parent.category = res[1].category;
-                    t.updateListView(parent);
+                    if (parent) {
+                      parent.assignTo = res[1].assignTo;
+                      parent.category = res[1].category;
+                      t.updateListView(parent);
+                    }
                   }
-                  // t.notiService.notifyCode("TM004")
+                  t.notiService.notifyCode('TM004');
                   var lv = t.lvOfStatus(this.dataValue);
                   t.data = lv.data;
                   t.itemSelected = t.data[0];
@@ -299,7 +333,14 @@ export class ViewListDetailsComponent implements OnInit {
     }
   }
 
-  ChangeStatusTask(status, taskAction) {
+  moreActionTask(moreFunc, taskAction) {
+    var fieldName = UrlUtil.getUrl('defaultField', moreFunc.url);
+    if (fieldName == 'Status') {
+      this.ChangeStatusTask(moreFunc, taskAction);
+    } else this.assignItem(taskAction);
+  }
+
+  ChangeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     this.api
@@ -314,13 +355,17 @@ export class ViewListDetailsComponent implements OnInit {
         if (res) {
           var fieldValue = res.fieldValue;
           if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, status, taskAction);
+            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
             var startDate = moment(new Date(taskAction.startDate)).toDate();
             var estimated = moment(completedOn).diff(
               moment(startDate),
               'hours'
+            );
+            var status = UrlUtil.getUrl(
+              "defaultValue",
+              moreFunc.url,
             );
             this.tmSv
               .setStatusTask(
@@ -332,11 +377,22 @@ export class ViewListDetailsComponent implements OnInit {
               )
               .subscribe((res) => {
                 if (res) {
+                  var taskOld = taskAction ;
                   taskAction.status = status;
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
+<<<<<<< HEAD
                   //  this.listview.addHandler(taskAction, false, 'recID');
+=======
+                  if(taskAction.status!=status){
+                    this.removeListView(taskOld);
+                    this.addListView(taskAction)
+                  }else{
+                    this.updateListView(taskAction) ;
+                  }
+                 // this.listview.addHandler(taskAction, false, 'recID');
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -349,14 +405,15 @@ export class ViewListDetailsComponent implements OnInit {
       });
   }
 
-  openPopupUpdateStatus(fieldValue, status, taskAction) {
+  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
-      status: status,
+      moreFunc: moreFunc,
       taskAction: taskAction,
     };
     var oldSt = this.dataValue;
     var oldTask = taskAction;
+<<<<<<< HEAD
     // this.callfc
     //   .openForm(
     //     UpdateStatusPopupComponent,
@@ -375,23 +432,56 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   closePopup(e: any, oldSt: string, taskAction: any, t: ViewListDetailsComponent) {
+=======
+    var statusNew = UrlUtil.getUrl(
+      "defaultValue",
+      moreFunc.url,
+    );
+    this.callfc
+      .openForm(
+        UpdateStatusPopupComponent,
+        'Cập nhật tình trạng',
+        500,
+        350,
+        '',
+        obj
+      )
+      .subscribe((dt: any) => {
+        var that = this;
+        dt.close = function (e) {
+          that.closePopup(e, oldSt,oldTask, that,statusNew);
+        };
+      });
+  }
+
+  closePopup(
+    e: any,
+    oldSt: string,
+    taskAction: any,
+    t: ViewListDetailsComponent, newStatus
+  ) {
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
-        this.addListView(task);
-        taskAction.status = oldSt;
-        this.removeListView(taskAction);
+        if(newStatus!='2')
+        t.addListView(task)
+       taskAction.status = oldSt;
+       t.removeListView(taskAction);
+       task.status = newStatus ;
       } else {
-        this.updateListView(task);
+        t.updateListView(task);
       }
     }
   }
 
   openShowNode() {
-    this.openNode = !this.openNode;
+    //dang fail
+    // this.openNode = !this.openNode;
   }
 
   addListView(obj) {
+<<<<<<< HEAD
     // switch (obj.status) {
     //   case '1':
     //     if (this.listviewAdd != undefined)
@@ -456,6 +546,72 @@ export class ViewListDetailsComponent implements OnInit {
     //   default:
     //     break;
     // }
+=======
+    switch (obj.status) {
+      case '1':
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.addHandler(obj, true, 'recID');
+        break;
+      case '9':
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.addHandler(obj, true, 'recID');
+        break;
+      case '5':
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.addHandler(obj, true, 'recID');
+        break;
+      case '8':
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.addHandler(obj, true, 'recID');
+        break;
+      default:
+        break;
+    }
+  }
+  updateListView(obj) {
+    switch (obj.status) {
+      case '1':
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.addHandler(obj, false, 'recID');
+        break;
+      case '9':
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.addHandler(obj, false, 'recID');
+        break;
+      case '5':
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.addHandler(obj, false, 'recID');
+        break;
+      case '8':
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.addHandler(obj, false, 'recID');
+        break;
+      default:
+        break;
+    }
+  }
+  removeListView(obj) {
+    switch (obj.status) {
+      case '1':
+        if (this.listviewAdd != undefined)
+          this.listviewAdd.removeHandler(obj, 'recID');
+        break;
+      case '9':
+        if (this.listviewCompleted != undefined)
+          this.listviewCompleted.removeHandler(obj, 'recID');
+        break;
+      case '5':
+        if (this.listviewPostpone != undefined)
+          this.listviewPostpone.removeHandler(obj, 'recID');
+        break;
+      case '8':
+        if (this.listviewRefuse != undefined)
+          this.listviewRefuse.removeHandler(obj, 'recID');
+        break;
+      default:
+        break;
+    }
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   }
   tabStatus(st: string) {
     switch (st) {
@@ -512,8 +668,8 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   loadDetailTask(task) {
-    this.objectAssign = "";
-    this.objectState = "";
+    this.objectAssign = '';
+    this.objectState = '';
     if (task.category == '3' || task.category == '4') {
       this.api
         .execSv<any>(
@@ -539,7 +695,11 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
+<<<<<<< HEAD
     this.listNode = []
+=======
+    this.listNode = [];
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     if (task?.category != '1') {
       this.api
         .execSv<any>(
@@ -556,8 +716,8 @@ export class ViewListDetailsComponent implements OnInit {
     this.isFinishLoad = true;
   }
   changeRowSelected(event) {
+    this.isFinishLoad = false;
     this.itemSelected = event;
-    this.loadDetailTask(this.itemSelected);
     switch (event.status) {
       case '1':
         //   this.data = this.listviewAdd?.data;
@@ -577,6 +737,7 @@ export class ViewListDetailsComponent implements OnInit {
     this.dataValue = event.status;
     if (this.itemSelected != null) {
       this.isFinishLoad = true;
+      this.loadDetailTask(this.itemSelected);
     } else this.isFinishLoad = false;
   }
 }

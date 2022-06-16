@@ -1,0 +1,61 @@
+<codx-views #view funcID="TMR01" [showToolBar]="false" entityName="TM_Tasks"></codx-views>
+<div class="page-content d-flex flex-row pt-4">
+  <div class="w-100 container pe-9">
+    <div class="taskbox-left" *ngIf="taskRemind">
+      <div class="row align-items-end m-0 mt-12 mb-6">
+        <div class="col pe-0">
+          <div class="text-dark fw-bold mb-1 text-nowrap">Tỉ lệ hoàn thành đúng hạn</div>
+          <div class="row">
+            <div class="font-size-h2 font-weight-bold mr-3 col">
+              {{ taskRemind.rateDoneOnTime | percent }}</div>
+            <div class="d-flex w-100 col " style="margin-right: 1000px;">
+              <ejs-progressbar #linear1 id="linear1" type="Linear" [maximum]="100" [minimum]="0"
+                [value]="taskRemind.rateDoneOnTime * 100" width="100%" [trackThickness]="12" [progressThickness]="12"
+                height="5" [animation]="animation">
+              </ejs-progressbar>
+            </div>
+          </div>
+        </div>
+        <div class="col-8" [style.position]="'relative'">
+          <ejs-accumulationchart background="transparent" id="doughnut-container" #pie style="display: block"
+            width="600" height="200" selectionMode="Point">
+            <e-accumulation-series-collection>
+              <e-accumulation-series name="Revenue" [palettes]="palettes" [dataSource]="doughnutData" xName="label"
+                yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="80%">
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+          <div id="center_title" style="position: absolute; top: 80px; left: 255px">
+            <div class="text-dark-50">
+              <div>
+                <span>{{ taskRemind.taskCount}} 
+                  <p>Công việc</p>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 w-100" style="height: 600px">
+          <ejs-chart style="display: block" background="transparent" [chartArea]="chartArea" width="100%" [align]="'center'"
+          id="chartbar" [primaryXAxis]="columnXAxis" [primaryYAxis]="columnYAxis" [tooltip]="tooltip"
+          [legendSettings]="legendSettings">
+          <e-axes>
+            <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" title="" labelFormat="" [minimum]="0"
+              [maximum]="50" [interval]="4">
+            </e-axis>
+          </e-axes>
+          <e-series-collection>
+            <e-series fill="#005DC7" [dataSource]="dataColumn" type="Column" name="Tasks" xName="label" yName="value"
+              [cornerRadius]="radius">
+            </e-series>
+            <e-series fill="#F9D923" [dataSource]="dataLine" type="Line" name="WorkHours" yName="value" xName="label"
+              yAxisName="WorkHours">
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

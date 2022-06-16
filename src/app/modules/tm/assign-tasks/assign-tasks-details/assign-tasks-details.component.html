@@ -2,10 +2,10 @@
   <div class="d-flex flex-row">
     <div id="codx_master" class="min-w-375px w-375px">
       <div class="codx_master_container">
-        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" funcId="" [pageSize]="0"
+        <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [funcId]="funcID" [pageSize]="100"
           service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync"
           [predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
-          entityName="TM_Tasks" [data]="data" groupBy="fieldGroup">
+          entityName="TM_Tasks" [data]="data" groupBy="fieldGroup" (changeRowSelected)="changeRowSelected($event)">
         </codx-listview>
       </div>
     </div>
@@ -607,7 +607,7 @@
           <!--begin::Label-->
           <div class="d-flex align-item-center me-4">
             <span class="icon-16  icon-attach_file me-1 text-primary "></span>
-            <span class="text-gray-800 fw-bold">3</span>
+            <span class="text-gray-800 fw-bold">{{data.attachments}}</span>
           </div>
           <!--end::Label-->
           <!--begin::Btn-->
@@ -668,7 +668,7 @@
 </ng-template>
 
 <ng-template #setupStatusTask>
-  <div>
+  <!-- <div>
     <div>
       <a class="dropdown-item" (click)="ChangeStatusTask('9',taskAction)" style="cursor: pointer">
         <div class="d-flex align-items-center">
@@ -695,44 +695,13 @@
         </div>
       </a>
     </div>
-    <!-- <div class="dropdown-divider"></div> -->
-    <!-- 
-        <a *ngFor="let f of menuAppend" class="dropdown-item" (click)="Click(f.id,f.funcID)">
-            <div class="d-flex align-items-center">
-                <span class="{{f.icon}} icon-18"></span>
-                <span class="ml-3">{{f.text}}</span>
-            </div>
-        </a> -->
-    <!-- <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-attachment icon-18"></span>
-                <span class="ml-3">{{'Đính kèm file' | lang : 'Common' : 'AttachFile'|async}} </span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-archive icon-18"></span>
-                <span class="ml-3">{{'Export File' | lang : 'Common' : 'ExportFile'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-email icon-18"></span>
-                <span class="ml-3">{{'Gửi mail' | lang : 'Common' : 'SendMail'|async}}</span>
-            </div>
-        </a>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-share icon-18"></span>
-                <span class="ml-3">{{'Chia sẽ' | lang : 'Common' : 'Share'|async}}</span>
-            </div>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item">
-            <div class="d-flex align-items-center">
-                <span class="icon-extension icon-18"></span>
-                <span class="ml-3">{{'Chức năng mở rộng' | lang : 'Common' : 'MoreFunction'|async}}</span>
-            </div>
-        </a> -->
-  </div>
+  </div> -->
+  <ng-container *ngFor="let moreFunc of moreFuncList" >
+    <a class="dropdown-item" (click)="ChangeStatusTask(moreFunc,taskAction)" style="cursor: pointer">
+      <div class="d-flex align-items-center">
+         <span class="{{moreFunc.largeIcon}}"></span>
+        <span class="ms-3">{{moreFunc.customName}}</span>
+      </div>
+    </a>
+  </ng-container>
 </ng-template>

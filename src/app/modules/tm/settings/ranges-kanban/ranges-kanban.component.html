@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMT02" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
+<codx-views #view funcID="TMS034" entityName="BS_RangesKanban" [views]="views" [buttons]="buttons"
   (buttonClick)="clickButton($event,true)"> </codx-views>
 
 <ng-template #main>
@@ -34,12 +34,12 @@
         <div class="form-group">
           <div class="form-group mt-3">
             <label>
-              <codx-label fiedName="TaskGroupID" formName="RangesKanban" gridViewName="grvRangesKanban"
+              <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban"
                 default="Mã nhóm công việc">
               </codx-label>
             </label>
             <input #RangeID name="RangeID" [attr.disabled]="!isAddMode ? '' : null" type="text" class="form-control"
-              [(ngModel)]="ranges.RangeID" placeholder="" style="width: 400px" />
+              [(ngModel)]="ranges.rangeID" placeholder="" style="width: 400px" />
           </div>
           <div class="form-group mt-3">
             <label>
@@ -47,13 +47,14 @@
                 default="Nhóm công việc">
               </codx-label>
             </label>
-            <input #RangeName name="RangeName" [(ngModel)]="ranges.RangeName" type="text" class="form-control"
+            <input #RangeName name="RangeName" [(ngModel)]="ranges.rangeName" type="text" class="form-control"
               placeholder="Nhóm công việc" />
 
           </div>
           <div class="form-group mt-3">
-            <label>Ghi chú</label>
-            <textarea #note name="Note" [(ngModel)]="ranges.Note" type="textarea" class="form-control"
+            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ghi chú">
+            </codx-label>
+            <textarea #note name="Rote" [(ngModel)]="ranges.note" type="textarea" class="form-control"
               placeholder="Ghi chú"></textarea>
           </div>
           <div class="workToDo">
@@ -78,49 +79,131 @@
                   <th scope="col" class="w-10 min-w-50px"></th>
                 </tr>
               </thead>
+              <tbody>
+                <tr *ngFor="let item of lstRangeLine; let index = index">
+                  <td class="text-left">
+                    <label>{{item.breakName}}</label>
+                  </td>
+                  <td class="text-left">
+                    <label>{{item.breakValue}}</label>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="Box-tools pull-right" style="vertical-align: middle;">
+                        <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;"
+                          (click)="openPopup(item, false, index)">
+                          <i class="fa fa-edit text-primary"></i>
+                        </a>
+                        <a class="btn btn-xs btn-flat btn-danger" (click)="deletePopup(index)">
+                          <i class="fa fa-remove "></i>
+                        </a>
+                      </div>
+                      <!-- <div class="dropdown ml-2">
+                        <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          <span class="icon-more_vert icon-18"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" (click)="openPopup(item, false, index)">
+                            <div class="d-flex align-items-center">
+                              <span class="icon-create icon-16"></span>
+                              <span class="ml-3">Chỉnh sửa</span>
+                            </div>
+                          </a>
+                          <a class="dropdown-item" (click)="deletePopup(index)">
+                            <div class="d-flex align-items-center">
+                              <span class="icon-delete icon-16"></span>
+                              <span class="ml-3">Xóa</span>
+                            </div>
+                          </a>
+                        </div>
+                      </div> -->
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
-<ng-template #add let-model>
-  <div #pop class="bg-body drawer drawer-end" style="display: none; width: 300px;">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Khoảng thời gian</h4>
-      <button type="button" class="close" aria-label="Close">
-        <i class="icon-close icon-20 text-dark text-hover-primary"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group row">
-        <div class="col-4">
-          <label>Diễn giải</label>
-        </div>
-        <div class="col-8">
-          <input type="text" class="form-control" placeholder="Quá hạn..." formControlName="BreakName" />
-          <!-- <input type="text" class="form-control" placeholder="Quá hạn..." [value]="itemRangeLine.BreakName"/> -->
-        </div>
+    <div class="card-footer pt-4">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
       </div>
-      <div class="form-group row">
-        <div class="col-4">
-          <label>Số ngày</label>
-        </div>
-        <div class="col-8">
-          <input type="text" class="form-control" placeholder="-5" formControlName="BreakValue" />
-          <!-- <input type="text" class="form-control" placeholder="-5" [value]="itemRangeLine.BreakValue" /> -->
-        </div>
-      </div>
-      <div class="text-muted mt-3">Người dùng nhập số âm (-) khi thiết lập khoảng thời gian quá khứ,
-        nhập số dương (+) khi thiết lập khoảng thời gian tương lai
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary">Lưu</button>
     </div>
   </div>
 </ng-template>
+<ng-template #add let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Khoảng thời gian</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row mt-3">
+      <div class="form-group col-4">
+        <codx-label fiedName="BreakName" default="Diễn giải" formName="RangeLines" gridViewName="grvRangeLines">
+        </codx-label>
+      </div>
+      <div class="col-8">
+        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control"
+          placeholder="Diễn giải" [crrValue]="rangeLines.breakName" (valueChange)="valueName($event)"></codx-input>
+        <!-- <codx-input name="BreakName" type="combobox" [refValue]="gridViewSetup.BreakName.refValue" field="BreakName"
+          placeholder="" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)">
+        </codx-input> -->
+      </div>
+    </div>
+    <div class="form-group row mt-3">
+      <div class="form-group col-4">
+        <codx-label fiedName="BreakValue" default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
+        </codx-label>
+      </div>
+      <div class="col-8 ">
+        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control"
+          placeholder="Số ngày" [crrValue]="rangeLines.breakValue" (valueChange)="valueValue($event)"></codx-input>
+        <!-- <codx-input name="BreakValue" type="combobox" [refValue]="gridViewSetup.BreakValue.refValue" field="breakValue"
+          placeholder="" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)">
+        </codx-input> -->
+      </div>
+    </div>
+    <div class="text-muted mt-3">Người dùng nhập số âm (-) khi thiết lập khoảng thời gian quá khứ,
+      nhập số dương (+) khi thiết lập khoảng thời gian tương lai
+    </div>
+  </div>
+  <div class="modal-footer" (click)="modal.close(lstRangeLine)">
+    <button type="button" class="btn btn-primary" >Lưu</button>
+  </div>
+</ng-template>
+<ng-template #popContent let-dataItem>
+  <a class="action-item" (click)="openForm(taskAction,false)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ms-2 me-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" (click)="deleteRange(taskAction)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+</ng-template>
+
+
+<ng-template #GiftIDCell let-dataItem>
+  <div class="dropdown" (dblclick)="showControl(p2,dataItem)" [ngbPopover]="popContent" popoverClass="empPopoverClass"
+    #p2="ngbPopover" placement="right left" container="body" autoClose="outside" triggers="manual">
+    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-more_vert icon-20"></span>
+    </button>
+  </div>
+
+</ng-template>
+
+
 <ng-template #itemListReadmore let-data>
   <div *ngFor="let h of data?.rangeLines; let i = index">
     <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>

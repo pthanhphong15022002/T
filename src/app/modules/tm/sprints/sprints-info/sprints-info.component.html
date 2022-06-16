@@ -1,0 +1,102 @@
+<div id="kt_engage_demos" class="bg-body drawer drawer-end drawer-on" style="width: 600px;">
+  <div class="card w-100 rounded-0 border-0">
+    <div class="card-header pe-5">
+      <!-- <div style="width : 30px" [style.background-color]="
+        ( task.status | vll: 'L0614':'color' | async) ">
+        </div> -->
+      <div class="card-title">
+        <h2 class="m-0">{{title}}</h2>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
+          id="kt_engage_demos_close" (click)="closeTaskBoard()">
+          <span class="icon-close icon-18"></span>
+        </button>
+      </div>
+      <!-- <div class="btn-extand mt-2 d-flex justify-content-end">
+          <a class="text-dark-75 text-hover-primary d-flex align-items-center" (click)="extendShow()">
+            <span class="mr-2 text-dark">Mở rộng</span>
+            <span class="icon-login icon-20 ml-1"></span>
+          </a>
+        </div> -->
+    </div>
+    <div class="card-body">
+      <div class="form-group row">
+        <span class="col-10">
+          <codx-input [disabled]="readOnly" type="text" field="iterationName" [crrValue]="taskBoard.iterationName"
+            (valueChange)="changText($event)" placeholder="Tên view board" [width]="50"></codx-input>
+        </span><span class="col-2">
+          <div class="form-group">
+            <div class="image-input image-input-outline" id="kt_user_add_avatar" >
+              <div>
+                <codx-img #imageAvatar class="symbol symbol-50 symbol-circle"
+                  [objectId]="taskBoard?taskBoard.iterationID:''" [objectName]="taskBoard?taskBoard.iterationName:''"
+                  objectType="TM_Sprints" funcId="TMT04" isAllowEdit="true" updateDirect="true" [width]="50" [disabled]="readOnly"
+                  [height]="50">
+                </codx-img>
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Dự án</label>
+        <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
+          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
+          [disabled]="readOnly" [crrValue]="taskBoard.projectID">
+        </codx-input>
+      </div>
+      <div class="form-group ">
+        <label>Lưu mặc định</label>
+        <codx-input type="valuelist" field="viewMode" [crrValue]="taskBoard.viewMode" refValue="L1469"
+          [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)" [disabled]="readOnly">
+        </codx-input>
+
+      </div>
+      <div class="form-group">
+        <label>Mô tả công việc</label>
+        <textarea [readonly]="readOnly" class="form-control" rows="2" [(ngModel)]="taskBoard.memo" [readOnly]="readOnly"></textarea>
+        <!-- [(ngModel)]="task.memo"  -->
+      </div>
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <div class="d-flex align-items-center">
+          <span class="icon-person icon-16 me-2 text-primary"></span>
+          <div class="fw-bold fs-6 text-primary">Phân công cho</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
+          <i class="icon-person_add_alt fs-5 me-1"></i>Add user
+        </button>
+      </div>
+      <div>
+        <ng-container *ngFor="let item of listUserDetail; index as i" >
+            <div class="badge me-2 flex align-items-center" style="background-color:#F4F7FF">
+              <span>
+                <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="item?.userID" objectType="AD_Users">
+                </codx-img>
+              </span><span class="text-dark fw-bold fs-7">
+                {{item?.userName}}
+              </span><span *ngIf="!readOnly"><a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+                    <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+                </a></span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end row">
+          <div class="col-10">
+            <!-- <codx-input type="checkbox"  (valueChange)="valueChange($event)" labelPosition="Before" label="sdsdsd"></codx-input> -->
+            <span><input type="checkbox" [readOnly]="readOnly" [(ngModel)]="taskBoard.isShared" (change)="changeShare($event)"> </span>
+            <span>
+              <codx-label name="lblCheck" formName="Tasks" default="Chia sẽ board cho nguồn lực" >
+              </codx-label>
+            </span>
+          </div>
+          <div class="col-2">
+            <!-- <button type="button" class="btn btn-primary">Lưu</button> -->
+            <button type="button" class="btn btn-primary"  (click)="saveData(taskBoard.iterationID)"
+              *ngIf="!readOnly">Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

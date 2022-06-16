@@ -1,0 +1,132 @@
+<codx-views #view funcID="TMS031" entityName="TM_Projects" [views]="views" [buttons]="buttons"
+  (buttonClick)="clickButton($event, true)"> </codx-views>
+
+<ng-template #main>
+  <div class="" id="kt_content">
+    <div class="list-table">
+      <codx-gridview #gridView [columnsGrid]="columnsGrid" [pageSize]="100" service="TM" entityName="TM_Projects"
+        type="listview" assemblyName="ERM.Business.TM" className="ProjectsBusiness" method="GetListProjectsAsync"
+        [gridViewName]="'grvProjects'" [predicate]="''" [dataValue]="''" [pageSize]="100" [formName]="formName"
+        [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle" [gridViewName]="gridViewName">
+      </codx-gridview>
+    </div>
+  </div>
+</ng-template>
+
+<!--Form thêm mới cứng-->
+<ng-template #sidebarRight let-data>
+  <div class="card w-100 rounded-0 border-0">
+    <div class="card-header pe-5">
+      <div class="card-title">
+        <h2 class="m-0">{{title}}</h2>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
+          id="kt_engage_demos_close">
+          <span (click)="Close()" class="icon-close icon-18"></span>
+        </button>
+      </div>
+    </div>
+    <div class="card-body" *ngIf="isAfterRender && gridViewSetup">
+      <div class="row">
+        <div class="form-group">
+          <div class="form-group row mt-3">
+            <div class="form-group col-4">
+              <codx-label fiedName="ProjectID" formName="Projects" gridViewName="grvProjects" default="Mã dự án">
+              </codx-label>
+              <codx-input name="ProjectID" [attr.disabled]="!isAddMode ? '' : null" type="text" field="ProjectID"
+                placeholder="" [crrValue]="projects.projectID" >
+              </codx-input>
+            </div>
+            <div class="form-group col-4">
+              <codx-label fiedName="ProjectCategory" formName="Projects" gridViewName="grvProjects" default="Phân loại">
+              </codx-label>
+              <codx-input name="ProjectCategory" type="combobox" refValue="L0607" field="projectCategory" placeholder=""
+                [crrValue]="projects.projectCategory" >
+              </codx-input>
+            </div>
+            <!-- <input name="ProjectID" [attr.disabled]="!isAddMode ? '' : null" type="text"
+              class="form-control" [(ngModel)]="projects.projectID" placeholder="" style="width: 400px" /> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="isOpen">
+  <codx-form-dynamic [objectID]="dataItem?.projectID" [data]="dataItem" [isAddMode]="isAddMode" (closeAfter)="Close()"
+    [isAddMode]="isAddMode" (saveAfter)="saveAfter($event)" (setDefaultValue)="setDefaultValue($event)">
+  </codx-form-dynamic>
+</div>
+<div class="offcanvas-overlay"></div>
+<ng-template #itemCreateBy let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+  </div>
+</ng-template>
+<ng-template #itemManager let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.projectManeger" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
+  </div>
+</ng-template>
+
+<ng-template #popContent let-dataItem>
+  <a class="action-item" (click)="openForm(taskAction,false)" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-edit icon-18 ms-2 me-2"></span>
+      <span class="tooltiptext">Edit</span>
+    </div>
+  </a>
+  <a class="action-item" style="cursor: pointer">
+    <div class="d-flex align-items-center btn-tooltip">
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+      <span class="tooltiptext">Delete</span>
+    </div>
+  </a>
+</ng-template>
+
+<ng-template #GiftIDCell let-dataItem>
+  <div class="dropdown" (dblclick)="showControl(p2,dataItem)" [ngbPopover]="popContent" popoverClass="empPopoverClass"
+    #p2="ngbPopover" placement="right left" container="body" autoClose="outside" triggers="manual">
+    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="icon-more_vert icon-20"></span>
+    </button>
+  </div>
+
+</ng-template>
+<ng-template #itemCreate let-data>
+  {{data.createdOn | fmDT:'dmy'}}
+</ng-template>
+<ng-template #itemStartdate let-data>
+  <div *ngIf="data.startDate==null">
+    {{data?.startDate }}
+  </div>
+  <div *ngIf="data.startDate!=null">
+    {{data?.startDate |fmDT:'dmy'}}
+  </div>
+</ng-template>
+<ng-template #itemEnddate let-data>
+  <div *ngIf="data.finishDate==null">
+    {{data?.finishDate }}
+  </div>
+  <div *ngIf="data.finishDate!=null">
+    {{data?.finishDate |fmDT:'dmy'}}
+  </div>
+</ng-template>
+
+<ng-template #itemApprovalControlVll let-data>
+  <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
+      [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+      {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+</ng-template>
+<ng-template #itemStatusVll let-data>
+  <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
+    [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
+    {{data?.status|vll:"L0614":"text"|async}}</div>
+</ng-template>

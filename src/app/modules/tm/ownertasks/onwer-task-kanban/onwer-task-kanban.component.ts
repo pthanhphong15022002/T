@@ -38,7 +38,7 @@ export class KanbanComponent implements OnInit {
   @ViewChild('popupAdd') modalContent: any;
   @ViewChild('content') content: any;
   @Input('viewBase') viewBase: ViewBaseComponent;
-  funtionID: string = "";
+  functionID: string;
 
   //@Input('taskInfo') taskInfo: TaskInfoComponent;
 
@@ -52,7 +52,7 @@ export class KanbanComponent implements OnInit {
   isAdd = false;
   today: Date = new Date();
   fromDate: Date = new Date(2022, 3, 1);
-  toDate: Date = new Date(2022, 5, 31);
+  toDate: Date = new Date(2022, 12, 30);
   configParam = null;
   gridView: any;
   grvSetup: any;
@@ -98,14 +98,14 @@ export class KanbanComponent implements OnInit {
     private notiService: NotificationsService
   ) {
     this.user = this.authStore.get();
-    this.funtionID = this.router.snapshot.params["funcID"];
+    this.functionID = this.router.snapshot.params["funcID"];
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.cache.viewSettings(this.funtionID).subscribe((res) => {
+    this.cache.viewSettings(this.functionID).subscribe((res) => {
       if (res) {
         this.settings = JSON.parse(res[0].settings);
         this.getColumnKanban();

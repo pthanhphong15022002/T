@@ -72,17 +72,18 @@ export class DataSv {
 }
 //Guid->string
 export class RangeLine {
-  RecID: string;
-  RangeID: string;
-  BreakName: string;
-  BreakValue: number = null;
+  recID: string;
+  rangeID: string;
+  breakName: string;
+  breakValue: number;
+  id:number;
 }
 
 export class rangeLine {
   recID: string;
   rangeID: string;
   breakName: string;
-  breakValue: number = null;
+  breakValue: number ;
   constructor(recID, rangeID, breakName, breakValue) {
     this.recID = recID;
     this.rangeID = rangeID;

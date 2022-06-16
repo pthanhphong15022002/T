@@ -23,6 +23,7 @@ import { TagsComponent } from './layout/tags/tags.component';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
+import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -38,6 +39,7 @@ const T_Component: Type<any>[] = [
   SelectweekComponent,
   AttachmentComponent,
   BreadcumbComponent,
+  AssignInfoComponent,
 ];
 
 const T_Moudule: Type<any>[] = [
@@ -51,10 +53,10 @@ const T_Moudule: Type<any>[] = [
   RouterModule,
   InlineSVGModule,
   NgxSkeletonLoaderModule,
-  FormsModule,
+  FormsModule
 ];
 @NgModule({
-  imports: [T_Moudule],
+  imports: [T_Moudule ],
   declarations: [T_Component],
   exports: [T_Moudule, T_Component],
 })

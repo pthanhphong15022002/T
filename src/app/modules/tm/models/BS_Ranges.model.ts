@@ -1,24 +1,32 @@
 export class BS_Ranges{
-    RangeID :String;
-	RangeName : String;
-    RangeName2 : String;
-    RangeType : String;
-    RangeUnit : String;
-    RangeValue : Number;
-    PayItemID : String;
-    Note :String;
-    ExpiredOn : Date;
-    Attachments :Number;
-    Comments :Number;
-    Stop :Boolean;
-    CreatedOn :Date;
-    CreatedBy :String;
-    ModifiedOn :Date;
-    ModifiedBy :String;
-    Owner :String;
-    BUID :String;
-    EmployeeID :String;
-    PositionID :String;
-    OrgUnitID :String;
-    DivisionID :String;
+    rangeID :String;
+	rangeName : String;
+    rangeName2 : String;
+    rangeType : String;
+    rangeUnit : String;
+    rangeValue : Number;
+    payItemID : String;
+    note :String;
+    expiredOn : Date;
+    attachments :Number;
+    comments :Number;
+    stop :Boolean;
+    createdOn :Date;
+    createdBy :String;
+    modifiedOn :Date;
+    modifiedBy :String;
+    owner :String;
+    build :String;
+    employeeID :String;
+    positionID :String;
+    orgUnitID :String;
+    divisionID :String;
+}
+
+export class BS_RangeLines{
+    RecID: String;
+    RangeID: String;
+    BreakName: String;
+    BreakValue: Number;
+    Color: String;    
 }

@@ -1,0 +1,313 @@
+<codx-views
+  #view
+  funcID="TMT02"
+  [showToolBar]="false"
+  entityName="TM_Tasks"
+></codx-views>
+<div class="page-content d-flex flex-row pt-4">
+  <div class="w-100 container pe-9">
+    <div class="taskbox-left" *ngIf="taskRemind">
+      <div class="text-dark fw-bold fs-4 mb-4">Nhắc việc</div>
+      <div class="row g-5 g-xl-8">
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a href="#" class="card bg-body hoverable card-xl-stretch mb-xl-8">
+            <!--begin::Body-->
+            <div class="card-body">
+              <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+                {{ taskRemind.taskOutOfDate }}
+              </div>
+              <div class="fw-bold text-gray-400">Quá hạn</div>
+            </div>
+            <!--end::Body-->
+          </a>
+          <!--end::Statistics Widget 5-->
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a href="#" class="card bg-dark hoverable card-xl-stretch mb-xl-8">
+            <!--begin::Body-->
+            <div class="card-body">
+              <div class="text-gray-100 fs-2 mb-2 mt-5">
+                {{ taskRemind.taskUncompelete }}
+              </div>
+              <div class="text-gray-100">Chưa thực hiện</div>
+            </div>
+            <!--end::Body-->
+          </a>
+          <!--end::Statistics Widget 5-->
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a href="#" class="card bg-warning hoverable card-xl-stretch mb-xl-8">
+            <!--begin::Body-->
+            <div class="card-body">
+              <div class="text-white fw-bolder fs-2 mb-2 mt-5">
+                {{ taskRemind.taskPrioritized }}
+              </div>
+              <div class="fw-bold text-white">Ưu tiên cao chưa thực hiện</div>
+            </div>
+            <!--end::Body-->
+          </a>
+          <!--end::Statistics Widget 5-->
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a
+            href="#"
+            class="card bg-info hoverable card-xl-stretch mb-5 mb-xl-8"
+          >
+            <!--begin::Body-->
+            <div class="card-body">
+              <div class="text-white fw-bolder fs-2 mb-2 mt-5">
+                {{ taskRemind.taskPrioritizedUnFinish }}
+              </div>
+              <div class="fw-bold text-white">Hoãn lại</div>
+            </div>
+            <!--end::Body-->
+          </a>
+          <!--end::Statistics Widget 5-->
+        </div>
+      </div>
+      <div class="row align-items-end m-0 mt-12 mb-6">
+        <div class="col pe-0">
+          <div class="text-dark fw-bold mb-1 text-nowrap">
+            Tỷ lệ hoàn thành đúng hạn
+          </div>
+          <div class="text-dark-50 mb-3 text-nowrap">12 tuần gần nhất</div>
+        </div>
+        <div class="col ps-0 pe-9">
+          <div>
+            <div class="d-flex flex-grow-1 mb-3">
+              <div class="font-size-h2 font-weight-bold mr-3">
+                {{ this.rateDoneOnTime | percent }}
+              </div>
+              <div class="d-flex w-100 h-50px">
+                <ejs-chart
+                  background="transparent"
+                  width="200"
+                  height="80"
+                  style="display: block"
+                  [chartArea]="chartArea"
+                  id="chartcontainer"
+                  [legendSettings]="legendLine"
+                  [primaryXAxis]="lineXAxis"
+                  [primaryYAxis]="lineYAxis"
+                  [tooltip]="tooltip"
+                >
+                  <e-series-collection>
+                    <e-series
+                      [dataSource]="dataLineTrend"
+                      fill="#F9D923"
+                      type="Line"
+                      yName="label"
+                      xName="value"
+                      width="2"
+                      [marker]="markerLine"
+                    >
+                    </e-series>
+                  </e-series-collection>
+                </ejs-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col pe-0">
+          <div class="text-dark fw-bold mb-1 text-nowrap">
+            Tỷ lệ hoàn thành công việc
+          </div>
+          <div class="text-dark-50 mb-3 text-nowrap">
+            Đến thời đến điểm hiện tại
+          </div>
+        </div>
+        <div class="col ps-0">
+          <div class="d-flex flex-column flex-grow-1 mb-3">
+            <div class="fs-2 fw-bold me-3">
+              {{ taskRemind.rateDoneAllTime | percent }}
+            </div>
+            <div class="d-flex w-100">
+              <ejs-progressbar
+                #linear1
+                id="linear1"
+                type="Linear"
+                [maximum]="100"
+                [minimum]="0"
+                [value]="taskRemind.rateDoneAllTime * 100"
+                width="100%"
+                [trackThickness]="12"
+                [progressThickness]="12"
+                height="5"
+                [animation]="animation"
+              >
+              </ejs-progressbar>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="row m-0 mt-9 mb-3 pt-1">
+        <div class="col-4">
+          <div class="text-dark fw-bold">Tuần {{ week }}</div>
+          <div class="text-dark font-size-h1 font-weight-bold mt-2">
+            {{ taskRemind.totalTaskInWeek }}
+          </div>
+
+          <div class="text-dark-50">
+            {{ rateTotalChange }}
+          </div>
+        </div>
+        <div class="col-8" [style.position]="'relative'">
+          <ejs-accumulationchart
+            background="transparent"
+            id="doughnut-container"
+            #pie
+            style="display: block"
+            width="600"
+            height="200"
+            selectionMode="Point"
+          >
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="Revenue"
+                [palettes]="palettes"
+                [dataSource]="doughnutData"
+                xName="label"
+                yName="value"
+                [startAngle]="startAngle"
+                [endAngle]="endAngle"
+                innerRadius="80%"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+          <div
+            id="center_title"
+            style="position: absolute; top: 80px; left: 220px"
+          >
+            <div class="text-dark-50">
+              <div *ngIf="this.positive == true">
+                <span
+                  class="icon-arrow_upward icon-18"
+                  [style.color]="'#06DDB8'"
+                ></span>
+                <span
+                  >{{ this.rateTotalChangeValue }} %
+                  <p>Task</p>
+                </span>
+              </div>
+              <div *ngIf="this.positive == false">
+                <span
+                  class="icon-arrow_downward icon-18"
+                  [style.color]="'red'"
+                ></span>
+                <span
+                  >{{ this.rateTotalChangeValue }} %
+                  <p>Task</p>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mt-6 mx-6">
+      <div class="text-dark fw-bold fs-4">
+        Task by days - {{ daySelected | date: "MMMM yyyy" }}
+      </div>
+    </div>
+    <div class="p-6 w-100" style="height: 600px">
+      <ejs-chart
+        style="display: block"
+        background="transparent"
+        [chartArea]="chartArea"
+        width="100%"
+        [align]="'center'"
+        id="chartbar"
+        [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis"
+        [tooltip]="tooltip"
+        [legendSettings]="legendSettings"
+      >
+        <e-axes>
+          <e-axis
+            rowIndex="0"
+            name="WorkHours"
+            opposedPosition="true"
+            title=""
+            labelFormat=""
+            [minimum]="0"
+            [maximum]="50"
+            [interval]="4"
+          >
+          </e-axis>
+        </e-axes>
+        <e-series-collection>
+          <e-series
+            fill="#005DC7"
+            [dataSource]="dataColumn"
+            type="Column"
+            name="Tasks"
+            xName="label"
+            yName="value"
+            [cornerRadius]="radius"
+          >
+          </e-series>
+          <e-series
+            fill="#F9D923"
+            [dataSource]="dataLine"
+            type="Line"
+            name="WorkHours"
+            yName="value"
+            xName="label"
+            yAxisName="WorkHours"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+  <div id="task_dashboard-right" class="min-w-350px w-350px me-6">
+    <div class="taskbox-user">
+      <selectweek
+        #selectweek
+        (onChangeValue)="onChangeValueSelectedWeek($event)"
+      ></selectweek>
+      <div class="taskbox-list">
+        <div
+          class="d-flex p-3 flex-grow-1 task-item"
+          *ngFor="let item of remiderOnDay"
+        >
+          <codx-img
+            class="symbol symbol-40px symbol-circle me-3"
+            objectType="AD_Users"
+            [objectId]="item.createdBy"
+            [objectName]="item.userName"
+          ></codx-img>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="text-dark fw-bold">
+                {{ item.userName }}
+              </div>
+              <span
+                class="icon-flag icon-18"
+                [style.color]="item.priority | vll: 'L0186':'color' | async"
+              ></span>
+            </div>
+            <div class="task-name text-gray-600 fs-7">{{ item.taskName }}</div>
+            <div
+              class="bagde bagde-light-primary me-2"
+              [style.border-color]="item.status | vll: 'L0614':'color' | async"
+              [style.background-color]="
+                (item.status | vll: 'L0614':'color' | async) + '30'
+              "
+              [style.color]="item.status | vll: 'L0614':'color' | async"
+              style="border: none"
+            >
+              {{ item.status | vll: "L0614":"text" | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+ <codx-views #view funcID="TMR02" entityName="TM_Tasks" [views]="views"> </codx-views>
+ <!-- 
+<ng-template #main>
+  <div class="" id="kt_content">
+    <div class="list-table">
+      <codx-gridview #gridView funcId="" [columnsGrid]="columnsGrid" [pageSize]="100" service="TM" entityName="TM_Tasks"
+        type="listview" assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportProjectAsync"
+        [gridViewName]="'grvTasks'" [predicate]="''" [dataValue]="''" [pageSize]="100" [formName]="formName"
+        [height]="'520'" [headerStyle]="headerStyle" [columnStyle]="columnStyle" [gridViewName]="gridViewName">
+      </codx-gridview>
+
+    </div>
+  </div>
+</ng-template>  -->
+ <!-- <codx-listview #listview [itemTemplate]="templateItem" [selectFirst]="true" [pageSize]="100"
+service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness" method="ListReportProjectAsync"
+[predicate]="" [dataValue]="" type="listView" [gridViewName]="'grvTasks'" autoLoad="false"
+entityName="TM_Tasks" [data]="data">
+</codx-listview> -->
+ <div class="e-gridheader e-lib e-droppable" style="padding-right: 4px;">
+   <div class="e-headercontent" style="border-right-width: 1px;">
+     <table class="e-table " style="border-collapse: collapse; ">
+       <thead style="height: 30px;">
+         <tr class="e-columnheader" style="border-bottom: 2px solid rgb(7, 7, 7); height: 100%;">
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext ">Danh sách dự án</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext">Nguồn lực</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext">Tổng số công việc</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext">Đã hoàn tất</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext">Chưa thực hiện</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-300px">
+             <div>
+               <span class="e-headertext ">Tỉ lệ hoàn thành</span>
+             </div>
+           </th>
+           <th class="e-headercell e-focus w-250px">
+             <div>
+               <span class="e-headertext ">Tỉ lệ hoàn thành đúng hạn</span>
+             </div>
+           </th>
+           <th >
+            
+          </th>
+         </tr>
+       </thead>
+       <tbody class="e-hide">
+         <tr *ngFor="let item of data" style="border-bottom: 1px solid #787; height: 100%;">
+           <td style="height: 40px;">{{item?.projectName}}</td>
+           <td style="height: 40px;">
+             <div class="flex align-items-center">
+               <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="item.resource" objectType="AD_Users"
+                 [numberImages]="4">
+               </codx-imgs>
+             </div>
+           </td>
+           <td style="height: 40px;">{{item.totalTask}}</td>
+           <td style="height: 40px;">{{item.taskCompleted}}</td>
+           <td style="height: 40px;">{{item.taskUnComplete}}</td>
+           <td style="height: 40px;">{{item.rateTaskDone | percent }}</td>
+           <td style="height: 40px;">{{item.rateTaskDoneTime | percent}}</td>
+           <td>
+            <div>
+              <a class="action-item"  style="cursor: pointer" (click)="openPopup(item)">
+                <span class=" icon-launch icon-18 ms-2 me-2"></span>
+              </a>   
+            </div>
+           </td>
+         </tr>
+
+       </tbody>
+     </table>
+   </div>
+ </div>

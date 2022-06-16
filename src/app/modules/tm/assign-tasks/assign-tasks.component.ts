@@ -10,6 +10,9 @@ import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 export class AssignTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('listDetails') listDetails: TemplateRef<any>;
+  @ViewChild('listTasks') listTasks: TemplateRef<any>;
+  @ViewChild('schedule') schedule: TemplateRef<any>;
+
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
 
@@ -28,6 +31,7 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+<<<<<<< HEAD
     // this.views = [{
     //   id: '2',
     //   type: 'content',
@@ -38,6 +42,43 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
     //     widthAsideRight: '900px'
     //   }
     // }];
+=======
+    this.views = [{
+      id: '2',
+      type: 'content',
+      active: true,
+      model: {
+        panelLeftRef: this.listDetails,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '3',
+      type: 'list',
+      icon: 'icon-format_list_bulleted',
+      text: 'List-tasks',
+      active: false,
+
+      model: {
+        panelLeftRef: this.listTasks,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },
+    {
+      id: '4',
+      type: 'schedule',
+      text: 'schedule',
+      active: false,
+      //   viewInput: null,
+      model: {
+        panelLeftRef: this.schedule,
+        sideBarRightRef: this.sidebarRight,
+        widthAsideRight: '900px'
+      }
+    },];
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     this.cf.detectChanges();
   }
 

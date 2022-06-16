@@ -1,4 +1,4 @@
-import { TM_Tasks } from './../../models/TM_Tasks.model';
+import { tmpTaskResource, TM_Tasks } from './../../models/TM_Tasks.model';
 import { TmService } from './../../tm.service';
 import { APICONSTANT } from '@shared/constant/api-const';
 
@@ -32,6 +32,7 @@ import { CbxpopupComponent } from '../cbxpopup/cbxpopup.component';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AttachmentService } from '@shared/components/attachment/attachment.service';
 import { AttachmentComponent } from '@shared/components/attachment/attachment.component';
+import { ActivatedRoute } from '@angular/router';
 
 declare var _, $: any;
 @Component({
@@ -44,10 +45,10 @@ export class TaskInfoComponent implements OnInit {
   user: any;
   readOnly = false;
   listUser: any[];
-  // listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[];
   listTodo: TaskGoal[];
+  listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -80,9 +81,14 @@ export class TaskInfoComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
+<<<<<<< HEAD
   @ViewChild('attachment') attachment: AttachmentComponent
 
 
+=======
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  showAssignTo = false;
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -101,43 +107,14 @@ export class TaskInfoComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = this.viewBase.funcID;
+<<<<<<< HEAD
+=======
+    if(this.functionID =="TMT03"){
+      this.showAssignTo = true;
+    }
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     this.getParam(); //bật tắt set param
     this.openTask();
-
-    // this.api.execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness","GetListEmployeesByUserIDAsync","PMNHI").subscribe(res=>{
-    //   console.log(res)})
-    // this.cache.gridViewSetup("Tasks", "grvTasks").then((res) => {
-    //   if (res) t.grvSetup = res;
-    // });
-    //this.getParam();
-    // this.dMService.islistFiles.subscribe((result) => {
-    //   if (result) {
-    //     this.attachmentComponent.loadAttachment();
-    //   }
-    // });
-    // this.tmSv.isShowPanel.subscribe((res) => {
-    //   if (res?.taskID) {
-    //     this.functionID = res.funtionID;
-    //     this.view = res.view;
-    //     this.action = res.action;
-    //     this.openInfo(res.taskID, res.action);
-    //     return;
-    //   }
-    //   if (res?.funtionID) {
-    //     this.functionID = res.funtionID;
-    //     this.view = res.view;
-    //     this.openTask();
-    //     return;
-    //   }
-    // });
-
-    // this.tmSv.isCopy.subscribe((res) => {
-    //   if (res) {
-    //     t.view = res.view;
-    //     t.functionID = res.functionID;
-    //     t.getTaskCoppied(res.id);
-    //   }
-    // });
   }
 
   getParam(callback = null) {
@@ -242,14 +219,173 @@ export class TaskInfoComponent implements OnInit {
           : this.STATUS_TASK_GOAL.Checked;
     }
   }
+  openTask(): void {
+    const t = this;
+   if(this.functionID =="TMT03"){
+     this.showAssignTo = true;
+     //cai nay thêm để test
+     this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+     this.getListUser(this.task.assignTo);
+   }
+  
+   this.task.estimated = 0;
+   this.readOnly = false;
+   this.task = new TM_Tasks();
+   this.listTodo = []; 
+   this.task.status = '1';
+   this.task.priority = '1';
+   this.task.memo = '';
+   this.task.dueDate = moment(new Date())
+     .set({ hour: 23, minute: 59, second: 59 })
+     .toDate();
+   this.changeDetectorRef.detectChanges();
+   if (!this.param)
+     this.getParam(function (o) {
+       //if (o) t.showPanel();
+     });
+   else {
+     this.closePanel();
+   }
+ }
+
+ openInfo(id, action) {
+   this.getParam();
+   const t = this;
+
+   t.task = new TM_Tasks();
+   t.readOnly = action === 'edit' ? false : true;
+   t.title =
+     action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
+   t.disableAddToDo = true;
+
+   this.tmSv.getTask(id).subscribe((res) => {
+     if (res && res.length) {
+       t.task = res[0];
+       t.listUserDetail = res[1] || [];
+       t.listTodo = res[2];
+       t.listMemo2OfUser = res[3];
+       if (t.task.assignTo != null) {
+         t.listUser = t.task.assignTo.split(';');
+         this.getListUser(this.task.assignTo);
+       } else {
+         this.listUser = [];
+         this.listUserDetail = [];
+         this.listMemo2OfUser = [];
+         //thêm giá trị đê add thử copy -sau nay xóa đi
+         //   if (action == 'edit') {
+         //     this.task.assignTo = 'TQHOAN'; ///tesst
+         //     this.getListUser(this.task.assignTo);
+         //   }
+       }
+       t.changeDetectorRef.detectChanges();
+       if(this.functionID =="TMT03"){
+         this.showAssignTo = true;
+       }
+       this.showPanel();
+     }
+   });
+ }
+
+ openAssignSchedule(task): void {
+  const t = this;
+  this.task = task
+  if(this.functionID =="TMT03"){
+   this.showAssignTo = true;
+   //cai nay thêm để test
+   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+   this.getListUser(this.task.assignTo);
+ }
+
+// this.task.estimated = 0;
+ this.readOnly = false;
+ this.listTodo = []; 
+ this.task.status = '1';
+ this.task.priority = '1';
+ this.task.memo = '';
+ this.task.dueDate = moment(new Date())
+   .set({ hour: 23, minute: 59, second: 59 })
+   .toDate();
+ this.changeDetectorRef.detectChanges();
+ if (!this.param)
+   this.getParam(function (o) {
+     //if (o) t.showPanel();
+   });
+ else {
+   this.closePanel();
+ }
+}
+
+ getTaskCoppied(id) {
+   const t = this;
+   if(this.functionID =="TMT03"){
+     this.showAssignTo = true;
+   }
+   this.tmSv.getTask(id).subscribe((res) => {
+     if (res && res.length) {
+       t.copyListTodo(res[2]);
+       t.beforeCopy(res[0]);
+     }
+   });
+ }
+
+ copyListTodo(listTodoCopy) {
+   const t = this;
+   t.listTodo = [];
+   if (listTodoCopy != null) {
+     listTodoCopy.forEach((td) => {
+       var todo = new TaskGoal();
+       todo.status = td.status;
+       todo.text = td.text;
+       t.listTodo.push(Object.assign({}, todo));
+     });
+   }
+ }
+
+ beforeCopy(data) {
+   this.title = 'Copy công việc ';
+   const t = this;
+   t.task = new TM_Tasks();
+   t.task = data;
+   t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+   if (data.startDate != null)
+     t.task.startDate = moment(new Date(data.startDate)).toDate();
+   t.task.endDate = moment(new Date(data.endDate)).toDate();
+   t.task.taskID = null;
+   t.task.parentID = null;
+   t.task.assignTo = null;
+   t.task.completedOn = null;
+   this.listUser = [];
+   this.listUserDetail = [];
+   this.listMemo2OfUser = [];
+   //thêm giá trị đê add thử copy -sau nay xóa đi
+   //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
+   // this.getListUser(this.task.assignTo);
+
+   t.changeDetectorRef.detectChanges();
+   this.showPanel();
+ }
 
   saveData(id) {
+<<<<<<< HEAD
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify("Tên công việc không được để trống !");
       $('#taskNameInput').focus()
       return;
+=======
+   // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    if (this.task.taskName == null || this.task.taskName.trim() == '') {
+      // this.notiService.notifyCode('TM002');
+      this.notiService.notify('Tên công việc không được để trống !');
+      $('#taskNameInput').focus();
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     }
+    if(this.functionID =="TMT03" && (this.task.assignTo==""||this.task.assignTo==null)){
+        this.notiService.notify('Phải nhập danh sách người được phân công !');
+        // this.notiService.notifyCode('mã code');
+        return;
+      }
+    
     this.checkLogicTime();
     if (!this.isCheckTime) {
       // this.notiService.notifyCode('TM002');
@@ -260,6 +396,7 @@ export class TaskInfoComponent implements OnInit {
       return;
     }
     if (
+<<<<<<< HEAD
       this.task.dueDate.getDate() < this.task.startDate.getDate() ||
       this.task.dueDate.getDate() < this.task.endDate.getDate()
     ) {
@@ -277,6 +414,26 @@ export class TaskInfoComponent implements OnInit {
       //       return that.closeConfirm(e, that, id);
       //     };
       //   });
+=======
+      this.task.dueDate < this.task.startDate ||
+      this.task.dueDate < this.task.endDate
+    ) {
+      // if (this.task.dueDate < this.task.startDate) {
+      //   this.message =
+      //     'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      // } else if (this.task.dueDate < this.task.endDate)
+      //   this.message =
+      //     'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
+      this.notiService
+        //.alert('Cảnh báo !!', this.message, { type: 'YesNo' })
+        .alertCode("TM002", { type: 'YesNo' })
+        .subscribe((dialog: Dialog) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.closeConfirm(e, that, id);
+          };
+        });
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     } else {
       this.actionSave(id);
     }
@@ -292,8 +449,8 @@ export class TaskInfoComponent implements OnInit {
       // this.notiService.notify('Mã lỗi TM002');
       return;
     }
+    this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-
     if (id) this.updateTask();
     else this.addTask();
     //this.viewBase.currentView.closeSidebarRight();
@@ -303,9 +460,9 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv
       .addTask([
         this.task,
-        this.listTodo,
         this.functionID,
-        this.listMemo2OfUser,
+        this.listTaskResources,
+        this.listTodo,
       ])
       .subscribe((res) => {
         if (res) {
@@ -336,11 +493,11 @@ export class TaskInfoComponent implements OnInit {
     this.tmSv
       .update([
         this.task,
+        this.functionID,
+        this.listTaskResources,
         this.listTodo,
         null,
-        this.functionID,
         this.recIDTodoDelete,
-        this.listMemo2OfUser,
       ])
       .subscribe((res) => {
         if (res) {
@@ -417,38 +574,13 @@ export class TaskInfoComponent implements OnInit {
       this.isCheckTime = false;
       return;
     }
-    if (this.task.startDate.getDate() > this.task.endDate.getDate()) {
+    if (this.task.startDate > this.task.endDate) {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
       this.notiService.notify(message);
     } else {
       this.isCheckTime = true;
     }
-  }
-  confirmDueTime() {
-    if (this.task.startDate && this.task.endDate) {
-      if (
-        this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-        (this.task.dueDate.getDate() < this.task.endDate.getDate() &&
-          !this.isConfirm)
-      ) {
-        if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
-          this.message =
-            'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-        } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
-          this.message =
-            'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-
-        if (confirm(this.message)) {
-          this.isConfirm = true;
-        } else {
-          this.isConfirm = false;
-          if (this.task.dueDate.getDate() < this.task.startDate.getDate())
-            $('#startDate').focus();
-          else $('#endDate').focus();
-        }
-      }
-    } else this.isConfirm = true;
   }
 
   checkLogicTaskGroup(idTaskGroup) {
@@ -510,6 +642,7 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
+<<<<<<< HEAD
           var toDo = res.checkList.split(';');
           toDo.forEach((tx) => {
             var taskG = new TaskGoal();
@@ -573,36 +706,22 @@ export class TaskInfoComponent implements OnInit {
           //     this.task.assignTo = 'TQHOAN'; ///tesst
           //     this.getListUser(this.task.assignTo);
           //   }
+=======
+          if (res.checkList != null) {
+            var toDo = res.checkList.split(';');
+            toDo.forEach((tx) => {
+              var taskG = new TaskGoal();
+              taskG.status = this.STATUS_TASK_GOAL.NotChecked;
+              taskG.text = tx;
+              this.listTodo.push(taskG);
+            });
+          }
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
         }
-        t.changeDetectorRef.detectChanges();
-        this.showPanel();
-      }
-    });
-  }
-
-  getTaskCoppied(id) {
-    const t = this;
-    this.tmSv.getTask(id).subscribe((res) => {
-      if (res && res.length) {
-        t.copyListTodo(res[2]);
-        t.beforeCopy(res[0]);
-      }
-    });
-  }
-
-  copyListTodo(listTodoCopy) {
-    const t = this;
-    t.listTodo = [];
-    if (listTodoCopy != null) {
-      listTodoCopy.forEach((td) => {
-        var todo = new TaskGoal();
-        todo.status = td.status;
-        todo.text = td.text;
-        t.listTodo.push(Object.assign({}, todo));
       });
-    }
   }
 
+<<<<<<< HEAD
   beforeCopy(data) {
     this.title = 'Copy công việc ';
     const t = this;
@@ -625,6 +744,9 @@ export class TaskInfoComponent implements OnInit {
     t.changeDetectorRef.detectChanges();
     this.showPanel();
   }
+=======
+ 
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
 
   // valueChangeUser(event) {
   //   if (event?.valueSeleteds) {
@@ -638,10 +760,15 @@ export class TaskInfoComponent implements OnInit {
   // }
 
   getListUser(listUser) {
+    this.listMemo2OfUser = [];
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
     this.listUser = listUser.split(';');
+    this.listUser.forEach((u) => {
+      var obj = { userID: u.userID, memo2: null };
+      this.listMemo2OfUser.push(obj);
+    });
     this.api
       .execSv<any>(
         'TM',
@@ -652,10 +779,7 @@ export class TaskInfoComponent implements OnInit {
       )
       .subscribe((res) => {
         this.listUserDetail = res;
-        this.listUserDetail.forEach((u) => {
-          var obj = { userID: u.userID, memo2: null };
-          this.listMemo2OfUser.push(obj);
-        });
+        
       });
   }
   extendShow() {
@@ -670,6 +794,7 @@ export class TaskInfoComponent implements OnInit {
     // if (this.tagsComponent.isOpen) this.tagsComponent.close()
     this.required.taskName = false;
     this.disableAddToDo = true;
+    this.showAssignTo=false;
     this.resetTask();
     this.closePanel();
   }
@@ -696,23 +821,6 @@ export class TaskInfoComponent implements OnInit {
   valueChangeTags(tags: string) {
     this.task.tags = tags;
   }
-  clickOpenFormAttach(taskID) {
-    // if (!taskID) {
-    //   this.confirmationDialogService
-    //     .confirm("Thông báo", "Công việc sẽ được lưu, bạn có muốn tiếp tục?")
-    //     .then((confirmed) => {
-    //       if (confirmed) {
-    //         this.addTask(false);
-    //       } else {
-    //       }
-    //     });
-    // } else {
-    //   this.openFormAttach(taskID);
-    // }
-  }
-  // openFormAttach(taskID) {
-  //   this.tmSv.openAttach("TM_Tasks", taskID, "TM001");
-  // }
 
   textboxChange(e) {
     console.log('task-info.comp', e);
@@ -770,14 +878,33 @@ export class TaskInfoComponent implements OnInit {
 
   closeConfirm(e: any, t: TaskInfoComponent, id: string) {
     if (e?.event?.status == 'Y') {
+<<<<<<< HEAD
       t.actionSave(id)
+=======
+      t.actionSave(id);
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     }
   }
   popup(evt: any) {
     this.attachment.openPopup();
   }
   fileAdded(e) {
+<<<<<<< HEAD
     console.log(e)
+=======
+    console.log(e);
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
   }
 
+  convertToListTaskResources() {
+    var listTaskResources: tmpTaskResource[] = [];
+    this.listMemo2OfUser.forEach((obj) => {
+      var tmpTR = new tmpTaskResource();
+      tmpTR.resourceID = obj.userID;
+      tmpTR.memo = obj.memo2;
+      tmpTR.roleType="R" ;
+      listTaskResources.push(tmpTR);
+    });
+    this.listTaskResources = listTaskResources;
+  }
 }

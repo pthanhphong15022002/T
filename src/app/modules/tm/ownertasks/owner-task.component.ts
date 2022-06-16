@@ -6,12 +6,16 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.component';
 
 import { TaskGroupComponent } from '../settings/task-group/task-group.component';
+import { ActivatedRoute } from '@angular/router';
+import { OnwerTaskDetailsComponent } from './owner-task-details/owner-task-details.component';
+import { AssignInfoComponent } from '@shared/components/assign-info/assign-info.component';
 
 @Component({
   selector: 'onwer-task',
@@ -40,22 +44,28 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   @ViewChild('taskGroup') taskGroup: TemplateRef<any>;
   @ViewChild('rangesKanban') rangesKanban: TemplateRef<any>;
 
-  // @ViewChild("sidebar") sidebar :TaskInfoComponent ;
+  @ViewChild(OnwerTaskDetailsComponent) ownerDetails   ;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
   @ViewChild('TaskGroup') TaskGroup: TaskGroupComponent;
-
-  public showBackdrop: boolean = true;
-  public type: string = 'Push';
-  public width: string = '550px';
-  public closeOnDocumentClick: boolean = true;
+  @ViewChild('assignInfo') assignInfo: AssignInfoComponent;
+  @ViewChild('sidebarRightToAssign') sidebarRightToAssign: TemplateRef<any> | null;
+  // public showBackdrop: boolean = true;
+  // public type: string = 'Push';
+   widthSidebar: string = '900px';
+   closeOnDocumentClick: boolean = true;
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
-
-  constructor(private cf: ChangeDetectorRef, private cache: CacheService) { }
+  funcID: any;
+  isAssign : boolean = false ;
+  constructor(
+    private cf: ChangeDetectorRef,
+    private activedRouter: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.buttons = [
       {
         id: '1',
@@ -84,6 +94,7 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+<<<<<<< HEAD
     this.views = [{
       id: '2',
       type: ViewType.kanban,
@@ -138,9 +149,73 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
         // widthAsideRight: '900px'
       }
     },
+=======
+   //this.isAssign = false ;
+    this.views = [
+      {
+        id: '1',
+        type: 'listdetail',
+        icon: 'icon-chrome_reader_mode1',
+        text: 'List-details',
+        active: true,
+        model: {
+          panelLeftRef: this.listDetails,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef:this.sidebarRight, //this.isAssign?  this.sidebarRightToAssign: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+      {
+        id: '2',
+        type: 'list',
+        icon: 'icon-format_list_bulleted',
+        text: 'List-tasks',
+        active: false,
+
+        model: {
+          panelLeftRef: this.listTasks,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+      {
+        id: '3',
+        type: 'kanban',
+        active: false,
+        model: {
+          panelLeftRef: this.kanban,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+      {
+        id: '4',
+        type: 'schedule',
+        text: 'schedule',
+        active: false,
+        //   viewInput: null,
+        model: {
+          panelLeftRef: this.schedule,
+          sideBarLeftRef: this.asideLeft,
+          sideBarRightRef: this.sidebarRight,
+          widthAsideRight: '900px',
+        },
+      },
+>>>>>>> 55e18d0366fad3bc7822d0c6b9ea171d2faf90d9
     ];
+  
+  }
+
+  receiveActionAssign($event) {
+    this.isAssign = $event;
+  
+    if(this.isAssign) this.assignInfo.showPanel();
     this.cf.detectChanges();
   }
+ 
+
 
   click(evt: any) {
     switch (evt.id) {

@@ -36,12 +36,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('sidebarRight') sidebarRight: TemplateRef<any> | null;
   @ViewChild('settingPanel') settingPanel: TemplateRef<any> | null;
   @ViewChild('calendarPanel') calendarPanel: TemplateRef<any> | null;
-
+  //  @ViewChild('assignInfo') assignInfo: AssignInfoComponent;
   @ViewChild('taskInfo') taskInfo: TaskInfoComponent;
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
+  isAssign: boolean = false;
 
   constructor(private cf: ChangeDetectorRef,
     private cache: CacheService) { }
@@ -162,6 +163,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // ];
     console.log(this.viewBase?.userPermission);
     this.cf.detectChanges();
+  }
+
+  receiveActionAssign(event) {
+    this.isAssign = event
   }
 
   click(evt: any) {

@@ -13,13 +13,13 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { ControlsModule } from '../controls/controls.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { HomeComponent } from './home/home.component';
 import { MwpComponent } from './mwp.component';
-
 import { ViewListDetailsComponent } from './view-list-details/view-list-details.component';
-import { LayoutComponent } from './_layout/layout.component';
 
+import { LayoutComponent } from './_layout/layout.component';
 
 const routes: Routes = [
   {
@@ -28,11 +28,15 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: MwpComponent,
+        component: DashboardComponent,
       },
       {
         path: 'home',
         component: HomeComponent,
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
       },
       {
         path: '**',
@@ -42,7 +46,12 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [MwpComponent,HomeComponent, ViewListDetailsComponent],
+  declarations: [
+    MwpComponent,
+    HomeComponent,
+    ViewListDetailsComponent,
+    DashboardComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -52,9 +61,9 @@ const routes: Routes = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    DatePickerModule,
+    DatePickerModule, 
     TabModule,
-    ControlsModule
+    ControlsModule,
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
