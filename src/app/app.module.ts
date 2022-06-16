@@ -22,6 +22,7 @@ import localeFr from '@angular/common/locales/vi';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
+import { TmComponent } from './modules/tm/tm.component';
 
 
 
@@ -71,6 +72,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+    TmComponent,
   ],
   imports: [
     BrowserModule,

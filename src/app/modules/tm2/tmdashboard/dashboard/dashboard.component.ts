@@ -6,11 +6,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
-import {
-  ChartTaskRemind,
-  RemiderOnDay,
-  TaskRemind,
-} from '@modules/tm/models/dashboard.model';
+
 import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -21,8 +17,8 @@ import {
   AccumulationChart,
   AnimationModel,
 } from '@syncfusion/ej2-angular-charts';
-import { TmService } from '@modules/tm/tm.service';
-
+import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm2/models/dashboard.model';
+import { TmService } from '@modules/tm2/tm.service';
 @Component({
   selector: 'dashboard',
   templateUrl: './dashboard.component.html',
