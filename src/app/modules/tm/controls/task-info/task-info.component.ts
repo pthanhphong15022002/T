@@ -80,9 +80,9 @@ export class TaskInfoComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  @ViewChild('attachment') attachment:AttachmentComponent
+  @ViewChild('attachment') attachment: AttachmentComponent
 
- 
+
   @ViewChild('tags') tagsComponent: TagsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -100,7 +100,7 @@ export class TaskInfoComponent implements OnInit {
 
   ngOnInit(): void {
     const t = this;
-    this.functionID = this.viewBase.funcID ;
+    this.functionID = this.viewBase.funcID;
     this.getParam(); //bật tắt set param
     this.openTask();
 
@@ -244,11 +244,11 @@ export class TaskInfoComponent implements OnInit {
   }
 
   saveData(id) {
-    if(this.task.taskName == null  ||this.task.taskName.trim() ==''){
+    if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify("Tên công việc không được để trống !");
       $('#taskNameInput').focus()
-      return ;
+      return;
     }
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -261,7 +261,7 @@ export class TaskInfoComponent implements OnInit {
     }
     if (
       this.task.dueDate.getDate() < this.task.startDate.getDate() ||
-        this.task.dueDate.getDate() < this.task.endDate.getDate()
+      this.task.dueDate.getDate() < this.task.endDate.getDate()
     ) {
       if (this.task.dueDate.getDate() < this.task.startDate.getDate()) {
         this.message =
@@ -269,14 +269,14 @@ export class TaskInfoComponent implements OnInit {
       } else if (this.task.dueDate.getDate() < this.task.endDate.getDate())
         this.message =
           'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      this.notiService
-        .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.closeConfirm(e, that, id);
-          };
-        });
+      // this.notiService
+      //   .alert('Cảnh báo !!', this.message, { type: 'YesNo' })
+      //   .subscribe((dialog: Dialog) => {
+      //     var that = this;
+      //     dialog.close = function (e) {
+      //       return that.closeConfirm(e, that, id);
+      //     };
+      //   });
     } else {
       this.actionSave(id);
     }
@@ -296,7 +296,7 @@ export class TaskInfoComponent implements OnInit {
 
     if (id) this.updateTask();
     else this.addTask();
-    this.viewBase.currentView.closeSidebarRight();
+    //this.viewBase.currentView.closeSidebarRight();
   }
 
   addTask(isCloseFormTask: boolean = true) {
@@ -497,7 +497,7 @@ export class TaskInfoComponent implements OnInit {
     }
   }
 
-  cbxChange(data) {}
+  cbxChange(data) { }
 
   loadTodoByGroup(idTaskGroup) {
     this.api
@@ -561,18 +561,18 @@ export class TaskInfoComponent implements OnInit {
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null){
+        if (t.task.assignTo != null) {
           t.listUser = t.task.assignTo.split(';');
           this.getListUser(this.task.assignTo);
-        }else{
-          this.listUser=[];
-          this.listMemo2OfUser=[];
-          this.listMemo2OfUser=[];
-           //thêm giá trị đê add thử copy -sau nay xóa đi
-        //   if (action == 'edit') {
-        //     this.task.assignTo = 'TQHOAN'; ///tesst
-        //     this.getListUser(this.task.assignTo);
-        //   }
+        } else {
+          this.listUser = [];
+          this.listMemo2OfUser = [];
+          this.listMemo2OfUser = [];
+          //thêm giá trị đê add thử copy -sau nay xóa đi
+          //   if (action == 'edit') {
+          //     this.task.assignTo = 'TQHOAN'; ///tesst
+          //     this.getListUser(this.task.assignTo);
+          //   }
         }
         t.changeDetectorRef.detectChanges();
         this.showPanel();
@@ -608,9 +608,9 @@ export class TaskInfoComponent implements OnInit {
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
-    t.task.dueDate = moment(new Date(data.dataValue)).toDate() ;
-    t.task.startDate = moment(new Date(data.startDate)).toDate() ;
-    t.task.endDate = moment(new Date(data.endDate)).toDate() ;
+    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+    t.task.startDate = moment(new Date(data.startDate)).toDate();
+    t.task.endDate = moment(new Date(data.endDate)).toDate();
     t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
@@ -723,10 +723,10 @@ export class TaskInfoComponent implements OnInit {
     console.log('task required', this.required.taskName);
   }
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    //this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
-    this.viewBase.currentView.closeSidebarRight();
+    // this.viewBase.currentView.closeSidebarRight();
   }
 
   onDeleteUser(userID) {
@@ -771,12 +771,12 @@ export class TaskInfoComponent implements OnInit {
   closeConfirm(e: any, t: TaskInfoComponent, id: string) {
     if (e?.event?.status == 'Y') {
       t.actionSave(id)
-     }
-   }
-   popup(evt: any){    
+    }
+  }
+  popup(evt: any) {
     this.attachment.openPopup();
   }
-  fileAdded(e){
+  fileAdded(e) {
     console.log(e)
   }
 

@@ -1,13 +1,10 @@
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { TmService } from '@modules/tm/tm.service';
 import { Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
-import { DataRequest, ApiHttpService, CacheService, AuthStore, UserModel, CodxGridviewComponent, CodxListviewComponent, ViewsComponent, CodxFormDynamicComponent, CallFuncService, NotificationsService } from 'codx-core';
+import { DataRequest, ApiHttpService, CacheService, AuthStore, UserModel, CodxGridviewComponent, CodxListviewComponent, ViewsComponent, CodxFormDynamicComponent, CallFuncService, NotificationsService, ButtonModel, ViewModel, ViewType } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ToDo } from '../../models/task.model';
 import { TM_TaskGroups } from '../../models/TM_TaskGroups.model';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'app-task-group',
@@ -114,13 +111,11 @@ export class TaskGroupComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {
         panelLeftRef: this.main,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
       }
     }];
   }
@@ -136,7 +131,7 @@ export class TaskGroupComponent implements OnInit {
     this.tmSv.loadTaskGroupByAuthen(model).subscribe((res) => {
       if (res && res.length) {
         this.data = res[0];
-        this.listView.data = this.data;
+        // this.listView.data = this.data;
       }
     })
   }
@@ -262,7 +257,7 @@ export class TaskGroupComponent implements OnInit {
   }
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    // //this.viewBase.currentView.openSidebarRight();
   }
 
 
@@ -298,7 +293,7 @@ export class TaskGroupComponent implements OnInit {
   Close() {
     this.listTodo = [];
     // this.renderer.removeClass(popup, 'drawer-on');
-    this.viewBase.currentView.closeSidebarRight();
+    //this.viewBase.currentView.closeSidebarRight();
   }
 
   valueApp(data) {
@@ -384,20 +379,20 @@ export class TaskGroupComponent implements OnInit {
 
   deleteTaskGroup(item) {
     var message = 'Bạn có chắc chắn muốn xóa task này !';
-    this.notiService
-      .alert('Cảnh báo', message, { type: 'YesNo' })
-      .subscribe((dialog: Dialog) => {
-        var t = this;
-        dialog.close = function (e) {
-          return t.api.execSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
-            if (res) {
-              item = res;
-        //      t.notiService.notify(res[2].message);
-              t.gridView.removeHandler(item, "taskGroupID");
-            }
-          })
-        };
-      });
+    // this.notiService
+    //   .alert('Cảnh báo', message, { type: 'YesNo' })
+    //   .subscribe((dialog: Dialog) => {
+    //     var t = this;
+    //     dialog.close = function (e) {
+    //       return t.api.execSv('TM', 'TM', 'TaskGroupBusiness', 'DeleteTaskGroupAsync', item.taskGroupID).subscribe((res) => {
+    //         if (res) {
+    //           item = res;
+    //     //      t.notiService.notify(res[2].message);
+    //           t.gridView.removeHandler(item, "taskGroupID");
+    //         }
+    //       })
+    //     };
+    //   });
   }
 
   addRow() {

@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewsComponent } from 'codx-core';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { ViewBoardInfoComponent } from './view-board-info/view-board-info.component';
 
 @Component({
@@ -33,13 +31,8 @@ export class ViewBoardsComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '2',
-      type: 'content',
-      active: true,
-      model: {
-        // panelLeftRef: this.listDetails,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '600px'
-      }
+      type: ViewType.content,
+      active: true
     }];
     this.cf.detectChanges();
   }
@@ -50,10 +43,10 @@ export class ViewBoardsComponent implements OnInit {
       case 'add':
         // this.viewBoardInfo.();
         this.viewBoardInfo.title = 'Task Board';
-        this.viewBase.currentView.openSidebarRight();
+        // //this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
-        this.viewBase.currentView.openSidebarRight();
+        //  //this.viewBase.currentView.openSidebarRight();
         break;
       default:
         break;

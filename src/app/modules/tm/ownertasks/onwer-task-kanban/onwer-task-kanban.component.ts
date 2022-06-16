@@ -158,7 +158,7 @@ export class KanbanComponent implements OnInit {
 
   onDataDrop(evt: Event) {
     this.item = evt;
-    this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
+    //  this.cf.openForm(this.content, 'Drag & Drop', 300, 300).subscribe(() => { });
   }
 
   submit(e: any) {

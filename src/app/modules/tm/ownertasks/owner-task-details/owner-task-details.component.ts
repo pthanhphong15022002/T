@@ -73,7 +73,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     const t = this;
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
-        this.listview.addHandler(res, true, 'recID');
+        // this.listview.addHandler(res, true, 'recID');
         this.data.push(res);
       }
     });
@@ -81,11 +81,11 @@ export class OnwerTaskDetailsComponent implements OnInit {
       if (res) {
         var index = this.data.findIndex(x => x.taskID == res.taskID);
         if (index != -1) {
-          this.listview.addHandler(res, false, 'recID');
+          //  this.listview.addHandler(res, false, 'recID');
         } else {
-          this.listview.addHandler(res, true, 'recID');
+          //  this.listview.addHandler(res, true, 'recID');
         }
-        this.data = this.listview.data;
+        //this.data = this.listview.data;
         if (t.itemSelected.taskID == res.taskID) {
           t.getOneItem(this.itemSelected.taskID);
           t.dt.detectChanges();
@@ -101,7 +101,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
     model.predicate = '';
-    model.funcID = "TMT02" ;
+    model.funcID = "TMT02";
     model.page = 1;
     model.pageSize = 100;
     // model.predicate = 'Owner=@0';
@@ -207,8 +207,8 @@ export class OnwerTaskDetailsComponent implements OnInit {
             this.objectState = objectState;
           }
         });
-    }else{
-      this.countOwner =1
+    } else {
+      this.countOwner = 1
     }
     this.listNode = []
     if (this.itemSelected?.category != '1') {
@@ -293,14 +293,14 @@ export class OnwerTaskDetailsComponent implements OnInit {
         return;
       }
       var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.confirmDelete(e, that);
-          };
-        });
+      // this.notiService
+      //   .alert('Cảnh báo', message, { type: 'YesNo' })
+      //   .subscribe((dialog: Dialog) => {
+      //     var that = this;
+      //     dialog.close = function (e) {
+      //       return that.confirmDelete(e, that);
+      //     };
+      //   });
 
     } else
       this.notiService.notify('Bạn chưa được cấp quyền này !');
@@ -345,17 +345,17 @@ export class OnwerTaskDetailsComponent implements OnInit {
                   var lstTaskDelete = res[0];
                   for (var i = 0; i < lstTaskDelete.length; i++) {
                     var taskDelete = t.data.find(x => x.taskID == lstTaskDelete[i].taskID);
-                    t.listview.removeHandler(taskDelete, 'recID');
+                    //t.listview.removeHandler(taskDelete, 'recID');
                   }
                   if (res[1] != null) {
                     var parent = t.data.find(x => x.taskID == res[1].taskID);
                     parent.assignTo = res[1].assignTo;
                     parent.category = res[1].category;
-                    t.listview.addHandler(parent, false, 'recID');
+                    // t.listview.addHandler(parent, false, 'recID');
                   }
                   // t.notiService.notifyCode("TM004")
                   t.notiService.notify('Xóa task thành công !');
-                  t.data = t.listview.data;
+                  //  t.data = t.listview.data;
                   t.itemSelected = t.data[0];
                   t.getOneItem(t.itemSelected.taskID)
                   return;
@@ -407,7 +407,7 @@ export class OnwerTaskDetailsComponent implements OnInit {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.listview.addHandler(taskAction, false, 'recID');
+                  //this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -426,25 +426,25 @@ export class OnwerTaskDetailsComponent implements OnInit {
       status: status,
       taskAction: taskAction,
     };
-    this.callfc
-      .openForm(
-        UpdateStatusPopupComponent,
-        'Cập nhật tình trạng',
-        500,
-        350,
-        '',
-        obj
-      )
-      .subscribe((dt: any) => {
-        dt.close = this.closePopup;
-      });
+    // this.callfc
+    //   .openForm(
+    //     UpdateStatusPopupComponent,
+    //     'Cập nhật tình trạng',
+    //     500,
+    //     350,
+    //     '',
+    //     obj
+    //   )
+    //   .subscribe((dt: any) => {
+    //     dt.close = this.closePopup;
+    //   });
   }
 
   closePopup(e: any) {
     if (e.closedBy == 'user action') {
       var task = e.event;
 
-      this.listview.addHandler(task, false, 'recID');
+      //this.listview.addHandler(task, false, 'recID');
     }
   }
 

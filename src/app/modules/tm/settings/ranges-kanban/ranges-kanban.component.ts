@@ -1,9 +1,7 @@
 import { InfoOpenForm } from './../../models/task.model';
 import { BS_Ranges } from './../../models/BS_Ranges.model';
 import { Component, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Renderer2 } from '@angular/core';
-import { AuthStore, CacheService, ApiHttpService, ViewsComponent, CodxFormDynamicComponent, CallFuncService } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
+import { AuthStore, CacheService, ApiHttpService, ViewsComponent, CodxFormDynamicComponent, CallFuncService, ButtonModel, ViewModel, ViewType } from 'codx-core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { RangeLineFormGroup } from '@modules/tm/models/task.model';
@@ -32,7 +30,7 @@ export class RangesKanbanComponent implements OnInit {
   lstRangeLine: any;
 
   @Input() ranges = new BS_Ranges();;
-  columnsGrid=[];
+  columnsGrid = [];
   headerStyle = {
     textAlign: 'center',
     backgroundColor: '#F1F2F3',
@@ -53,7 +51,7 @@ export class RangesKanbanComponent implements OnInit {
   isAfterRender = false;
   searchType = "0";
   isAddMode = true;
-  title="";
+  title = "";
   isAdd: boolean = true;
   index = null;
   isAddLine: boolean = true;
@@ -61,7 +59,7 @@ export class RangesKanbanComponent implements OnInit {
   constructor(private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
     private api: ApiHttpService, private dt: ChangeDetectorRef, private callfc: CallFuncService, private renderer: Renderer2,
     private modalService: NgbModal,
-    ) { }
+  ) { }
 
 
   views: Array<ViewModel> = [];
@@ -81,7 +79,7 @@ export class RangesKanbanComponent implements OnInit {
       { field: 'rangeID', headerText: 'Khoảng thời gian', template: this.itemListReadmore, width: 140 },
       { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy, width: 140 },
       { field: 'createOn', headerText: 'ngày tạo', template: this.itemCreate, width: 140 },
-      
+
     ];
     this.cache.gridViewSetup('RangesKanban', 'grvRangesKanban').subscribe(res => {
       if (res)
@@ -92,18 +90,18 @@ export class RangesKanbanComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
-      model: {
-        panelLeftRef: this.main,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
+      // model: {
+      //   panelLeftRef: this.main,
+      //   sideBarRightRef: this.sidebarRight,
+      //   widthAsideRight: '900px'
+      // }
     },
-    
-  ];
-    
+
+    ];
+
   }
 
   initForm() {
@@ -147,11 +145,11 @@ export class RangesKanbanComponent implements OnInit {
     };
     this.callfc.openForm(CodxFormDynamicComponent, 'Dynamic', 0, 0, '', obj);
   }
-  openPopup(itemdata, isAdd, index){
+  openPopup(itemdata, isAdd, index) {
     this.isAdd = isAdd;
     if (isAdd) {
       this.initPopup();
-    }else {
+    } else {
       this.itemRangeLine = this.fb.group(RangeLineFormGroup);
       this.itemRangeLine.patchValue(itemdata);
       this.index = index;
@@ -270,17 +268,17 @@ export class RangesKanbanComponent implements OnInit {
       this.title = 'Thêm chi tiết khoảng thời gian';
       this.initPopup();
     }
- //    this.showPanel();
-      this.renderer.addClass(pop, 'drawer-on');
+    //    this.showPanel();
+    this.renderer.addClass(pop, 'drawer-on');
   }
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    //  //this.viewBase.currentView.openSidebarRight();
   }
 
   Close() {
     // this.renderer.removeClass(popup, 'drawer-on');
-    this.viewBase.currentView.closeSidebarRight();
+    //  this.viewBase.currentView.closeSidebarRight();
   }
 
   readMore(dataItem) {

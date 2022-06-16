@@ -1,4 +1,4 @@
-import { CacheService, ViewsComponent } from 'codx-core';
+import { ButtonModel, CacheService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import {
   Component,
   OnInit,
@@ -7,8 +7,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 import { SettingPanelComponent } from '../controls/setting-panel/setting-panel.component';
 
@@ -87,56 +86,56 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '2',
-      type: 'kanban',
+      type: ViewType.kanban,
       active: false,
 
       model: {
         panelLeftRef: this.kanban,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // sideBarLeftRef: this.asideLeft,
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     },
     {
       id: '3',
-      type: 'kanban',
+      type: ViewType.kanban,
       icon: 'icon-chrome_reader_mode1',
       text: 'List-details',
       active: true,
       //   viewInput: null,
       model: {
         panelLeftRef: this.listDetails,
-        itemTemplate: this.templateTask,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // itemTemplate: this.templateTask,
+        // sideBarLeftRef: this.asideLeft,
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     },
     {
       id: '4',
-      type: 'list',
+      type: ViewType.list,
       icon: 'icon-format_list_bulleted',
       text: 'List-tasks',
       active: false,
 
       model: {
         panelLeftRef: this.listTasks,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // sideBarLeftRef: this.asideLeft,
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     },
     {
       id: '5',
-      type: 'schedule',
+      type: ViewType.schedule,
       text: 'schedule',
       active: false,
       //   viewInput: null,
       model: {
         panelLeftRef: this.schedule,
-        sideBarLeftRef: this.asideLeft,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
+        // sideBarLeftRef: this.asideLeft,
+        // sideBarRightRef: this.sidebarRight,
+        // widthAsideRight: '900px'
       }
     },
     ];
@@ -148,19 +147,19 @@ export class OwnerTaskComponent implements OnInit, AfterViewInit {
       case 'add':
         this.taskInfo.openTask();
         this.taskInfo.title = 'Tạo mới công việc';
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       case 'add1':
         this.TaskGroup.openTask();
         this.TaskGroup.title = 'Tạo mới nhóm làm việc';
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       case 'edit':
         this.taskInfo.openInfo(evt.data.taskID, 'edit');
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       default:
         break;

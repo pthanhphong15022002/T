@@ -1,9 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { SelectweekComponent } from '@shared/components/selectweek/selectweek.component';
 import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '@modules/tm/models/dashboard.model';
-import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
+import { ApiHttpService, AuthStore, DataRequest, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { AccPoints, IAccAnimationCompleteEventArgs, ILoadedEventArgs, AccumulationChartComponent, AccumulationChart, AnimationModel } from '@syncfusion/ej2-angular-charts';
 
@@ -37,7 +36,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'content',
+      type: ViewType.content,
       active: true,
       model: {
         panelLeftRef: this.dashboard

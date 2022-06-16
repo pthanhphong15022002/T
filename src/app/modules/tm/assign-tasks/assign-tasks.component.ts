@@ -1,7 +1,5 @@
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
-import { ButtonModel } from 'codx-core/lib/layout/toolbar/tool-model';
 import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
-import { ViewsComponent } from 'codx-core';
+import { ButtonModel, ViewModel, ViewsComponent } from 'codx-core';
 import { TaskInfoComponent } from '../controls/task-info/task-info.component';
 
 @Component({
@@ -30,16 +28,16 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.views = [{
-      id: '2',
-      type: 'content',
-      active: true,
-      model: {
-        panelLeftRef: this.listDetails,
-        sideBarRightRef: this.sidebarRight,
-        widthAsideRight: '900px'
-      }
-    }];
+    // this.views = [{
+    //   id: '2',
+    //   type: 'content',
+    //   active: true,
+    //   model: {
+    //     panelLeftRef: this.listDetails,
+    //     sideBarRightRef: this.sidebarRight,
+    //     widthAsideRight: '900px'
+    //   }
+    // }];
     this.cf.detectChanges();
   }
 
@@ -49,10 +47,10 @@ export class AssignTaskComponent implements OnInit, AfterViewInit {
       case 'add':
         this.taskInfo.openTask();
         this.taskInfo.title = 'Tạo mới công việc';
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       case '1':
-        this.viewBase.currentView.openSidebarRight();
+        //this.viewBase.currentView.openSidebarRight();
         break;
       default:
         break;

@@ -1,7 +1,6 @@
 import { LayoutModel, TmService } from '@modules/tm/tm.service';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
-import { CodxService, LayoutInitService, LayoutService } from 'codx-core';
+import { CodxService, LayoutInitService, LayoutService, ViewModel } from 'codx-core';
 import { LayoutComponent } from '../_layout/layout.component';
 
 @Component({

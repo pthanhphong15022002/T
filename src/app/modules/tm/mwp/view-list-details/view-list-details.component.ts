@@ -91,8 +91,8 @@ export class ViewListDetailsComponent implements OnInit {
     const t = this;
     this.taskInfo.isAddNew.subscribe((res) => {
       if (res) {
-        this.listviewAdd.addHandler(res, true, 'recID');
-        if (this.dataValue == '1') this.data = this.listviewAdd.data;
+        // this.listviewAdd.addHandler(res, true, 'recID');
+        // if (this.dataValue == '1') this.data = this.listviewAdd.data;
       }
     });
     this.taskInfo.isUpdate.subscribe((res) => {
@@ -103,7 +103,7 @@ export class ViewListDetailsComponent implements OnInit {
         } else {
           this.addListView(res);
         }
-        this.data = this.listview.data;
+        // this.data = this.listview.data;
         if (t.itemSelected.taskID == res.taskID) {
           t.getOneItem(this.itemSelected.taskID);
           t.dt.detectChanges();
@@ -118,7 +118,7 @@ export class ViewListDetailsComponent implements OnInit {
     model.formName = 'Tasks';
     model.gridViewName = 'grvTasks';
     model.entityName = 'TM_Tasks';
-   // model.funcID = 'WPT036';
+    // model.funcID = 'WPT036';
     model.page = 1;
     // model.pageSize = 20;
     // set max dinh
@@ -221,14 +221,14 @@ export class ViewListDetailsComponent implements OnInit {
         return;
       }
       var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.confirmDelete(e, that);
-          };
-        });
+      // this.notiService
+      //   .alert('Cảnh báo', message, { type: 'YesNo' })
+      //   .subscribe((dialog: Dialog) => {
+      //     var that = this;
+      //     dialog.close = function (e) {
+      //       return that.confirmDelete(e, that);
+      //     };
+      //   });
     } else this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
 
@@ -336,7 +336,7 @@ export class ViewListDetailsComponent implements OnInit {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.listview.addHandler(taskAction, false, 'recID');
+                  //  this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -357,24 +357,24 @@ export class ViewListDetailsComponent implements OnInit {
     };
     var oldSt = this.dataValue;
     var oldTask = taskAction;
-    this.callfc
-      .openForm(
-        UpdateStatusPopupComponent,
-        'Cập nhật tình trạng',
-        500,
-        350,
-        '',
-        obj
-      )
-      .subscribe((dt: any) => {
-        var that = this;
-        dt.close = function (e) {
-          that.closePopup(e, oldSt,oldTask, that);
-        };
-      });
+    // this.callfc
+    //   .openForm(
+    //     UpdateStatusPopupComponent,
+    //     'Cập nhật tình trạng',
+    //     500,
+    //     350,
+    //     '',
+    //     obj
+    //   )
+    //   .subscribe((dt: any) => {
+    //     var that = this;
+    //     dt.close = function (e) {
+    //       that.closePopup(e, oldSt, oldTask, that);
+    //     };
+    //   });
   }
 
-  closePopup(e: any, oldSt: string,taskAction: any, t: ViewListDetailsComponent) {
+  closePopup(e: any, oldSt: string, taskAction: any, t: ViewListDetailsComponent) {
     if (e.closedBy == 'user action') {
       var task = e.event;
       if (task.status != oldSt) {
@@ -392,88 +392,88 @@ export class ViewListDetailsComponent implements OnInit {
   }
 
   addListView(obj) {
-    switch (obj.status) {
-      case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.addHandler(obj, true, 'recID');
-        break;
-      case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.addHandler(obj, true, 'recID');
-        break;
-      case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.addHandler(obj, true, 'recID');
-        break;
-      case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.addHandler(obj, true, 'recID');
-        break;
-      default:
-        break;
-    }
+    // switch (obj.status) {
+    //   case '1':
+    //     if (this.listviewAdd != undefined)
+    //       //    this.listviewAdd.addHandler(obj, true, 'recID');
+    //       break;
+    //   case '9':
+    //     if (this.listviewCompleted != undefined)
+    //       //     this.listviewCompleted.addHandler(obj, true, 'recID');
+    //       break;
+    //   case '5':
+    //     if (this.listviewPostpone != undefined)
+    //       //      this.listviewPostpone.addHandler(obj, true, 'recID');
+    //       break;
+    //   case '8':
+    //     if (this.listviewRefuse != undefined)
+    //       //    this.listviewRefuse.addHandler(obj, true, 'recID');
+    //       break;
+    //   default:
+    //     break;
+    // }
   }
   updateListView(obj) {
-    switch (obj.status) {
-      case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.addHandler(obj, false, 'recID');
-        break;
-      case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.addHandler(obj, false, 'recID');
-        break;
-      case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.addHandler(obj, false, 'recID');
-        break;
-      case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.addHandler(obj, false, 'recID');
-        break;
-      default:
-        break;
-    }
+    // switch (obj.status) {
+    //   case '1':
+    //     if (this.listviewAdd != undefined)
+    //       //   this.listviewAdd.addHandler(obj, false, 'recID');
+    //       break;
+    //   case '9':
+    //     if (this.listviewCompleted != undefined)
+    //       //         this.listviewCompleted.addHandler(obj, false, 'recID');
+    //       break;
+    //   case '5':
+    //     if (this.listviewPostpone != undefined)
+    //       //        this.listviewPostpone.addHandler(obj, false, 'recID');
+    //       break;
+    //   case '8':
+    //     if (this.listviewRefuse != undefined)
+    //       //         this.listviewRefuse.addHandler(obj, false, 'recID');
+    //       break;
+    //   default:
+    //     break;
+    // }
   }
   removeListView(obj) {
-    switch (obj.status) {
-      case '1':
-        if(this.listviewAdd !=undefined)
-        this.listviewAdd.removeHandler(obj, 'recID');
-        break;
-      case '9':
-        if(this.listviewCompleted !=undefined)
-        this.listviewCompleted.removeHandler(obj, 'recID');
-        break;
-      case '5':
-        if(this.listviewPostpone !=undefined)
-        this.listviewPostpone.removeHandler(obj, 'recID');
-        break;
-      case '8':
-        if(this.listviewRefuse !=undefined)
-        this.listviewRefuse.removeHandler(obj, 'recID');
-        break;
-      default:
-        break;
-    }
+    // switch (obj.status) {
+    //   case '1':
+    //     if (this.listviewAdd != undefined)
+    //       this.listviewAdd.removeHandler(obj, 'recID');
+    //       break;
+    //   case '9':
+    //     if (this.listviewCompleted != undefined)
+    //         this.listviewCompleted.removeHandler(obj, 'recID');
+    //       break;
+    //   case '5':
+    //     if (this.listviewPostpone != undefined)
+    //         this.listviewPostpone.removeHandler(obj, 'recID');
+    //       break;
+    //   case '8':
+    //     if (this.listviewRefuse != undefined)
+    //            this.listviewRefuse.removeHandler(obj, 'recID');
+    //       break;
+    //   default:
+    //     break;
+    // }
   }
   tabStatus(st: string) {
     switch (st) {
       case '1':
-        this.data = this.listviewAdd?.data;
+        // this.data = this.listviewAdd?.data;
         if (this.data != null) this.itemSelected = this.data[0];
 
         break;
       case '9':
-        this.data = this.listviewCompleted?.data;
+        //this.data = this.listviewCompleted?.data;
         if (this.data != null) this.itemSelected = this.data[0];
         break;
       case '5':
-        this.data = this.listviewPostpone?.data;
+        //  this.data = this.listviewPostpone?.data;
         if (this.data != null) this.itemSelected = this.data[0];
         break;
       case '8':
-        this.data = this.listviewRefuse?.data;
+        // this.data = this.listviewRefuse?.data;
         if (this.data != null) this.itemSelected = this.data[0];
         break;
       default:
@@ -539,7 +539,7 @@ export class ViewListDetailsComponent implements OnInit {
     } else {
       this.countOwner = 1;
     }
-     this.listNode = []
+    this.listNode = []
     if (task?.category != '1') {
       this.api
         .execSv<any>(
@@ -560,16 +560,16 @@ export class ViewListDetailsComponent implements OnInit {
     this.loadDetailTask(this.itemSelected);
     switch (event.status) {
       case '1':
-        this.data = this.listviewAdd?.data;
+        //   this.data = this.listviewAdd?.data;
         break;
       case '9':
-        this.data = this.listviewCompleted?.data;
+        //    this.data = this.listviewCompleted?.data;
         break;
       case '5':
-        this.data = this.listviewPostpone?.data;
+        //     this.data = this.listviewPostpone?.data;
         break;
       case '8':
-        this.data = this.listviewRefuse?.data;
+        // this.data = this.listviewRefuse?.data;
         break;
       default:
         break;

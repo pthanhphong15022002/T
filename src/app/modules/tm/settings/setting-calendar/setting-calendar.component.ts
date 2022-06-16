@@ -240,14 +240,14 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
         return;
       }
       var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.close(e, that);
-          };
-        });
+      // this.notiService
+      //   .alert('Cảnh báo', message, { type: 'YesNo' })
+      //   .subscribe((dialog: Dialog) => {
+      //     var that = this;
+      //     dialog.close = function (e) {
+      //       return that.close(e, that);
+      //     };
+      //   });
     } else this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
 
@@ -265,8 +265,8 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
       ],
     };
     //reload data
-    this.schedule.reloadDataSource();
-    this.schedule.reloadResource();
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
   }
   close(e: any, t) {
     if (e.closedBy == 'user action') {
@@ -333,77 +333,77 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
 
   // modal
   addCalendar() {
-    this.callfc
-      .openForm(this.add, 'Tạo lịch làm việc', 500, 400)
-      .subscribe((res: Dialog) => {
-        var _this = this;
-        res.close = function (e) {
-          return _this.close(e, _this);
-        };
-      });
+    // this.callfc
+    //   .openForm(this.add, 'Tạo lịch làm việc', 500, 400)
+    //   .subscribe((res: Dialog) => {
+    //     var _this = this;
+    //     res.close = function (e) {
+    //       return _this.close(e, _this);
+    //     };
+    //   });
   }
 
   //Modal setting
   openCalendarSettings() {
-    this.callfc
-      .openForm(this.editCalendar, 'Lịch làm việc chuẩn', 1200, 1000)
-      .subscribe((res: Dialog) => {
-        let _this = this;
-        this.api
-          .execSv<any>(
-            APICONSTANT.SERVICES.BS,
-            APICONSTANT.ASSEMBLY.BS,
-            APICONSTANT.BUSINESS.BS.Calendars,
-            'GetSettingCalendarAsync',
-            this.calendarID
-          )
-          .subscribe((res) => {
-            if (res) {
-              _this.dayOff = res[0];
-              _this.handleWeekDay(res[1]);
-              _this.calendateDate = res[2];
-            }
-          });
-        res.close = function (e) {
-          return _this.close(e, _this);
-        };
-      });
+    // this.callfc
+    //   .openForm(this.editCalendar, 'Lịch làm việc chuẩn', 1200, 1000)
+    //   .subscribe((res: Dialog) => {
+    //     let _this = this;
+    //     this.api
+    //       .execSv<any>(
+    //         APICONSTANT.SERVICES.BS,
+    //         APICONSTANT.ASSEMBLY.BS,
+    //         APICONSTANT.BUSINESS.BS.Calendars,
+    //         'GetSettingCalendarAsync',
+    //         this.calendarID
+    //       )
+    //       .subscribe((res) => {
+    //         if (res) {
+    //           _this.dayOff = res[0];
+    //           _this.handleWeekDay(res[1]);
+    //           _this.calendateDate = res[2];
+    //         }
+    //       });
+    //     res.close = function (e) {
+    //       return _this.close(e, _this);
+    //     };
+    //   });
   }
 
   //Modal event dayoff
   openDayOffs(data = null) {
-    this.callfc
-      .openForm(this.editEvent, 'Thêm Lễ/Tết/Sự kiện', 800, 800)
-      .subscribe((res: Dialog) => {
-        let _this = this;
-        _this.evtData = new DaysOffModel();
-        if (data) _this.evtData = { ...data };
-        _this.evtData.dayoffCode = this.calendarID;
-        _this.evtData.day = data?.day || 1;
-        _this.evtData.month = data?.month || 1;
-        _this.evtData.color = data?.color || '#0078ff';
-        _this.getDayOff();
-        res.close = this.close;
-      });
+    // this.callfc
+    //   .openForm(this.editEvent, 'Thêm Lễ/Tết/Sự kiện', 800, 800)
+    //   .subscribe((res: Dialog) => {
+    //     let _this = this;
+    //     _this.evtData = new DaysOffModel();
+    //     if (data) _this.evtData = { ...data };
+    //     _this.evtData.dayoffCode = this.calendarID;
+    //     _this.evtData.day = data?.day || 1;
+    //     _this.evtData.month = data?.month || 1;
+    //     _this.evtData.color = data?.color || '#0078ff';
+    //     _this.getDayOff();
+    //     res.close = this.close;
+    //   });
   }
 
   //Modal calendarDate
   openCalendarDate(data = null) {
-    this.callfc
-      .openForm(this.editCalendarDate, 'Thêm ngày nghỉ', 800, 800)
-      .subscribe((res: Dialog) => {
-        let _this = this;
-        _this.evtCDDate = new CalendarDateModel();
-        if (data) _this.evtCDDate = data;
-        _this.evtCDDate.calendarID = this.calendarID;
-        _this.evtCDDate.calendarDate = data?.calendarDate
-          ? new Date(data.calendarDate)
-          : new Date();
-        _this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
-        res.close = function (e) {
-          return _this.close(e, _this);
-        };
-      });
+    // this.callfc
+    //   .openForm(this.editCalendarDate, 'Thêm ngày nghỉ', 800, 800)
+    //   .subscribe((res: Dialog) => {
+    //     let _this = this;
+    //     _this.evtCDDate = new CalendarDateModel();
+    //     if (data) _this.evtCDDate = data;
+    //     _this.evtCDDate.calendarID = this.calendarID;
+    //     _this.evtCDDate.calendarDate = data?.calendarDate
+    //       ? new Date(data.calendarDate)
+    //       : new Date();
+    //     _this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
+    //     res.close = function (e) {
+    //       return _this.close(e, _this);
+    //     };
+    //   });
   }
   // modal
 
@@ -450,7 +450,7 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
           }
         }
       });
-    this.schedule.reloadDataSource();
+    //  this.schedule.reloadDataSource();
   }
 
   saveCalendarDate() {
@@ -605,7 +605,7 @@ export class SettingCalendarComponent implements OnInit, AfterViewInit {
     if (e.field == 'calendarDate') this.evtCDDate.calendarDate = e.data;
   }
 
-  toggleMoreFunc(id:string){
+  toggleMoreFunc(id: string) {
     this.dayOffId == id ? (this.dayOffId = '') : (this.dayOffId = id);
   }
 }

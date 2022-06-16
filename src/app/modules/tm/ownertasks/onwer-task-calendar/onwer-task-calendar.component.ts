@@ -139,7 +139,7 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
         ],
       };
     }
-    
+
   }
 
   getParams() {
@@ -183,14 +183,14 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
         return;
       }
       var message = 'Bạn có chắc chắn muốn xóa task này !';
-      this.notiService
-        .alert('Cảnh báo', message, { type: 'YesNo' })
-        .subscribe((dialog: Dialog) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.close(e, that);
-          };
-        });
+      // this.notiService
+      //   .alert('Cảnh báo', message, { type: 'YesNo' })
+      //   .subscribe((dialog: Dialog) => {
+      //     var that = this;
+      //     dialog.close = function (e) {
+      //       return that.close(e, that);
+      //     };
+      //   });
 
     } else
       this.notiService.notify('Bạn chưa được cấp quyền này !');
@@ -211,8 +211,8 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
       ]
     }
     //reload data
-    this.schedule.reloadDataSource();
-    this.schedule.reloadResource();
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
 
   }
   close(e: any, t: OwnerTaskCalendarComponent) {
@@ -243,7 +243,7 @@ export class OwnerTaskCalendarComponent implements OnInit, AfterViewInit {
               t.tmSv.deleteTask(t.taskAction.taskID).subscribe((res) => {
                 if (res) {
                   // this.notiService.notifyCode("TM004")
-                  this.listview.removeHandler(this.taskAction, 'recID');
+                  //  this.listview.removeHandler(this.taskAction, 'recID');
                   this.notiService.notify('Xóa task thành công !');
                   return;
                 }

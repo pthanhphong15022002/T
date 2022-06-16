@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TmService } from '@modules/tm/tm.service';
-import { CodxService } from 'codx-core';
-import { ViewModel } from 'codx-core/lib/layout/views/view-model';
+import { CodxService, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'app-home-setting',
@@ -23,7 +22,7 @@ export class HomeSettingComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [{
       id: '1',
-      type: 'grid',
+      type: ViewType.grid,
       sameData: false,
       active: true,
       model: {

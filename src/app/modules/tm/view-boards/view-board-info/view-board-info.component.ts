@@ -7,9 +7,9 @@ import { ViewsComponent } from 'codx-core';
   styleUrls: ['./view-board-info.component.scss']
 })
 export class ViewBoardInfoComponent implements OnInit {
-  // taskBoard = new 
-  title = "Task Board" ;
-  readOnly = true ;
+  // taskBoard = new
+  title = "Task Board";
+  readOnly = true;
 
 
 
@@ -19,22 +19,22 @@ export class ViewBoardInfoComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
 
-  saveData(id){
+
+  saveData(id) {
     //save taskBodad
   }
-  
-  closeTaskBoard(){
+
+  closeTaskBoard() {
     //lam gif ddos
-    this.viewBase.currentView.closeSidebarRight();
+    // this.viewBase.currentView.closeSidebarRight();
   }
 
   showPanel() {
-    this.viewBase.currentView.openSidebarRight();
+    //  //this.viewBase.currentView.openSidebarRight();
   }
   closePanel() {
-    this.viewBase.currentView.closeSidebarRight();
+    //   this.viewBase.currentView.closeSidebarRight();
   }
   openDialog() {
     // let obj = {
@@ -45,13 +45,13 @@ export class ViewBoardInfoComponent implements OnInit {
     // };
     // this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', obj);
   }
-  valueChange(e :any){
+  valueChange(e: any) {
 
   }
-  changeVLL(e :any){
+  changeVLL(e: any) {
 
   }
-  cbxChange(e :any){
+  cbxChange(e: any) {
 
   }
 }
