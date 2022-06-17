@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { OwnerTasksComponent } from './ownertasks/ownertasks.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -31,11 +32,6 @@ export const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      },
-      {
         path: '**',
         redirectTo: 'error/404',
       }
@@ -53,6 +49,7 @@ const T_Component: Type<any>[] = [
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     OverlayModule,
     InlineSVGModule.forRoot(),
     HttpClientModule,

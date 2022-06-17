@@ -38,21 +38,19 @@
         "src/core/*"
       ],
       "codx-share": [
-        "dist/codx-share/codx-share",
-        "dist/codx-share"
+        "projects/codx-share/src"
+        // "dist/codx-share/codx-share",
+        // "dist/codx-share"
       ],
       "codx-tm": [
-        "dist/codx-tm/codx-tm",
-        "dist/codx-tm",
-        "dist/codx-tm/codx-tm",
-        "dist/codx-tm"
+        "projects/codx-tm/src"
+        // "dist/codx-tm/codx-tm",
+        // "dist/codx-tm",
+        // "dist/codx-tm/codx-tm",
+        // "dist/codx-tm"
       ],
       "@shared/*": [
         "src/shared/*"
-      ],
-      "tm": [
-        "dist/tm/tm",
-        "dist/tm"
       ]
     }
   },
