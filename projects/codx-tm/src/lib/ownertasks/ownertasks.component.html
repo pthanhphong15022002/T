@@ -35,7 +35,7 @@
 </ng-template>
 
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel"></app-view-detail>
+  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected"></app-view-detail>
   <!-- <div class="container">
     <ul class="list-group">
       <li class="list-group-item">Cras justo odio</li>
@@ -130,9 +130,9 @@
   </div>
 </ng-template>
 
-<codx-views #view funcID="TMT02" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
+<codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
   (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)" (selectedChange)="bbb($event)" (onDragDrop)="aaa($event)"
+  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
   [selectedFirst]="true">
 </codx-views>

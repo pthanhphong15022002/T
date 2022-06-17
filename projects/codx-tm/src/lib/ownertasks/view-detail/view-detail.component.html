@@ -20,74 +20,98 @@
           <span class="fw-bold me-1">Nhóm công việc:</span>
           <span class="text-gray-700">Triển khai dự án</span>
         </div>
-      </div>
-      <div class="d-flex mt-1">
-        <div class="d-flex me-6">
-          <span class="fw-bold me-1">Ngày bắt đầu:</span>
-          <span class="text-gray-700">30/06/2021</span>
+        <div class="task-info mt-2">
+          <!-- <div class="d-flex align-items-start w-100 mb-3">
+         <codx-temp-full (clickMF)="aaa($event)" [imageId]="itemSelected.createdBy" imageObjType="AD_Users" [imageWidth]="55"
+            [title]="itemSelected?.userNameCreate" [desc]="itemSelected?.positionNameCreate">
+          </codx-temp-full>
+        </div> -->
+          <div class="d-flex mt-1">
+            <div class="d-flex me-6">
+              <span class="fw-bold me-1">Ngày hết hạn:</span>
+              <span class="text-gray-700">{{itemSelected?.dueDate | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div class="d-flex align-items-center text-dark me-6">
+              <span class="me-1 fw-bold">Ưu tiên:</span>
+              <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
+                [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async">
+                <span class="icon-18 icon-outlined_flag"></span>
+              </span>
+              <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="fw-bold me-1">Nhóm công việc:</span>
+              <span class="text-gray-700">{{itemSelected?.taskGroupName}}</span>
+            </div>
+          </div>
+          <div class="d-flex mt-1">
+            <div class="d-flex me-6">
+              <span class="fw-bold me-1">Ngày bắt đầu:</span>
+              <span [ngClass]="itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400' ">{{
+                itemSelected?.startDate
+                | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div class="d-flex align-items-center text-dark me-6">
+              <span class="me-1 fw-bold">Ngày kết thúc:</span>
+              <span [ngClass]="itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.endDate
+                |date:
+                'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="d-flex">
+              <span class="fw-bold me-1">Ngày hoàn tất:</span>
+              <!-- <span class="text-gray-700">30/06/2021 | 0 giờ</span> -->
+              <span [ngClass]="itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400' "><span
+                  *ngIf=" itemSelected?.completedOn">{{
+                  itemSelected?.completedOn
+                  | date: 'dd/MM/yyyy' }} {{" | "+ itemSelected?.estimated}}</span></span>
+            </div>
+          </div>
         </div>
-        <div class="d-flex align-items-center text-dark me-6">
-          <span class="me-1 fw-bold">Ngày kết thúc:</span>
-          <span class="text-gray-700">30/06/2021</span>
+        <div class="mt-2">
+          <div class="d-flex mb-1">
+            <span class="fw-bold me-2">Dự án:</span>
+            <span class="text-gray-700">{{ itemSelected?.projectName }}</span>
+          </div>
+          <div class="d-flex">
+            <span class="fw-bold me-2">Địa điểm:</span>
+            <span class="text-gray-700">{{itemSelected?.location}}</span>
+          </div>
         </div>
-        <div class="d-flex">
-          <span class="fw-bold me-1">Ngày hoàn tất:</span>
-          <span class="text-gray-700">30/06/2021 | 0 giờ</span>
+        <div class="mt-2">
+          <span class="badge badge-info me-1">Issue</span>
+          <span class="badge badge-success me-1">Project</span>
+          <span class="badge badge-warning">Customize</span>
+          <!-- <codx-tags [editMode]="false" [entityName]="'TM_Task'" [(value)]="itemSelected.tags">
+          </codx-tags> -->
         </div>
       </div>
-    </div>
-    <div class="mt-2">
-      <div class="d-flex mb-1">
-        <span class="fw-bold me-2">Dự án:</span>
-        <span class="text-gray-700">Triển khai nội bộ DIGOPRO | Lạc Việt</span>
-      </div>
-      <div class="d-flex">
-        <span class="fw-bold me-2">Địa điểm:</span>
-        <span class="text-gray-700">Thành phố Hồ Chí Minh</span>
-      </div>
-    </div>
-    <div class="mt-2">
-      <span class="badge badge-info me-1">Issue</span>
-      <span class="badge badge-success me-1">Project</span>
-      <span class="badge badge-warning">Customize</span>
     </div>
   </ng-template>
-
   <ng-template #body>
     <div class="codx_title_sub_primary mt-6 mb-3">Người thực hiện</div>
     <div class="symbol-group">
       <div class="symbol symbol-30px symbol-circle me-3">
-        <codx-img #image objectId="ADMIN"></codx-img>
+        <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">
+        </codx-imgs>
       </div>
     </div>
     <div class="codx_title_sub_primary mt-6 mb-3">Nội dung</div>
     <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">
-      CRM_DVSC Digipro_Cập nhật tình trạng case
+      {{ itemSelected?.taskName }}
     </div>
-    <div class="text-gray-700">
-      Thank You Messages: One of the sweetest gestures that one can show – is saying “Thank You” to
-      anyone
-      that he or she may feel grateful to. Saying thank you doesn’t cost anything but it surely makes
-      everyone notice your best behavior and helps you to create a great impression.
-      <br />
-      <br />
-      Thank You Messages: One of the sweetest gestures that one can show – is saying “Thank You” to
-      anyone
-      that he or she may feel grateful to. Saying thank you doesn’t cost anything but it surely makes
-      everyone notice your best behavior and helps you to create a great impression.
-      <br />
+    <div class="text-gray-700" [innerHTML]="itemSelected?.memo">
     </div>
-    <div class="codx_title_sub_primary mt-6 mb-3">
+    <div class="codx_title_sub_primary mt-6 mb-3" *ngIf=" itemSelected?.listTaskGoals.length >0">
       <div class="text-primary fw-bold mt-4 mb-2">Check list</div>
       <div class="checkbox-list mt-2 ms-6 text-dark">
-        <codx-input type="checkbox" class="me-6" label="Issue" labelPosition="After"></codx-input>
-        <codx-input type="checkbox" class="me-6" label="Project" labelPosition="After"></codx-input>
-        <codx-input type="checkbox" class="me-6" label="Customize" labelPosition="After">
-        </codx-input>
+        <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
+          <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input> -->
+          <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
+          <span></span>{{" " + item.memo }}
+        </ng-container>
       </div>
     </div>
   </ng-template>
-
   <ng-template #footer>
   </ng-template>
 </codx-detail-tmp>

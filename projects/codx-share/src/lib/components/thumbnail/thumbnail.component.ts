@@ -1,11 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { NotificationsService } from 'codx-core';
-
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
-
 @Component({
   selector: 'thumbnail',
   templateUrl: './thumbnail.component.html',
@@ -14,7 +9,9 @@ import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() data: any;
   files: any;
+  //formatBytes = formatBytes
   constructor(
+    //private odService: DispatchService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
   ) {
@@ -49,6 +46,18 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     // changes.prop contains the old and the new value...
     this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
   getExtension(ext) {
