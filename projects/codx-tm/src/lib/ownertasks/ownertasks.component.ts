@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Injector,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   DataRequest,
   ViewModel,
@@ -18,7 +19,9 @@ import {
   SidebarModel,
   DialogRef,
   ApiHttpService,
+  AuthStore,
 } from 'codx-core';
+import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 @Component({
   selector: 'test-views',
@@ -43,13 +46,21 @@ export class OwnerTasksComponent implements OnInit {
   dataValue = 'ADMIN';
   resourceKanban?: ResourceModel;
   dialog!: DialogRef;
+  itemSelected : any ;
+  user : any 
+  funcID : string
 
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
-    private api: ApiHttpService
-  ) { }
+    private api: ApiHttpService,
+    private authStore: AuthStore,
+    private activedRouter : ActivatedRoute
+  ) { 
+    this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   clickMF(e: any, data: any) {
     switch (e.functionID) {
@@ -112,7 +123,7 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
+      
         sameData: true,
         model: {
           template: this.template,
@@ -136,6 +147,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.listdetail,
         sameData: true,
+        active: true,
         model: {
           template: this.template,
           panelRightRef: this.panelRight,
@@ -218,7 +230,9 @@ export class OwnerTasksComponent implements OnInit {
   aaa(val: any) {
     console.log(val);
   }
-  bbb(val: any) {
+  selectedChange(val: any) {
     console.log(val);
+    this.itemSelected = val.data;
+    this.dt.detectChanges() ;
   }
 }
