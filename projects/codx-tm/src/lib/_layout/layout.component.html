@@ -81,4 +81,17 @@
   </ng-template>
   <!-- end::TOPBAR -->
 
+  <ng-template #asideMenu>
+    <ng-container *ngFor="let f of funcs$ | async">
+      <div class="menu-item">
+        <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
+          routerLinkActive="active">
+          <span class="menu-icon">
+            <img class="w-25px" src="../../../{{f.smallIcon}}" />
+          </span>
+          <span class="menu-title">{{f.customName}}</span>
+        </a>
+      </div>
+    </ng-container>
+  </ng-template>
 </ng-container>

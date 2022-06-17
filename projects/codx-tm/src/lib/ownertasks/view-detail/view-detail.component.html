@@ -1,0 +1,93 @@
+<codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer">
+  <ng-template #header>
+    <div class="task-info mt-2">
+      <div class="d-flex align-items-start w-100 mb-3">
+        <codx-temp-full (clickMF)="aaa($event)" [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="55" [title]="'Ngô Hoàng Minh'"
+          [desc]="'HR Manager'">
+        </codx-temp-full>
+      </div>
+      <div class="d-flex mt-1">
+        <div class="d-flex me-6">
+          <span class="fw-bold me-1">Ngày hết hạn:</span>
+          <span class="text-gray-700">30/06/2021</span>
+        </div>
+        <div class="d-flex align-items-center text-dark me-6">
+          <span class="me-1 fw-bold">Ưu tiên:</span>
+          <span class="icon-flag icon-16 me-2 text-danger"></span>
+          <span class="text-gray-700">Cao</span>
+        </div>
+        <div class="d-flex">
+          <span class="fw-bold me-1">Nhóm công việc:</span>
+          <span class="text-gray-700">Triển khai dự án</span>
+        </div>
+      </div>
+      <div class="d-flex mt-1">
+        <div class="d-flex me-6">
+          <span class="fw-bold me-1">Ngày bắt đầu:</span>
+          <span class="text-gray-700">30/06/2021</span>
+        </div>
+        <div class="d-flex align-items-center text-dark me-6">
+          <span class="me-1 fw-bold">Ngày kết thúc:</span>
+          <span class="text-gray-700">30/06/2021</span>
+        </div>
+        <div class="d-flex">
+          <span class="fw-bold me-1">Ngày hoàn tất:</span>
+          <span class="text-gray-700">30/06/2021 | 0 giờ</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2">
+      <div class="d-flex mb-1">
+        <span class="fw-bold me-2">Dự án:</span>
+        <span class="text-gray-700">Triển khai nội bộ DIGOPRO | Lạc Việt</span>
+      </div>
+      <div class="d-flex">
+        <span class="fw-bold me-2">Địa điểm:</span>
+        <span class="text-gray-700">Thành phố Hồ Chí Minh</span>
+      </div>
+    </div>
+    <div class="mt-2">
+      <span class="badge badge-info me-1">Issue</span>
+      <span class="badge badge-success me-1">Project</span>
+      <span class="badge badge-warning">Customize</span>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="codx_title_sub_primary mt-6 mb-3">Người thực hiện</div>
+    <div class="symbol-group">
+      <div class="symbol symbol-30px symbol-circle me-3">
+        <codx-img #image objectId="ADMIN"></codx-img>
+      </div>
+    </div>
+    <div class="codx_title_sub_primary mt-6 mb-3">Nội dung</div>
+    <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">
+      CRM_DVSC Digipro_Cập nhật tình trạng case
+    </div>
+    <div class="text-gray-700">
+      Thank You Messages: One of the sweetest gestures that one can show – is saying “Thank You” to
+      anyone
+      that he or she may feel grateful to. Saying thank you doesn’t cost anything but it surely makes
+      everyone notice your best behavior and helps you to create a great impression.
+      <br />
+      <br />
+      Thank You Messages: One of the sweetest gestures that one can show – is saying “Thank You” to
+      anyone
+      that he or she may feel grateful to. Saying thank you doesn’t cost anything but it surely makes
+      everyone notice your best behavior and helps you to create a great impression.
+      <br />
+    </div>
+    <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="text-primary fw-bold mt-4 mb-2">Check list</div>
+      <div class="checkbox-list mt-2 ms-6 text-dark">
+        <codx-input type="checkbox" class="me-6" label="Issue" labelPosition="After"></codx-input>
+        <codx-input type="checkbox" class="me-6" label="Project" labelPosition="After"></codx-input>
+        <codx-input type="checkbox" class="me-6" label="Customize" labelPosition="After">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+  </ng-template>
+</codx-detail-tmp>

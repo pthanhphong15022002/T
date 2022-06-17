@@ -2,22 +2,27 @@ import { Component, OnInit, Injector } from '@angular/core';
 import {
   LayoutBaseComponent
 } from 'codx-core';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  onInit(): void {
-    throw new Error('Method not implemented.');
-  }
-  onAfterViewInit(): void {
-    throw new Error('Method not implemented.');
-  }
+
+  public funcs$: Observable<any>;
 
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init('WP');
+    this.codxService.init('TM');
+    this.funcs$ = this.codxService.getFuncs('TM');
+  }
+
+  onInit(): void {
+  }
+
+  onAfterViewInit(): void {
+
   }
 
 }

@@ -20,14 +20,14 @@ export const routes: Routes = [
         path: '',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('./pages/_layout/layout.modules').then((m) => m.LayoutModule),
+          import('./pages/_layout/layout.module').then((m) => m.LayoutModule),
       },
-      // {
-      //   path: 'tm',
-      //   canActivate: [AuthGuard],
-      //   loadChildren: () =>
-      //     import('./modules/tm/tm.modules').then((m) => m.TMModule),
-      // },
+      {
+        path: 'tm',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
+      },
       // {
       //   path: 'mwp',
       //   canActivate: [AuthGuard],

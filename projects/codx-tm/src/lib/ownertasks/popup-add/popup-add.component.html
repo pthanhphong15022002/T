@@ -1,0 +1,17 @@
+<codx-form headerText="Thiết lập" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template popup adde #body>
+    <codx-input type="text" [disabled]="false" class="test-textbox" field="taskName" placeholder="textbox"
+      [crrValue]="data?.taskName" (valueChange)="valueChange($event)"></codx-input>
+    <codx-input type="text" [disabled]="false" class="test-textbox" field="memo" placeholder="textbox"
+      [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-light-primary" (click)="save2()">
+        Sửa
+      </button> <button class="btn btn-light-success" (click)="saveForm()">
+        Lưu
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

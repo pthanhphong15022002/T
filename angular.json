@@ -167,6 +167,68 @@
           }
         }
       }
+    },
+    "codx-tm": {
+      "projectType": "library",
+      "root": "projects/codx-tm",
+      "sourceRoot": "projects/codx-tm/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-tm/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-tm/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-tm/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-tm/src/test.ts",
+            "tsConfig": "projects/codx-tm/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-tm/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-share": {
+      "projectType": "library",
+      "root": "projects/codx-share",
+      "sourceRoot": "projects/codx-share/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-share/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-share/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-share/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-share/src/test.ts",
+            "tsConfig": "projects/codx-share/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-share/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "CodxUI"

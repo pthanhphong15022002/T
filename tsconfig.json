@@ -37,7 +37,13 @@
       "@core/*": [
         "src/core/*"
       ],
+      "codx-share": [
+        "dist/codx-share/codx-share",
+        "dist/codx-share"
+      ],
       "codx-tm": [
+        "dist/codx-tm/codx-tm",
+        "dist/codx-tm",
         "dist/codx-tm/codx-tm",
         "dist/codx-tm"
       ],
