@@ -48,7 +48,8 @@ const T_Component: Type<any>[] = [
   OwnerTasksComponent,
   PopupAddComponent,
   ViewDetailComponent,
-  DashboardComponent
+  DashboardComponent,
+  
 ]
 @NgModule({
   imports: [

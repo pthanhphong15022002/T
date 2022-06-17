@@ -5,6 +5,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Injector,
+  Input,
 } from '@angular/core';
 import {
   DataRequest,
@@ -34,7 +35,9 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('cardCenterTemplate') cardCenterTemplate!: TemplateRef<any>;
   @ViewChild('kanbanTemplate') kanbanTemplate?: TemplateRef<any>;
+  @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
   @ViewChild('tmpRight') sidebarRight?: TemplateRef<any>;
+  @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -42,7 +45,18 @@ export class OwnerTasksComponent implements OnInit {
   predicate = 'Owner=@0';
   dataValue = 'ADMIN';
   resourceKanban?: ResourceModel;
+  modelResource: ResourceModel;
   dialog!: DialogRef;
+  selectedDate = new Date();
+  startDate: Date;
+  endDate: Date;
+  dayoff = [];
+  // resourceField: any;
+  eventStatus: any;
+  gridView: any;
+  @Input() calendarID: string;
+
+  @Input() viewPreset: string = "weekAndDay";
 
   constructor(
     private inject: Injector,
@@ -79,6 +93,12 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'TM';
+    this.modelResource.className = 'TaskBusiness';
+    this.modelResource.service = 'TM';
+    this.modelResource.method = 'GetUserByTasksAsync';
+
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'TM';
     this.resourceKanban.assemblyName = 'TM';
@@ -100,6 +120,7 @@ export class OwnerTasksComponent implements OnInit {
         text: 'more 2',
       },
     ];
+    this.getParams();
   }
   change() {
     // this.view.dataService.dataValues = "1";
@@ -162,9 +183,23 @@ export class OwnerTasksComponent implements OnInit {
         active: false,
         type: ViewType.grid,
         sameData: true,
+      },
+      {
+        type: ViewType.schedule,
+        sameData: true,
+        active: true,
+        request2: this.modelResource,
+        model:{
+          panelLeftRef: this.panelLeft,
+          eventModel:  this.fields,
+          resourceModel: this.resourceField,
+          contextMenu: '',
+          template: this.scheduleTemplate,
+        }
       }
     ];
 
+  
     this.view.dataService.predicates = "Status=@0";
     this.view.dataService.dataValues = "1";
     this.view.dataService.methodSave = 'TestApiSave';
@@ -173,6 +208,88 @@ export class OwnerTasksComponent implements OnInit {
     console.log(this.view.formModel);
     this.dt.detectChanges();
   }
+  //#region schedule
+
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: "userID" },
+  }
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
+
+  // viewChange(evt: any) {
+  //   let fied = this.gridView?.dateControl || 'DueDate';
+  //   console.log(evt);
+  //   // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+  //   this.startDate = evt?.fromDate;
+  //   this.endDate = evt?.toDate;
+  //   //Thêm vào option predicate
+  //   this.model.filter = {
+  //     logic: 'and',
+  //     filters: [
+  //       { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+  //       { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
+  //     ]
+  //   }
+  //   //reload data
+  //   // this.schedule.reloadDataSource();
+  //   // this.schedule.reloadResource();
+
+  // }
+
+  getCellContent(evt: any) {
+
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (day && evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach(item => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            })
+          }
+          return '<icon class="' + this.dayoff[i].symbol + '"></icon>' + '<span>' + this.dayoff[i].note + '</span>'
+        }
+      }
+    }
+    
+    return ``;
+  }
+
+  getParams() {
+    this.api.execSv<any>('SYS', 'ERM.Business.CM', 'ParametersBusiness', 'GetOneField', ['TM_Parameters', null, 'CalendarID']).subscribe(res => {
+      if (res) {
+        this.calendarID = res.fieldValue;
+        this.getDayOff(this.calendarID);
+      }
+    })
+  }
+
+  getDayOff(id = null) {
+    if (id)
+      this.calendarID = id;
+    this.api.execSv<any>('BS', 'ERM.Business.BS', 'CalendarsBusiness', 'GetDayWeekAsync', [this.calendarID]).subscribe(res => {
+      if (res) {
+        console.log(res);
+        res.forEach(ele => {
+          this.dayoff = res;
+        });
+      }
+    })
+  }
+  //#endregion chartline
 
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {

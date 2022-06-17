@@ -1,59 +1,4 @@
-<ng-template #tmpLeft>
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Panel title</h5>
-      <p class="card-text">Some quick example text to build on the panel title and make up the bulk of the panel's
-        content.</p>
-      <!-- <a class="card-link" (click)="show('left')">Card link</a>
-      <a class="card-link" (click)="show('right')">Another link</a> -->
-    </div>
-  </div>
-</ng-template>
-<ng-template #tmpRight>
-  <ul class="list-group">
-    <li class="list-group-item">Cras justo odio</li>
-    <li class="list-group-item">Dapibus ac facilisis in</li>
-    <li class="list-group-item">Morbi leo risus</li>
-    <li class="list-group-item">Porta ac consectetur ac</li>
-    <li class="list-group-item">Vestibulum at eros</li>
-  </ul>
-</ng-template>
 
-
-
-<!-- view listdetail -->
-<ng-template #panelLeftRef let-data>
-  <div class="container">
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </div>
-</ng-template>
-
-<ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel"></app-view-detail>
-  <!-- <div class="container">
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </div> -->
-</ng-template>
-
-<!-- <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
-    iconCss="icon-flag" iconCss2="icon-security" [content]="data.memo" [status]="data.status" statusVll="L0614"
-    [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel"
-    [modeImgs]="false">
-  </codx-temp-full>
-</ng-template> -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
     iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.userID" imageObjType="AD_Users" [title]="data.userName"
@@ -129,6 +74,18 @@
     <!--end::Item-->
   </div>
 </ng-template>
+
+<!-- <ng-template #name >
+  <codx-views #scheduleTemplate funcID="TMT02" [showToolBar]="true" service="TM" assemblyName="ERM.Business.TM"
+  idField="taskID" entityName="TM_Tasks" [views]="views" [button]="button" (buttonClick)="click($event)"
+  [moreFuncs]="moreFuncs" className="TaskBusiness" method="GetListDetailTasksAsync" methodResource="GetUserByTasksAsync"
+  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" (selectedChange)="bbb($event)"
+  (onDragDrop)="aaa($event)" [selectedFirst]="true">
+</codx-views>
+</ng-template> -->
+
+
+
 
 <codx-views #view funcID="TMT02" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
