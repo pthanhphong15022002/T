@@ -9,9 +9,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  public funcs$: Observable<any>;
-
+  module = 'TM';
   constructor(inject: Injector) {
     super(inject);
     this.codxService.init('TM');

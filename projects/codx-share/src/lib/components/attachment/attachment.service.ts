@@ -12,7 +12,7 @@ import { FileUpload } from "@shared/models/file.model";
 
 export class AttachmentService {
     public data = new BehaviorSubject<any>(null);
-
+    public fileListAdded: any[];
     public openAttachment = new BehaviorSubject<boolean>(null);
     isOpenAttachment = this.openAttachment.asObservable();
    
@@ -56,5 +56,15 @@ export class AttachmentService {
     ngOnInit(): void {
 
     }
-   
+    
+    // <img alt="" class="w-100 mr-2" [src]='this.dmSV.getThumbnail(fileEditing.thumbnail)'>
+    getThumbnail(data) {
+        if (data != "") {
+            var url = 'data:image/png;base64,' + data;
+            return this.domSanitizer.bypassSecurityTrustUrl(data);
+        }
+        else
+            return "";
+    }
+
 }

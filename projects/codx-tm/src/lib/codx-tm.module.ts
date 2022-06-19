@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { OwnerTasksComponent } from './ownertasks/ownertasks.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -18,7 +19,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { FormsModule } from '@angular/forms';
 import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
@@ -50,11 +50,6 @@ export const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      },
-      {
         path: '**',
         redirectTo: 'error/404',
       }
@@ -77,6 +72,7 @@ const T_Component: Type<any>[] = [
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     OverlayModule,
     InlineSVGModule.forRoot(),
     HttpClientModule,

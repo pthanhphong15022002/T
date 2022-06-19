@@ -229,6 +229,285 @@
           }
         }
       }
+    },
+    "codx-od": {
+      "projectType": "library",
+      "root": "projects/codx-od",
+      "sourceRoot": "projects/codx-od/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-od/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-od/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-od/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-od/src/test.ts",
+            "tsConfig": "projects/codx-od/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-od/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-ep": {
+      "projectType": "library",
+      "root": "projects/codx-ep",
+      "sourceRoot": "projects/codx-ep/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-ep/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-ep/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-ep/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-ep/src/test.ts",
+            "tsConfig": "projects/codx-ep/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-ep/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-es": {
+      "projectType": "library",
+      "root": "projects/codx-es",
+      "sourceRoot": "projects/codx-es/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-es/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-es/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-es/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-es/src/test.ts",
+            "tsConfig": "projects/codx-es/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-es/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-hr": {
+      "projectType": "library",
+      "root": "projects/codx-hr",
+      "sourceRoot": "projects/codx-hr/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-hr/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-hr/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-hr/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-hr/src/test.ts",
+            "tsConfig": "projects/codx-hr/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-hr/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-wp": {
+      "projectType": "library",
+      "root": "projects/codx-wp",
+      "sourceRoot": "projects/codx-wp/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-wp/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-wp/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-wp/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-wp/src/test.ts",
+            "tsConfig": "projects/codx-wp/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-wp/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-fd": {
+      "projectType": "library",
+      "root": "projects/codx-fd",
+      "sourceRoot": "projects/codx-fd/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-fd/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-fd/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-fd/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-fd/src/test.ts",
+            "tsConfig": "projects/codx-fd/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-fd/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-mwp": {
+      "projectType": "library",
+      "root": "projects/codx-mwp",
+      "sourceRoot": "projects/codx-mwp/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-mwp/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-mwp/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-mwp/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-mwp/src/test.ts",
+            "tsConfig": "projects/codx-mwp/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-mwp/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-dm": {
+      "projectType": "library",
+      "root": "projects/codx-dm",
+      "sourceRoot": "projects/codx-dm/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-dm/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-dm/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-dm/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-dm/src/test.ts",
+            "tsConfig": "projects/codx-dm/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-dm/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-ad": {
+      "projectType": "library",
+      "root": "projects/codx-ad",
+      "sourceRoot": "projects/codx-ad/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-ad/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-ad/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-ad/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-ad/src/test.ts",
+            "tsConfig": "projects/codx-ad/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-ad/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "CodxUI"
