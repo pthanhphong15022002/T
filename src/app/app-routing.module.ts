@@ -32,7 +32,7 @@ export const routes: Routes = [
       //   path: 'mwp',
       //   canActivate: [AuthGuard],
       //   loadChildren: () =>
-      //     import('./modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
+      //     import('/modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
       // },
       { path: '**', redirectTo: 'error/404' }
     ]

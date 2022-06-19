@@ -12,8 +12,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init('TM');
-    this.funcs$ = this.codxService.getFuncs('TM');
+    this.codxService.init(this.module);
   }
 
   onInit(): void {

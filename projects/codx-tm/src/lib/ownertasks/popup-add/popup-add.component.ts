@@ -59,7 +59,7 @@ export class PopupAddComponent implements OnInit {
 
 
   @ViewChild('tags') tagsComponent: TagsComponent;
-  task = new TM_Tasks();
+  task: TM_Tasks = new TM_Tasks();
   dialog: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -73,7 +73,10 @@ export class PopupAddComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
-    this.task = dt?.data;
+    this.task = {
+      ...this.task,
+      ...dt?.data
+    };
     this.dialog = dialog;
     this.user = this.authStore.get();
   }
