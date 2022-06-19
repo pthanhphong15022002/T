@@ -108,7 +108,8 @@
 </ng-template>
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
+  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button" 
+  [predicate]="predicate" [dataValue]="dataValue"
   (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
   [selectedFirst]="true">

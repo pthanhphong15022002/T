@@ -73,8 +73,9 @@ export class OwnerTasksComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.dataValue = this.user.userID;
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    
   }
 
   clickMF(e: any, data: any) {
