@@ -17,6 +17,11 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { SprintsComponent } from './sprints/sprints.component';
+import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
+import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
+import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
+import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +32,19 @@ export const routes: Routes = [
         path: 'mytasks/:funcID',
         component: OwnerTasksComponent,
       },
+      {
+        path: 'viewboards/:funcID',
+        component: SprintsComponent,
+      },
+      {
+        path: 'sprinttasks/:funcID',
+        component: SprintsTasksComponent,
+        children: [
+          {
+            path: ':id',
+            component: SprintsTasksComponent,
+          }]
+      },   
       {
         path: 'home/:funcID',
         component: DashboardComponent
@@ -45,7 +63,11 @@ const T_Component: Type<any>[] = [
   PopupAddComponent,
   ViewDetailComponent,
   DashboardComponent,
-  
+  SprintsComponent,
+  PopupAddSprintsComponent,
+  ListCardSprintsComponent,
+  SprintsTasksComponent,
+  ViewDetailsTaskComponent
 ]
 @NgModule({
   imports: [
@@ -62,7 +84,8 @@ const T_Component: Type<any>[] = [
     ProgressBarModule,
     TreeMapModule,
     DatePickerModule,
-    TabModule
+    TabModule,
+    FormsModule 
   ],
   exports: [
     RouterModule

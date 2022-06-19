@@ -1,0 +1,8 @@
+
+
+<codx-views #view [funcID]="funcID" entityName="TM_Tasks" [views]="views" [buttons]="button"
+    (buttonClick)="click($event)" [moreFuncs]="moreFuncs"> </codx-views>
+
+    <ng-template #listCardSprints>
+        <lib-list-card-sprints [viewBase]="view"  ></lib-list-card-sprints>
+      </ng-template> 
