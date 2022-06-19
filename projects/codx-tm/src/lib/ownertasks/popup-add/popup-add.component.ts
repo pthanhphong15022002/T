@@ -396,37 +396,44 @@ export class PopupAddComponent implements OnInit {
     //this.viewBase.currentView.closeSidebarRight();
   }
 
+  beforeSave(op: any) {
+    op.method = 'AddTaskAsync';
+    var data = [this.task, this.functionID, this.listTaskResources, this.listTodo];
+    op.data = data;
+    return true
+  }
   addTask(isCloseFormTask: boolean = true) {
-    this.tmSv
-      .addTask([
-        this.task,
-        this.functionID,
-        this.listTaskResources,
-        this.listTodo,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res.message);
-          if (res.data && res.data.length) {
-            res.data.forEach((dt) => {
-              var data = dt;
-              this.dataAddNew.next(data);
-            });
-          }
-          this.closeTask();
-          // if (isCloseFormTask) {
-          //   this.closeTask();
-          // } else {
-          //   if (res?.data?.length > 0) {
-          //     let task = res.data[0];
-          //     // this.openFormAttach(task?.parentID ?? task?.taskID);
-          //   }
-          // }
-        } else {
-          this.notiService.notify('TM002'); /// call sau
-          return;
-        }
-      });
+    this.dialog.dataService.save((option: any) => this.beforeSave(option)).subscribe();
+    // this.tmSv
+    //   .addTask([
+    //     this.task,
+    //     this.functionID,
+    //     this.listTaskResources,
+    //     this.listTodo,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.notiService.notify(res.message);
+    //       if (res.data && res.data.length) {
+    //         res.data.forEach((dt) => {
+    //           var data = dt;
+    //           this.dataAddNew.next(data);
+    //         });
+    //       }
+    //       this.closeTask();
+    //       // if (isCloseFormTask) {
+    //       //   this.closeTask();
+    //       // } else {
+    //       //   if (res?.data?.length > 0) {
+    //       //     let task = res.data[0];
+    //       //     // this.openFormAttach(task?.parentID ?? task?.taskID);
+    //       //   }
+    //       // }
+    //     } else {
+    //       this.notiService.notify('TM002'); /// call sau
+    //       return;
+    //     }
+    //   });
   }
 
   updateTask() {
@@ -488,10 +495,10 @@ export class PopupAddComponent implements OnInit {
 
   changeTime(data) {
     if (!data.field) return;
-    this.task[data.field] = data.data;
+    this.task[data.field] = data.data.fromDate;
     if (data.field == 'startDate') {
       if (!this.task.endDate)
-        this.task.endDate = moment(new Date(data.data))
+        this.task.endDate = moment(new Date(data.data.fromDate))
           .add(1, 'hours')
           .toDate();
     }
