@@ -79,10 +79,11 @@ export class SprintsComponent implements OnInit {
     this.views = [{
       id: '2',
       type: ViewType.content,
+      sameData: true,
       active: true,
       model: {
-        panelLeftRef: this.listCardSprints,
-        // sideBarRightRef: this.sidebarRight,
+        template: this.listCardSprints,
+        //sideBarRightRef: this.sidebarRight,
         // widthAsideRight: '600px'
       }
     }];
