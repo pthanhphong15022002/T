@@ -74,6 +74,7 @@ export class OwnerTasksComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.dataValue = this.user.userID;
   }
 
   clickMF(e: any, data: any) {
@@ -144,7 +145,7 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-
+        active : false,
         sameData: true,
         model: {
           template: this.template,
@@ -153,6 +154,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.card,
         sameData: true,
+        active : false,
         model: {
           template: this.cardTemplate,
         },
@@ -161,6 +163,7 @@ export class OwnerTasksComponent implements OnInit {
         type: ViewType.card,
         text: 'List card center',
         sameData: true,
+        active : false,
         model: {
           template: this.cardCenterTemplate,
         },
@@ -177,6 +180,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.content,
         sameData: true,
+        active : false,
         model: {
           panelRightRef: this.panelRight,
           panelLeftRef: this.panelLeft,
@@ -185,6 +189,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.kanban,
         sameData: true,
+        active : false,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -199,7 +204,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.schedule,
         sameData: true,
-        active: true,
+        active : false,
         request2: this.modelResource,
         model: {
           panelLeftRef: this.panelLeft,
