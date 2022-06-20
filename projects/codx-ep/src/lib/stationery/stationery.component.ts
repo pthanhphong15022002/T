@@ -1,16 +1,13 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DataRequest,
   DialogRef,
   ResourceModel,
@@ -36,11 +33,20 @@ export class StationeryComponent implements OnInit {
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
-  columnsGrid: any;
   dataSelected: any;
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
+
+  funcID = 'EPS24';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '6';
+  idField = 'RecID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
 
   constructor(
     private callfunc: CallFuncService,
@@ -93,6 +99,18 @@ export class StationeryComponent implements OnInit {
         },
       },
     ];
+    this.moreFunc = [
+      {
+        id: 'btnEdit',
+        icon: 'icon-list-checkbox',
+        text: 'Chỉnh sửa',
+      },
+      {
+        id: 'btnDelete',
+        icon: 'icon-list-checkbox',
+        text: 'Xóa',
+      },
+    ];
     this.cf.detectChanges();
   }
 
@@ -130,6 +148,7 @@ export class StationeryComponent implements OnInit {
       .subscribe((res) => {
         this.dataSelected = this.viewBase.dataService.dataSelected;
         let option = new SidebarModel();
+        option.Width = '750px';
         option.DataService = this.viewBase?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
           DialogStationeryComponent,
