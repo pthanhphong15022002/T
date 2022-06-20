@@ -22,6 +22,7 @@ import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-
 import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
+import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
 
 export const routes: Routes = [
   {
@@ -67,7 +68,8 @@ const T_Component: Type<any>[] = [
   PopupAddSprintsComponent,
   ListCardSprintsComponent,
   SprintsTasksComponent,
-  ViewDetailsTaskComponent
+  ViewDetailsTaskComponent,
+  UpdateStatusPopupComponent
 ]
 @NgModule({
   imports: [
