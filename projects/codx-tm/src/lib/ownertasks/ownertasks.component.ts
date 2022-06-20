@@ -22,6 +22,8 @@ import {
   ApiHttpService,
   AuthStore,
   CodxScheduleComponent,
+  NotificationsService,
+  CacheService,
 } from 'codx-core';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -68,7 +70,7 @@ export class OwnerTasksComponent implements OnInit {
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
@@ -76,14 +78,13 @@ export class OwnerTasksComponent implements OnInit {
 
   }
 
-  clickMF(e: any, data: any) {
-    console.log(e, data);
+  clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
         this.show();
         break;
       case 'edit':
-        this.edit();
+        this.edit(data);
         break;
       case 'delete':
         this.delete(data);
@@ -94,12 +95,6 @@ export class OwnerTasksComponent implements OnInit {
     switch (evt.id) {
       case 'btnAdd':
         this.show();
-        break;
-      case 'edit':
-        this.edit();
-        break;
-      case 'delete':
-        this.delete(evt);
         break;
     }
   }
@@ -278,10 +273,14 @@ export class OwnerTasksComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
     });
   }
 
-  edit() {
+  edit(data) {
+    this.view.dataService.dataSelected = data;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
