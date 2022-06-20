@@ -1,0 +1,385 @@
+<div class="card w-100 rounded-0 border-0">
+  <div class="card-header bgi-no-repeat bgi-size-cover border-0"
+    style="background-position: left top; background-size: 100% auto; background-image: url(/assets/themes/es/default/light/img/Rectangle%20328.svg);">
+    <div class="card-title">
+      <div class="d-flex flex-grow-1">
+        <!--begin::Symbol-->
+        <div class="symbol symbol-circle symbol-24px me-2">
+          <div class="symbol-label bg-primary">
+            <i class="icon-add_box text-white icon-12"></i>
+          </div>
+        </div>
+        <!--end::Symbol-->
+        <!--begin::Title-->
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center mb-2">
+            <!--begin::Title-->
+            <h2 class="m-0">Thêm mới chữ ký số</h2>
+            <!--end::Title-->
+          </div>
+          <!--begin::Text-->
+          <span class="text-gray-400 fs-7">Tạo & upload file văn bản</span>
+          <!--end::Text-->
+        </div>
+        <!--end::Title-->
+      </div>
+    </div>
+    <div class="card-toolbar">
+      <div class="d-flex flex-column align-items-end ">
+        <!--begin::Close-->
+        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary" aria-label="Close"
+          (click)="closeForm(null)">
+          <i class="icon-close fs-1 text-dark text-hover-primary"></i>
+        </button>
+        <!--end::Close-->
+        <!--begin::Mo rong-->
+        <a class="text-dark-75 text-hover-primary d-flex align-items-center d-block">
+          <span class="mr-2 text-dark">Mở rộng</span>
+          <span class="icon-login fs-1 ml-1"></span></a>
+        <!--end::Mo rong-->
+      </div>
+    </div>
+
+  </div>
+  <form [formGroup]="dialogSignature" *ngIf="isAfterRender">
+    <div class="card-body scroll-y my-7">
+      <div class="d-flex flex-stack fs-6 py-2">
+        <div class="fw-bolder text-primary">THÔNG TIN CHỮ KÝ SỐ</div>
+        <!--begin::Badge-->
+        <span class="text-end align-items-end" style="display: none;">
+          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
+            <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+          </button>
+        </span>
+        <!--begin::Badge-->
+      </div>
+      <!--begin::form-group-->
+      <div class="form-group mt-3">
+        <codx-label fiedName="Email" default="Email"formName="Users" gridviewName="grvUsers">
+        </codx-label>
+        <!--begin::Title-->
+        <div class="d-flex">
+          <div class="w-100 me-2">
+            <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="email"
+              [Group]="dialogSignature">
+            </codx-input>
+          </div>
+          <button class="btn btn-primary">Add</button>
+          <!-- <button class="btn btn-primary" (click)="openPopup(content)">Add</button> -->
+        </div>
+        <!--end::Title-->
+      </div>
+      <!--end::form-group-->
+      <!--begin::form-group-->
+      <div class="form-group mt-3">
+        <codx-label fiedName="UserID" default="Tên"formName="Users" gridviewName="grvUsers">
+        </codx-label>
+        <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="fullName"
+          [Group]="dialogSignature">
+        </codx-input>
+      </div>
+      <!--end::form-group-->
+      <!--begin::form-group-->
+      <div class="form-group row mt-3">
+        <div class="col-6">
+          <codx-label fiedName="SignatureType"formName="Users" gridviewName="grvUsers" default="Loại chữ kí">
+          </codx-label>
+          <codx-input type="valuelist" name="valuelist" ngDefaultControl
+            [crrValue]="dialogSignature.value.signatureType" [refValue]="cbxName['SignatureType']" field="signatureType"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="Supplier" default="Nhà cung cấp"formName="Users" gridviewName="grvUsers">
+          </codx-label>
+          <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.supplier"
+            [refValue]="cbxName['Supplier']" field="supplier" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <!--end::form-group-->
+
+      <!--begin::Title-->
+      <div class="d-flex flex-stack fs-6 py-2">
+        <div class="fw-bolder ">Chữ ký & Con dấu</div>
+        <!--begin::Badge-->
+        <span class="text-end align-items-end">
+          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
+            <i class="icon-select_all text-primary text-hover-primary-dark icon-24" (click)="openPopup(content)"></i>
+          </button>
+        </span>
+        <!--begin::Badge-->
+      </div>
+
+      <!--end::Title-->
+      <div class="d-flex flex-column flex-grow-1 pe-8">
+        <!--begin::Stats-->
+        <div class="d-flex flex-wrap">
+          <!--begin::Stats-->
+          <div class="text-center">
+            <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+              <div class="m-auto">
+                <div class="m-auto">
+                  <codx-img *ngIf="dialogSignature.value.signature1 == null" #image objectId="ADMIN"></codx-img>
+                  <img class="square" *ngIf="dialogSignature.value.signature1 != null" [src]="getLinkImg(Signature1)" />
+                </div>
+              </div>
+            </div>
+            <codx-label name="lblText" default="Kí thường"formName="Users" gridviewName="grvUsers"></codx-label>
+          </div>
+          <!--end::Stats-->
+          <!--begin::Stats-->
+          <div class="text-center">
+            <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+              <div class="m-auto">
+                <codx-img *ngIf="dialogSignature.value.signature2 == null" #image objectId="ADMIN"></codx-img>
+                <img class="square" *ngIf="dialogSignature.value.signature2 != null" [src]="getLinkImg(Signature2)" />
+              </div>
+            </div>
+            <codx-label name="lblText" default="Kí nháy"formName="Users" gridviewName="grvUsers" class=""></codx-label>
+          </div>
+          <!--end::Stats-->
+          <!--begin::Stats-->
+          <div class="text-center">
+            <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+              <div class="m-auto">
+                <codx-img *ngIf="dialogSignature.value.stamp == null" #image objectId="ADMIN"></codx-img>
+                <img class="square" *ngIf="dialogSignature.value.stamp!= null" [src]="getLinkImg(Stamp)" />
+              </div>
+            </div>
+            <codx-label name="lblText" default="Con dấu"formName="Users" gridviewName="grvUsers" class=""></codx-label>
+          </div>
+          <!--end::Stats-->
+        </div>
+        <!--end::Stats-->
+      </div>
+      <!-- <thumbnail [data]="getJSONString(Signature1)"></thumbnail>
+      <thumbnail [data]="getJSONString(Signature2)"></thumbnail>
+      <thumbnail [data]="getJSONString(Stamp)"></thumbnail> -->
+
+      <!--begin::form-group-->
+      <div class="form-group row mt-3">
+        <div class="col-6">
+          <codx-label fiedName="OTPControl" default="OTP"formName="Users" gridviewName="grvUsers">
+          </codx-label>
+          <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.oTPControl"
+            [refValue]="cbxName['OTPControl']" field="oTPControl" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="SpanTime" default="Thời gian"formName="Users" gridviewName="grvUsers">
+          </codx-label>
+          <codx-input type="number" field="spanTime" value="5" [crrValue]="dialogSignature.value.spanTime" [min]="0"
+            max="50" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <!--end::form-group-->
+      <!-- <thumbnail [data]="getJSONString(dataFile)"></thumbnail> -->
+
+    </div>
+  </form>
+
+
+  <div class="card-footer pt-4 border-0">
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-light-primary me-3" (click)="popup($event, null)">
+        <i class="icon-cloud_upload fs-5"></i>Upload file
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- <attachment *ngIf="isAfterRender" #attachment type="center" objectType="TM_Tasks" [objectId]="objectIDFile"
+  [functionID]="modelPage.functionID" (fileAdded)="fileAdded($event, currentTab)"></attachment>
+<app-viewfiledialog></app-viewfiledialog> -->
+
+<ng-template #content>
+  <div class="card-body card-scroll mx-5 mx-xl-18 pb-15">
+    <div class="text-center mb-6">
+      <!--begin::Title-->
+      <h1 class="">Chọn chữ ký</h1>
+      <!--end::Title-->
+    </div>
+    <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
+      <li class="nav-item m-0">
+        <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
+          [ngClass]="currentTab==1?'active':''" data-bs-toggle="tab" id="#pane_1" (click)="changeTab(1)">
+          <span class="d-flex flex-column ">
+            <span class="icon-text_format icon-24 m-auto mb-1"></span>
+            <span class="fs-6 fw-bold">Họ & tên</span>
+          </span>
+        </a>
+      </li>
+      <li class="nav-item m-0">
+        <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
+          [ngClass]="currentTab==2?'active':''" data-bs-toggle="tab" id="#pane_2" (click)="changeTab(2)">
+          <span class="d-flex flex-column ">
+            <span class=" icon-gesture icon-24 m-auto mb-1"></span>
+            <span class="fs-6 fw-bold"> Ký</span>
+          </span>
+        </a>
+      </li>
+      <li class="nav-item m-0">
+        <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
+          [ngClass]="currentTab==3?'active':''" data-bs-toggle="tab" id="#pane_3" (click)="changeTab(3)">
+          <span class="d-flex flex-column ">
+            <span class="icon-looks_one icon-24 m-auto mb-1"></span>
+            <span class="fs-6 fw-bold"> Chữ ký</span>
+          </span>
+        </a>
+      </li>
+      <li class="nav-item m-0">
+        <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
+          [ngClass]="currentTab==4?'active':''" data-bs-toggle="tab" id="#pane_4" (click)="changeTab(4)">
+          <span class="d-flex flex-column ">
+            <span class="icon-looks_two icon-24 m-auto mb-1"></span>
+            <span class="fs-6 fw-bold"> Ký nháy</span>
+          </span>
+        </a>
+      </li>
+      <li class="nav-item m-0">
+        <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
+          [ngClass]="currentTab==5?'active':''" data-bs-toggle="tab" id="#pane_5" (click)="changeTab(5)">
+          <span class="d-flex flex-column ">
+            <span class=" icon-filter_tilt_shift icon-24 m-auto mb-1"></span>
+            <span class="fs-6 fw-bold">Con dấu</span>
+          </span>
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content py-5">
+      <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab==1?'active show':''">
+        <div class="row">
+          <div class="col">
+            <!--begin:Label-->
+            <label class="btn btn-outline btn-outline-primary w-100 text-center p-3 mb-3">
+              <!--begin:Info-->
+              <span class="d-flex flex-column text-center">
+                <span class="text-dark  fw-bolder d-block fs-4">Phạm Hữu
+                  Thời</span>
+              </span>
+              <!--end:Info-->
+            </label>
+            <!--end:Label-->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <label class="btn btn-outline border d-flex flex-stack active p-3 mb-3">
+              <!--begin:Label-->
+              <span class="d-flex align-items-center me-2">
+                <!--begin:Info-->
+                <span class="d-flex flex-column">
+                  <span class="text-dark fw-bolder d-block font-yuji fs-4">Phạm Hữu
+                    Thời</span>
+                </span>
+                <!--end:Info-->
+              </span>
+              <!--end:Label-->
+              <!--begin:Input-->
+              <span class="me-3">
+                <codx-input type="radio" name="radio" label="1" [checked]="false" labelPosition="After"
+                  [disabled]="true" value="radio"></codx-input>
+              </span>
+              <!--end:Input-->
+            </label>
+          </div>
+          <div class="col-6">
+            <label class="btn btn-outline border d-flex flex-stack  p-3 mb-3">
+              <!--begin:Label-->
+              <span class="d-flex align-items-center me-2">
+                <!--begin:Info-->
+                <span class="d-flex flex-column">
+                  <span class="text-dark fw-bolder d-block font-unifrakturCook fs-4">Phạm Hữu
+                    Thời</span>
+                </span>
+                <!--end:Info-->
+              </span>
+              <!--end:Label-->
+              <!--begin:Input-->
+              <span class="me-3">
+                <codx-input type="radio" name="radio" label="1" [checked]="false" labelPosition="After"
+                  [disabled]="true" value="radio"></codx-input>
+              </span>
+              <!--end:Input-->
+            </label>
+          </div>
+          <div class="col-6">
+            <label class="btn btn-outline border d-flex flex-stack  p-3 mb-3">
+              <!--begin:Label-->
+              <span class="d-flex align-items-center me-2">
+                <!--begin:Info-->
+                <span class="d-flex flex-column">
+                  <span class="text-dark fw-bolder d-block font-windSong fs-4">Phạm Hữu
+                    Thời</span>
+                </span>
+                <!--end:Info-->
+              </span>
+              <!--end:Label-->
+              <!--begin:Input-->
+              <span class="me-3">
+                <codx-input type="radio" name="radio" label="1" [checked]="false" labelPosition="After"
+                  [disabled]="true" value="radio"></codx-input>
+              </span>
+              <!--end:Input-->
+            </label>
+          </div>
+          <div class="col-6">
+            <label class="btn btn-outline border d-flex flex-stack  p-3 mb-3">
+              <!--begin:Label-->
+              <span class="d-flex align-items-center me-2">
+                <!--begin:Info-->
+                <span class="d-flex flex-column">
+                  <span class="text-dark fw-bolder d-block font-yaldevi fs-4">Phạm Hữu
+                    Thời</span>
+                </span>
+                <!--end:Info-->
+              </span>
+              <!--end:Label-->
+              <!--begin:Input-->
+              <span class="me-3">
+                <codx-input type="radio" name="radio" label="1" [checked]="false" labelPosition="After"
+                  [disabled]="true" value="radio"></codx-input>
+              </span>
+              <!--end:Input-->
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab==2?'active show':''">
+        <!--begin::panel-->
+        <div class=" d-flex align-items-center rounded border-primary border p-10">
+          <!--begin::Stats-->
+          <div class="m-auto">
+            <codx-img #image objectId="ADMIN" class="mh-100px"></codx-img>
+          </div>
+          <!--end::Stats-->
+        </div>
+        <!--end::panel-->
+      </div>
+      <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab==3?'active show':''">
+        <!-- <attachment #attachment1 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
+          hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 3)"></attachment> -->
+      </div>
+      <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab==4?'active show':''">
+        <!-- <attachment #attachment2 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
+          hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 4)"></attachment> -->
+      </div>
+      <div class="tab-pane fade" id="pane_5" [ngClass]="currentTab==5?'active show':''">
+        <!-- <attachment #attachment3 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
+          hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 5)"></attachment> -->
+      </div>
+
+    </div>
+  </div>
+  <div class="card-footer pt-4 border-0">
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-light-primary me-3">
+        <i class="icon-airplay fs-5"></i>Thiết lập template
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onSavePopup()">Lưu</button>
+    </div>
+  </div>
+</ng-template>

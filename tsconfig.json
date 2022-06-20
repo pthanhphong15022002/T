@@ -37,22 +37,56 @@
       "@core/*": [
         "src/core/*"
       ],
+      "codx-ad": [
+        "dist/codx-ad/codx-ad",
+        "dist/codx-ad"
+      ],
+      "codx-dm": [
+        "dist/codx-dm/codx-dm",
+        "dist/codx-dm"
+      ],
+      "codx-ep": [
+        "dist/codx-ep/codx-ep",
+        "dist/codx-ep"
+      ],
+      "codx-es": [
+        "dist/codx-es/codx-es",
+        "dist/codx-es"
+      ],
+      "codx-fd": [
+        "dist/codx-fd/codx-fd",
+        "dist/codx-fd"
+      ],
+      "codx-hr": [
+        "dist/codx-hr/codx-hr",
+        "dist/codx-hr"
+      ],
+      "codx-mwp": [
+        "dist/codx-mwp/codx-mwp",
+        "dist/codx-mwp"
+      ],
+      "codx-od": [
+        "dist/codx-od/codx-od",
+        "dist/codx-od"
+      ],
       "codx-share": [
-        "dist/codx-share/codx-share",
-        "dist/codx-share"
+        "projects/codx-share/src"
+        // "dist/codx-share/codx-share",
+        // "dist/codx-share"
       ],
       "codx-tm": [
-        "dist/codx-tm/codx-tm",
-        "dist/codx-tm",
-        "dist/codx-tm/codx-tm",
-        "dist/codx-tm"
+        "projects/codx-tm/src"
+        // "dist/codx-tm/codx-tm",
+        // "dist/codx-tm",
+        // "dist/codx-tm/codx-tm",
+        // "dist/codx-tm"
+      ],
+      "codx-wp": [
+        "dist/codx-wp/codx-wp",
+        "dist/codx-wp"
       ],
       "@shared/*": [
         "src/shared/*"
-      ],
-      "tm": [
-        "dist/tm/tm",
-        "dist/tm"
       ]
     }
   },

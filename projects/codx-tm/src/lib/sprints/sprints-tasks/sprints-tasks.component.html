@@ -1,0 +1,34 @@
+<!-- view listdetail -->
+<ng-template #panelLeftRef let-data>
+  <div class="container">
+    <ul class="list-group">
+      <li class="list-group-item">Cras justo odio</li>
+      <li class="list-group-item">Dapibus ac facilisis in</li>
+      <li class="list-group-item">Morbi leo risus</li>
+      <li class="list-group-item">Porta ac consectetur ac</li>
+      <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
+  </div>
+</ng-template>
+
+
+
+<ng-template #panelRight>
+  <lib-view-details-task [formModel]="view.formModel" [itemSelected]="itemSelected"></lib-view-details-task>
+</ng-template>
+
+<codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
+  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [moreFuncs]="moreFuncs"
+  (viewChanged)="changeView($event)" [predicate]="" [dataValue]=""
+  [gridViewName]="'grvTasks'" autoLoad="false" (requestEnded)="requestEnded($event)"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" [selectedFirst]="true">
+</codx-views>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
+    iconCss="icon-flag" iconCss2="icon-security" [imageId]="data?.userID" imageObjType="AD_Users"
+    [title]="data?.userName" icoSubTitleCss="icon-assignment" [subTitle]="data?.positionName" [content]="data?.memo"
+    [status]="data?.status" statusVll="L0614" [date]="data?.createdOn" [resources]="data?.assignTo"
+    resourceObjType="AD_Users" [formModel]="view.formModel">
+  </codx-temp-full>
+</ng-template>

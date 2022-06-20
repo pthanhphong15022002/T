@@ -1,8 +1,3 @@
-
-<<<<<<< HEAD
-=======
-
-
 <!-- view listdetail -->
 <ng-template #panelLeftRef let-data>
   <div class="container">
@@ -36,7 +31,6 @@
     [modeImgs]="false">
   </codx-temp-full>
 </ng-template> -->
->>>>>>> 4b735dc623f9908e6974b9eea27a68f17a01bf8c
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
     iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.userID" imageObjType="AD_Users" [title]="data.userName"
@@ -114,7 +108,8 @@
 </ng-template>
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
+  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button" 
+  [predicate]="predicate" [dataValue]="dataValue"
   (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
   [selectedFirst]="true">

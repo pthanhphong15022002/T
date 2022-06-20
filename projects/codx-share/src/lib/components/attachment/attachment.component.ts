@@ -7,6 +7,7 @@ import {
   ViewChild,
   Input,
   ElementRef,
+  Optional,
 } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileUpload, Permission } from '@shared/models/file.model';
@@ -14,7 +15,7 @@ import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, AuthStore, CallFuncService, NotificationsService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogData, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
 import { AttachmentService } from './attachment.service';
 // import { AuthStore } from '@core/services/auth/auth.store';
@@ -44,6 +45,10 @@ export class AttachmentComponent implements OnInit {
   @Input() folderType: string;
   @Input() functionID: string;
   @Input() type: string;
+  @Input() popup = "1";
+  @Input() hideBtnSave = "0";
+  @Input() hideUploadBtn = "0";
+  @Input() hideFolder = "0";
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -58,37 +63,60 @@ export class AttachmentComponent implements OnInit {
     private fileService: FileService,
     public atSV: AttachmentService,
     private callfc: CallFuncService,
-    private notificationsService: NotificationsService) {
+    private notificationsService: NotificationsService,
+    @Optional() data?: DialogData,
+    @Optional() dialog?: Dialog) {
     this.user = this.auth.get();
+    if (data != null) {
+      this.objectType = data?.data.objectType;
+      this.objectId = data?.data.objectId;
+      this.folderType = data?.data.folderType;
+      this.functionID = data?.data.functionID;
+      this.type = data?.data.type;
+      this.popup = data?.data.popup;
+      this.hideBtnSave = data?.data.hideBtnSave;
+    }
+
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
       this.folderType = "3";
+
+    if (this.type == null || this.type == "")
+      this.type = "center";
+
+    if (this.popup == null || this.popup == "")
+      this.popup = "1";
+
+    if (this.hideBtnSave == null || this.hideBtnSave == "")
+      this.hideBtnSave = "0";
   }
+
 
   openPopup() {
     this.fileUploadList = [];
     if (this.type == "center") {
-      // this.callfc.openForm(this.openFile, "File upload", 700, null, null, "").subscribe((dialog: Dialog) => {
-      //   let that = this;
-      //   dialog.close = function (e) {
-      //     return that.closeOpenForm(e);
-      //   }
-      // });
+      let dialog = this.callfc.openForm(this.openFile, "Upload tài liệu", 700, null, null, "")
+      dialog.closed.subscribe((res) => {
+        let that = this;
+        return that.closeOpenForm(res);
+      });
     }
     else {
-      //   //this.viewBase.currentView.openSidebarRight();
+      // this.viewBase.currentView.openSidebarRight();
     }
   }
 
   closePopup(modal) {
-    this.fileAdded.emit({ data: this.fileUploadList });
-    if (this.type == 'center')
-      modal.hide();
-    else {
-      // this.viewBase.currentView.closeSidebarRight();
-      this.atSV.openAttachment.next(false);
-
+    this.fileAdded.emit({ data: this.atSV.fileListAdded });
+    if (this.popup == "1") {
+      if (this.type == 'center' && modal != null)
+        modal.hide();
+      else {
+        // this.viewBase.currentView.closeSidebarRight();
+        this.atSV.openAttachment.next(false);
+      }
     }
+
     this.fileUploadList = [];
   }
 
@@ -229,12 +257,10 @@ export class AttachmentComponent implements OnInit {
     });
 
 
-    // this.callfc.openForm(this.openFolder, "Open Folder", 400, null, null, "").subscribe((dialog: Dialog)=>{
-    //   let that = this;
-    //   dialog.close = function(e) {
-    //     return that.closeOpenForm(e);
-    //   }
-    // });
+    let dialog = this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "");
+    dialog.closed.subscribe((e) => {
+      return this.closeOpenForm(e);
+    });
   }
 
   closeOpenForm(e: any) {
@@ -253,9 +279,14 @@ export class AttachmentComponent implements OnInit {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
   }
 
-  onMultiFileSave(modal) {
+  saveFiles(modal = null) {
+    this.onMultiFileSave(modal);
+  }
+
+  onMultiFileSave(modal = null) {
     let total = this.fileUploadList.length;
     var that = this;
+    this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService.addMultiFile(this.fileUploadList).toPromise().then(res => {
         if (res != null) {
@@ -265,13 +296,16 @@ export class AttachmentComponent implements OnInit {
 
           if (addList.length == this.fileUploadList.length) {
             this.atSV.fileList.next(this.fileUploadList);
+            this.atSV.fileListAdded = addList;
             this.notificationsService.notify("Đã thêm file thành công");
-            this.fileUploadList = [];
             this.closePopup(modal);
+            this.fileUploadList = [];
           }
           else {
             var item = newlist[0];
             var newUploadList = [];
+            //   this.fileUploadList = [];
+            //   this.fileUploadList = addList;
             // copy list
             for (var i = 0; i < this.fileUploadList.length; i++) {
               var file = this.fileUploadList[i];
@@ -332,7 +366,6 @@ export class AttachmentComponent implements OnInit {
     else if (total == 1) {
       this.addFile(this.fileUploadList[0], modal);
       this.atSV.fileList.next(this.fileUploadList);
-      this.closePopup(modal);
     }
     else {
       this.notificationsService.notify("Vui lòng chọn file tải lên");
@@ -346,6 +379,10 @@ export class AttachmentComponent implements OnInit {
       done.then(item => {
         if (item.status == 0) {
           this.notificationsService.notify(item.message);
+          this.fileUploadList[0].recID = item.data.recID;
+          // list.push(Object.assign({}, res));
+          this.atSV.fileListAdded.push(Object.assign({}, item));
+          this.closePopup(modal);
         }
         else if (item.status == 6) {
           // ghi đè
@@ -366,22 +403,23 @@ export class AttachmentComponent implements OnInit {
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
 
-    // this.notificationsService.alert(title, message, config).subscribe((res: Dialog) => {
-    //   let that = this;
-    //   res.close = function (e) {
-    //     item.reWrite = true;
-    //     var done = this.fileService.updateVersionFile(item).toPromise();
-    //     if (done) {
-    //       done.then(async res => {
-    //         this.fileUploadList = [];
-    //         this.notificationsService.notify(res.message);
-    //         this.closePopup(modal);
-    //       }).catch((error) => {
-    //         console.log("Promise rejected with " + JSON.stringify(error));
-    //       });
-    //     }
-    //   }
-    // })
+    var dialog = this.notificationsService.alert(title, message, config);
+    dialog.closed.subscribe((e) => {
+      let that = this;
+      item.reWrite = true;
+      var done = this.fileService.updateVersionFile(item).toPromise();
+      if (done) {
+        done.then(async res => {
+          this.fileUploadList[0].recID = res.data.recID;
+          this.atSV.fileListAdded.push(Object.assign({}, item));
+          this.notificationsService.notify(res.message);
+          this.closePopup(modal);
+          this.fileUploadList = [];
+        }).catch((error) => {
+          console.log("Promise rejected with " + JSON.stringify(error));
+        });
+      }
+    })
 
     // this.confirmationDialogService.confirm(title, message).then((confirmed) => {
     //   if (confirmed) {
@@ -640,6 +678,10 @@ export class AttachmentComponent implements OnInit {
     return "";
   }
 
+  uploadFile() {
+    this.file.nativeElement.click();
+  }
+
   async handleFileInput(files: FileList) {
 
     var count = this.fileUploadList.length;
@@ -674,11 +716,12 @@ export class AttachmentComponent implements OnInit {
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
     }
-    this.changeDetectorRef.detectChanges();
+
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";
     //  this.dmSV.fileUploadList.next(this.fileUploadList);
+    this.changeDetectorRef.detectChanges();
     return false;
   }
 }

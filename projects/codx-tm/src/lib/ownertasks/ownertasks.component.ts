@@ -59,9 +59,9 @@ export class OwnerTasksComponent implements OnInit {
   dayoff = [];
   // resourceField: any;
   eventStatus: any;
-  itemSelected : any ;
-  user : any 
-  funcID : string
+  itemSelected: any;
+  user: any
+  funcID: string
   gridView: any;
   @Input() calendarID: string;
 
@@ -73,10 +73,12 @@ export class OwnerTasksComponent implements OnInit {
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private authStore: AuthStore,
-    private activedRouter : ActivatedRoute
-  ) { 
+    private activedRouter: ActivatedRoute
+  ) {
     this.user = this.authStore.get();
+    this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    
   }
 
   clickMF(e: any, data: any) {
@@ -147,7 +149,7 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-      
+        active : false,
         sameData: true,
         model: {
           template: this.template,
@@ -156,6 +158,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.card,
         sameData: true,
+        active : false,
         model: {
           template: this.cardTemplate,
         },
@@ -164,6 +167,7 @@ export class OwnerTasksComponent implements OnInit {
         type: ViewType.card,
         text: 'List card center',
         sameData: true,
+        active : false,
         model: {
           template: this.cardCenterTemplate,
         },
@@ -180,6 +184,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.content,
         sameData: true,
+        active : false,
         model: {
           panelRightRef: this.panelRight,
           panelLeftRef: this.panelLeft,
@@ -188,6 +193,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.kanban,
         sameData: true,
+        active : false,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -202,11 +208,11 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.schedule,
         sameData: true,
-        active: true,
+        active : false,
         request2: this.modelResource,
-        model:{
+        model: {
           panelLeftRef: this.panelLeft,
-          eventModel:  this.fields,
+          eventModel: this.fields,
           resourceModel: this.resourceField,
           contextMenu: '',
           template: this.scheduleTemplate,
@@ -214,13 +220,9 @@ export class OwnerTasksComponent implements OnInit {
       }
     ];
 
-  
-    this.view.dataService.predicates = "Status=@0";
-    this.view.dataService.dataValues = "1";
-    this.view.dataService.methodSave = 'TestApiSave';
-    this.view.dataService.methodUpdate = 'TestApiBool';
-    this.view.dataService.methodDelete = 'TestApi';
-    console.log(this.view.formModel);
+    this.view.dataService.methodSave = 'AddTaskAsync';
+    this.view.dataService.methodUpdate = 'UpdateTaskAsync';
+    this.view.dataService.methodDelete = 'DeleteTaskAsync';
     this.dt.detectChanges();
   }
   //#region schedule
@@ -279,7 +281,7 @@ export class OwnerTasksComponent implements OnInit {
         }
       }
     }
-    
+
     return ``;
   }
 
@@ -310,8 +312,9 @@ export class OwnerTasksComponent implements OnInit {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
-      //dialog.close();
     });
   }
 
@@ -319,6 +322,8 @@ export class OwnerTasksComponent implements OnInit {
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
     });
   }
@@ -338,8 +343,6 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   changeView(evt: any) {
-    console.log('evt: ', evt);
-    var t = this;
   }
 
   requestEnded(evt: any) {
@@ -353,6 +356,6 @@ export class OwnerTasksComponent implements OnInit {
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
-    this.dt.detectChanges() ;
+    this.dt.detectChanges();
   }
 }

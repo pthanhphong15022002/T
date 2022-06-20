@@ -1,3 +1,4 @@
+import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule } from 'codx-core';
@@ -13,7 +14,8 @@ const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
   BreadcumbComponent,
-  SelectweekComponent
+  SelectweekComponent,
+  ViewFileDialogComponent
 ]
 
 @NgModule({
