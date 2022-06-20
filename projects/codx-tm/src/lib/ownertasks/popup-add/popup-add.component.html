@@ -69,7 +69,7 @@
                   </codx-label>
                 </label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
-                  [disabled]="readOnly" [crrValue]="task.dueDate" (valueChange)="changeTime($event)">
+                  [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -135,6 +135,7 @@
                   <i class="icon-person_add_alt fs-5 me-1"></i>
                 </button>
               </div>
+              <!-- <codx-share (eventApply)="eventApply($event)"> </codx-share> -->
               <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
                   <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">

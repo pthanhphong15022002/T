@@ -12,7 +12,7 @@ export class ViewDetailComponent implements OnInit {
   dialog: any;
   active = 1;
   @Input() formModel?: FormModel;
-  @Input() itemSelected ?: any
+  @Input() itemSelected?: any
   constructor(
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
@@ -22,8 +22,7 @@ export class ViewDetailComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  aaa(val:any)
-  {
+  aaa(val: any) {
     console.log(val)
   }
 

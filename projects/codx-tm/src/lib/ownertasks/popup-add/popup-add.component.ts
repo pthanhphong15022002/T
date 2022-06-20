@@ -124,7 +124,7 @@ export class PopupAddComponent implements OnInit {
 
   onAddUser(event) {
     this.changeDetectorRef.detectChanges();
-    this.openDialogFolder(this.contentAddUser, '');
+    // this.openDialogFolder(this.contentAddUser, '');
   }
 
   changeMeno2User(message, id) {
@@ -416,20 +416,20 @@ export class PopupAddComponent implements OnInit {
   }
 
   beforeSave(op: any) {
-    var data =[] ;
+    var data = [];
     if (op.taskID != null) {
       op.method = 'UpdateTaskAsync';
-      data =[
-            this.task,
-            this.functionID,
-            this.listTaskResources,
-            this.listTodo,
-            null,
-            this.recIDTodoDelete,
-          ]
+      data = [
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+        null,
+        this.recIDTodoDelete,
+      ]
     } else {
       op.method = 'AddTaskAsync';
-       data = [
+      data = [
         this.task,
         this.functionID,
         this.listTaskResources,
@@ -507,32 +507,12 @@ export class PopupAddComponent implements OnInit {
     this.openMemo2 = !this.openMemo2;
   }
 
-  openDialogFolder(content, size: string = '') {
-    // this.modalService
-    //   .open(content, {
-    //     ariaLabelledBy: 'modal-basic-title',
-    //     size: size,
-    //     windowClass: 'custom-class',
-    //   })
-    //   .result.then(
-    //     (result) => {
-    //       console.log(`Closed with: ${result}`);
-    //     },
-    //     (reason) => {
-    //       // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    //     }
-    //   );
+  eventApply(e: any) {
+    console.log(e);
   }
 
-  arrayBufferToBase64(buffer) {
-    //this.taskboard.features..editTask(taskRecord);
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
+  changeVLL(data) {
+    this.task.priority = data.data;
   }
 
   changeTime(data) {
@@ -553,6 +533,15 @@ export class PopupAddComponent implements OnInit {
     }
   }
 
+  cbxChangeTaskGroup(data) {
+    console.log('abasdas');
+    if (data.data != '') {
+      this.task.taskGroupID = data.data[0];
+      this.loadTodoByGroup(this.task.taskGroupID);
+    }
+  }
+
+  cbxChange(data) { }
   checkLogicTime() {
     if (!this.task.startDate && !this.task.endDate) {
       this.isCheckTime = true;
@@ -606,21 +595,6 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
-
-  changeVLL(data) {
-    this.task.priority = data.data;
-  }
-
-  cbxChangeTaskGroup(data) {
-    console.log('abasdas');
-    if (data.data != '') {
-      this.task.taskGroupID = data.data[0];
-      this.loadTodoByGroup(this.task.taskGroupID);
-    }
-  }
-
-  cbxChange(data) {}
-
   loadTodoByGroup(idTaskGroup) {
     this.api
       .execSv<any>(
@@ -678,7 +652,7 @@ export class PopupAddComponent implements OnInit {
         this.listUserDetail = res;
       });
   }
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -718,8 +692,8 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
-  closePanel() {}
+  showPanel() { }
+  closePanel() { }
 
   onDeleteUser(userID) {
     var listUser = [];
