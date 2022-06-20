@@ -172,7 +172,6 @@ export class OwnerTasksComponent implements OnInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
           template: this.scheduleTemplate,
         }
       }

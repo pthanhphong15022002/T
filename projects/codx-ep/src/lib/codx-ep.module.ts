@@ -36,11 +36,11 @@ const routes: Routes = [
         component: Home1Component,
       },
       {
-        path: 'home1/:functionID',
+        path: 'home1/:funcID',
         component: Home1Component,
       },
       {
-        path: 'bookingrooms/:functionID',
+        path: 'bookingrooms/:funcID',
         component: RoomComponent,
       },
       {
@@ -52,23 +52,23 @@ const routes: Routes = [
         component: EditRoomBookingComponent,
       },
       {
-        path: 'bookingcars/:functionID',
+        path: 'bookingcars/:funcID',
         component: CarBookingComponent,
       },
       {
-        path: 'setting/:functionID',
+        path: 'setting/:funcID',
         component: SettingsComponent,
       },
       {
-        path: 'cars/:functionID',
+        path: 'cars/:funcID',
         component: CarResourceComponent,
       },
       {
-        path: 'rooms/:functionID',
+        path: 'rooms/:funcID',
         component: RoomsComponent,
       },
       {
-        path: 'stationery/:functionID',
+        path: 'stationery/:funcID',
         component: StationeryComponent,
       },
       {
@@ -130,4 +130,4 @@ export class CodxEpModule {
       ],
     };
   }
- }
+}

@@ -48,15 +48,15 @@ export const routes: Routes = [
           }]
       },
       {
-        path: 'setting/:funcID',
+        path: 'setting',
         component: SettingComponent,
-        children:[
+        children: [
           {
-            path:'',
+            path: ':funcID',
             component: HomeSettingComponent
           }
         ]
-      },   
+      },
       {
         path: 'home/:funcID',
         component: DashboardComponent
@@ -99,7 +99,7 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule 
+    FormsModule
   ],
   exports: [
     RouterModule
