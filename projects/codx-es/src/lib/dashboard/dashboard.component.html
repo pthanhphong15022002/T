@@ -1,0 +1,128 @@
+<div class="content">
+  <div class="row">
+    <div class="col col-6">
+      <div class="row child-row">
+        <div class="e-panel-container">
+          <div class="d-flex">
+            <div
+              *ngFor="let total of totals"
+              class="info-rectangle d-flex justify-content-between flex-column"
+            >
+              <h5 [style.color]="'white'">
+                {{ total.title }}
+              </h5>
+              <h2 [style.color]="'white'">
+                {{ total.value }}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row child-row">
+        <div
+          class="e-panel-container justify-content-between d-flex w-100 h-100"
+        >
+          <div class="chart chart-documents">
+            <ejs-accumulationchart
+              class="donut-container"
+              selectionMode="Point"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="documents"
+                  [dataSource]="data"
+                  xName="x"
+                  yName="y"
+                  [startAngle]="0"
+                  [endAngle]="360"
+                  innerRadius="80%"
+                  [dataLabel]="dataLabel"
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+          <div class="chart chart-archives">
+            <ejs-accumulationchart
+              class="donut-container"
+              selectionMode="Point"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="archives"
+                  [dataSource]="data"
+                  xName="x"
+                  yName="y"
+                  [startAngle]="0"
+                  [endAngle]="360"
+                  innerRadius="80%"
+                  [dataLabel]="dataLabel"
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col col-5">
+      <div class="chart chart-documents">
+        <ejs-accumulationchart class="donut-container" selectionMode="Point">
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              name="documents"
+              [dataSource]="data"
+              xName="x"
+              yName="y"
+              [startAngle]="0"
+              [endAngle]="360"
+              innerRadius="80%"
+              [dataLabel]="dataLabel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="chart chart-archives">
+        <ejs-accumulationchart class="donut-container" selectionMode="Point">
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              name="archives"
+              [dataSource]="data"
+              xName="x"
+              yName="y"
+              [startAngle]="0"
+              [endAngle]="360"
+              innerRadius="85%"
+              [dataLabel]="dataLabel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+    </div>
+  </div>
+  <div class="row bar-chart">
+    <ejs-chart
+      id="chart-container"
+      [primaryXAxis]="primaryXAxis"
+      [dataSource]="chartData"
+      [height]="'100%'"
+    >
+      <e-series-collection>
+        <e-series
+          type="Column"
+          xName="month"
+          yName="sales"
+          name="Sales"
+        ></e-series>
+        <e-series
+          type="Column"
+          xName="month"
+          yName="sales1"
+          name="Sales"
+        ></e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</div>

@@ -21,7 +21,8 @@ export const APICONSTANT = {
         SYS: 'ERM.Business.SYS',
         TENANT: 'ERM.Business.TENANT',
         TM: 'ERM.Business.TM',
-        WP: 'ERM.Business.WP'
+        WP: 'ERM.Business.WP',
+        EP: 'ERM.Business.EP',
     },
     BUSINESS: {
         FED: {
@@ -46,6 +47,10 @@ export const APICONSTANT = {
         },
         AD: {
             ViewSettings: 'ViewSettingsBusiness'
+        },
+        EP: {
+          Bookings: 'BookingsBusiness',
+          Resources: 'ResourceBusiness'
         }
 
     },

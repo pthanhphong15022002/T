@@ -1,0 +1,262 @@
+<div class="container1">
+  <div class="card card-custom cdx-add border-radius-0">
+    <div class="card-header border-0">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Thêm mới Phòng họp</h2>
+          <button
+            type="button"
+            class="btn btn-xs btn-icon btn-light btn-hover-primary"
+            aria-label="Close"
+            (click)="closeFormEdit($event)"
+          >
+            <span class="icon-close icon-20"></span>
+          </button>
+        </div>
+        <div class="text-dark-50">Tạo & upload file văn bản</div>
+      </div>
+    </div>
+    <div class="card-body scroll-y my-7">
+      <form [formGroup]="dialog" *ngIf="isAfterRender">
+        <!-- <form> -->
+        <div class="row mb-4">
+          <codx-label class="fs-5 fw-bold" default="Tên phòng họp" fiedName="ResourceName">
+          </codx-label>
+          <div class="d-flex position-relative">
+            <div class="w-100">
+              <codx-input
+                type="text"
+                class="form-control flex-grow-1 me-3 w-100"
+                ControlName="resourceName"
+                [Group]="dialog"
+              >
+              </codx-input>
+            </div>
+            <div class="ml-2 room-icon" style="display: none">
+              <codx-input
+                type="vllicon"
+                refValue="L1470"
+                field="icon"
+                class="btn btn-primary dropdown-toggle"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+              <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
+              </select-icon> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-6">
+            <codx-label class="fw-bold" default="Phân loại" fiedName="Ranking" >
+            </codx-label>
+            <codx-input
+              type="valuelist"
+              name="valuelist"
+              ngDefaultControl
+              [crrValue]="dialog.value.ranking"
+              refValue="EP005"
+              field="ranking"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            <!--end::Input-->
+          </div>
+          <!--end::Col-->
+          <!--begin::Col-->
+          <div class="col-3">
+            <!--end::Label-->
+            <codx-label class="fw-bold" default="Diện tích (m2)" fiedName="Area">
+            </codx-label>
+            <!--end::Label-->
+            <!--end::Input-->
+            <codx-input
+              type="text"
+              class="form-control"
+              ControlName="area"
+              [Group]="dialog"
+            >
+            </codx-input>
+            <!--end::Input-->
+          </div>
+          <!--end::Col-->
+          <!--begin::Col-->
+          <div class="col-3">
+            <!--end::Label-->
+            <codx-label class="fw-bold" default="Sức chứa (người)" fiedName="Capacity" >
+            </codx-label>
+            <!--end::Label-->
+            <!--end::Input-->
+            <codx-input
+              type="text"
+              class="form-control"
+              ControlName="capacity"
+              [Group]="dialog"
+            >
+            </codx-input>
+            <!--end::Input-->
+          </div>
+          <!--end::Col-->
+        </div>
+        <!--end::Input group-->
+        <!--begin::Input group-->
+        <div class="row mb-4">
+          <!--begin::Col-->
+          <div class="col-8">
+            <!--begin::Label-->
+            <codx-label class="fw-bold" default="Vị trí" fiedName="Location" >
+            </codx-label>
+            <!--end::Label-->
+            <!--begin::Input-->
+            <codx-input
+              type="text"
+              class="form-control"
+              placeholder=""
+              ControlName="location"
+              [Group]="dialog"
+            >
+            </codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label class="fw-bold" default="Đơn vị" fiedName="CompanyID" >
+            </codx-label>
+            <codx-input
+              service="EP"
+              type="combobox"
+              name="combobox"
+              crrValue=""
+              ngDefaultControl
+              refValue="Companies"
+              [loadFull]="true"
+              field="companyID"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-12">
+            <codx-label class="fw-bold" default="Người quản lí" fiedName="Owner" >
+            </codx-label>
+            <div class="position-relative">
+              <codx-input
+                service="AD"
+                type="combobox"
+                name="combobox"
+                [crrValue]="dialog.value.owner"
+                ngDefaultControl
+                field="owner"
+                refValue="Users"
+                (valueChange)="valueOwnerChange($event)"
+              >
+              </codx-input>
+              <div
+                class="position-absolute translate-middle-y top-50 end-0 me-3"
+              >
+                <span class="icon-person_pin_circle"> </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-12">
+            <codx-label class="fw-bold" default="Mô tả" fiedName="Note" >
+            </codx-label>
+            <codx-input
+              type="textarea"
+              class="test-textarea"
+              field="note"
+              placeholder=""
+              [crrValue]="dialog.value.note"
+              rows="3"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- <h5 class="text-dark">Thiết bị</h5> -->
+            <codx-label class="fw-bold" default="Thiết bị" fiedName="Equipments" >
+            </codx-label>
+            <span
+              class="icon-select_all text-primary icon-20"
+              (click)="openPopupDevices()"
+            ></span>
+          </div>
+          <div class="d-flex align-items-center fw-bold">
+            <ng-container *ngFor="let item of lstDevices">
+              <span class="text-dark fs-5 icon-wifi me-3">
+                <span class="fs-6 ms-1">{{ getDeviceName(item) }}</span>
+                <!-- <span class="fs-6 ms-1">{{item|vll:'EP005':'text'|async}}</span>-->
+              </span>
+            </ng-container>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="saveRoom()">
+          Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #popupDevice let-modal>
+  <!--begin::Card body-->
+  <div class="modal-header">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="modal-basic-title">Thiết bị</h2>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        >
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+      <div class="text-dark-50">
+        Chọn các thiết bị đã tích tích hợp sẵn trong phòng
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="py-2" *ngFor="let item of vllDevices">
+      <!--begin::Item-->
+      <div class="d-flex flex-stack">
+        <div class="d-flex">
+          <span class="text-dark icon-wifi me-2 p-1"></span>
+          <div class="d-flex flex-column">
+            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
+              item.text
+            }}</a>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="form-check form-check-solid form-switch">
+            <input
+              class="form-check-input w-35px h-20px"
+              type="checkbox"
+              id="googleswitch"
+              [checked]="isExist(item.value)"
+              (change)="checkedChange($event, item)"
+            />
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+      <!--end::Item-->
+      <!-- <div class="separator separator-dashed my-5"></div> -->
+    </div>
+    <!--end::Card body-->
+  </div>
+  <div class="modal-footer" (click)="modal.close()">
+    <button type="button" class="btn btn-primary">Lưu</button>
+  </div>
+</ng-template>

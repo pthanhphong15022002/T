@@ -34,6 +34,18 @@ export const routes: Routes = [
       //   loadChildren: () =>
       //     import('/modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
       // },
+      {
+        path: 'ep',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-ep/src/lib/codx-ep.module').then((m) => m.CodxEpModule),
+      },
+      {
+        path: 'es',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-es/src/lib/codx-es.module').then((m) => m.CodxEsModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },
