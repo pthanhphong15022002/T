@@ -1,7 +1,6 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import {
-  LayoutBaseComponent
-} from 'codx-core';
+import { LayoutBaseComponent } from 'codx-core';
+
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
@@ -10,14 +9,16 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
 
-  module = 'WP'
+  module = 'TM';
   constructor(inject: Injector) {
     super(inject);
+    this.codxService.init('TM');
   }
 
-  onInit(): void {
-  }
-  onAfterViewInit(): void {
+  onInit() { }
+
+  onAfterViewInit() {
+
   }
 
 }
