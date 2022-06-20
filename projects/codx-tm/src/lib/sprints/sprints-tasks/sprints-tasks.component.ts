@@ -62,7 +62,7 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       active: false,
       model: {
-        panelLeftRef: this.template,
+        template: this.template,
         // sideBarLeftRef: this.asideLeft,
       },
     },
@@ -84,7 +84,7 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       active: false,
       model: {
-        panelLeftRef: this.sprintsKanban,
+        template: this.sprintsKanban,
         // sideBarLeftRef: this.asideLeft,
       },
     },
@@ -95,7 +95,7 @@ export class SprintsTasksComponent implements OnInit {
       text: 'calendar',
       active: false,
       model: {
-        panelLeftRef: this.sprintsCalendar,
+        template: this.sprintsCalendar,
         //sideBarLeftRef: this.asideLeft,
       },
     },
@@ -106,7 +106,7 @@ export class SprintsTasksComponent implements OnInit {
       text: 'schedule',
       active: false,
       model: {
-        panelLeftRef: this.sprintsSchedule,
+        template: this.sprintsSchedule,
         // sideBarLeftRef: this.asideLeft,
       },
     },

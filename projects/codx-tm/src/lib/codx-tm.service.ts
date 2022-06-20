@@ -19,7 +19,7 @@ export class CodxTMService {
   constructor(
     //private cache: CacheService,
     private api: ApiHttpService,
-    private authStore: AuthStore //private dmDialog: CustomdialogService,    //nam trong share
+    private authStore: AuthStore 
   ) {
     this.user = this.authStore.get();
   }

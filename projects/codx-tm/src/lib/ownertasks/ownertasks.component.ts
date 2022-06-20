@@ -21,6 +21,7 @@ import {
   DialogRef,
   ApiHttpService,
   AuthStore,
+  CodxScheduleComponent,
 } from 'codx-core';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -36,6 +37,8 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
+  // @ViewChild("schedule") schedule: CodxScheduleComponent;
+
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -68,7 +71,9 @@ export class OwnerTasksComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
+    this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    
   }
 
   clickMF(e: any, data: any) {
@@ -140,10 +145,31 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-
+        active : false,
         sameData: true,
         model: {
+<<<<<<< HEAD
           template: this.itemTemplate,
+=======
+          template: this.template,
+        },
+      },
+      {
+        type: ViewType.card,
+        sameData: true,
+        active : false,
+        model: {
+          template: this.cardTemplate,
+        },
+      },
+      {
+        type: ViewType.card,
+        text: 'List card center',
+        sameData: true,
+        active : false,
+        model: {
+          template: this.cardCenterTemplate,
+>>>>>>> 94d616a66d933ab98879f6583a955e23d9c57b4e
         },
       },
       {
@@ -156,8 +182,21 @@ export class OwnerTasksComponent implements OnInit {
         },
       },
       {
+<<<<<<< HEAD
+=======
+        type: ViewType.content,
+        sameData: true,
+        active : false,
+        model: {
+          panelRightRef: this.panelRight,
+          panelLeftRef: this.panelLeft,
+        },
+      },
+      {
+>>>>>>> 94d616a66d933ab98879f6583a955e23d9c57b4e
         type: ViewType.kanban,
         sameData: true,
+        active : false,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -166,7 +205,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.schedule,
         sameData: true,
-        active: true,
+        active : false,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -199,25 +238,25 @@ export class OwnerTasksComponent implements OnInit {
     Title: 'Resources',
   };
 
-  // viewChange(evt: any) {
-  //   let fied = this.gridView?.dateControl || 'DueDate';
-  //   console.log(evt);
-  //   // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-  //   this.startDate = evt?.fromDate;
-  //   this.endDate = evt?.toDate;
-  //   //Thêm vào option predicate
-  //   this.model.filter = {
-  //     logic: 'and',
-  //     filters: [
-  //       { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-  //       { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
-  //     ]
-  //   }
-  //   //reload data
-  //   // this.schedule.reloadDataSource();
-  //   // this.schedule.reloadResource();
+  viewChange(evt: any) {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    console.log(evt);
+    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+    this.startDate = evt?.fromDate;
+    this.endDate = evt?.toDate;
+    //Thêm vào option predicate
+    this.model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
+      ]
+    }
+    //reload data
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
 
-  // }
+  }
 
   getCellContent(evt: any) {
 
@@ -263,7 +302,7 @@ export class OwnerTasksComponent implements OnInit {
       }
     })
   }
-  //#endregion chartline
+  //#endregion schedule
 
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {
