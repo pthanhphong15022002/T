@@ -1,19 +1,19 @@
 <codx-views
   #view
-  funcID="EPS24"
+  [funcID]="funcID"
   [showToolBar]="true"
-  service="EP"
-  assemblyName="EP"
-  entityName="EP_Resources"
-  predicate="ResourceType=@0"
-  dataValue="6"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="6"
   [views]="views"
   [button]="button"
   (buttonClick)="add($event)"
   [moreFuncs]="moreFunc"
-  idField="RecID"
-  className="ResourcesBusiness"
-  method="GetListAsync"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
   (requestEnded)="closeEditForm($event)"
 >
 </codx-views>
@@ -62,7 +62,10 @@
           <span>{{ data.availableQty }}</span>
         </div>
       </div>
-      <div class="symbol-group symbol-hover justify-content-end" (click)="addCart($event)">
+      <div
+        class="symbol-group symbol-hover justify-content-end"
+        (click)="addCart($event)"
+      >
         <span class="icon-shopping_cart icon-20 text-gray-400"></span>
       </div>
     </div>
@@ -80,11 +83,18 @@
       <tbody>
         <td class="w-75">
           <div class="d-flex">
-            <div class="w-100px h-100px"><img src="https://anlocviet.vn/upload/product/butbithienlongtl2529-3581.jpg" alt=""></div>
+            <div class="w-100px h-100px">
+              <img
+                src="https://anlocviet.vn/upload/product/butbithienlongtl2529-3581.jpg"
+                alt=""
+              />
+            </div>
             <div>
-              <div class="text-dark font-weight-bold font-size-h6">{{data.resourceName}}</div>
-              <div>Đơn vị tính: {{data.costPrice}}</div>
-              <div>Nhóm: {{data.costPrice}}</div>
+              <div class="text-dark font-weight-bold font-size-h6">
+                {{ data.resourceName }}
+              </div>
+              <div>Đơn vị tính: {{ data.costPrice }}</div>
+              <div>Nhóm: {{ data.costPrice }}</div>
               <div class="d-flex justify-content-between align-items-end mt-2">
                 <div class="d-flex align-items-end me-2 codx-badge">
                   <div class="d-flex align-items-center position-relative me-4">

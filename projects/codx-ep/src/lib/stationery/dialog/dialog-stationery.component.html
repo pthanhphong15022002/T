@@ -3,353 +3,9 @@
   subHeaderText="Thêm văn phòng phẩm"
   [body]="body"
   [footer]="footer"
+  [dialog]="dialog"
 >
-  <ng-template popup adde #body>
-      <!-- <div class="card-body">
-        <div class="d-flex flex-column mb-4">
-          <div
-            class="d-flex justify-content-between align-items-center"
-          >
-            <codx-label
-              class="fw-bold"
-              default="Phòng"
-              fieldName="ResourceID"
-              formName="Users"
-              gridViewName="grvUsers"
-            >
-            </codx-label>
-            <span class="label-status text-primary">Sẵn sàng</span>
-          </div>
-          <codx-input
-            type="combobox"
-            ControlName="resourceID"
-            [Group]="addEditForm"
-            [refValue]="CbxName['ResourceID']"
-          ></codx-input>
-        </div>
-
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between fw-bold fs-7 mb-2"
-        >
-          <div class="d-flex" *ngFor="let item of lstDeviceRoom">
-            <span
-              class="d-flex align-items-center me-2 mb-2"
-              [ngClass]="
-                item.isSelected ? 'text-primary' : 'text-muted'
-              "
-            >
-              <span
-                class="icon-wifi me-1"
-                [ngClass]="item.isSelected ? 'text-primary' : ''"
-              >
-              </span
-              >{{ item.text }}
-            </span>
-          </div>
-          <span class="text-end align-items-end">
-            <button
-            (click)="openPopupDevice()"
-              type="button"
-              class="btn btn-clean btn-sm btn-icon btn-icon-md"
-              data-dismiss="modal"
-            >
-              <i
-                class="icon-select_all text-primary text-hover-primary-dark icon-24"
-              ></i>
-            </button>
-          </span>
-        </div>
-        <div class="d-flex row align-items-center mb-4">
-          <div class="col-4">
-            <codx-label
-              class="fw-bold"
-              default="Ngày"
-              fiedName="ResourceID"
-            >
-            </codx-label>
-            <codx-input
-              type="datetime"
-              class="form-control test-datetime"
-              field="datetime"
-              [crrValue]="addEditForm.value.startDate"
-              ControlName="startDate"
-              placeholder="datetime"
-              dataformat="d"
-            >
-            </codx-input>
-          </div>
-          <div class="col-3">
-            <codx-label
-              class="fw-bold"
-              default="Từ giờ"
-              fiedName="StartDate"
-              aria-disabled="false"
-            >
-            </codx-label>
-            <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-              dataformat="t">
-            </codx-input>
-            <ejs-timepicker
-              id="workHourStart"
-              showClearButton="false"
-            >
-            </ejs-timepicker>
-          </div>
-          <div class="col-3">
-            <codx-label
-              class="fw-bold"
-              default="Đến giờ"
-              fiedName="ResourceID"
-            >
-            </codx-label>
-            <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-              dataformat="t" >
-            </codx-input>
-            <ejs-timepicker
-              id="workHourStart"
-              showClearButton="false"
-              [value]=""
-              class="test-datetime"
-            ></ejs-timepicker>
-          </div>
-          <div class="col-2">
-            <codx-label class="fs-6 fw-bold mb-2" default>
-            </codx-label>
-            <codx-input
-              #checkbox
-              type="checkbox"
-              label="Cả ngày"
-              labelPosition="after"
-              field="day"
-              class="test-check"
-              (valueChange)="valueChange($event)"
-              [crrValue]=""
-            >
-            </codx-input>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
-          <codx-label
-            class="fw-bold"
-            default="Mục đích sử dụng"
-            fiedName="ReasonID"
-            formName="Stationery"
-            gridViewName="grvStationery"
-          >
-          </codx-label>
-          <codx-input
-            type="combobox"
-            ngDefaultControl
-            [refValue]="CbxName['ReasonID']"
-            (valueChange)="valueChange($event)"
-            [multiple]="false"
-          >
-          </codx-input>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
-          <codx-label
-            class="fw-bold"
-            default="Tiêu đề"
-            fiedName="ResourceName"
-            formName="Stationery"
-            gridViewName="grvStationery"
-          >
-          </codx-label>
-          <codx-input
-            type="text"
-            name="text"
-            ControlName="resourceName"
-            [Group]="addEditForm"
-            crrValue="title"
-            placeholder=""
-            ngDefaultControl
-            class="form-control"
-          ></codx-input>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
-          <codx-label
-            class="fw-bold"
-            default="Nội dung buổi họp"
-            fiedName="Memo"
-          >
-          </codx-label>
-          <codx-input
-            type="textarea"
-            class="test-textarea"
-            field="memo"
-            ControlName="memo"
-            placeholder="textarea"
-            [crrValue]="addEditForm.value.memo"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
-          <div
-            class="d-flex justify-content-between align-items-center mb-2"
-          >
-            <div class="form-switch1">
-              <codx-input
-                #checkbox
-                type="switch"
-                id="switchOnl"
-                [checked]="this.addEditForm.value.online"
-                labelPosition="After"
-                label=""
-                [disabled]="false"
-                class="test-switch"
-                (valueChange)="checkedOnlineChange($event)"
-              >
-              </codx-input>
-              <span class="fw-bold ms-2"
-                ><label for="switchOnl">Họp online</label></span
-              >
-            </div>
-            <span class="text-end align-items-end">
-              <button
-                type="button"
-                class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                data-dismiss="modal"
-                (click)="openPopupLink()"
-                *ngIf="this.addEditForm.value.online"
-              >
-                <i
-                  class="icon-insert_link text-primary text-hover-primary-dark icon-24"
-                ></i>
-              </button>
-            </span>
-          </div>
-          <div class="d-flex align-items-center fw-bold">
-            <a href="" *ngIf="this.addEditForm.value.online">{{
-              addEditForm.value.onlineUrl
-            }}</a>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column mb-8">
-          <div
-            class="d-flex justify-content-between align-items-center mb-2"
-          >
-            <h4 class="fw-bolder text-gray-800 d-block">
-              <codx-label
-                default="Người tham dự"
-                fiedName="Attendees"
-              ></codx-label>
-            </h4>
-            <span class="text-end align-items-end">
-              <button
-                type="button"
-                class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                data-dismiss="modal"
-              >
-                <i
-                  class="icon-group_add text-primary text-hover-primary-dark icon-24"
-                ></i>
-              </button>
-            </span>
-          </div>
-          <div
-            class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-          >
-            <div
-              class="symbol symbol-35px symbol-circle"
-              data-bs-toggle="tooltip"
-              title=""
-              data-bs-original-title="Alan Warden"
-            >
-              <span
-                class="symbol-label bg-warning text-inverse-warning fw-bolder"
-                >A</span
-              >
-              <span
-                class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
-              ></span>
-            </div>
-            <div
-              class="symbol symbol-35px symbol-circle"
-              data-bs-toggle="tooltip"
-              title=""
-              data-bs-original-title="Michael Eberon"
-            >
-              <img
-                alt="Pic"
-                src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-              />
-              <span
-                class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-              ></span>
-            </div>
-            <div
-              class="symbol symbol-35px symbol-circle"
-              data-bs-toggle="tooltip"
-              title=""
-              data-bs-original-title="Melody Macy"
-            >
-              <img
-                alt="Pic"
-                src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-              />
-              <span
-                class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-              ></span>
-            </div>
-
-            <a
-              href="#"
-              class="symbol symbol-35px symbol-circle"
-              data-bs-toggle="modal"
-              data-bs-target="#kt_modal_view_users"
-            >
-              <span
-                class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                >+3</span
-              >
-            </a>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
-          <div
-            class="d-flex justify-content-between align-items-center mb-2"
-          >
-            <h4 class="fw-bolder text-gray-800 d-block">
-              <codx-label
-                default="Tài liệu tham khảo"
-                fiedName="Attendees"
-              >
-              </codx-label>
-            </h4>
-            <a
-              class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary"
-            >
-              <span
-                class="icon-cloud_upload btn-text-primary me-2"
-                (click)="popup($event)"
-              ></span
-              >Upload file</a
-            >
-          </div>
-          <div class="AttachmentFile-group flex-nowrap">
-            <div class="d-flex align-items-center mb-2">
-              <span class="me-4 icon-file-excel"> </span>
-              <a href="#" class="text-gray-800 text-hover-primary"
-                >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
-              >
-            </div>
-            <div class="d-flex align-items-center mb-2">
-              <span class="me-4 icon-file-excel">
-              </span>
-              <a href="#" class="text-gray-800 text-hover-primary"
-                >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
-              >
-            </div>
-          </div>
-        </div>
-      </div> -->
+  <ng-template popup #body>
     <div class="tab-content">
       <ejs-tab
         id="tab_orientation"
@@ -364,124 +20,55 @@
               <div id="rome" class="tabpanel">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
-                    <div
-                      class="d-flex justify-content-between align-items-center"
+                    <codx-label
+                      class="fw-bold"
+                      default="Tên sản phẩm"
+                      fieldName="ResourceName"
+                      formName="Stationery"
+                      gridViewName="grvStationery"
                     >
-                      <codx-label
-                        class="fw-bold"
-                        default="Phòng"
-                        fieldName="ResourceID"
-                        formName="Users"
-                        gridViewName="grvUsers"
-                      >
-                      </codx-label>
-                      <span class="label-status text-primary">Sẵn sàng</span>
-                    </div>
+                    </codx-label>
                     <codx-input
-                      type="combobox"
+                      type="text"
                       ControlName="resourceID"
                       [crrValue]="addEditForm.value.resourceID"
                       [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
+                      (valueChange)="valueChange($event)"
                     ></codx-input>
                   </div>
-
-                  <div
-                    class="d-flex flex-wrap align-items-center justify-content-between fw-bold fs-7 mb-2"
-                  >
-                    <div class="d-flex" *ngFor="let item of lstDeviceRoom">
-                      <span
-                        class="d-flex align-items-center me-2 mb-2"
-                        [ngClass]="
-                          item.isSelected ? 'text-primary' : 'text-muted'
-                        "
-                      >
-                        <span
-                          class="icon-wifi me-1"
-                          [ngClass]="item.isSelected ? 'text-primary' : ''"
-                        >
-                        </span
-                        >{{ item.text }}
-                      </span>
-                    </div>
-                    <span class="text-end align-items-end">
-                      <button
-                      (click)="openPopupDevice()"
-                        type="button"
-                        class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                        data-dismiss="modal"
-                      >
-                        <i
-                          class="icon-select_all text-primary text-hover-primary-dark icon-24"
-                        ></i>
-                      </button>
-                    </span>
-                  </div>
                   <div class="d-flex row align-items-center mb-4">
-                    <div class="col-4">
+                    <div class="col-8">
                       <codx-label
                         class="fw-bold"
-                        default="Ngày"
+                        default="Nhóm"
                         fiedName="ResourceID"
                       >
                       </codx-label>
                       <codx-input
-                        type="datetime"
-                        class="form-control test-datetime"
-                        field="datetime"
-                        [crrValue]="addEditForm.value.startDate"
-                        ControlName="startDate"
-                        placeholder="datetime"
-                        dataformat="d"
+                      type="combobox"
+                      ngDefaultControl
+                      [refValue]="CbxName['ReasonID']"
+                      (valueChange)="valueChange($event)"
+                      [multiple]="false"
                       >
                       </codx-input>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                       <codx-label
                         class="fw-bold"
-                        default="Từ giờ"
+                        default="Mã số"
                         fiedName="StartDate"
                         aria-disabled="false"
                       >
                       </codx-label>
-                      <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                        dataformat="t">
-                      </codx-input>
-                      <ejs-timepicker
-                        id="workHourStart"
-                        showClearButton="false"
-                      >
-                      </ejs-timepicker>
-                    </div>
-                    <div class="col-3">
-                      <codx-label
-                        class="fw-bold"
-                        default="Đến giờ"
-                        fiedName="ResourceID"
-                      >
-                      </codx-label>
-                      <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                        dataformat="t">
-                      </codx-input>
-                      <ejs-timepicker
-                        id="workHourStart"
-                        showClearButton="false"
-                        [value]=""
-                        class="test-datetime"
-                      ></ejs-timepicker>
-                    </div>
-                    <div class="col-2">
-                      <codx-label class="fs-6 fw-bold mb-2" default>
-                      </codx-label>
                       <codx-input
-                        #checkbox
-                        type="checkbox"
-                        label="Cả ngày"
-                        labelPosition="after"
-                        field="day"
-                        class="test-check"
+                        type="text"
+                        ControlName="resourceID"
+                        [crrValue]="addEditForm.value.resourceID"
+                        [Group]="addEditForm"
+                        [refValue]="CbxName['ResourceID']"
                         (valueChange)="valueChange($event)"
-                        [crrValue]=""
                       >
                       </codx-input>
                     </div>
@@ -699,8 +286,7 @@
                         >
                       </div>
                       <div class="d-flex align-items-center mb-2">
-                        <span class="me-4 icon-file-excel">
-                        </span>
+                        <span class="me-4 icon-file-excel"> </span>
                         <a href="#" class="text-gray-800 text-hover-primary"
                           >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
                         >
@@ -1121,6 +707,4 @@
   </div>
 </ng-template>
 
-<ng-template #addLink>
-
-</ng-template>
+<ng-template #addLink> </ng-template>
