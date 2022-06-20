@@ -416,20 +416,20 @@ export class PopupAddComponent implements OnInit {
   }
 
   beforeSave(op: any) {
-    var data =[] ;
+    var data = [];
     if (op.taskID != null) {
       op.method = 'UpdateTaskAsync';
-      data =[
-            this.task,
-            this.functionID,
-            this.listTaskResources,
-            this.listTodo,
-            null,
-            this.recIDTodoDelete,
-          ]
+      data = [
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+        null,
+        this.recIDTodoDelete,
+      ]
     } else {
       op.method = 'AddTaskAsync';
-       data = [
+      data = [
         this.task,
         this.functionID,
         this.listTaskResources,
@@ -595,24 +595,6 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
-<<<<<<< HEAD
-=======
-
-  changeVLL(data) {
-    this.task.priority = data.data;
-  }
-
-  cbxChangeTaskGroup(data) {
-    console.log('abasdas');
-    if (data.data != '') {
-      this.task.taskGroupID = data.data[0];
-      this.loadTodoByGroup(this.task.taskGroupID);
-    }
-  }
-
-  cbxChange(data) {}
-
->>>>>>> 94d616a66d933ab98879f6583a955e23d9c57b4e
   loadTodoByGroup(idTaskGroup) {
     this.api
       .execSv<any>(
@@ -670,7 +652,7 @@ export class PopupAddComponent implements OnInit {
         this.listUserDetail = res;
       });
   }
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -710,8 +692,8 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
-  closePanel() {}
+  showPanel() { }
+  closePanel() { }
 
   onDeleteUser(userID) {
     var listUser = [];
