@@ -21,6 +21,7 @@ import {
   DialogRef,
   ApiHttpService,
   AuthStore,
+  CodxScheduleComponent,
 } from 'codx-core';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -41,6 +42,8 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
   @ViewChild('tmpRight') sidebarRight?: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
+  // @ViewChild("schedule") schedule: CodxScheduleComponent;
+
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -237,25 +240,25 @@ export class OwnerTasksComponent implements OnInit {
     Title: 'Resources',
   };
 
-  // viewChange(evt: any) {
-  //   let fied = this.gridView?.dateControl || 'DueDate';
-  //   console.log(evt);
-  //   // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-  //   this.startDate = evt?.fromDate;
-  //   this.endDate = evt?.toDate;
-  //   //Thêm vào option predicate
-  //   this.model.filter = {
-  //     logic: 'and',
-  //     filters: [
-  //       { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-  //       { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
-  //     ]
-  //   }
-  //   //reload data
-  //   // this.schedule.reloadDataSource();
-  //   // this.schedule.reloadResource();
+  viewChange(evt: any) {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    console.log(evt);
+    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+    this.startDate = evt?.fromDate;
+    this.endDate = evt?.toDate;
+    //Thêm vào option predicate
+    this.model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
+      ]
+    }
+    //reload data
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
 
-  // }
+  }
 
   getCellContent(evt: any) {
 
@@ -301,7 +304,7 @@ export class OwnerTasksComponent implements OnInit {
       }
     })
   }
-  //#endregion chartline
+  //#endregion schedule
 
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {

@@ -8,6 +8,7 @@ import {
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
+  module: string;
   onInit(): void {
     throw new Error('Method not implemented.');
   }

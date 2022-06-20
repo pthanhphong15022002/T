@@ -9,8 +9,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
+  module: string;
 
-  public funcs$: Observable<any>;
+  public override funcs$: Observable<any>;
 
   constructor(inject: Injector) {
     super(inject);
