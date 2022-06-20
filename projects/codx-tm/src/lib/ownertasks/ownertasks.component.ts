@@ -31,15 +31,10 @@ import { PopupAddComponent } from './popup-add/popup-add.component';
 })
 export class OwnerTasksComponent implements OnInit {
   @ViewChild('view') view!: ViewsComponent;
-  @ViewChild('panelLeftRef') panelLeft?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate!: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  @ViewChild('cardCenterTemplate') cardCenterTemplate!: TemplateRef<any>;
-  @ViewChild('kanbanTemplate') kanbanTemplate?: TemplateRef<any>;
   @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
-  @ViewChild('tmpRight') sidebarRight?: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -77,6 +72,7 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   clickMF(e: any, data: any) {
+    console.log(e, data);
     switch (e.functionID) {
       case 'btnAdd':
         this.show();
@@ -133,36 +129,21 @@ export class OwnerTasksComponent implements OnInit {
     ];
     this.getParams();
   }
+
   change() {
     // this.view.dataService.dataValues = "1";
     // this.view.dataService.load();
     this.view.dataService.setPredicates(["Status=@0"], ["1"]);
-
   }
+
   ngAfterViewInit(): void {
-    // this.noti.notifyCode('DM012')
     this.views = [
       {
         type: ViewType.list,
 
         sameData: true,
         model: {
-          template: this.template,
-        },
-      },
-      {
-        type: ViewType.card,
-        sameData: true,
-        model: {
-          template: this.cardTemplate,
-        },
-      },
-      {
-        type: ViewType.card,
-        text: 'List card center',
-        sameData: true,
-        model: {
-          template: this.cardCenterTemplate,
+          template: this.itemTemplate,
         },
       },
       {
@@ -170,16 +151,8 @@ export class OwnerTasksComponent implements OnInit {
         sameData: true,
         active: true,
         model: {
-          template: this.template,
+          template: this.itemTemplate,
           panelRightRef: this.panelRight,
-        },
-      },
-      {
-        type: ViewType.content,
-        sameData: true,
-        model: {
-          panelRightRef: this.panelRight,
-          panelLeftRef: this.panelLeft,
         },
       },
       {
@@ -188,13 +161,7 @@ export class OwnerTasksComponent implements OnInit {
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
-          panelLeftRef: this.kanbanTemplate,
         },
-      },
-      {
-        active: false,
-        type: ViewType.grid,
-        sameData: true,
       },
       {
         type: ViewType.schedule,
@@ -202,7 +169,6 @@ export class OwnerTasksComponent implements OnInit {
         active: true,
         request2: this.modelResource,
         model: {
-          panelLeftRef: this.panelLeft,
           eventModel: this.fields,
           resourceModel: this.resourceField,
           contextMenu: '',
