@@ -24,6 +24,7 @@ import {
   CodxScheduleComponent,
   UrlUtil,
   NotificationsService,
+  CacheService,
 } from 'codx-core';
 import * as moment from 'moment';
 import { CodxTMService } from '../codx-tm.service';
@@ -83,14 +84,13 @@ export class OwnerTasksComponent implements OnInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  clickMF(e: any, data: any) {
-    console.log(e, data);
+  clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
         this.show();
         break;
       case 'edit':
-        this.edit();
+        this.edit(data);
         break;
       case 'delete':
         this.delete(data);
@@ -104,15 +104,6 @@ export class OwnerTasksComponent implements OnInit {
     switch (evt.id) {
       case 'btnAdd':
         this.show();
-        break;
-      case 'edit':
-        this.edit();
-        break;
-      case 'delete':
-        this.delete(evt);
-        break;
-      case 'delete':
-        this.delete(evt);
         break;
     }
   }
@@ -190,7 +181,6 @@ export class OwnerTasksComponent implements OnInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
           template: this.scheduleTemplate,
         },
       },
@@ -314,28 +304,22 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(
-        PopupAddComponent,
-        this.view.dataService.dataSelected,
-        option
-      );
+      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
     });
   }
 
-  edit() {
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '750px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddComponent,
-          this.view.dataService.dataSelected,
-          option
-        );
-      });
+  edit(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
+      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+    });
   }
 
   delete(data: any) {

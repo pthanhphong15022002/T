@@ -1,3 +1,5 @@
+import { SettingComponent } from './setting/setting.component';
+import { HomeSettingComponent } from './setting/home-setting/home-setting.component';
 import { FormsModule } from '@angular/forms';
 import { OwnerTasksComponent } from './ownertasks/ownertasks.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
@@ -45,7 +47,17 @@ export const routes: Routes = [
             path: ':id',
             component: SprintsTasksComponent,
           }]
-      },   
+      },
+      {
+        path: 'setting',
+        component: SettingComponent,
+        children: [
+          {
+            path: ':funcID',
+            component: HomeSettingComponent
+          }
+        ]
+      },
       {
         path: 'home/:funcID',
         component: DashboardComponent
@@ -69,7 +81,9 @@ const T_Component: Type<any>[] = [
   ListCardSprintsComponent,
   SprintsTasksComponent,
   ViewDetailsTaskComponent,
-  UpdateStatusPopupComponent
+  UpdateStatusPopupComponent,  
+  HomeSettingComponent,
+  SettingComponent
 ]
 @NgModule({
   imports: [
@@ -87,7 +101,7 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule 
+    FormsModule
   ],
   exports: [
     RouterModule

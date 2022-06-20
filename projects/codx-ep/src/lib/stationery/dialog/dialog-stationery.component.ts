@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  Optional,
   Output,
   TemplateRef,
   ViewChild,
@@ -14,6 +15,8 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogData,
+  DialogRef,
   ImageViewerComponent,
   NotificationsService,
   ViewModel,
@@ -61,15 +64,20 @@ export class DialogStationeryComponent implements OnInit {
   ];
 
   isAdd = true;
+  data: any = {};
+  dialog: any;
   constructor(
     private bookingService: CodxEpService,
     private api: ApiHttpService,
     private cacheSv: CacheService,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private notification: NotificationsService,
-    private cfService: CallFuncService
+    private cfService: CallFuncService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
     // this.bookingService.getModelPage('EPT1').then((res) => {
     //   if (res) this.modelPage = res;
     //   console.log('constructor', this.modelPage);
@@ -263,6 +271,7 @@ export class DialogStationeryComponent implements OnInit {
     console.log('Aloo');
   }
   valueChange(event) {
+    debugger;
     console.log('Color: ', event);
   }
   popupTab() {

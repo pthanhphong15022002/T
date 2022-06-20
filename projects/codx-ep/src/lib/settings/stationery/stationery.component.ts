@@ -82,7 +82,7 @@ export class StationeryComponent implements OnInit {
     private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
     private callfunc: CallFuncService
-  ) {}
+  ) { }
 
   moreFuncs = [
     {
@@ -108,7 +108,7 @@ export class StationeryComponent implements OnInit {
       //   model: {
       //     eventModel: this.fields,
       //     resourceModel: this.resourceField,
-      //     contextMenu: '',
+      //     ,
       //   },
       // },
       // {
@@ -230,7 +230,7 @@ export class StationeryComponent implements OnInit {
       });
   }
 
-  onDone(event) {}
+  onDone(event) { }
 
   click(evt: ButtonModel) {
     switch (evt.id) {
