@@ -1,36 +1,8 @@
 <!-- view listdetail -->
-<ng-template #panelLeftRef let-data>
-  <div class="container">
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </div>
-</ng-template>
-
 <ng-template #panelRight>
   <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected"></app-view-detail>
-  <!-- <div class="container">
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </div> -->
 </ng-template>
 
-<!-- <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
-    iconCss="icon-flag" iconCss2="icon-security" [content]="data.memo" [status]="data.status" statusVll="L0614"
-    [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel"
-    [modeImgs]="false">
-  </codx-temp-full>
-</ng-template> -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
     iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.userID" imageObjType="AD_Users" [title]="data.userName"
@@ -40,32 +12,13 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #cardTemplate let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" (click)="clickMF($event,data)" (click)="click(data)"
-    imageSrc="../assets/media/img/codx/default/card-default.svg" imageObjType="AD_Users" iconCss="icon-flag"
-    iconCss2="icon-security " [title]="data.userName" icoSubTitleCss="icon-assignment" [subTitle]="data.positionName"
-    [desc2]="data.memo||'memo'" [status]="data.status" statusVll="L0614" [date]="data.createdOn"
-    [resources]="data.assignTo" resourceObjType="AD_Users" [rootData]="data" [setting]="setting"
-    [footer]="cardImgFooter">
-  </codx-card-img>
-</ng-template>
-
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" (click)="clickMF($event,data)"
-    imageSrc="../assets/media/img/codx/default/card-default.svg" imageObjType="AD_Users" [icoStatus]="data.priority"
-    icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag" [subTitle]="data.positionName"
-    [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614" [date]="data.createdOn"
-    [resources]="data.assignTo" resourceObjType="AD_Users" [rootData]="data" [setting]="setting"
+  <codx-card-img cardCss="border h-100" (click)="clickMF($event,data)" imageObjType="AD_Users"
+    [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag"
+    [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
+    [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users" [rootData]="data" [setting]="setting"
     [footer]="cardImgFooter">
   </codx-card-img>
-</ng-template>
-
-<ng-template #cardCenterTemplate let-data>
-  <codx-card-center cardCss="border h-100" (click)="clickMF($event,data)" (click)="click(data)" [imageId]="data.userID"
-    imageObjType="AD_Users" iconCss="icon-flag" iconCss2="icon-security" [title]="data.userName"
-    [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
-    [date]="data.createdOn" [footer]="cardImgFooter">
-  </codx-card-center>
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
