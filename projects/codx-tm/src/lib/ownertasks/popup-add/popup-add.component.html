@@ -33,24 +33,26 @@
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-center">
+          <ng-template #headerText class="me-10 border-0 ">
+            <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
               <div class="fw-bold">Thông tin chung</div>
             </div>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content class="ms-10">
             <div class="form-group">
               <label>
-                <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
+                <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
+                  (valueChange)="valueChange($event)">
                 </codx-label>
               </label>
-              <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
+              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName">
+              </codx-input>
+              <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
                 [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
                 (focus)="textboxChange($event.target.value)" />
               <div id="errorCopy" autofocus *ngIf="!required.taskName" class="invalid-feedback">
-                Tên công việc.
-              </div>
+                Tên công việc. -->
             </div>
             <div class="form-group mt-3">
               <label>
@@ -58,8 +60,8 @@
                 </codx-label>
               </label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
-                placeholder="Nhóm công việc" ngDefaultControl refValue="TaskGroups" loadFull="true" field="taskGroupID"
-                (valueChange)="cbxChangeTaskGroup($event)" [crrValue]="task.taskGroupID">
+                placeholder="Nhóm công việc" refValue="TaskGroups" loadFull="true" field="taskGroupID"
+                (valueChange)="cbxChange($event)" [multiple]="false" [crrValue]="task.taskGroupID">
               </codx-input>
             </div>
             <div class="form-group row mt-3">
@@ -69,7 +71,7 @@
                   </codx-label>
                 </label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
-                  [disabled]="readOnly" [crrValue]="task.dueDate" (valueChange)="changeTime($event)">
+                  [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -135,12 +137,13 @@
                   <i class="icon-person_add_alt fs-5 me-1"></i>
                 </button>
               </div>
-              <div class="symbol-group">
+              <codx-share (eventApply)="eventApply($event)"> </codx-share>
+              <!-- <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
                   <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">
                   </codx-img>
                 </ng-container>
-              </div>
+              </div> -->
             </ng-container>
             <div class="d-flex align-items-center justify-content-between mt-6">
               <div class="d-flex align-items-center mb-3">
@@ -421,9 +424,9 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary">
+      <!-- <button class="btn btn-light-primary">
         Sửa
-      </button>
+      </button> -->
       <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
     </div>
   </ng-template>

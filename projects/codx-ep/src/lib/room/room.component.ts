@@ -167,11 +167,9 @@ export class RoomComponent implements OnInit, AfterViewInit {
         type: ViewType.schedule,
         active: true,
         request2: this.modelResource,
-
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
           template: this.eventTemplate,
         },
       },

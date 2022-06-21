@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,9 +12,7 @@ import { CarBookingComponent } from './car/car.component';
 import { CarDashboardComponent } from './car/dashboard/dashboard.component';
 import { DialogCarBookingComponent } from './car/dialog/editor.component';
 import { EditRoomBookingComponent } from './room/edit-room-booking/edit-room-booking.component';
-import { Home1Component } from './home1/home1.component';
 import { RoomComponent } from './room/room.component';
-import { SelectIconComponent } from './select-icon/select-icon.component';
 import { RoomDashboardComponent } from './room/dashboard/dashboard.component';
 import { StationeryComponent } from './stationery/stationery.component';
 import { DialogStationeryComponent } from './stationery/dialog/dialog-stationery.component';
@@ -32,15 +30,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home1',
-        component: Home1Component,
-      },
-      {
-        path: 'home1/:functionID',
-        component: Home1Component,
-      },
-      {
-        path: 'bookingrooms/:functionID',
+        path: 'bookingrooms/:funcID',
         component: RoomComponent,
       },
       {
@@ -52,23 +42,23 @@ const routes: Routes = [
         component: EditRoomBookingComponent,
       },
       {
-        path: 'bookingcars/:functionID',
+        path: 'bookingcars/:funcID',
         component: CarBookingComponent,
       },
       {
-        path: 'setting/:functionID',
+        path: 'setting/:funcID',
         component: SettingsComponent,
       },
       {
-        path: 'cars/:functionID',
+        path: 'cars/:funcID',
         component: CarResourceComponent,
       },
       {
-        path: 'rooms/:functionID',
+        path: 'rooms/:funcID',
         component: RoomsComponent,
       },
       {
-        path: 'stationery/:functionID',
+        path: 'stationery/:funcID',
         component: StationeryComponent,
       },
       {
@@ -91,21 +81,22 @@ const routes: Routes = [
     ],
   },
 ];
+
+const Components: Type<any>[] = [
+  LayoutComponent,
+  RoomComponent,
+  EditRoomBookingComponent,
+  CarBookingComponent,
+  DialogCarBookingComponent,
+  RoomDashboardComponent,
+  CarDashboardComponent,
+  DialogStationeryComponent,
+  StationeryComponent,
+  StationeryDashboardComponent,
+];
+
 @NgModule({
-  declarations: [
-    LayoutComponent,
-    RoomComponent,
-    SelectIconComponent,
-    EditRoomBookingComponent,
-    CarBookingComponent,
-    DialogCarBookingComponent,
-    RoomDashboardComponent,
-    CarDashboardComponent,
-    DialogStationeryComponent,
-    Home1Component,
-    StationeryComponent,
-    StationeryDashboardComponent,
-  ],
+  declarations: [Components],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -130,4 +121,4 @@ export class CodxEpModule {
       ],
     };
   }
- }
+}
