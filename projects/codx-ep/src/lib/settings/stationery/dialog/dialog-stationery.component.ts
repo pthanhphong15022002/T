@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  Optional,
   Output,
   TemplateRef,
   ViewChild,
@@ -14,6 +15,9 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogData,
+  DialogRef,
+  ImageViewerComponent,
   NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -39,6 +43,9 @@ export class DialogStationeryComponent implements OnInit {
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @Output() loadData = new EventEmitter();
+
   modelPage: ModelPage;
   vllDevices = [];
   lstDeviceRoom = [];
@@ -54,7 +61,8 @@ export class DialogStationeryComponent implements OnInit {
     { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
-
+  data: any = {};
+  dialog: any;
   isAdd = true;
   constructor(
     private bookingService: CodxEpService,
@@ -63,8 +71,12 @@ export class DialogStationeryComponent implements OnInit {
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
     private notification: NotificationsService,
-    private cfService: CallFuncService
+    private cfService: CallFuncService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
     // this.bookingService.getModelPage('EPT1').then((res) => {
     //   if (res) this.modelPage = res;
     //   console.log('constructor', this.modelPage);
@@ -165,13 +177,28 @@ export class DialogStationeryComponent implements OnInit {
       this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
     this.api
-      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddNewAsync', [
         this.addEditForm.value,
         this.isAdd,
         '',
       ])
       .subscribe((res) => {
         debugger;
+        this.imageUpload
+          .updateFileDirectReload(res.msgBodyData[0].resourceID)
+          .subscribe((result) => {
+            if (result) {
+              this.initForm();
+              this.loadData.emit();
+
+              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+              // this.changedr.detectChanges();
+            } else {
+              this.initForm();
+              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+              // this.changedr.detectChanges();
+            }
+          });
         this.onDone.emit([res.msgBodyData[0], this.isAdd]);
         this.closeForm();
       });

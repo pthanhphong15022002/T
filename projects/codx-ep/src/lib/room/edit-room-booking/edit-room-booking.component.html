@@ -33,7 +33,7 @@
                         gridViewName="grvUsers"
                       >
                       </codx-label>
-                      <span class="label-status text-primary">Sẵn sàng</span>     
+                      <span class="label-status text-primary">Sẵn sàng</span>
                     </div>
                     <!--end::Label-->
                     <codx-input
@@ -123,17 +123,23 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                        dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                      </codx-input> -->
-                      <ejs-timepicker
+                      <codx-input
+                        type="datetime"
+                        class="test-datetime"
+                        field="datetime"
+                        placeholder="datetime"
+                        dataformat="t"
+                        (valueChange)="valueStartTimeChange($event)"
+                      >
+                      </codx-input>
+                      <!-- <ejs-timepicker
                         id="workHourStart"
                         showClearButton="false"
                         [value]="this.startTime"
                         (change)="valueStartTimeChange($event)"
                         [value]="addEditForm.value.startDate"
                       >
-                      </ejs-timepicker>
+                      </ejs-timepicker> -->
                       <!--end::Input-->
                     </div>
                     <div class="col-3">
