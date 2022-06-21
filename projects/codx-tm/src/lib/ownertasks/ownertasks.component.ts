@@ -319,8 +319,11 @@ export class OwnerTasksComponent implements OnInit {
     });
   }
 
-  edit(data) {
-    this.view.dataService.dataSelected = data;
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -365,8 +368,9 @@ export class OwnerTasksComponent implements OnInit {
   requestEnded(evt: any) {
 
   }
-  aaa(val: any) {
-    console.log(val);
+  onDragDrop(e: any) {
+    if (e.type == 'drop') {
+    }
   }
   selectedChange(val: any) {
     console.log(val);

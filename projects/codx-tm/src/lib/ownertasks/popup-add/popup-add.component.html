@@ -107,7 +107,7 @@
                     </codx-label>
                   </label>
                   <codx-input name="startDate" type="datetime" class="test-datetime" [disabled]="readOnly"
-                    field="startDate" placeholder="datetime" [crrValue]="task.startDate" dataformat="d"
+                    field="startDate" placeholder="datetime" [crrValue]="task.startDate" format="d"
                     (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
@@ -117,7 +117,7 @@
                     </codx-label>
                   </label>
                   <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
+                    placeholder="datetime" [crrValue]="task.endDate" format="d" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
