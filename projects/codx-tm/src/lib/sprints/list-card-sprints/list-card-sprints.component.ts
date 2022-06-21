@@ -42,9 +42,7 @@ export class ListCardSprintsComponent implements OnInit {
   @Input() funcID: string;
   @ViewChild('lstViewBoard') lstViewBoard: any;
   @ViewChild('lstProjectBoard') lstProjectBoard: any;
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
 
-  views: Array<ViewModel> = [];
 
   urlShare = "";
   urlView = "";
@@ -75,16 +73,6 @@ export class ListCardSprintsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.card,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-        },
-      },
-    ]
   }
   viewMoreMyBoard() {
     this.totalRowMyBoard += 6;

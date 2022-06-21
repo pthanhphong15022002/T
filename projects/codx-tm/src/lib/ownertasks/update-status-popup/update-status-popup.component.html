@@ -4,18 +4,16 @@
     <div class="form-group row">
         <div class="col-12">
             <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
-            <!-- <input class="form-control" value ="{{moreFunc.customName}}" type="text" readonly /> -->
             <codx-input class="form-control" type="text"  [crrValue]="moreFunc.customName" [disabled]="true"></codx-input>
         </div>
         <div class="col-6" *ngIf="status =='9'">
             <codx-label fiedName ="CompletedOn" formName="Tasks"  default="Ngày cập nhật"></codx-label>
             <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
-                [crrValue]="completedOn" dataformat="d" (valueChange)="changeTime($event)">
+                [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
             </codx-input>
         </div>
         <div class="col-6" *ngIf="status =='9'">
             <codx-label fiedName="Estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
-            <!-- <input type="number" class="form-control" [(ngModel)]="estimated" /> -->
             <codx-input class="form-control" type="number" field="estimated" [crrValue]="estimated"></codx-input>
         </div>
         <div class="col-12">
@@ -26,7 +24,9 @@
   </ng-template>
   <ng-template #footer>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="saveData()">Lưu</button>
+            <button type="button" class="btn btn-primary" (click)="saveData()">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
         </div>
  </ng-template>
     

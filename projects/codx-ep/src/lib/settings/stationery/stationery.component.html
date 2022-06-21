@@ -1,124 +1,88 @@
 <codx-views
   #base
-  funcID="EPS24"
+  [funcID]="funcID"
   [showToolBar]="true"
-  service="EP"
-  assemblyName="EP"
-  entityName="EP_Resources"
-  predicate="ResourceType=@0"
-  dataValue="6"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="button"
-  (buttonClick)="click($event)"
+  (buttonClick)="add($event)"
   [moreFuncs]="moreFunc"
-  idField="RecID"
-  className="ResourcesBusiness"
-  method="GetListAsync"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
 >
 </codx-views>
 
-<ng-template #panelLeftRef> </ng-template>
+<!-- begin::View list -->
 
-<ng-template #gridTemplate>
-  <h1>Danh sách văn phòng phẩm</h1>
-  <codx-gridview
-    #gridView
-    [columnsGrid]="columnsGrid"
-    [allowSorting]=""
-    [sortSettings]=""
-    [allowGrouping]=""
-    [groupSettings]=""
-    [editSettings]=""
-    [selectionOptions]=""
-    [rowHeight]="40"
-    [pageSize]="10"
-    funcId="EPS21"
-    assemblyName="EP"
-    entityName="EP_Resources"
-    className="ResourcesBusiness"
-    method="GetListAsync"
-    predicate="ResourceType=@0"
-    dataValue="3"
-    [pageSize]="15"
-    height="500px"
-    [showColumnMenu]="true"
-    [filterSettings]=""
-    [allowFiltering]=""
-    [allowResizing]=""
-  >
-  </codx-gridview>
-</ng-template>
-
-<ng-template #GiftIDCell let-dataItem>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="edit(dataItem)"
-      >
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="deleteResource(dataItem)"
-      >
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
+<ng-template #listItem let-data>
+  <div class="task-row">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-auto">
+          <div class="d-flex">
+            <div class="w-100px h-100px m-4">
+              <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+            </div>
+            <div class="">
+              <div class="text-dark font-weight-bold font-size-h6">
+                {{ data.resourceName }}
+              </div>
+              <div>Đơn vị tính: {{ data.costPrice }}</div>
+              <div>Nhóm: {{ data.costPrice }}</div>
+              <div class="d-flex justify-content-between align-items-end mt-2">
+                <div class="d-flex align-items-end me-2 codx-badge">
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span class="icon-view_agenda icon-20 text-gray-400"></span>
+                    <span>{{ data.currentQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-shopping_cart icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.reservedQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-brightness_auto icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.availableQty }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="w-auto">
+          <span class="h-20 w-20 m-1" style="background-color: blue"></span>
+          <span class="h-20 w-20 m-1" style="background-color: #000000"></span>
+          <span class="h-20 w-20 m-1" style="background-color: red"></span>
+          <span class="h-20 w-20 m-1" style="background-color: green"></span>
+        </td>
+        <td class="w-auto">
+          {{ data.costPrice * 1000 }}
+        </td>
+        <td class="w-auto">{{ data.location }}</td>
+        <td class="w-auto">
+          <div>
+            <codx-img
+              [objectId]="data.owner"
+              objectType="AD_Users"
+              class="symbol symbol-35px symbol-circle"
+            >
+            </codx-img>
+            <div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </td>
+      </tbody>
+    </table>
   </div>
 </ng-template>
-
-<ng-template #Devices let-dataItem>
-  <div class="d-flex align-items-center fw-bold">
-    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"
-        ><span class="fs-6 ms-1">{{
-          item | vll: "EP012":"text" | async
-        }}</span></span
-      >
-    </ng-container>
-  </div>
-</ng-template>
-
-<ng-template #ranking let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.ranking | vll: "EP005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-
-<ng-template #stationeryResourceDialog>
-  <app-dialog-stationery
-    #editRoomBookingForm
-    (closeEdit)="closeEditForm()"
-    (onDone)="onDone($event)"
-  ></app-dialog-stationery>
-</ng-template>
-<ng-template #popuptemplate let-modal>
-  <div class="modal-body">
-    <p>Bạn có muốn xóa</p>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="delete(currentDelete)"
-    >
-      Xóa
-    </button>
-  </div>
-</ng-template>
-<ng-template #Devices let-dataItem>
-  <div class="d-flex align-items-center fw-bold">
-    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"
-        ><span class="fs-6 ms-1">{{ getDeviceName(item) }}</span></span
-      >
-    </ng-container>
-  </div>
-</ng-template>
+<!-- end::View list -->

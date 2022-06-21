@@ -34,10 +34,10 @@ import { EditRoomBookingComponent } from './edit-room-booking/edit-room-booking.
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 @Component({
   selector: 'app-room',
-  templateUrl: './room.component.html',
-  styleUrls: ['./room.component.scss'],
+  templateUrl: './booking-room.component.html',
+  styleUrls: ['./booking-room.component.scss'],
 })
-export class RoomComponent implements OnInit, AfterViewInit {
+export class BookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @Input('data') data;
