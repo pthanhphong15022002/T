@@ -21,9 +21,11 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemAttachmentControl', { static: true }) itemAttachmentControl: TemplateRef<any>;
   @ViewChild('itemCheckListControlVll', { static: true }) itemCheckListControlVll: TemplateRef<any>;
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
+  @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+
   @ViewChild('view') view!: ViewsComponent;
 
-  constructor(private cache: CacheService, private auth: AuthStore, private fb: FormBuilder,
+  constructor(private cache: CacheService, private auth: AuthStore, 
     private dt: ChangeDetectorRef,     private callfunc: CallFuncService,
     ) { }
 
@@ -50,12 +52,11 @@ export class TaskGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initForm();
     this.columnsGrid = [
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
-      { field: 'note', headerText: 'Ghi chú', width: 180 },
+      { field: 'note', headerText: 'Ghi chú', width: 180 , template: this.itemNote},
       { field: 'approvalControl', headerText: 'Xét duyệt?', template: this.itemApprovalControlVll, width: 140 },
       { field: 'projectControl', headerText: 'Chọn dự án', template: this.itemProjectControlVll, width: 140 },
       { field: 'attachmentControl', headerText: 'Đính kèm file', template: this.itemAttachmentControl, width: 140 },
@@ -113,76 +114,7 @@ export class TaskGroupComponent implements OnInit {
     }];
   }
 
-  initForm() {
-    this.getFormGroup(this.formName, this.gridViewName).then((item) => {
-      // this.addEditForm = item;
-      this.isAfterRender = true;
-      // this.getAutonumber("TM00632", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
-      
-      //   this.taskGroups.taskGroupID = key;
-      //   this.taskGroups.approvalControl = "0";
-      //   this.taskGroups.projectControl = "0";
-      //   this.taskGroups.attachmentControl = "0";
-      //   this.taskGroups.checkListControl = "0";
-      //   this.listTodo = [];
-      // })
-    })
-  }
-
-  getFormGroup(formName, gridView): Promise<FormGroup> {
-    return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
-        var model = {};
-        if (gv) {
-          const user = this.auth.get();
-          for (const key in gv) {
-            var b = false;
-            if (Object.prototype.hasOwnProperty.call(gv, key)) {
-              const element = gv[key];
-              element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
-              model[element.fieldName] = [];
-
-              if (element.fieldName == "owner") {
-                model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == "createdOn") {
-                model[element.fieldName].push(new Date());
-              }
-              else if (element.fieldName == "stop") {
-                model[element.fieldName].push(false);
-              }
-              else if (element.fieldName == "orgUnitID") {
-                model[element.fieldName].push(user['buid']);
-              }
-              else if (element.dataType == "Decimal" || element.dataType == "Int") {
-                model[element.fieldName].push(0);
-              }
-              else if (element.dataType == "Bool" || element.dataType == "Boolean")
-                model[element.fieldName].push(false);
-              else if (element.fieldName == "createdBy") {
-                model[element.fieldName].push(user.userID);
-              } else {
-                model[element.fieldName].push(null);
-              }
-
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(Validators.compose([
-              //     Validators.required,
-              //   ]));
-              // }
-              // else {
-              //   model[element.fieldName].push(Validators.compose([
-              //   ]));
-              // }
-            }
-          }
-        }
-
-        resolve(this.fb.group(model, { updateOn: 'blur' }));
-      });
-    });
-
-  }
+  
 
   getCheckList(checkList) {
     if (checkList != null) {
