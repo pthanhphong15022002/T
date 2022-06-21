@@ -1,11 +1,20 @@
 <codx-views
-  #view
-  funcID="TM001"
-  entityName="AD_Users"
+  #base
+  funcID="EPT1"
+  [showToolBar]="true"
+  service="EP"
+  assemblyName="EP"
+  entityName="EP_Bookings"
+  predicate="ResourceType=@0"
+  dataValue="1"
   [views]="views"
-  [button]="buttons"
-  (buttonClick)="addNew($event)"
+  [button]="button"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
+  idField="RecID"
+  className="BookingsBusiness"
+  method="GetEventsAsync"
+  (requestEnded)="closeEditForm($event)"
 >
 </codx-views>
 
