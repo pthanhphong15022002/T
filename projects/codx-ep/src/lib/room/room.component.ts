@@ -175,7 +175,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
           template: this.eventTemplate
         },
       },

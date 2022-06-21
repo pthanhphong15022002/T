@@ -97,7 +97,6 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
         },
       },
 

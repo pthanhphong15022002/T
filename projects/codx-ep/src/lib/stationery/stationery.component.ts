@@ -70,7 +70,6 @@ export class StationeryComponent implements OnInit {
         active: false,
         model: {
           template: this.chart,
-          contextMenu: '',
         },
       },
       {
@@ -81,7 +80,6 @@ export class StationeryComponent implements OnInit {
         active: false,
         model: {
           template: this.cardItem,
-          contextMenu: '',
         },
       },
       {
@@ -92,7 +90,6 @@ export class StationeryComponent implements OnInit {
         active: true,
         model: {
           template: this.listItem,
-          contextMenu: '',
         },
       },
     ];

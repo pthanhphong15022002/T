@@ -75,7 +75,7 @@ export class OwnerTasksComponent implements OnInit {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    
+
   }
 
   clickMF(e: any, data: any) {
@@ -211,7 +211,6 @@ export class OwnerTasksComponent implements OnInit {
           panelLeftRef: this.panelLeft,
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
           template: this.scheduleTemplate,
         }
       }
