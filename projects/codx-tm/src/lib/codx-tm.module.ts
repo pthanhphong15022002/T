@@ -1,3 +1,4 @@
+import { TaskGroupComponent } from './setting/task-group/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { HomeSettingComponent } from './setting/home-setting/home-setting.component';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +25,7 @@ import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-
 import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
+import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +56,10 @@ export const routes: Routes = [
           {
             path: ':funcID',
             component: HomeSettingComponent
+          },
+          {
+            path: 'taskgroup/:funcID',
+            component: TaskGroupComponent
           }
         ]
       },
@@ -80,8 +86,10 @@ const T_Component: Type<any>[] = [
   ListCardSprintsComponent,
   SprintsTasksComponent,
   ViewDetailsTaskComponent,
+  UpdateStatusPopupComponent,  
   HomeSettingComponent,
-  SettingComponent
+  SettingComponent,
+  TaskGroupComponent
 ]
 @NgModule({
   imports: [

@@ -1,0 +1,21 @@
+.e-tab .e-tab-header.e-vertical {
+    max-width: 200px;
+    z-index: 1;
+    margin-right: 30px;
+}
+.e-tab.e-vertical-tab .e-content {
+    display: flex;   
+}
+.e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+    padding: 0 0px;
+}
+.e-tab .e-tab-header.e-vertical.e-vertical-left .e-toolbar-item.e-active {
+    border-radius: 0;
+    border-right: 0px solid #fff;
+}
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+    border:0;   
+}
+.e-tab .e-tab-header.e-vertical::before {
+    border-width: 0px; 
+}

@@ -33,13 +33,13 @@
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-center">
+          <ng-template #headerText class="me-10 border-0 ">
+            <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
               <div class="fw-bold">Thông tin chung</div>
             </div>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content class="ms-10">
             <div class="form-group">
               <label>
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
@@ -428,9 +428,9 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary">
+      <!-- <button class="btn btn-light-primary">
         Sửa
-      </button>
+      </button> -->
       <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">Lưu</button>
     </div>
   </ng-template>

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CallFuncService, CodxService, DataRequest, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxService, DataRequest, NotificationsService } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { TM_Sprints } from '../../models/TM_Sprints.model';
 
@@ -183,4 +183,11 @@ export class ListCardSprintsComponent implements OnInit {
   //     }
   //   }
   // }
+
+  
+  clickMF(e: any, data: any) {
+    console.log(e, data);
+  }
+  click(evt: ButtonModel) {
+  }
 }
