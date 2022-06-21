@@ -1,8 +1,8 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer" (clickMF)="aaa($event)">
     <ng-template #header>
-      <div class="container_detail" >
+      <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
           <div class="symbol symbol-60px symbol-circle me-4">
             <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users" [width]="55">
@@ -50,7 +50,7 @@
           <!-- <div class="d-flex align-items-start w-100 mb-3">
          <codx-temp-full (clickMF)="aaa($event)" [imageId]="itemSelected.createdBy" imageObjType="AD_Users" [imageWidth]="55"
             [title]="itemSelected?.userNameCreate" [desc]="itemSelected?.positionNameCreate">
-          </codx-temp-full> 
+          </codx-temp-full>
         </div> -->
           <div class="d-flex mt-1">
             <div class="d-flex me-6">
@@ -119,7 +119,8 @@
           <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">
           </codx-imgs>
         </div>
-        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="symbol symbol-30px symbol-circle me-3">
+        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
+          class="symbol symbol-30px symbol-circle me-3">
           <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4">
           </codx-imgs>
         </div>

@@ -14,7 +14,7 @@ import { ButtonModel, CodxScheduleComponent, ViewModel, ViewsComponent, ViewType
 import { DataRequest } from '@shared/models/data.request';
 import { DialogCarBookingComponent } from './dialog/editor.component';
 import { ModelPage } from '../codx-ep.service';
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'app-car',
   templateUrl: 'car.component.html',
@@ -221,17 +221,17 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-  addNew(evt?){
+  addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(DialogCarBookingComponent,  this.dataSelected, option);
+      this.dialog = this.callfunc.openSide(DialogCarBookingComponent, this.dataSelected, option);
     });
   }
 
-  edit(evt?){
+  edit(evt?) {
     this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
@@ -240,7 +240,7 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
       this.dialog = this.callfunc.openSide(DialogCarBookingComponent, this.viewBase.dataService.dataSelected, option);
     });
   }
-  delete(evt?){
+  delete(evt?) {
     this.viewBase.dataService.delete([this.viewBase.dataService.dataSelected]).subscribe(res => {
       console.log(res);
       this.dataSelected = res;
@@ -248,7 +248,7 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
   }
 
   closeEditForm(evt?: any) {
-    if(evt){
+    if (evt) {
       this.dialog && this.dialog.close();
     }
   }
@@ -277,7 +277,7 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
   //   }
   //   //this.viewBase.currentView.openSidebarRight();
   // }
-  viewChange(event) {}
+  viewChange(event) { }
 
   deleteBooking(event) {
     console.log('delete', event);
@@ -303,10 +303,10 @@ export class CarBookingComponent implements OnInit, AfterViewInit {
       if (evt[1]) {
         this.schedule.scheduleObj.addEvent(evt[0]);
       } else {
-        if(!evt[0]){
+        if (!evt[0]) {
           this.schedule.scheduleObj.saveEvent(this.oldData);
         }
-        else{
+        else {
           this.schedule.scheduleObj.saveEvent(evt[0]);
         }
       }

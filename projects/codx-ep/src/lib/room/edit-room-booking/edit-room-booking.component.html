@@ -3,6 +3,7 @@
   subHeaderText="Đặt phòng họp"
   [body]="body"
   [footer]="footer"
+  [dialog]="dialog"
 >
   <ng-template popup adde #body>
     <div class="tab-content">
@@ -32,9 +33,7 @@
                         gridViewName="grvUsers"
                       >
                       </codx-label>
-                      <span class="label-status text-primary">Sẵn sàng</span>
-                      <!-- <span
-                        class="label-status text-primary">{{addEditForm.value.status|vll:CbxName['Status']:'text'|async}}</span> -->
+                      <span class="label-status text-primary">Sẵn sàng</span>     
                     </div>
                     <!--end::Label-->
                     <codx-input
@@ -43,6 +42,8 @@
                       [crrValue]="addEditForm.value.resourceID"
                       [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
+                      [multiple]="false"
+                      (valueChange)="valueChange($event)"
                     ></codx-input>
                   </div>
 

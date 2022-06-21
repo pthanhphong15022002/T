@@ -4,8 +4,9 @@ import {
   AfterViewInit,
   ViewChild,
   ChangeDetectorRef,
+  TemplateRef,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, DataRequest, UserModel } from 'codx-core';
+import { ApiHttpService, AuthStore, DataRequest, UserModel, ViewType, ViewModel } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
   AccPoints,
@@ -25,6 +26,7 @@ import { SelectweekComponent } from 'projects/codx-share/src/lib/components/sele
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   ngUnsubscribe = new Subject<void>();
   user: UserModel;
   model: DataRequest;
@@ -43,7 +45,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   remiderOnDay: RemiderOnDay[] = [];
   taskRemind: TaskRemind = new TaskRemind();
   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
-
+  views: Array<ViewModel> = [];
   //#region chartline
   dataLineTrend: Object[] = [];
   lineXAxis: Object = {
@@ -207,6 +209,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateLeft,
+        }
+      },]
     this.week = this.selectweekComponent.week;
     this.fromDate = this.selectweekComponent.fromDate;
     this.toDate = this.selectweekComponent.toDate;

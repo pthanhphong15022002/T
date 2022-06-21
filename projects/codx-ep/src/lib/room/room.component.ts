@@ -171,7 +171,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
         type: ViewType.schedule,
         active: true,
         request2: this.modelResource,
-
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -232,7 +231,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  initForm() {}
+  initForm() { }
   getSelectedItem(evt: any) {
     if (evt) {
       this.selectedItem = evt;
@@ -383,9 +382,9 @@ export class RoomComponent implements OnInit, AfterViewInit {
     });
   }
 
-  edit(evt?){
+  edit(evt?) {
     let item = this.viewBase.dataService.dataSelected;
-    if(evt){
+    if (evt) {
       item = evt;
     }
     this.viewBase.dataService.edit(item).subscribe((res) => {
@@ -395,9 +394,9 @@ export class RoomComponent implements OnInit, AfterViewInit {
       this.dialog = this.callfunc.openSide(EditRoomBookingComponent, this.viewBase.dataService.dataSelected, option);
     });
   }
-  delete(evt?){
+  delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
-    if(evt){
+    if (evt) {
       deleteItem = evt;
     }
     this.viewBase.dataService.delete([deleteItem]).subscribe(res => {
@@ -405,7 +404,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
     });
   }
 
-  toggleClick() {}
+  toggleClick() { }
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -435,7 +434,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
   //   //this.viewBase.currentView.openSidebarRight();
   // }
 
-  viewChange(event) {}
+  viewChange(event) { }
 
   deleteTask(event) {
     console.log('delete', event);

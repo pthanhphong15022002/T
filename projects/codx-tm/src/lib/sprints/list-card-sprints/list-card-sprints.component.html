@@ -9,7 +9,7 @@
                   (click)="codxService.navigate('',urlView)" >
                     <div class="d-flex justify-content-center mt-3">
                         <codx-img class="symbol symbol-50 symbol-circle" [objectId]="user.userID" objectType="TM_Sprints"
-                            [objectName]="user.na">
+                            [objectName]="user.userName">
                         </codx-img>
                     </div>
                     <div class="mt-3 text-center">
@@ -19,11 +19,11 @@
                     </div>
                 </div>
                 </ng-container>
-                <!-- <codx-view-list-card #lstViewBoard [pageSize]="6" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
+                <codx-listcard #lstViewBoard [pageSize]="6" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
                     className="SprintsBusiness" method="GetListSprintAsync" autoLoad="true" entityName="TM_Sprints"
                     [predicate]="predicateViewBoards" [dataValue]="" [gridViewName]="'grvSprints'" class="h-100"
                     [cartTemp]="itemViewBoard">
-                </codx-view-list-card > -->
+                </codx-listcard>
                  <!-- <codx-card-center cardCss="border h-100" (click)="clickMF($event,data)" (click)="click(data)" [imageId]="data.userID"
                   imageObjType="AD_Users" iconCss="icon-flag" iconCss2="icon-security" [title]="data.userName"
                      [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
@@ -59,8 +59,8 @@
     </div>
 </div>
 
-<ng-template #itemViewBoard>
-    <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;" >
+<ng-template #itemViewBoard let-data>
+    <!-- <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;" >
         <div class="d-flex justify-content-center mt-3">
             <codx-imgs class="symbol symbol-50 symbol-circle" [objectId]="user?.userID" objectName="AD_Users"
             [numberImages]="2">
@@ -71,5 +71,10 @@
             <div class="text-muted font-size-sm card-des"><codx-label name="lblMemo" formName="Tasks" default="Danh sách công việc theo phân quyền của tôi "></codx-label></div>
             
         </div>
-    </div>
+    </div> -->
+   <codx-card-center cardCss="border h-100" (click)="clickMF($event,data)" (click)="click(data)" [imageId]="data.userID"
+                  imageObjType="AD_Users" [title]="data.userName"
+                     [content]="data.memo||'memo'"
+                   [date]="data.createdOn" >
+                  </codx-card-center>
   </ng-template>
