@@ -27,6 +27,7 @@ import {
   CacheService,
 } from 'codx-core';
 import * as moment from 'moment';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -100,6 +101,9 @@ export class OwnerTasksComponent implements OnInit {
       case 'delete':
         this.delete(data);
         break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
       case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
@@ -161,6 +165,7 @@ export class OwnerTasksComponent implements OnInit {
         sameData: true,
         model: {
           template: this.itemTemplate,
+
         },
       },
       {
@@ -323,7 +328,6 @@ export class OwnerTasksComponent implements OnInit {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -353,6 +357,9 @@ export class OwnerTasksComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
       .subscribe();
   }
+  sendemail(data){
+    
+  }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -360,7 +367,17 @@ export class OwnerTasksComponent implements OnInit {
     return true;
   }
 
-  assignTask(data) { }
+  assignTask(data) { 
+    this.view.dataService.dataSelected = data;
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    option.Width = '750px';
+    this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
+   }
 
   changeView(evt: any) {
 

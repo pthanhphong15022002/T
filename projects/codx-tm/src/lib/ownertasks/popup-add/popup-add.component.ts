@@ -26,7 +26,7 @@ import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 @Component({
-  selector: 'app-test-add',
+  selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
   styleUrls: ['./popup-add.component.scss'],
 })
@@ -157,15 +157,6 @@ export class PopupAddComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-  // onOpenTodo() {
-  //   if (!this.disableAddToDo) {
-  //     this.onAddToDo();
-  //   } else {
-  //     this.disableAddToDo = !this.disableAddToDo;
-  //     this.changeDetectorRef.detectChanges();
-  //     if (!this.disableAddToDo) $('#txtTodoAdd').focus();
-  //   }
-  // }
 
   onAddToDo(evt: any) {
     if (!this.todoAddText) return;
