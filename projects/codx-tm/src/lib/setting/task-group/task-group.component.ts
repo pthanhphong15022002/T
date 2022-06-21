@@ -10,6 +10,8 @@ import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.
 })
 export class TaskGroupComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
+  @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
+
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
@@ -52,7 +54,7 @@ export class TaskGroupComponent implements OnInit {
     this.columnsGrid = [
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
-      { field: 'taskGroupName2', headerText: 'Tên khác', width: 200 },
+      { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
       { field: 'note', headerText: 'Ghi chú', width: 180 },
       { field: 'approvalControl', headerText: 'Xét duyệt?', template: this.itemApprovalControlVll, width: 140 },
       { field: 'projectControl', headerText: 'Chọn dự án', template: this.itemProjectControlVll, width: 140 },
@@ -79,7 +81,7 @@ export class TaskGroupComponent implements OnInit {
       },
     ];
   }
-  
+
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
@@ -106,7 +108,6 @@ export class TaskGroupComponent implements OnInit {
       sameData: true,
       active: true,
       model: {
-        template: this.GiftIDCell,
         resources: this.columnsGrid,
       }
     }];
