@@ -1,6 +1,6 @@
 <codx-views #view funcID="TMS032" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
   className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
-  [moreFuncs]="moreFuncs"></codx-views>
+  [moreFuncs]="moreFuncs" (buttonClick)="click($event)" idField="taskGroupID"></codx-views>
 
 <ng-template #GiftIDCell let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" iconCss="icon-flag"

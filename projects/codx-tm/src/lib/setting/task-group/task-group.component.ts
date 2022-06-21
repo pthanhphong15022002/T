@@ -79,6 +79,7 @@ export class TaskGroupComponent implements OnInit {
       },
     ];
   }
+  
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
