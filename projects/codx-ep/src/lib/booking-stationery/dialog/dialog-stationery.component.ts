@@ -22,8 +22,8 @@ import {
   ViewModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Device } from '../../booking-room/edit-room-booking/edit-room-booking.component';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
-import { Device } from '../../room/edit-room-booking/edit-room-booking.component';
 
 @Component({
   selector: 'codx-dialog-stationery',

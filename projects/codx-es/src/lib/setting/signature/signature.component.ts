@@ -28,7 +28,6 @@ import {
 import { EditSignatureComponent } from './dialog/editor.component';
 import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditRoomBookingComponent } from 'projects/codx-ep/src/lib/room/edit-room-booking/edit-room-booking.component';
 
 export class defaultRecource {}
 @Component({
@@ -197,7 +196,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        EditRoomBookingComponent,
+        EditSignatureComponent,
         this.viewBase.dataService.dataSelected,
         option
       );
