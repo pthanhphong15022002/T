@@ -99,8 +99,8 @@ export class PopupAddComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = this.dialog.formModel.funcID;
-    if (this.functionID == 'TMT03') this.showAssignTo = true;
-    this.getParam(); //bật tắt set param
+    // if (this.functionID == 'TMT03') this.showAssignTo = true;
+    this.getParam();
     this.openTask();
   }
 
@@ -150,17 +150,17 @@ export class PopupAddComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-  onOpenTodo() {
-    if (!this.disableAddToDo) {
-      this.onAddToDo();
-    } else {
-      this.disableAddToDo = !this.disableAddToDo;
-      this.changeDetectorRef.detectChanges();
-      // if (!this.disableAddToDo) $('#txtTodoAdd').focus();
-    }
-  }
+  // onOpenTodo() {
+  //   if (!this.disableAddToDo) {
+  //     this.onAddToDo();
+  //   } else {
+  //     this.disableAddToDo = !this.disableAddToDo;
+  //     this.changeDetectorRef.detectChanges();
+  //     if (!this.disableAddToDo) $('#txtTodoAdd').focus();
+  //   }
+  // }
 
-  onAddToDo() {
+  onAddToDo(evt: any) {
     if (!this.todoAddText) return;
     if (this.listTodo == null) this.listTodo = [];
     var todo = new TaskGoal();
@@ -169,7 +169,7 @@ export class PopupAddComponent implements OnInit {
     this.listTodo.push(Object.assign({}, todo));
     this.todoAddText = '';
     this.changeDetectorRef.detectChanges();
-    // $('#txtTodoAdd').focus();
+    evt.focus();
   }
 
   onDeleteTodo(index) {
@@ -206,12 +206,12 @@ export class PopupAddComponent implements OnInit {
 
   openTask(): void {
     const t = this;
-    if (this.functionID == 'TMT03') {
-      // this.showAssignTo = true;
-      //cai nay thêm để test
-      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-      this.getListUser(this.task.assignTo);
-    }
+    // if (this.functionID == 'TMT03') {
+    //   // this.showAssignTo = true;
+    //   //cai nay thêm để test
+    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    //   this.getListUser(this.task.assignTo);
+    // }
 
     this.task.estimated = 0;
     this.readOnly = false;
@@ -355,16 +355,16 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-      // $('#taskNameInput').focus();
+      //$('#taskNameInput').focus();
     }
-    if (
-      this.functionID == 'TMT03' &&
-      (this.task.assignTo == '' || this.task.assignTo == null)
-    ) {
-      this.notiService.notify('Phải nhập danh sách người được phân công !');
-      // this.notiService.notifyCode('mã code');
-      return;
-    }
+    // if (
+    //   this.functionID == 'TMT03' &&
+    //   (this.task.assignTo == '' || this.task.assignTo == null)
+    // ) {
+    //   this.notiService.notify('Phải nhập danh sách người được phân công !');
+    //   // this.notiService.notifyCode('mã code');
+    //   return;
+    // }
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -379,21 +379,14 @@ export class PopupAddComponent implements OnInit {
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
-      // if (this.task.dueDate < this.task.startDate) {
-      //   this.message =
-      //     'Ngày bắt đầu lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
-      // } else if (this.task.dueDate < this.task.endDate)
-      //   this.message =
-      //     'Ngày kết thúc lớn hơn ngày hết hạn ! Bạn có muốn tiếp tục ?';
       this.notiService
-        //.alert('Cảnh báo !!', this.message, { type: 'YesNo' })
-        .alertCode('TM002', { type: 'YesNo' });
-      // .subscribe((dialog: Dialog) => {
-      //   var that = this;
-      //   dialog.close = function (e) {
-      //     return that.closeConfirm(e, that, id);
-      //   };
-      // });
+        .alertCode('TM002', { type: 'YesNo' })
+        .subscribe((dialog: any) => {
+          var that = this;
+          dialog.close = function (e) {
+            return that.closeConfirm(e, that, id);
+          };
+        });
     } else {
       this.actionSave(id);
     }
@@ -444,7 +437,12 @@ export class PopupAddComponent implements OnInit {
   addTask(isCloseFormTask: boolean = true) {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe();
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+        }
+      });
     // this.tmSv
     //   .addTask([
     //     this.task,
@@ -480,7 +478,12 @@ export class PopupAddComponent implements OnInit {
   updateTask() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe();
+      .subscribe((res) => {
+        if (res.update) {
+          this.dialog.close();
+          this.notiService.notify(' Sửa đổi thành công !'); ///sau này có mess thì gán vào giờ chưa có
+        }
+      });
     // this.tmSv
     //   .update([
     //     this.task,
@@ -515,7 +518,7 @@ export class PopupAddComponent implements OnInit {
 
   valueChange(data) {
     if (data.data) {
-      this.task[data.field] = data.data[0];
+      this.task[data.field] = data.data;
     }
   }
 
@@ -690,8 +693,8 @@ export class PopupAddComponent implements OnInit {
       .toDate();
   }
 
-  valueChangeTags(tags: string) {
-    this.task.tags = tags;
+  valueChangeTags(e) {
+    this.task.tags = e.data;
   }
 
   textboxChange(e) {
@@ -703,7 +706,9 @@ export class PopupAddComponent implements OnInit {
     console.log('task required', this.required.taskName);
   }
   showPanel() {}
-  closePanel() {}
+  closePanel() {
+    this.dialog.close();
+  }
 
   onDeleteUser(userID) {
     var listUser = [];
@@ -744,11 +749,12 @@ export class PopupAddComponent implements OnInit {
     // this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', obj);
   }
 
-  // closeConfirm(e: any, t: TaskInfoComponent, id: string) {
-  //   if (e?.event?.status == 'Y') {
-  //     t.actionSave(id)
-  //   }
-  // }
+  closeConfirm(e: any, t: PopupAddComponent, id: string) {
+    t.dialog.close();
+    if (e?.status == 'Y') {
+      t.actionSave(id);
+    }
+  }
   popup(evt: any) {
     this.attachment.openPopup();
   }
