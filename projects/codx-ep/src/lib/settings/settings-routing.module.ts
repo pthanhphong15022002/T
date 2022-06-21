@@ -5,7 +5,6 @@ import { environment } from 'src/environments/environment';
 import { CarResourceComponent } from './cars/cars.component';
 import { DriverResourceComponent } from './drivers/drivers.component';
 import { RoomsComponent } from './rooms/rooms.component';
-import { StationeryComponent } from './stationery/stationery.component';
 import { TypesComponent } from './types/types.component';
 import { LayoutComponent } from './_layout/layout.component';
 
@@ -18,10 +17,7 @@ const routes: Routes = [
         path: 'drivers',
         component: DriverResourceComponent,
       },
-      {
-        path: 'stationery',
-        component: StationeryComponent,
-      },
+
       {
         path: 'type',
         component: TypesComponent,

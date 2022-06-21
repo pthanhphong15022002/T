@@ -14,15 +14,16 @@ import { DialogCarBookingComponent } from './car/dialog/editor.component';
 import { EditRoomBookingComponent } from './room/edit-room-booking/edit-room-booking.component';
 import { RoomComponent } from './room/room.component';
 import { RoomDashboardComponent } from './room/dashboard/dashboard.component';
-import { StationeryComponent } from './stationery/stationery.component';
-import { DialogStationeryComponent } from './stationery/dialog/dialog-stationery.component';
-import { StationeryDashboardComponent } from './stationery/dashboard/dashboard.component';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { SettingsComponent } from './settings/settings.component';
 import { CarResourceComponent } from './settings/cars/cars.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { StationeryComponent } from './settings/stationery/stationery.component';
+import { BookingStationeryComponent } from './booking-stationery/booking-stationery.component';
+import { StationeryDashboardComponent } from './booking-stationery/dashboard/dashboard.component';
+import { DialogStationeryComponent } from './settings/stationery/dialog/dialog-stationery.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'bookingrooms/:funcID',
         component: RoomComponent,
+      },
+      {
+        path: 'bookingstationery/:funcID',
+        component: BookingStationeryComponent,
       },
       {
         path: 'room-resources',
@@ -90,9 +95,10 @@ const Components: Type<any>[] = [
   DialogCarBookingComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
-  DialogStationeryComponent,
   StationeryComponent,
+  BookingStationeryComponent,
   StationeryDashboardComponent,
+  DialogStationeryComponent,
 ];
 
 @NgModule({

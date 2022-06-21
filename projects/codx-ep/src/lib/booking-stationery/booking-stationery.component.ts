@@ -20,10 +20,10 @@ import { DialogStationeryComponent } from './dialog/dialog-stationery.component'
 
 @Component({
   selector: 'codx-stationery',
-  templateUrl: './stationery.component.html',
-  styleUrls: ['./stationery.component.scss'],
+  templateUrl: './booking-stationery.component.html',
+  styleUrls: ['./booking-stationery.component.scss'],
 })
-export class StationeryComponent implements OnInit {
+export class BookingStationeryComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
@@ -51,7 +51,7 @@ export class StationeryComponent implements OnInit {
   constructor(
     private callfunc: CallFuncService,
     private cf: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.button = {
@@ -176,7 +176,7 @@ export class StationeryComponent implements OnInit {
     this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
   }
 
-  clickMF(evt, data) { }
+  clickMF(evt, data) {}
 
   click(data) {
     console.log(data);

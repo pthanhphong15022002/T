@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
@@ -33,7 +34,7 @@ import { DialogStationeryComponent } from './dialog/dialog-stationery.component'
 })
 export class StationeryComponent implements OnInit {
   @ViewChild('base') viewBase: ViewsComponent;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  @ViewChild('panelLeftRsef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
@@ -53,6 +54,16 @@ export class StationeryComponent implements OnInit {
   devices: any;
   columnsGrid;
   modelResource?: ResourceModel;
+
+  funcID: string;
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '6';
+  idField = 'RecID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
 
   defaultRecource: any = {
     resourceName: '',
@@ -81,8 +92,11 @@ export class StationeryComponent implements OnInit {
     private cacheSv: CacheService,
     private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
-    private callfunc: CallFuncService
-  ) { }
+    private callfunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   moreFuncs = [
     {
@@ -164,16 +178,14 @@ export class StationeryComponent implements OnInit {
       this.vllDevices = res.datas;
     });
   }
+
   addNew(evt: any) {
-    // this.isAdd = true;
-    // this.editor && this.editor.setdata(evt);
-    // //this.viewBase.currentView.openSidebarRight();
-    // this.cr.detectChanges();
     this.viewBase.dataService.addNew().subscribe((res) => {
       // this.dataSelected = res;
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
       option.Width = '750px';
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         DialogStationeryComponent,
         this.viewBase.dataService.dataSelected,
@@ -230,7 +242,7 @@ export class StationeryComponent implements OnInit {
       });
   }
 
-  onDone(event) { }
+  onDone(event) {}
 
   click(evt: ButtonModel) {
     switch (evt.id) {

@@ -1,19 +1,19 @@
 <codx-views
   #base
-  funcID="EPS24"
+  [funcID]="funcID"
   [showToolBar]="true"
-  service="EP"
-  assemblyName="EP"
-  entityName="EP_Resources"
-  predicate="ResourceType=@0"
-  dataValue="6"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
-  idField="RecID"
-  className="ResourcesBusiness"
-  method="GetListAsync"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
 >
 </codx-views>
 

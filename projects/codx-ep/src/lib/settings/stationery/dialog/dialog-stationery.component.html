@@ -38,7 +38,7 @@
                     <codx-input
                       type="text"
                       name="text"
-                      ControlName="resourceID"
+                      ControlName="resourceName"
                       [crrValue]="addEditForm.value.resourceID"
                       [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
@@ -50,17 +50,16 @@
                       <codx-label
                         class="fw-bold"
                         default="Nhóm"
-                        fiedName="ResourceID"
+                        fiedName="GroupID"
                       >
                       </codx-label>
                       <!--begin::Input-->
                       <codx-input
                         type="combobox"
-                        class="form-control test-datetime"
-                        ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
-                        [Group]="addEditForm"
-                        [refValue]="CbxName['ResourceID']"
+                        class="form-control"
+                        field="groupID"
+                        [crrValue]="addEditForm.value.groupID"
+                        [refValue]="CbxName['GroupID']"
                       >
                       </codx-input>
                       <!--end::Input-->
@@ -69,8 +68,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Mã số"
-                        fiedName="StartDate"
-                        aria-disabled="false"
+                        fiedName="ResourceID"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -104,7 +102,7 @@
                     <codx-input
                       type="text"
                       ControlName="Location"
-                      [crrValue]="addEditForm.value.Location"
+                      [crrValue]="addEditForm.value.location"
                       [Group]="addEditForm"
                       [refValue]="CbxName['Location']"
                       [multiple]="false"
@@ -118,7 +116,7 @@
                     <codx-label
                       class="fw-bold"
                       default="Người điều phối"
-                      fiedName="Title"
+                      fiedName="Owner"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -130,7 +128,7 @@
                         [crrValue]="addEditForm.value.owner"
                         ngDefaultControl
                         field="owner"
-                        refValue="Users"
+                        refValue="CbxName['Owner']"
                         (valueChange)="valueOwnerChange($event)"
                       >
                       </codx-input>
@@ -158,7 +156,7 @@
                       ControlName="memo"
                       placeholder="textarea"
                       [crrValue]="addEditForm.value.memo"
-                      (valueChange)="valueOwnerChange($event)"
+                      (valueChange)="valueChange($event)"
                     >
                     </codx-input>
                   </div>
@@ -171,7 +169,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Hình ảnh màu sắc"
-                        fiedName="Equipments"
+                        name="lblImageStationary"
                       >
                       </codx-label>
                       <span
@@ -249,8 +247,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Số lượng hiện có"
-                        fiedName="StartDate"
-                        aria-disabled="false"
+                        fiedName="AvailableQty"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -260,10 +257,9 @@
                       <codx-input
                         type="text"
                         name="text"
-                        ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
-                        [Group]="addEditForm"
-                        [refValue]="CbxName['ResourceID']"
+                        ControlName="availableQty"
+                        [crrValue]="addEditForm.value.availableQty"
+                        [refValue]="CbxName['availableQty']"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -271,7 +267,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Số lượng yêu cầu"
-                        fiedName="StartDate"
+                        fiedName="ReservedQty"
                         aria-disabled="false"
                       >
                       </codx-label>
@@ -282,10 +278,10 @@
                       <codx-input
                         type="text"
                         name="text"
-                        ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
+                        ControlName="reservedQty"
+                        [crrValue]="addEditForm.value.reservedQty"
                         [Group]="addEditForm"
-                        [refValue]="CbxName['ResourceID']"
+                        [refValue]="CbxName['ReservedQty']"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -293,8 +289,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Số lượng còn lại"
-                        fiedName="StartDate"
-                        aria-disabled="false"
+                        fiedName="CurrentQty"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -304,10 +299,9 @@
                       <codx-input
                         type="text"
                         name="text"
-                        ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
-                        [Group]="addEditForm"
-                        [refValue]="CbxName['ResourceID']"
+                        ControlName="currentQty"
+                        [crrValue]="addEditForm.value.currentQty"
+                        [refValue]="CbxName['CurrentQty']"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -317,8 +311,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Giá mua sau cùng"
-                        fiedName="StartDate"
-                        aria-disabled="false"
+                        fiedName="CostPrice"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -328,10 +321,9 @@
                       <codx-input
                         type="text"
                         name="text"
-                        ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
-                        [Group]="addEditForm"
-                        [refValue]="CbxName['ResourceID']"
+                        ControlName="CostPrice"
+                        [crrValue]="addEditForm.value.costPrice"
+                        [refValue]="CbxName['CostPrice']"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -341,18 +333,18 @@
                     <codx-label
                       class="fw-bold"
                       default="Ghi chú"
-                      fiedName="Memo"
+                      fiedName="Note"
                     >
                     </codx-label>
                     <!--end::Label-->
                     <codx-input
                       type="textarea"
                       class="test-textarea"
-                      field="memo"
-                      ControlName="memo"
+                      field="note"
+                      ControlName="note"
                       placeholder="textarea"
-                      [crrValue]="addEditForm.value.memo"
-                      (valueChange)="valueOwnerChange($event)"
+                      [crrValue]="addEditForm.value.note"
+                      (valueChange)="valueChange($event)"
                     >
                     </codx-input>
                   </div>

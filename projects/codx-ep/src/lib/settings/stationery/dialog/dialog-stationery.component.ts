@@ -17,6 +17,7 @@ import {
   CodxGridviewComponent,
   DialogData,
   DialogRef,
+  FormModel,
   ImageViewerComponent,
   NotificationsService,
 } from 'codx-core';
@@ -46,7 +47,6 @@ export class DialogStationeryComponent implements OnInit {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
-  modelPage: ModelPage;
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
@@ -64,6 +64,8 @@ export class DialogStationeryComponent implements OnInit {
   data: any = {};
   dialog: any;
   isAdd = true;
+
+  formModel: FormModel;
   constructor(
     private bookingService: CodxEpService,
     private api: ApiHttpService,
@@ -77,36 +79,17 @@ export class DialogStationeryComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
-    // this.bookingService.getModelPage('EPT1').then((res) => {
-    //   if (res) this.modelPage = res;
-    //   console.log('constructor', this.modelPage);
-    // });
+    this.formModel = this.dialog;
   }
 
   ngOnInit(): void {
-    this.bookingService.getModelPage('EPT1').then((res) => {
-      if (res) {
-        this.modelPage = res;
-      }
-      this.cacheSv.valueList('EP012').subscribe((res) => {
-        this.vllDevices = res.datas;
-        this.vllDevices.forEach((item) => {
-          let device = new Device();
-          device.id = item.value;
-          device.text = item.text;
-          this.lstDeviceRoom.push(device);
-        });
-        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+    this.bookingService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        this.CbxName = res;
       });
 
-      this.bookingService
-        .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-        .then((res) => {
-          this.CbxName = res;
-        });
-
-      this.initForm();
-    });
+    this.initForm();
   }
 
   ngAfterViewInit(): void {
@@ -142,7 +125,7 @@ export class DialogStationeryComponent implements OnInit {
 
   initForm() {
     this.bookingService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.addEditForm = item;
         this.isAfterRender = true;
@@ -152,56 +135,63 @@ export class DialogStationeryComponent implements OnInit {
   }
 
   onSaveForm() {
-    let equipments = '';
-    this.lstDeviceRoom.forEach((element) => {
-      if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
-        } else {
-          equipments += ';' + element.id;
-        }
-      }
-    });
-    this.addEditForm.patchValue({ equipments: equipments });
-    if (this.isAdd) {
-      this.addEditForm.patchValue({
-        category: '1',
-        status: '1',
-        resourceType: '1',
-      });
-      if (!this.addEditForm.value.resourceID) {
-        this.addEditForm.value.resourceID =
-          '4ef9b480-d73c-11ec-b612-e454e8919646';
-      }
-      var date = new Date(this.addEditForm.value.startDate);
-      this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
-    }
-    this.api
-      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddNewAsync', [
-        this.addEditForm.value,
-        this.isAdd,
-        '',
-      ])
-      .subscribe((res) => {
-        debugger;
-        this.imageUpload
-          .updateFileDirectReload(res.msgBodyData[0].resourceID)
-          .subscribe((result) => {
-            if (result) {
-              this.initForm();
-              this.loadData.emit();
+    // let equipments = '';
+    // this.lstDeviceRoom.forEach((element) => {
+    //   if (element.isSelected) {
+    //     if (equipments == '') {
+    //       equipments += element.id;
+    //     } else {
+    //       equipments += ';' + element.id;
+    //     }
+    //   }
+    // });
+    // this.addEditForm.patchValue({ equipments: equipments });
+    // if (this.isAdd) {
+    //   this.addEditForm.patchValue({
+    //     category: '1',
+    //     status: '1',
+    //     resourceType: '1',
+    //   });
+    //   if (!this.addEditForm.value.resourceID) {
+    //     this.addEditForm.value.resourceID =
+    //       '4ef9b480-d73c-11ec-b612-e454e8919646';
+    //   }
+    //   var date = new Date(this.addEditForm.value.startDate);
+    //   this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
+    // }
 
-              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-              // this.changedr.detectChanges();
-            } else {
-              this.initForm();
-              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-              // this.changedr.detectChanges();
-            }
-          });
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeForm();
-      });
+    console.log(this.addEditForm);
+
+    // debugger;
+    // this.dialog.value.linkType = '0';
+    // this.dialog.value.resourceType = '6';
+    // this.api
+    //   .callSv(
+    //     'EP',
+    //     'ERM.Business.EP',
+    //     'ResourcesBusiness',
+    //     'AddEditItemAsync',
+    //     [this.addEditForm.value, this.isAdd]
+    //   )
+    //   .subscribe((res) => {
+    //     this.imageUpload
+    //       .updateFileDirectReload(res.msgBodyData[0].resourceID)
+    //       .subscribe((result) => {
+    //         if (result) {
+    //           this.initForm();
+    //           this.loadData.emit();
+
+    //           // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+    //           // this.changedr.detectChanges();
+    //         } else {
+    //           this.initForm();
+    //           // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+    //           // this.changedr.detectChanges();
+    //         }
+    //       });
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeForm();
+    //   });
   }
 
   valueOwnerChange(event) {
@@ -297,7 +287,13 @@ export class DialogStationeryComponent implements OnInit {
     console.log('Aloo');
   }
   valueChange(event) {
-    console.log('Color: ', event);
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.addEditForm.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.addEditForm.patchValue({ [event['field']]: event.data });
+      }
+    }
   }
   popupTab() {
     debugger;

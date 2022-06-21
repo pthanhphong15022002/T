@@ -112,7 +112,7 @@ export class DialogStationeryComponent implements OnInit {
     });
   }
   openPopupLink() {
-    this.cfService.openForm(this.addLink, '', 300, 500)
+    this.cfService.openForm(this.addLink, '', 300, 500);
     // this.modalService
     //   .open(this.addLink, { centered: true, size: 'md' })
     //   .result.then(
@@ -145,48 +145,46 @@ export class DialogStationeryComponent implements OnInit {
       .then((item) => {
         this.addEditForm = item;
         this.isAfterRender = true;
-
       });
   }
 
   onSaveForm() {
     console.log(this.addEditForm);
-    return;
 
-    let equipments = '';
-    this.lstDeviceRoom.forEach((element) => {
-      if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
-        } else {
-          equipments += ';' + element.id;
-        }
-      }
-    });
-    this.addEditForm.patchValue({ equipments: equipments });
-    if (this.isAdd) {
-      this.addEditForm.patchValue({
-        category: '1',
-        status: '1',
-        resourceType: '1',
-      });
-      if (!this.addEditForm.value.resourceID) {
-        this.addEditForm.value.resourceID =
-          '4ef9b480-d73c-11ec-b612-e454e8919646';
-      }
-      var date = new Date(this.addEditForm.value.startDate);
-      this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
-    }
-    this.api
-      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-        this.addEditForm.value,
-        this.isAdd,
-        '',
-      ])
-      .subscribe((res) => {
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeForm();
-      });
+    // let equipments = '';
+    // this.lstDeviceRoom.forEach((element) => {
+    //   if (element.isSelected) {
+    //     if (equipments == '') {
+    //       equipments += element.id;
+    //     } else {
+    //       equipments += ';' + element.id;
+    //     }
+    //   }
+    // });
+    // this.addEditForm.patchValue({ equipments: equipments });
+    // if (this.isAdd) {
+    //   this.addEditForm.patchValue({
+    //     category: '1',
+    //     status: '1',
+    //     resourceType: '1',
+    //   });
+    //   if (!this.addEditForm.value.resourceID) {
+    //     this.addEditForm.value.resourceID =
+    //       '4ef9b480-d73c-11ec-b612-e454e8919646';
+    //   }
+    //   var date = new Date(this.addEditForm.value.startDate);
+    //   this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
+    // }
+    // this.api
+    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+    //     this.addEditForm.value,
+    //     this.isAdd,
+    //     '',
+    //   ])
+    //   .subscribe((res) => {
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeForm();
+    //   });
   }
 
   valueOwnerChange(event) {
@@ -271,8 +269,14 @@ export class DialogStationeryComponent implements OnInit {
     console.log('Aloo');
   }
   valueChange(event) {
-    debugger;
-    console.log('Color: ', event);
+    console.log('valueChange', event);
+    if (event?.field != null) {
+      if (typeof event.data === 'object') {
+        this.dialog.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.dialog.patchValue({ [event['field']]: event.data });
+      }
+    }
   }
   popupTab() {
     this.cfService.openForm(this.popupTemp, 'Chọn màu');
