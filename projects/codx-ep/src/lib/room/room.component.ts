@@ -104,8 +104,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
   resourceField: any;
   selectedItem: any;
   ngOnInit(): void {
-
-
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
     this.modelResource.className = 'BookingsBusiness';
@@ -126,7 +124,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
         text: 'Xóa',
       },
     ];
-
 
     this.model.page = 1;
     this.model.pageSize = 200;
@@ -160,10 +157,9 @@ export class RoomComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
-    this.viewBase.dataService.methodDelete = "DeleteBookingAsync";
-    this.viewBase.dataService.methodSave = "AddNewAsync";
-    this.viewBase.dataService.methodUpdate = "EditAsync";
+    this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
     this.views = [
       {
         sameData: true,
@@ -174,7 +170,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate
+          template: this.eventTemplate,
         },
       },
       {
@@ -231,7 +227,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  initForm() { }
+  initForm() {}
   getSelectedItem(evt: any) {
     if (evt) {
       this.selectedItem = evt;
@@ -391,7 +387,11 @@ export class RoomComponent implements OnInit, AfterViewInit {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(EditRoomBookingComponent, this.viewBase.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(
+        EditRoomBookingComponent,
+        this.viewBase.dataService.dataSelected,
+        option
+      );
     });
   }
   delete(evt?) {
@@ -399,12 +399,12 @@ export class RoomComponent implements OnInit, AfterViewInit {
     if (evt) {
       deleteItem = evt;
     }
-    this.viewBase.dataService.delete([deleteItem]).subscribe(res => {
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
     });
   }
 
-  toggleClick() { }
+  toggleClick() {}
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -434,7 +434,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
   //   //this.viewBase.currentView.openSidebarRight();
   // }
 
-  viewChange(event) { }
+  viewChange(event) {}
 
   deleteTask(event) {
     console.log('delete', event);

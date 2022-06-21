@@ -1,6 +1,8 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template popup adde #body>
-    <div class="d-flex align-items-center justify-content-between">
+    <codx-tag entityName="AD_Users" [isEdit]="true" [value]=""></codx-tag>
+
+    <!-- <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex mb-5">
         <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
         <span class="btn btn-sm btn-light-primary btn-pill me-2">Customize</span>
@@ -29,24 +31,25 @@
           <span class="icon-login icon-20 ms-1"></span>
         </a>
       </div>
-    </div>
+    </div> -->
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-center">
+          <ng-template #headerText class="me-10 border-0 ">
+            <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
               <div class="fw-bold">Thông tin chung</div>
             </div>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content class="ms-10">
             <div class="form-group">
               <label>
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
-                  (valueChange)="valueChange($event)">
+                  (valueChange)="valueChange($event)" [crrValue]="task?.taskName">
                 </codx-label>
               </label>
-              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName">
+              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName"
+                (valueChange)="valueChange($event)">
               </codx-input>
               <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
                 [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
@@ -67,10 +70,10 @@
             <div class="form-group row mt-3">
               <div class="col-6">
                 <label>
-                  <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
+                  <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
                   </codx-label>
                 </label>
-                <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
+                <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
                   [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
@@ -123,7 +126,10 @@
                       default="Số giờ thực hiện">
                     </codx-label>
                   </label>
-                  <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
+                  <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
+                    [crrValue]="task.estimated" (valueChange)="valueChange($event)">
+                  </codx-input>
+                  <!-- <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" /> -->
                 </div>
               </div>
             </ng-container>
@@ -359,9 +365,9 @@
                         height: 14px;
                         width: 14px;
                         margin-top: 5px" class="col-md-4">
-                      <input name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1 (blur)="onAddToDo()"
-                        placeholder="Add to do list..." (keydown.enter)="onAddToDo()" type="text" class="col-md-8"
-                        style="margin-left: -17px;
+                      <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
+                        (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
+                        (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" class="col-md-8" style="margin-left: -17px;
                             border-width: thin;
                             border-style: none;
                             margin-top: 3px;

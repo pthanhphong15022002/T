@@ -150,17 +150,17 @@ export class PopupAddComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-  onOpenTodo() {
-    if (!this.disableAddToDo) {
-      this.onAddToDo();
-    } else {
-      this.disableAddToDo = !this.disableAddToDo;
-      this.changeDetectorRef.detectChanges();
-      if (!this.disableAddToDo) $('#txtTodoAdd').focus();
-    }
-  }
+  // onOpenTodo() {
+  //   if (!this.disableAddToDo) {
+  //     this.onAddToDo();
+  //   } else {
+  //     this.disableAddToDo = !this.disableAddToDo;
+  //     this.changeDetectorRef.detectChanges();
+  //     if (!this.disableAddToDo) $('#txtTodoAdd').focus();
+  //   }
+  // }
 
-  onAddToDo() {
+  onAddToDo(evt: any) {
     if (!this.todoAddText) return;
     if (this.listTodo == null) this.listTodo = [];
     var todo = new TaskGoal();
@@ -169,7 +169,7 @@ export class PopupAddComponent implements OnInit {
     this.listTodo.push(Object.assign({}, todo));
     this.todoAddText = '';
     this.changeDetectorRef.detectChanges();
-    $('#txtTodoAdd').focus();
+    evt.focus();
   }
 
   onDeleteTodo(index) {
@@ -355,7 +355,7 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-      $('#taskNameInput').focus();
+      //$('#taskNameInput').focus();
     }
     if (
       this.functionID == 'TMT03' &&
@@ -542,7 +542,7 @@ export class PopupAddComponent implements OnInit {
   }
 
   cbxChange(data) {
-    if (data.data) {
+    if (data.data && data.data[0]) {
       this.task[data.field] = data.data[0];
       if (data.field === 'taskGroupID')
         this.loadTodoByGroup(this.task.taskGroupID);

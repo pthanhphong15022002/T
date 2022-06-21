@@ -94,10 +94,13 @@ export class OwnerTasksComponent implements OnInit {
       case 'edit':
         this.edit(data);
         break;
+        case 'copy':
+        this.copy(data);
+        break;
       case 'delete':
         this.delete(data);
         break;
-        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét 
+        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
           this.assignTask(data);
           break;
       default:
@@ -327,6 +330,19 @@ export class OwnerTasksComponent implements OnInit {
     });
   }
 
+  copy(data) {
+    data.taskID = null ;
+    data.recID = null ;
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
+      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+    });
+  }
+
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -347,7 +363,7 @@ export class OwnerTasksComponent implements OnInit {
   changeView(evt: any) {}
 
   requestEnded(evt: any) {
-  
+
   }
   aaa(val: any) {
     console.log(val);
@@ -424,6 +440,6 @@ export class OwnerTasksComponent implements OnInit {
         '',
         obj
       );
-     
+
   }
 }

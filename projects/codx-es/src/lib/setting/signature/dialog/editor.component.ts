@@ -6,6 +6,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -19,11 +20,17 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DialogData,
+  DialogRef,
   NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { AddGridData, CodxEsService, ModelPage } from '../../../codx-es.service';
+import {
+  AddGridData,
+  CodxEsService,
+  ModelPage,
+} from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
 @Component({
@@ -52,6 +59,10 @@ export class EditSignatureComponent implements OnInit {
   Signature1: any = null;
   Signature2: any = null;
   Stamp: any = null;
+  dialog: any;
+  data: any;
+  headerText = 'Thêm mới chữ ký số';
+  subHeaderText = 'Tạo & upload file văn bản';
 
   constructor(
     private api: ApiHttpService,
@@ -64,8 +75,13 @@ export class EditSignatureComponent implements OnInit {
     private cfService: CallFuncService,
     private notify: NotificationsService,
     private codxService: CodxService,
-    private readonly auth: AuthService
-  ) {}
+    private readonly auth: AuthService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.dialog = dialog;
+    this.data = dt?.data;
+  }
 
   initForm() {
     this.esService
@@ -165,22 +181,16 @@ export class EditSignatureComponent implements OnInit {
   }
 
   openPopup(content) {
-    // this.cfService
-    //   .openForm(
-    //     PopupSignatureComponent,
-    //     'Thêm mới ghi chú',
-    //     747,
-    //     570,
-    //     '',
-    //     this.dialogSignature
-    //   )
-    //   .subscribe((dt: any) => {
-    //     if (dt) {
-    //       var that = this;
-    //       dt.close = function (e) {};
-    //     }
-    //   });
-    // this.cr.detectChanges();
+    this.cfService.openForm(
+      PopupSignatureComponent,
+      'Thêm mới ghi chú',
+      747,
+      570,
+      '',
+      this.dialogSignature
+    );
+
+    this.cr.detectChanges();
   }
 
   nextStep() {
