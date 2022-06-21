@@ -41,7 +41,6 @@
                       ControlName="resourceName"
                       [crrValue]="addEditForm.value.resourceID"
                       [Group]="addEditForm"
-                      [refValue]="CbxName['ResourceID']"
                     ></codx-input>
                   </div>
 
@@ -259,7 +258,7 @@
                         name="text"
                         ControlName="availableQty"
                         [crrValue]="addEditForm.value.availableQty"
-                        [refValue]="CbxName['availableQty']"
+                        [Group]="addEditForm"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -301,7 +300,7 @@
                         name="text"
                         ControlName="currentQty"
                         [crrValue]="addEditForm.value.currentQty"
-                        [refValue]="CbxName['CurrentQty']"
+                        [Group]="addEditForm"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -321,9 +320,9 @@
                       <codx-input
                         type="text"
                         name="text"
-                        ControlName="CostPrice"
+                        ControlName="costPrice"
                         [crrValue]="addEditForm.value.costPrice"
-                        [refValue]="CbxName['CostPrice']"
+                        [Group]="addEditForm"
                       ></codx-input>
                       <!--end::Input-->
                     </div>

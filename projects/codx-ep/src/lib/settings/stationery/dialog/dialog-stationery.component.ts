@@ -79,7 +79,7 @@ export class DialogStationeryComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
-    this.formModel = this.dialog;
+    this.formModel = this.dialog.formModel;
   }
 
   ngOnInit(): void {
@@ -160,38 +160,35 @@ export class DialogStationeryComponent implements OnInit {
     //   this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     // }
 
-    console.log(this.addEditForm);
+    this.addEditForm.value.linkType = '0';
+    this.addEditForm.value.resourceType = '6';
+    this.api
+      .callSv(
+        'EP',
+        'ERM.Business.EP',
+        'ResourcesBusiness',
+        'AddEditItemAsync',
+        [this.addEditForm.value, this.isAdd]
+      )
+      .subscribe((res) => {
+        this.imageUpload
+          .updateFileDirectReload(res.msgBodyData[0].resourceID)
+          .subscribe((result) => {
+            if (result) {
+              this.initForm();
+              this.loadData.emit();
 
-    // debugger;
-    // this.dialog.value.linkType = '0';
-    // this.dialog.value.resourceType = '6';
-    // this.api
-    //   .callSv(
-    //     'EP',
-    //     'ERM.Business.EP',
-    //     'ResourcesBusiness',
-    //     'AddEditItemAsync',
-    //     [this.addEditForm.value, this.isAdd]
-    //   )
-    //   .subscribe((res) => {
-    //     this.imageUpload
-    //       .updateFileDirectReload(res.msgBodyData[0].resourceID)
-    //       .subscribe((result) => {
-    //         if (result) {
-    //           this.initForm();
-    //           this.loadData.emit();
-
-    //           // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-    //           // this.changedr.detectChanges();
-    //         } else {
-    //           this.initForm();
-    //           // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-    //           // this.changedr.detectChanges();
-    //         }
-    //       });
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeForm();
-    //   });
+              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+              // this.changedr.detectChanges();
+            } else {
+              this.initForm();
+              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
+              // this.changedr.detectChanges();
+            }
+          });
+        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+        this.closeForm();
+      });
   }
 
   valueOwnerChange(event) {

@@ -202,7 +202,7 @@ export class StationeryComponent implements OnInit {
     //this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
   }
 
-  clickMF(evt, data) { }
+  clickMF(evt, data) {}
 
   click(data) {
     console.log(data);
