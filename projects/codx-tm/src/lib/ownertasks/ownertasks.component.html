@@ -1,6 +1,6 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected"></app-view-detail>
+  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)"></app-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -17,7 +17,7 @@
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag"
     [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
     [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users" [rootData]="data" [setting]="setting"
-    [footer]="cardImgFooter">
+    [footer]="cardImgFooter" >
   </codx-card-img>
 </ng-template>
 
@@ -81,6 +81,6 @@
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
   [predicate]="predicate" [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)"
+  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" 
   (onDragDrop)="aaa($event)" [selectedFirst]="true">
 </codx-views>

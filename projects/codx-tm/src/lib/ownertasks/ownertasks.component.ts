@@ -312,14 +312,14 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add'], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
     });
   }
 
-  edit(data?) {
+  edit(data) {
     if(data){
       this.view.dataService.dataSelected = data;
     }
@@ -329,20 +329,21 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
     });
   }
 
   copy(data) {
-    data.taskID = null;
-    data.recID = null;
+    // data.taskID = null;
+    // data.recID = null;
     this.view.dataService.dataSelected = data;
-    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
+    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.view.dataService.dataSelected = data;
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
     });
   }
 
@@ -441,6 +442,8 @@ export class OwnerTasksComponent implements OnInit {
       '',
       obj
     );
-
+  }
+  receiveMF(e : any){
+      this.clickMF(e.e,this.itemSelected)
   }
 }
