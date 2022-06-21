@@ -4,8 +4,9 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"  [iconCss]="data.isTimeOut?'icon-access_alarm':''"
-    iconCss2="icon-flag" [imageId]="data.userID" imageObjType="AD_Users" [title]="data.userName"
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconCss2="icon-flag" [imageId]="data.userID"
+    imageObjType="AD_Users" [title]="data.userName" [icon]="data.priority" icoStatusVll="L0186"
     icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" [content]="data.memo" [status]="data.status"
     statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users"
     [formModel]="view.formModel">
@@ -59,11 +60,6 @@
     <!--end::Item-->
   </div>
 </ng-template>
-
-<ng-template #cellTemplate let-data>
-  <div [innerHtml]="getCellContent(data.date)"></div>
-</ng-template>
-
 
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"

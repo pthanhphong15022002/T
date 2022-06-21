@@ -358,7 +358,9 @@ export class OwnerTasksComponent implements OnInit {
 
   assignTask(data) { }
 
-  changeView(evt: any) { }
+  changeView(evt: any) {
+
+  }
 
   requestEnded(evt: any) {
 
