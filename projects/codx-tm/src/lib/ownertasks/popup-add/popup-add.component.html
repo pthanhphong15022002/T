@@ -1,4 +1,5 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+
   <ng-template popup adde #body>
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex mb-5">
@@ -33,7 +34,7 @@
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
-          <ng-template #headerText class="me-10 border-0 ">
+          <ng-template #headerText>
             <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
               <div class="fw-bold">Thông tin chung</div>
@@ -41,11 +42,11 @@
           </ng-template>
           <ng-template #content class="ms-10">
             <div class="form-group">
-              <label>
-                <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
-                  (valueChange)="valueChange($event)">
-                </codx-label>
-              </label>
+
+              <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
+                (valueChange)="valueChange($event)">
+              </codx-label>
+
               <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName">
               </codx-input>
               <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
@@ -54,31 +55,27 @@
               <div id="errorCopy" autofocus *ngIf="!required.taskName" class="invalid-feedback">
                 Tên công việc. -->
             </div>
-            <div class="form-group mt-3">
-              <label>
-                <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Nhóm triển khai">
-                </codx-label>
-              </label>
+            <div class="form-group">
+              <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Nhóm triển khai">
+              </codx-label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
                 placeholder="Nhóm công việc" refValue="TaskGroups" loadFull="true" field="taskGroupID"
                 (valueChange)="cbxChange($event)" [multiple]="false" [crrValue]="task.taskGroupID">
               </codx-input>
             </div>
-            <div class="form-group row mt-3">
+            <div class="form-group row">
               <div class="col-6">
-                <label>
-                  <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
-                  </codx-label>
-                </label>
+                <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
+                </codx-label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
                   [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
-                <label>
-                  <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
-                  </codx-label>
-                </label>
+
+                <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
+                </codx-label>
+
                 <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"
                   [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
@@ -97,32 +94,31 @@
               </div>
             </div>
             <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
-              <div class="form-group row mt-3">
+              <div class="form-group row ">
                 <div class="col-4">
-                  <label>
-                    <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
-                    </codx-label>
-                  </label>
+
+                  <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
+                  </codx-label>
+
                   <codx-input name="startDate" type="datetime" class="test-datetime" [disabled]="readOnly"
                     field="startDate" placeholder="datetime" [crrValue]="task.startDate" dataformat="d"
                     (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
-                  <label>
-                    <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
-                    </codx-label>
-                  </label>
+
+                  <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
+                  </codx-label>
+
                   <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
                     placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
-                  <label>
-                    <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks"
-                      default="Số giờ thực hiện">
-                    </codx-label>
-                  </label>
+
+                  <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks" default="Số giờ thực hiện">
+                  </codx-label>
+
                   <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
                 </div>
               </div>
@@ -206,7 +202,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <div class="form-group mt-3">
+            <div class="form-group">
               <div class="d-flex align-items-center justify-content-between">
                 <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Mô tả chi tiết">
                 </codx-label>
