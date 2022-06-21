@@ -52,7 +52,7 @@ export class UpdateStatusPopupComponent implements OnInit {
     );
   }
   changeTime(data) {
-    this.completedOn = data.data;
+    this.completedOn = data.data.fromDate;
     this.estimated = moment(this.completedOn).diff(
       moment(this.startDate),
       'hours'
