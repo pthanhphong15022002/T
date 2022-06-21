@@ -8,10 +8,10 @@
 
 </ng-template> -->
 
-<codx-views #view [funcID]="funcID" entityName="TM_Tasks" [views]="views" [button]="button"
-  (buttonClick)="click($event)" [moreFuncs]="moreFuncs"> </codx-views>
+<codx-views #view [funcID]="funcID" entityName="TM_Tasks" service="TM" assemblyName="TM" [views]="views"
+  [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"> </codx-views>
 
-<div *ngIf="18 <=18; then listCardSprints ;else tmpRight">
+<div *ngIf="18 ==18; then listCardSprints  ">
 </div>
 <!-- <ng-template #listCardSprints>
     <h1>hello tre</h1>
@@ -24,15 +24,11 @@
 
 
   </ng-template> -->
-  <!-- <ng-template #gia></ng-template>
+<!-- <ng-template #gia></ng-template>
   <ng-template #tre><h1>hello gia</h1></ng-template> -->
 <ng-template #listCardSprints>
   <lib-list-card-sprints [viewBase]="view"></lib-list-card-sprints>
 </ng-template>
-<ng-template #tmpRight>
+<!-- <ng-template #tmpRight>
 
-</ng-template>
-
-<codx-content>
-  
-</codx-content>
+</ng-template> -->

@@ -54,7 +54,7 @@
                      [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
                    [date]="data.createdOn" [footer]="cardImgFooter">
                   </codx-card-center> -->
-        <codx-view-list-card
+        <codx-treeview
           #lstViewBoard
           funcId="TMT04"
           service="TM"
@@ -62,11 +62,30 @@
           className="SprintsBusiness"
           method="GetListSprintAsync"
           entityName="TM_Sprints"
+          [gridViewName]="'grvSprints'"
           [predicate]="predicateViewBoards"
-          class="h-1000"
+          class="h-100"
           [itemTemplate]="itemViewBoard"
         >
-        </codx-view-list-card>
+        </codx-treeview>
+        <ng-template #itemViewBoard let-data>
+          <!-- <div style="border-bottom: 1px solid">
+            <div>{{ data.meno }}</div>
+            <div>{{ data.iterationName }}</div>
+            <div>{{ data.resources }}</div>
+          </div> -->
+          <codx-card-center
+          cardCss="border h-100"
+          (click)="clickMF($event, data)"
+          (click)="click(data)"
+          [imageId]="data.iterationID"
+          [title]="data.iterationName"
+          [content]="data.memo || 'memo'"
+          [date]="data.createdOn"
+        >
+        </codx-card-center>
+        </ng-template>.
+        
 <!-- 
         <codx-views
           [view]="view"
