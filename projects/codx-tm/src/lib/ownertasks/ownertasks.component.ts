@@ -95,7 +95,7 @@ export class OwnerTasksComponent implements OnInit {
       case 'delete':
         this.delete(data);
         break;
-        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét 
+        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
           this.assignTask(data);
           break;
       default:
@@ -344,7 +344,7 @@ export class OwnerTasksComponent implements OnInit {
   changeView(evt: any) {}
 
   requestEnded(evt: any) {
-  
+
   }
   aaa(val: any) {
     console.log(val);
@@ -421,6 +421,6 @@ export class OwnerTasksComponent implements OnInit {
         '',
         obj
       );
-     
+
   }
 }
