@@ -43,10 +43,11 @@
             <div class="form-group">
               <label>
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
-                  (valueChange)="valueChange($event)">
+                  (valueChange)="valueChange($event)" [crrValue]="task?.taskName">
                 </codx-label>
               </label>
-              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName">
+              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName"
+                (valueChange)="valueChange($event)">
               </codx-input>
               <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
                 [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
@@ -70,7 +71,7 @@
                   <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
                   </codx-label>
                 </label>
-                <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
+                <codx-input type="datetime" class="test-datetime" field="dueDate" [format]="'d'" placeholder="datetime"
                   [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
@@ -123,7 +124,10 @@
                       default="Số giờ thực hiện">
                     </codx-label>
                   </label>
-                  <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
+                  <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
+                    [crrValue]="task.estimated" (valueChange)="valueChange($event)">
+                  </codx-input>
+                  <!-- <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" /> -->
                 </div>
               </div>
             </ng-container>
