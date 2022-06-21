@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectIconComponent } from './select-icon.component';
+import { TaskGroupComponent } from './task-group.component';
 
-describe('SelectIconComponent', () => {
-  let component: SelectIconComponent;
-  let fixture: ComponentFixture<SelectIconComponent>;
+describe('TaskGroupComponent', () => {
+  let component: TaskGroupComponent;
+  let fixture: ComponentFixture<TaskGroupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectIconComponent ]
+      declarations: [ TaskGroupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectIconComponent);
+    fixture = TestBed.createComponent(TaskGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -3,7 +3,6 @@ import {
   OnInit,
   Optional,
   ChangeDetectorRef,
-  Input,
   ViewChild,
   ElementRef,
 } from '@angular/core';
@@ -17,7 +16,6 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
-  ViewsComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
@@ -95,6 +93,7 @@ export class PopupAddComponent implements OnInit {
     };
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.functionID = this.dialog.formModel.funcID;
   }
 
   ngOnInit(): void {
@@ -271,6 +270,7 @@ export class PopupAddComponent implements OnInit {
       }
     });
   }
+
   openAssignSchedule(task): void {
     const t = this;
     this.task = task;
@@ -398,6 +398,7 @@ export class PopupAddComponent implements OnInit {
       this.actionSave(id);
     }
   }
+
   actionSave(id) {
     if (this.task.taskGroupID) this.checkLogicTaskGroup(this.task.taskGroupID);
     var checkLogic =
@@ -439,6 +440,7 @@ export class PopupAddComponent implements OnInit {
     op.data = data;
     return true;
   }
+
   addTask(isCloseFormTask: boolean = true) {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
@@ -511,6 +513,12 @@ export class PopupAddComponent implements OnInit {
     console.log(e);
   }
 
+  valueChange(data) {
+    if (data.data) {
+      this.task[data.field] = data.data[0];
+    }
+  }
+
   changeVLL(data) {
     this.task.priority = data.data;
   }
@@ -533,15 +541,14 @@ export class PopupAddComponent implements OnInit {
     }
   }
 
-  cbxChangeTaskGroup(data) {
-    console.log('abasdas');
-    if (data.data != '') {
-      this.task.taskGroupID = data.data[0];
-      this.loadTodoByGroup(this.task.taskGroupID);
+  cbxChange(data) {
+    if (data.data) {
+      this.task[data.field] = data.data[0];
+      if (data.field === 'taskGroupID')
+        this.loadTodoByGroup(this.task.taskGroupID);
     }
   }
 
-  cbxChange(data) { }
   checkLogicTime() {
     if (!this.task.startDate && !this.task.endDate) {
       this.isCheckTime = true;
@@ -595,6 +602,7 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
+
   loadTodoByGroup(idTaskGroup) {
     this.api
       .execSv<any>(
@@ -652,6 +660,7 @@ export class PopupAddComponent implements OnInit {
         this.listUserDetail = res;
       });
   }
+
   extendShow() { }
 
   closeTask(): void {
@@ -660,6 +669,7 @@ export class PopupAddComponent implements OnInit {
     this.resetTask();
     this.closePanel();
   }
+
   resetTask() {
     this.task = new TM_Tasks();
     this.isCheckProjectControl = false;

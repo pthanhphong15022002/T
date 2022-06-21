@@ -105,6 +105,7 @@ export class EditRoomBookingComponent implements OnInit {
         .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
         .then((res) => {
           this.CbxName = res;
+          console.log(res);
         });
 
       this.initForm();
@@ -234,9 +235,8 @@ export class EditRoomBookingComponent implements OnInit {
     }
   }
 
-  openPopupDevice(template:any) {
-
-    var dialog = this.callFuncService.openForm(template, '', 300, 400)
+  openPopupDevice(template: any) {
+    var dialog = this.callFuncService.openForm(template, '', 300, 400);
     // this.modalService
     //   .open(this.popupDevice, { centered: true, size: 'md' })
     //   .result.then(
@@ -326,7 +326,7 @@ export class EditRoomBookingComponent implements OnInit {
   }
 
   openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 300, 500)
+    this.callFuncService.openForm(this.addLink, '', 300, 500);
     // this.modalService
     //   .open(this.addLink, { centered: true, size: 'md' })
     //   .result.then(

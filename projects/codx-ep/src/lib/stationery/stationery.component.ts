@@ -1,16 +1,13 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DataRequest,
   DialogRef,
   ResourceModel,
@@ -36,16 +33,25 @@ export class StationeryComponent implements OnInit {
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
-  columnsGrid: any;
   dataSelected: any;
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
 
+  funcID = 'EPS24';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '6';
+  idField = 'RecID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
+
   constructor(
     private callfunc: CallFuncService,
     private cf: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.button = {
@@ -70,7 +76,6 @@ export class StationeryComponent implements OnInit {
         active: false,
         model: {
           template: this.chart,
-          contextMenu: '',
         },
       },
       {
@@ -81,7 +86,6 @@ export class StationeryComponent implements OnInit {
         active: false,
         model: {
           template: this.cardItem,
-          contextMenu: '',
         },
       },
       {
@@ -92,8 +96,19 @@ export class StationeryComponent implements OnInit {
         active: true,
         model: {
           template: this.listItem,
-          contextMenu: '',
         },
+      },
+    ];
+    this.moreFunc = [
+      {
+        id: 'btnEdit',
+        icon: 'icon-list-checkbox',
+        text: 'Chỉnh sửa',
+      },
+      {
+        id: 'btnDelete',
+        icon: 'icon-list-checkbox',
+        text: 'Xóa',
       },
     ];
     this.cf.detectChanges();
@@ -133,6 +148,7 @@ export class StationeryComponent implements OnInit {
       .subscribe((res) => {
         this.dataSelected = this.viewBase.dataService.dataSelected;
         let option = new SidebarModel();
+        option.Width = '750px';
         option.DataService = this.viewBase?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
           DialogStationeryComponent,
@@ -160,7 +176,7 @@ export class StationeryComponent implements OnInit {
     this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
   }
 
-  clickMF(evt, data) {}
+  clickMF(evt, data) { }
 
   click(data) {
     console.log(data);
