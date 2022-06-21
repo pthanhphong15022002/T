@@ -104,11 +104,10 @@
           </div>
         </div>
         <div class="mt-2">
-          <span class="badge badge-info me-1">Issue</span>
+          <!-- <span class="badge badge-info me-1">Issue</span>
           <span class="badge badge-success me-1">Project</span>
-          <span class="badge badge-warning">Customize</span>
-          <codx-tags [isEdit]="false" [entityName]="'TM_Task'" [value]="itemSelected.tags">
-          </codx-tags>
+          <span class="badge badge-warning">Customize</span> -->
+          <codx-tag entityName="AD_Users" [isEdit]="false" [value]="itemSelected?.tags" ></codx-tag>
         </div>
       </div>
     </ng-template>
