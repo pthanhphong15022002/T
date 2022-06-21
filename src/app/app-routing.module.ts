@@ -46,6 +46,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-es/src/lib/codx-es.module').then((m) => m.CodxEsModule),
       },
+      {
+        path: 'fd',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-fd/src/lib/codx-fd.module').then((m) => m.CodxFdModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

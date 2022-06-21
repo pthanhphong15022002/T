@@ -1,26 +1,39 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { CodxFdComponent } from './codx-fd.component';
+import { StatisticalComponent } from './statistical/statistical.component';
+import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    children: [],
+    children: [
+      {
+        path: 'coins/:funcID',
+        component: WalletsComponent,
+      },
+      {
+        path: 'statistical/:funcID',
+        component: StatisticalComponent,
+      },
+    ],
   },
 ];
 
-const Component: Type<any>[] = [LayoutComponent, CodxFdComponent];
+const Component: Type<any>[] = [
+  LayoutComponent,
+  WalletsComponent,
+  StatisticalComponent,
+];
 
 @NgModule({
-  declarations: [Component],
   imports: [
     CommonModule,
     FormsModule,
@@ -30,7 +43,11 @@ const Component: Type<any>[] = [LayoutComponent, CodxFdComponent];
     CodxCoreModule,
     RouterModule.forChild(routes),
   ],
-  exports: [],
+  exports: [
+    RouterModule
+  ],
+  declarations: Component,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {
   public static forRoot(

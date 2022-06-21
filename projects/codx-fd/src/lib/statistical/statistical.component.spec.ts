@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxFdComponent } from './codx-fd.component';
+import { StatisticalComponent } from './statistical.component';
 
-describe('CodxFdComponent', () => {
-  let component: CodxFdComponent;
-  let fixture: ComponentFixture<CodxFdComponent>;
+describe('StatisticalComponent', () => {
+  let component: StatisticalComponent;
+  let fixture: ComponentFixture<StatisticalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxFdComponent ]
+      declarations: [ StatisticalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxFdComponent);
+    fixture = TestBed.createComponent(StatisticalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
