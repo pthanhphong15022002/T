@@ -91,7 +91,6 @@ export class PopupAddComponent implements OnInit {
       ...this.task,
       ...dt?.data,
     };
-    console.log("tesssss",this.task)
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
