@@ -41,8 +41,10 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
   views: Array<ViewModel> = [];
@@ -184,7 +186,8 @@ export class OwnerTasksComponent implements OnInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.scheduleTemplate,
+          template: this.eventTemplate,
+          template3: this.cellTemplate
         },
       },
     ];

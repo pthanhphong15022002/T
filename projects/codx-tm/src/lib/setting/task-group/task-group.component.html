@@ -1,1 +1,56 @@
-<p>task-group works!</p>
+<codx-views #view funcID="TMS032" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
+  className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
+  [moreFuncs]="moreFuncs"></codx-views>
+
+<ng-template #GiftIDCell let-data>
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" iconCss="icon-flag"
+    iconCss2="icon-security" [taskGroupID]="data.taskGroupID" icoSubTitleCss="icon-assignment" [formModel]="view.formModel">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #itemCreateBy let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg" placement="bottom">
+      {{dataItem.createName}}
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemCreate let-data>
+  {{data.createdOn | date: 'dd/MM/yyyy'}}
+</ng-template>
+<ng-template #itemApprovalControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.approvalControl|vll:"L1433":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemProjectControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.projectControl|vll:"L1462":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemAttachmentControl let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.attachmentControl|vll:"L1462":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemCheckListControlVll let-data>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap">
+    {{data?.checkListControl|vll:"L1463":"text"|async}}
+  </div>
+</ng-template>
+<ng-template #itemCheckList let-data>
+  <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
+    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
+      *ngIf=" (i<3 || data.disableReadmore) ">
+      <label class="checkbox checkbox-square checkbox-sm mb-0">
+        <input type="checkbox" checked="checked" disabled>
+        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
+        <span></span> {{item}}
+      </label>
+    </div>
+  </ng-container>
+  <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
+      (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+</ng-template>
