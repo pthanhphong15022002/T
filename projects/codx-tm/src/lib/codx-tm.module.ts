@@ -1,3 +1,4 @@
+import { TaskGroupComponent } from './setting/task-group/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { HomeSettingComponent } from './setting/home-setting/home-setting.component';
 import { FormsModule } from '@angular/forms';
@@ -55,6 +56,10 @@ export const routes: Routes = [
           {
             path: ':funcID',
             component: HomeSettingComponent
+          },
+          {
+            path: 'taskgroup/:funcID',
+            component: TaskGroupComponent
           }
         ]
       },
@@ -83,7 +88,8 @@ const T_Component: Type<any>[] = [
   ViewDetailsTaskComponent,
   UpdateStatusPopupComponent,  
   HomeSettingComponent,
-  SettingComponent
+  SettingComponent,
+  TaskGroupComponent
 ]
 @NgModule({
   imports: [

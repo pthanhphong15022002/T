@@ -15,17 +15,20 @@ import {
 import {
   ApiHttpService,
   AuthService,
+  ButtonModel,
   CacheService,
+  CallFuncService,
   CodxGridviewComponent,
+  DialogRef,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { ButtonModel } from '@syncfusion/ej2-angular-buttons/public_api';
 import { EditSignatureComponent } from './dialog/editor.component';
 import { environment } from 'src/environments/environment';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EditRoomBookingComponent } from 'projects/codx-ep/src/lib/room/edit-room-booking/edit-room-booking.component';
 
 export class defaultRecource {}
 @Component({
@@ -34,7 +37,7 @@ export class defaultRecource {}
   styleUrls: ['./signature.component.scss'],
 })
 export class SignatureComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -55,9 +58,12 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  dataSelected: any;
+  dialog!: DialogRef;
 
   constructor(
     private api: ApiHttpService,
+    private callfunc: CallFuncService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private cacheSv: CacheService,
@@ -67,19 +73,33 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
+
   moreFunc: Array<ButtonModel> = [];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
+
+  button: ButtonModel;
+  funcID = 'ESS21';
+  service = 'ES';
+  assemblyName = 'ES';
+  entityName = 'ES_Signatures';
+  predicate = '';
+  dataValue = '';
+  idField = 'RecID';
+  className = 'SignaturesBusiness';
+  method = 'GetListAsync';
 
   ngAfterViewInit(): void {
     this.views = [
       {
-        sameData: false,
+        sameData: true,
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
-        model: {
-          panelLeftRef: this.grid,
-        },
+        model: {},
       },
     ];
 
@@ -136,11 +156,64 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     ];
     this.cr.detectChanges();
   }
-  addNew(evt: any) {
-    this.cr.detectChanges();
+
+  closeEditForm(event) {}
+
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
   }
 
-  edit(dataItem) {
+  addNew(evt?) {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        EditSignatureComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        EditRoomBookingComponent,
+        this.viewBase.dataService.dataSelected,
+        option
+      );
+    });
+  }
+  delete(evt?) {
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  edit1(dataItem) {
     this.editSignature.isAdd = false;
     this.editSignature.dialogSignature.patchValue(dataItem);
     this.editSignature.dialogSignature.patchValue({

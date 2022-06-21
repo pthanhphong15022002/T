@@ -542,7 +542,7 @@ export class PopupAddComponent implements OnInit {
   }
 
   cbxChange(data) {
-    if (data.data) {
+    if (data.data && data.data[0]) {
       this.task[data.field] = data.data[0];
       if (data.field === 'taskGroupID')
         this.loadTodoByGroup(this.task.taskGroupID);
