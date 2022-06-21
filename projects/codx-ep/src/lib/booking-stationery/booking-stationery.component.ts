@@ -5,6 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
@@ -20,15 +21,14 @@ import { DialogStationeryComponent } from './dialog/dialog-stationery.component'
 
 @Component({
   selector: 'codx-stationery',
-  templateUrl: './stationery.component.html',
-  styleUrls: ['./stationery.component.scss'],
+  templateUrl: './booking-stationery.component.html',
+  styleUrls: ['./booking-stationery.component.scss'],
 })
-export class StationeryComponent implements OnInit {
+export class BookingStationeryComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
-  @ViewChild('colorPicker') colorPicker: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button: ButtonModel;
@@ -37,8 +37,9 @@ export class StationeryComponent implements OnInit {
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
+  cart: [];
 
-  funcID = 'EPS24';
+  funcID: string;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -50,8 +51,11 @@ export class StationeryComponent implements OnInit {
 
   constructor(
     private callfunc: CallFuncService,
-    private cf: ChangeDetectorRef
-  ) { }
+    private cf: ChangeDetectorRef,
+    private activedRouter: ActivatedRoute,
+  ) { 
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   ngOnInit(): void {
     this.button = {
@@ -91,6 +95,16 @@ export class StationeryComponent implements OnInit {
       {
         id: '3',
         text: 'List',
+        type: ViewType.list,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.listItem,
+        },
+      },
+      {
+        id: '4',
+        text: 'List ',
         type: ViewType.list,
         sameData: true,
         active: true,
@@ -172,11 +186,11 @@ export class StationeryComponent implements OnInit {
     }
   }
 
-  addCart(evt) {
-    this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
+  addCart(evt, data) {
+    console.log(data)
   }
 
-  clickMF(evt, data) { }
+  clickMF(evt, data) {}
 
   click(data) {
     console.log(data);

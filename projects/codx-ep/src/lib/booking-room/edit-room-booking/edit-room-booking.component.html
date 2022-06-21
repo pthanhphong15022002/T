@@ -33,7 +33,7 @@
                         gridViewName="grvUsers"
                       >
                       </codx-label>
-                      <span class="label-status text-primary">Sẵn sàng</span>     
+                      <span class="label-status text-primary">Sẵn sàng</span>
                     </div>
                     <!--end::Label-->
                     <codx-input
@@ -108,7 +108,7 @@
                         [crrValue]="addEditForm.value.startDate"
                         ControlName="startDate"
                         placeholder="datetime"
-                        dataformat="d"
+                        format="d"
                         (valueChange)="valueDateChange($event)"
                       >
                       </codx-input>
@@ -123,18 +123,15 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                        dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                      </codx-input> -->
-                      <ejs-timepicker
-                        id="workHourStart"
-                        showClearButton="false"
-                        [value]="this.startTime"
-                        (change)="valueStartTimeChange($event)"
-                        [value]="addEditForm.value.startDate"
+                      <codx-input
+                        type="datetime"
+                        class="test-datetime"
+                        field="datetime"
+                        placeholder="datetime"
+                        format="t"
+                        (valueChange)="valueStartTimeChange($event)"
                       >
-                      </ejs-timepicker>
-                      <!--end::Input-->
+                      </codx-input>
                     </div>
                     <div class="col-3">
                       <!--begin::Label-->
@@ -146,17 +143,16 @@
                       </codx-label>
                       <!--end::Label-->
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                        dataformat="t" (valueChange)="valueEndTimeChange($event)">
-                      </codx-input> -->
-                      <ejs-timepicker
-                        id="workHourStart"
-                        showClearButton="false"
-                        [value]="this.endTime"
+                      <codx-input
+                        type="datetime"
                         class="test-datetime"
-                        (change)="valueEndTimeChange($event)"
-                        [value]="addEditForm.value.endDate"
-                      ></ejs-timepicker>
+                        field="datetime"
+                        placeholder="datetime"
+                        format="t"
+                        (valueChange)="valueEndTimeChange($event)"
+                      >
+                      </codx-input>
+
                       <!--end::Input-->
                     </div>
                     <div class="col-2">

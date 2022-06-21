@@ -64,7 +64,7 @@
       </div>
       <div
         class="symbol-group symbol-hover justify-content-end"
-        (click)="addCart($event)"
+        (click)="addCart($event, data.recID)"
       >
         <span class="icon-shopping_cart icon-20 text-gray-400"></span>
       </div>
@@ -78,18 +78,15 @@
 <!-- begin::View list -->
 
 <ng-template #listItem let-data>
-  <div class="task-row py-3 px-6">
+  <div class="task-row">
     <table class="table w-100 table-action-menu">
       <tbody>
         <td class="w-75">
           <div class="d-flex">
-            <div class="w-100px h-100px">
-              <img
-                src="https://anlocviet.vn/upload/product/butbithienlongtl2529-3581.jpg"
-                alt=""
-              />
+            <div class="w-100px h-100px m-4">
+             <codx-img [objectId]="" imageType="square" width="100"></codx-img>
             </div>
-            <div>
+            <div class="">
               <div class="text-dark font-weight-bold font-size-h6">
                 {{ data.resourceName }}
               </div>
@@ -128,20 +125,3 @@
 </ng-template>
 <!-- end::View list -->
 
-<ng-template #colorPicker>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Chọn màu</h4>
-    <button
-      type="button"
-      class="btn btn-xs btn-icon btn-light btn-hover-primary"
-      aria-label="Close"
-      (click)="dialog.close()"
-    >
-      <span class="icon-close icon-20"></span>
-    </button>
-  </div>
-  <div class="modal-body"></div>
-  <div class="modal-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">Lưu</button>
-  </div>
-</ng-template>

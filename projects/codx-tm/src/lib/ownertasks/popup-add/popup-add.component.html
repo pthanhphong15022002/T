@@ -47,7 +47,7 @@
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
                 </codx-label>
               </label>
-              <codx-input  field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
+              <codx-input field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
                 (valueChange)="valueChange($event)">
               </codx-input>
               <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
@@ -72,8 +72,8 @@
                   <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
                   </codx-label>
                 </label>
-                <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime" [crrValue]="task.dueDate"
-                  [disabled]="readOnly" (valueChange)="changeTime($event)">
+                <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
+                  [crrValue]="task.dueDate" [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -105,9 +105,8 @@
                     <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly"
-                    field="startDate" placeholder="datetime" [crrValue]="task.startDate" format="F"
-                    (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
+                    placeholder="datetime" [crrValue]="task.startDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -432,7 +431,9 @@
       <button class="btn btn-light-primary" (click)="dialog.close()">
         <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
       </button>
-      <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly"><codx-label name="Save" formName="Tasks" default="Lưu"></codx-label></button>
+      <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">
+        <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+      </button>
     </div>
   </ng-template>
 </codx-form>

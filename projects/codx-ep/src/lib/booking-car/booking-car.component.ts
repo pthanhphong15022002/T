@@ -16,11 +16,11 @@ import { DialogCarBookingComponent } from './dialog/editor.component';
 import { ModelPage } from '../codx-ep.service';
 export class defaultRecource { }
 @Component({
-  selector: 'app-car',
-  templateUrl: 'car.component.html',
-  styleUrls: ['car.component.scss'],
+  selector: 'app-booking-car',
+  templateUrl: 'booking-car.component.html',
+  styleUrls: ['booking-car.component.scss'],
 })
-export class CarBookingComponent implements OnInit, AfterViewInit {
+export class BookingCarComponent implements OnInit, AfterViewInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('popupDevice', { static: true }) popupDevice;
