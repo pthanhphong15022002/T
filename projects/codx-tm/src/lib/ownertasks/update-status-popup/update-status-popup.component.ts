@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, CodxService, DialogData, NotificationsService, UrlUtil } from 'codx-core';
+import { ApiHttpService, CodxService, DialogData, DialogRef, NotificationsService, UrlUtil } from 'codx-core';
 import * as moment from 'moment';
 import { CodxTMService } from '../../codx-tm.service';
 
@@ -21,6 +21,7 @@ export class UpdateStatusPopupComponent implements OnInit {
   moreFunc: any;
   url: string;
   status: string;
+  title :string = "Cập nhật tình trạng công việc "
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -28,7 +29,7 @@ export class UpdateStatusPopupComponent implements OnInit {
     private tmSv : CodxTMService,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: Dialog,
+    @Optional() dialog?: DialogRef,
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
@@ -75,32 +76,26 @@ export class UpdateStatusPopupComponent implements OnInit {
     if (this.data.fieldValue == '2') {
       if (this.comment == '') return;
     }
-    this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe();
-  //   this.tmSv.setStatusTask(
-  //       this.task.taskID,
-  //       this.status,
-  //       this.completedOn,
-  //       this.estimated,
-  //       this.comment
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.task.status = this.status;
-  //         this.task.completedOn = this.completedOn;
-  //         this.task.comment = this.comment;
-  //         this.task.completed = this.estimated;
-  //        // this.dialog.hide(this.task);
-  //        this.dialog.dataService
-  //        .save((option: any) => this.beforeSave(option))
-  //        .subscribe();
-  //         this.notiService.notify('Cập nhật trạng thái thành công !');
-  //       } else {
-  //         this.notiService.notify(
-  //           'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
-  //         );
-  //       }
-  //     });
+    this.tmSv.setStatusTask(
+        this.task.taskID,
+        this.status,
+        this.completedOn,
+        this.estimated,
+        this.comment
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.task.status = this.status;
+          this.task.completedOn = this.completedOn;
+          this.task.comment = this.comment;
+          this.task.completed = this.estimated;
+          this.dialog.close() ;
+          this.notiService.notify('Cập nhật trạng thái thành công !');
+        } else {
+          this.notiService.notify(
+            'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
+          );
+        }
+      });
    }
 }

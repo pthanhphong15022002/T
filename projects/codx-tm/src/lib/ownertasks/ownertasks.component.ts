@@ -95,6 +95,9 @@ export class OwnerTasksComponent implements OnInit {
       case 'delete':
         this.delete(data);
         break;
+        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét 
+          this.assignTask(data);
+          break;
       default:
         this.changeStatusTask(e, data);
         break;
@@ -189,7 +192,6 @@ export class OwnerTasksComponent implements OnInit {
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    // this.view.dataService.methodUpdate = 'SetStatusTaskAsync';
     this.dt.detectChanges();
   }
   //#region schedule
@@ -337,12 +339,12 @@ export class OwnerTasksComponent implements OnInit {
     return true;
   }
 
+  assignTask(data){}
+
   changeView(evt: any) {}
 
   requestEnded(evt: any) {
-    // if (evt) {
-    //   this.dialog.close();
-    // }
+  
   }
   aaa(val: any) {
     console.log(val);
@@ -356,6 +358,7 @@ export class OwnerTasksComponent implements OnInit {
   changeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
+    //  this.view.dataService.dataSelected = taskAction;
     this.api
       .execSv<any>(
         'SYS',
@@ -392,7 +395,6 @@ export class OwnerTasksComponent implements OnInit {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  //this.listview.addHandler(taskAction, false, 'recID');
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -406,23 +408,19 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
-    let obj = {
-      fieldValue: fieldValue,
-      moreFunc: moreFunc,
-      taskAction: taskAction,
-    };
-    this.dialog = this.callfc.openForm(
-      UpdateStatusPopupComponent,
-      'Cập nhật tình trạng',
-      500,
-      450,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e.closedBy == 'user action') {
-        var task = e.event;
-      }
-    });
+      let obj = {
+        fieldValue: fieldValue,
+        moreFunc: moreFunc,
+        taskAction:  taskAction,
+      };
+      this.dialog = this.callfc.openForm(
+        UpdateStatusPopupComponent,
+        'Cập nhật tình trạng',
+        500,
+        450,
+        '',
+        obj
+      );
+     
   }
 }

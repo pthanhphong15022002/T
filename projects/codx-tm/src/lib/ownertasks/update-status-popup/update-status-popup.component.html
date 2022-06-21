@@ -1,23 +1,23 @@
-<codx-form headerText="Cập nhật tình trạng công việc" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
 </codx-form>
   <ng-template  #body>
     <div class="form-group row">
         <div class="col-12">
-            <label>Tình trạng</label>
+            <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
             <input class="form-control" value ="{{moreFunc.customName}}" type="text" readonly />
         </div>
         <div class="col-6" *ngIf="status =='9'">
-            <label>Ngày cập nhật</label>
-                <!-- tạm dùng "d" vf f đang lỗi -->
+            <codx-label fiedName ="completedOn" formName="Tasks"  default="Ngày cập nhật"></codx-label>
             <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
                 [crrValue]="completedOn" dataformat="d" (valueChange)="changeTime($event)">
             </codx-input>
         </div>
         <div class="col-6" *ngIf="status =='9'">
-            <label>Thời gian hoàn tất</label>
+            <codx-label fiedName="estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
             <input type="number" class="form-control" [(ngModel)]="estimated" />
         </div>
-        <div class="col-12"> <label>Comment</label>
+        <div class="col-12">
+             <codx-label fiedName="comment" formName="Tasks"  default="Comment"></codx-label>
             <textarea [(ngModel)]="comment" class="form-control" rows="2"></textarea>
         </div>
     </div>
