@@ -41,8 +41,10 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
   views: Array<ViewModel> = [];
@@ -92,15 +94,15 @@ export class OwnerTasksComponent implements OnInit {
       case 'edit':
         this.edit(data);
         break;
-        case 'copy':
+      case 'copy':
         this.copy(data);
         break;
       case 'delete':
         this.delete(data);
         break;
-        case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
-          this.assignTask(data);
-          break;
+      case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
+        this.assignTask(data);
+        break;
       default:
         this.changeStatusTask(e, data);
         break;
@@ -187,7 +189,8 @@ export class OwnerTasksComponent implements OnInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.scheduleTemplate,
+          template: this.eventTemplate,
+          template3: this.cellTemplate
         },
       },
     ];
@@ -316,8 +319,11 @@ export class OwnerTasksComponent implements OnInit {
     });
   }
 
-  edit(data) {
-    this.view.dataService.dataSelected = data;
+  edit(data?) {
+    if(data){
+      this.view.dataService.dataSelected = data;
+    }
+    
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -328,8 +334,8 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   copy(data) {
-    data.taskID = null ;
-    data.recID = null ;
+    data.taskID = null;
+    data.recID = null;
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
@@ -343,21 +349,19 @@ export class OwnerTasksComponent implements OnInit {
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], this.beforeDel)
+      .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
       .subscribe();
   }
 
   beforeDel(opt: RequestOption) {
-    opt.service = 'TM';
-    opt.assemblyName = 'TM';
-    opt.className = 'TaskBusiness';
-    opt.methodName = 'TestApi';
+    opt.methodName = 'DeleteTaskAsync';
+    opt.data = this.itemSelected.taskID;
     return true;
   }
 
-  assignTask(data){}
+  assignTask(data) { }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
 
@@ -424,19 +428,19 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
-      let obj = {
-        fieldValue: fieldValue,
-        moreFunc: moreFunc,
-        taskAction:  taskAction,
-      };
-      this.dialog = this.callfc.openForm(
-        UpdateStatusPopupComponent,
-        'Cập nhật tình trạng',
-        500,
-        450,
-        '',
-        obj
-      );
+    let obj = {
+      fieldValue: fieldValue,
+      moreFunc: moreFunc,
+      taskAction: taskAction,
+    };
+    this.dialog = this.callfc.openForm(
+      UpdateStatusPopupComponent,
+      'Cập nhật tình trạng',
+      500,
+      450,
+      '',
+      obj
+    );
 
   }
 }
