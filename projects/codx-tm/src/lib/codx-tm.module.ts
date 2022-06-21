@@ -26,6 +26,7 @@ import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
+import { PopAddTaskgroupComponent } from './setting/task-group/pop-add-taskgroup/pop-add-taskgroup.component';
 
 export const routes: Routes = [
   {
@@ -58,7 +59,7 @@ export const routes: Routes = [
             component: HomeSettingComponent
           },
           {
-            path: 'taskgroup/:funcID',
+            path: 'taskgroups/:funcID',
             component: TaskGroupComponent
           }
         ]
@@ -89,7 +90,9 @@ const T_Component: Type<any>[] = [
   UpdateStatusPopupComponent,  
   HomeSettingComponent,
   SettingComponent,
-  TaskGroupComponent
+  TaskGroupComponent,
+  PopupAddComponent,
+  PopAddTaskgroupComponent
 ]
 @NgModule({
   imports: [

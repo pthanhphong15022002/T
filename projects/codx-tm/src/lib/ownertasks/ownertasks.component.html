@@ -60,6 +60,12 @@
   </div>
 </ng-template>
 
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data.date)"></div>
+</ng-template>
+
+
+
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
   [predicate]="predicate" [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
