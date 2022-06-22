@@ -161,7 +161,7 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -170,7 +170,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,

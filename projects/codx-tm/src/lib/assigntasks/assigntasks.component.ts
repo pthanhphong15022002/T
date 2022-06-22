@@ -171,8 +171,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.listdetail,
-        sameData: true,
         active: false,
+        sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -180,8 +180,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.kanban,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -189,8 +189,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.schedule,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
