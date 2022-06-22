@@ -93,7 +93,7 @@ export class PopupAddComponent implements OnInit {
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
-    this.showAssignTo =dt?.data[2];
+    this.showAssignTo = dt?.data[2];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -593,7 +593,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -634,7 +634,7 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }

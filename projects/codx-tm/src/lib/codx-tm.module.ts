@@ -1,8 +1,8 @@
-import { TaskGroupComponent } from './setting/task-group/task-group.component';
+import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
-import { HomeSettingComponent } from './setting/home-setting/home-setting.component';
 import { FormsModule } from '@angular/forms';
 import { OwnerTasksComponent } from './ownertasks/ownertasks.component';
+
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewDetailComponent } from './ownertasks/view-detail/view-detail.component';
@@ -26,10 +26,12 @@ import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
-import { PopAddTaskgroupComponent } from './setting/task-group/pop-add-taskgroup/pop-add-taskgroup.component';
+import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
+import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
+import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
+import { PopAddRangesComponent } from './setting/rangeskanban/pop-add-ranges/pop-add-ranges.component';
 import { AssignTasksComponent } from './assigntasks/assigntasks.component';
 import { ViewDetailAssignTasksComponent } from './assigntasks/view-detail-assign-tasks/view-detail-assign-tasks.component';
-
 export const routes: Routes = [
   {
     path: '',
@@ -67,7 +69,11 @@ export const routes: Routes = [
           {
             path: 'taskgroups/:funcID',
             component: TaskGroupComponent
-          }
+          },
+          {
+            path: 'rangeskanban/:funcID',
+            component: RangesKanbanComponent
+          },
         ]
       },
       {
@@ -98,6 +104,8 @@ const T_Component: Type<any>[] = [
   SettingComponent,
   TaskGroupComponent,
   PopAddTaskgroupComponent,
+  RangesKanbanComponent,
+  PopAddRangesComponent,
   AssignTasksComponent,
   ViewDetailAssignTasksComponent
 ]

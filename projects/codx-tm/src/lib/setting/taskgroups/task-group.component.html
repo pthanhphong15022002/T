@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMS032" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
+<codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
   className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
   [moreFuncs]="moreFuncs" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
@@ -12,6 +12,10 @@
     [checkList]="data.checkList" [createBy]="data.createName" [createdOn]="data.createdOn">
   </codx-view-grid>
 </ng-template> -->
+
+<ng-template #GiftIDCell let-data>
+  
+</ng-template>
 
 
 <ng-template #itemCreateBy let-dataItem>

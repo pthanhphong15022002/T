@@ -23,7 +23,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   enableAddtodolist: boolean = false;
   listTodo: any;
   todoAddText: any;
-  title = 'Tạo mới công việc';
+  title : 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
   readOnly = false;
@@ -195,13 +195,23 @@ export class PopAddTaskgroupComponent implements OnInit {
   //save
   addRow() {
     var t = this;
-    this.tmSv.addTaskGroup(this.taskGroups)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
-        }
-      })
+    this.dialog.dataService.save((opt:any)=>{
+      opt.data = [this.taskGroups];
+      return true;
+    })
+    .subscribe((res) => {
+      if (res.save) {
+        this.dialog.close();
+        this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+      }
+    });
+    // this.tmSv.addTaskGroup(this.taskGroups)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.notiService.notify(res[0].message);
+    //       t.data = res[1];
+    //     }
+    //   })
     this.closePanel();
   }
 
