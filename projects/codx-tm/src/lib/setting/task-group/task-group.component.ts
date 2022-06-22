@@ -10,7 +10,7 @@ import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.
 })
 export class TaskGroupComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
-  @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
+  // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
 
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;

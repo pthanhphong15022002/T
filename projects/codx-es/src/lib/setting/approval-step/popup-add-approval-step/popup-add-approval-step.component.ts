@@ -9,19 +9,15 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import {
-  timelineHeaderTableBody,
-  treeGridPane,
-} from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 import { ApiHttpService, DialogData, NotificationsService } from 'codx-core';
 import { CodxEsService, ModelPage } from '../../../codx-es.service';
 
 @Component({
-  selector: 'app-edit-approvalstep',
-  templateUrl: './edit-approval-step.component.html',
-  styleUrls: ['./edit-approval-step.component.scss'],
+  selector: 'popup-add-approval-step',
+  templateUrl: './popup-add-approval-step.component.html',
+  styleUrls: ['./popup-add-approval-step.component.scss'],
 })
-export class EditApprovalSteps implements OnInit {
+export class PopupAddApprovalStepComponent implements OnInit {
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;

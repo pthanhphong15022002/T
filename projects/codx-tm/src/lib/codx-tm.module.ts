@@ -30,7 +30,8 @@ import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
 import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
 import { PopAddRangesComponent } from './setting/rangeskanban/pop-add-ranges/pop-add-ranges.component';
-
+import { AssignTasksComponent } from './assigntasks/assigntasks.component';
+import { ViewDetailAssignTasksComponent } from './assigntasks/view-detail-assign-tasks/view-detail-assign-tasks.component';
 export const routes: Routes = [
   {
     path: '',
@@ -43,6 +44,10 @@ export const routes: Routes = [
       {
         path: 'viewboards/:funcID',
         component: SprintsComponent,
+      },
+      {
+        path: 'assigntasks/:funcID',
+        component: AssignTasksComponent,
       },
       {
         path: 'sprinttasks/:funcID',
@@ -101,7 +106,8 @@ const T_Component: Type<any>[] = [
   PopAddTaskgroupComponent,
   RangesKanbanComponent,
   PopAddRangesComponent,
-  
+  AssignTasksComponent,
+  ViewDetailAssignTasksComponent
 ]
 @NgModule({
   imports: [

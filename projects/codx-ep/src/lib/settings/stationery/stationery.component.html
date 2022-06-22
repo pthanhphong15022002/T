@@ -50,5 +50,74 @@
 </ng-template> -->
 
 
+-<ng-template #listItem let-data>
+  <div class="task-row">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-auto">
+          <div class="d-flex">
+            <div class="w-100px h-100px m-4">
+              <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+            </div>
+            <div class="">
+              <div class="text-dark font-weight-bold font-size-h6">
+                {{ data.resourceName }}
+              </div>
+              <div>Đơn vị tính: {{ data.costPrice }}</div>
+              <div>Nhóm: {{ data.costPrice }}</div>
+              <div class="d-flex justify-content-between align-items-end mt-2">
+                <div class="d-flex align-items-end me-2 codx-badge">
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span class="icon-view_agenda icon-20 text-gray-400"></span>
+                    <span>{{ data.currentQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-shopping_cart icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.reservedQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-brightness_auto icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.availableQty }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="w-auto">
+          <span class="h-20 w-20 m-1" style="background-color: blue"></span>
+          <span class="h-20 w-20 m-1" style="background-color: #000000"></span>
+          <span class="h-20 w-20 m-1" style="background-color: red"></span>
+          <span class="h-20 w-20 m-1" style="background-color: green"></span>
+        </td>
+        <td class="w-auto">
+          {{ data.costPrice * 1000 }}
+        </td>
+        <td class="w-auto">{{ data.location }}</td>
+        <td class="w-auto">
+          <div>
+            <codx-img
+              [objectId]="data.owner"
+              objectType="AD_Users"
+              class="symbol symbol-35px symbol-circle"
+            >
+            </codx-img>
+            <div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </td>
+      </tbody>
+    </table>
+  </div>
+  <codx-temp-full (clickMF)="clickMF($event,data)"
+    [formModel]="viewBase.formModel">
+  </codx-temp-full>
+</ng-template>
 
 <!-- end::View list -->

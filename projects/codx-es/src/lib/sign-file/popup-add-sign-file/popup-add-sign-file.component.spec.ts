@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditSignFileComponent } from './edit-sign-file.component';
+import { PopupAddSignFileComponent } from './popup-add-sign-file.component';
 
 describe('EditSignFileComponent', () => {
-  let component: EditSignFileComponent;
-  let fixture: ComponentFixture<EditSignFileComponent>;
+  let component: PopupAddSignFileComponent;
+  let fixture: ComponentFixture<PopupAddSignFileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditSignFileComponent ]
-    })
-    .compileComponents();
+      declarations: [PopupAddSignFileComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditSignFileComponent);
+    fixture = TestBed.createComponent(PopupAddSignFileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
