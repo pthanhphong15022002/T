@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <codx-form headerText="{{title}}" [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog"
   [openMore]="true">
   <ng-template #subHeader>
@@ -15,51 +14,15 @@
             <input type="text" class="form-control" placeholder="Tag..." />
             <div class="input-group-append">
               <button class="btn btn-secondary" type="button">Lưu</button>
-=======
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-  <ng-template popup adde #body>
-    <codx-tag [entityName]="dialog.formModel.entityName" [disabled]="true" [isEdit]="true" [value]="task.tags"
-      (valueChange)="valueChangeTags($event)"></codx-tag>
-
-    <!-- <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex mb-5">
-        <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
-        <span class="btn btn-sm btn-light-primary btn-pill me-2">Customize</span>
-        <div class="dropdown" id="tag_toggle">
-          <div class="topbar-item" data-toggle="dropdown">
-            <span class="btn btn-sm btn-secondary btn-pill btn-dropdown">Tag +</span>
-          </div>
-          <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
-            <div class="quick-search quick-search-dropdown" id="tag_dropdown">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Tag..." />
-                <div class="input-group-append">
-                  <button class="btn btn-secondary" type="button">Lưu</button>
-                </div>
-              </div>
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
             </div>
           </div>
         </div>
       </div>
-<<<<<<< HEAD
     </div>
 
   </ng-template>
   <ng-template popup adde #body>
 
-=======
-      <div class="btn-extand d-flex justify-content-end">
-        <a class="text-dark-75 text-hover-primary d-flex align-items-center" style="cursor:pointer;"
-          (click)="extendShow()">
-          <span class="me-2 text-dark">
-            <codx-label name="lblExtend" formName="Tasks" default="Mở rộng"></codx-label>
-          </span>
-          <span class="icon-login icon-20 ms-1"></span>
-        </a>
-      </div>
-    </div> -->
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
@@ -71,19 +34,10 @@
           </ng-template>
           <ng-template #content>
             <div class="form-group">
-<<<<<<< HEAD
-              <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc"
-                (valueChange)="valueChange($event)">
+              <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
               </codx-label>
-              <codx-input placeholder="Tên công việc" field="taskName" type="text" [crrValue]="task.taskName">
-=======
-              <label>
-                <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
-                </codx-label>
-              </label>
               <codx-input field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
                 (valueChange)="valueChange($event)">
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
               </codx-input>
               <!-- <input #taskNameInput [class.is-error]="required.taskName" name="taskName" [(ngModel)]="task.taskName"
                 [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
@@ -101,19 +55,10 @@
             </div>
             <div class="form-group row">
               <div class="col-6">
-<<<<<<< HEAD
                 <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
                 </codx-label>
-                <codx-input type="dateTime" class="test-datetime" field="dueDate" [disabled]="readOnly"
+                <codx-input type="dateTime" class="test-datetime" format="f" field="dueDate" [disabled]="readOnly"
                   (valueChange)="changeTime($event)">
-=======
-                <label>
-                  <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
-                  </codx-label>
-                </label>
-                <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
-                  [crrValue]="task.dueDate" [disabled]="readOnly" (valueChange)="changeTime($event)">
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
                 </codx-input>
               </div>
               <div class="col-6">
@@ -124,68 +69,38 @@
                 </codx-input>
               </div>
             </div>
-            <div class="extend-function">
-              <hr />
-              <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
-                <div class="d-flex align-items-center w-auto extend-title">
-                  <span class="text-primary text-hover-primary_darker fw-bold me-1">Kế hoạch</span>
-                  <span *ngIf="showPlan"
-                    class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                  <span *ngIf="!showPlan"
-                    class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-                </div>
+
+            <div class="separator separator-content  border-primary my-10 " (click)="showPlan = !showPlan">
+              <div class="d-flex align-items-center w-auto extend-title text-nowrap cursor-pointer">
+                <span class="text-primary text-hover-primary_darker fw-bolder me-1">Kế hoạch</span>
+                <span *ngIf="showPlan"
+                  class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+                <span *ngIf="!showPlan"
+                  class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
               </div>
             </div>
+
+
             <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
               <div class="form-group row ">
                 <div class="col-4">
-<<<<<<< HEAD
                   <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
                   </codx-label>
                   <codx-input type="dateTime" class="test-datetime" placeholder="datetime" [crrValue]="task.startDate"
-                    dataformat="d" (valueChange)="changeTime($event)">
+                    format="f" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
                   <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
                   </codx-label>
-                  <codx-input name="endDate" type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" dataformat="d" (valueChange)="changeTime($event)">
+                  <codx-input name="endDate" type="dateTime" class="test-datetime" [disabled]="readOnly" field="endDate"
+                    placeholder="datetime" [crrValue]="task.endDate" format="f" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
                   <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks" default="Số giờ thực hiện">
                   </codx-label>
                   <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
-=======
-                  <label>
-                    <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
-                    </codx-label>
-                  </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-                    placeholder="datetime" [crrValue]="task.startDate" format="F" (valueChange)="changeTime($event)">
-                  </codx-input>
-                </div>
-                <div class="col-4">
-                  <label>
-                    <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
-                    </codx-label>
-                  </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" format="F" (valueChange)="changeTime($event)">
-                  </codx-input>
-                </div>
-                <div class="col-4">
-                  <label>
-                    <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks"
-                      default="Số giờ thực hiện">
-                    </codx-label>
-                  </label>
-                  <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
-                    [crrValue]="task.estimated" (valueChange)="valueChange($event)">
-                  </codx-input>
-                  <!-- <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" /> -->
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
                 </div>
               </div>
             </ng-container>

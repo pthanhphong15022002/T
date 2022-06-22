@@ -157,21 +157,7 @@ export class PopupAddComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-<<<<<<< HEAD
-  onOpenTodo() {
-    if (!this.disableAddToDo) {
-      this.onAddToDo();
-    } else {
-      this.disableAddToDo = !this.disableAddToDo;
-      this.changeDetectorRef.detectChanges();
-      //  if (!this.disableAddToDo) $('#txtTodoAdd').focus();
-    }
-  }
-
-  onAddToDo() {
-=======
   onAddToDo(evt: any) {
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
     if (!this.todoAddText) return;
     if (this.listTodo == null) this.listTodo = [];
     var todo = new TaskGoal();
@@ -180,11 +166,7 @@ export class PopupAddComponent implements OnInit {
     this.listTodo.push(Object.assign({}, todo));
     this.todoAddText = '';
     this.changeDetectorRef.detectChanges();
-<<<<<<< HEAD
-    //  $('#txtTodoAdd').focus();
-=======
     evt.focus();
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
   }
 
   onDeleteTodo(index) {
@@ -363,7 +345,6 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-<<<<<<< HEAD
       //    $('#taskNameInput').focus();
     }
     if (
@@ -373,9 +354,6 @@ export class PopupAddComponent implements OnInit {
       this.notiService.notify('Phải nhập danh sách người được phân công !');
       // this.notiService.notifyCode('mã code');
       return;
-=======
-      //$('#taskNameInput').focus();
->>>>>>> 72249e0d62b79f324b4f044ffc1b9e143186047a
     }
     // if (
     //   this.functionID == 'TMT03' &&
@@ -631,7 +609,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -672,7 +650,7 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
