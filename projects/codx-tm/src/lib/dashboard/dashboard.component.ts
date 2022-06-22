@@ -218,13 +218,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           template: this.templateLeft,
         }
       },]
-    this.week = this.selectweekComponent.week;
-    this.fromDate = this.selectweekComponent.fromDate;
-    this.toDate = this.selectweekComponent.toDate;
-    this.daySelected = this.selectweekComponent.daySelected;
-    this.daySelectedFrom = this.selectweekComponent.daySelectedFrom;
-    this.daySelectedTo = this.selectweekComponent.daySelectedTo;
-    this.monthSelected = this.selectweekComponent.month + 1;
+    this.week = this.selectweekComponent?.week;
+    this.fromDate = this.selectweekComponent?.fromDate;
+    this.toDate = this.selectweekComponent?.toDate;
+    this.daySelected = this.selectweekComponent?.daySelected;
+    this.daySelectedFrom = this.selectweekComponent?.daySelectedFrom;
+    this.daySelectedTo = this.selectweekComponent?.daySelectedTo;
+    this.monthSelected = this.selectweekComponent?.month + 1;
+
     this.getInitData();
   }
 

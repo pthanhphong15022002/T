@@ -16,7 +16,9 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogRef,
   NotificationsService,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
 } from 'codx-core';
@@ -53,6 +55,7 @@ export class TypesComponent implements OnInit, AfterViewInit {
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
   devices: any;
+  dialog1: DialogRef;
   columnsGrid;
   defaultRecource: any = {
     resourceName: '',
@@ -63,8 +66,10 @@ export class TypesComponent implements OnInit, AfterViewInit {
     note: '',
     location: '',
   };
+  dataSelected: any;
   dialog: FormGroup;
   isAdd = false;
+  button: ButtonModel;
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -116,7 +121,18 @@ export class TypesComponent implements OnInit, AfterViewInit {
       },
     ];
   }
-
+  moreFuncs = [
+    {
+      id: 'btnEdit',
+      icon: 'icon-list-checkbox',
+      text: 'Chỉnh sửa',
+    },
+    {
+      id: 'btnDelete',
+      icon: 'icon-list-checkbox',
+      text: 'Xóa',
+    },
+  ];
   vllDevices = [];
   lstDevices = [];
   tmplstDevice = [];
@@ -127,18 +143,69 @@ export class TypesComponent implements OnInit, AfterViewInit {
       this.vllDevices = res.datas;
     });
   }
-  addNew(evt: any) {
-    this.isAdd = true;
-    this.editor && this.editor.setdata(evt);
-    //this.viewBase.currentView.openSidebarRight();
-    this.cr.detectChanges();
+  // addNew(evt: any) {
+  //   this.isAdd = true;
+  //   this.editor && this.editor.setdata(evt);
+  //   //this.viewBase.currentView.openSidebarRight();
+  //   this.cr.detectChanges();
+  // }
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
   }
-  edit(evt: any) {
-    this.editor.isAdd = false;
-    this.editor.dialog.patchValue(evt);
-    //this.viewBase.currentView.openSidebarRight();
-    this.cr.detectChanges();
+  addNew(evt?) {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog1 = this.callFunc.openSide(
+        DialogTypeResourceComponent,
+        this.dataSelected,
+        option
+      );
+    });
   }
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog1 = this.callFunc.openSide(
+        DialogTypeResourceComponent,
+        this.viewBase.dataService.dataSelected,
+        option
+      );
+    });
+  }
+  delete(evt?) {
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
+  }
+  // edit(evt: any) {
+  //   this.editor.isAdd = false;
+  //   this.editor.dialog.patchValue(evt);
+  //   //this.viewBase.currentView.openSidebarRight();
+  //   this.cr.detectChanges();
+  // }
   closeEditForm(event) {
     if (event?.dataItem) {
       this.gridView.addHandler(event.dataItem, event.isAdd, event.key);
@@ -175,21 +242,21 @@ export class TypesComponent implements OnInit, AfterViewInit {
     this.callFunc.openForm(this.popupTemp, 'Xóa', 450, 250);
     this.cr.detectChanges();
   }
-  delete(item) {
-    debugger;
-    console.log(item);
-    this.api
-      .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-        item.recID,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.notificationsService.notify('Xóa thành công!');
-          this.currentDelete = null;
-          this.gridView.removeHandler(item, 'recID');
-        }
+  // delete(item) {
+  //   debugger;
+  //   console.log(item);
+  //   this.api
+  //     .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
+  //       item.recID,
+  //     ])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.notificationsService.notify('Xóa thành công!');
+  //         this.currentDelete = null;
+  //         this.gridView.removeHandler(item, 'recID');
+  //       }
 
-        this.cr.detectChanges();
-      });
-  }
+  //       this.cr.detectChanges();
+  //     });
+  // }
 }
