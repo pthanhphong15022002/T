@@ -25,9 +25,9 @@ export class TaskGroupComponent implements OnInit {
 
   @ViewChild('view') view!: ViewsComponent;
 
-  constructor(private cache: CacheService, private auth: AuthStore, 
-    private dt: ChangeDetectorRef,     private callfunc: CallFuncService,
-    ) { }
+  constructor(private cache: CacheService, private auth: AuthStore,
+    private dt: ChangeDetectorRef, private callfunc: CallFuncService,
+  ) { }
 
   views: Array<ViewModel> = [];
   formName = "";
@@ -54,10 +54,11 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
+      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
-      { field: 'note', headerText: 'Ghi chú', width: 180 , template: this.itemNote},
+      { field: 'note', headerText: 'Ghi chú', width: 180, template: this.itemNote },
       { field: 'approvalControl', headerText: 'Xét duyệt?', template: this.itemApprovalControlVll, width: 140 },
       { field: 'projectControl', headerText: 'Chọn dự án', template: this.itemProjectControlVll, width: 140 },
       { field: 'attachmentControl', headerText: 'Đính kèm file', template: this.itemAttachmentControl, width: 140 },
@@ -115,7 +116,7 @@ export class TaskGroupComponent implements OnInit {
     }];
   }
 
-  
+
 
   getCheckList(checkList) {
     if (checkList != null) {
@@ -185,6 +186,6 @@ export class TaskGroupComponent implements OnInit {
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
-    this.dt.detectChanges() ;
+    this.dt.detectChanges();
   }
 }

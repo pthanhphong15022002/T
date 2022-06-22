@@ -199,14 +199,10 @@ export class PopAddTaskgroupComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.notiService.notify(res[0].message);
-       //   this.notiService.notify('Phải thêm người được giao việc !');
-
           t.data = res[1];
-          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
         }
-       
       })
-      this.closePanel();
+    this.closePanel();
   }
 
   updateRow() {
@@ -216,10 +212,9 @@ export class PopAddTaskgroupComponent implements OnInit {
         if (res) {
           this.notiService.notify(res[0].message);
           t.data = res[1];
-          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
         }
       })
-      this.closePanel(); 
+    this.closePanel();
   }
 
   lstSavecheckList: any = [];
