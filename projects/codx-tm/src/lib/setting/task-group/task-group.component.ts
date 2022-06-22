@@ -34,6 +34,7 @@ export class TaskGroupComponent implements OnInit {
   gridViewName = "";
   columnsGrid = [];
   dialog!: DialogRef;
+  itemSelected: any;
 
   isAfterRender = false;
   button?: ButtonModel;
@@ -53,6 +54,7 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
+      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
@@ -109,7 +111,7 @@ export class TaskGroupComponent implements OnInit {
       sameData: true,
       active: true,
       model: {
-        resources: this.columnsGrid,
+        // resources: this.columnsGrid,
       }
     }];
   }
@@ -167,5 +169,23 @@ export class TaskGroupComponent implements OnInit {
     opt.className = 'TaskBusiness';
     opt.methodName = 'TestApi';
     return true;
+  }
+
+  changeView(evt: any) {
+    console.log('evt: ', evt);
+    var t = this;
+  }
+  requestEnded(evt: any) {
+    // if (evt) {
+    //   this.dialog.close();
+    // }
+  }
+  aaa(val: any) {
+    console.log(val);
+  }
+  selectedChange(val: any) {
+    console.log(val);
+    this.itemSelected = val.data;
+    this.dt.detectChanges();
   }
 }

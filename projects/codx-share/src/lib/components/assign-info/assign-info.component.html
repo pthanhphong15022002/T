@@ -19,7 +19,9 @@
             <div> 
                 <div class="d-flex justify-content-between mb-2 p-2">
                     <div class="d-flex align-items-center flex-grow-1">
-                        <div class="w-100px">Người giao việc:</div>
+                        <div class="w-100px">
+                            <codx-label fiedName="CreatedBy" formName="Tasks" gridViewName="grvTasks" default="Người giao việc"></codx-label>     
+                        </div>
                         <div class="d-flex align-items-center me-2 mail-user">
                             <div class="symbol symbol-20px symbol-circle me-2">
                                 <codx-img #image [objectId]="'ADMIN'"></codx-img>
@@ -30,7 +32,7 @@
                 </div>
                 <div class="d-flex justify-content-between p-2">
                     <div class="d-flex align-items-center justify-content-start flex-grow-1">
-                        <div class="w-100px fw-bold">Giao cho:</div>                        
+                        <div class="w-100px fw-bold"> <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Giao cho"></codx-label></div>                        
                         <div class="d-flex align-items-center w-100" >
                             <codx-input
                                 [refValue]="'Users'"

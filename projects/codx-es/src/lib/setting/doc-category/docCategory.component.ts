@@ -14,17 +14,22 @@ import {
 } from '@angular/forms';
 import {
   ApiHttpService,
+  ButtonModel,
   CacheService,
+  CallFuncService,
   CodxGridviewComponent,
+  DialogRef,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { ButtonModel } from '@syncfusion/ej2-angular-buttons/public_api';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
+import { ActivatedRoute } from '@angular/router';
 
 export class defaultRecource {}
 @Component({
@@ -33,7 +38,7 @@ export class defaultRecource {}
   styleUrls: ['./docCategory.component.scss'],
 })
 export class DocCategoryComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -49,20 +54,41 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   isAdd = true;
   columnsGrid;
 
+  views: Array<ViewModel> = [];
+  moreFunc: Array<ButtonModel> = [];
+
+  button: ButtonModel;
+  funcID: string;
+  service = 'ES';
+  assemblyName = 'ES';
+  entityName = 'ES_Categories';
+  predicate = '';
+  dataValue = '';
+  idField = 'RecID';
+  className = 'CategoriesBusiness';
+  method = 'GetListAsync';
+
+  dataSelected: any;
+  dialog!: DialogRef;
+
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
-    public atSV: AttachmentService
-  ) {}
-
-  views: Array<ViewModel> = [];
-  buttons: Array<ButtonModel> = [];
-  moreFunc: Array<ButtonModel> = [];
+    private callfunc: CallFuncService,
+    public atSV: AttachmentService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   ngOnInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+
     this.columnsGrid = [
       {
         field: 'categoryID',
@@ -113,22 +139,72 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        sameData: false,
+        sameData: true,
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
-        model: {
-          panelLeftRef: this.grid,
-        },
+        model: {},
       },
     ];
     this.cr.detectChanges();
   }
 
-  addNew(evt: any) {
-
-    this.cr.detectChanges();
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
   }
+
+  addNew(evt?: any) {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callfunc.openSide(
+        EditCategoryComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        EditCategoryComponent,
+        this.viewBase.dataService.dataSelected,
+        option
+      );
+    });
+  }
+  delete(evt?) {
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  closeEditForm(event) {}
 
   closeSidebar(data) {
     if (data) {
@@ -141,21 +217,21 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.atSV.openForm.next(true);
   }
 
-  edit(data) {
-    this.editCategory.dialogCategory.patchValue(data);
-    this.editCategory.dialogCategory.patchValue({ transID: data.categoryID });
+  // edit(data) {
+  //   this.editCategory.dialogCategory.patchValue(data);
+  //   this.editCategory.dialogCategory.patchValue({ transID: data.categoryID });
 
-    this.editCategory.dialogCategory.addControl(
-      'recID',
-      new FormControl(data.id)
-    );
-    this.editCategory.dialogCategory.addControl(
-      'countStep',
-      new FormControl(data.countStep)
-    );
+  //   this.editCategory.dialogCategory.addControl(
+  //     'recID',
+  //     new FormControl(data.id)
+  //   );
+  //   this.editCategory.dialogCategory.addControl(
+  //     'countStep',
+  //     new FormControl(data.countStep)
+  //   );
 
-    this.editCategory.isAdd = false;
-  }
+  //   this.editCategory.isAdd = false;
+  // }
 
   deleteCategory(data) {}
 

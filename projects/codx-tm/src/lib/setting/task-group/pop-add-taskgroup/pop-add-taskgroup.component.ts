@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, CodxGridviewComponent, DialogData, DialogRef, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CodxGridviewComponent, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { CodxTMService } from '../../../codx-tm.service';
 import { ToDo } from '../../../models/task.model';
@@ -38,6 +38,8 @@ export class PopAddTaskgroupComponent implements OnInit {
     private fb: FormBuilder,
     private tmSv: CodxTMService,
     private api: ApiHttpService,
+    private notiService: NotificationsService,
+
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
     this.taskGroups = {
@@ -186,10 +188,9 @@ export class PopAddTaskgroupComponent implements OnInit {
   valueCheck(data) {
     this.taskGroups.checkListControl = data.data
   }
-  Close() {
-    this.listTodo = [];
-    // this.renderer.removeClass(popup, 'drawer-on');
-
+  closePanel() {
+    this.dialog.close()
+    //this.viewBase.currentView.closeSidebarRight();
   }
   //save
   addRow() {
@@ -197,21 +198,11 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.tmSv.addTaskGroup(this.taskGroups)
       .subscribe((res) => {
         if (res) {
-          //  this.notiService.notify(res[0].message);
+          this.notiService.notify(res[0].message);
           t.data = res[1];
-          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
-
-          // if (t.data) {
-          //   let item = t.data;
-          //   this.api.callSv('TM','ERM.Business.TM','TaskGroupBusiness','GetListTaskGroupsDetailAsync').subscribe((res)=>{
-          //     this.gridView.data = res;
-          //   })
-          // }
         }
-        this.dialog.closed.subscribe(e => {
-          console.log(e);
-        })
       })
+    this.closePanel();
   }
 
   updateRow() {
@@ -219,14 +210,11 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.tmSv.updateTaskGroup(this.taskGroups)
       .subscribe((res) => {
         if (res) {
-          //       this.notiService.notify(res[0].message);
+          this.notiService.notify(res[0].message);
           t.data = res[1];
-          this.gridView.addHandler(t.data, this.isAddMode, "taskGroupID");
         }
       })
-    this.dialog.closed.subscribe(e => {
-      console.log(e);
-    })
+    this.closePanel();
   }
 
   lstSavecheckList: any = [];

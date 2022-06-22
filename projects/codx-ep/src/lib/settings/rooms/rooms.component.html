@@ -4,18 +4,48 @@
   [showToolBar]="true"
   service="EP"
   assemblyName="EP"
-  entityName="EP_Bookings"
+  entityName="EP_Resources"
   predicate="ResourceType=@0"
   dataValue="1"
   [views]="views"
   [button]="buttons"
   [moreFuncs]="moreFuncs"
-  idField="RecID"
+  idField="recID"
   className="ResourcesBusiness"
   method="GetListAsync"
 >
 </codx-views>
 
+<ng-template #itemTemplate let-data>
+  <div class="task-row py-3 px-6">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-25">
+          {{data.resourceID}}
+        </td>
+        <td class="w-25">
+          {{data.resourceName}}
+        </td>
+        <td class="w-25">
+          <div class="d-flex justify-content-center">
+            <span
+              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.status|vll:'EP002':'text'|async}}</span>
+          </div>
+        </td>
+        <td class="w-150px">
+          {{ data.ranking|vll:'EP005':'text'|async }}
+        </td>
+        <!-- <td class="w-150px">1 Chai / Người / Lần</td> -->
+      </tbody>
+    </table>
+  </div>
+  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
+    iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.owner" imageObjType="AD_Users" [title]="data.resourceName"
+    icoSubTitleCss="icon-assignment" [subTitle]="data.resourceID" [content]="data.memo" [status]="data.status"
+    statusVll="EP005" [date]="data.createdOn" [resources]="data.owner" resourceObjType="AD_Users"
+    [formModel]="view.formModel">
+  </codx-temp-full> -->
+</ng-template>
 <ng-template #panelLeftRef> </ng-template>
 
 <ng-template #gridTemplate>

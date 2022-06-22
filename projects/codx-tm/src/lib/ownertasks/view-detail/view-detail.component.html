@@ -33,13 +33,13 @@
               </div>
               <div class="d-status">
                 <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                (itemSelected?.status | vll: 'L0614':'color' | async) +
+                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
                 '30'
               " [style.background-color]="
-                (itemSelected?.status | vll: 'L0614':'color' | async) +
+                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
                 '30'
               " [style.color]="
-                itemSelected?.status | vll: 'L0614':'color' | async
+                itemSelected?.status | vll: 'L0614':'textColor' | async
               " style="border: none">
                   {{ itemSelected?.status | vll: "L0614":"text" | async }}
                 </div>
@@ -61,8 +61,8 @@
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">Ưu tiên:</span>
               <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
-                [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async">
-                <span class="icon-18 icon-outlined_flag"></span>
+                [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async">
+                <span class="icon-18 icon-outlined_flag"></span> 
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
             </div>

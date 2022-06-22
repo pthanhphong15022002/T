@@ -28,6 +28,7 @@ import {
 import { EditSignatureComponent } from './dialog/editor.component';
 import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 export class defaultRecource {}
 @Component({
@@ -37,6 +38,7 @@ export class defaultRecource {}
 })
 export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -67,12 +69,13 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
-    private readonly auth: AuthService
-  ) {}
+    private readonly auth: AuthService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   views: Array<ViewModel> = [];
-  buttons: Array<ButtonModel> = [];
-
   moreFunc: Array<ButtonModel> = [];
   ngOnInit(): void {
     this.button = {
@@ -81,7 +84,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   button: ButtonModel;
-  funcID = 'ESS21';
+  funcID: string;
   service = 'ES';
   assemblyName = 'ES';
   entityName = 'ES_Signatures';
@@ -98,7 +101,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         id: '1',
         type: ViewType.list,
         active: true,
-        model: {},
+        model: {
+          template: this.listItem,
+        },
       },
     ];
 
@@ -178,6 +183,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         EditSignatureComponent,
         this.dataSelected,
@@ -211,6 +217,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       console.log(res);
     });
   }
+
+  clickMF(event: any, data) {}
 
   edit1(dataItem) {
     this.editSignature.isAdd = false;
