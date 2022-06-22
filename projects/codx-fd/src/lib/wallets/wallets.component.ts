@@ -1,6 +1,8 @@
+import { Valuelist } from './../models/model';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent } from 'codx-core';
+import { LayoutModel } from '@shared/models/layout.model';
 import { AccumulationChart, AccumulationChartComponent, MarkerSettingsModel } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
 declare var _;
@@ -18,6 +20,9 @@ export class Data_Line {
 
 
 export class WalletsComponent implements OnInit {
+
+  count1 = 0;
+
   public chartArea: Object = {
     border: {
       width: 0
@@ -48,7 +53,7 @@ export class WalletsComponent implements OnInit {
   dataListView: any = [];
   checkdataListView = false;
 
-  funcID = 'FED201';
+  funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;
@@ -148,7 +153,7 @@ export class WalletsComponent implements OnInit {
   emloyeeID = "";
   predicate = "";
   dataValue = "";
-  comboboxName = 'HRDepartments';
+  comboboxName = '';
   lstDataChart = [];
   ishide = true;
   loadList = false;
@@ -161,6 +166,8 @@ export class WalletsComponent implements OnInit {
     label: 'empty',
     data: [],
   }];
+  L1483 = [];
+  vllOrganize_value: any;
   predicateCombobox: any;
   dataValueCombobox: any;
 
@@ -174,26 +181,27 @@ export class WalletsComponent implements OnInit {
 
   @ViewChild("listview") listview;
   @ViewChild("subheader") subheader;
-  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
+  @ViewChild('view') view!: ViewsComponent;
 
 
   constructor(
-    injector: Injector,
     private dt: ChangeDetectorRef,
     private api: ApiHttpService,
+    private router: Router,
     private route: ActivatedRoute,
     private tenantStore: TenantStore,
     private changedr: ChangeDetectorRef,
     private cache: CacheService,
-    private router: Router,
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
 
-    this.route.params.subscribe(param => {
-      this.funcID = param["funcID"]
-    });
+    this.cache.valueList('L1483').subscribe((res) => {
+      if (res) {
+        this.L1483 = res.datas;
+      }
+    })
   }
 
   button: Array<ButtonModel> = [{
@@ -207,12 +215,19 @@ export class WalletsComponent implements OnInit {
 
   ngOnInit(): void {
     this.options.pageLoading = false;
-    this.options.entityName = "FED_KudosTrans";
-    this.options.entityPermission = "FED_KudosTrans";
+    this.options.entityName = "FD_KudosTrans";
+    this.options.entityPermission = "FD_KudosTrans";
     this.options.gridViewName = "grvKudosTrans";
     this.options.formName = "KudosTrans";
     this.options.funcID = this.funcID;
     this.options.dataObj = "Coins";
+
+    this.route.params.subscribe(param => {
+      this.funcID = param["funcID"]
+      this.changedr.detectChanges();
+    });
+
+    this.setPredicate();
   }
 
   ngAfterViewInit() {
@@ -222,14 +237,17 @@ export class WalletsComponent implements OnInit {
         active: false,
         sameData: true,
         model: {
-          template: this.panelLeftRef,
+          template: this.iTemplateLeft,
         }
       },]
+    console.log("check view", this.view)
+    this.userPermission = this.viewbase.userPermission;
+    this.changedr.detectChanges();
   }
 
   LoadData() {
     this.api
-      .execSv<any>("FED", "FED", "KudosTransBusiness", "LoadDataWalletAsync", [
+      .execSv<any>("FD", "FD", "KudosTransBusiness", "LoadDataWalletAsync", [
         this.options
       ])
       .subscribe((res) => {
@@ -315,13 +333,13 @@ export class WalletsComponent implements OnInit {
 
   valueChange(e, f) {
     if (f == 'Organize') {
-      this.orgUnit = e[0];
+      this.orgUnit = e?.data[0];
     } else if (f == 'Employee') {
-      this.emloyeeID = e[0];
+      this.emloyeeID = e?.data[0];
     }
     switch (e.field) {
       case "toDate":
-        if(e.data?.toDate != undefined) {
+        if (e.data?.toDate != undefined) {
           var value = new Date(e.data);
           this.toDate = value;
           this.options.predicate += " && TransDate <= @1";
@@ -329,7 +347,7 @@ export class WalletsComponent implements OnInit {
         }
         break;
       case "firstDay":
-        if(e.data?.fromDate != undefined) {
+        if (e.data?.fromDate != undefined) {
           var value = new Date(e.data);
           value.setDate(value.getDate());
           this.firstDay = value;
@@ -338,23 +356,41 @@ export class WalletsComponent implements OnInit {
       case "vllOrganize":
         // this.dataValueCombobox = e.data;
         // this.predicateCombobox = "Key=@0";
-        // this.comboboxName = 'HRCompany';
+        this.vllOrganize_value = e.data;
+        this.getComboboxName();
         break;
       case "Organize":
-        this.orgUnit = e[0];
+        this.orgUnit = e?.data[0];
         break;
       case "Employee":
-        this.emloyeeID = e[0];
+        this.emloyeeID = e?.data[0];
         break;
       default:
         break;
     }
     if (e.field != "vllOrganize" || f != "vllOrganize") {
-      this.setPredicate();
+      if (f == 'Employee' || f == 'Organize') {
+        if (e?.data.length != 0) {
+          this.setPredicate();
+        }
+      } else if (f == 'toDate' || f == 'firstDay') {
+        if (e?.data?.fromDate != undefined || e?.data?.fromDate != undefined) {
+          this.setPredicate();
+        }
+      }
     }
   }
 
+  getComboboxName() {
+    this.comboboxName = '';
+    var a = this.L1483.find(x => x.value == this.vllOrganize_value);
+    this.comboboxName = a.text;
+    this.changedr.detectChanges();
+  }
+
   setPredicate() {
+    this.count1++;
+    console.log("check count", this.count1)
     this.options.predicate = "(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3)";
     this.options.dataValue = "1;2;4;5";
     var predicate = "",
@@ -412,11 +448,9 @@ export class WalletsComponent implements OnInit {
       },
     };
     if (type == 1) {
-      // this.doughnutChartPlugins[0] = css;
       this.dt.detectChanges();
       return;
     }
-    // this.doughnutChartPlugins_SEND[0] = css;
     this.dt.detectChanges();
   }
 
@@ -462,7 +496,6 @@ export class WalletsComponent implements OnInit {
     let i = 1;
     var total = 0;
     this.data_Send.forEach((e) => {
-      // this.chartDatas_Send.push(e);
       this.chartLabels_Send.push(this.getLabelName(e.key));
       this.colors_Send[0].backgroundColor.push("#" + this.L1422[i].color);
       total += e.value;
