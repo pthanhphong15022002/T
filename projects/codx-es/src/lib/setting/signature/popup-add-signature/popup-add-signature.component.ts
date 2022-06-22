@@ -33,11 +33,11 @@ import {
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
 @Component({
-  selector: 'app-edit-signature',
-  templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss'],
+  selector: 'popup-add-signature',
+  templateUrl: './popup-add-signature.component.html',
+  styleUrls: ['./popup-add-signature.component.scss'],
 })
-export class EditSignatureComponent implements OnInit {
+export class PopupAddSignatureComponent implements OnInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
   // @ViewChild('attachment', { static: false }) attachment: AttachmentComponent;
@@ -102,32 +102,6 @@ export class EditSignatureComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.esService.getModelPage('ESS21').then((res) => {
-    //   if (res) {
-    //     this.modelPage = res;
-
-    //     this.esService
-    //       .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-    //       .then((res) => {
-    //         console.log(res);
-
-    //         this.cbxName = res;
-    //       });
-
-    //     this.codxService
-    //       .getAutoNumber(
-    //         this.modelPage.functionID,
-    //         this.modelPage.entity,
-    //         'CategoryID'
-    //       )
-    //       .subscribe((dt: any) => {
-    //         this.objectIDFile = dt;
-    //       });
-
-    //     this.initForm();
-    //   }
-    // });
-
     this.esService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {

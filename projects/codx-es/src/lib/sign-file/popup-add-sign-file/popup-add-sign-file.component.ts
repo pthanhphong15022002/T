@@ -9,18 +9,18 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService, ModelPage } from '../../codx-es.service';
-import { ApprovalStepsComponent } from '../../setting/approval-steps/approval-steps.component';
+import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
 
 @Component({
-  selector: 'app-edit-sign-file',
-  templateUrl: './edit-sign-file.component.html',
-  styleUrls: ['./edit-sign-file.component.scss'],
+  selector: 'popup-add-sign-file',
+  templateUrl: './popup-add-sign-file.component.html',
+  styleUrls: ['./popup-add-sign-file.component.scss'],
 })
-export class EditSignFileComponent implements OnInit {
+export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('content') content;
-  @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepsComponent;
+  @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
   currentTab = 0;
   modelPage: ModelPage;

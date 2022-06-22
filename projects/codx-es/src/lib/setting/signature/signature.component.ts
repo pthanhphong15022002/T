@@ -25,10 +25,10 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { EditSignatureComponent } from './dialog/editor.component';
 import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
 
 export class defaultRecource {}
 @Component({
@@ -50,7 +50,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('oTPControl', { static: true }) oTPControl;
   @ViewChild('noName', { static: true }) noName;
   @ViewChild('createdBy', { static: true }) createdBy;
-  @ViewChild('editSignature') editSignature: EditSignatureComponent;
+  @ViewChild('editSignature') editSignature: PopupAddSignatureComponent;
   @ViewChild('imageStamp', { static: true }) imageStamp;
   @ViewChild('imageSignature1', { static: true }) imageSignature1;
   @ViewChild('imageSignature2', { static: true }) imageSignature2;
@@ -185,7 +185,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
-        EditSignatureComponent,
+        PopupAddSignatureComponent,
         this.dataSelected,
         option
       );
@@ -202,7 +202,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        EditSignatureComponent,
+        PopupAddSignatureComponent,
         this.viewBase.dataService.dataSelected,
         option
       );

@@ -5,26 +5,28 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
   CacheService,
   CallFuncService,
-  NotificationsFCMService,
+  DialogData,
+  DialogRef,
   NotificationsService,
 } from 'codx-core';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
 
 @Component({
-  selector: 'car-booking-editor',
-  templateUrl: 'editor.component.html',
-  styleUrls: ['editor.component.scss'],
+  selector: 'popup-add-booking-car',
+  templateUrl: 'popup-add-booking-car.component.html',
+  styleUrls: ['popup-add-booking-car.component.scss'],
 })
-export class DialogCarBookingComponent implements OnInit, AfterViewInit {
+export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data = {};
@@ -45,6 +47,8 @@ export class DialogCarBookingComponent implements OnInit, AfterViewInit {
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
 
+  dialog: any;
+  isSaveSuccess = false;
   constructor(
     private api: ApiHttpService,
     private modalService: NgbModal,
@@ -52,10 +56,22 @@ export class DialogCarBookingComponent implements OnInit, AfterViewInit {
     private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
     private bookingService: CodxEpService,
-    private notification: NotificationsService,
-    private cfService: CallFuncService
-  ) {}
-  ngAfterViewInit(): void {}
+    private cfService: CallFuncService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+  }
+  ngAfterViewInit(): void {
+    if(this.dialog){
+      if(!this.isSaveSuccess){
+        this.dialog.closed.subscribe((res: any) => {
+          this.dialog.dataService.saveFailed.next(null);
+        })
+      }
+     }
+  }
 
   ngOnInit(): void {
     this.bookingService.getModelPage('EPT2').then((res) => {
@@ -70,6 +86,7 @@ export class DialogCarBookingComponent implements OnInit, AfterViewInit {
         .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
         .then((res) => {
           this.CbxName = res;
+          console.log('Cbx', this.CbxName)
         });
     });
   }
@@ -148,7 +165,6 @@ export class DialogCarBookingComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    console.log('valueChnage', event);
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogCarBooking.patchValue({
@@ -173,7 +189,6 @@ export class DialogCarBookingComponent implements OnInit, AfterViewInit {
       .result.then(
         (result) => {},
         (reason) => {
-          console.log('reason');
         }
       );
   }

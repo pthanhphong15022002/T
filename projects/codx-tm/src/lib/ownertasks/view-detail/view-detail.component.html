@@ -1,6 +1,7 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer" (clickMF)="clickMF($event,itemSelected)">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
+    (clickMF)="clickMF($event,itemSelected)">
     <ng-template #header>
       <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
@@ -112,7 +113,9 @@
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="codx_title_sub_primary mt-6 mb-3">Người thực hiện</div>
+      <div class="codx_title_sub_primary mt-6 mb-3">
+        <codx-label fiedName="lblAsignTo" default="Người thực hiện" formName="TM_Tasks"></codx-label>
+      </div>
       <div class="symbol-group">
         <div *ngIf="itemSelected.category == '3'" class="symbol symbol-30px symbol-circle me-3">
           <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">

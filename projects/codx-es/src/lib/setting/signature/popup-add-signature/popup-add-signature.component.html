@@ -120,8 +120,9 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
-      <button class="btn btn-light-primary">Sửa</button>
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
+      </button>
     </div>
   </ng-template>
 </codx-form>

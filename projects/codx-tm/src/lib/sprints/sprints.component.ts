@@ -14,7 +14,7 @@ export class SprintsComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeft?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('tmpRight') sidebarRight?: TemplateRef<any>;
-  @ViewChild('listCardSprints') listCardSprints: TemplateRef<any> | null
+  @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -23,25 +23,25 @@ export class SprintsComponent implements OnInit {
   dataValue = 'ADMIN';
   resourceKanban?: ResourceModel;
   dialog!: DialogRef;
-  itemSelected : any ;
-  user : any 
-  funcID : string
+  itemSelected: any;
+  user: any
+  funcID: string
   moreFunc
   constructor(
     private inject: Injector,
-    private tmSv : CodxTMService,
-    private dt: ChangeDetectorRef,
+    private tmSv: CodxTMService,
+    private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private authStore: AuthStore,
-    private activedRouter : ActivatedRoute
-  ) { 
+    private activedRouter: ActivatedRoute
+  ) {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
   ngOnInit(): void {
-   
+
   }
 
   clickMF(e: any, data: any) {
@@ -71,9 +71,6 @@ export class SprintsComponent implements OnInit {
     }
   }
 
-  
-
-  
 
   ngAfterViewInit(): void {
     this.views = [{
@@ -82,12 +79,10 @@ export class SprintsComponent implements OnInit {
       sameData: true,
       active: true,
       model: {
-        template: this.listCardSprints,
-        //sideBarRightRef: this.sidebarRight,
-        // widthAsideRight: '600px'
+        panelLeftRef: this.listCardSprints,
       }
     }];
-
+    this.changeDetectorRef.detectChanges();
   }
 
 
@@ -137,8 +132,7 @@ export class SprintsComponent implements OnInit {
     console.log(val);
   }
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
-    this.dt.detectChanges() ;
+    this.changeDetectorRef.detectChanges();
   }
 }
