@@ -370,6 +370,11 @@ export class OwnerTasksComponent implements OnInit {
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
+      this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data).subscribe(res => {
+        if (res) {
+          this.view.dataService.update(e.data);
+        }
+      });
     }
   }
   selectedChange(val: any) {
