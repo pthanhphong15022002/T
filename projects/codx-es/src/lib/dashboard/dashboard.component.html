@@ -4,10 +4,7 @@
       <div class="row child-row">
         <div class="e-panel-container">
           <div class="d-flex">
-            <div
-              *ngFor="let doc of docsApproveStatus"
-              class="info-rectangle d-flex justify-content-between flex-column"
-            >
+            <div *ngFor="let doc of docsApproveStatus" class="card-body">
               <h5 [style.color]="'white'">
                 {{ doc.vll | vll: "ES003":"text" | async }}
               </h5>
@@ -30,9 +27,9 @@
               <e-accumulation-series-collection>
                 <e-accumulation-series
                   name="documents"
-                  [dataSource]="data"
-                  xName="x"
-                  yName="y"
+                  [dataSource]="categoriesDocs"
+                  xName="categoryName"
+                  yName="quantity"
                   [startAngle]="0"
                   [endAngle]="360"
                   innerRadius="80%"
@@ -103,26 +100,25 @@
     </div>
   </div>
   <div class="row bar-chart">
-    <!-- <ejs-chart
+    <ejs-chart
       id="chart-container"
       [primaryXAxis]="primaryXAxis"
-      [dataSource]="chartData"
-      [height]="'100%'"
+      [dataSource]="docsByDays"
     >
       <e-series-collection>
         <e-series
           type="Column"
-          xName="month"
-          yName="sales"
-          name="Sales"
+          xName="day"
+          yName="docs"
+          name="Docs"
         ></e-series>
-        <e-series
+        <!-- <e-series
           type="Column"
           xName="month"
           yName="sales1"
           name="Sales"
-        ></e-series>
+        ></e-series> -->
       </e-series-collection>
-    </ejs-chart> -->
+    </ejs-chart>
   </div>
 </div>

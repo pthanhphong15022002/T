@@ -48,12 +48,9 @@ const routes: Routes = [
       },
       {
         path: 'home/:funcID',
-        component: SignFileComponent,
-      },
-      {
-        path: 'dashboard',
         component: DashboardComponent,
       },
+      
       {
         path: 'mark',
         component: MarkSignatureComponent,

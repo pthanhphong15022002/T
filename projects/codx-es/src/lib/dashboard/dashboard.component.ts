@@ -1,5 +1,7 @@
+import { I } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DashboardLayoutComponent } from '@syncfusion/ej2-angular-layouts';
+import { getDateCount, getDaysCount } from '@syncfusion/ej2-angular-schedule';
 import { ApiHttpService, CallFuncService } from 'codx-core';
 import { CodxEsService } from '../codx-es.service';
 
@@ -20,14 +22,27 @@ export class DashboardComponent implements OnInit {
   
   public cellSpacing: number[] = [10, 10];
   docsApproveStatus;
-  
+  categoriesDocs
+  docsByDays
+
   ngOnInit(): void {
-    this.esService.getSignFilesGroupByApproveStatus().subscribe((res) => {
+    this.esService.getTotalGByApproveStatus().subscribe((res) => {
       this.docsApproveStatus = res;
       this.df.detectChanges()
     });
+
+    this.esService.getTotalGByCategory().subscribe((res) => {
+      this.categoriesDocs = res;
+      this.df.detectChanges()
+    });
+
+    this.esService.getDocsGByDays().subscribe((res) => {
+      this.docsByDays = res;
+      this.df.detectChanges()
+    });
+
   }
-  
+
   public data: Object[] = [
     { x: 'ESP', y: 21, text: '21%' },
     { x: 'HCS', y: 8, text: '8%' },
@@ -70,15 +85,6 @@ export class DashboardComponent implements OnInit {
     { x: 'Tea', y: 189, text: 'Thiland' },
   ];
 
-  chartData = [
-    { month: 'Jan', sales: 35, sales1: 28 },
-    { month: 'Feb', sales: 28, sales1: 35 },
-    { month: 'Mar', sales: 34, sales1: 32 },
-    { month: 'Apr', sales: 32, sales1: 34 },
-    { month: 'May', sales: 40, sales1: 32 },
-    { month: 'Jun', sales: 32, sales1: 40 },
-  ];
-  
   primaryXAxis = {
     min: 1,
     max: 30,

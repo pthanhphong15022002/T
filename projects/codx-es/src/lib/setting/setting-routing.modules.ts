@@ -11,6 +11,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MarkSignatureComponent } from '../sign-file/mark-signature/mark-signature.component';
 import { PopupAddSignFileComponent } from '../sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { SignFileComponent } from '../sign-file/sign-file.component';
@@ -38,6 +39,7 @@ const routes: Routes = [
         path: 'doc-category',
         component: DocCategoryComponent,
       },
+
       {
         path: '',
         redirectTo: 'signature',
