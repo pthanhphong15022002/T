@@ -1,0 +1,125 @@
+<codx-views #view funcID="WPT05" service="HR" entityName="HR_Employees" [views]="views" [buttons]="buttons"
+  idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness" method="GetModelFormEmployAsync"
+  [showToolBar]="true" [predicate]="predicate" [dataValue]="dataValue" (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)" [selectedFirst]="true">
+</codx-views>
+
+<ng-template #itemTemplate let-data>
+  <table >
+    <tbody>
+      <tr>
+        <td >
+          <div class="d-flex align-items-center">
+            <codx-img class="symbol symbol-30 symbol-circle mr-3" [width]="40" [objectId]="data.employeeID"
+              objectType="HR_Employees">
+            </codx-img>
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="d-flex align-items-center">
+                <div class="text-dark font-weight-bold mr-2">{{data.employeeName}}</div>
+              </div>
+              <div>
+                <div class="text-dark-50 font-size-sm mt-1" *ngIf="data.positionName">
+                  {{data.positionName}}</div>
+                <div class="text-muted font-size-sm mt-1" *ngIf="!data.positionName">
+                  <codx-label formName="Employees" name="" default="Bộ phận">
+                  </codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+
+        <td >
+          <div class="d-flex flex-column employee-info">
+            <div class="d-flex align-items-center1">
+              <span class="text-dark-75" *ngIf="data.birthday">{{data.birthday | date: "dd/MM/yyyy" }}</span>
+              <span class="text-muted" *ngIf="!data.birthday">{{data.birthday| date: "dd/MM/yyyy" }}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center employee-add">
+            <span class="icon-phone_android icon-16 mr-2"></span>
+            <div class="text-dark-75" *ngIf="data.phone != '---'">{{data.phone}}
+            </div>
+            <div class="text-muted" *ngIf="data.phone =='---'">
+              <codx-label name="phone" formName="Employees" default="Số điện thoại">
+              </codx-label>
+            </div>
+          </div>
+        </td>
+        <td >
+          <div class="d-flex align-items-top employee-email">
+            <span class="icon-email icon-16 mr-2"></span>
+            <div class="text-dark-75" *ngIf="data.email != '---'">
+              <div class="email">
+                {{data.email}}
+                <span class="tooltiptext">{{data.email}}</span>
+              </div>
+            </div>
+            <div class="text-muted" *ngIf="data.email == '---'">
+              <codx-label name="email" formName="Employees" default="Email">
+              </codx-label>
+            </div>
+          </div>
+        </td>
+        <td >
+          <div class="d-flex align-items-center">
+            <div class="text-dark-75" *ngIf="data.joinedOn">{{data.joinedOn| date: "dd/MM/yyyy" }}
+            </div>
+            <div class="text-muted" *ngIf="!data.joinedOn">{{data.joinedOn| date: "dd/MM/yyyy" }}
+            </div>
+          </div>
+        </td>
+        <td >
+          <div class="d-flex">
+            <span class="label label-xxs label-pill label-inline label-success"
+              [style.background]="data.statusColor">{{data.statusName}}
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
+
+<!-- <ng-template #cardTemp let-data>
+  <div class="user-card employee-item">
+      <div class="d-flex flex-column flex-center mt-3">
+          <codx-img class="symbol symbol-60 symbol-circle" [width]="40" [objectId]="data.employeeID"
+              objectType="HR_Employees">
+          </codx-img>
+          <div class="font-weight-bold text-dark pt-3">{{data.employeeName}}</div>
+          <div class="text-dark-50 font-size-sm mt-1" *ngIf="data.positionName">{{data.positionName}}</div>
+          <div class="text-muted font-size-sm mt-1" *ngIf="!data.positionName">
+              <codx-label formName="Employees" name="" default="Bộ phận">
+              </codx-label>
+          </div>
+          <div class="text-dark-75 mt-1" *ngIf="data.birthday">{{data.birthday | date: "dd/MM/yyyy" }}</div>
+          <div class="text-muted mt-1" *ngIf="!data.birthday">{{data.birthday | date: "dd/MM/yyyy" }}</div>
+      </div>
+      <div class="d-flex flex-column mt-7">
+          <div class="d-flex align-items-center">
+              <span class="icon-phone_android icon-16 mr-2"></span>
+              <div class="text-dark-75 font-size-sm" *ngIf="data.phone != '---'">{{data.phone}}
+              </div>
+              <div class="text-muted font-size-sm" *ngIf="data.phone == '---'">
+                  <codx-label name="phone" formName="Employees" default="Số điện thoại">
+                  </codx-label>
+              </div>
+          </div>
+          <div class="d-flex align-items-top mt-2">
+              <span class="icon-email icon-16 mr-2"></span>
+              <div class="text-dark-75 font-size-sm flex-wrap text-email" *ngIf="data.email != '---'">
+                  <div class="email">
+                      {{data.email}}
+                  </div>
+              </div>
+              <div class="text-muted font-size-sm flex-wrap" *ngIf="data.email == '---'">
+                  <codx-label name="email" formName="Employees" default="Email">
+                  </codx-label>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template> -->

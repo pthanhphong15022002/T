@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Tasks } from '../../models/TM_Tasks.model';
 
@@ -13,6 +13,7 @@ export class ViewDetailComponent implements OnInit {
   active = 1;
   @Input() formModel?: FormModel;
   @Input() itemSelected?: any
+  @Output() clickMoreFunction = new EventEmitter<any>();
   constructor(
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
@@ -22,8 +23,9 @@ export class ViewDetailComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  aaa(val: any) {
-    console.log(val)
+
+  clickMF(e: any, dt?: any) {
+    this.clickMoreFunction.emit({e:e,data:dt})
   }
 
 }
