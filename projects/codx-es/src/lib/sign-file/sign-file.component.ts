@@ -17,7 +17,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxEsService } from '../codx-es.service';
-import { EditSignFileComponent } from './edit-sign-file/edit-sign-file.component';
+import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
 
 @Component({
   selector: 'app-sign-file',
@@ -55,8 +55,8 @@ export class SignFileComponent implements OnInit {
 
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
   @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('editSFile') editSFile: EditSignFileComponent;
-  @ViewChild('viewdetail') viewdetail: EditSignFileComponent;
+  @ViewChild('editSFile') editSFile: PopupAddSignFileComponent;
+  @ViewChild('viewdetail') viewdetail: PopupAddSignFileComponent;
   @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;

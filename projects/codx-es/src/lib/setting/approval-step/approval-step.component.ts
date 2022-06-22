@@ -13,15 +13,14 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
-import { EditApprovalSteps } from './edit-approval-step/edit-approval-step.component';
 
 export class Approver {}
 @Component({
   selector: 'app-approval-steps',
-  templateUrl: './approval-steps.component.html',
-  styleUrls: ['./approval-steps.component.scss'],
+  templateUrl: './approval-step.component.html',
+  styleUrls: ['./approval-step.component.scss'],
 })
-export class ApprovalStepsComponent implements OnInit {
+export class ApprovalStepComponent implements OnInit {
   @ViewChild('editApprovalStep') editApprovalStep;
 
   @Input() transId = '';

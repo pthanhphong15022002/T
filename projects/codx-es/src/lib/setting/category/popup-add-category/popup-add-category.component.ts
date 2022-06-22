@@ -26,13 +26,13 @@ import {
   CodxEsService,
   ModelPage,
 } from '../../../codx-es.service';
-import { ApprovalStepsComponent } from '../../approval-steps/approval-steps.component';
+import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 @Component({
-  selector: 'app-edit-category',
-  templateUrl: './edit-category.component.html',
-  styleUrls: ['./edit-category.component.scss'],
+  selector: 'popup-add-category',
+  templateUrl: './popup-add-category.component.html',
+  styleUrls: ['./popup-add-category.component.scss'],
 })
-export class EditCategoryComponent implements OnInit, AfterViewInit {
+export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @Output() closeForm = new EventEmitter();
   @Output() openAsideForm = new EventEmitter();
 
@@ -40,7 +40,7 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('content') content: TemplateRef<any>;
   @ViewChild('popupModal') popupModal;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
-  @ViewChild('viewApprovalSteps') viewApprovalSteps: ApprovalStepsComponent;
+  @ViewChild('viewApprovalSteps') viewApprovalSteps: ApprovalStepComponent;
 
   color: any;
   dialogCategory: FormGroup;
@@ -78,7 +78,6 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
     this.data = data;
     this.formModel = this.dialog.formModel;
   }
-  html: any;
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
@@ -229,50 +228,6 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
 
   openAside() {
     this.openAsideForm.emit();
-  }
-
-  setHtml() {
-    this.html = this.templateItem.nativeElement;
-    let parent = document.getElementsByClassName(
-      'timeline-items'
-    )[0] as HTMLElement;
-    let inner = '';
-    let frag = [];
-    for (let i = 0; i < this.data.length; i++) {
-      let ele = this.html as HTMLElement;
-      for (let j = 0; j < this.data[i].approvers.length; j++) {
-        let childEle = ele
-          .getElementsByClassName('flex-wrap')[0]
-          .children.item(j);
-        childEle
-          .getElementsByTagName('codx-img')[0]
-          .setAttribute('objectId', this.data[i].approvers[j].userID);
-        childEle
-          .getElementsByTagName('codx-img')[0]
-          .setAttribute(
-            'ng-reflect-object-id',
-            this.data[i].approvers[j].userID
-          );
-      }
-
-      ele.style.display = 'block';
-      (ele as HTMLElement).getElementsByClassName('step-order')[0].innerHTML =
-        this.data[i].number.toString();
-      (ele as HTMLElement).getElementsByClassName(
-        'stepper-title'
-      )[0].innerHTML = this.data[i].name.toString();
-      (ele as HTMLElement).getElementsByClassName('stepper-desc')[0].innerHTML =
-        this.data[i].name2.toString();
-      frag.push(ele);
-      inner += ele.outerHTML;
-    }
-    if (parent) {
-      // let inner = '';
-      // frag.forEach((item) => {
-      //   inner = inner + item.innerHTML;
-      // });
-      parent.innerHTML = inner;
-    }
   }
 
   extendShowPlan() {

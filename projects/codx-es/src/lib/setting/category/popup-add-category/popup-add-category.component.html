@@ -1,0 +1,396 @@
+<codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [formGroup]="dialogCategory" *ngIf="isAfterRender">
+  <ng-template popup add #body>
+    <div class="mt-3">
+      <div class="fw-bolder codx-label">Icon & màu sắc</div>
+      <div class="d-block">
+        <button type="button" class="btn btn-icon btn-primary btn-icon btn-icon-md btn-circle me-5"
+          data-dismiss="modal">
+          <i class="icon-add_business icon-24"></i>
+        </button>
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
+          <i class="icon-color_lens text-primary text-hover-primary-dark icon-24"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-8">
+        <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
+          [Group]="dialogCategory" ControlName="categoryName">
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
+          [Group]="dialogCategory" ControlName="categoryID">
+        </codx-input>
+      </div>
+    </div>
+    <div class="d-flex align-items-center mt-3">
+      <codx-input #checkbox type="switch" id="switch" [checked]="this.dialogCategory.value.eSign" labelPosition="After"
+        field="eSign" [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
+      <label class="ms-2">Chữ ký số</label>
+    </div>
+    <div class="row mt-3">
+      <div class="col-6">
+        <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['SignatureType']"
+          [crrValue]="dialogCategory.value.signatureType" field="signatureType" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6">
+
+      </div>
+    </div>
+    <div class="mt-3">
+      <codx-label default="Ghi chú" fiedName="Note" [formModel]="dialog.formModel">
+      </codx-label>
+      <codx-input type="textarea" class="test-textarea" field="note" ControlName="note"
+        (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.note">
+      </codx-input>
+    </div>
+    <div class=" row mt-3">
+      <div class="d-flex flex-stack mt-3">
+        <div class="fw-bolder ">
+          <codx-label default="Đánh số văn bản" fiedName="ProcessID" [formModel]="dialog.formModel">
+          </codx-label>
+        </div>
+        <span class="text-end align-items-end">
+          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+            (click)="openPopup(autoNumber, '<h2>Thiết lập số tự động<h2>')">
+            <i class=" icon-edit-one text-primary text-hover-primary-dark icon-24"></i>
+          </button>
+        </span>
+      </div>
+      <div class="col-6">
+        <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" [Group]="dialogCategory"
+          ControlName="autoNumber">
+        </codx-input>
+      </div>
+
+
+    </div>
+    <div class="d-flex flex-stack mt-3">
+      <div class="fw-bolder ">
+        <codx-label default="Qui trình duyệt" fiedName="ProcessID" [formModel]="dialog.formModel">
+        </codx-label>
+      </div>
+      <span class="text-end align-items-end">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+          (click)="openPopupModal()">
+          <i class="icon-settings text-primary text-hover-primary-dark icon-24"></i>
+        </button>
+      </span>
+    </div>
+
+
+    <div id="progress" class="cdx-progress mt-3" *ngIf="dialogCategory?.value.countStep > 0">
+      <div id="progress-bar"></div>
+      <ul id="progress-num">
+        <ng-container *ngFor="let item of getCount(dialogCategory?.value.countStep)">
+          <li class="step">{{item}}</li>
+        </ng-container>
+      </ul>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-light-primary" (click)="onSaveForm(true)">Lưu</button>
+      <button class="btn btn-light-primary">Sửa</button>
+    </div>
+  </ng-template>
+</codx-form>
+
+<ng-template #autoNumber>
+  <div class="card w-90 rounded-0 border-0">
+    <form [formGroup]="dialogAutoNum" *ngIf="isAfterAuto">
+      <div class="card-body scroll-y my-7">
+        <div class="form-group mt-3">
+          <codx-label fiedName="AutoNoCode" default="Định dạng đánh số tự động" formName="Users"
+            gridviewName="grvUsers">
+          </codx-label>
+          <div class="d-flex">
+            <div class="w-100 me-2">
+              <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="autoNoCode"
+                [Group]="dialogCategory" [disabled]="true">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <div class="text text-primary">
+            <codx-label name="lblAutoNumber" default="Định dạng đánh số tự động" formName="Users"
+              gridviewName="grvUsers">
+            </codx-label>
+          </div>
+
+        </div>
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <codx-label fiedName="StringFormat" [formModel]="dialog.formModel" default="Định dạng số tự động">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.stringFormat"
+              refValue="L0089" field="stringFormat" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="MaxLength" default="Chiều dài tối đa" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="number" name="number" ngDefaultControl [crrValue]="dialogAutoNum.value.maxLength"
+              [min]="0" field="maxLength" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="form-group row mt-3">
+          <div class="col-3">
+            <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
+            </codx-label>
+            <codx-input type="text" name="text" ngDefaultControl ControlName="fixedString" [Group]="dialogAutoNum"
+              field="fixedString">
+            </codx-input>
+          </div>
+          <div class="col-3">
+            <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="text" name="text" ngDefaultControl ControlName="separator" [Group]="dialogAutoNum">
+            </codx-input>
+          </div>
+          <div class="col-3">
+            <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.dateFormat"
+              refValue="L0088" field="dateFormat" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <codx-input #checkbox type="checkbox" label="Tự động reset số tự động" labelPosition="after"
+              field="autoReset" class="test-check" (valueChange)="valueChange1($event)"
+              [crrValue]="dialogAutoNum.value.autoReset">
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="form-group row mt-3">
+          <div class="col-3">
+            <codx-label fiedName="Interval" [formModel]="dialog.formModel" default="Chu kỳ reset ">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.interval"
+              refValue="" field="interval" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="card-footer pt-4 border-0">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onSaveAutoNumber()">Lưu</button>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #autoNumber>
+  <div class="card w-90 rounded-0 border-0">
+    <form [formGroup]="dialogAutoNum" *ngIf="isAfterAuto">
+      <div class="card-body scroll-y my-7">
+        <div class="form-group mt-3">
+          <codx-label fiedName="AutoNoCode" default="Định dạng đánh số tự động" formName="Users"
+            gridviewName="grvUsers">
+          </codx-label>
+          <div class="d-flex">
+            <div class="w-100 me-2">
+              <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="autoNoCode"
+                [Group]="dialogCategory" [disabled]="true">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <div class="text text-primary">
+            <codx-label name="lblAutoNumber" default="Định dạng đánh số tự động" formName="Users"
+              gridviewName="grvUsers">
+            </codx-label>
+          </div>
+
+        </div>
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <codx-label fiedName="StringFormat" [formModel]="dialog.formModel" default="Định dạng số tự động">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.stringFormat"
+              refValue="L0089" field="stringFormat" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="MaxLength" default="Chiều dài tối đa" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="number" name="number" ngDefaultControl [crrValue]="dialogAutoNum.value.maxLength"
+              [min]="0" field="maxLength" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="form-group row mt-3">
+          <div class="col-3">
+            <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
+            </codx-label>
+            <codx-input type="text" name="text" ngDefaultControl ControlName="fixedString" [Group]="dialogAutoNum"
+              field="fixedString">
+            </codx-input>
+          </div>
+          <div class="col-3">
+            <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="text" name="text" ngDefaultControl ControlName="separator" [Group]="dialogAutoNum">
+            </codx-input>
+          </div>
+          <div class="col-3">
+            <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="dialog.formModel">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.dateFormat"
+              refValue="L0088" field="dateFormat" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group row mt-3">
+          <div class="col-6">
+            <codx-input #checkbox type="checkbox" label="Tự động reset số tự động" labelPosition="after"
+              field="autoReset" class="test-check" (valueChange)="valueChange1($event)"
+              [crrValue]="dialogAutoNum.value.autoReset">
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="form-group row mt-3">
+          <div class="col-3">
+            <codx-label fiedName="Interval" [formModel]="dialog.formModel" default="Chu kỳ reset ">
+            </codx-label>
+            <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.interval"
+              refValue="" field="interval" (valueChange)="valueChange1($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="card-footer pt-4 border-0">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onSaveAutoNumber()">Lưu</button>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #editApprovalStep>
+  <popup-add-approval-step [transId]="transID" [stepNo]="stepNo" (close)="changeStep($event)"></popup-add-approval-step>
+</ng-template>
+
+<!--
+<ng-template #popupModal let-modal>
+  <div class="modal-header" style="height: 20px;">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 id="modal-basic-title"></h4>
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="modal.dismiss()">
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-body">
+    <app-approval-steps #viewApprovalSteps [transId]="transID" (addEditItem)="openAddEditStep($event)">
+    </app-approval-steps>
+  </div>
+  <div class="modal-footer" (click)="modal.close()">
+    <button type="button" class="btn btn-primary">Lưu</button>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <div class="card-body">
+    <div class=" scroll-y mx-5 mx-xl-18 pt-0 pb-15">
+      <div class="text-center mb-13">
+        <h1 class="mb-3">Qui trình duyệt</h1>
+        <div class="text-muted fw-bold fs-5">Hợp đồng lao động</div>
+      </div>
+
+      <div class="cdx-timeline-vertical">
+        <div class="timeline timeline-3">
+
+          <div class="timeline-items">
+            <ng-container *ngFor="let item of data; let index=index">
+
+              <div class="timeline-item">
+                <div class="timeline-nav flex-row-auto w-100 w-lg-200px ">
+                  <div class="timeline-media">
+                    <span class="">{{item.number}}</span>
+                  </div>
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">
+                      {{item.name}}
+                    </h3>
+                    <div class="stepper-desc">
+                      {{item.name2}}
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-content mx-auto">
+                  <div class="d-flex flex-wrap">
+                    <ng-container *ngFor="let approver of item.approvers">
+                      <div class=" d-flex border border-gray-300 border-dashed rounded min-w-250px py-3 px-4 me-6 mb-3">
+                        <div class="symbol symbol-35px symbol-circle me-4">
+                          <codx-img #image [objectId]="approver.userID"></codx-img>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div class="text-dark fw-bolder fs-6">{{approver.userName}}
+                            </div>
+                            <div class="d-flex flex-center">
+                              <span class=" icon-create text-primary ms-1"></span>
+                            </div>
+                          </div>
+                          <div class="text-gray-600">{{approver.positionName}}</div>
+                          <div class="d-flex justify-content-end"><span
+                              class="icon-schedule text-gray-600 me-1"></span><span class="text-muted me-2 fs-7">8
+                              giờ</span>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item" *ngIf="index==data.length-1">
+                <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                  <div class="timeline-media-add">
+                    <span class=" icon-add_circle_outline icon-20" (click)="openAside()"></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+ -->

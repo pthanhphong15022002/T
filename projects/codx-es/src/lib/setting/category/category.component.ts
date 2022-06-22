@@ -26,7 +26,7 @@ import {
 } from 'codx-core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { EditCategoryComponent } from './edit-category/edit-category.component';
+import { PopupAddCategoryComponent } from './popup-add-category/popup-add-category.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { ActivatedRoute } from '@angular/router';
@@ -34,8 +34,8 @@ import { ActivatedRoute } from '@angular/router';
 export class defaultRecource {}
 @Component({
   selector: 'doc-category',
-  templateUrl: './docCategory.component.html',
-  styleUrls: ['./docCategory.component.scss'],
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.scss'],
 })
 export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
@@ -47,7 +47,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('noName', { static: true }) noName;
   @ViewChild('process', { static: true }) process;
-  @ViewChild('editCategory') editCategory: EditCategoryComponent;
+  @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
 
   devices: any;
   editform: FormGroup;
@@ -171,7 +171,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
-        EditCategoryComponent,
+        PopupAddCategoryComponent,
         this.dataSelected,
         option
       );
@@ -188,7 +188,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        EditCategoryComponent,
+        PopupAddCategoryComponent,
         this.viewBase.dataService.dataSelected,
         option
       );
