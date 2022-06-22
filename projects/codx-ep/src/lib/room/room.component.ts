@@ -183,7 +183,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
         type: ViewType.chart,
         active: false,
         model: {
-          template: this.chart,
+         panelLeftRef: this.chart,
         },
       },
     ];
@@ -367,6 +367,14 @@ export class RoomComponent implements OnInit, AfterViewInit {
         this.delete();
         break;
     }
+  }
+  onDragDrop(evt: any){
+    if(evt){
+      if(evt.type=='drop'){
+        this.edit(evt.data);
+      }
+    }
+
   }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {

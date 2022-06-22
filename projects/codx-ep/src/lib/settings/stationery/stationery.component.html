@@ -11,7 +11,7 @@
   [button]="button"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
-  idField="RecID"
+  idField="recID"
   className="ResourcesBusiness"
   method="GetListAsync"
 >
@@ -19,7 +19,7 @@
 
 <ng-template #panelLeftRef> </ng-template>
 
-<ng-template #gridTemplate>
+<!-- <ng-template #gridTemplate>
   <h1>Danh sách văn phòng phẩm</h1>
   <codx-gridview
     #gridView
@@ -47,7 +47,7 @@
     [allowResizing]=""
   >
   </codx-gridview>
-</ng-template>
+</ng-template> -->
 
 <ng-template #GiftIDCell let-dataItem>
   <div class="d-flex align-items-center">
