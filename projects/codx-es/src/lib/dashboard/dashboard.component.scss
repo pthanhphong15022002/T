@@ -29,10 +29,10 @@
 
 .content {
   background-color: #c9c9c9;
-    padding: 20px;
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
+  padding: 20px;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 
   .row {
     position: relative;
@@ -42,22 +42,24 @@
       position: relative;
       height: 50%;
       width: 100%;
-        box-sizing: border-box;
-    margin-bottom: 20px;
-    background-color: white;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+      background-color: white;
     }
 
     .col {
-        box-sizing: border-box;
-
+      box-sizing: border-box;
     }
-    .bar-chart{
-        position: relative;
-        width: 100%;
-        #chart-container{
-            width: 100%;
-            height: 100px;
-        }
+    
+  }
+
+  .bar-chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid red;
+    #chart-container {
+      width: 100%;
     }
   }
 }

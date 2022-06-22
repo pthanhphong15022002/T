@@ -5,14 +5,14 @@
         <div class="e-panel-container">
           <div class="d-flex">
             <div
-              *ngFor="let total of totals"
+              *ngFor="let doc of docsApproveStatus"
               class="info-rectangle d-flex justify-content-between flex-column"
             >
               <h5 [style.color]="'white'">
-                {{ total.title }}
+                {{ doc.vll | vll: "ES003":"text" | async }}
               </h5>
               <h2 [style.color]="'white'">
-                {{ total.value }}
+                {{ doc.quantity }}
               </h2>
             </div>
           </div>
@@ -103,7 +103,7 @@
     </div>
   </div>
   <div class="row bar-chart">
-    <ejs-chart
+    <!-- <ejs-chart
       id="chart-container"
       [primaryXAxis]="primaryXAxis"
       [dataSource]="chartData"
@@ -123,6 +123,6 @@
           name="Sales"
         ></e-series>
       </e-series-collection>
-    </ejs-chart>
+    </ejs-chart> -->
   </div>
 </div>

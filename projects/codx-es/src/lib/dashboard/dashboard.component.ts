@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DashboardLayoutComponent } from '@syncfusion/ej2-angular-layouts';
+import { ApiHttpService, CallFuncService } from 'codx-core';
+import { CodxEsService } from '../codx-es.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,31 +9,25 @@ import { DashboardLayoutComponent } from '@syncfusion/ej2-angular-layouts';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private esService: CodxEsService,
+    private callFunc: CallFuncService,
+    private df: ChangeDetectorRef,
+    private api: ApiHttpService
+  ) {}
   @ViewChild('default_dashboard') public dashboard: DashboardLayoutComponent;
-  ngOnInit(): void {}
 
+  
   public cellSpacing: number[] = [10, 10];
-
-  totals = [
-    {
-      title: 'Chưa xử lí',
-      value: 17,
-    },
-    {
-      title: 'Khẩn cấp',
-      value: 0,
-    },
-    {
-      title: 'Quá hạn',
-      value: 2,
-    },
-    {
-      title: 'Hoãn lại',
-      value: 3,
-    },
-  ];
-
+  docsApproveStatus;
+  
+  ngOnInit(): void {
+    this.esService.getSignFilesGroupByApproveStatus().subscribe((res) => {
+      this.docsApproveStatus = res;
+      this.df.detectChanges()
+    });
+  }
+  
   public data: Object[] = [
     { x: 'ESP', y: 21, text: '21%' },
     { x: 'HCS', y: 8, text: '8%' },
@@ -82,6 +78,7 @@ export class DashboardComponent implements OnInit {
     { month: 'May', sales: 40, sales1: 32 },
     { month: 'Jun', sales: 32, sales1: 40 },
   ];
+  
   primaryXAxis = {
     min: 1,
     max: 30,

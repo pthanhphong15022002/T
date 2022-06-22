@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, DataRequest, NotificationsService, UploadFile, UserModel } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  NotificationsService,
+  UploadFile,
+  UserModel,
+} from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 export class ModelPage {
   functionID = '';
@@ -71,10 +79,9 @@ interface cbxObj {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxEsService {
-
   user: UserModel;
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
@@ -207,6 +214,21 @@ export class CodxEsService {
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetAsync',
+      data
+    );
+  }
+
+  getSignFilesGroupByApproveStatus() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalSignFilesGroupByApproveStatusAsync',
       data
     );
   }
