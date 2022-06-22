@@ -1,0 +1,98 @@
+<codx-views
+  #codxViews
+  [views]="views"
+  [funcID]="funcID"
+  [showToolBar]="true"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entity"
+  [views]="views"
+  [button]="button"
+  [moreFuncs]="moreFunc"
+  idField="recID"
+  [className]="className"
+  [method]="method"
+  [selectedFirst]="true"
+  (selectedChange)="changeItemDetail($event)"
+  [autoLoad]="autoLoad"
+>
+</codx-views>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    iconCss="icon-flag"
+    [icoStatusVll]="'VL003'"
+    [imageId]="data.categoryID? data.categoryID : 'ADMIN'"
+    imageObjType=""
+    [title]="data.title"
+    icoSubTitleCss="icon-assignment"
+    [subTitle]="data.positionName"
+    [content]="data.memo"
+    [status]="data.approveStatus"
+    [statusVll]="'VL003'"
+    cardCss="card-template border-bottom px-2 py-3"
+    [date]="data.createdOn"
+    [icoDesc2Fld]="data.createdBy"
+    [resources]="data.createdBy != undefined ? data.createdBy : ''"
+    [resourceObjType]="'AD_Users'"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #paneLeft>
+  <div class="codx_e-main codx-left col-4 d-flex flex-grow-1">
+    <button
+      class="btn btn-white text-dark me-1"
+      [class.active]="taskViewStt === '1'"
+      (click)="clickChangeTaskViewStatus('1')"
+    >
+      <i class="icon-format_list_numbered icon-16"></i>
+      <codx-label name="lblTitleNew" [formModel]="codxViews.formModel" default="Mới tạo" class="ms-2 fw-bold"></codx-label>
+    </button>
+    <button
+      class="btn btn-white text-dark me-1"
+      [class.active]="taskViewStt === '2'"
+      (click)="clickChangeTaskViewStatus('2')"
+    >
+      <i class="icon-spellcheck icon-16"></i>
+      <codx-label name="lblTitlePending" [formModel]="codxViews.formModel" default="Chờ duyệt" class="ms-2 fw-bold"></codx-label>
+    </button>
+    <button
+      class="btn btn-white text-dark me-1"
+      [class.active]="taskViewStt === '3'"
+      (click)="clickChangeTaskViewStatus('3')"
+    >
+      <i class="icon-download_done icon-16"></i>
+      <codx-label name="lblTitleDone" [formModel]="codxViews.formModel" default="Hoàn tất" class="ms-2 fw-bold"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #paneRight>
+  <lib-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    style="height: 800px !important"
+  >
+  </lib-view-detail>
+</ng-template>
+<!-- 
+<ng-template #content let-modal>
+  <div class="modal-header" style="height: 20px">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 id="modal-basic-title"></h4>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        >
+          <codx-label name="" fiedName="" formName="" default="" class="icon-close icon-20 text-dark text-hover-primary"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-edit-sign-file #editSFile></app-edit-sign-file>
+</ng-template> -->

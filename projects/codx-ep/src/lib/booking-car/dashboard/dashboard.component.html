@@ -136,12 +136,31 @@
         </div> -->
         <div class="card-body">
           <div id="kt_apexcharts_3" style="height: 400px">
-            <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' align='center' id='chartcontainer1' [primaryYAxis]="primaryYAxis" [primaryXAxis]='primaryXAxis'
-            [primaryYAxis]='primaryYAxis' [title]='titleBar' [tooltip]='tooltip' (load)='load($event)' [legendSettings]="legendSettings1">
-            <e-series-collection>
-                <e-series [dataSource]='data' type='Bar' xName='x' yName='y' name='Imports' [marker]='marker'> </e-series>
-            </e-series-collection>
-        </ejs-chart>
+            <ejs-chart
+              style="display: block"
+              [chartArea]="chartArea"
+              [width]="width"
+              id="chartcontainer1"
+              [primaryYAxis]="primaryYAxis"
+              [primaryXAxis]="primaryXAxis"
+              [primaryYAxis]="primaryYAxis"
+              [title]="titleBar"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+              [legendSettings]="legendSettings1"
+            >
+              <e-series-collection>
+                <e-series
+                  [dataSource]="data"
+                  type="Bar"
+                  xName="x"
+                  yName="y"
+                  name="Imports"
+                  [marker]="marker"
+                >
+                </e-series>
+              </e-series-collection>
+            </ejs-chart>
           </div>
         </div>
       </div>
@@ -163,29 +182,48 @@
               (load)="load($event)"
               startAngle="0"
               endAngle="360"
-              style="margin: 0 40px;"
+              style="margin: 0 40px"
               [progressThickness]="15"
               [trackThickness]="15"
               progressColor="#b30900"
             >
             </ejs-progressbar>
             <div class="d-flex justify-content-center">
-              <span  style="font-weight: 700;font-size: 12px;">Hiệu quả sử dụng tài sản</span>
-               <span style="font-size:11px"> &nbsp;(đơn vị tính: %)</span>
+              <span style="font-weight: 700; font-size: 12px"
+                >Hiệu quả sử dụng tài sản</span
+              >
+              <span style="font-size: 11px"> &nbsp;(đơn vị tính: %)</span>
             </div>
-
           </div>
-          <div class="container mt-3" *ngIf="statEffenciencyOfResource.length>0">
-            <div class="row w-100"  *ngFor='let item of statEffenciencyOfResource'>
+          <div
+            class="container mt-3"
+            *ngIf="statEffenciencyOfResource.length > 0"
+          >
+            <div
+              class="row w-100"
+              *ngFor="let item of statEffenciencyOfResource"
+            >
+              <span style="font-size: 12px; color: rgb(70, 69, 69)">{{
+                item.resourceName
+              }}</span>
 
-                <span style="font-size:12px; color: rgb(70, 69, 69)">{{item.resourceName}}</span>
-
-                <ejs-progressbar  id='linear{{item.resourceName}}' type='Linear' [maximum]='100' [minimum]='0'
-                [value]='item.percent' width='100%' [trackThickness]='12' [progressThickness]='12'
-                height='5' [animation]='animation' role="Danger" style="margin: 0 -10px;"></ejs-progressbar>
+              <ejs-progressbar
+                id="linear{{ item.resourceName }}"
+                type="Linear"
+                [maximum]="100"
+                [minimum]="0"
+                [value]="item.percent"
+                width="100%"
+                [trackThickness]="12"
+                [progressThickness]="12"
+                height="5"
+                [animation]="animation"
+                role="Danger"
+                style="margin: 0 -10px"
+              ></ejs-progressbar>
             </div>
 
-          <!-- </ejs-progressbar>
+            <!-- </ejs-progressbar>
             <ejs-progressbar *ngFor='let item of statEffenciencyOfResource' type='Linear' maximum='100' minimum='0' [value]='item.percent'
             [width]='width' [trackThickness]='trackThickness' [progressThickness]='progressThickness'
             height='20px' role='Danger' showProgressValue='true' [animation]='animation'
@@ -229,7 +267,6 @@
                   [dataLabel]="dataLabel"
                   explode="true"
                   explodeOffset="5%"
-
                 >
                 </e-accumulation-series>
               </e-accumulation-series-collection>
@@ -271,7 +308,6 @@
                   [dataLabel]="dataLabel"
                   explode="true"
                   explodeOffset="5%"
-
                 >
                 </e-accumulation-series>
               </e-accumulation-series-collection>
@@ -319,11 +355,20 @@
             </ejs-accumulationchart>
           </div>
 
-          <ejs-progressbar #linear1 id='linear1' type='Linear' [maximum]='100' [minimum]='0'
-          value='80' width='100%' [trackThickness]='12' [progressThickness]='12'
-          height='5' [animation]='animation'>
-        </ejs-progressbar>
-
+          <ejs-progressbar
+            #linear1
+            id="linear1"
+            type="Linear"
+            [maximum]="100"
+            [minimum]="0"
+            value="80"
+            width="100%"
+            [trackThickness]="12"
+            [progressThickness]="12"
+            height="5"
+            [animation]="animation"
+          >
+          </ejs-progressbar>
 
           <!--end::Chart-->
         </div>

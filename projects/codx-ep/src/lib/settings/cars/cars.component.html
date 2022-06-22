@@ -1,96 +1,49 @@
-<codx-views #view funcID="TM001" entityName="AD_Users" [views]="views"  (buttonClick)="addNew($event)"
-  [moreFuncs]="moreFunc"> </codx-views>
-
-<ng-template #panelLeftRef> </ng-template>
-
-<!-- <ng-template #template let-data>
-  <div style="border-bottom: 1px solid">
-    <div>{{data.resourceName}}</div>
+<codx-views
+  #view
+  funcID="EPS22"
+  [showToolBar]="true"
+  service="EP"
+  assemblyName="EP"
+  entityName="EP_Resources"
+  predicate="ResourceType=@0"
+  dataValue="2"
+  [views]="views"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFuncs"
+  idField="recID"
+  className="ResourcesBusiness"
+  method="GetListAsync"
+>
+</codx-views>
+<ng-template #itemTemplate let-data>
+  <div class="task-row py-3 px-6">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-25">
+          {{ data.resourceID }}
+        </td>
+        <td class="w-25">
+          {{ data.resourceName }}
+        </td>
+        <td class="w-25">
+          <div class="d-flex justify-content-center">
+            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+              data.status | vll: "EP002":"text" | async
+            }}</span>
+          </div>
+        </td>
+        <td class="w-150px">
+          {{ data.ranking | vll: "EP005":"text" | async }}
+        </td>
+        <!-- <td class="w-150px">1 Chai / Người / Lần</td> -->
+      </tbody>
+    </table>
   </div>
-</ng-template> -->
-
-<!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
-
-<ng-template #gridTemplate>
-  <h1>Danh sách xe</h1>
-  <div class="row w-100 h-100">
-    <codx-gridview
-      #gridView
-      [columnsGrid]="columnsGrid"
-      [allowSorting]=""
-      [sortSettings]=""
-      [allowGrouping]=""
-      [groupSettings]=""
-      [editSettings]=""
-      [selectionOptions]=""
-      [rowHeight]="40"
-      [pageSize]="10"
-      funcId="EPS23"
-      assemblyName="EP"
-      entityName="EP_Resources"
-      className="ResourcesBusiness"
-      method="GetListAsync"
-      predicate="ResourceType=@0"
-      dataValue="2"
-      [pageSize]="15"
-      height="500px"
-      [showColumnMenu]="true"
-      [filterSettings]=""
-      [allowFiltering]=""
-      [allowResizing]=""
-    >
-    </codx-gridview>
-  </div>
+  <codx-temp-full
+    (clickMF)="clickMF($event, data)"
+    [formModel]="viewBase.formModel"
+  >
+  </codx-temp-full>
+  <ng-template #panelLeftRef> </ng-template>
 </ng-template>
-
-<ng-template #ranking let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.ranking | vll: "EP005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-<ng-template #category let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.category | vll: "VL005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-
-<ng-template #GiftIDCell let-dataItem>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="edit(dataItem)"
-      >
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="deleteResource(dataItem)"
-      >
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
-  </div>
-</ng-template>
-
-<ng-template #carResourceDialog>
-  <car-resource-editor
-    #editor
-    [data]=""
-    (closeEdit)="closeEditForm($event)"
-  ></car-resource-editor>
-</ng-template>
-
-<ng-template #editRoomBooking> </ng-template>
-
-<ng-template #listDetails> 2 </ng-template>
-
-<ng-template #listTasks let-data> 3 </ng-template>

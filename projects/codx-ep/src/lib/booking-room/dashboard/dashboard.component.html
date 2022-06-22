@@ -1,4 +1,4 @@
-<div class="cdx-dash">
+<div class="cdx-dash w-100">
   <div class="row gy-5 g-xl-8">
     <div class="col-xl-6">
       <div class="row">
@@ -16,7 +16,7 @@
             <!--begin::Body-->
             <div class="card-body p-0">
               <div class="fw-bold text-gray-100">Chưa xử lý</div>
-              <div class="text-white fw-bolder fs-2x mb-0 mt-5">17</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt1? stt1 : '0'}}</div>
             </div>
             <!--end::Body-->
           </a>
@@ -35,7 +35,7 @@
             <!--begin::Body-->
             <div class="card-body p-0">
               <div class="fw-bold text-gray-100">Khẩn cấp</div>
-              <div class="text-white fw-bolder fs-2x mb-0 mt-5">17</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt2? stt2 : '0'}}</div>
             </div>
             <!--end::Body-->
           </a>
@@ -54,7 +54,7 @@
             <!--begin::Body-->
             <div class="card-body p-0">
               <div class="fw-bold text-gray-100">Quá hạn</div>
-              <div class="text-white fw-bolder fs-2x mb-0 mt-5">17</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt3? stt3 : '0'}}</div>
             </div>
             <!--end::Body-->
           </a>
@@ -73,7 +73,7 @@
             <!--begin::Body-->
             <div class="card-body p-0">
               <div class="fw-bold text-gray-100">Hoãn lại</div>
-              <div class="text-white fw-bolder fs-2x mb-0 mt-5">17</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt4 ? stt4 : '0'}}</div>
             </div>
             <!--end::Body-->
           </a>

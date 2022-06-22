@@ -5,6 +5,45 @@
 </codx-views>
 
 
+<ng-template #listItem let-data>
+  <div class="task-row py-3 px-6">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-25">
+          <div class="d-flex justify-content-center">
+            {{data.email}}
+          </div>
+        </td>
+        <td class="w-15">
+          <div class="d-flex justify-content-center">
+            {{data.fullName}}
+          </div>
+        </td>
+        <td class="w-15">
+          <div class="d-flex justify-content-center">
+            <span
+              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.signatureType|vll:'ES001':'text'|async}}</span>
+          </div>
+        </td>
+        <td class="w-15">
+          <div class="d-flex justify-content-center">
+            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{data.supplier|vll:'ES006':'text'|async}}</span>
+          </div>
+        </td>
+      </tbody>
+    </table>
+  </div>
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
+    iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.owner" imageObjType="AD_Users"
+    [title]="data.resourceName" icoSubTitleCss="icon-assignment" [subTitle]="data.resourceID" [content]="data.memo"
+    [status]="data.status" statusVll="EP005" [date]="data.createdOn" [resources]="data.owner" resourceObjType="AD_Users"
+    [formModel]="viewBase.formModel">
+  </codx-temp-full>
+</ng-template>
+
+
+
+
 <ng-template #gridTemplate>
   <!-- <app-edit-signature></app-edit-signature> -->
   <codx-gridview #gridView [allowSorting]="" [columnsGrid]="columnsGrid" [sortSettings]="" [allowGrouping]=""
@@ -15,7 +54,7 @@
 </ng-template>
 
 <ng-template #sideBarRightRef>
-  <app-edit-signature #editSignature (closeSidebar)="closeSidebar($event)"></app-edit-signature>
+  <popup-add-signature #editSignature (closeSidebar)="closeSidebar($event)"></popup-add-signature>
 </ng-template>
 
 <ng-template #signatureType let-dataItem>

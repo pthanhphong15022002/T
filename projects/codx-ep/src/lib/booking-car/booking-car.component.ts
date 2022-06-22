@@ -1,3 +1,4 @@
+import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
 import {
   Component,
   OnInit,
@@ -7,16 +8,30 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, NotificationsService, CacheService, ResourceModel, DialogRef, SidebarModel, CallFuncService } from 'codx-core';
+import {
+  ApiHttpService,
+  NotificationsService,
+  CacheService,
+  ResourceModel,
+  DialogRef,
+  SidebarModel,
+  CallFuncService,
+} from 'codx-core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { ButtonModel, CodxScheduleComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  CodxScheduleComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
-import { DialogCarBookingComponent } from './dialog/editor.component';
-import { ModelPage } from '../codx-ep.service';
-export class defaultRecource { }
+import { CodxEpService, ModelPage } from '../codx-ep.service';
+import { ActivatedRoute } from '@angular/router';
+export class defaultRecource {}
 @Component({
-  selector: 'app-booking-car',
+  selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
   styleUrls: ['booking-car.component.scss'],
 })
@@ -29,7 +44,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
   @ViewChild('scheduleCar') schedule: CodxScheduleComponent;
   @ViewChild('gridTemplateCar') gridTemplate: TemplateRef<any>;
   @ViewChild('carBookingDialog') carBookingEditor: TemplateRef<any>;
-  @ViewChild('editor') carBookingForm: DialogCarBookingComponent;
+  @ViewChild('editor') carBookingForm: PopupAddBookingCarComponent;
   @ViewChild('dashboard') dashboard: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
@@ -37,7 +52,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
 
   devices: any;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   defaultRecource: any = {
     resourceName: '',
@@ -53,7 +68,6 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     icon: '',
     equipments: '',
   };
-  modelPage: ModelPage;
   oldData: any;
   editform: FormGroup;
   isAdd = true;
@@ -68,22 +82,34 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
   // modelResource = new DataRequest();
   dataSelected: any;
   dialog!: DialogRef;
+  modelPage: ModelPage;
+  funcID: string;
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
+  idField = 'RecID';
+  className = 'BookingsBusiness';
+  method = 'GetEventsAsync';
 
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private cacheSv: CacheService,
-    private cf: ChangeDetectorRef,
+    private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
+    private activedRouter: ActivatedRoute,
+    private bookingService: CodxEpService
   ) {
-    this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'Bookings',
-      gridViewName: 'grvBookings',
-      functionID: 'EPT2',
-    };
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.bookingService.getModelPage(this.funcID).then((res) => {
+      if (res) {
+        this.modelPage = res;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -107,7 +133,6 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         active: true,
         model: {
           panelLeftRef: this.dashboard,
-
         },
       },
     ];
@@ -159,7 +184,8 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         id: 'EPS22',
         icon: 'icon-list-chechbox',
         text: 'Danh mục xe',
-      }, {
+      },
+      {
         id: 'btnEdit',
         icon: 'icon-list-chechbox',
         text: 'Sửa',
@@ -169,11 +195,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         icon: 'icon-list-chechbox',
         text: 'Xóa',
       },
-
     ];
-    // this.bookingService.getModelPage('EPT2').then((res) => {
-    //   if (res) this.modelPage = res;
-    // });
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
     this.modelResource.className = 'BookingsBusiness';
@@ -203,9 +225,8 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       Title: 'Resources',
     };
 
-    this.button = {
+    this.buttons = {
       id: 'btnAdd',
-
     };
   }
   click(evt: ButtonModel) {
@@ -227,24 +248,36 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(DialogCarBookingComponent, this.dataSelected, option);
+      this.dialog = this.callfunc.openSide(
+        PopupAddBookingCarComponent,
+        this.dataSelected,
+        option
+      );
     });
   }
 
   edit(evt?) {
-    this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '750px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(DialogCarBookingComponent, this.viewBase.dataService.dataSelected, option);
-    });
+    this.viewBase.dataService
+      .edit(this.viewBase.dataService.dataSelected)
+      .subscribe((res) => {
+        this.dataSelected = this.viewBase.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '750px';
+        option.DataService = this.viewBase?.currentView?.dataService;
+        this.dialog = this.callfunc.openSide(
+          PopupAddBookingCarComponent,
+          this.viewBase.dataService.dataSelected,
+          option
+        );
+      });
   }
   delete(evt?) {
-    this.viewBase.dataService.delete([this.viewBase.dataService.dataSelected]).subscribe(res => {
-      console.log(res);
-      this.dataSelected = res;
-    });
+    this.viewBase.dataService
+      .delete([this.viewBase.dataService.dataSelected])
+      .subscribe((res) => {
+        console.log(res);
+        this.dataSelected = res;
+      });
   }
 
   closeEditForm(evt?: any) {
@@ -277,7 +310,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
   //   }
   //   //this.viewBase.currentView.openSidebarRight();
   // }
-  viewChange(event) { }
+  viewChange(event) {}
 
   deleteBooking(event) {
     console.log('delete', event);
@@ -305,8 +338,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       } else {
         if (!evt[0]) {
           this.schedule.scheduleObj.saveEvent(this.oldData);
-        }
-        else {
+        } else {
           this.schedule.scheduleObj.saveEvent(evt[0]);
         }
       }

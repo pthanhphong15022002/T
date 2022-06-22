@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, DataRequest, NotificationsService, UploadFile, UserModel } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  NotificationsService,
+  UploadFile,
+  UserModel,
+} from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 export class ModelPage {
-  functionID = '';
+  funcID = '';
   gridViewName = '';
   formName = '';
   entity = '';
@@ -71,10 +79,9 @@ interface cbxObj {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxEsService {
-
   user: UserModel;
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
@@ -95,7 +102,7 @@ export class CodxEsService {
           modelPage.entity = funcList?.entityName;
           modelPage.formName = funcList?.formName;
           modelPage.gridViewName = funcList?.gridViewName;
-          modelPage.functionID = funcList?.functionID;
+          modelPage.funcID = funcList?.functionID;
         }
         resolve(modelPage);
       });
@@ -208,6 +215,54 @@ export class CodxEsService {
       'SignFilesBusiness',
       'GetAsync',
       data
+    );
+  }
+
+  getTotalGByApproveStatus() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByApproveStatusAsync',
+      data
+    );
+  }
+  
+
+  getTotalGByCategory() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByCategoryAsync',
+      data
+    );
+  }
+
+  getDocsGByDays() {
+    let model = new DataRequest();
+    model.formName = 'SignFiles';
+    model.gridViewName = 'grvSignFiles';
+    model.entityName = 'ES_SignFiles';
+    model.pageLoading = false;
+    let month = (new Date().getMonth() + 1).toString();
+
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetDocsGByDayAsync',
+      [model, month]
     );
   }
 

@@ -19,7 +19,38 @@
 
 <!-- begin::View list -->
 
-<ng-template #listItem let-data>
+<!-- <ng-template #gridTemplate>
+  <h1>Danh sách văn phòng phẩm</h1>
+  <codx-gridview
+    #gridView
+    [columnsGrid]="columnsGrid"
+    [allowSorting]=""
+    [sortSettings]=""
+    [allowGrouping]=""
+    [groupSettings]=""
+    [editSettings]=""
+    [selectionOptions]=""
+    [rowHeight]="40"
+    [pageSize]="10"
+    funcId="EPS21"
+    assemblyName="EP"
+    entityName="EP_Resources"
+    className="ResourcesBusiness"
+    method="GetListAsync"
+    predicate="ResourceType=@0"
+    dataValue="3"
+    [pageSize]="15"
+    height="500px"
+    [showColumnMenu]="true"
+    [filterSettings]=""
+    [allowFiltering]=""
+    [allowResizing]=""
+  >
+  </codx-gridview>
+</ng-template> -->
+
+
+-<ng-template #listItem let-data>
   <div class="task-row">
     <table class="table w-100 table-action-menu">
       <tbody>
@@ -84,5 +115,9 @@
       </tbody>
     </table>
   </div>
+  <codx-temp-full (clickMF)="clickMF($event,data)"
+    [formModel]="viewBase.formModel">
+  </codx-temp-full>
 </ng-template>
+
 <!-- end::View list -->

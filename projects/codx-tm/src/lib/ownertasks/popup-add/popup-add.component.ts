@@ -26,7 +26,7 @@ import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 @Component({
-  selector: 'app-test-add',
+  selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
   styleUrls: ['./popup-add.component.scss'],
 })
@@ -75,6 +75,7 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('tags') tagsComponent: TagsComponent;
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
+  tags: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -89,8 +90,10 @@ export class PopupAddComponent implements OnInit {
   ) {
     this.task = {
       ...this.task,
-      ...dt?.data,
+      ...dt?.data[0],
     };
+    this.action = dt?.data[1];
+    this.showAssignTo = dt?.data[2];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -99,9 +102,13 @@ export class PopupAddComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = this.dialog.formModel.funcID;
-    // if (this.functionID == 'TMT03') this.showAssignTo = true;
     this.getParam();
-    this.openTask();
+    if (!this.task.taskID) {
+      this.openTask();
+    } else {
+      if (this.action == 'copy') return this.getTaskCoppied(this.task.taskID);
+      else this.openInfo(this.task.taskID, this.action);
+    }
   }
 
   getParam(callback = null) {
@@ -149,16 +156,6 @@ export class PopupAddComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
-
-  // onOpenTodo() {
-  //   if (!this.disableAddToDo) {
-  //     this.onAddToDo();
-  //   } else {
-  //     this.disableAddToDo = !this.disableAddToDo;
-  //     this.changeDetectorRef.detectChanges();
-  //     if (!this.disableAddToDo) $('#txtTodoAdd').focus();
-  //   }
-  // }
 
   onAddToDo(evt: any) {
     if (!this.todoAddText) return;
@@ -234,9 +231,7 @@ export class PopupAddComponent implements OnInit {
   }
 
   openInfo(id, action) {
-    this.getParam();
     const t = this;
-
     t.task = new TM_Tasks();
     t.readOnly = action === 'edit' ? false : true;
     t.title =
@@ -246,6 +241,7 @@ export class PopupAddComponent implements OnInit {
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         t.task = res[0];
+        this.tags = t.task.tags;
         t.listUserDetail = res[1] || [];
         t.listTodo = res[2];
         t.listMemo2OfUser = res[3];
@@ -256,17 +252,8 @@ export class PopupAddComponent implements OnInit {
           this.listUser = [];
           this.listUserDetail = [];
           this.listMemo2OfUser = [];
-          //thêm giá trị đê add thử copy -sau nay xóa đi
-          //   if (action == 'edit') {
-          //     this.task.assignTo = 'TQHOAN'; ///tesst
-          //     this.getListUser(this.task.assignTo);
-          //   }
         }
         t.changeDetectorRef.detectChanges();
-        if (this.functionID == 'TMT03') {
-          //    this.showAssignTo = true;
-        }
-        this.showPanel();
       }
     });
   }
@@ -274,12 +261,12 @@ export class PopupAddComponent implements OnInit {
   openAssignSchedule(task): void {
     const t = this;
     this.task = task;
-    if (this.functionID == 'TMT03') {
-      // this.showAssignTo = true;
-      //cai nay thêm để test
-      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-      this.getListUser(this.task.assignTo);
-    }
+    // if (this.functionID == 'TMT03') {
+    //   // this.showAssignTo = true;
+    //   //cai nay thêm để test
+    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    //   this.getListUser(this.task.assignTo);
+    // }
 
     // this.task.estimated = 0;
     this.readOnly = false;
@@ -302,9 +289,7 @@ export class PopupAddComponent implements OnInit {
 
   getTaskCoppied(id) {
     const t = this;
-    if (this.functionID == 'TMT03') {
-      // this.showAssignTo = true;
-    }
+    this.title = 'Copy công việc ';
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         t.copyListTodo(res[2]);
@@ -327,14 +312,14 @@ export class PopupAddComponent implements OnInit {
   }
 
   beforeCopy(data) {
-    this.title = 'Copy công việc ';
     const t = this;
     t.task = new TM_Tasks();
     t.task = data;
-    t.task.dueDate = moment(new Date(data.dataValue)).toDate();
+    t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
-    t.task.endDate = moment(new Date(data.endDate)).toDate();
+    if (data.endDate != null)
+      t.task.endDate = moment(new Date(data.startDate)).toDate();
     t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
@@ -345,9 +330,7 @@ export class PopupAddComponent implements OnInit {
     //thêm giá trị đê add thử copy -sau nay xóa đi
     //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
     // this.getListUser(this.task.assignTo);
-
     t.changeDetectorRef.detectChanges();
-    this.showPanel();
   }
 
   saveData(id) {
@@ -355,16 +338,15 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-      //$('#taskNameInput').focus();
     }
-    // if (
-    //   this.functionID == 'TMT03' &&
-    //   (this.task.assignTo == '' || this.task.assignTo == null)
-    // ) {
-    //   this.notiService.notify('Phải nhập danh sách người được phân công !');
-    //   // this.notiService.notifyCode('mã code');
-    //   return;
-    // }
+    if (
+      this.showAssignTo &&
+      (this.task.assignTo == '' || this.task.assignTo == null)
+    ) {
+      this.notiService.notify('Phải nhập danh sách người được phân công !');
+      // this.notiService.notifyCode('mã code');
+      return;
+    }
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -406,12 +388,11 @@ export class PopupAddComponent implements OnInit {
     this.task.taskType = this.param['TaskType'];
     if (id) this.updateTask();
     else this.addTask();
-    //this.viewBase.currentView.closeSidebarRight();
   }
 
   beforeSave(op: any) {
     var data = [];
-    if (op.taskID != null) {
+    if (this.task.taskID != null) {
       op.method = 'UpdateTaskAsync';
       data = [
         this.task,
@@ -443,36 +424,6 @@ export class PopupAddComponent implements OnInit {
           this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
         }
       });
-    // this.tmSv
-    //   .addTask([
-    //     this.task,
-    //     this.functionID,
-    //     this.listTaskResources,
-    //     this.listTodo,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify(res.message);
-    //       if (res.data && res.data.length) {
-    //         res.data.forEach((dt) => {
-    //           var data = dt;
-    //           this.dataAddNew.next(data);
-    //         });
-    //       }
-    //       this.closeTask();
-    //       // if (isCloseFormTask) {
-    //       //   this.closeTask();
-    //       // } else {
-    //       //   if (res?.data?.length > 0) {
-    //       //     let task = res.data[0];
-    //       //     // this.openFormAttach(task?.parentID ?? task?.taskID);
-    //       //   }
-    //       // }
-    //     } else {
-    //       this.notiService.notify('TM002'); /// call sau
-    //       return;
-    //     }
-    //   });
   }
 
   updateTask() {
@@ -484,28 +435,6 @@ export class PopupAddComponent implements OnInit {
           this.notiService.notify(' Sửa đổi thành công !'); ///sau này có mess thì gán vào giờ chưa có
         }
       });
-    // this.tmSv
-    //   .update([
-    //     this.task,
-    //     this.functionID,
-    //     this.listTaskResources,
-    //     this.listTodo,
-    //     null,
-    //     this.recIDTodoDelete,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify(res.message);
-    //       res.data.forEach((dt) => {
-    //         var data = dt;
-    //         this.updateData.next(data);
-    //       });
-    //       this.closeTask();
-    //     } else {
-    //       this.notiService.notify('TM002');
-    //       return;
-    //     }
-    //   });
   }
 
   openInputMemo2() {
@@ -547,7 +476,7 @@ export class PopupAddComponent implements OnInit {
   cbxChange(data) {
     if (data.data && data.data[0]) {
       this.task[data.field] = data.data[0];
-      if (data.field === 'taskGroupID')
+      if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
     }
   }
@@ -664,7 +593,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -705,7 +634,7 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }

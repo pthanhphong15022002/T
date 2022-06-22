@@ -116,7 +116,12 @@ export class DialogRoomResourceComponent implements OnInit {
       this.setdata(this.data);
     }
   }
+  clickMF(evt?:any, data?:any){
 
+  }
+  click(evt?:any){
+
+  }
   initForm() {
     this.cacheSv
       .gridViewSetup(this.modelPage.formName, this.modelPage.gridViewName)

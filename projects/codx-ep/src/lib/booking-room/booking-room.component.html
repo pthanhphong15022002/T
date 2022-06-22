@@ -15,6 +15,7 @@
   className="BookingsBusiness"
   method="GetEventsAsync"
   (requestEnded)="closeEditForm($event)"
+  (onDragDrop)="onDragDrop($event)"
 >
 </codx-views>
 <ng-template #cardTemplate let-data let-setting="setting">

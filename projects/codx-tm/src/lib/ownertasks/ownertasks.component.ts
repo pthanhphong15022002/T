@@ -27,6 +27,7 @@ import {
   CacheService,
 } from 'codx-core';
 import * as moment from 'moment';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
@@ -100,6 +101,9 @@ export class OwnerTasksComponent implements OnInit {
       case 'delete':
         this.delete(data);
         break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
       case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
@@ -157,7 +161,7 @@ export class OwnerTasksComponent implements OnInit {
     this.views = [
       {
         type: ViewType.list,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -166,7 +170,7 @@ export class OwnerTasksComponent implements OnInit {
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -312,7 +316,7 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -323,26 +327,26 @@ export class OwnerTasksComponent implements OnInit {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }
 
   copy(data) {
-    data.taskID = null;
-    data.recID = null;
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
+    // data.taskID = null;
+    // data.recID = null;
+   
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.view.dataService.dataSelected = data;
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
     });
   }
 
@@ -352,6 +356,9 @@ export class OwnerTasksComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
       .subscribe();
   }
+  sendemail(data) {
+
+  }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -359,7 +366,17 @@ export class OwnerTasksComponent implements OnInit {
     return true;
   }
 
-  assignTask(data) { }
+  assignTask(data) {
+    this.view.dataService.dataSelected = data;
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    option.Width = '750px';
+    this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
+  }
 
   changeView(evt: any) {
 
@@ -370,6 +387,11 @@ export class OwnerTasksComponent implements OnInit {
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
+      this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data).subscribe(res => {
+        if (res) {
+          this.view.dataService.update(e.data);
+        }
+      });
     }
   }
   selectedChange(val: any) {
@@ -444,6 +466,8 @@ export class OwnerTasksComponent implements OnInit {
       '',
       obj
     );
-
+  }
+  receiveMF(e: any) {
+    this.clickMF(e.e, this.itemSelected)
   }
 }

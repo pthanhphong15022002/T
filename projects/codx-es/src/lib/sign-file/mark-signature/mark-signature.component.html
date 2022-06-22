@@ -1,0 +1,109 @@
+<div class="col-4">
+  <div>
+    <label class="combobox">
+      Chọn tài liệu
+      <codx-input
+        type="combobox"
+        (valueChange)="selectFile()"
+        [refValue]="files"
+        labelPosition="After"
+      >
+      </codx-input>
+    </label>
+  </div>
+  <div>
+    <label class="combobox">
+      Chọn người kí cần thiết lập
+      <codx-input
+        type="combobox"
+        (valueChange)="selectApprover()"
+        labelPosition="After"
+      >
+      </codx-input>
+    </label>
+  </div>
+  <label> Kéo & thả chữ ký vào tài liệu </label>
+  <div class="action-List">
+    <div class="col-5">
+      <div>
+        <div class="icon icon-create"></div>
+        <div>Chữ ký</div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div>
+        <div class="icon icon-text_format"></div>
+        <div>Con dấu</div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div>
+        <div class="icon icon-text_format"></div>
+        <div>Tên đầy đủ</div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div>
+        <div class="icon icon-person_pin_circle"></div>
+        <div>Chức danh</div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div>
+        <div class="icon icon-access_time"></div>
+        <div>Ngày giờ</div>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div>
+        <div class="icon icon-mode_comment"></div>
+        <div>Mô tả</div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div>
+        <div class="icon icon-notes"></div>
+        <div>Số văn bản</div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div>
+        <div class="icon icon-qr_code"></div>
+        <div>QR Code</div>
+      </div>
+    </div>
+  </div>
+  <div class="switch-space">
+    <div class="switch-1">
+      <label>
+        <codx-input
+          type="switch"
+          [checked]="switch_1"
+          field="switchControl"
+          [crrValue]="switch_1"
+          (valueChange)="changeSwitchState(switch_1, 'sw1')"
+        >
+        </codx-input>
+        Gợi ý vị trí kí
+      </label>
+    </div>
+    <div class="switch-2">
+      <label>
+        <codx-input
+          type="switch"
+          [checked]="switch_2"
+          field="switchControl"
+          [crrValue]="switch_2"
+          (valueChange)="changeSwitchState(switch_2, 'sw2')"
+        >
+        </codx-input>
+        Chèn chữ ký tự động cho tất cả vai trò
+      </label>
+    </div>
+  </div>
+</div>
