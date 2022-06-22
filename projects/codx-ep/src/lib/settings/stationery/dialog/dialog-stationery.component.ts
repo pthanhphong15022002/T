@@ -56,6 +56,8 @@ export class DialogStationeryComponent implements OnInit {
   link = '';
   color: any;
   columnGrid;
+  headerTitle = "Thêm Văn Phòng phẩm";
+  subHeaderTilte = "Thêm mới Văn phòng phẩm";
   public headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
