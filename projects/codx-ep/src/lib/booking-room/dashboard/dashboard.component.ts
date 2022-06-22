@@ -44,6 +44,12 @@ export class RoomDashboardComponent implements OnInit, AfterViewInit {
   statEquipments = [];
   efficiency = 0;
   statEffenciencyOfResource = [];
+  arrStatBookingStatus = [];
+  stt1 = '0';
+  stt2 = '0';
+  stt3 = '0';
+  stt4 = '0';
+  stt5 = '0';
   ngOnInit(): void {
     this.loadChart();
   }
@@ -60,6 +66,7 @@ export class RoomDashboardComponent implements OnInit, AfterViewInit {
         this.statEquipments = res.msgBodyData[0]['arrUsedHoursOfEquipment'];
         this.statUsedHoursOfResource = res.msgBodyData[0]['arrUsedHoursOfResource'];
         this.statEffenciencyOfResource = res.msgBodyData[0]['arrEffiecyUsedResource'];
+        this.arrStatBookingStatus = res.msgBodyData[0]['arrStatBookingStatus'];
         if (this.statEquipments.length > 0) {
           this.statEquipments.forEach((item) => {
             item.percent = Math.floor(Math.random() * 10);
@@ -86,6 +93,13 @@ export class RoomDashboardComponent implements OnInit, AfterViewInit {
         }
         if(this.efficiency == 0){
           this.efficiency = 80;
+        }
+        if(this.arrStatBookingStatus.length > 0){
+          this.stt1 = this.arrStatBookingStatus[0]?.count;
+          this.stt2 = this.arrStatBookingStatus[1]?.count;
+          this.stt3 = this.arrStatBookingStatus[2]?.count;
+          this.stt4 = this.arrStatBookingStatus[3]?.count;
+          this.stt5 = this.arrStatBookingStatus[4]?.count;
         }
       });
   }

@@ -39,6 +39,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   @ViewChild('editor') editor: DialogCarResourceComponent;
   @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
   @ViewChild('category', { static: true }) category: TemplateRef<any>;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
@@ -61,19 +62,34 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  moreFuncs = [
+    {
+      id: 'btnEdit',
+      icon: 'icon-list-checkbox',
+      text: 'Chỉnh sửa',
+    },
+    {
+      id: 'btnDelete',
+      icon: 'icon-list-checkbox',
+      text: 'Xóa',
+    },
+  ];
   constructor(
     private api: ApiHttpService,
     private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService
-  ) {}
+  ) {
+
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
+        sameData: true,
         model: {
-          panelLeftRef: this.gridTemplate,
+          template: this.template
         },
       },
     ];
@@ -119,6 +135,12 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
           }
         });
     }
+  }
+  clickMF(evt?:any, data?:any){
+
+  }
+  click(evt?:any){
+
   }
   edit(evt) {
     this.isAdd = false;

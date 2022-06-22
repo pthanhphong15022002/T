@@ -76,7 +76,7 @@ export class EditSignFileComponent implements OnInit {
           });
           this.codxService
             .getAutoNumber(
-              this.modelPage.functionID,
+              this.modelPage.funcID,
               this.modelPage.entity,
               'CategoryID'
             )

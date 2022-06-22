@@ -111,7 +111,7 @@ export class TaskGroupComponent implements OnInit {
       sameData: true,
       active: true,
       model: {
-        resources: this.columnsGrid,
+        // resources: this.columnsGrid,
       }
     }];
   }

@@ -21,6 +21,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
 import { enter } from '@syncfusion/ej2-grids';
@@ -33,6 +34,7 @@ export class defaultRecource {}
   styleUrls: ['rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit, AfterViewInit {
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('popupDevice', { static: true }) popupDevice;
@@ -93,12 +95,12 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        sameData: false,
+        sameData: true,
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
         model: {
-          panelLeftRef: this.gridTemplate,
+          template: this.template
         },
       },
     ];
@@ -140,6 +142,12 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
+  }
+  clickMF(evt?:any, data?:any){
+
+  }
+  click(evt?:any){
+
   }
   addNew(evt: any) {
     this.isAdd = true;

@@ -1,6 +1,6 @@
 <codx-form
-  headerText="Thêm mới Văn Phòng phẩm"
-  subHeaderText="Đặt xe công tác"
+  [headerText]="headerTitle"
+  [subHeaderText]="subHeaderTilte"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
@@ -197,7 +197,13 @@
           </e-tabitem>
           <e-tabitem [header]="headerText[1]">
             <ng-template #gridTemplate>
-              <h1>Danh sách phòng</h1>
+              <h1>
+                <codx-label
+                  name="lblStationaries"
+                  default="Danh sách văn phòng phẩm"
+                  [formModel]="dialog.formModel"
+                ></codx-label>
+              </h1>
               <codx-gridview
                 #gridView
                 [columnsGrid]="columnGrid"
@@ -365,7 +371,13 @@
 
 <ng-template #addLink let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Link cuộc họp</h4>
+    <h4 class="modal-title" id="modal-basic-title">
+      <codx-label
+        name="lblLinkAppointment"
+        default="Link cuộc họp"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </h4>
     <button
       type="button"
       class="btn btn-xs btn-icon btn-light btn-hover-primary"
@@ -378,7 +390,11 @@
   <div class="modal-body">
     <div class="form-group row">
       <div class="col-4">
-        <label>Đường dẫn</label>
+        <codx-label
+          name="lblLinks"
+          default="Đường dẫn"
+          [formModel]="dialog.formModel"
+        ></codx-label>
       </div>
     </div>
     <div class="form-group row">
@@ -392,7 +408,13 @@
     </div>
   </div>
   <div class="modal-footer" (click)="modal.close()">
-    <button type="button" class="btn btn-primary">Lưu</button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 
@@ -401,7 +423,13 @@
   <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
-        <h2 id="modal-basic-title">Thiết bị</h2>
+        <h2 id="modal-basic-title">
+          <codx-label
+            name="lblEquipments"
+            default="Thiết bị"
+            [formModel]="dialog.formModel"
+          ></codx-label>
+        </h2>
         <button
           type="button"
           class="btn btn-xs btn-icon btn-light btn-hover-primary"
@@ -412,7 +440,11 @@
         </button>
       </div>
       <div class="text-dark-50">
-        Chọn các thiết bị đã tích tích hợp sẵn trong phòng
+        <codx-label
+          name="lblChooseEquipments"
+          default="Chọn thiết bị đã được tích hợp sẵn"
+          [formModel]="dialog.formModel"
+        ></codx-label>
       </div>
     </div>
   </div>
@@ -447,7 +479,13 @@
     <!--end::Card body-->
   </div>
   <div class="modal-footer" (click)="modal.close()">
-    <button type="button" class="btn btn-primary">Lưu</button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 <ng-template #popupColor let-modal>
@@ -456,7 +494,14 @@
     </codx-colorpicker>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="add()">Lưu</button>
+    <button type="button" class="btn btn-danger" (click)="add()">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label
+      >
+    </button>
   </div>
 </ng-template>
 

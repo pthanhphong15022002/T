@@ -8,10 +8,11 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { EditSignFileComponent } from '../sign-process/edit-sign-file/edit-sign-file.component';
-import { MarkSignatureComponent } from '../sign-process/mark-signature/mark-signature.component';
-import { SignProcessComponent } from '../sign-process/sign-process.component';
+import { EditSignFileComponent } from '../sign-file/edit-sign-file/edit-sign-file.component';
+import { MarkSignatureComponent } from '../sign-file/mark-signature/mark-signature.component';
+import { SignFileComponent } from '../sign-file/sign-file.component';
+import { ViewDetailComponent } from '../sign-file/view-detail/view-detail.component';
+
 import { ApprovalStepsComponent } from './approval-steps/approval-steps.component';
 import { EditApprovalSteps } from './approval-steps/edit-approval-step/edit-approval-step.component';
 import { DocCategoryComponent } from './doc-category/docCategory.component';
@@ -58,11 +59,11 @@ const routes: Routes = [
     ProcessStepComponent,
     EditApprovalSteps,
     ApprovalStepsComponent,
-    SignProcessComponent,
+    SignFileComponent,
     EditSignFileComponent,
     PopupSignatureComponent,
-    DashboardComponent,
-    MarkSignatureComponent
+    MarkSignatureComponent,
+    ViewDetailComponent
   ],
   imports: [
     RouterModule.forChild(routes),

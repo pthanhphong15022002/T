@@ -157,7 +157,6 @@ export class PopupAddComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-
   onAddToDo(evt: any) {
     if (!this.todoAddText) return;
     if (this.listTodo == null) this.listTodo = [];

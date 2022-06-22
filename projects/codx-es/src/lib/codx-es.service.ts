@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, DataRequest, NotificationsService, UploadFile, UserModel } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  NotificationsService,
+  UploadFile,
+  UserModel,
+} from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 export class ModelPage {
-  functionID = '';
+  funcID = '';
   gridViewName = '';
   formName = '';
   entity = '';
@@ -71,10 +79,9 @@ interface cbxObj {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxEsService {
-
   user: UserModel;
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
@@ -95,7 +102,7 @@ export class CodxEsService {
           modelPage.entity = funcList?.entityName;
           modelPage.formName = funcList?.formName;
           modelPage.gridViewName = funcList?.gridViewName;
-          modelPage.functionID = funcList?.functionID;
+          modelPage.funcID = funcList?.functionID;
         }
         resolve(modelPage);
       });
