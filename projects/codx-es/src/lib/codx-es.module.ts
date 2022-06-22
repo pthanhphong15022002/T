@@ -69,7 +69,7 @@ const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'setting',
+        redirectTo: 'signfiles',
         pathMatch: 'full',
       },
       {

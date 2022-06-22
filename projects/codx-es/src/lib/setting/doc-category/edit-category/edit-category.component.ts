@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   OnInit,
+  Optional,
   Output,
   TemplateRef,
   ViewChild,
@@ -14,42 +15,18 @@ import { DataItem } from '@shared/models/folder.model';
 import {
   ApiHttpService,
   CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { debug } from 'console';
-import { AddGridData, CodxEsService, ModelPage } from '../../../codx-es.service';
+import {
+  AddGridData,
+  CodxEsService,
+  ModelPage,
+} from '../../../codx-es.service';
 import { ApprovalStepsComponent } from '../../approval-steps/approval-steps.component';
-
-export class ApprovalStep {
-  alterApprovers: null;
-  approveControl: 0;
-  approvers: null;
-  cancelControl: 1;
-  constraints: null;
-  emailTemplates: null;
-  emailTime: null;
-  leadtime: 0;
-  loops: 0;
-  memo: null;
-  modifiedBy: null;
-  modifiedOn: null;
-  note: null;
-  overdueControl: null;
-  recallControl: 1;
-  redoControl: 1;
-  redoStep: 0;
-  rejectControl: 1;
-  reminder: null;
-  reminderBy: null;
-  representative: false;
-  sequential: false;
-  signatureType: null;
-  stepName: null;
-  stepNo: 0;
-  stepType: null;
-  stopOn: null;
-  transID: '';
-}
 @Component({
   selector: 'app-edit-category',
   templateUrl: './edit-category.component.html',
@@ -69,11 +46,9 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
   dialogCategory: FormGroup;
   isAfterRender: boolean = false;
   cbxName;
-  modelPage: ModelPage;
   dataGrid: AddGridData;
   isAdd: boolean = false;
   showPlan = true;
-  data;
   isSaved = false;
   isClose = true;
   transID: String = '';
@@ -83,39 +58,44 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
   isAfterAuto = false;
   cbxNameAuto: any;
 
+  headerText = 'Thêm mới Phân loại tài liệu';
+  subHeaderText = 'Tạo & upload file văn bản';
+  dialog: DialogRef;
+  data: any;
+
+  formModel: FormModel;
+
   constructor(
     private esService: CodxEsService,
     private api: ApiHttpService,
     private notifyService: NotificationsService,
     private cfService: CallFuncService,
-    private modalService: NgbModal
-  ) {}
+    private modalService: NgbModal,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    this.data = data;
+    this.formModel = this.dialog.formModel;
+  }
   html: any;
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    console.log(this.viewApprovalSteps);
+    this.initForm();
 
-    this.esService.getModelPage('ESS22').then((res) => {
-      if (res) {
-        this.modelPage = res;
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) this.cbxName = res;
+      });
 
-        this.initForm();
-
-        this.esService
-          .getComboboxName('Categories', this.modelPage.gridViewName)
-          .then((res) => {
-            if (res) this.cbxName = res;
-          });
-
-        this.initAutoNumber();
-      }
-    });
+    this.initAutoNumber();
   }
 
   initForm() {
     this.esService
-      .getFormGroup('Categories', this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
@@ -179,7 +159,7 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onSave(isClose) {
+  onSaveForm(isClose) {
     if (this.dialogCategory.invalid == true) {
       return;
     }
@@ -228,7 +208,7 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
     console.log(this.viewApprovalSteps);
 
     if (this.isAdd) {
-      this.onSave(false);
+      this.onSaveForm(false);
     } else {
       this.transID = this.dialogCategory.value.recID;
       this.modalService
