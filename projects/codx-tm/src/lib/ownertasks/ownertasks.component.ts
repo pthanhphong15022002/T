@@ -165,7 +165,6 @@ export class OwnerTasksComponent implements OnInit {
         sameData: true,
         model: {
           template: this.itemTemplate,
-
         },
       },
       {
@@ -317,7 +316,7 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -333,7 +332,7 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }
 
@@ -347,7 +346,7 @@ export class OwnerTasksComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
     });
   }
 
@@ -357,8 +356,8 @@ export class OwnerTasksComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
       .subscribe();
   }
-  sendemail(data){
-    
+  sendemail(data) {
+
   }
 
   beforeDel(opt: RequestOption) {
@@ -367,7 +366,7 @@ export class OwnerTasksComponent implements OnInit {
     return true;
   }
 
-  assignTask(data) { 
+  assignTask(data) {
     this.view.dataService.dataSelected = data;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
@@ -377,7 +376,7 @@ export class OwnerTasksComponent implements OnInit {
     this.dialog.closed.subscribe(e => {
       console.log(e);
     })
-   }
+  }
 
   changeView(evt: any) {
 
@@ -468,7 +467,7 @@ export class OwnerTasksComponent implements OnInit {
       obj
     );
   }
-  receiveMF(e : any){
-      this.clickMF(e.e,this.itemSelected)
+  receiveMF(e: any) {
+    this.clickMF(e.e, this.itemSelected)
   }
 }
