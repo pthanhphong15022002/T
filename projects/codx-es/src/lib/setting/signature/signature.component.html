@@ -2,14 +2,6 @@
   (buttonClick)="addNew($event)" [moreFuncs]="moreFunc"> </codx-views>
 
 
-<ng-template #gridTemplate>
-  <!-- <app-edit-signature></app-edit-signature> -->
-  <codx-gridview #gridView [allowSorting]="" [columnsGrid]="columnsGrid" [sortSettings]="" [allowGrouping]=""
-    [groupSettings]="" [editSettings]="" [selectionOptions]="" [rowHeight]='40' [pageSize]="10" [funcId]=""
-    assemblyName="ES" entityName="ES_Signatures" className="SignaturesBusiness" method="GetListAsync" predicate=""
-    dataValue="" [pageSize]="15" height="500px" [showColumnMenu]='true' [filterSettings]="" [allowFiltering]=""
-    [allowResizing]=""></codx-gridview>
-</ng-template>
 
 <ng-template #sideBarRightRef>
   <app-edit-signature #editSignature (closeSidebar)="closeSidebar($event)"></app-edit-signature>

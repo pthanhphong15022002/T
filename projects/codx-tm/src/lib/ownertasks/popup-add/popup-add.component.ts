@@ -157,7 +157,7 @@ export class PopupAddComponent implements OnInit {
     } else {
       this.disableAddToDo = !this.disableAddToDo;
       this.changeDetectorRef.detectChanges();
-      if (!this.disableAddToDo) $('#txtTodoAdd').focus();
+      // if (!this.disableAddToDo) $('#txtTodoAdd').focus();
     }
   }
 
@@ -170,7 +170,7 @@ export class PopupAddComponent implements OnInit {
     this.listTodo.push(Object.assign({}, todo));
     this.todoAddText = '';
     this.changeDetectorRef.detectChanges();
-    $('#txtTodoAdd').focus();
+    // $('#txtTodoAdd').focus();
   }
 
   onDeleteTodo(index) {
@@ -355,7 +355,7 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-      $('#taskNameInput').focus();
+      // $('#taskNameInput').focus();
     }
     if (
       this.functionID == 'TMT03' &&

@@ -73,12 +73,11 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        sameData: false,
+        sameData: true,
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
         model: {
-          panelLeftRef: this.grid,
         },
       },
     ];

@@ -12,8 +12,8 @@ import { environment } from 'src/environments/environment';
 import { CodxEsComponent } from './codx-es.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DocCategoryComponent } from './setting/doc-category/docCategory.component';
-import { MarkSignatureComponent } from './sign-process/mark-signature/mark-signature.component';
-import { SignProcessComponent } from './sign-process/sign-process.component';
+import { MarkSignatureComponent } from './sign-file/mark-signature/mark-signature.component';
+import { SignFileComponent } from './sign-file/sign-file.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 
@@ -24,7 +24,7 @@ const routes: Routes = [
     children: [
       {
         path: 'signfiles/:funcID',
-        component: SignProcessComponent,
+        component: SignFileComponent,
       },
       {
         path: 'signatures/:funcID',
@@ -36,7 +36,7 @@ const routes: Routes = [
       },
       {
         path: 'home/:funcID',
-        component: SignProcessComponent,
+        component: SignFileComponent,
       },
       {
         path: 'dashboard',
@@ -69,7 +69,9 @@ const routes: Routes = [
 ];
 @NgModule({
   declarations: [
-    CodxEsComponent
+    LayoutComponent,
+    DashboardComponent,
+    CodxEsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
