@@ -19,7 +19,7 @@ import {
 } from 'codx-core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { DialogCarResourceComponent } from './dialog/editor.component';
+import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
 export class defaultRecource {}
 @Component({
@@ -36,7 +36,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('carResourceDialog') carResourceDialog: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('editor') editor: DialogCarResourceComponent;
+  @ViewChild('editor') editor: PopupAddCarsComponent;
   @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
   @ViewChild('category', { static: true }) category: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
