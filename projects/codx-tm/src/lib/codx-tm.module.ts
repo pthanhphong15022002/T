@@ -91,7 +91,6 @@ const T_Component: Type<any>[] = [
   HomeSettingComponent,
   SettingComponent,
   TaskGroupComponent,
-  PopupAddComponent,
   PopAddTaskgroupComponent
 ]
 @NgModule({

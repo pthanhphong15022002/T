@@ -1,6 +1,6 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected"></app-view-detail>
+  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)"></app-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>

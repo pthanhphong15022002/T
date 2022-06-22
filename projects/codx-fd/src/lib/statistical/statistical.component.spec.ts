@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxHrComponent } from './codx-hr.component';
+import { StatisticalComponent } from './statistical.component';
 
-describe('CodxHrComponent', () => {
-  let component: CodxHrComponent;
-  let fixture: ComponentFixture<CodxHrComponent>;
+describe('StatisticalComponent', () => {
+  let component: StatisticalComponent;
+  let fixture: ComponentFixture<StatisticalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxHrComponent ]
+      declarations: [ StatisticalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxHrComponent);
+    fixture = TestBed.createComponent(StatisticalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
