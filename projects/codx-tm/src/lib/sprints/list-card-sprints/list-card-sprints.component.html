@@ -7,105 +7,36 @@
       </div>
       <div class="view-listbox card-with-dropdown pl-6 row">
         <ng-container>
-          <div
-            class="task-card card-with-dropdown-item col-2 flex"
-            style="
+          <div class="task-card card-with-dropdown-item col-2 flex" style="
               background-color: rgb(204, 228, 231);
               border-radius: 5%;
               padding: 20px;
               height: 100%;
-            "
-            (click)="codxService.navigate('', urlView)"
-          >
+            " (click)="codxService.navigate('', urlView)">
             <div class="d-flex justify-content-center mt-3">
-              <codx-img
-                class="symbol symbol-50 symbol-circle"
-                [objectId]="user.userID"
-                objectType="TM_Sprints"
-                [objectName]="user.userName"
-              >
+              <codx-img class="symbol symbol-50 symbol-circle" [objectId]="user.userID" objectType="TM_Sprints"
+                [objectName]="user.userName">
               </codx-img>
             </div>
             <div class="mt-3 text-center">
               <div class="font-weight-bold font-size-h5 text-dard card-name">
-                <codx-label
-                  name="lblName"
-                  formName="Tasks"
-                  default="Task board"
-                ></codx-label>
+                <codx-label name="lblName" formName="Tasks" default="Task board"></codx-label>
               </div>
               <div class="text-muted font-size-sm card-des">
-                <codx-label
-                  name="lblDetails"
-                  formName="Tasks"
-                  default="Danh sách công việc theo phân quyền của tôi "
-                ></codx-label>
+                <codx-label name="lblDetails" formName="Tasks" default="Danh sách công việc theo phân quyền của tôi ">
+                </codx-label>
               </div>
             </div>
           </div>
         </ng-container>
-        <!-- <codx-listcard #lstViewBoard [pageSize]="6" funcId="TMT04" service="TM" assemblyName="ERM.Business.TM"
-                    className="SprintsBusiness" method="GetListSprintAsync" autoLoad="true" entityName="TM_Sprints"
-                    [predicate]="predicateViewBoards" [gridViewName]="'grvSprints'" class="h-100"
-                    [cartTemp]="itemViewBoard">
-                </codx-listcard> -->
-        <!-- <codx-card-center cardCss="border h-100" (click)="clickMF($event,data)" (click)="click(data)" [imageId]="data.userID"
-                  imageObjType="AD_Users" iconCss="icon-flag" iconCss2="icon-security" [title]="data.userName"
-                     [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
-                   [date]="data.createdOn" [footer]="cardImgFooter">
-                  </codx-card-center> -->
-        <codx-treeview
-          #lstViewBoard
-          funcId="TMT04"
-          service="TM"
-          assemblyName="ERM.Business.TM"
-          className="SprintsBusiness"
-          method="GetListSprintAsync"
-          entityName="TM_Sprints"
-          [gridViewName]="'grvSprints'"
-          [predicate]="predicateViewBoards"
-          class="h-100"
-          [itemTemplate]="itemViewBoard"
-        >
-        </codx-treeview>
-        <ng-template #itemViewBoard let-data>
-          <!-- <div style="border-bottom: 1px solid">
-            <div>{{ data.meno }}</div>
-            <div>{{ data.iterationName }}</div>
-            <div>{{ data.resources }}</div>
-          </div> -->
-          <codx-card-center
-          cardCss="border h-100"
-          (click)="clickMF($event, data)"
-          (click)="click(data)"
-          [imageId]="data.iterationID"
-          [title]="data.iterationName"
-          [content]="data.memo || 'memo'"
-          [date]="data.createdOn"
-        >
-        </codx-card-center>
-        </ng-template>.
-        
-<!-- 
-        <codx-views
-          [view]="view"
-          funcID="TMT04"
-          service="TM"
-          assemblyName="ERM.Business.TM"
-          className="SprintsBusiness"
-          method="GetListSprintAsync"
-          entityName="TM_Sprints"
-          [predicate]="predicateViewBoards"
-          [itemTemplate]="itemViewBoard"
-        >
-        </codx-views> -->
+        <codx-listview type="cardView" #lstViewBoard service="TM" assemblyName="ERM.Business.TM"
+          className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
+          [predicate]="predicateViewBoards" class="h-100" [formModel]="formModel" [itemTemplate]="itemViewBoard">
+        </codx-listview>
       </div>
       <div class="clear mb-6 d-flex justify-content-end pr-9">
-        <div
-          (click)="viewMoreMyBoard()"
-          class="read-more d-flex align-items-center"
-          *ngIf="totalRowMyBoard <= totalViewBoards"
-        >
+        <div (click)="viewMoreMyBoard()" class="read-more d-flex align-items-center"
+          *ngIf="totalRowMyBoard <= totalViewBoards">
           <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
           <span class="text-primary">Read more</span>
         </div>
@@ -117,18 +48,14 @@
         Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ
       </div>
       <div class="view-listbox pl-6">
-        <!-- <codx-listcard #lstProjectBoard  [pageSize]="6" funcId="TMT04" service="TM"
-                    assemblyName="ERM.Business.TM" className="SprintsBusiness" method="GetListSprintAsync"
-                    autoLoad="true" entityName="TM_Sprints" [predicate]="predicateProjectBoards"
-                    [gridViewName]="'grvSprints'" class="h-100" [cartTemp]="itemViewBoard">
-                </codx-listcard> -->
+        <codx-listview type="cardView" #lstProjectBoard service="TM" assemblyName="ERM.Business.TM"
+          className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
+          [predicate]="predicateProjectBoards" class="h-100" [formModel]="formModel" [itemTemplate]="itemViewBoard">
+        </codx-listview>
       </div>
       <div class="clear mb-6 d-flex justify-content-end pr-9">
-        <div
-          (click)="viewMoreProjectBoard()"
-          class="read-more d-flex align-items-center"
-          *ngIf="totalRowProjectBoard < totalProjectBoards"
-        >
+        <div (click)="viewMoreProjectBoard()" class="read-more d-flex align-items-center"
+          *ngIf="totalRowProjectBoard < totalProjectBoards">
           <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
           <span class="text-primary">Read more</span>
         </div>
@@ -137,28 +64,10 @@
   </div>
 </div>
 
-<ng-template #itemViewBoard let-data>
-  <!-- <div class="task-card card-with-dropdown-item" style="background-color: rgb(204, 228, 231);  border-radius: 5%; padding:20px ; height: 100%;" >
-        <div class="d-flex justify-content-center mt-3">
-            <codx-imgs class="symbol symbol-50 symbol-circle" [objectId]="user?.userID" objectName="AD_Users"
-            [numberImages]="2">
-          </codx-imgs>
-        </div>
-        <div class="mt-3 text-center">
-            <div class="font-weight-bold font-size-h5 text-dard card-name"><codx-label  name="lblName" formName="Tasks" default="Task board"></codx-label></div>
-            <div class="text-muted font-size-sm card-des"><codx-label name="lblMemo" formName="Tasks" default="Danh sách công việc theo phân quyền của tôi "></codx-label></div>
 
-        </div>
-    </div> -->
-  <codx-card-center
-    cardCss="border h-100"
-    (click)="clickMF($event, data)"
-    (click)="click(data)"
-    [imageId]="data.userID"
-    imageObjType="AD_Users"
-    [title]="data.userName"
-    [content]="data.memo || 'memo'"
-    [date]="data.createdOn"
-  >
+<ng-template #itemViewBoard let-data>
+  <codx-card-center cardCss="border h-100" [formModel]="formModel" (click)="clickMF($event, data)" (click)="click(data)"
+    [imageId]="data.iterationID" [title]="data.iterationName" [content]="data.memo || 'memo'" [date]="data.createdOn"
+    [resources]="" [resourceObjType]="" [resourceNum]="">
   </codx-card-center>
 </ng-template>

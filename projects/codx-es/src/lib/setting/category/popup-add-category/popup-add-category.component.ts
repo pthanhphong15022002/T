@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   OnInit,
+  Optional,
   Output,
   TemplateRef,
   ViewChild,
@@ -14,48 +15,24 @@ import { DataItem } from '@shared/models/folder.model';
 import {
   ApiHttpService,
   CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { debug } from 'console';
-import { AddGridData, CodxEsService, ModelPage } from '../../../codx-es.service';
-import { ApprovalStepsComponent } from '../../approval-steps/approval-steps.component';
-
-export class ApprovalStep {
-  alterApprovers: null;
-  approveControl: 0;
-  approvers: null;
-  cancelControl: 1;
-  constraints: null;
-  emailTemplates: null;
-  emailTime: null;
-  leadtime: 0;
-  loops: 0;
-  memo: null;
-  modifiedBy: null;
-  modifiedOn: null;
-  note: null;
-  overdueControl: null;
-  recallControl: 1;
-  redoControl: 1;
-  redoStep: 0;
-  rejectControl: 1;
-  reminder: null;
-  reminderBy: null;
-  representative: false;
-  sequential: false;
-  signatureType: null;
-  stepName: null;
-  stepNo: 0;
-  stepType: null;
-  stopOn: null;
-  transID: '';
-}
+import {
+  AddGridData,
+  CodxEsService,
+  ModelPage,
+} from '../../../codx-es.service';
+import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 @Component({
-  selector: 'app-edit-category',
-  templateUrl: './edit-category.component.html',
-  styleUrls: ['./edit-category.component.scss'],
+  selector: 'popup-add-category',
+  templateUrl: './popup-add-category.component.html',
+  styleUrls: ['./popup-add-category.component.scss'],
 })
-export class EditCategoryComponent implements OnInit, AfterViewInit {
+export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @Output() closeForm = new EventEmitter();
   @Output() openAsideForm = new EventEmitter();
 
@@ -63,17 +40,15 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('content') content: TemplateRef<any>;
   @ViewChild('popupModal') popupModal;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
-  @ViewChild('viewApprovalSteps') viewApprovalSteps: ApprovalStepsComponent;
+  @ViewChild('viewApprovalSteps') viewApprovalSteps: ApprovalStepComponent;
 
   color: any;
   dialogCategory: FormGroup;
   isAfterRender: boolean = false;
   cbxName;
-  modelPage: ModelPage;
   dataGrid: AddGridData;
   isAdd: boolean = false;
   showPlan = true;
-  data;
   isSaved = false;
   isClose = true;
   transID: String = '';
@@ -83,39 +58,43 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
   isAfterAuto = false;
   cbxNameAuto: any;
 
+  headerText = 'Thêm mới Phân loại tài liệu';
+  subHeaderText = 'Tạo & upload file văn bản';
+  dialog: DialogRef;
+  data: any;
+
+  formModel: FormModel;
+
   constructor(
     private esService: CodxEsService,
     private api: ApiHttpService,
     private notifyService: NotificationsService,
     private cfService: CallFuncService,
-    private modalService: NgbModal
-  ) {}
-  html: any;
+    private modalService: NgbModal,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    this.data = data;
+    this.formModel = this.dialog.formModel;
+  }
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    console.log(this.viewApprovalSteps);
+    this.initForm();
 
-    this.esService.getModelPage('ESS22').then((res) => {
-      if (res) {
-        this.modelPage = res;
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) this.cbxName = res;
+      });
 
-        this.initForm();
-
-        this.esService
-          .getComboboxName('Categories', this.modelPage.gridViewName)
-          .then((res) => {
-            if (res) this.cbxName = res;
-          });
-
-        this.initAutoNumber();
-      }
-    });
+    this.initAutoNumber();
   }
 
   initForm() {
     this.esService
-      .getFormGroup('Categories', this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
@@ -179,7 +158,7 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onSave(isClose) {
+  onSaveForm(isClose) {
     if (this.dialogCategory.invalid == true) {
       return;
     }
@@ -228,7 +207,7 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
     console.log(this.viewApprovalSteps);
 
     if (this.isAdd) {
-      this.onSave(false);
+      this.onSaveForm(false);
     } else {
       this.transID = this.dialogCategory.value.recID;
       this.modalService
@@ -249,50 +228,6 @@ export class EditCategoryComponent implements OnInit, AfterViewInit {
 
   openAside() {
     this.openAsideForm.emit();
-  }
-
-  setHtml() {
-    this.html = this.templateItem.nativeElement;
-    let parent = document.getElementsByClassName(
-      'timeline-items'
-    )[0] as HTMLElement;
-    let inner = '';
-    let frag = [];
-    for (let i = 0; i < this.data.length; i++) {
-      let ele = this.html as HTMLElement;
-      for (let j = 0; j < this.data[i].approvers.length; j++) {
-        let childEle = ele
-          .getElementsByClassName('flex-wrap')[0]
-          .children.item(j);
-        childEle
-          .getElementsByTagName('codx-img')[0]
-          .setAttribute('objectId', this.data[i].approvers[j].userID);
-        childEle
-          .getElementsByTagName('codx-img')[0]
-          .setAttribute(
-            'ng-reflect-object-id',
-            this.data[i].approvers[j].userID
-          );
-      }
-
-      ele.style.display = 'block';
-      (ele as HTMLElement).getElementsByClassName('step-order')[0].innerHTML =
-        this.data[i].number.toString();
-      (ele as HTMLElement).getElementsByClassName(
-        'stepper-title'
-      )[0].innerHTML = this.data[i].name.toString();
-      (ele as HTMLElement).getElementsByClassName('stepper-desc')[0].innerHTML =
-        this.data[i].name2.toString();
-      frag.push(ele);
-      inner += ele.outerHTML;
-    }
-    if (parent) {
-      // let inner = '';
-      // frag.forEach((item) => {
-      //   inner = inner + item.innerHTML;
-      // });
-      parent.innerHTML = inner;
-    }
   }
 
   extendShowPlan() {

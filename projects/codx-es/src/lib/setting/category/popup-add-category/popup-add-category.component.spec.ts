@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditApprovalSteps } from './edit-approval-step.component';
+import { PopupAddCategoryComponent } from './edit-category.component';
 
-describe('EditApprovalSteps', () => {
-  let component: EditApprovalSteps;
-  let fixture: ComponentFixture<EditApprovalSteps>;
+describe('EditCategoryComponent', () => {
+  let component: PopupAddCategoryComponent;
+  let fixture: ComponentFixture<PopupAddCategoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditApprovalSteps],
+      declarations: [PopupAddCategoryComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditApprovalSteps);
+    fixture = TestBed.createComponent(PopupAddCategoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

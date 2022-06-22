@@ -11,7 +11,7 @@ import {
 } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 export class ModelPage {
-  functionID = '';
+  funcID = '';
   gridViewName = '';
   formName = '';
   entity = '';
@@ -102,7 +102,7 @@ export class CodxEsService {
           modelPage.entity = funcList?.entityName;
           modelPage.formName = funcList?.formName;
           modelPage.gridViewName = funcList?.gridViewName;
-          modelPage.functionID = funcList?.functionID;
+          modelPage.funcID = funcList?.functionID;
         }
         resolve(modelPage);
       });
