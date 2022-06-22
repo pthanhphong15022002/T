@@ -27,6 +27,8 @@ import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.com
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
 import { PopAddTaskgroupComponent } from './setting/task-group/pop-add-taskgroup/pop-add-taskgroup.component';
+import { AssignTasksComponent } from './assigntasks/assigntasks.component';
+import { ViewDetailAssignTasksComponent } from './assigntasks/view-detail-assign-tasks/view-detail-assign-tasks.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +42,10 @@ export const routes: Routes = [
       {
         path: 'viewboards/:funcID',
         component: SprintsComponent,
+      },
+      {
+        path: 'assigntasks/:funcID',
+        component: AssignTasksComponent,
       },
       {
         path: 'sprinttasks/:funcID',
@@ -91,7 +97,9 @@ const T_Component: Type<any>[] = [
   HomeSettingComponent,
   SettingComponent,
   TaskGroupComponent,
-  PopAddTaskgroupComponent
+  PopAddTaskgroupComponent,
+  AssignTasksComponent,
+  ViewDetailAssignTasksComponent
 ]
 @NgModule({
   imports: [

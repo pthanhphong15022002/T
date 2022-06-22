@@ -80,13 +80,13 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
       this.initForm();
       this.cacheSv.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
-        console.log('Devices', this.vllDevices)
       });
 
       this.bookingService
         .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
         .then((res) => {
           this.CbxName = res;
+          console.log('Cbx', this.CbxName)
         });
     });
   }

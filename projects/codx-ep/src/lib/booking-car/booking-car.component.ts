@@ -52,7 +52,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
 
   devices: any;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   defaultRecource: any = {
     resourceName: '',
@@ -98,7 +98,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private cacheSv: CacheService,
-    private cf: ChangeDetectorRef,
+    private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
     private activedRouter: ActivatedRoute,
@@ -108,7 +108,6 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     this.bookingService.getModelPage(this.funcID).then((res) => {
       if (res) {
         this.modelPage = res;
-        console.log(this.modelPage)
       }
     });
   }
@@ -226,7 +225,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       Title: 'Resources',
     };
 
-    this.button = {
+    this.buttons = {
       id: 'btnAdd',
     };
   }

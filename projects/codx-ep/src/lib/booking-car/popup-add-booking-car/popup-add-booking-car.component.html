@@ -5,7 +5,7 @@
   [footer]="footer"
   [dialog]="dialog"
 >
-  <ng-template popup adde #body>
+  <ng-template popup #body>
     <div class="tab-content">
       <!-- Render the Tab Component -->
       <ejs-tab
@@ -44,6 +44,7 @@
                       [crrValue]="dialogCarBooking.value.resourceID"
                       [Group]="dialogCarBooking"
                       [refValue]="CbxName['ResourceID']"
+                      [multiple]="false"
                     ></codx-input>
                   </div>
                   <div
@@ -112,9 +113,10 @@
                     <!--end::Label-->
                     <codx-input
                       type="combobox"
-                      ngDefaultControl
+                      ControlName="reasonID"
+                      [crrValue]="dialogCarBooking.value.reasonID"
+                      [Group]="dialogCarBooking"
                       [refValue]="CbxName['ReasonID']"
-                      (valueChange)="valueChange($event)"
                       [multiple]="false"
                     >
                     </codx-input>
@@ -220,7 +222,6 @@
                         [Group]="dialogCarBooking"
                         [crrValue]="dialogCarBooking.value.phone"
                         placeholder=""
-                        ngDefaultControl
                         class="form-control"
                       ></codx-input>
                       <!--end::Input-->
@@ -323,7 +324,6 @@
             <ng-template #content>
               <div id="rome" class="tabpanel">
                 <div class="tab-content">
-                  <!--begin::Title-->
                   <div
                     class="d-flex justify-content-between align-items-center mb-4"
                   >
@@ -332,27 +332,18 @@
                     </h4>
                     <span class="icon-group_add text-primary fs-1"></span>
                   </div>
-                  <!--end::Title-->
-                  <!--begin::User item-->
                   <div class="d-flex align-items-center mb-4">
-                    <!--begin::Symbol-->
-                    <div
-                      class="symbol symbol-35px symbol-circle me-4"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Trần Quốc Hoàn"
-                    >
-                      <img
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
+                    <div class="symbol symbol-35px symbol-circle me-4">
+                      <codx-img
+                        [objectId]="'ADMIN'"
+                        [objectName]="'ADMIN'"
+                        objectType="AD_Users"
+                      ></codx-img>
                       <span
                         class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
                         >R</span
                       >
                     </div>
-                    <!--end::Symbol-->
-                    <!--begin::Text-->
                     <div class="d-flex flex-column flex-grow-1">
                       <div class="text-dark fw-bold fs-6 font-weight-bolder">
                         Trần Quốc Hoàn
@@ -361,8 +352,6 @@
                         >Chủ trì cuộc họp</span
                       >
                     </div>
-                    <!--end::Text-->
-                    <!--begin::label-->
                     <div class="d-flex flex-column justify-content-end">
                       <span class="badge badge-light-success fs-7 fw-bold mb-1"
                         >Chưa xác định</span
@@ -370,86 +359,6 @@
                       <span class="text-muted font-weight-bold text-center">
                         1 ngày trước
                       </span>
-                    </div>
-                    <!--end::label-->
-                  </div>
-                  <!--end::User item-->
-                  <!--begin::User item-->
-                  <div class="d-flex align-items-center mb-4">
-                    <!--begin::Symbol-->
-                    <div
-                      class="symbol symbol-35px symbol-circle me-4"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Võ Văn Quang"
-                    >
-                      <img
-                        class="empImg"
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
-                      <span
-                        class="symbol-badge badge badge-circle bg-dark top-100 start-100 text-white fs-8"
-                        >0</span
-                      >
-                    </div>
-                    <!--end::Symbol-->
-                    <!--begin::Text-->
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark fw-bold fs-6 font-weight-bolder">
-                        Trần Quốc Hoàn
-                      </div>
-                      <span class="text-muted font-weight-bold"
-                        >Thành viên</span
-                      >
-                    </div>
-                    <!--end::Text-->
-                    <!--begin::label-->
-                    <div class="d-flex flex-column justify-content-end">
-                      <span class="badge badge-light-danger mb-1"
-                        >Không tham gia</span
-                      >
-                      <span class="text-muted font-weight-bold text-center">
-                        1 giờ trước
-                      </span>
-                    </div>
-                    <!--end::label-->
-                  </div>
-                  <!--end::User item-->
-                  <div class="text-center">
-                    <div
-                      class="Participants d-flex align-items-center w-275px mx-auto"
-                    >
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-danger top-100 start-100 text-white fs-8 me-1"
-                          >A</span
-                        >
-                        Chủ trì
-                      </a>
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-success top-100 start-100 text-white fs-8 me-1"
-                          >S</span
-                        >
-                        Thư ký
-                      </a>
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-primary top-100 start-100 text-white fs-8 me-1"
-                          >P</span
-                        >
-                        Tham dự
-                      </a>
                     </div>
                   </div>
                 </div>

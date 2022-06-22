@@ -4,13 +4,14 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { AddGridData, CodxEpService, ModelPage } from '../../../codx-ep.service';
 
 @Component({
@@ -29,8 +30,9 @@ export class PopupAddCarsComponent implements OnInit {
   devices: any;
   modelPage: ModelPage;
   cacheGridViewSetup: any;
-
   dialogCar: FormGroup;
+  dialog: any;
+  
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -38,8 +40,13 @@ export class PopupAddCarsComponent implements OnInit {
     private cacheSv: CacheService,
     private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
-    private bookingService: CodxEpService
-  ) {}
+    private bookingService: CodxEpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+  }
 
   isAfterRender = false;
   vllDevices = [];
@@ -132,6 +139,7 @@ export class PopupAddCarsComponent implements OnInit {
       this.dialogCar.patchValue({ owner: evt[0] });
     }
   }
+  onSaveForm(){}
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
