@@ -84,7 +84,7 @@
         <td class="w-75">
           <div class="d-flex">
             <div class="w-100px h-100px m-4">
-             <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+              <codx-img [objectId]="" imageType="square" width="100"></codx-img>
             </div>
             <div class="">
               <div class="text-dark font-weight-bold font-size-h6">
@@ -122,6 +122,10 @@
       </tbody>
     </table>
   </div>
+  <codx-temp-full
+    (clickMF)="clickMF($event, data)"
+    [formModel]="viewBase.formModel"
+  >
+  </codx-temp-full>
 </ng-template>
 <!-- end::View list -->
-
