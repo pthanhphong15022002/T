@@ -14,11 +14,11 @@ import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
 import { AddGridData, CodxEpService, ModelPage } from '../../../codx-ep.service';
 
 @Component({
-  selector: 'car-resource-editor',
-  templateUrl: 'editor.component.html',
-  styleUrls: ['editor.component.scss'],
+  selector: 'popup-add-cars',
+  templateUrl: 'popup-add-cars.component.html',
+  styleUrls: ['popup-add-cars.component.scss'],
 })
-export class DialogCarResourceComponent implements OnInit {
+export class PopupAddCarsComponent implements OnInit {
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data = {};

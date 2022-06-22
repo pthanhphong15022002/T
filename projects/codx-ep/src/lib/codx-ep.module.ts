@@ -20,15 +20,19 @@ import { DialogStationeryComponent } from './settings/stationery/dialog/dialog-s
 import { EditRoomBookingComponent } from './booking-room/edit-room-booking/edit-room-booking.component';
 import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { BookingCarComponent } from './booking-car/booking-car.component';
-import { DialogCarBookingComponent } from './booking-car/dialog/editor.component';
 import { RoomDashboardComponent } from './booking-room/dashboard/dashboard.component';
 import { CarDashboardComponent } from './booking-car/dashboard/dashboard.component';
+import { PopupAddBookingCarComponent } from './booking-car/popup-add-booking-car/popup-add-booking-car.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'bookingcars/:funcID',
+        component: BookingCarComponent,
+      },
       {
         path: 'bookingrooms/:funcID',
         component: BookingRoomComponent,
@@ -91,7 +95,7 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   EditRoomBookingComponent,
   BookingCarComponent,
-  DialogCarBookingComponent,
+  PopupAddBookingCarComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryComponent,
