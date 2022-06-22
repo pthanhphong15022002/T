@@ -212,7 +212,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     //       t.data = res[1];
     //     }
     //   })
-   // this.closePanel();
+    this.closePanel();
   }
 
   updateRow() {

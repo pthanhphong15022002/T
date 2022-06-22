@@ -39,8 +39,12 @@ export class PopAddRangesComponent implements OnInit {
     @Optional() dd?: DialogData,) { 
       this.ranges = {
         ...this.ranges,
-        ...dd?.data,
+        ...dd?.data[0],
       };
+      this.rangeLines = {
+        ...this.rangeLines,
+        ...dd?.data[1]
+      }
       this.dialog = dialog;
       this.user = this.authStore.get();
       this.functionID = this.dialog.formModel.funcID;
@@ -148,6 +152,7 @@ export class PopAddRangesComponent implements OnInit {
 
   openPopup(itemdata, isAddLine, index) {
     this.isAddLine = isAddLine;
+
     if (!itemdata)
       this.initPopup();
     else if (!itemdata.recID) {
