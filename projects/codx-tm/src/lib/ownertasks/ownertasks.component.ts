@@ -22,9 +22,16 @@ import {
   ApiHttpService,
   AuthStore,
   CodxScheduleComponent,
+  UrlUtil,
+  NotificationsService,
+  CacheService,
 } from 'codx-core';
+import * as moment from 'moment';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { CodxTMService } from '../codx-tm.service';
 import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
   selector: 'test-views',
   templateUrl: './ownertasks.component.html',
@@ -35,8 +42,10 @@ export class OwnerTasksComponent implements OnInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
   views: Array<ViewModel> = [];
@@ -55,12 +64,12 @@ export class OwnerTasksComponent implements OnInit {
   // resourceField: any;
   eventStatus: any;
   itemSelected: any;
-  user: any
-  funcID: string
+  user: any;
+  funcID: string;
   gridView: any;
   @Input() calendarID: string;
 
-  @Input() viewPreset: string = "weekAndDay";
+  @Input() viewPreset: string = 'weekAndDay';
 
   constructor(
     private inject: Injector,
@@ -68,25 +77,38 @@ export class OwnerTasksComponent implements OnInit {
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private notiService: NotificationsService,
+    private tmSv: CodxTMService,
+    private callfc: CallFuncService
   ) {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
   }
 
-  clickMF(e: any, data: any) {
-    console.log(e, data);
+  clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
         this.show();
         break;
       case 'edit':
-        this.edit();
+        this.edit(data);
+        break;
+      case 'copy':
+        this.copy(data);
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
+      case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
+        this.assignTask(data);
+        break;
+      default:
+        this.changeStatusTask(e, data);
         break;
     }
   }
@@ -94,12 +116,6 @@ export class OwnerTasksComponent implements OnInit {
     switch (evt.id) {
       case 'btnAdd':
         this.show();
-        break;
-      case 'edit':
-        this.edit();
-        break;
-      case 'delete':
-        this.delete(evt);
         break;
     }
   }
@@ -138,7 +154,7 @@ export class OwnerTasksComponent implements OnInit {
   change() {
     // this.view.dataService.dataValues = "1";
     // this.view.dataService.load();
-    this.view.dataService.setPredicates(["Status=@0"], ["1"]);
+    this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
   ngAfterViewInit(): void {
@@ -149,6 +165,7 @@ export class OwnerTasksComponent implements OnInit {
         sameData: true,
         model: {
           template: this.itemTemplate,
+
         },
       },
       {
@@ -177,10 +194,10 @@ export class OwnerTasksComponent implements OnInit {
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          contextMenu: '',
-          template: this.scheduleTemplate,
-        }
-      }
+          template: this.eventTemplate,
+          template3: this.cellTemplate
+        },
+      },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -195,8 +212,8 @@ export class OwnerTasksComponent implements OnInit {
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: "userID" },
-  }
+    resourceId: { name: 'userID' },
+  };
   resourceField = {
     Name: 'Resources',
     Field: 'userID',
@@ -216,31 +233,39 @@ export class OwnerTasksComponent implements OnInit {
       logic: 'and',
       filters: [
         { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' }
-      ]
-    }
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
+      ],
+    };
     //reload data
     // this.schedule.reloadDataSource();
     // this.schedule.reloadResource();
-
   }
 
   getCellContent(evt: any) {
-
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
-        if (day && evt.getFullYear() == day.getFullYear() &&
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
           evt.getMonth() == day.getMonth() &&
-          evt.getDate() == day.getDate()) {
+          evt.getDate() == day.getDate()
+        ) {
           var time = evt.getTime();
           var ele = document.querySelectorAll('[data-date="' + time + '"]');
           if (ele.length > 0) {
-            ele.forEach(item => {
+            ele.forEach((item) => {
               (item as any).style.backgroundColor = this.dayoff[i].color;
-            })
+            });
           }
-          return '<icon class="' + this.dayoff[i].symbol + '"></icon>' + '<span>' + this.dayoff[i].note + '</span>'
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
         }
       }
     }
@@ -249,25 +274,40 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   getParams() {
-    this.api.execSv<any>('SYS', 'ERM.Business.CM', 'ParametersBusiness', 'GetOneField', ['TM_Parameters', null, 'CalendarID']).subscribe(res => {
-      if (res) {
-        this.calendarID = res.fieldValue;
-        this.getDayOff(this.calendarID);
-      }
-    })
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TM_Parameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+        }
+      });
   }
 
   getDayOff(id = null) {
-    if (id)
-      this.calendarID = id;
-    this.api.execSv<any>('BS', 'ERM.Business.BS', 'CalendarsBusiness', 'GetDayWeekAsync', [this.calendarID]).subscribe(res => {
-      if (res) {
-        console.log(res);
-        res.forEach(ele => {
-          this.dayoff = res;
-        });
-      }
-    })
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          console.log(res);
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
   }
   //#endregion schedule
 
@@ -277,48 +317,158 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add'], option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
     });
   }
 
-  edit() {
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
+    });
+  }
+
+  copy(data) {
+    // data.taskID = null;
+    // data.recID = null;
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
+      this.view.dataService.dataSelected = data;
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], this.beforeDel).subscribe();
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
+      .subscribe();
+  }
+  sendemail(data){
+    
   }
 
-
   beforeDel(opt: RequestOption) {
-    opt.service = 'TM';
-    opt.assemblyName = 'TM';
-    opt.className = 'TaskBusiness';
-    opt.methodName = 'TestApi';
+    opt.methodName = 'DeleteTaskAsync';
+    opt.data = this.itemSelected.taskID;
     return true;
   }
 
+  assignTask(data) { 
+    this.view.dataService.dataSelected = data;
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    option.Width = '750px';
+    this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
+   }
+
   changeView(evt: any) {
+
   }
 
   requestEnded(evt: any) {
-    // if (evt) {
-    //   this.dialog.close();
-    // }
+
   }
-  aaa(val: any) {
-    console.log(val);
+  onDragDrop(e: any) {
+    if (e.type == 'drop') {
+      this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data).subscribe(res => {
+        if (res) {
+          this.view.dataService.update(e.data);
+        }
+      });
+    }
   }
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
+  }
+
+  changeStatusTask(moreFunc, taskAction) {
+    const fromName = 'TM_Parameters';
+    const fieldName = 'UpdateControl';
+    //  this.view.dataService.dataSelected = taskAction;
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        [fromName, null, fieldName]
+      )
+      .subscribe((res) => {
+        if (res) {
+          var fieldValue = res.fieldValue;
+          if (fieldValue != '0') {
+            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
+          } else {
+            var completedOn = moment(new Date()).toDate();
+            var startDate = moment(new Date(taskAction.startDate)).toDate();
+            var estimated = moment(completedOn).diff(
+              moment(startDate),
+              'hours'
+            );
+            var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
+
+            this.tmSv
+              .setStatusTask(
+                taskAction.taskID,
+                status,
+                completedOn,
+                estimated.toString(),
+                ''
+              )
+              .subscribe((res) => {
+                if (res) {
+                  taskAction.status = status;
+                  taskAction.completedOn = completedOn;
+                  taskAction.comment = '';
+                  taskAction.completed = estimated;
+                  this.notiService.notify('Cập nhật trạng thái thành công !');
+                } else {
+                  this.notiService.notify(
+                    'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
+                  );
+                }
+              });
+          }
+        }
+      });
+  }
+
+  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
+    let obj = {
+      fieldValue: fieldValue,
+      moreFunc: moreFunc,
+      taskAction: taskAction,
+    };
+    this.dialog = this.callfc.openForm(
+      UpdateStatusPopupComponent,
+      'Cập nhật tình trạng',
+      500,
+      450,
+      '',
+      obj
+    );
+  }
+  receiveMF(e : any){
+      this.clickMF(e.e,this.itemSelected)
   }
 }

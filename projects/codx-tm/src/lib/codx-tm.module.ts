@@ -1,3 +1,6 @@
+import { TaskGroupComponent } from './setting/task-group/task-group.component';
+import { SettingComponent } from './setting/setting.component';
+import { HomeSettingComponent } from './setting/home-setting/home-setting.component';
 import { FormsModule } from '@angular/forms';
 import { OwnerTasksComponent } from './ownertasks/ownertasks.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
@@ -22,6 +25,8 @@ import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-
 import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
+import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
+import { PopAddTaskgroupComponent } from './setting/task-group/pop-add-taskgroup/pop-add-taskgroup.component';
 
 export const routes: Routes = [
   {
@@ -39,12 +44,26 @@ export const routes: Routes = [
       {
         path: 'sprinttasks/:funcID',
         component: SprintsTasksComponent,
+        // children: [
+        //   {
+        //     path: ':id',
+        //     component: SprintsTasksComponent,
+        //   }]
+      },
+      {
+        path: 'setting',
+        component: SettingComponent,
         children: [
           {
-            path: ':id',
-            component: SprintsTasksComponent,
-          }]
-      },   
+            path: ':funcID',
+            component: HomeSettingComponent
+          },
+          {
+            path: 'taskgroups/:funcID',
+            component: TaskGroupComponent
+          }
+        ]
+      },
       {
         path: 'home/:funcID',
         component: DashboardComponent
@@ -67,7 +86,12 @@ const T_Component: Type<any>[] = [
   PopupAddSprintsComponent,
   ListCardSprintsComponent,
   SprintsTasksComponent,
-  ViewDetailsTaskComponent
+  ViewDetailsTaskComponent,
+  UpdateStatusPopupComponent,
+  HomeSettingComponent,
+  SettingComponent,
+  TaskGroupComponent,
+  PopAddTaskgroupComponent
 ]
 @NgModule({
   imports: [
@@ -85,7 +109,7 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule 
+    FormsModule
   ],
   exports: [
     RouterModule

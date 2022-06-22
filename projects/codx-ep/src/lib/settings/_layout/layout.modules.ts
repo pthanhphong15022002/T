@@ -13,8 +13,6 @@ import { DialogRoomResourceComponent } from '../rooms/dialog/editor.component';
 import { RoomsComponent } from '../rooms/rooms.component';
 import { DialogDriverResourceComponent } from '../drivers/dialog/editor.component';
 import { DriverResourceComponent } from '../drivers/drivers.component';
-import { StationeryComponent } from '../stationery/stationery.component';
-import { DialogStationeryComponent } from '../stationery/dialog/dialog-stationery.component';
 import { TypesComponent } from '../types/types.component';
 import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
 
@@ -29,8 +27,6 @@ import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
     DialogRoomResourceComponent,
     DialogDriverResourceComponent,
     DriverResourceComponent,
-    StationeryComponent,
-    DialogStationeryComponent,
     TypesComponent,
     DialogTypeResourceComponent,
   ],

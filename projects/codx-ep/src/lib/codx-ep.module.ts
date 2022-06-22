@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,23 +8,21 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
-import { CarBookingComponent } from './car/car.component';
-import { CarDashboardComponent } from './car/dashboard/dashboard.component';
-import { DialogCarBookingComponent } from './car/dialog/editor.component';
-import { EditRoomBookingComponent } from './room/edit-room-booking/edit-room-booking.component';
-import { Home1Component } from './home1/home1.component';
-import { RoomComponent } from './room/room.component';
-import { SelectIconComponent } from './select-icon/select-icon.component';
-import { RoomDashboardComponent } from './room/dashboard/dashboard.component';
-import { StationeryComponent } from './stationery/stationery.component';
-import { DialogStationeryComponent } from './stationery/dialog/dialog-stationery.component';
-import { StationeryDashboardComponent } from './stationery/dashboard/dashboard.component';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { RoomsComponent } from './settings/rooms/rooms.component';
-import { SettingsComponent } from './settings/settings.component';
 import { CarResourceComponent } from './settings/cars/cars.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { StationeryComponent } from './settings/stationery/stationery.component';
+import { BookingStationeryComponent } from './booking-stationery/booking-stationery.component';
+import { StationeryDashboardComponent } from './booking-stationery/dashboard/dashboard.component';
+import { DialogStationeryComponent } from './settings/stationery/dialog/dialog-stationery.component';
+import { EditRoomBookingComponent } from './booking-room/edit-room-booking/edit-room-booking.component';
+import { BookingRoomComponent } from './booking-room/booking-room.component';
+import { BookingCarComponent } from './booking-car/booking-car.component';
+import { DialogCarBookingComponent } from './booking-car/dialog/editor.component';
+import { RoomDashboardComponent } from './booking-room/dashboard/dashboard.component';
+import { CarDashboardComponent } from './booking-car/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -32,16 +30,20 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home1',
-        component: Home1Component,
+        path: 'bookingrooms/:funcID',
+        component: BookingRoomComponent,
       },
       {
-        path: 'home1/:functionID',
-        component: Home1Component,
+        path: 'bookingstationery/:funcID',
+        component: BookingStationeryComponent,
       },
       {
-        path: 'bookingrooms/:functionID',
-        component: RoomComponent,
+        path: 'room-resources',
+        component: RoomsComponent,
+      },
+      {
+        path: 'bookingstationery/:funcID',
+        component: BookingStationeryComponent,
       },
       {
         path: 'room-resources',
@@ -52,23 +54,15 @@ const routes: Routes = [
         component: EditRoomBookingComponent,
       },
       {
-        path: 'bookingcars/:functionID',
-        component: CarBookingComponent,
-      },
-      {
-        path: 'setting/:functionID',
-        component: SettingsComponent,
-      },
-      {
-        path: 'cars/:functionID',
+        path: 'cars/:funcID',
         component: CarResourceComponent,
       },
       {
-        path: 'rooms/:functionID',
+        path: 'rooms/:funcID',
         component: RoomsComponent,
       },
       {
-        path: 'stationery/:functionID',
+        path: 'stationery/:funcID',
         component: StationeryComponent,
       },
       {
@@ -91,21 +85,23 @@ const routes: Routes = [
     ],
   },
 ];
+
+const Components: Type<any>[] = [
+  LayoutComponent,
+  BookingRoomComponent,
+  EditRoomBookingComponent,
+  BookingCarComponent,
+  DialogCarBookingComponent,
+  RoomDashboardComponent,
+  CarDashboardComponent,
+  StationeryComponent,
+  BookingStationeryComponent,
+  StationeryDashboardComponent,
+  DialogStationeryComponent,
+];
+
 @NgModule({
-  declarations: [
-    LayoutComponent,
-    RoomComponent,
-    SelectIconComponent,
-    EditRoomBookingComponent,
-    CarBookingComponent,
-    DialogCarBookingComponent,
-    RoomDashboardComponent,
-    CarDashboardComponent,
-    DialogStationeryComponent,
-    Home1Component,
-    StationeryComponent,
-    StationeryDashboardComponent,
-  ],
+  declarations: [Components],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -130,4 +126,4 @@ export class CodxEpModule {
       ],
     };
   }
- }
+}

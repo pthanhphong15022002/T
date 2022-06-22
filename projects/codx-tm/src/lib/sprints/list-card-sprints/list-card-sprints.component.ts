@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CallFuncService, CodxService, DataRequest, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxService, DataRequest, NotificationsService, ViewModel, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { TM_Sprints } from '../../models/TM_Sprints.model';
 
@@ -42,6 +42,8 @@ export class ListCardSprintsComponent implements OnInit {
   @Input() funcID: string;
   @ViewChild('lstViewBoard') lstViewBoard: any;
   @ViewChild('lstProjectBoard') lstProjectBoard: any;
+
+
   urlShare = "";
   urlView = "";
   moreFunc: any[];
@@ -66,11 +68,11 @@ export class ListCardSprintsComponent implements OnInit {
           if (this.moreFunc[i].functionID == "TMT042") this.urlView = this.moreFunc[i].url;
         }
       }
-    })
+    });
+    
   }
 
   ngAfterViewInit() {
-    throw new Error('Method not implemented.');
   }
   viewMoreMyBoard() {
     this.totalRowMyBoard += 6;
@@ -183,4 +185,11 @@ export class ListCardSprintsComponent implements OnInit {
   //     }
   //   }
   // }
+
+  
+  clickMF(e: any, data: any) {
+    console.log(e, data);
+  }
+  click(evt: ButtonModel) {
+  }
 }
