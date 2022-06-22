@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -34,7 +35,7 @@ export class Device {
   templateUrl: './edit-room-booking.component.html',
   styleUrls: ['./edit-room-booking.component.scss'],
 })
-export class EditRoomBookingComponent implements OnInit {
+export class EditRoomBookingComponent implements OnInit,AfterViewInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -65,6 +66,7 @@ export class EditRoomBookingComponent implements OnInit {
   isAdd = true;
   data: any = {};
   dialog: any;
+  isSaveSuccess = false;
   constructor(
     private bookingService: CodxEpService,
     private cacheSv: CacheService,
@@ -83,6 +85,16 @@ export class EditRoomBookingComponent implements OnInit {
     //   if (res) this.modelPage = res;
     //   console.log('constructor', this.modelPage);
     // });
+  }
+  ngAfterViewInit(): void {
+    if(this.dialog){
+      if(!this.isSaveSuccess){
+        this.dialog.closed.subscribe((res: any) => {
+          console.log("Close without saving or save failed",res);
+          this.dialog.dataService.saveFailed.next(null);
+        })
+      }
+     }
   }
 
   ngOnInit(): void {
@@ -170,17 +182,24 @@ export class EditRoomBookingComponent implements OnInit {
       var date = new Date(this.addEditForm.value.startDate);
       this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
-    this.api
-      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-        this.addEditForm.value,
-        this.isAdd,
-        '',
-      ])
-      .subscribe((res) => {
-        debugger;
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeForm();
-      });
+    this.dialog.dataService.dataSelected =this.addEditForm.value;
+    this.dialog.dataService.save().subscribe((res: any)=> {
+      if(res){
+        this.isSaveSuccess = true;
+      }
+      console.log(res);
+    });
+    // this.api
+    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+    //     this.addEditForm.value,
+    //     this.isAdd,
+    //     '',
+    //   ])
+    //   .subscribe((res) => {
+    //     debugger;
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeForm();
+    //   });
   }
 
   valueChange(event) {

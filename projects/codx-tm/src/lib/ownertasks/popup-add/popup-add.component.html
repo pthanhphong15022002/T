@@ -1,6 +1,7 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template popup adde #body>
-    <codx-tag entityName="AD_Users" [isEdit]="true" [value]="task?.tags" (valueChange)="valueChangeTags($event)"></codx-tag>
+    <codx-tag [entityName]="dialog.formModel.entityName" [disabled]="true" [isEdit]="true" [value]="task.tags"
+      (valueChange)="valueChangeTags($event)"></codx-tag>
 
     <!-- <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex mb-5">

@@ -1,6 +1,8 @@
 <codx-views #view funcID="TMS032" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
   className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
-  [moreFuncs]="moreFuncs" (buttonClick)="click($event)" idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
+  [moreFuncs]="moreFuncs" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
+  idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #itemTemplate let-data>
@@ -22,7 +24,7 @@
 </ng-template>
 <ng-template #itemNote let-data>
   <div [innerHTML]="data.note">
-    
+
   </div>
 </ng-template>
 <ng-template #itemCreate let-data>

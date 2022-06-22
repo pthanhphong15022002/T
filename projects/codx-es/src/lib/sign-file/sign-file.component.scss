@@ -115,15 +115,16 @@ button {
 
 }
 
-.cdx-timeline-vertical{
-    max-height: 350px;
-    overflow: auto;
-}
-
 .codx_e-header {
     max-height: 650px;
     overflow: auto;
 }
+
+.cdx-timeline-vertical{
+    max-height: 350px;
+    overflow: auto;
+}
+    
 .timeline{
     .timeline-item {
         display: block;

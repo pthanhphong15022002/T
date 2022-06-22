@@ -1,5 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
-import { ThisReceiver } from '@angular/compiler';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -22,6 +20,7 @@ import {
   CodxService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -46,7 +45,6 @@ export class EditSignatureComponent implements OnInit {
   @ViewChild('content') content;
 
   dataGrid: AddGridData;
-  modelPage: ModelPage;
   dialogSignature: FormGroup;
   cbxName: any;
   isAfterRender: boolean = false;
@@ -54,6 +52,8 @@ export class EditSignatureComponent implements OnInit {
   currentTab = 1;
   type;
   objectIDFile: any;
+
+  formModel: FormModel;
 
   dataFile: any = null;
   Signature1: any = null;
@@ -66,14 +66,10 @@ export class EditSignatureComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notification: NotificationsService,
     private cfService: CallFuncService,
-    private notify: NotificationsService,
     private codxService: CodxService,
     private readonly auth: AuthService,
     @Optional() dt?: DialogData,
@@ -81,14 +77,14 @@ export class EditSignatureComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
+    this.formModel = this.dialog.formModel;
   }
 
   initForm() {
     this.esService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         console.log(item);
-
         this.dialogSignature = item;
         this.dialogSignature.patchValue({
           signatureType: '1',
@@ -106,31 +102,51 @@ export class EditSignatureComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.esService.getModelPage('ESS21').then((res) => {
-      if (res) {
-        this.modelPage = res;
+    // this.esService.getModelPage('ESS21').then((res) => {
+    //   if (res) {
+    //     this.modelPage = res;
 
-        this.esService
-          .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-          .then((res) => {
-            console.log(res);
+    //     this.esService
+    //       .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
+    //       .then((res) => {
+    //         console.log(res);
 
-            this.cbxName = res;
-          });
+    //         this.cbxName = res;
+    //       });
 
-        this.codxService
-          .getAutoNumber(
-            this.modelPage.functionID,
-            this.modelPage.entity,
-            'CategoryID'
-          )
-          .subscribe((dt: any) => {
-            this.objectIDFile = dt;
-          });
+    //     this.codxService
+    //       .getAutoNumber(
+    //         this.modelPage.functionID,
+    //         this.modelPage.entity,
+    //         'CategoryID'
+    //       )
+    //       .subscribe((dt: any) => {
+    //         this.objectIDFile = dt;
+    //       });
 
-        this.initForm();
-      }
-    });
+    //     this.initForm();
+    //   }
+    // });
+
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        console.log(res);
+
+        this.cbxName = res;
+      });
+
+    this.initForm();
+
+    this.codxService
+      .getAutoNumber(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        'CategoryID'
+      )
+      .subscribe((dt: any) => {
+        this.objectIDFile = dt;
+      });
   }
 
   onSavePopup() {
@@ -144,27 +160,29 @@ export class EditSignatureComponent implements OnInit {
       return;
     }
 
-    this.api
-      .callSv(
-        'ES',
-        'ERM.Business.ES',
-        'SignaturesBusiness',
-        'AddEditSignatureAsync',
-        [this.dialogSignature.value, this.isAdd, '']
-      )
-      .subscribe((res) => {
-        this.dataGrid = new AddGridData();
-        if (res && res.msgBodyData[0][0] == true) {
-          this.dataGrid.dataItem = res.msgBodyData[0][1];
-          this.dataGrid.isAdd = this.isAdd;
-          this.dataGrid.key = 'recID';
-          this.notify.notify('Successfully');
-          this.closeForm(this.dataGrid);
-        } else {
-          this.notify.notify('Fail');
-          this.closeForm(null);
-        }
-      });
+    console.log(this.dialogSignature);
+
+    // this.api
+    //   .callSv(
+    //     'ES',
+    //     'ERM.Business.ES',
+    //     'SignaturesBusiness',
+    //     'AddEditSignatureAsync',
+    //     [this.dialogSignature.value, this.isAdd, '']
+    //   )
+    //   .subscribe((res) => {
+    //     this.dataGrid = new AddGridData();
+    //     if (res && res.msgBodyData[0][0] == true) {
+    //       this.dataGrid.dataItem = res.msgBodyData[0][1];
+    //       this.dataGrid.isAdd = this.isAdd;
+    //       this.dataGrid.key = 'recID';
+    //       this.notification.notify('Successfully');
+    //       this.closeForm(this.dataGrid);
+    //     } else {
+    //       this.notification.notify('Fail');
+    //       this.closeForm(null);
+    //     }
+    //   });
   }
 
   valueChange(event: any) {
