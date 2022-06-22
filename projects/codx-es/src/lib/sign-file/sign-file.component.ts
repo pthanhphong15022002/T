@@ -115,7 +115,6 @@ export class SignFileComponent implements OnInit {
     this.codxViews.dataService.predicate = 'ApproveStatus=@0';
     this.codxViews.dataService.dataValue = stt;
     this.codxViews.dataService.load().subscribe();
-    debugger;
     this.codxViews.currentView.resize(0, 1000);
   }
 

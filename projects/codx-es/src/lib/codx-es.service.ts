@@ -218,6 +218,54 @@ export class CodxEsService {
     );
   }
 
+  getTotalGByApproveStatus() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByApproveStatusAsync',
+      data
+    );
+  }
+  
+
+  getTotalGByCategory() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByCategoryAsync',
+      data
+    );
+  }
+
+  getDocsGByDays() {
+    let model = new DataRequest();
+    model.formName = 'SignFiles';
+    model.gridViewName = 'grvSignFiles';
+    model.entityName = 'ES_SignFiles';
+    model.pageLoading = false;
+    let month = (new Date().getMonth() + 1).toString();
+
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetDocsGByDayAsync',
+      [model, month]
+    );
+  }
+
   getApprovalSteps(recID) {
     return this.api.execSv(
       'es',
