@@ -1,0 +1,58 @@
+<codx-views #base [funcID]="funcID" [showToolBar]="true" [service]="service" [assemblyName]="assemblyName"
+  [entityName]="entityName" [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button"
+  (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (requestEnded)="closeEditForm($event)">
+</codx-views>
+
+<!-- <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons"
+  (buttonClick)="addNew($event)" [moreFuncs]="moreFunc"> </codx-views>
+
+<ng-template #asideAttachment>
+
+  <attachment [viewBase]="" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"></attachment>
+
+</ng-template>
+<ng-template #gridTemplate>
+
+  <h1>Category</h1>
+  <codx-gridview #gridView [columnsGrid]="columnsGrid" [rowHeight]='40' [pageSize]="10" funcId="EPT11.1"
+    assemblyName="ES" entityName="ES_Categories" className="CategoriesBusiness" method="GetListAsync" predicate=""
+    dataValue="" [pageSize]="15" height="500px" [showColumnMenu]='true' [allowResizing]=""></codx-gridview>
+</ng-template>
+
+<ng-template #sideBarRightRef>
+  <app-edit-category #editCategory (closeForm)="closeSidebar($event)" (openAsideForm)="addNew($event)">
+  </app-edit-category>
+
+</ng-template>
+
+<ng-template #process let-dataItem>
+  <div id="progress" class="cdx-progress mt-3" *ngIf="dataItem?.countStep > 0">
+    <div id="progress-bar"></div>
+    <ul id="progress-num">
+      <ng-container *ngFor="let item of getCount(dataItem?.countStep)">
+        <li class="step">{{item}}</li>
+      </ng-container>
+    </ul>
+  </div>
+  <div class="center" *ngIf="dataItem?.countStep == 0">
+    Chưa thiết lập
+  </div>
+</ng-template>
+
+<ng-template #noName let-dataItem>
+  <div class="d-flex align-items-center">
+    <a class="action-item d-flex align-items-center">
+      <div class="d-flex align-items-center btn-tooltip" (click)="edit(dataItem)">
+        <span class=" icon-edit-one icon-18 ml-2 mr-2"></span>
+        <span class="tooltiptext">Edit</span>
+      </div>
+    </a>
+    <a class="action-item d-flex align-items-center">
+      <div class="d-flex align-items-center btn-tooltip" (click)="deleteCategory(dataItem)">
+        <span class="icon-close icon-18 text-danger mx-2"></span>
+        <span class="tooltiptext">Xóa</span>
+      </div>
+    </a>
+  </div>
+</ng-template> -->

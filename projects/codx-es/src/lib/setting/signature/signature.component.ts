@@ -15,17 +15,20 @@ import {
 import {
   ApiHttpService,
   AuthService,
+  ButtonModel,
   CacheService,
+  CallFuncService,
   CodxGridviewComponent,
+  DialogRef,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { ButtonModel } from '@syncfusion/ej2-angular-buttons/public_api';
-import { EditSignatureComponent } from './dialog/editor.component';
 import { environment } from 'src/environments/environment';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
+import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
 
 export class defaultRecource {}
 @Component({
@@ -34,7 +37,8 @@ export class defaultRecource {}
   styleUrls: ['./signature.component.scss'],
 })
 export class SignatureComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -46,7 +50,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('oTPControl', { static: true }) oTPControl;
   @ViewChild('noName', { static: true }) noName;
   @ViewChild('createdBy', { static: true }) createdBy;
-  @ViewChild('editSignature') editSignature: EditSignatureComponent;
+  @ViewChild('editSignature') editSignature: PopupAddSignatureComponent;
   @ViewChild('imageStamp', { static: true }) imageStamp;
   @ViewChild('imageSignature1', { static: true }) imageSignature1;
   @ViewChild('imageSignature2', { static: true }) imageSignature2;
@@ -55,30 +59,50 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  dataSelected: any;
+  dialog!: DialogRef;
 
   constructor(
     private api: ApiHttpService,
+    private callfunc: CallFuncService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
-    private readonly auth: AuthService
-  ) {}
+    private readonly auth: AuthService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   views: Array<ViewModel> = [];
-  buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
+
+  button: ButtonModel;
+  funcID: string;
+  service = 'ES';
+  assemblyName = 'ES';
+  entityName = 'ES_Signatures';
+  predicate = '';
+  dataValue = '';
+  idField = 'RecID';
+  className = 'SignaturesBusiness';
+  method = 'GetListAsync';
 
   ngAfterViewInit(): void {
     this.views = [
       {
-        sameData: false,
+        sameData: true,
         id: '1',
-        type: ViewType.grid,
+        type: ViewType.list,
         active: true,
         model: {
-          panelLeftRef: this.grid,
+          template: this.listItem,
         },
       },
     ];
@@ -136,11 +160,67 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     ];
     this.cr.detectChanges();
   }
-  addNew(evt: any) {
-    this.cr.detectChanges();
+
+  closeEditForm(event) {}
+
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
   }
 
-  edit(dataItem) {
+  addNew(evt?) {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callfunc.openSide(
+        PopupAddSignatureComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        PopupAddSignatureComponent,
+        this.viewBase.dataService.dataSelected,
+        option
+      );
+    });
+  }
+  delete(evt?) {
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  clickMF(event: any, data) {}
+
+  edit1(dataItem) {
     this.editSignature.isAdd = false;
     this.editSignature.dialogSignature.patchValue(dataItem);
     this.editSignature.dialogSignature.patchValue({

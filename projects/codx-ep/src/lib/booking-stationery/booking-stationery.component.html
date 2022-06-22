@@ -1,0 +1,127 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [showToolBar]="true"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="6"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="add($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeEditForm($event)"
+>
+</codx-views>
+
+<!-- begin::Dashboard -->
+
+<ng-template #chart>
+  <codx-stationery-dashboard></codx-stationery-dashboard>
+</ng-template>
+
+<!-- begin::Dashboard -->
+
+<!-- begin::View card -->
+
+<ng-template #cardItem let-data>
+  <codx-card-img
+    cardCss="border w-300px h-100"
+    [imageSrc]="
+      data.icon
+        ? data.icon
+        : '../assets/media/img/codx/default/card-default.svg'
+    "
+    [title]="data.resourceName"
+    [subTitle]="data.costPrice * 1000"
+    [rootData]="data"
+    [footer]="cardItemFooter"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #cardItemFooter let-data>
+  <div class="d-flex flex-column flex-grow-1 mt-2">
+    <!--begin::Item-->
+    <div class="d-flex justify-content-between align-items-end mt-2">
+      <div class="d-flex align-items-end me-2 codx-badge">
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-view_agenda icon-20 text-gray-400"></span>
+          <span>{{ data.currentQty }}</span>
+        </div>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-shopping_cart icon-20 text-gray-400"></span>
+          <span>{{ data.reservedQty }}</span>
+        </div>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-brightness_auto icon-20 text-gray-400"></span>
+          <span>{{ data.availableQty }}</span>
+        </div>
+      </div>
+      <div
+        class="symbol-group symbol-hover justify-content-end"
+        (click)="addCart($event, data.recID)"
+      >
+        <span class="icon-shopping_cart icon-20 text-gray-400"></span>
+      </div>
+    </div>
+    <!--end::Item-->
+  </div>
+</ng-template>
+
+<!-- end::View card -->
+
+<!-- begin::View list -->
+
+<ng-template #listItem let-data>
+  <div class="task-row">
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-75">
+          <div class="d-flex">
+            <div class="w-100px h-100px m-4">
+             <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+            </div>
+            <div class="">
+              <div class="text-dark font-weight-bold font-size-h6">
+                {{ data.resourceName }}
+              </div>
+              <div>Đơn vị tính: {{ data.costPrice }}</div>
+              <div>Nhóm: {{ data.costPrice }}</div>
+              <div class="d-flex justify-content-between align-items-end mt-2">
+                <div class="d-flex align-items-end me-2 codx-badge">
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span class="icon-view_agenda icon-20 text-gray-400"></span>
+                    <span>{{ data.currentQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-shopping_cart icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.reservedQty }}</span>
+                  </div>
+                  <div class="d-flex align-items-center position-relative me-4">
+                    <span
+                      class="icon-brightness_auto icon-20 text-gray-400"
+                    ></span>
+                    <span>{{ data.availableQty }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="w-150px">
+          {{ data.costPrice * 1000 }}
+        </td>
+        <td class="w-150px">1 Chai / Người / Lần</td>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+<!-- end::View list -->
+

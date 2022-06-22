@@ -1,6 +1,7 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer" (clickMF)="aaa($event)">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
+    (clickMF)="clickMF($event,itemSelected)">
     <ng-template #header>
       <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
@@ -32,13 +33,13 @@
               </div>
               <div class="d-status">
                 <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                (itemSelected?.status | vll: 'L0614':'color' | async) +
+                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
                 '30'
               " [style.background-color]="
-                (itemSelected?.status | vll: 'L0614':'color' | async) +
+                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
                 '30'
               " [style.color]="
-                itemSelected?.status | vll: 'L0614':'color' | async
+                itemSelected?.status | vll: 'L0614':'textColor' | async
               " style="border: none">
                   {{ itemSelected?.status | vll: "L0614":"text" | async }}
                 </div>
@@ -60,8 +61,8 @@
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">Ưu tiên:</span>
               <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
-                [style.color]="itemSelected?.priority | vll: 'L0186':'color' | async">
-                <span class="icon-18 icon-outlined_flag"></span>
+                [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async">
+                <span class="icon-18 icon-outlined_flag"></span> 
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
             </div>
@@ -104,16 +105,17 @@
           </div>
         </div>
         <div class="mt-2">
-          <span class="badge badge-info me-1">Issue</span>
+          <!-- <span class="badge badge-info me-1">Issue</span>
           <span class="badge badge-success me-1">Project</span>
-          <span class="badge badge-warning">Customize</span>
-          <!-- <codx-tags [editMode]="false" [entityName]="'TM_Task'" [(value)]="itemSelected.tags">
-          </codx-tags> -->
+          <span class="badge badge-warning">Customize</span> -->
+          <codx-tag entityName="AD_Users" [disabled]="false" [isEdit]="false" [value]="itemSelected?.tags"></codx-tag>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="codx_title_sub_primary mt-6 mb-3">Người thực hiện</div>
+      <div class="codx_title_sub_primary mt-6 mb-3">
+        <codx-label fiedName="lblAsignTo" default="Người thực hiện" formName="TM_Tasks"></codx-label>
+      </div>
       <div class="symbol-group">
         <div *ngIf="itemSelected.category == '3'" class="symbol symbol-30px symbol-circle me-3">
           <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">

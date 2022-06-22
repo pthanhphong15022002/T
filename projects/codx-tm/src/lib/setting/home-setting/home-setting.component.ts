@@ -20,9 +20,8 @@ export class HomeSettingComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.views = [{
-      id: '1',
       active: true,
-      type: ViewType.grid,
+      type: ViewType.content,
       sameData: true,
       model: {
         panelLeftRef: this.main,

@@ -4,18 +4,30 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
-import { AccumulationChartAllModule, CategoryService, ChartAnnotationService, ChartModule, ColumnSeriesService, DateTimeService, LegendService, LineSeriesService, RangeColumnSeriesService, ScrollBarService, StackingColumnSeriesService, TooltipService } from '@syncfusion/ej2-angular-charts';
-import { SignatureComponent } from '@syncfusion/ej2-angular-inputs';
+import {
+  AccumulationChartAllModule,
+  CategoryService,
+  ChartAnnotationService,
+  ChartModule,
+  ColumnSeriesService,
+  DateTimeService,
+  LegendService,
+  LineSeriesService,
+  RangeColumnSeriesService,
+  ScrollBarService,
+  StackingColumnSeriesService,
+  TooltipService,
+} from '@syncfusion/ej2-angular-charts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxEsComponent } from './codx-es.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DocCategoryComponent } from './setting/doc-category/docCategory.component';
-import { MarkSignatureComponent } from './sign-process/mark-signature/mark-signature.component';
-import { SignProcessComponent } from './sign-process/sign-process.component';
+import { DocCategoryComponent } from './setting/category/category.component';
+import { SignatureComponent } from './setting/signature/signature.component';
+import { MarkSignatureComponent } from './sign-file/mark-signature/mark-signature.component';
+import { SignFileComponent } from './sign-file/sign-file.component';
 import { LayoutComponent } from './_layout/layout.component';
-
 
 const routes: Routes = [
   {
@@ -24,7 +36,7 @@ const routes: Routes = [
     children: [
       {
         path: 'signfiles/:funcID',
-        component: SignProcessComponent,
+        component: SignFileComponent,
       },
       {
         path: 'signatures/:funcID',
@@ -36,7 +48,7 @@ const routes: Routes = [
       },
       {
         path: 'home/:funcID',
-        component: SignProcessComponent,
+        component: SignFileComponent,
       },
       {
         path: 'dashboard',
@@ -57,7 +69,7 @@ const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'setting',
+        redirectTo: 'signfiles',
         pathMatch: 'full',
       },
       {
@@ -68,9 +80,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [
-    CodxEsComponent
-  ],
+  declarations: [LayoutComponent, DashboardComponent, CodxEsComponent],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
@@ -82,10 +92,8 @@ const routes: Routes = [
     SharedModule,
     TabModule,
   ],
-  exports: [
-    CodxEsComponent
-  ],
-  providers:[
+  exports: [CodxEsComponent],
+  providers: [
     CategoryService,
     DateTimeService,
     ScrollBarService,
@@ -96,17 +104,18 @@ const routes: Routes = [
     StackingColumnSeriesService,
     LegendService,
     TooltipService,
-  ]
+  ],
 })
 export class CodxEsModule {
   public static forRoot(
-  config?: EnvironmentConfig
-): ModuleWithProviders<CodxCoreModule> {
-  return {
-    ngModule: CodxCoreModule,
-    providers: [
-      HttpClientModule,
-      { provide: EnvironmentConfig, useValue: config },
-    ],
-  };
-} }
+    config?: EnvironmentConfig
+  ): ModuleWithProviders<CodxCoreModule> {
+    return {
+      ngModule: CodxCoreModule,
+      providers: [
+        HttpClientModule,
+        { provide: EnvironmentConfig, useValue: config },
+      ],
+    };
+  }
+}

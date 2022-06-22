@@ -1,3 +1,4 @@
+import { PopupAddCarsComponent } from './../cars/popup-add-cars/popup-add-cars.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
@@ -8,13 +9,10 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SettingsRoutingModule } from '../settings-routing.module';
 import { CarResourceComponent } from '../cars/cars.component';
-import { DialogCarResourceComponent } from '../cars/dialog/editor.component';
 import { DialogRoomResourceComponent } from '../rooms/dialog/editor.component';
 import { RoomsComponent } from '../rooms/rooms.component';
 import { DialogDriverResourceComponent } from '../drivers/dialog/editor.component';
 import { DriverResourceComponent } from '../drivers/drivers.component';
-import { StationeryComponent } from '../stationery/stationery.component';
-import { DialogStationeryComponent } from '../stationery/dialog/dialog-stationery.component';
 import { TypesComponent } from '../types/types.component';
 import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
 
@@ -24,13 +22,11 @@ import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
   declarations: [
     LayoutComponent,
     CarResourceComponent,
-    DialogCarResourceComponent,
+    PopupAddCarsComponent,
     RoomsComponent,
     DialogRoomResourceComponent,
     DialogDriverResourceComponent,
     DriverResourceComponent,
-    StationeryComponent,
-    DialogStationeryComponent,
     TypesComponent,
     DialogTypeResourceComponent,
   ],

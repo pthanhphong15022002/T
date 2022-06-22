@@ -2,22 +2,25 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { EditSignFileComponent } from '../sign-process/edit-sign-file/edit-sign-file.component';
-import { MarkSignatureComponent } from '../sign-process/mark-signature/mark-signature.component';
-import { SignProcessComponent } from '../sign-process/sign-process.component';
-import { ApprovalStepsComponent } from './approval-steps/approval-steps.component';
-import { EditApprovalSteps } from './approval-steps/edit-approval-step/edit-approval-step.component';
-import { DocCategoryComponent } from './doc-category/docCategory.component';
-import { EditCategoryComponent } from './doc-category/edit-category/edit-category.component';
-import { ProcessStepComponent } from './doc-category/process-step/process-step.component';
-import { EditSignatureComponent } from './signature/dialog/editor.component';
+import { MarkSignatureComponent } from '../sign-file/mark-signature/mark-signature.component';
+import { PopupAddSignFileComponent } from '../sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { SignFileComponent } from '../sign-file/sign-file.component';
+import { ViewDetailComponent } from '../sign-file/view-detail/view-detail.component';
+import { ApprovalStepComponent } from './approval-step/approval-step.component';
+import { PopupAddApprovalStepComponent } from './approval-step/popup-add-approval-step/popup-add-approval-step.component';
+import { DocCategoryComponent } from './category/category.component';
+import { PopupAddCategoryComponent } from './category/popup-add-category/popup-add-category.component';
+import { ProcessStepComponent } from './category/process-step/process-step.component';
+import { PopupAddSignatureComponent } from './signature/popup-add-signature/popup-add-signature.component';
 import { PopupSignatureComponent } from './signature/popup-signature/popup-signature.component';
 import { SignatureComponent } from './signature/signature.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -52,17 +55,18 @@ const routes: Routes = [
   declarations: [
     LayoutComponent,
     SignatureComponent,
-    EditSignatureComponent,
-    EditCategoryComponent,
+    PopupSignatureComponent,
+    PopupSignatureComponent,
     DocCategoryComponent,
     ProcessStepComponent,
-    EditApprovalSteps,
-    ApprovalStepsComponent,
-    SignProcessComponent,
-    EditSignFileComponent,
-    PopupSignatureComponent,
-    DashboardComponent,
-    MarkSignatureComponent
+    PopupAddApprovalStepComponent,
+    ApprovalStepComponent,
+    SignFileComponent,
+    PopupAddSignFileComponent,
+    PopupAddCategoryComponent,
+    PopupAddSignatureComponent,
+    MarkSignatureComponent,
+    ViewDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

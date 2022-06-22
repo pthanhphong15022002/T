@@ -1,19 +1,18 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxService, DataRequest, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxService, DataRequest, NotificationsService, ViewModel, ViewType, FormModel, DataService, CodxListviewComponent, CRUDService } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
-import { TM_Sprints } from '../../models/TM_Sprints.model';
+
 
 @Component({
-  selector: 'lib-list-card-sprints',
+  selector: 'list-sprints',
   templateUrl: './list-card-sprints.component.html',
   styleUrls: ['./list-card-sprints.component.css']
 })
 export class ListCardSprintsComponent implements OnInit {
   //@Input('sprintsInfo') sprintsInfo: SprintsInfoComponent;
-
-  fromDate: Date;
-  toDate: Date;
+  @Input() formModel: FormModel;
+  @Input() dataService: CRUDService;
   view: string;
   model = new DataRequest();
   gridView: any;
@@ -21,31 +20,19 @@ export class ListCardSprintsComponent implements OnInit {
     '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and (!@2.Contains(outerIt.IterationID)) AND ProjectID=null';
   predicateProjectBoards =
     '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and (!@2.Contains(outerIt.IterationID)) AND ProjectID!=null';
-  listMyBoard = [];
-  listProjectBoard = [];
-  gridModel: DataRequest = {
-    entityName: 'TM_Sprints',
-    page: 1,
-    pageSize: 5,
-    pageLoading: false,
-    dataObj: '',
-    gridViewName: 'grvSprints',
-    formName: 'Sprints',
-  };
   totalRowMyBoard: number = 6;
   totalRowProjectBoard: number = 6;
   totalViewBoards: number = 0;
   totalProjectBoards: number = 0;
   boardAction: any;
   user: any;
-  sprintDefault: TM_Sprints;
   @Input() funcID: string;
-  @ViewChild('lstViewBoard') lstViewBoard: any;
+  @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: any;
   urlShare = "";
   urlView = "";
   moreFunc: any[];
-  constructor( private api: ApiHttpService,
+  constructor(private api: ApiHttpService,
     private tmSv: CodxTMService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -55,7 +42,7 @@ export class ListCardSprintsComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
- }
+  }
 
   ngOnInit(): void {
     this.funcID = this.activedRouter.snapshot.params["funcID"];;
@@ -66,18 +53,18 @@ export class ListCardSprintsComponent implements OnInit {
           if (this.moreFunc[i].functionID == "TMT042") this.urlView = this.moreFunc[i].url;
         }
       }
-    })
+    });
+
   }
 
   ngAfterViewInit() {
-    throw new Error('Method not implemented.');
   }
   viewMoreMyBoard() {
     this.totalRowMyBoard += 6;
     this.ngAfterViewInit();
     this.changeDetectorRef.detectChanges();
   }
- 
+
   viewMoreProjectBoard() {
     this.totalProjectBoards += 6;
     this.ngAfterViewInit();
@@ -117,7 +104,7 @@ export class ListCardSprintsComponent implements OnInit {
           if (boardAction?.projectID != null) {
             this.lstProjectBoard.removeHandler(boardAction, 'iterationID');
           } else {
-            this.lstViewBoard.removeHandler(boardAction, 'iterationID');
+            this.dataService.remove(boardAction);
           }
           this.notiService.notify('Xoá task board thành công !');
         }
@@ -184,7 +171,7 @@ export class ListCardSprintsComponent implements OnInit {
   //   }
   // }
 
-  
+
   clickMF(e: any, data: any) {
     console.log(e, data);
   }
