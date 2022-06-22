@@ -8,6 +8,7 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxMwpComponent } from './codx-mwp.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { EmployeeInfomationComponent } from './employeeinfomation/employee-infomation.component';
 
 export const routes: Routes = [
   {
@@ -17,7 +18,11 @@ export const routes: Routes = [
   },
 ];
 
-const Component: Type<any>[] = [LayoutComponent, CodxMwpComponent];
+const Component: Type<any>[] = [
+  LayoutComponent,
+  CodxMwpComponent,
+  EmployeeInfomationComponent,
+];
 
 @NgModule({
   declarations: [Component],
