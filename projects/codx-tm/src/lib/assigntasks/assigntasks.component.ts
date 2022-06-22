@@ -27,17 +27,19 @@ import {
   CacheService,
 } from 'codx-core';
 import * as moment from 'moment';
-import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxTMService } from '../codx-tm.service';
-import { TM_Tasks } from '../models/TM_Tasks.model';
-import { PopupAddComponent } from './popup-add/popup-add.component';
-import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
+import { PopupAddComponent } from '../ownertasks/popup-add/popup-add.component';
+import { UpdateStatusPopupComponent } from '../ownertasks/update-status-popup/update-status-popup.component';
+
+
+
 @Component({
-  selector: 'test-views',
-  templateUrl: './ownertasks.component.html',
-  styleUrls: ['./ownertasks.component.scss'],
+  selector: 'lib-assigntasks',
+  templateUrl: './assigntasks.component.html',
+  styleUrls: ['./assigntasks.component.css']
 })
-export class OwnerTasksComponent implements OnInit {
+export class AssignTasksComponent implements OnInit {
+
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -87,10 +89,11 @@ export class OwnerTasksComponent implements OnInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
+
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
       case 'edit':
         this.edit(data);
@@ -104,9 +107,9 @@ export class OwnerTasksComponent implements OnInit {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
-        this.assignTask(data);
-        break;
+      // case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
+      //   this.assignTask(data);
+      //   break;
       default:
         this.changeStatusTask(e, data);
         break;
@@ -115,7 +118,7 @@ export class OwnerTasksComponent implements OnInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
     }
   }
@@ -152,8 +155,6 @@ export class OwnerTasksComponent implements OnInit {
   }
 
   change() {
-    // this.view.dataService.dataValues = "1";
-    // this.view.dataService.load();
     this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
@@ -165,6 +166,7 @@ export class OwnerTasksComponent implements OnInit {
         sameData: true,
         model: {
           template: this.itemTemplate,
+
         },
       },
       {
@@ -310,13 +312,13 @@ export class OwnerTasksComponent implements OnInit {
   }
   //#endregion schedule
 
-  show() {
+  add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add',true], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -332,21 +334,21 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
     });
   }
 
   copy(data) {
     // data.taskID = null;
     // data.recID = null;
-   
-    this.view.dataService.copy().subscribe((res: any) => {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
     });
   }
 
@@ -356,8 +358,8 @@ export class OwnerTasksComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
       .subscribe();
   }
-  sendemail(data) {
-
+  sendemail(data){
+    
   }
 
   beforeDel(opt: RequestOption) {
@@ -366,17 +368,17 @@ export class OwnerTasksComponent implements OnInit {
     return true;
   }
 
-  assignTask(data) {
-    this.view.dataService.dataSelected = data;
-    let option = new SidebarModel();
-    option.DataService = this.view?.currentView?.dataService;
-    option.FormModel = this.view?.currentView?.formModel;
-    option.Width = '750px';
-    this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
-    this.dialog.closed.subscribe(e => {
-      console.log(e);
-    })
-  }
+  // assignTask(data) { 
+  //   this.view.dataService.dataSelected = data;
+  //   let option = new SidebarModel();
+  //   option.DataService = this.view?.currentView?.dataService;
+  //   option.FormModel = this.view?.currentView?.formModel;
+  //   option.Width = '750px';
+  //   this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
+  //   this.dialog.closed.subscribe(e => {
+  //     console.log(e);
+  //   })
+  //  }
 
   changeView(evt: any) {
 
@@ -467,7 +469,9 @@ export class OwnerTasksComponent implements OnInit {
       obj
     );
   }
-  receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected)
+  receiveMF(e : any){
+      this.clickMF(e.e,this.itemSelected)
   }
 }
+
+// }

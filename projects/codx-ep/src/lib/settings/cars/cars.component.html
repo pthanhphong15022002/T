@@ -9,6 +9,7 @@
   dataValue="2"
   [views]="views"
   [button]="buttons"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   idField="recID"
   className="ResourcesBusiness"
@@ -20,120 +21,29 @@
     <table class="table w-100 table-action-menu">
       <tbody>
         <td class="w-25">
-          {{data.resourceID}}
+          {{ data.resourceID }}
         </td>
         <td class="w-25">
-          {{data.resourceName}}
+          {{ data.resourceName }}
         </td>
         <td class="w-25">
           <div class="d-flex justify-content-center">
-            <span
-              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.status|vll:'EP002':'text'|async}}</span>
+            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+              data.status | vll: "EP002":"text" | async
+            }}</span>
           </div>
         </td>
         <td class="w-150px">
-          {{ data.ranking|vll:'EP005':'text'|async }}
+          {{ data.ranking | vll: "EP005":"text" | async }}
         </td>
         <!-- <td class="w-150px">1 Chai / Người / Lần</td> -->
       </tbody>
     </table>
   </div>
-  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
-    iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.owner" imageObjType="AD_Users" [title]="data.resourceName"
-    icoSubTitleCss="icon-assignment" [subTitle]="data.resourceID" [content]="data.memo" [status]="data.status"
-    statusVll="EP005" [date]="data.createdOn" [resources]="data.owner" resourceObjType="AD_Users"
-    [formModel]="view.formModel">
-  </codx-temp-full> -->
-<ng-template #panelLeftRef> </ng-template>
-
-<!-- <ng-template #template let-data>
-  <div style="border-bottom: 1px solid">
-    <div>{{data.resourceName}}</div>
-  </div>
-</ng-template> -->
-
-<!-- <ng-template #itemTemplate let-data> <app-list-tasks></app-list-tasks> </ng-template> -->
-
-<ng-template #gridTemplate>
-  <h1>Danh sách xe</h1>
-  <div class="row w-100 h-100">
-    <codx-gridview
-      #gridView
-      [columnsGrid]="columnsGrid"
-      [allowSorting]=""
-      [sortSettings]=""
-      [allowGrouping]=""
-      [groupSettings]=""
-      [editSettings]=""
-      [selectionOptions]=""
-      [rowHeight]="40"
-      [pageSize]="10"
-      funcId="EPS23"
-      assemblyName="EP"
-      entityName="EP_Resources"
-      className="ResourcesBusiness"
-      method="GetListAsync"
-      predicate="ResourceType=@0"
-      dataValue="2"
-      [pageSize]="15"
-      height="500px"
-      [showColumnMenu]="true"
-      [filterSettings]=""
-      [allowFiltering]=""
-      [allowResizing]=""
-    >
-    </codx-gridview>
-  </div>
+  <codx-temp-full
+    (clickMF)="clickMF($event, data)"
+    [formModel]="viewBase.formModel"
+  >
+  </codx-temp-full>
+  <ng-template #panelLeftRef> </ng-template>
 </ng-template>
-
-<ng-template #ranking let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.ranking | vll: "EP005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-<ng-template #category let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.category | vll: "VL005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-
-<ng-template #GiftIDCell let-dataItem>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="edit(dataItem)"
-      >
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="deleteResource(dataItem)"
-      >
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
-  </div>
-</ng-template>
-
-<ng-template #carResourceDialog>
-  <popup-add-cars
-    #editor
-    [data]=""
-    (closeEdit)="closeEditForm($event)"
-  ></popup-add-cars>
-</ng-template>
-
-<ng-template #editRoomBooking> </ng-template>
-
-<ng-template #listDetails> 2 </ng-template>
-
-<ng-template #listTasks let-data> 3 </ng-template>

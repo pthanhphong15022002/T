@@ -1,0 +1,31 @@
+<codx-views #view funcID="TMS034" entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS"
+  className="RangesKanbanBusiness" method="GetListRangesKanbanAsync" [views]="views" [button]="button"
+  [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)" (buttonClick)="click($event)"
+  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
+  idField="RangeID" [pageSize]="100" [selectedFirst]="true">
+</codx-views>
+
+<ng-template #itemListReadmore let-data>
+  <div *ngFor="let h of data?.rangeLines; let i = index">
+    <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
+  </div>
+  <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
+          !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+</ng-template>
+<ng-template #itemCreateBy let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg" placement="bottom" style="margin-left: 20px;">
+      {{dataItem.createName}}
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemCreate let-data>
+  {{data.createdOn | date: 'dd/MM/yyyy'}}
+</ng-template>
+<ng-template #itemNote let-data>
+  <div [innerHTML]="data.note">
+
+  </div>
+</ng-template>
