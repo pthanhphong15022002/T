@@ -338,8 +338,8 @@ export class OwnerTasksComponent implements OnInit {
   copy(data) {
     // data.taskID = null;
     // data.recID = null;
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
+   
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;

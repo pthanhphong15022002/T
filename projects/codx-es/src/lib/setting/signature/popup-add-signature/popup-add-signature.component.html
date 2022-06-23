@@ -1,0 +1,125 @@
+<codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [formGroup]="dialogSignature" *ngIf="isAfterRender">
+  <ng-template popup add #body>
+    <div class="d-flex flex-stack fs-6 py-2">
+      <div class="fw-bolder text-primary">
+        <codx-label [name]="'lblTitleSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="dialog.formModel">
+        </codx-label>
+      </div>
+      <span class="text-end align-items-end" style="display: none;">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+          (click)="openPopup(null)">
+          <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+        </button>
+      </span>
+    </div>
+    <div class="form-group mt-3">
+      <codx-label fiedName="Email" default="Email" [formModel]="dialog.formModel">
+      </codx-label>
+      <div class="d-flex">
+        <div class="w-100 me-2">
+          <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="email"
+            [Group]="dialogSignature">
+          </codx-input>
+        </div>
+        <button class="btn btn-primary">
+          <codx-label name="lblTitleAdd" default="Add" [formModel]="dialog.formModel"></codx-label>
+        </button>
+      </div>
+    </div>
+    <div class="form-group mt-3">
+      <codx-label fiedName="UserID" default="Tên" [formModel]="dialog.formModel">
+      </codx-label>
+      <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="fullName"
+        [Group]="dialogSignature">
+      </codx-input>
+    </div>
+    <div class="form-group row mt-3">
+      <div class="col-6">
+        <codx-label fiedName="SignatureType" [formModel]="dialog.formModel" default="Loại chữ kí">
+        </codx-label>
+        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.signatureType"
+          [refValue]="cbxName['SignatureType']" field="signatureType" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.supplier"
+          [refValue]="cbxName['Supplier']" field="supplier" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group mt-3">
+      <div class="d-flex flex-stack fs-6 py-2">
+        <div class="fw-bolder ">
+          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="dialog.formModel"></codx-label>
+        </div>
+        <span class="text-end align-items-end">
+          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
+            <i class="icon-select_all text-primary text-hover-primary-dark icon-24" (click)="openPopup(content)"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1 pe-8">
+      <div class="d-flex flex-wrap">
+        <div class="text-center">
+          <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+            <div class="m-auto">
+              <div class="m-auto">
+                <codx-img *ngIf="dialogSignature.value.signature1 == null" #image objectId="ADMIN"></codx-img>
+                <img class="square" *ngIf="dialogSignature.value.signature1 != null" [src]="getLinkImg(Signature1)" />
+              </div>
+            </div>
+          </div>
+          <codx-label fiedName="Signature1" default="Kí thường" [formModel]="dialog.formModel"></codx-label>
+        </div>
+        <div class="text-center">
+          <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+            <div class="m-auto">
+              <codx-img *ngIf="dialogSignature.value.signature2 == null" #image objectId="ADMIN"></codx-img>
+              <img class="square" *ngIf="dialogSignature.value.signature2 != null" [src]="getLinkImg(Signature2)" />
+            </div>
+          </div>
+          <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="dialog.formModel" class="">
+          </codx-label>
+        </div>
+        <div class="text-center">
+          <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+            <div class="m-auto">
+              <codx-img *ngIf="dialogSignature.value.stamp == null" #image objectId="ADMIN"></codx-img>
+              <img class="square" *ngIf="dialogSignature.value.stamp!= null" [src]="getLinkImg(Stamp)" />
+            </div>
+          </div>
+          <codx-label fiedName="Stamp" default="Con dấu" [formModel]="dialog.formModel" class="">
+          </codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row mt-3">
+      <div class="col-6">
+        <codx-label fiedName="OTPControl" default="OTP" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.oTPControl"
+          [refValue]="cbxName['OTPControl']" field="oTPControl" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input type="number" field="spanTime" value="5" [crrValue]="dialogSignature.value.spanTime" [min]="0"
+          max="50" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

@@ -121,7 +121,7 @@ export class AssignInfoComponent implements OnInit {
     if (e.data.length == 0) {
       this.task.assignTo = '';
       return ;
-    } else if (this.task.assignTo != null || this.task.assignTo != '') {
+    } else if (this.task.assignTo != null && this.task.assignTo != '') {
       this.task.assignTo += ';' + e.data;
     } else this.task.assignTo = e.data;
 

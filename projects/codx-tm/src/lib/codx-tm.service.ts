@@ -243,6 +243,14 @@ export class CodxTMService {
     );
   }
 
+  getUserByDepartment(depID){
+    return this.api.execSv<any>('HR',
+    'HR',
+    'OrganizationUnitsBusiness',
+    'GetUserByDepartmentAsync',
+    depID)
+  }
+
   getChartData(
     model: Object,
     daySelectedFrom: Date,
