@@ -416,14 +416,25 @@ export class PopupAddComponent implements OnInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
-        }
-      });
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.dialog.close();
+    //       this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+    //     }
+    //   });
+    this.tmSv.addTask([
+      this.task,
+      this.functionID,
+      this.listTaskResources,
+      this.listTodo,
+    ]).subscribe(res => {
+      if (res && res.length)
+        this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+      this.dialog.dataService.setDataSelected(res[0]);
+      this.dialog.dataService.afterSave.next(res);
+    })
   }
 
   updateTask() {
@@ -443,6 +454,41 @@ export class PopupAddComponent implements OnInit {
 
   eventApply(e: any) {
     console.log(e);
+    const t = this ;
+    var assignTo = '';
+    var i = 0 ;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            assignTo += obj?.data;
+            i++ ;
+            break;
+          case 'D':
+            //chua doi chay xong da moi chay tiep dang fail
+            var depID = obj?.data.substring(0, obj?.data.length - 1);
+            this.tmSv.getUserByDepartment(depID).subscribe(res=>{
+              if(res){
+                assignTo += res +";"; 
+                i++;
+              }
+            })
+            break;
+        }
+      }
+    
+        this.handleChangeUser(assignTo)
+    
+    }) 
+  }
+  handleChangeUser(assignTo){
+    if (assignTo != '') {
+      if (assignTo.split(';').length > 1)
+        assignTo = assignTo.substring(0, assignTo.length - 1);
+      if (this.task.assignTo && this.task.assignTo != '') this.task.assignTo += ";" + assignTo; else this.task.assignTo = assignTo
+      this.getListUser(this.task.assignTo);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChange(data) {
