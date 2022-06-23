@@ -31,11 +31,11 @@ export class Device {
 }
 
 @Component({
-  selector: 'app-edit-room-booking',
-  templateUrl: './edit-room-booking.component.html',
-  styleUrls: ['./edit-room-booking.component.scss'],
+  selector: 'popup-add-booking-room',
+  templateUrl: './popup-add-booking-room.component.html',
+  styleUrls: ['./popup-add-booking-room.component.scss'],
 })
-export class EditRoomBookingComponent implements OnInit,AfterViewInit {
+export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -50,7 +50,8 @@ export class EditRoomBookingComponent implements OnInit,AfterViewInit {
   chosenDate = null;
   CbxName: any;
   link = '';
-
+  headerTitle = 'Đặt phòng';
+  subHeaderTitle = 'Đặt phòng họp';
   selectDate = null;
   startTime: any = null;
   endTime: any = null;
@@ -87,14 +88,14 @@ export class EditRoomBookingComponent implements OnInit,AfterViewInit {
     // });
   }
   ngAfterViewInit(): void {
-    if(this.dialog){
-      if(!this.isSaveSuccess){
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
-          console.log("Close without saving or save failed",res);
+          console.log('Close without saving or save failed', res);
           this.dialog.dataService.saveFailed.next(null);
-        })
+        });
       }
-     }
+    }
   }
 
   ngOnInit(): void {
@@ -182,9 +183,9 @@ export class EditRoomBookingComponent implements OnInit,AfterViewInit {
       var date = new Date(this.addEditForm.value.startDate);
       this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
-    this.dialog.dataService.dataSelected =this.addEditForm.value;
-    this.dialog.dataService.save().subscribe((res: any)=> {
-      if(res){
+    this.dialog.dataService.dataSelected = this.addEditForm.value;
+    this.dialog.dataService.save().subscribe((res: any) => {
+      if (res) {
         this.isSaveSuccess = true;
       }
       console.log(res);

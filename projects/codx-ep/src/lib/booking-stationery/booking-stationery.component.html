@@ -36,6 +36,7 @@
         ? data.icon
         : '../assets/media/img/codx/default/card-default.svg'
     "
+    [content]="'content'"
     [title]="data.resourceName"
     [subTitle]="data.costPrice * 1000"
     [rootData]="data"
@@ -129,3 +130,31 @@
   </codx-temp-full>
 </ng-template>
 <!-- end::View list -->
+
+<ng-template #gridTemplate>
+  <codx-gridview
+    #gridView
+    [columnsGrid]="columnsGrid"
+    [allowSorting]=""
+    [sortSettings]=""
+    [allowGrouping]=""
+    [groupSettings]=""
+    [editSettings]=""
+    [selectionOptions]=""
+    [rowHeight]="40"
+    [pageSize]="10"
+    funcId="EPT1"
+    assemblyName="EP"
+    entityName="EP_Bookings"
+    className="BookingsBusiness"
+    method="GetEventsAsync"
+    predicate="ResourceType=@0"
+    dataValue="1"
+    [pageSize]="15"
+    height="500px"
+    [showColumnMenu]="true"
+    [filterSettings]=""
+    [allowFiltering]=""
+    [allowResizing]=""
+  ></codx-gridview>
+</ng-template>
