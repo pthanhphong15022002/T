@@ -23,6 +23,14 @@ const routes: Routes = [
         component: TypesComponent,
       },
       {
+        path: 'rooms',
+        component: RoomsComponent,
+      },
+      {
+        path: 'cars',
+        component: CarResourceComponent,
+      },
+      {
         path: '',
         redirectTo: 'rooms',
         pathMatch: 'full',

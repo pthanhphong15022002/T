@@ -114,16 +114,15 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   ngOnChange(): void {}
-  beforeSave(option: any){
+  beforeSave(option: any) {
     let itemData = this.dialogCar.value;
-    if(!itemData.resourceID){
+    if (!itemData.resourceID) {
       this.isAdd = true;
-    }
-    else {
+    } else {
       this.isAdd = false;
     }
-    option.method = "AddEditItemAsync"    ;
-    option.data = [itemData,this.isAdd];
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
     return true;
   }
   valueCbxChange(evt: any) {
@@ -161,7 +160,9 @@ export class PopupAddCarsComponent implements OnInit {
     //       this.closeFormEdit(null);
     //     }
     //   });
-    this.dialog.dataService.save((opt: any)=> this.beforeSave(opt)).subscribe();
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
   closeFormEdit(data) {
     this.initForm();

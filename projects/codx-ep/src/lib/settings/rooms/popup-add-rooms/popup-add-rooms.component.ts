@@ -4,22 +4,33 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { AddGridData, CodxEpService, ModelPage } from '../../../codx-ep.service';
+import {
+  ApiHttpService,
+  CacheService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
+import {
+  AddGridData,
+  CodxEpService,
+  ModelPage,
+} from '../../../codx-ep.service';
 
 @Component({
-  selector: 'dialog-room-resource-editor',
-  templateUrl: 'editor.component.html',
-  styleUrls: ['editor.component.scss'],
+  selector: 'popup-add-rooms',
+  templateUrl: 'popup-add-rooms.component.html',
+  styleUrls: ['popup-add-rooms.component.scss'],
 })
-export class DialogRoomResourceComponent implements OnInit {
+export class PopupAddRoomsComponent implements OnInit {
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data = {};
@@ -45,7 +56,9 @@ export class DialogRoomResourceComponent implements OnInit {
   //   icon: '',
   //   equipments: '',
   // };
-  dialog: FormGroup;
+  dialog: any;
+  addEditForm: FormGroup;
+  formModel: FormModel;
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -53,8 +66,13 @@ export class DialogRoomResourceComponent implements OnInit {
     private cacheSv: CacheService,
     private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
-    private bookingService: CodxEpService
+    private bookingService: CodxEpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+    this.formModel = this.dialog.formModel;
     // this.modelPage = {
     //   entity: 'EP_Rooms1',
     //   formName: 'Rooms',
@@ -62,14 +80,20 @@ export class DialogRoomResourceComponent implements OnInit {
     //   functionID: 'EPS21',
     // };
   }
-
+  CbxName: any;
   vllDevices = [];
   lstDevices = [];
   tmplstDevice = [];
   cacheGridViewSetup: any;
   isAfterRender = false;
-
+  headerText = 'Thêm mới Phòng họp';
+  subHeaderText = 'Tạo & upload file văn bản';
   ngOnInit(): void {
+    this.bookingService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        this.CbxName = res;
+      });
     this.bookingService.getModelPage('EPS21').then((res) => {
       if (res) this.modelPage = res;
       console.log('constructor', this.modelPage);
@@ -96,13 +120,13 @@ export class DialogRoomResourceComponent implements OnInit {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.dialog.patchValue(data);
+      this.addEditForm.patchValue(data);
       if (
-        this.dialog.value.equipments != null ||
-        this.dialog.value.equipments != ''
+        this.addEditForm.value.equipments != null ||
+        this.addEditForm.value.equipments != ''
       ) {
-        this.lstDevices = this.dialog.value.equipments.split(';');
-        this.tmplstDevice = this.dialog.value.equipments.split(';');
+        this.lstDevices = this.addEditForm.value.equipments.split(';');
+        this.tmplstDevice = this.addEditForm.value.equipments.split(';');
       } else {
         this.lstDevices = [];
         this.tmplstDevice = [];
@@ -116,12 +140,8 @@ export class DialogRoomResourceComponent implements OnInit {
       this.setdata(this.data);
     }
   }
-  clickMF(evt?:any, data?:any){
-
-  }
-  click(evt?:any){
-
-  }
+  clickMF(evt?: any, data?: any) {}
+  click(evt?: any) {}
   initForm() {
     this.cacheSv
       .gridViewSetup(this.modelPage.formName, this.modelPage.gridViewName)
@@ -132,55 +152,68 @@ export class DialogRoomResourceComponent implements OnInit {
     this.bookingService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
       .then((item) => {
-        this.dialog = item;
-        console.log(this.dialog);
+        this.addEditForm = item;
+        console.log(this.addEditForm);
         this.isAfterRender = true;
       });
     // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
     this.lstDevices = [];
     this.tmplstDevice = [];
   }
-
-  saveRoom() {
-    if (this.dialog.invalid == true) {
-      console.log(this.dialog);
+  beforeSave(option: any) {
+    let itemData = this.addEditForm.value;
+    if (!itemData.resourceID) {
+      this.isAdd = true;
+    } else {
+      this.isAdd = false;
+    }
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
+  onSaveForm() {
+    if (this.addEditForm.invalid == true) {
+      console.log(this.addEditForm);
       return;
     }
 
-    this.dialog.value.linkType = '0';
-    this.dialog.value.equipments = this.lstDevices.join(';');
-    this.dialog.value.resourceType = '1';
-    console.log(this.dialog);
-    this.api
-      .callSv(
-        'EP',
-        'ERM.Business.EP',
-        'ResourcesBusiness',
-        'AddEditItemAsync',
-        [this.dialog.value, this.isAdd]
-      )
-      .subscribe((res) => {
-        this.dataGrid = new AddGridData();
-        if (res && res.msgBodyData[0][0] == true) {
-          this.dataGrid.dataItem = res.msgBodyData[0][1];
-          this.dataGrid.isAdd = this.isAdd;
-          this.dataGrid.key = 'recID';
-          this.notificationsService.notify('Successfully');
-          this.closeFormEdit(this.dataGrid);
-        } else {
-          this.notificationsService.notify('Fail');
-          this.closeFormEdit(null);
-        }
-      });
+    this.addEditForm.value.linkType = '0';
+    this.addEditForm.value.equipments = this.lstDevices.join(';');
+    this.addEditForm.value.resourceType = '1';
+    console.log(this.addEditForm);
+    // this.api
+    //   .callSv(
+    //     'EP',
+    //     'ERM.Business.EP',
+    //     'ResourcesBusiness',
+    //     'AddEditItemAsync',
+    //     [this.addEditForm.value, this.isAdd]
+    //   )
+    //   .subscribe((res) => {
+    //     this.dataGrid = new AddGridData();
+    //     if (res && res.msgBodyData[0][0] == true) {
+    //       this.dataGrid.dataItem = res.msgBodyData[0][1];
+    //       this.dataGrid.isAdd = this.isAdd;
+    //       this.dataGrid.key = 'recID';
+    //       this.notificationsService.notify('Successfully');
+    //       this.closeFormEdit(this.dataGrid);
+    //     } else {
+    //       this.notificationsService.notify('Fail');
+    //       this.closeFormEdit(null);
+    //     }
+    //   });
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
   valueChange(event: any) {
     console.log('valueChange', event);
     if (event?.field != null) {
       if (typeof event.data === 'object') {
-        this.dialog.patchValue({ [event['field']]: event.data.value });
+        this.addEditForm.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialog.patchValue({ [event['field']]: event.data });
+        this.addEditForm.patchValue({ [event['field']]: event.data });
       }
     }
   }
@@ -188,7 +221,7 @@ export class DialogRoomResourceComponent implements OnInit {
   icon: any;
   valueChangeIcon(icon: any) {
     this.icon = icon;
-    this.dialog.patchValue({ icon: icon });
+    this.addEditForm.patchValue({ icon: icon });
   }
 
   openPopupDevices() {
@@ -246,6 +279,6 @@ export class DialogRoomResourceComponent implements OnInit {
   }
 
   valueOwnerChange(event) {
-    if (event) this.dialog.patchValue({ owner: event[0] });
+    if (event) this.addEditForm.patchValue({ owner: event[0] });
   }
 }

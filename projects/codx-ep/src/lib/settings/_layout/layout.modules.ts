@@ -9,14 +9,12 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SettingsRoutingModule } from '../settings-routing.module';
 import { CarResourceComponent } from '../cars/cars.component';
-import { DialogRoomResourceComponent } from '../rooms/dialog/editor.component';
 import { RoomsComponent } from '../rooms/rooms.component';
 import { DialogDriverResourceComponent } from '../drivers/dialog/editor.component';
 import { DriverResourceComponent } from '../drivers/drivers.component';
 import { TypesComponent } from '../types/types.component';
 import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
-
-// import { EditRoomComponent } from '../room/edit-room/edit-room.component';
+import { PopupAddRoomsComponent } from '../rooms/popup-add-rooms/popup-add-rooms.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +22,7 @@ import { DialogTypeResourceComponent } from '../types/dialog/dialog.component';
     CarResourceComponent,
     PopupAddCarsComponent,
     RoomsComponent,
-    DialogRoomResourceComponent,
+    PopupAddRoomsComponent,
     DialogDriverResourceComponent,
     DriverResourceComponent,
     TypesComponent,

@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
@@ -10,21 +10,21 @@ import {
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
-import { RoomsComponent } from './settings/rooms/rooms.component';
 import { CarResourceComponent } from './settings/cars/cars.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { BookingStationeryComponent } from './booking-stationery/booking-stationery.component';
 import { StationeryDashboardComponent } from './booking-stationery/dashboard/dashboard.component';
 import { DialogStationeryComponent } from './settings/stationery/dialog/dialog-stationery.component';
-import { EditRoomBookingComponent } from './booking-room/edit-room-booking/edit-room-booking.component';
-import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { BookingCarComponent } from './booking-car/booking-car.component';
 import { RoomDashboardComponent } from './booking-room/dashboard/dashboard.component';
 import { CarDashboardComponent } from './booking-car/dashboard/dashboard.component';
 import { PopupAddBookingCarComponent } from './booking-car/popup-add-booking-car/popup-add-booking-car.component';
+import { RoomsComponent } from './settings/rooms/rooms.component';
+import { BookingRoomComponent } from './booking-room/booking-room.component';
+import { PopupAddBookingRoomComponent } from './booking-room/popup-add-booking-room/popup-add-booking-room.component';
 
-const routes: Routes = [
+const routes: Route[] = [
   {
     path: '',
     component: LayoutComponent,
@@ -42,28 +42,16 @@ const routes: Routes = [
         component: BookingStationeryComponent,
       },
       {
-        path: 'room-resources',
-        component: RoomsComponent,
-      },
-      {
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
       },
       {
-        path: 'room-resources',
+        path: 'rooms/:funcID',
         component: RoomsComponent,
-      },
-      {
-        path: 'booking-edit',
-        component: EditRoomBookingComponent,
       },
       {
         path: 'cars/:funcID',
         component: CarResourceComponent,
-      },
-      {
-        path: 'rooms/:funcID',
-        component: RoomsComponent,
       },
       {
         path: 'stationery/:funcID',
@@ -93,8 +81,8 @@ const routes: Routes = [
 const Components: Type<any>[] = [
   LayoutComponent,
   BookingRoomComponent,
-  EditRoomBookingComponent,
   BookingCarComponent,
+  PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
