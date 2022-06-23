@@ -413,14 +413,25 @@ export class PopupAddComponent implements OnInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
-        }
-      });
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.dialog.close();
+    //       this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+    //     }
+    //   });
+    this.tmSv.addTask([
+      this.task,
+      this.functionID,
+      this.listTaskResources,
+      this.listTodo,
+    ]).subscribe(res => {
+      if (res && res.length)
+        this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+      this.dialog.dataService.setDataSelected(res[0]);
+      this.dialog.dataService.afterSave.next(res);
+    })
   }
 
   updateTask() {

@@ -14,6 +14,8 @@ export class ProjectgroupsComponent implements OnInit {
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
   @ViewChild('itemApprovalControlVll', { static: true }) itemApprovalControlVll: TemplateRef<any>;
+  @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+
   @ViewChild('view') view!: ViewsComponent;
 
   columnsGrid = [];
@@ -31,7 +33,7 @@ export class ProjectgroupsComponent implements OnInit {
       { field: 'projectGroupName', headerText: 'Tên nhóm dự án', width: 150 },
       { field: 'projectGroupName2', headerText: 'Tên khác', width: 140 },
       { field: 'projectCategory', headerText: 'Phân loại', template: this.itemApprovalControlVll, width: 80 },
-      { field: 'note', headerText: 'Ghi chú', width: 160 },
+      { field: 'note', headerText: 'Ghi chú', width: 160, template: this.itemNote },
       { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 120 },
       { field: 'createdOn', headerText: 'Ngày tạo', template: this.itemCreate, width: 100 }
     ];

@@ -23,8 +23,6 @@ import {
 } from 'codx-core';
 
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
-
-export class defaultRecource {}
 @Component({
   selector: 'app-rooms',
   templateUrl: 'rooms.component.html',
@@ -32,34 +30,28 @@ export class defaultRecource {}
 })
 export class RoomsComponent implements OnInit, AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('popuptemplate') popupTemp: TemplateRef<any>;
-  @Input('data') data;
-  @Output() editData = new EventEmitter();
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   devices: any;
-  columnsGrid;
   dataSelected: any;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
   addEditForm: FormGroup;
   isAdd = false;
   dialog!: DialogRef;
+  vllDevices = [];
+  lstDevices = [];
+  funcID = 'EPS21';
+  showToolBar = 'true';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '1';
+  idField = 'recID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
+
   constructor(
     private api: ApiHttpService,
     private cacheSv: CacheService,
@@ -84,20 +76,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     };
   }
 
-  vllDevices = [];
-  lstDevices = [];
-  tmplstDevice = [];
-  funcID = 'EPS21';
-  showToolBar = 'true';
-  service = 'EP';
-  assemblyName = 'EP';
-  entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
-  idField = 'recID';
-  className = 'ResourcesBusiness';
-  Height = '500px';
-  method = 'GetListAsync';
   ngOnInit(): void {
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
@@ -158,26 +136,5 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       });
   }
 
-  saveRoom() {
-    // if (this.dialog.status == 'INVALID') {
-    //   console.log('result', this.dialog.value);
-    //   this.notificationsService.notify('"area" and "capacity" is not null!');
-    //   return;
-    // }
-  }
-  getlstDevice(items: string) {
-    this.lstDevices = items.split(';');
-    return this.lstDevices;
-  }
-
-  getDeviceName(value) {
-    let device = this.vllDevices.find((x) => x.value == value);
-    if (device) return device.text;
-  }
-
-  deleteResource(item) {
-    console.log(item);
-    this.callFunc.openForm(this.popupTemp, 'Xóa', 450, 250);
-  }
   closeEditForm(evt) {}
 }

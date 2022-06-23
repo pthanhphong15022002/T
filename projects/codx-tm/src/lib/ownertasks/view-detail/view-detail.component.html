@@ -1,46 +1,87 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
-    (clickMF)="clickMF($event,itemSelected)">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [footer]="footer"
+    (clickMF)="clickMF($event, itemSelected)"
+  >
     <ng-template #header>
       <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
           <div class="symbol symbol-60px symbol-circle me-4">
-            <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users" [width]="55">
+            <codx-img
+              [objectId]="itemSelected?.createdBy"
+              objectType="AD_Users"
+              [width]="55"
+            >
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
-                <div class="fw-bolder codx-text-overflow-1line">{{ itemSelected?.userNameCreate }}
+                <div class="fw-bolder codx-text-overflow-1line">
+                  {{ itemSelected?.userNameCreate }}
                 </div>
-                <div class="text-gray-600 me-4 mb-1">{{ itemSelected?.positionNameCreate }}
+                <div class="text-gray-600 me-4 mb-1">
+                  {{ itemSelected?.positionNameCreate }}
                 </div>
                 <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center me-4">
-                    <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-                    <div class="text-gray-600" [ngClass]="itemSelected?.phoneCreate?'text-gray-600':'text-gray-400'">
-                      {{ itemSelected?.phoneCreate ? itemSelected?.phoneCreate : 'Số điện thoại' }}
+                    <span
+                      class="icon-phone_android icon-16 text-gray-600 me-2"
+                    ></span>
+                    <div
+                      class="text-gray-600"
+                      [ngClass]="
+                        itemSelected?.phoneCreate
+                          ? 'text-gray-600'
+                          : 'text-gray-400'
+                      "
+                    >
+                      {{
+                        itemSelected?.phoneCreate
+                          ? itemSelected?.phoneCreate
+                          : "Số điện thoại"
+                      }}
                     </div>
                   </div>
                   <div class="d-flex align-items-center">
                     <span class="icon-email icon-16 text-gray-600 me-2"></span>
-                    <div class="font-size-sm" [ngClass]="itemSelected?.emailCreate ? 'text-gray-600' : 'text-gray-400'">
-                      {{ itemSelected?.emailCreate ? itemSelected?.emailCreate : 'Email' }}
+                    <div
+                      class="font-size-sm"
+                      [ngClass]="
+                        itemSelected?.emailCreate
+                          ? 'text-gray-600'
+                          : 'text-gray-400'
+                      "
+                    >
+                      {{
+                        itemSelected?.emailCreate
+                          ? itemSelected?.emailCreate
+                          : "Email"
+                      }}
                     </div>
                   </div>
                 </div>
               </div>
               <div class="d-status">
-                <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
-                '30'
-              " [style.background-color]="
-                (itemSelected?.status | vll: 'L0614':'textColor' | async) +
-                '30'
-              " [style.color]="
-                itemSelected?.status | vll: 'L0614':'textColor' | async
-              " style="border: none">
+                <div
+                  class="badge badge-danger me-2 label-status"
+                  [style.border-color]="
+                    (itemSelected?.status | vll: 'L0614':'textColor' | async) +
+                    '30'
+                  "
+                  [style.background-color]="
+                    (itemSelected?.status | vll: 'L0614':'textColor' | async) +
+                    '30'
+                  "
+                  [style.color]="
+                    itemSelected?.status | vll: 'L0614':'textColor' | async
+                  "
+                  style="border: none"
+                >
                   {{ itemSelected?.status | vll: "L0614":"text" | async }}
                 </div>
               </div>
@@ -56,32 +97,44 @@
           <div class="d-flex mt-1">
             <div class="d-flex me-6">
               <span class="fw-bold me-1">Ngày hết hạn:</span>
-              <span class="text-gray-700">{{itemSelected.dueDate | date: 'dd/MM/yyyy'}}</span>
+              <span class="text-gray-700">{{
+                itemSelected.dueDate | date: "dd/MM/yyyy"
+              }}</span>
             </div>
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">Ưu tiên:</span>
               <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
                 [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async">
               </span>
-              <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
+              <span class="text-gray-700">{{
+                itemSelected?.priority | vll: "L0186":"text" | async
+              }}</span>
             </div>
             <div class="d-flex">
               <span class="fw-bold me-1">Nhóm công việc:</span>
-              <span class="text-gray-700">{{itemSelected?.taskGroupName}}</span>
+              <span class="text-gray-700">{{
+                itemSelected?.taskGroupName
+              }}</span>
             </div>
           </div>
           <div class="d-flex mt-1">
             <div class="d-flex me-6">
               <span class="fw-bold me-1">Ngày bắt đầu:</span>
-              <span [ngClass]="itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400' ">{{
-                itemSelected?.startDate
-                | date: 'dd/MM/yyyy'}}</span>
+              <span
+                [ngClass]="
+                  itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
+                "
+                >{{ itemSelected?.startDate | date: "dd/MM/yyyy" }}</span
+              >
             </div>
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">Ngày kết thúc:</span>
-              <span [ngClass]="itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400' ">{{ itemSelected?.endDate
-                |date:
-                'dd/MM/yyyy' }}</span>
+              <span
+                [ngClass]="
+                  itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
+                "
+                >{{ itemSelected?.endDate | date: "dd/MM/yyyy" }}</span
+              >
             </div>
             <div class="d-flex">
               <span class="fw-bold me-1">Ngày hoàn tất:</span>
@@ -100,7 +153,7 @@
           </div>
           <div class="d-flex">
             <span class="fw-bold me-2">Địa điểm:</span>
-            <span class="text-gray-700">{{itemSelected?.location}}</span>
+            <span class="text-gray-700">{{ itemSelected?.location }}</span>
           </div>
         </div>
         <div class="mt-2">
@@ -113,15 +166,24 @@
     </ng-template>
     <ng-template #body>
       <div class="codx_title_sub_primary mt-6 mb-3">
-        <codx-label fiedName="lblAsignTo" default="Người thực hiện" formName="TM_Tasks"></codx-label>
+        <codx-label
+          fiedName="lblAsignTo"
+          default="Người thực hiện"
+          formName="TM_Tasks"
+        ></codx-label>
       </div>
       <div class="symbol-group">
-        <div *ngIf="itemSelected.category == '3'" class="symbol symbol-30px symbol-circle me-3">
+        <div
+          *ngIf="itemSelected.category == '3'"
+          class="symbol symbol-30px symbol-circle me-3"
+        >
           <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">
           </codx-imgs>
         </div>
-        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
-          class="symbol symbol-30px symbol-circle me-3">
+        <div
+          *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
+          class="symbol symbol-30px symbol-circle me-3"
+        >
           <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4">
           </codx-imgs>
         </div>
@@ -130,20 +192,28 @@
       <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div class="text-gray-700" [innerHTML]="itemSelected?.memo">
-      </div>
-      <div class="codx_title_sub_primary mt-6 mb-3" *ngIf=" itemSelected?.listTaskGoals.length >0">
+      <div class="text-gray-700" [innerHTML]="itemSelected?.memo"></div>
+      <div
+        class="codx_title_sub_primary mt-6 mb-3"
+        *ngIf="itemSelected?.listTaskGoals.length > 0"
+      >
         <div class="text-primary fw-bold mt-4 mb-2">Check list</div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
             <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input> -->
-            <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
-            <span></span>{{" " + item.memo }}
+            <input
+              type="checkbox"
+              name="Checkboxes1"
+              [checked]="item.status == '9'"
+              disabled
+            />
+            <span></span>{{ " " + item.memo }}
           </ng-container>
         </div>
       </div>
     </ng-template>
     <ng-template #footer>
+      <codx-tabs></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>

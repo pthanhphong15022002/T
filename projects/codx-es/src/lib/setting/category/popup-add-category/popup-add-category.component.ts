@@ -196,11 +196,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopup(content, title) {
-    // this.cfService.openForm(content, title, 750, 1000).subscribe((res) => {
-    //   res.close = this.closePopup();
-    //   // let hmtl = (content as any).getElementById('templateItem');
-    //   // this.setHtml();
-    // });
+    this.cfService.openForm(content, title, 750, 1000);
   }
 
   openPopupModal() {
