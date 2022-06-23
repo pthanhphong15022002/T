@@ -6,11 +6,10 @@ import {
   OnInit,
   Optional,
   Output,
-  ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
   CacheService,
@@ -19,9 +18,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import {
-  AddGridData,
   CodxEpService,
-  ModelPage,
 } from '../../../codx-ep.service';
 
 @Component({
@@ -35,20 +32,12 @@ export class PopupAddCarsComponent implements OnInit {
   @Input() data = {};
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  dataGrid: AddGridData;
-  devices: any;
-  modelPage: ModelPage;
   cacheGridViewSetup: any;
   dialogCar: FormGroup;
   dialog: any;
 
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
     private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
     private bookingService: CodxEpService,
     @Optional() dt?: DialogData,
@@ -139,27 +128,6 @@ export class PopupAddCarsComponent implements OnInit {
       this.dialogCar.value.linkType = '0';
     }
     this.dialogCar.value.resourceType = '2';
-    // this.api
-    //   .callSv(
-    //     'EP',
-    //     'ERM.Business.EP',
-    //     'ResourcesBusiness',
-    //     'AddEditItemAsync',
-    //     [this.dialogCar.value, this.isAdd]
-    //   )
-    //   .subscribe((res) => {
-    //     this.dataGrid = new AddGridData();
-    //     if (res && res.msgBodyData[0][0] == true) {
-    //       this.dataGrid.dataItem = res.msgBodyData[0][1];
-    //       this.dataGrid.isAdd = this.isAdd;
-    //       this.dataGrid.key = 'recID';
-    //       this.notificationsService.notify('Successfully');
-    //       this.closeFormEdit(this.dataGrid);
-    //     } else {
-    //       this.notificationsService.notify('Fail');
-    //       this.closeFormEdit(null);
-    //     }
-    //   });
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();

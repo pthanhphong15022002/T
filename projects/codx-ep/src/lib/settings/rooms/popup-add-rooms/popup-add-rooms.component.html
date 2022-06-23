@@ -11,8 +11,7 @@
   <div class="container">
     <div class="card card-custom cdx-add border-radius-0">
       <div class="card-body scroll-y my-7">
-        <form [formGroup]="addEditForm" *ngIf="isAfterRender">
-          <!-- <form> -->
+        <form [formGroup]="dialogRoom" *ngIf="isAfterRender">
           <div class="row mb-4">
             <codx-label
               class="fs-5 fw-bold"
@@ -40,8 +39,6 @@
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
-                <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-              </select-icon> -->
               </div>
             </div>
           </div>
@@ -65,12 +62,8 @@
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
-              <!--end::Input-->
             </div>
-            <!--end::Col-->
-            <!--begin::Col-->
             <div class="col-3">
-              <!--end::Label-->
               <codx-label
                 class="fw-bold"
                 default="Diện tích (m2)"
@@ -78,8 +71,6 @@
                 [formModel]="dialog.formModel"
               >
               </codx-label>
-              <!--end::Label-->
-              <!--end::Input-->
               <codx-input
                 type="text"
                 class="form-control"
@@ -87,12 +78,8 @@
                 [Group]="dialog"
               >
               </codx-input>
-              <!--end::Input-->
             </div>
-            <!--end::Col-->
-            <!--begin::Col-->
             <div class="col-3">
-              <!--end::Label-->
               <codx-label
                 class="fw-bold"
                 default="Sức chứa (người)"
@@ -100,8 +87,6 @@
                 [formModel]="dialog.formModel"
               >
               </codx-label>
-              <!--end::Label-->
-              <!--end::Input-->
               <codx-input
                 type="text"
                 class="form-control"
@@ -109,16 +94,10 @@
                 [Group]="dialog"
               >
               </codx-input>
-              <!--end::Input-->
             </div>
-            <!--end::Col-->
           </div>
-          <!--end::Input group-->
-          <!--begin::Input group-->
           <div class="row mb-4">
-            <!--begin::Col-->
             <div class="col-8">
-              <!--begin::Label-->
               <codx-label
                 class="fw-bold"
                 default="Vị trí"
@@ -126,8 +105,6 @@
                 [formModel]="dialog.formModel"
               >
               </codx-label>
-              <!--end::Label-->
-              <!--begin::Input-->
               <codx-input
                 type="text"
                 class="form-control"
@@ -206,23 +183,18 @@
           </div>
           <div class="row mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <!-- <h5 class="text-dark">Thiết bị</h5> -->
               <codx-label
                 class="fw-bold"
                 default="Thiết bị"
                 fiedName="Equipments"
               >
               </codx-label>
-              <span
-                class="icon-select_all text-primary icon-20"
-                (click)="openPopupDevices()"
-              ></span>
+              <span class="icon-select_all text-primary icon-20"></span>
             </div>
             <div class="d-flex align-items-center fw-bold">
               <ng-container *ngFor="let item of lstDevices">
                 <span class="text-dark fs-5 icon-wifi me-3">
                   <span class="fs-6 ms-1">{{ getDeviceName(item) }}</span>
-                  <!-- <span class="fs-6 ms-1">{{item|vll:'EP005':'text'|async}}</span>-->
                 </span>
               </ng-container>
             </div>
@@ -232,6 +204,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-light-primary" (click)="onSaveForm()">

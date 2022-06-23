@@ -36,35 +36,13 @@ export class PopupAddRoomsComponent implements OnInit {
   @Input() data = {};
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  dataGrid: AddGridData;
-  devices: any;
   modelPage: ModelPage;
-
-  // defaultRecource: any = {
-  //   recID: '',
-  //   resourceName: '',
-  //   ranking: '1',
-  //   category: '1',
-  //   area: '',
-  //   capacity: '',
-  //   location: '',
-  //   companyID: '1',
-  //   owner: '',
-  //   note: '',
-  //   resourceType: '',
-  //   icon: '',
-  //   equipments: '',
-  // };
   dialog: any;
-  addEditForm: FormGroup;
+  dialogRoom: FormGroup;
   formModel: FormModel;
+
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
     private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
     private bookingService: CodxEpService,
     @Optional() dt?: DialogData,
@@ -73,12 +51,6 @@ export class PopupAddRoomsComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
-    // this.modelPage = {
-    //   entity: 'EP_Rooms1',
-    //   formName: 'Rooms',
-    //   gridViewName: 'grvRooms',
-    //   functionID: 'EPS21',
-    // };
   }
   CbxName: any;
   vllDevices = [];
@@ -88,6 +60,7 @@ export class PopupAddRoomsComponent implements OnInit {
   isAfterRender = false;
   headerText = 'Thêm mới Phòng họp';
   subHeaderText = 'Tạo & upload file văn bản';
+
   ngOnInit(): void {
     this.bookingService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
@@ -120,13 +93,13 @@ export class PopupAddRoomsComponent implements OnInit {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.addEditForm.patchValue(data);
+      this.dialogRoom.patchValue(data);
       if (
-        this.addEditForm.value.equipments != null ||
-        this.addEditForm.value.equipments != ''
+        this.dialogRoom.value.equipments != null ||
+        this.dialogRoom.value.equipments != ''
       ) {
-        this.lstDevices = this.addEditForm.value.equipments.split(';');
-        this.tmplstDevice = this.addEditForm.value.equipments.split(';');
+        this.lstDevices = this.dialogRoom.value.equipments.split(';');
+        this.tmplstDevice = this.dialogRoom.value.equipments.split(';');
       } else {
         this.lstDevices = [];
         this.tmplstDevice = [];
@@ -152,8 +125,8 @@ export class PopupAddRoomsComponent implements OnInit {
     this.bookingService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
       .then((item) => {
-        this.addEditForm = item;
-        console.log(this.addEditForm);
+        this.dialogRoom = item;
+        console.log(this.dialogRoom);
         this.isAfterRender = true;
       });
     // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
@@ -161,7 +134,7 @@ export class PopupAddRoomsComponent implements OnInit {
     this.tmplstDevice = [];
   }
   beforeSave(option: any) {
-    let itemData = this.addEditForm.value;
+    let itemData = this.dialogRoom.value;
     if (!itemData.resourceID) {
       this.isAdd = true;
     } else {
@@ -172,22 +145,22 @@ export class PopupAddRoomsComponent implements OnInit {
     return true;
   }
   onSaveForm() {
-    if (this.addEditForm.invalid == true) {
-      console.log(this.addEditForm);
+    if (this.dialogRoom.invalid == true) {
+      console.log(this.dialogRoom);
       return;
     }
 
-    this.addEditForm.value.linkType = '0';
-    this.addEditForm.value.equipments = this.lstDevices.join(';');
-    this.addEditForm.value.resourceType = '1';
-    console.log(this.addEditForm);
+    this.dialogRoom.value.linkType = '0';
+    this.dialogRoom.value.equipments = this.lstDevices.join(';');
+    this.dialogRoom.value.resourceType = '1';
+    console.log(this.dialogRoom);
     // this.api
     //   .callSv(
     //     'EP',
     //     'ERM.Business.EP',
     //     'ResourcesBusiness',
     //     'AddEditItemAsync',
-    //     [this.addEditForm.value, this.isAdd]
+    //     [this.dialogRoom.value, this.isAdd]
     //   )
     //   .subscribe((res) => {
     //     this.dataGrid = new AddGridData();
@@ -211,42 +184,25 @@ export class PopupAddRoomsComponent implements OnInit {
     console.log('valueChange', event);
     if (event?.field != null) {
       if (typeof event.data === 'object') {
-        this.addEditForm.patchValue({ [event['field']]: event.data.value });
+        this.dialogRoom.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.addEditForm.patchValue({ [event['field']]: event.data });
+        this.dialogRoom.patchValue({ [event['field']]: event.data });
       }
+    }
+  }
+
+  valueCbxChange(evt: any) {
+    if (evt.length > 0) {
+      this.dialogRoom.patchValue({ owner: evt[0] });
     }
   }
 
   icon: any;
   valueChangeIcon(icon: any) {
     this.icon = icon;
-    this.addEditForm.patchValue({ icon: icon });
+    this.dialogRoom.patchValue({ icon: icon });
   }
 
-  openPopupDevices() {
-    this.modalService
-      .open(this.popupDevice, { centered: true, size: 'md' })
-      .result.then(
-        (result) => {
-          this.lstDevices = [...this.tmplstDevice];
-        },
-        (reason) => {
-          this.tmplstDevice = [...this.lstDevices];
-          console.log('reason', this.getDismissReason(reason));
-        }
-      );
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
 
   isExist(deviceName) {
     let index = this.lstDevices.indexOf(deviceName);
@@ -279,6 +235,6 @@ export class PopupAddRoomsComponent implements OnInit {
   }
 
   valueOwnerChange(event) {
-    if (event) this.addEditForm.patchValue({ owner: event[0] });
+    if (event) this.dialogRoom.patchValue({ owner: event[0] });
   }
 }

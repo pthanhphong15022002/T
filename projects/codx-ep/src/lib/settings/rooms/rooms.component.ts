@@ -39,7 +39,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   @Output() editData = new EventEmitter();
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
   devices: any;
   columnsGrid;
   dataSelected: any;
@@ -66,19 +66,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private callFunc: CallFuncService
   ) {}
-  moreFuncs = [
-    {
-      id: 'btnEdit',
-      icon: 'icon-list-checkbox',
-      text: 'Chỉnh sửa',
-    },
-    {
-      id: 'btnDelete',
-      icon: 'icon-list-checkbox',
-      text: 'Xóa',
-    },
-  ];
-
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -142,6 +129,10 @@ export class RoomsComponent implements OnInit, AfterViewInit {
         option
       );
     });
+  }
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 
   edit(evt?) {

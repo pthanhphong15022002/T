@@ -29,7 +29,7 @@ export class defaultRecource {}
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarResourceComponent implements OnInit, AfterViewInit {
+export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -80,7 +80,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
+    private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {}
   ngAfterViewInit(): void {
@@ -127,7 +127,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
         option
@@ -147,7 +147,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
         option

@@ -1,3 +1,5 @@
+import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
+import { CarsComponent } from './settings/cars/cars.component';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { SharedModule } from 'src/shared';
@@ -10,12 +12,10 @@ import {
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
-import { CarResourceComponent } from './settings/cars/cars.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { BookingStationeryComponent } from './booking-stationery/booking-stationery.component';
 import { StationeryDashboardComponent } from './booking-stationery/dashboard/dashboard.component';
-import { DialogStationeryComponent } from './settings/stationery/dialog/dialog-stationery.component';
 import { BookingCarComponent } from './booking-car/booking-car.component';
 import { RoomDashboardComponent } from './booking-room/dashboard/dashboard.component';
 import { CarDashboardComponent } from './booking-car/dashboard/dashboard.component';
@@ -42,16 +42,12 @@ const routes: Route[] = [
         component: BookingStationeryComponent,
       },
       {
-        path: 'bookingstationery/:funcID',
-        component: BookingStationeryComponent,
-      },
-      {
         path: 'rooms/:funcID',
         component: RoomsComponent,
       },
       {
         path: 'cars/:funcID',
-        component: CarResourceComponent,
+        component: CarsComponent,
       },
       {
         path: 'stationery/:funcID',
@@ -82,14 +78,15 @@ const Components: Type<any>[] = [
   LayoutComponent,
   BookingRoomComponent,
   BookingCarComponent,
+  BookingStationeryComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
+  StationeryComponent,
+  CarsComponent,
+  RoomsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
-  StationeryComponent,
-  BookingStationeryComponent,
   StationeryDashboardComponent,
-  DialogStationeryComponent,
 ];
 
 @NgModule({

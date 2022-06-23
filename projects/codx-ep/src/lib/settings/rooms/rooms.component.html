@@ -1,7 +1,7 @@
 <codx-views
   #view
   [funcID]="funcID"
-  [showToolBar]="showToolBar"
+  [showToolBar]="true"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
@@ -9,12 +9,12 @@
   [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
   [className]="className"
   [method]="method"
-  (buttonClick)="click($event)"
-  (requestEnded)="closeEditForm($event)"
+  (requestEnded)="closeDialog($event)"
 >
 </codx-views>
 

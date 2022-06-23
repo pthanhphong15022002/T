@@ -26,7 +26,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { DialogStationeryComponent } from './dialog/dialog-stationery.component';
+import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 
 @Component({
   selector: 'app-stationery',
@@ -85,7 +85,18 @@ export class StationeryComponent implements OnInit {
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
-
+  moreFuncs = [
+    {
+      id: 'btnEdit',
+      icon: 'icon-list-checkbox',
+      text: 'Chỉnh sửa',
+    },
+    {
+      id: 'btnDelete',
+      icon: 'icon-list-checkbox',
+      text: 'Xóa',
+    },
+  ];
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -161,7 +172,7 @@ export class StationeryComponent implements OnInit {
       option.Width = '750px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
-        DialogStationeryComponent,
+        PopupAddStationeryComponent,
         this.dataSelected,
         option
       );
@@ -177,7 +188,7 @@ export class StationeryComponent implements OnInit {
         option.Width = '750px';
         option.DataService = this.viewBase?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
-          DialogStationeryComponent,
+          PopupAddStationeryComponent,
           this.viewBase.dataService.dataSelected,
           option
         );
