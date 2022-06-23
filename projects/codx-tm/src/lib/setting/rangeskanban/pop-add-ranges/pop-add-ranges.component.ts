@@ -41,10 +41,7 @@ export class PopAddRangesComponent implements OnInit {
         ...this.ranges,
         ...dd?.data[0],
       };
-      this.rangeLines = {
-        ...this.rangeLines,
-        ...dd?.data[1]
-      }
+
       this.dialog = dialog;
       this.user = this.authStore.get();
       this.functionID = this.dialog.formModel.funcID;
