@@ -62,7 +62,6 @@
               <span class="me-1 fw-bold">Ưu tiên:</span>
               <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
                 [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async">
-                <span class="icon-18 icon-outlined_flag"></span> 
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
             </div>
@@ -90,7 +89,7 @@
               <span [ngClass]="itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400' "><span
                   *ngIf=" itemSelected?.completedOn">{{
                   itemSelected?.completedOn
-                  | date: 'dd/MM/yyyy' }} {{" | "+ itemSelected?.estimated}}</span></span>
+                  | date: 'dd/MM/yyyy' }} {{" | "+ itemSelected?.completed}}</span></span>
             </div>
           </div>
         </div>
@@ -108,7 +107,7 @@
           <!-- <span class="badge badge-info me-1">Issue</span>
           <span class="badge badge-success me-1">Project</span>
           <span class="badge badge-warning">Customize</span> -->
-          <codx-tag entityName="AD_Users" [disabled]="false" [isEdit]="false" [value]="itemSelected?.tags"></codx-tag>
+          <codx-tag [entityName]="formModel.entityName"  [disabled]="false" [isEdit]="false" [value]="itemSelected?.tags"></codx-tag>
         </div>
       </div>
     </ng-template>
