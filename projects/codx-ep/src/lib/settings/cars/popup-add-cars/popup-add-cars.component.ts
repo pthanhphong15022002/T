@@ -7,15 +7,12 @@ import {
   Optional,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  ApiHttpService,
   CacheService,
   DialogData,
   DialogRef,
-  NotificationsService,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 

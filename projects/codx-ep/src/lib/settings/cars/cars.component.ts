@@ -45,7 +45,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
   dataValue = '2';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
   
@@ -106,6 +106,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
         break;
     }
   }
+
   addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
@@ -172,8 +173,5 @@ export class CarsComponent implements OnInit, AfterViewInit {
       default:
         break;
     }
-  }
-  closeEditForm(evt?) {
-    //this.viewBase.currentView.closeSidebarRight();
   }
 }

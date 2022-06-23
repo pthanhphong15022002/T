@@ -327,9 +327,6 @@ export class PopupAddComponent implements OnInit {
     this.listUser = [];
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi
-    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    // this.getListUser(this.task.assignTo);
     t.changeDetectorRef.detectChanges();
   }
 
@@ -605,16 +602,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  // valueChangeUser(event) {
-  //   if (event?.valueSeleteds) {
-  //     this.task.assignTo = event?.valueSeleteds;
-  //   }
-  // this.listUser =  this.task.assignTo.split(";");
 
-  // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
-  //   this.listUserDetail = res ;
-  // })
-  // }
 
   getListUser(listUser) {
     this.listMemo2OfUser = [];
