@@ -1,0 +1,34 @@
+<div class="tab-horizone tab-footer tab-off">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-tabs">
+    <ng-container *ngFor="let item of TabControl; let i = index">
+      <li [ngbNavItem]="i + 1" class="nav-item">
+        <a ngbNavLink class="nav-link"
+          ><codx-label
+            [name]="'tab' + item.name"
+            [formName]="'SYS'"
+            [default]="item.default || item.name"
+          ></codx-label
+        ></a>
+        <ng-template ngbNavContent>
+          <ng-container
+            *ngTemplateOutlet="tab; context: { $implicit: item.name }"
+          >
+          </ng-container>
+        </ng-template>
+      </li>
+    </ng-container>
+  </ul>
+  <div [ngbNavOutlet]="nav" class="py-5"></div>
+</div>
+
+<ng-template #tab let-name>
+  <ng-container *ngIf="name.toLowerCase() == 'attachment'">
+    <div>attachment</div>
+  </ng-container>
+  <ng-container *ngIf="name.toLowerCase() == 'history'">
+    <div>history</div>
+  </ng-container>
+  <ng-container *ngIf="name.toLowerCase() == 'comment'">
+    <div>comment</div>
+  </ng-container>
+</ng-template>

@@ -1,6 +1,7 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)"></app-view-detail>
+  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
+  </app-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -17,7 +18,7 @@
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" [icoStatus]="data.priority" icoStatusVll="L0186"
     [title]="data.userName" icoSubTitleCss="icon-flag" [subTitle]="data.positionName" [content]="data.memo||'memo'"
     [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data"
-    [setting]="setting" [footer]="cardImgFooter">
+    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter">
   </codx-card-img>
 </ng-template>
 
@@ -65,7 +66,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div>
+  <!-- <div>
     <div>{{data.taskName}}</div>
   </div>
   <button class="btn btn-light-primary" (click)="edit(data)">
@@ -73,7 +74,10 @@
   </button>
   <button class="btn btn-light-primary" (click)="delete(data)">
     Xóa
-  </button>
+  </button> -->
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+    [title]="data.userName" [formModel]=" view.formModel">
+  </codx-temp-full>
 </ng-template>
 
 
