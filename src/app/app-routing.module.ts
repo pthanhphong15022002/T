@@ -58,6 +58,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-hr/src/lib/codx-hr.module').then((m) => m.CodxHRModule),
       },
+      {
+        path: 'mwp',
+        canActivate: [AuthGuard],  
+        loadChildren: () =>
+          import('projects/codx-mwp/src/lib/codx-mwp.module').then((m) => m.CodxMwpModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },
