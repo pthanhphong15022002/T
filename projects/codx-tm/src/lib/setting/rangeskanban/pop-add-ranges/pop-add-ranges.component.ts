@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthStore, CacheService, ApiHttpService, DialogRef, DialogData } from 'codx-core';
+import { AuthStore, CacheService, ApiHttpService, DialogRef, DialogData, NotificationsService } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { BS_Ranges } from '../../../models/BS_Ranges.model';
-import { RangeLine, RangeLineFormGroup } from '../../../models/task.model';
+import { rangeLine, RangeLine, RangeLineFormGroup } from '../../../models/task.model';
 
 @Component({
   selector: 'lib-pop-add-ranges',
@@ -18,6 +18,7 @@ export class PopAddRangesComponent implements OnInit {
   @Input() rangeLines = new RangeLine();
   @Input() data: [];
   lstRangeLine: RangeLine[];
+  lstSaveRangeLine: any;
 
 
   title = 'Thêm khoảng thời gian';
@@ -35,17 +36,20 @@ export class PopAddRangesComponent implements OnInit {
   constructor(private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
     private dt: ChangeDetectorRef, private modalService: NgbModal, private api: ApiHttpService,
     private authStore: AuthStore,
-    @Optional() dialog?: DialogRef,
-    @Optional() dd?: DialogData,) { 
-      this.ranges = {
-        ...this.ranges,
-        ...dd?.data[0],
-      };
+    private notiService: NotificationsService,
 
-      this.dialog = dialog;
-      this.user = this.authStore.get();
-      this.functionID = this.dialog.formModel.funcID;
-    }
+    @Optional() dialog?: DialogRef,
+    @Optional() dd?: DialogData,) {
+    this.ranges = {
+      ...this.ranges,
+      ...dd?.data[0],
+    };
+    this.lstRangeLine = [];
+
+    this.dialog = dialog;
+    this.user = this.authStore.get();
+    this.functionID = this.dialog.formModel.funcID;
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -66,6 +70,7 @@ export class PopAddRangesComponent implements OnInit {
   }
 
   initPopup(dataItem = null) {
+
     if (dataItem) {
       this
         .getFormGroup("RangeLines", "grvRangeLines")
@@ -150,8 +155,10 @@ export class PopAddRangesComponent implements OnInit {
   openPopup(itemdata, isAddLine, index) {
     this.isAddLine = isAddLine;
 
-    if (!itemdata)
+    if (!itemdata) {
       this.initPopup();
+    }
+
     else if (!itemdata.recID) {
       var item = this.lstRangeLine.find(x => x.id == itemdata.id);
       this.initPopup(item);
@@ -190,8 +197,41 @@ export class PopAddRangesComponent implements OnInit {
     }
   }
 
-  OnSaveForm(){
-  
+  beforeSave(op: any) {
+    var data = [];
+    op.method = 'AddEditRangeAsync';
+    data = [
+      this.ranges,
+      this.lstRangeLine,
+      this.isAddMode
+    ];
+
+    op.data = data;
+    return true;
+  }
+
+
+  OnSaveForm() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.lstSaveRangeLine = [];
+          if (this.lstRangeLine != null) {
+            for (let item1 of this.lstRangeLine) {
+              var rangeline = new rangeLine(
+                item1.recID,
+                item1.rangeID,
+                item1.breakName,
+                item1.breakValue
+              );
+              this.lstSaveRangeLine.push(rangeline);
+            }
+          }
+          this.dialog.close();
+          this.notiService.notify('Thêm mới khoảng thời gian thành công'); ///sau này có mess thì gán vào giờ chưa có
+        }
+      });
   }
 
   deletePopup(index) {

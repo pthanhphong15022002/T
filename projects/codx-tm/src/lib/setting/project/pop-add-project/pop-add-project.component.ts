@@ -10,7 +10,7 @@ import { TM_Projects } from '../../../models/TM_Projects.model';
 export class PopAddProjectComponent implements OnInit {
   @Input() projects = new TM_Projects();
 
-  title: 'Thêm mới dự án'
+  title: 'Thêm mới dự án';
   dialog: any;
   user: any;
   functionID: string;
