@@ -1,109 +1,159 @@
-<div class="col-4">
+<div class="col-4" #actions>
   <div>
-    <label class="combobox">
-      Chọn tài liệu
-      <codx-input
-        type="combobox"
-        (valueChange)="selectFile()"
-        [refValue]="files"
-        labelPosition="After"
-      >
-      </codx-input>
-    </label>
+    <codx-label
+      name="lblDocSelection"
+      [formModel]="actions.formModel"
+      default="Chọn tài liệu"
+      class="combobox"
+    >
+    </codx-label>
+    <codx-input
+      type="combobox"
+      (valueChange)="selectFile()"
+      [refValue]="files"
+      labelPosition="After"
+    >
+    </codx-input>
   </div>
   <div>
-    <label class="combobox">
-      Chọn người kí cần thiết lập
-      <codx-input
-        type="combobox"
-        (valueChange)="selectApprover()"
-        labelPosition="After"
-      >
-      </codx-input>
-    </label>
+    <codx-label
+      class="combobox"
+      name="lblApproverSelection"
+      [formModel]="actions.formModel"
+      default="Chọn người kí cần thiết lập"
+    >
+    </codx-label>
+    <codx-input
+      type="combobox"
+      (valueChange)="selectApprover()"
+      labelPosition="After"
+    >
+    </codx-input>
   </div>
-  <label> Kéo & thả chữ ký vào tài liệu </label>
+  <codx-label
+    name="lblSignatureSelection"
+    [formModel]="actions.formModel"
+    default="Kéo & thả chữ ký vào tài liệu"
+  ></codx-label>
   <div class="action-List">
     <div class="col-5">
       <div>
         <div class="icon icon-create"></div>
-        <div>Chữ ký</div>
+        <codx-label
+          name="lblSignature"
+          [formModel]="actions.formModel"
+          default="Chữ ký"
+        ></codx-label>
       </div>
     </div>
 
     <div class="col-5">
       <div>
         <div class="icon icon-text_format"></div>
-        <div>Con dấu</div>
+        <codx-label
+          name="lblStamp"
+          [formModel]="actions.formModel"
+          default="Con dấu"
+        ></codx-label>
       </div>
     </div>
 
     <div class="col-5">
       <div>
         <div class="icon icon-text_format"></div>
-        <div>Tên đầy đủ</div>
+        <codx-label
+          name="lblFullName"
+          [formModel]="actions.formModel"
+          default="Tên đầy đủ"
+        ></codx-label>
       </div>
     </div>
 
     <div class="col-5">
       <div>
         <div class="icon icon-person_pin_circle"></div>
-        <div>Chức danh</div>
+        <codx-label
+          name="lblTitle"
+          [formModel]="actions.formModel"
+          default="Chức danh"
+        ></codx-label>
       </div>
     </div>
 
     <div class="col-5">
       <div>
         <div class="icon icon-access_time"></div>
-        <div>Ngày giờ</div>
+        <codx-label
+          name="lblDateTime"
+          [formModel]="actions.formModel"
+          default="Ngày giờ"
+        ></codx-label>
       </div>
     </div>
 
     <div class="col-5">
       <div>
         <div class="icon icon-mode_comment"></div>
-        <div>Mô tả</div>
+        <codx-label
+          name="lblDescribe"
+          [formModel]="actions.formModel"
+          default="Mô tả"
+        ></codx-label>
       </div>
     </div>
     <div class="col-5">
       <div>
         <div class="icon icon-notes"></div>
-        <div>Số văn bản</div>
+        <codx-label
+          name="lblRefNumber"
+          [formModel]="actions.formModel"
+          default="Số văn bản"
+        ></codx-label>
       </div>
     </div>
     <div class="col-5">
       <div>
         <div class="icon icon-qr_code"></div>
-        <div>QR Code</div>
+        <codx-label
+          name="lblQRCode"
+          [formModel]="actions.formModel"
+          default="QR Code"
+        ></codx-label>
       </div>
     </div>
   </div>
   <div class="switch-space">
     <div class="switch-1">
-      <label>
-        <codx-input
-          type="switch"
-          [checked]="switch_1"
-          field="switchControl"
-          [crrValue]="switch_1"
-          (valueChange)="changeSwitchState(switch_1, 'sw1')"
-        >
-        </codx-input>
-        Gợi ý vị trí kí
-      </label>
+      <codx-label
+        name="lblSignAreaSuggestion"
+        [formModel]="actions.formModel"
+        default="Gợi ý vị trí kí"
+      >
+      </codx-label>
+      <codx-input
+        type="switch"
+        [checked]="switch_1"
+        field="switchControl"
+        [crrValue]="switch_1"
+        (valueChange)="changeSwitchState(switch_1, 'sw1')"
+      >
+      </codx-input>
     </div>
     <div class="switch-2">
-      <label>
-        <codx-input
-          type="switch"
-          [checked]="switch_2"
-          field="switchControl"
-          [crrValue]="switch_2"
-          (valueChange)="changeSwitchState(switch_2, 'sw2')"
-        >
-        </codx-input>
-        Chèn chữ ký tự động cho tất cả vai trò
-      </label>
+      <codx-label
+        name=""
+        [formModel]="actions.formModel"
+        default="Chèn chữ ký tự động cho tất cả vai trò"
+      >
+      </codx-label>
+      <codx-input
+        type="switch"
+        [checked]="switch_2"
+        field="switchControl"
+        [crrValue]="switch_2"
+        (valueChange)="changeSwitchState(switch_2, 'sw2')"
+      >
+      </codx-input>
     </div>
   </div>
 </div>

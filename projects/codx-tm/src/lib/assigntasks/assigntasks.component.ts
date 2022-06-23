@@ -334,7 +334,7 @@ export class AssignTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
     });
   }
 
@@ -348,7 +348,7 @@ export class AssignTasksComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
     });
   }
 

@@ -34,6 +34,8 @@ import { AssignTasksComponent } from './assigntasks/assigntasks.component';
 import { ViewDetailAssignTasksComponent } from './assigntasks/view-detail-assign-tasks/view-detail-assign-tasks.component';
 import { ProjectComponent } from './setting/project/project.component';
 import { PopAddProjectComponent } from './setting/project/pop-add-project/pop-add-project.component';
+import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.component';
+import { PopAddProjectgroupComponent } from './setting/projectgroups/pop-add-projectgroup/pop-add-projectgroup.component';
 export const routes: Routes = [
   {
     path: '',
@@ -80,6 +82,10 @@ export const routes: Routes = [
             path: 'project/:funcID',
             component: ProjectComponent
           },
+          {
+            path: 'projectgroups/:funcID',
+            component: ProjectgroupsComponent
+          },
         ]
       },
       {
@@ -115,7 +121,9 @@ const T_Component: Type<any>[] = [
   AssignTasksComponent,
   ViewDetailAssignTasksComponent,
   ProjectComponent,
-  PopAddProjectComponent
+  PopAddProjectComponent,
+  ProjectgroupsComponent,
+  PopAddProjectgroupComponent
   
 ]
 @NgModule({

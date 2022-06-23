@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
@@ -37,18 +37,17 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
   templateUrl: './popup-add-signature.component.html',
   styleUrls: ['./popup-add-signature.component.scss'],
 })
-export class PopupAddSignatureComponent implements OnInit {
+export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
   // @ViewChild('attachment', { static: false }) attachment: AttachmentComponent;
   // @ViewChild(AttachmentComponent) attachment: AttachmentComponent;
   @ViewChild('content') content;
 
-  dataGrid: AddGridData;
+  isSaveSuccess = false;
   dialogSignature: FormGroup;
   cbxName: any;
   isAfterRender: boolean = false;
-  isAdd: boolean = true;
   currentTab = 1;
   type;
   objectIDFile: any;
@@ -60,7 +59,7 @@ export class PopupAddSignatureComponent implements OnInit {
   Signature2: any = null;
   Stamp: any = null;
   dialog: any;
-  data: any;
+  data: any = null;
   headerText = 'Thêm mới chữ ký số';
   subHeaderText = 'Tạo & upload file văn bản';
 
@@ -72,20 +71,28 @@ export class PopupAddSignatureComponent implements OnInit {
     private cfService: CallFuncService,
     private codxService: CodxService,
     private readonly auth: AuthService,
-    @Optional() dt?: DialogData,
+    @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = data?.data;
     this.formModel = this.dialog.formModel;
+    console.log(this.data);
   }
 
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        console.log(item);
         this.dialogSignature = item;
+        this.dialogSignature.addControl(
+          'recID',
+          new FormControl(this.data.recID)
+        );
+        this.dialogSignature.addControl(
+          '_uuid',
+          new FormControl(this.data._uuid)
+        );
         this.dialogSignature.patchValue({
           signatureType: '1',
           supplier: '1',
@@ -93,8 +100,12 @@ export class PopupAddSignatureComponent implements OnInit {
           spanTime: 0,
           stop: false,
         });
+        if (this.data != null) {
+          this.dialogSignature.patchValue(this.data);
+        }
+        console.log(this.dialogSignature.value);
+
         this.isAfterRender = true;
-        this.isAdd = true;
         this.Signature1 = null;
         this.Signature2 = null;
         this.Stamp = null;
@@ -123,6 +134,17 @@ export class PopupAddSignatureComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
+        this.dialog.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialog.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
+
   onSavePopup() {
     if (this.content) {
       this.attachment.onMultiFileSave(null);
@@ -134,7 +156,17 @@ export class PopupAddSignatureComponent implements OnInit {
       return;
     }
 
+    debugger;
     console.log(this.dialogSignature);
+    this.data = this.dialogSignature.value;
+    console.log(this.dialog.dataService.dataSelected);
+    this.dialog.dataService.dataSelected = this.data;
+    this.dialog.dataService.save().subscribe((res: any) => {
+      if (res) {
+        this.isSaveSuccess = true;
+      }
+      console.log(res);
+    });
 
     // this.api
     //   .callSv(
@@ -176,25 +208,13 @@ export class PopupAddSignatureComponent implements OnInit {
     this.cfService.openForm(
       PopupSignatureComponent,
       'Thêm mới ghi chú',
-      747,
-      570,
+      800,
+      600,
       '',
       this.dialogSignature
     );
 
     this.cr.detectChanges();
-  }
-
-  nextStep() {
-    this.currentTab += 1;
-    this.cr.detectChanges();
-  }
-
-  previousStep() {
-    if (this.currentTab > 0) {
-      this.currentTab -= 1;
-      this.cr.detectChanges();
-    }
   }
 
   public lstDtDis: any;
@@ -242,12 +262,6 @@ export class PopupAddSignatureComponent implements OnInit {
       }
     }
     return JSON.stringify(data);
-  }
-
-  close() {}
-
-  popup(evt: any, type) {
-    // this.attachment.openPopup();
   }
 
   changeTab(tab) {

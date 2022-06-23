@@ -65,18 +65,6 @@ export class SignFileComponent implements OnInit {
   ngOnInit(): void {
     this.taskViewStt = '1';
     this.preStepNo = 0;
-
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskBusiness',
-    //     'GetListTasksTreeAsync',
-    //     ['2206070006']
-    //   )
-    //   .subscribe((res) => {
-    //     this.taskViews = res;
-    //   });
   }
 
   ngAfterViewInit(): void {
