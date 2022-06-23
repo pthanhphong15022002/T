@@ -301,7 +301,6 @@ export class OwnerTasksComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           res.forEach((ele) => {
             this.dayoff = res;
           });
