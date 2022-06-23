@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
@@ -19,6 +20,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
 export class defaultRecource {}
@@ -27,18 +29,8 @@ export class defaultRecource {}
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarResourceComponent implements OnInit, AfterViewInit {
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
+export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('carResourceDialog') carResourceDialog: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('editor') editor: PopupAddCarsComponent;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-  @ViewChild('category', { static: true }) category: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -60,9 +52,18 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     icon: '',
     equipments: '',
   };
-  editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  dialogCar: FormGroup;
+  funcID: string;
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
+  idField = 'RecID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -79,9 +80,11 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
-    ) {}
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {}
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.views = [
       {
         id: '1',
@@ -93,27 +96,6 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         },
       },
     ];
-    this.columnsGrid = [
-      {
-        field: 'resourceName',
-        headerText: 'Xe',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'category',
-        headerText: 'Nguồn',
-        template: this.category,
-        width: 150,
-      },
-      {
-        field: 'ranking',
-        headerText: 'Phân loại',
-        template: this.ranking,
-        width: 150,
-      },
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 50 },
-    ];
     this.buttons = {
       id: 'btnAdd',
     };
@@ -123,7 +105,9 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   lstDevices = [];
   tmplstDevice = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -137,13 +121,13 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-  addNew(evt?) {
+  addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
         option
@@ -151,28 +135,31 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     });
   }
 
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
+  }
+
   edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddCarsComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) item = evt;
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = item;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callFunc.openSide(
+        PopupAddCarsComponent,
+        this.dataSelected,
+        option
+      );
+    });
   }
   delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        console.log(res);
-        this.dataSelected = res;
-      });
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
   }
   deleteResource(item) {
     console.log(item);
@@ -195,7 +182,7 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         this.edit(data);
         break;
       case 'delete':
-        this.delete();
+        this.delete(data);
         break;
       default:
         break;

@@ -22,15 +22,14 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Device } from '../../../booking-room/edit-room-booking/edit-room-booking.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 
 @Component({
-  selector: 'app-dialog-stationery',
-  templateUrl: './dialog-stationery.component.html',
-  styleUrls: ['./dialog-stationery.component.scss'],
+  selector: 'popup-add-stationery',
+  templateUrl: './popup-add-stationery.component.html',
+  styleUrls: ['./popup-add-stationery.component.scss'],
 })
-export class DialogStationeryComponent implements OnInit {
+export class PopupAddStationeryComponent implements OnInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -56,8 +55,8 @@ export class DialogStationeryComponent implements OnInit {
   link = '';
   color: any;
   columnGrid;
-  headerTitle = "Thêm Văn Phòng phẩm";
-  subHeaderTilte = "Thêm mới Văn phòng phẩm";
+  headerTitle = 'Thêm Văn Phòng phẩm';
+  subHeaderTilte = 'Thêm mới Văn phòng phẩm';
   public headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
