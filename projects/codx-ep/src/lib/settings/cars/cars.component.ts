@@ -6,19 +6,21 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
-  CacheService,
+  CallFuncService,
   CodxGridviewComponent,
+  DialogRef,
   NotificationsService,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
 export class defaultRecource {}
@@ -27,24 +29,15 @@ export class defaultRecource {}
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarResourceComponent implements OnInit, AfterViewInit {
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
+export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('carResourceDialog') carResourceDialog: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('editor') editor: PopupAddCarsComponent;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-  @ViewChild('category', { static: true }) category: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttons: Array<ButtonModel> = [];
+  buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
-
+  dataSelected: any;
+  dialog!: DialogRef;
   defaultRecource: any = {
     resourceName: '',
     ranking: '1',
@@ -59,9 +52,18 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     icon: '',
     equipments: '',
   };
-  editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  dialogCar: FormGroup;
+  funcID: string;
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
+  idField = 'RecID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -77,11 +79,12 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   constructor(
     private api: ApiHttpService,
     private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService
-  ) {
-
-  }
+    private notificationsService: NotificationsService,
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {}
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.views = [
       {
         id: '1',
@@ -89,39 +92,75 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         active: true,
         sameData: true,
         model: {
-          template: this.template
+          template: this.template,
         },
       },
     ];
-    this.columnsGrid = [
-      {
-        field: 'resourceName',
-        headerText: 'Xe',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'category',
-        headerText: 'Nguồn',
-        template: this.category,
-        width: 150,
-      },
-      {
-        field: 'ranking',
-        headerText: 'Phân loại',
-        template: this.ranking,
-        width: 150,
-      },
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 50 },
-    ];
-    //this.gridView.fields = this.columnsGrid;
+    this.buttons = {
+      id: 'btnAdd',
+    };
   }
 
   vllDevices = [];
   lstDevices = [];
   tmplstDevice = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
+  }
+  addNew() {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callFunc.openSide(
+        PopupAddCarsComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
+  }
+
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) item = evt;
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = item;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callFunc.openSide(
+        PopupAddCarsComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+  delete(evt?) {
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
+  }
   deleteResource(item) {
     console.log(item);
     if (confirm('Are you sure to delete')) {
@@ -136,28 +175,18 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         });
     }
   }
-  clickMF(evt?:any, data?:any){
 
-  }
-  click(evt?:any){
-
-  }
-  edit(evt) {
-    this.isAdd = false;
-    console.log(evt);
-    if (evt?.id != 'add') {
-      this.editor && this.editor.setdata(evt);
+  clickMF(evt?: any, data?: any) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
     }
-    //this.viewBase.currentView.openSidebarRight();
-
-    this.cr.detectChanges();
-  }
-  addNew(evt: any) {
-    this.isAdd = true;
-    console.log(evt);
-    //this.viewBase.currentView.openSidebarRight();
-
-    this.cr.detectChanges();
   }
   closeEditForm(evt?) {
     //this.viewBase.currentView.closeSidebarRight();

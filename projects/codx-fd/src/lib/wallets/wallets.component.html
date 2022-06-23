@@ -1,27 +1,30 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FD_Gifts'" [showToolBar]="false"></codx-views>
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" assemblyName="ERM.Business.FD"
+    className="KudosTransBusiness" method="GetDataAchievementAsync" [showToolBar]="false" [views]="views"
+    [predicate]="options.predicate" [dataValue]="options.dataValue" >
+</codx-views>
 
-<div #panelLeft>
+
+
+<div #templateLeft>
     <div class="page-home page-master">
         <div class="d-flex flex-row w-100">
             <div class="d-flex flex-column w-100" id="erm_content">
-                <div class="container d-flex pb-0">
+                <div class="container d-flex pb-0 pd-r-0">
                     <div class="w-100 pr-6 mt-3">
                         <div class="d-flex align-items-top">
                             <div class="mr-3 w-150px">
                                 <div class="d-flex flex-column mb-3">
-                                    <codx-label name="lblfirstDay" formName="FED_KudosTrans" default="Từ ngày">
+                                    <codx-label name="lblfirstDay" formName="FD_KudosTrans" default="Từ ngày">
                                     </codx-label>
-                                    <div style="height: 30px;">
-                                        <codx-input type="datetime" dataformat="d" class="form-control"
-                                            [crrValue]="firstDate" field="firstDay" ngDefaultControl
-                                            (valueChange)="valueChange($event, 'firstDay')">
-                                        </codx-input>
-                                    </div>
+                                    <codx-input type="datetime" dataformat="d" class="form-control"
+                                        [crrValue]="firstDate" field="firstDay" ngDefaultControl
+                                        (valueChange)="valueChange($event, 'firstDay')">
+                                    </codx-input>
                                 </div>
                             </div>
                             <div class="mr-3 w-150px">
                                 <div class="d-flex flex-column mb-3" #ToDate>
-                                    <codx-label name="lblToDate" formName="FED_KudosTrans" default="Đến ngày">
+                                    <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày">
                                     </codx-label>
                                     <codx-input type="datetime" dataformat="d" class="form-control" [crrValue]="toDate"
                                         field="toDate" ngDefaultControl (valueChange)="valueChange($event, 'toDate')">
@@ -30,21 +33,28 @@
                             </div>
                             <div class="mr-3">
                                 <div class="d-flex flex-column mb-3" #Organize>
-                                    <codx-label name="lblOrganize" formName="FED_KudosTrans" default="Cơ cấu tổ chức">
+                                    <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức">
                                     </codx-label>
                                     <div class="d-flex header-combo">
                                         <codx-input class="form-control" type="valuelist" field="vllOrganize"
                                             refValue="L1483" (valueChange)="valueChange($event, 'vllOrganize')">
                                         </codx-input>
-                                        <codx-input class="form-control" type="combobox" field="Organize"
-                                            [refValue]="comboboxName" (valueChange)="valueChange($event, 'Organize')">
-                                        </codx-input>
+                                        <div class="organize" *ngIf="comboboxName">
+                                            <codx-input class="form-control" type="combobox" field="Organize"
+                                                [refValue]="comboboxName"
+                                                (valueChange)="valueChange($event, 'Organize')">
+                                            </codx-input>
+                                        </div>
+                                        <div class="organize" *ngIf="!comboboxName">
+                                            <codx-input class="form-control" type="combobox">
+                                            </codx-input>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="mr-3 w-200px">
                                 <div class="d-flex flex-column mb-3" #Employee>
-                                    <codx-label name="lblEmployee" formName="FED_KudosTrans" default="Nhân viên">
+                                    <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên">
                                     </codx-label>
                                     <codx-input class="form-control" type="combobox" field="Employee"
                                         refValue="Employees" (valueChange)="valueChange($event, 'Employee')">
@@ -56,7 +66,7 @@
                             <div class="chart chart-circle pr-9 chart-received">
                                 <div style="display: block">
                                     <ng-container *ngIf="chartDatas.length !== 0">
-                                        <codx-label name="lblCoinsReceived" formName="FED_KudosTrans" default="Xu nhận"
+                                        <codx-label name="lblCoinsReceived" formName="FD_KudosTrans" default="Xu nhận"
                                             class="lbl-coin"></codx-label>
                                         <ejs-accumulationchart background="transparent" id="doughnut-container-received"
                                             #pieReceived style="display: block" width="200" height="200"
@@ -74,7 +84,7 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="chartDatas.length == 0">
-                                        <codx-label name="lblCoinsReceived" formName="FED_KudosTrans" default="Xu nhận"
+                                        <codx-label name="lblCoinsReceived" formName="FD_KudosTrans" default="Xu nhận"
                                             class="lbl-coin"></codx-label>
                                         <ejs-accumulationchart background="transparent" id="doughnut-container-received"
                                             #pieReceived style="display: block" width="200" height="200"
@@ -92,7 +102,7 @@
                             <div class="chart chart-circle pr-6 pl-3 chart-sended">
                                 <div style="display: block">
                                     <ng-container *ngIf="chartDatas_Send.length !== 0">
-                                        <codx-label name="lblCoinsSended" formName="FED_KudosTrans" default="Xu cho"
+                                        <codx-label name="lblCoinsSended" formName="FD_KudosTrans" default="Xu cho"
                                             class="lbl-coin"></codx-label>
                                         <ejs-accumulationchart background="transparent" id="doughnut-container-send"
                                             #pieSend style="display: block" width="200" height="200"
@@ -110,7 +120,7 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="chartDatas_Send.length == 0">
-                                        <codx-label name="lblCoinsSended" formName="FED_KudosTrans" default="Xu cho"
+                                        <codx-label name="lblCoinsSended" formName="FD_KudosTrans" default="Xu cho"
                                             class="lbl-coin"></codx-label>
                                         <ejs-accumulationchart background="transparent" id="doughnut-container-send"
                                             #pieSend width="200" height="200" selectionMode="Point">
@@ -128,7 +138,7 @@
                         <div class="box-wallets" *ngIf="data_Line.length == 0">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="text-dark font-size-h4 font-weight-bold">
-                                    <codx-label name="lblEmployee" formName="FED_KudosTrans"
+                                    <codx-label name="lblEmployee" formName="FD_KudosTrans"
                                         default="Biến động số dư theo ví bộ phận"></codx-label>
                                 </div>
                             </div>
@@ -151,7 +161,7 @@
                         <div class="box-wallets top-100" *ngIf="data_Line.length !== 0">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="text-dark font-size-h4 font-weight-bold">
-                                    <codx-label name="lblEmployee" formName="FED_KudosTrans"
+                                    <codx-label name="lblEmployee" formName="FD_KudosTrans"
                                         default="Biến động số dư theo ví bộ phận"></codx-label>
                                 </div>
                             </div>
@@ -180,9 +190,10 @@
                                 <div class="top-item top2">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img class="symbol symbol-40 symbol-circle"
-                                                [objectId]="lstRate[1]?.employeeID"
-                                                [objectName]="lstRate[1]?.employeeName" objectType="AD_Users">
+                                            <codx-img
+                                                [objectId]="lstRate[1]?.employeeID ? lstRate[1]?.employeeID : lstRate[1]?.userID"
+                                                [objectName]="lstRate[1]?.employeeName" objectType="AD_Users"
+                                                width="40">
                                             </codx-img>
                                         </div>
                                     </div>
@@ -196,8 +207,8 @@
                                 <div class="top-item top1">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img class="symbol symbol-50 symbol-circle"
-                                                [objectId]="lstRate[0]?.employeeID"
+                                            <codx-img [width]="50"
+                                                [objectId]="lstRate[0]?.employeeID ? lstRate[0]?.employeeID : lstRate[0]?.userID"
                                                 [objectName]="lstRate[0]?.employeeName" objectType="AD_Users">
                                             </codx-img>
                                         </div>
@@ -212,8 +223,8 @@
                                 <div class="top-item top3">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img class="symbol symbol-40 symbol-circle"
-                                                [objectId]="lstRate[2]?.employeeID"
+                                            <codx-img [width]="40"
+                                                [objectId]="lstRate[2]?.employeeID ? lstRate[2]?.employeeID : lstRate[2]?.userID"
                                                 [objectName]="lstRate[2]?.employeeName" objectType="AD_Users">
                                             </codx-img>
                                         </div>
@@ -227,13 +238,20 @@
                                 </div>
                             </div>
                             <div class="list-performance pt-2">
-                                <codx-listview #listview [pageSize]="10" [loadFull]="true" service="FED"
-                                    assemblyName="ERM.Business.FED" className="KudosTransBusiness"
+                                <!-- <codx-listview #listview [pageSize]="10" [loadFull]="true" service="FD"
+                                    assemblyName="ERM.Business.FD" className="KudosTransBusiness"
                                     method="GetDataAchievementAsync" [predicate]="options.predicate"
-                                    [dataValue]="options.dataValue" entityName="FED_KudosTrans"
+                                    [dataValue]="options.dataValue" entityName="FD_KudosTrans"
                                     [itemTemplate]="TemplateList" [dataObj]="'Coins'" [height]="heightList"
                                     [itemTemplateLoading]="" [parentIdField]="" [autoLoad]="loadList">
-                                </codx-listview>
+                                </codx-listview> -->
+
+                                <ng-template #iTemplateLeft let-data>
+                                    <codx-temp-full
+                                        [imageId]="data?.userID" imageObjType="AD_Users" [title]="data?.employeeName"
+                                        [subTitle]="data?.orgUnitName" [formModel]="view.formModel">
+                                    </codx-temp-full>
+                                </ng-template>
                             </div>
                         </div>
                     </div>
@@ -243,11 +261,13 @@
     </div>
 </div>
 
-<ng-template #TemplateList let-item>
+
+<!-- <ng-template #template let-item>
     <div class="d-flex align-items-center user-card list-item mb-4">
         <div class="symbol symbol-40 symbol-circle with-number mr-4">
-            <codx-img class="symbol symbol-40 symbol-circle mr-2" [objectId]="item?.employeeID"
-                [objectName]="item?.employeeName" objectType="AD_Users">
+            <codx-img class="symbol symbol-40 symbol-circle mr-2"
+                [objectId]="item?.employeeID ? item?.employeeID : item?.userID" [objectName]="item?.employeeName"
+                objectType="AD_Users">
             </codx-img>
             <div *ngIf="item?.rate == 1">
                 <span class="list-number top-premium" style="background-color: palevioletred; color: white;">{{
@@ -275,12 +295,9 @@
             <div class="text-dark-50">{{ item?.orgUnitName }}</div>
         </div>
         <div class="d-flex flex-column pr-3">
-            <!-- <span class="label label-inline label-light-primary">{{
-                item.textRate
-                }}</span> -->
             <div class="text-dark font-size-h5 text-right font-weight-bold mt-1">
                 {{ item?.totalCoreEmp }}
             </div>
         </div>
     </div>
-</ng-template>
+</ng-template> -->

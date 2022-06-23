@@ -5,6 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import { CodxEsService } from '../../codx-es.service';
 
@@ -28,12 +29,11 @@ export class ViewDetailComponent implements OnInit {
   processes;
   itemDetailDataStt;
 
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.itemDetail && this.itemDetail !== null) {
-
-      this.itemDetail.title = this.itemDetail.title.toUpperCase();
 
       this.esService
         .getApprovalTrans(this.itemDetail?.recID)
@@ -42,7 +42,6 @@ export class ViewDetailComponent implements OnInit {
           this.df.detectChanges();
         });
     }
-    this.itemDetail = this.itemDetail;
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     } 

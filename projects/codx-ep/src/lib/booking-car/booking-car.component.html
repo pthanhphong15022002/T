@@ -8,7 +8,7 @@
   [predicate]="predicate"
   [dataValue]="dataValue"
   [views]="views"
-  [button]="button"
+  [button]="buttons"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
   [idField]="idField"
@@ -58,40 +58,6 @@
   {{ data.bookingOn | fmDT: "dmy" }}
 </ng-template>
 
-<ng-template #GiftIDCell let-dataItem>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center" (click)="edit(dataItem)">
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a
-      class="action-item d-flex align-items-center"
-      (click)="deleteBooking(dataItem)"
-    >
-      <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
-  </div>
-</ng-template>
-
-<ng-template #Devices let-dataItem>
-  <div class="d-flex align-items-center fw-bold">
-    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"
-        ><span class="fs-6 ms-1">{{ getDeviceName(item) }}</span></span
-      >
-    </ng-container>
-  </div>
-</ng-template>
-
-<ng-template #listDetails> 2 </ng-template>
-
-<ng-template #listTasks let-data> 3 </ng-template>
-
 <ng-template #scheduleTemplate let-data>
   <codx-schedule
     height="100%"
@@ -125,11 +91,6 @@
   </div>
 </ng-template>
 
-<ng-template #date let-data>
-  <div class="w-100">
-    <car-dashboard></car-dashboard>
-  </div>
-</ng-template>
 
 <ng-template #resourceTootip let-data>
   <div class="template-wrap">
@@ -144,7 +105,7 @@
 <ng-template #cellFooter let-data>
   <div class="row border">
     <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
-      sửa
+      <codx-label name="lblEdit" default="Sửa" [formModel]="dialog.formModel"></codx-label>
     </button>
     <button
       ejs-button
@@ -153,7 +114,7 @@
       [isPrimary]="true"
       (click)="deleteBooking(data)"
     >
-      xóa
+    <codx-label name="lblDelete" default="Xoá" [formModel]="dialog.formModel"></codx-label>
     </button>
   </div>
 </ng-template>

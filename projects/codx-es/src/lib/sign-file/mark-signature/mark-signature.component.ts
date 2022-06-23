@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { ViewsComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
@@ -20,6 +21,13 @@ export class MarkSignatureComponent implements OnInit {
   switch_2 = true;
   switchControl: FormControl
 
+  service
+  document
+
+
+
+  @ViewChild('actions') actions : ViewsComponent;
+  
   ngOnInit(): void {
     this.esService.loadSignFiles().subscribe(
       res => {

@@ -93,6 +93,7 @@ export class PopupAddComponent implements OnInit {
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
+    this.showAssignTo = dt?.data[2];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -101,7 +102,6 @@ export class PopupAddComponent implements OnInit {
   ngOnInit(): void {
     const t = this;
     this.functionID = this.dialog.formModel.funcID;
-    // if (this.functionID == 'TMT03') this.showAssignTo = true;
     this.getParam();
     if (!this.task.taskID) {
       this.openTask();
@@ -254,10 +254,6 @@ export class PopupAddComponent implements OnInit {
           this.listMemo2OfUser = [];
         }
         t.changeDetectorRef.detectChanges();
-        // if (this.functionID == 'TMT03') {
-        //   //    this.showAssignTo = true;
-        // }
-        //    this.showPanel();
       }
     });
   }
@@ -265,12 +261,12 @@ export class PopupAddComponent implements OnInit {
   openAssignSchedule(task): void {
     const t = this;
     this.task = task;
-    if (this.functionID == 'TMT03') {
-      // this.showAssignTo = true;
-      //cai nay thêm để test
-      this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-      this.getListUser(this.task.assignTo);
-    }
+    // if (this.functionID == 'TMT03') {
+    //   // this.showAssignTo = true;
+    //   //cai nay thêm để test
+    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
+    //   this.getListUser(this.task.assignTo);
+    // }
 
     // this.task.estimated = 0;
     this.readOnly = false;
@@ -293,9 +289,6 @@ export class PopupAddComponent implements OnInit {
 
   getTaskCoppied(id) {
     const t = this;
-    // if (this.functionID == 'TMT03') {
-    //   // this.showAssignTo = true;
-    // }
     this.title = 'Copy công việc ';
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
@@ -345,16 +338,15 @@ export class PopupAddComponent implements OnInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
-      //$('#taskNameInput').focus();
     }
-    // if (
-    //   this.functionID == 'TMT03' &&
-    //   (this.task.assignTo == '' || this.task.assignTo == null)
-    // ) {
-    //   this.notiService.notify('Phải nhập danh sách người được phân công !');
-    //   // this.notiService.notifyCode('mã code');
-    //   return;
-    // }
+    if (
+      this.showAssignTo &&
+      (this.task.assignTo == '' || this.task.assignTo == null)
+    ) {
+      this.notiService.notify('Phải nhập danh sách người được phân công !');
+      // this.notiService.notifyCode('mã code');
+      return;
+    }
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -451,6 +443,41 @@ export class PopupAddComponent implements OnInit {
 
   eventApply(e: any) {
     console.log(e);
+    const t = this ;
+    var assignTo = '';
+    var i = 0 ;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            assignTo += obj?.data;
+            i++ ;
+            break;
+          case 'D':
+            //chua doi chay xong da moi chay tiep dang fail
+            var depID = obj?.data.substring(0, obj?.data.length - 1);
+            this.tmSv.getUserByDepartment(depID).subscribe(res=>{
+              if(res){
+                assignTo += res +";"; 
+                i++;
+              }
+            })
+            break;
+        }
+      }
+    
+        this.handleChangeUser(assignTo)
+    
+    }) 
+  }
+  handleChangeUser(assignTo){
+    if (assignTo != '') {
+      if (assignTo.split(';').length > 1)
+        assignTo = assignTo.substring(0, assignTo.length - 1);
+      if (this.task.assignTo && this.task.assignTo != '') this.task.assignTo += ";" + assignTo; else this.task.assignTo = assignTo
+      this.getListUser(this.task.assignTo);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChange(data) {
@@ -601,7 +628,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() {}
+  extendShow() { }
 
   closeTask(): void {
     this.required.taskName = false;
@@ -642,7 +669,7 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }

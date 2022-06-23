@@ -1,0 +1,543 @@
+<codx-form
+  [headerText]="headerTitle"
+  [subHeaderText]="subHeaderTilte"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formGroup]="addEditForm"
+  *ngIf="isAfterRender"
+>
+  <ng-template popup add #body>
+    <div class="tab-content">
+      <!-- Render the Tab Component -->
+      <ejs-tab
+        id="tab_orientation"
+        #orientationTab
+        [showCloseButton]="false"
+        heightAdjustMode="Auto"
+        headerPlacement="Left"
+      >
+        <e-tabitems>
+          <e-tabitem [header]="headerText[0]">
+            <ng-template #content>
+              <div id="rome" class="tabpanel">
+                <div class="tab-content">
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <codx-label
+                        class="fw-bold"
+                        default="Tên sản phẩm"
+                        fiedName="ResourceID"
+                      >
+                      </codx-label>
+                    </div>
+                    <!--end::Label-->
+                    <codx-input
+                      type="text"
+                      name="text"
+                      ControlName="resourceName"
+                      [crrValue]="addEditForm.value.resourceID"
+                      [Group]="addEditForm"
+                    ></codx-input>
+                  </div>
+
+                  <div class="d-flex row align-items-center mb-2">
+                    <div class="col-8">
+                      <codx-label
+                        class="fw-bold"
+                        default="Nhóm"
+                        fiedName="GroupID"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <codx-input
+                        type="combobox"
+                        class="form-control"
+                        field="groupID"
+                        [crrValue]="addEditForm.value.groupID"
+                        [refValue]="CbxName['GroupID']"
+                      >
+                      </codx-input>
+                      <!--end::Input-->
+                    </div>
+                    <div class="col-4">
+                      <codx-label
+                        class="fw-bold"
+                        default="Mã số"
+                        fiedName="ResourceID"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
+                        </codx-input> -->
+                      <codx-input
+                        type="text"
+                        name="text"
+                        ControlName="resourceID"
+                        [crrValue]="addEditForm.value.resourceID"
+                        [Group]="addEditForm"
+                        [refValue]="CbxName['ResourceID']"
+                      ></codx-input>
+                      <!--end::Input-->
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label
+                      class="fw-bold"
+                      default="Kho"
+                      fiedName="Location"
+                    >
+                    </codx-label>
+                    <!--end::Label-->
+                    <!-- <codx-combobox service="SYS" name="combobox" placeholder="" ngDefaultControl refValue="Users"
+                        file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="addEditForm">
+                      </codx-combobox> -->
+                    <codx-input
+                      type="text"
+                      ControlName="Location"
+                      [crrValue]="addEditForm.value.location"
+                      [Group]="addEditForm"
+                      [refValue]="CbxName['Location']"
+                      [multiple]="false"
+                      (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label
+                      class="fw-bold"
+                      default="Người điều phối"
+                      fiedName="Owner"
+                    >
+                    </codx-label>
+                    <!--end::Label-->
+                    <div class="position-relative">
+                      <codx-input
+                        service="AD"
+                        type="combobox"
+                        name="combobox"
+                        [crrValue]="addEditForm.value.owner"
+                        ngDefaultControl
+                        field="owner"
+                        refValue="CbxName['Owner']"
+                        (valueChange)="valueOwnerChange($event)"
+                      >
+                      </codx-input>
+                      <div
+                        class="position-absolute translate-middle-y top-50 end-0 me-3"
+                      >
+                        <span class="icon-person_pin_circle"> </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label
+                      class="fw-bold"
+                      default="Mô tả chi tiết"
+                      fiedName="Memo"
+                    >
+                    </codx-label>
+                    <!--end::Label-->
+                    <codx-input
+                      type="textarea"
+                      class="test-textarea"
+                      field="memo"
+                      ControlName="memo"
+                      placeholder="textarea"
+                      [crrValue]="addEditForm.value.memo"
+                      (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-4"
+                    >
+                      <!-- <h5 class="text-dark">Thiết bị</h5> -->
+                      <codx-label
+                        class="fw-bold"
+                        default="Hình ảnh màu sắc"
+                        name="lblImageStationary"
+                      >
+                      </codx-label>
+                      <span
+                        class="icon-select_all text-primary icon-20"
+                        (click)="openPopupDevices()"
+                      ></span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Title-->
+                    <codx-img
+                      funcId="FEDS0122"
+                      #imageUpLoad
+                      aria-disabled="true"
+                      objectType="FD_Gifts"
+                      [isAllowEdit]="true"
+                      [width]="90"
+                      [objectId]="addEditForm.value.resourceID"
+                    >
+                    </codx-img>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem [header]="headerText[1]">
+            <ng-template #gridTemplate>
+              <h1>
+                <codx-label
+                  name="lblStationaries"
+                  default="Danh sách văn phòng phẩm"
+                  [formModel]="dialog.formModel"
+                ></codx-label>
+              </h1>
+              <codx-gridview
+                #gridView
+                [columnsGrid]="columnGrid"
+                [allowSorting]=""
+                [sortSettings]=""
+                [allowGrouping]=""
+                [groupSettings]=""
+                [editSettings]=""
+                [selectionOptions]=""
+                [rowHeight]="40"
+                [pageSize]="10"
+                funcId="EPS21"
+                assemblyName="EP"
+                entityName="EP_Resources"
+                className="ResourcesBusiness"
+                method="GetListAsync"
+                predicate="ResourceType=@0"
+                dataValue="6"
+                [pageSize]="15"
+                height="500px"
+                [showColumnMenu]="true"
+                [filterSettings]=""
+                [allowFiltering]=""
+                [allowResizing]=""
+              >
+              </codx-gridview>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem [header]="headerText[2]">
+            <ng-template #content>
+              <div id="rome" class="tabpanel">
+                <div class="tab-content">
+                  <!--begin::Title-->
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-4"
+                  >
+                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
+                      Thông tin khác
+                    </h4>
+                    <span class="icon-layers text-primary fs-1"></span>
+                  </div>
+                  <!--end::Title-->
+
+                  <div class="d-flex row align-items-center mb-4">
+                    <div class="col-4">
+                      <codx-label
+                        class="fw-bold"
+                        default="Số lượng hiện có"
+                        fiedName="AvailableQty"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
+                        </codx-input> -->
+                      <codx-input
+                        type="text"
+                        name="text"
+                        ControlName="availableQty"
+                        [crrValue]="addEditForm.value.availableQty"
+                        [Group]="addEditForm"
+                      ></codx-input>
+                      <!--end::Input-->
+                    </div>
+                    <div class="col-4">
+                      <codx-label
+                        class="fw-bold"
+                        default="Số lượng yêu cầu"
+                        fiedName="ReservedQty"
+                        aria-disabled="false"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
+                        </codx-input> -->
+                      <codx-input
+                        type="text"
+                        name="text"
+                        ControlName="reservedQty"
+                        [crrValue]="addEditForm.value.reservedQty"
+                        [Group]="addEditForm"
+                        [refValue]="CbxName['ReservedQty']"
+                      ></codx-input>
+                      <!--end::Input-->
+                    </div>
+                    <div class="col-4">
+                      <codx-label
+                        class="fw-bold"
+                        default="Số lượng còn lại"
+                        fiedName="CurrentQty"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
+                        </codx-input> -->
+                      <codx-input
+                        type="text"
+                        name="text"
+                        ControlName="currentQty"
+                        [crrValue]="addEditForm.value.currentQty"
+                        [Group]="addEditForm"
+                      ></codx-input>
+                      <!--end::Input-->
+                    </div>
+                  </div>
+                  <div class="d-flex flex-stack mb-4">
+                    <div class="col-6">
+                      <codx-label
+                        class="fw-bold"
+                        default="Giá mua sau cùng"
+                        fiedName="CostPrice"
+                      >
+                      </codx-label>
+                      <!--begin::Input-->
+                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
+                        </codx-input> -->
+                      <codx-input
+                        type="text"
+                        name="text"
+                        ControlName="costPrice"
+                        [crrValue]="addEditForm.value.costPrice"
+                        [Group]="addEditForm"
+                      ></codx-input>
+                      <!--end::Input-->
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label
+                      class="fw-bold"
+                      default="Ghi chú"
+                      fiedName="Note"
+                    >
+                    </codx-label>
+                    <!--end::Label-->
+                    <codx-input
+                      type="textarea"
+                      class="test-textarea"
+                      field="note"
+                      ControlName="note"
+                      placeholder="textarea"
+                      [crrValue]="addEditForm.value.note"
+                      (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
+      <button class="btn btn-light-primary">Sửa</button>
+    </div>
+  </ng-template>
+</codx-form>
+
+<ng-template #addLink let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <codx-label
+        name="lblLinkAppointment"
+        default="Link cuộc họp"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </h4>
+    <button
+      type="button"
+      class="btn btn-xs btn-icon btn-light btn-hover-primary"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span class="icon-close icon-20"></span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <div class="col-4">
+        <codx-label
+          name="lblLinks"
+          default="Đường dẫn"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <codx-input
+        type="text"
+        class="form-control"
+        placeholder="https://home.suremeet.vn/"
+        [crrValue]="link"
+        (valueChange)="changeLink($event)"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="modal-footer" (click)="modal.close()">
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #popupDevice let-modal>
+  <!--begin::Card body-->
+  <div class="modal-header">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="modal-basic-title">
+          <codx-label
+            name="lblEquipments"
+            default="Thiết bị"
+            [formModel]="dialog.formModel"
+          ></codx-label>
+        </h2>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        >
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+      <div class="text-dark-50">
+        <codx-label
+          name="lblChooseEquipments"
+          default="Chọn thiết bị đã được tích hợp sẵn"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="py-2" *ngFor="let item of tmplstDevice">
+      <!--begin::Item-->
+      <div class="d-flex flex-stack">
+        <div class="d-flex">
+          <span class="text-dark icon-wifi me-2 p-1"></span>
+          <div class="d-flex flex-column">
+            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
+              item.text
+            }}</a>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="form-check form-check-solid form-switch">
+            <input
+              class="form-check-input w-35px h-20px"
+              type="checkbox"
+              id="googleswitch"
+              [checked]="item.isSelected"
+              (change)="checkedChange($event, item)"
+            />
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+      <!--end::Item-->
+      <!-- <div class="separator separator-dashed my-5"></div> -->
+    </div>
+    <!--end::Card body-->
+  </div>
+  <div class="modal-footer" (click)="modal.close()">
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+<ng-template #popupColor let-modal>
+  <div class="modal-body">
+    <codx-colorpicker [(value)]="color" (valueChange)="valueChange($event)">
+    </codx-colorpicker>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="add()">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #Devices let-dataItem>
+  <div class="d-flex align-items-center fw-bold">
+    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
+      <span class="text-dark fs-5 icon-wifi me-3"
+        ><span class="fs-6 ms-1">{{
+          item | vll: "EP012":"text" | async
+        }}</span></span
+      >
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #ranking let-dataItem>
+  <div class="d-flex justify-content-center">
+    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+      dataItem.ranking | vll: "EP005":"text" | async
+    }}</span>
+  </div>
+</ng-template>
+
+<!-- <ng-template #roomResourceDialog>
+  <app-dialog-stationery
+    #editRoomBookingForm
+    (closeEdit)="closeEditForm()"
+    (onDone)="onDone($event)"
+  ></app-dialog-stationery>
+</ng-template> -->
+
+<ng-template #Devices let-dataItem>
+  <div class="d-flex align-items-center fw-bold">
+    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
+      <span class="text-dark fs-5 icon-wifi me-3"
+        ><span class="fs-6 ms-1">{{ getDeviceName(item) }}</span></span
+      >
+    </ng-container>
+  </div>
+</ng-template>

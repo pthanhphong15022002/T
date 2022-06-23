@@ -4,14 +4,22 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
-  ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CacheService, NotificationsService } from 'codx-core';
-import { AddGridData, CodxEpService, ModelPage } from '../../../codx-ep.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  ApiHttpService,
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
+import {
+  CodxEpService,
+} from '../../../codx-ep.service';
 
 @Component({
   selector: 'popup-add-cars',
@@ -24,22 +32,20 @@ export class PopupAddCarsComponent implements OnInit {
   @Input() data = {};
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  dataGrid: AddGridData;
-  devices: any;
-  modelPage: ModelPage;
   cacheGridViewSetup: any;
-
   dialogCar: FormGroup;
+  dialog: any;
+
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
     private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
     private cr: ChangeDetectorRef,
-    private bookingService: CodxEpService
-  ) {}
+    private bookingService: CodxEpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+  }
 
   isAfterRender = false;
   vllDevices = [];
@@ -51,7 +57,6 @@ export class PopupAddCarsComponent implements OnInit {
     });
 
     this.bookingService.getComboboxName('Rooms', 'grvRooms').then((res) => {
-      console.log(res);
       this.cacheGridViewSetup = res;
     });
   }
@@ -75,48 +80,19 @@ export class PopupAddCarsComponent implements OnInit {
       .getFormGroup('Resources', 'grvResources')
       .then((item) => {
         this.dialogCar = item;
+        if (this.data) {
+          this.dialogCar.patchValue(this.data);
+        }
         this.isAfterRender = true;
       });
     // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
   }
 
   addNew() {}
+
   edit() {}
-  save() {
-    if (this.dialogCar.invalid == true) {
-      console.log(this.dialogCar);
-      return;
-    }
-    if (!this.dialogCar.value.linkType) {
-      this.dialogCar.value.linkType = '0';
-    }
-    this.dialogCar.value.resourceType = '2';
-    console.log(this.dialogCar);
-    this.api
-      .callSv(
-        'EP',
-        'ERM.Business.EP',
-        'ResourcesBusiness',
-        'AddEditItemAsync',
-        [this.dialogCar.value, this.isAdd]
-      )
-      .subscribe((res) => {
-        this.dataGrid = new AddGridData();
-        if (res && res.msgBodyData[0][0] == true) {
-          this.dataGrid.dataItem = res.msgBodyData[0][1];
-          this.dataGrid.isAdd = this.isAdd;
-          this.dataGrid.key = 'recID';
-          this.notificationsService.notify('Successfully');
-          this.closeFormEdit(this.dataGrid);
-        } else {
-          this.notificationsService.notify('Fail');
-          this.closeFormEdit(null);
-        }
-      });
-  }
 
   valueChange(event: any) {
-    console.log('valueChange', event);
     if (event?.field != null) {
       if (event.data instanceof Object) {
         this.dialogCar.patchValue({ [event['field']]: event.data.value });
@@ -127,10 +103,34 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   ngOnChange(): void {}
+  beforeSave(option: any) {
+    let itemData = this.dialogCar.value;
+    if (!itemData.resourceID) {
+      this.isAdd = true;
+    } else {
+      this.isAdd = false;
+    }
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
   valueCbxChange(evt: any) {
     if (evt.length > 0) {
       this.dialogCar.patchValue({ owner: evt[0] });
     }
+  }
+  onSaveForm() {
+    if (this.dialogCar.invalid == true) {
+      console.log(this.dialogCar);
+      return;
+    }
+    if (!this.dialogCar.value.linkType) {
+      this.dialogCar.value.linkType = '0';
+    }
+    this.dialogCar.value.resourceType = '2';
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
   closeFormEdit(data) {
     this.initForm();
