@@ -9,22 +9,19 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   ButtonModel,
   CacheService,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 
 export class defaultRecource {}
@@ -64,6 +61,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   isAdd = false;
   dialog!: DialogRef;
   constructor(
+    private api: ApiHttpService,
     private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
     private callFunc: CallFuncService

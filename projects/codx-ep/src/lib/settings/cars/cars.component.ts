@@ -81,11 +81,10 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
-    private activedRouter: ActivatedRoute,
-    private bookingService: CodxEpService
-    ) {}
+    private activedRouter: ActivatedRoute
+  ) {}
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = "DeleteResourceAsync";
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.views = [
       {
         id: '1',
@@ -136,31 +135,31 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     });
   }
 
-  closeDialog(evt?){
+  closeDialog(evt?) {
     this.dialog && this.dialog.close();
   }
 
-  edit() {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddCarsComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) item = evt;
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = item;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        PopupAddCarsComponent,
+        this.dataSelected,
+        option
+      );
+    });
   }
-  delete() {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        this.dataSelected = res;
-      });
+  delete(evt?) {
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
   }
   deleteResource(item) {
     console.log(item);
@@ -180,10 +179,10 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
       case 'edit':
-        this.edit();
+        this.edit(data);
         break;
       case 'delete':
-        this.delete();
+        this.delete(data);
         break;
       default:
         break;
