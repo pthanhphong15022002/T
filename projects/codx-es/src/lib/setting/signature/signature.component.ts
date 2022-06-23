@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 export class defaultRecource {}
 @Component({
@@ -90,11 +91,14 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   entityName = 'ES_Signatures';
   predicate = '';
   dataValue = '';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'SignaturesBusiness';
   method = 'GetListAsync';
 
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
     this.views = [
       {
         sameData: true,
@@ -186,7 +190,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddSignatureComponent,
-        this.dataSelected,
+        this.viewBase.dataService.dataSelected,
         option
       );
     });
@@ -200,7 +204,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
+      option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+
       this.dialog = this.callfunc.openSide(
         PopupAddSignatureComponent,
         this.viewBase.dataService.dataSelected,
@@ -208,6 +215,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       );
     });
   }
+
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
     if (evt) {
@@ -218,19 +226,15 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     });
   }
 
-  clickMF(event: any, data) {}
-
-  edit1(dataItem) {
-    this.editSignature.isAdd = false;
-    this.editSignature.dialogSignature.patchValue(dataItem);
-    this.editSignature.dialogSignature.patchValue({
-      oTPControl: dataItem.otpControl,
-    });
-    this.editSignature.dialogSignature.addControl(
-      'recID',
-      new FormControl(dataItem.recID, Validators.required)
-    );
-    this.cr.detectChanges();
+  clickMF(event: any, data) {
+    switch (event?.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
   }
 
   deleteSignature(dataItem) {
