@@ -107,9 +107,6 @@ export class AssignTasksComponent implements OnInit {
       case 'sendemail':
         this.sendemail(data);
         break;
-      // case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
-      //   this.assignTask(data);
-      //   break;
       default:
         this.changeStatusTask(e, data);
         break;
@@ -171,8 +168,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.listdetail,
-        sameData: true,
         active: false,
+        sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -180,8 +177,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.kanban,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -189,8 +186,8 @@ export class AssignTasksComponent implements OnInit {
       },
       {
         type: ViewType.schedule,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -334,13 +331,11 @@ export class AssignTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
     });
   }
 
   copy(data) {
-    // data.taskID = null;
-    // data.recID = null;
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
       let option = new SidebarModel();
@@ -348,7 +343,7 @@ export class AssignTasksComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy'], option);
+      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
     });
   }
 
@@ -367,18 +362,6 @@ export class AssignTasksComponent implements OnInit {
     opt.data = this.itemSelected.taskID;
     return true;
   }
-
-  // assignTask(data) { 
-  //   this.view.dataService.dataSelected = data;
-  //   let option = new SidebarModel();
-  //   option.DataService = this.view?.currentView?.dataService;
-  //   option.FormModel = this.view?.currentView?.formModel;
-  //   option.Width = '750px';
-  //   this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
-  //   this.dialog.closed.subscribe(e => {
-  //     console.log(e);
-  //   })
-  //  }
 
   changeView(evt: any) {
 

@@ -30,10 +30,11 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { EditRoomBookingComponent } from './edit-room-booking/edit-room-booking.component';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
+import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
+
 @Component({
-  selector: 'app-room',
+  selector: 'booking-room',
   templateUrl: './booking-room.component.html',
   styleUrls: ['./booking-room.component.scss'],
 })
@@ -60,9 +61,21 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('Devices') Devices: TemplateRef<any>;
 
   @ViewChild('editRoomBookingForm')
-  editRoomBookingForm: EditRoomBookingComponent;
+  editRoomBookingForm: PopupAddBookingRoomComponent;
   devices: any;
-
+  funcID = 'EPT1';
+  showToolBar = 'true';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Bookings';
+  predicate = 'ResourceType=@0';
+  dataValue = '1';
+  idField = 'recID';
+  className = 'BookingsBusiness';
+  method = 'GetEventsAsync';
+  Height = '500px';
+  methodResource = 'GetResourceAsync';
+  eventStyle = 'colored';
   columnsGrid;
   modelPage: ModelPage;
   modelResource?: ResourceModel;
@@ -179,7 +192,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
         type: ViewType.chart,
         active: false,
         model: {
-         panelLeftRef: this.chart,
+          panelLeftRef: this.chart,
         },
       },
     ];
@@ -356,21 +369,14 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       case 'btnAdd':
         this.addNew();
         break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
-        break;
     }
   }
-  onDragDrop(evt: any){
-    if(evt){
-      if(evt.type=='drop'){
+  onDragDrop(evt: any) {
+    if (evt) {
+      if (evt.type == 'drop') {
         this.edit(evt.data);
       }
     }
-
   }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
@@ -379,8 +385,8 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        EditRoomBookingComponent,
-        this.dataSelected,
+        PopupAddBookingRoomComponent,
+        [this.dataSelected, true],
         option
       );
     });
@@ -396,8 +402,8 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        EditRoomBookingComponent,
-        this.viewBase.dataService.dataSelected,
+        PopupAddBookingRoomComponent,
+        [item, false],
         option
       );
     });

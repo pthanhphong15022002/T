@@ -36,6 +36,7 @@
         ? data.icon
         : '../assets/media/img/codx/default/card-default.svg'
     "
+    [content]="'content'"
     [title]="data.resourceName"
     [subTitle]="data.costPrice * 1000"
     [rootData]="data"
@@ -129,3 +130,44 @@
   </codx-temp-full>
 </ng-template>
 <!-- end::View list -->
+
+<ng-template #resourceNameCol let-data>
+  <div class="d-flex">
+    <div class="w-100px h-100px m-4">
+      <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+    </div>
+    <div class="">
+      <div class="text-dark font-weight-bold font-size-h6">
+        {{ data.resourceName }}
+      </div>
+      <div>Đơn vị tính: {{ data.costPrice }}</div>
+      <div>Nhóm: {{ data.costPrice }}</div>
+      <div class="d-flex justify-content-between align-items-end mt-2">
+        <div class="d-flex align-items-end me-2 codx-badge">
+          <div class="d-flex align-items-center position-relative me-4">
+            <span class="icon-view_agenda icon-20 text-gray-400"></span>
+            <span>{{ data.currentQty }}</span>
+          </div>
+          <div class="d-flex align-items-center position-relative me-4">
+            <span
+              class="icon-shopping_cart icon-20 text-gray-400"
+            ></span>
+            <span>{{ data.reservedQty }}</span>
+          </div>
+          <div class="d-flex align-items-center position-relative me-4">
+            <span
+              class="icon-brightness_auto icon-20 text-gray-400"
+            ></span>
+            <span>{{ data.availableQty }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h1>test</h1>
+</ng-template>
+
+<ng-template #costPriceCol let-data>
+  {{ data.costPrice * 1000 }}
+  <h1>cost</h1>
+</ng-template>

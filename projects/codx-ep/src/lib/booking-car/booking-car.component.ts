@@ -7,7 +7,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   NotificationsService,
@@ -17,8 +17,7 @@ import {
   SidebarModel,
   CallFuncService,
 } from 'codx-core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ButtonModel,
   CodxScheduleComponent,
@@ -275,7 +274,6 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
       .subscribe((res) => {
-        console.log(res);
         this.dataSelected = res;
       });
   }
@@ -296,24 +294,10 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     let device = this.vllDevices.find((x) => x.value == value);
     if (device) return device.text;
   }
-  // addNew(event) {
-  //   console.log(event);
-  //   this.carBookingForm.dialogCarBooking.patchValue({
-  //     startDate: event.startTime,
-  //     endDate: event.endTime,
-  //   });
-  //   if (event.resource) {
-  //     this.carBookingForm.dialogCarBooking.patchValue({
-  //       resourceID: event.resource.resourceID,
-  //       resourceType: event.resource.resourceName,
-  //     });
-  //   }
-  //   //this.viewBase.currentView.openSidebarRight();
-  // }
-  viewChange(event) {}
 
+  viewChange(event) {}
+  
   deleteBooking(event) {
-    console.log('delete', event);
     if (confirm('Are you sure to delete booking')) {
       this.api
         .execSv('EP', 'EP', 'BookingsBusiness', 'DeleteBookingAsync', [

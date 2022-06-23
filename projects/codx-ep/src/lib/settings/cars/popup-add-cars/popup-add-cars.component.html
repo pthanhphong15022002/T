@@ -151,7 +151,7 @@
             <div class="w-100">
               <codx-label class="fw-bold" default="Tài xế" fiedName="LinkID">
               </codx-label>
-              <codx-input
+              <!-- <codx-input
                 service="EP"
                 type="combobox"
                 name="combobox"
@@ -162,7 +162,7 @@
                 field="LinkID"
                 (valueChange)="valueChange($event)"
               >
-              </codx-input>
+              </codx-input> -->
             </div>
           </div>
           <div class="row mb-4">
@@ -196,7 +196,7 @@
           </div>
           <div class="row mb-4">
             <div class="col-12">
-              <label>Mô tả</label>
+              <codx-label default="Mô tả" fiedName="Note"></codx-label>
               <!-- <codx-label default="Mô tả" class="fs-5 fw-bold mb-2"></codx-label> -->
               <codx-input
                 type="textarea"
@@ -216,8 +216,15 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
+    <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>

@@ -17,7 +17,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { DialogStationeryComponent } from './dialog/dialog-stationery.component';
+import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 
 @Component({
   selector: 'codx-stationery',
@@ -29,11 +29,14 @@ export class BookingStationeryComponent implements OnInit {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
-  @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
+  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   dataSelected: any;
+  columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
@@ -52,8 +55,8 @@ export class BookingStationeryComponent implements OnInit {
   constructor(
     private callfunc: CallFuncService,
     private cf: ChangeDetectorRef,
-    private activedRouter: ActivatedRoute,
-  ) { 
+    private activedRouter: ActivatedRoute
+  ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
@@ -71,6 +74,39 @@ export class BookingStationeryComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.moreFunc = [
+      {
+        id: 'btnEdit',
+        icon: 'icon-list-checkbox',
+        text: 'Chỉnh sửa',
+      },
+      {
+        id: 'btnDelete',
+        icon: 'icon-list-checkbox',
+        text: 'Xóa',
+      },
+    ];
+
+    this.columnsGrid = [
+      {
+        field: 'resourceName',
+        headerText: 'Sản phẩm',
+        width: 150,
+        template: this.resourceNameCol,
+      },
+      {
+        field: 'costPrice',
+        headerText: 'Đơn giá',
+        width: 150,
+        template: this.costPriceCol,
+      },
+      {
+        field: '',
+        headerText: 'Định mức sử dụng',
+        width: 150,
+      },
+    ];
+
     this.views = [
       {
         id: '1',
@@ -97,32 +133,20 @@ export class BookingStationeryComponent implements OnInit {
         text: 'List',
         type: ViewType.list,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.listItem,
         },
       },
       {
         id: '4',
-        text: 'List ',
-        type: ViewType.list,
+        text: 'Grid',
+        type: ViewType.grid,
         sameData: true,
         active: true,
         model: {
-          template: this.listItem,
+          resources: this.columnsGrid,
         },
-      },
-    ];
-    this.moreFunc = [
-      {
-        id: 'btnEdit',
-        icon: 'icon-list-checkbox',
-        text: 'Chỉnh sửa',
-      },
-      {
-        id: 'btnDelete',
-        icon: 'icon-list-checkbox',
-        text: 'Xóa',
       },
     ];
     this.cf.detectChanges();
@@ -149,7 +173,7 @@ export class BookingStationeryComponent implements OnInit {
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        DialogStationeryComponent,
+        PopupAddStationeryComponent,
         this.dataSelected,
         option
       );
@@ -165,7 +189,7 @@ export class BookingStationeryComponent implements OnInit {
         option.Width = '750px';
         option.DataService = this.viewBase?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
-          DialogStationeryComponent,
+          PopupAddStationeryComponent,
           this.viewBase.dataService.dataSelected,
           option
         );
@@ -187,7 +211,7 @@ export class BookingStationeryComponent implements OnInit {
   }
 
   addCart(evt, data) {
-    console.log(data)
+    console.log(data);
   }
 
   clickMF(evt, data) {}
