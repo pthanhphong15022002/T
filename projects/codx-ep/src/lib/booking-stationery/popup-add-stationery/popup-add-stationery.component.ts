@@ -26,11 +26,11 @@ import { Device } from '../../booking-room/popup-add-booking-room/popup-add-book
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
 
 @Component({
-  selector: 'codx-dialog-stationery',
-  templateUrl: './dialog-stationery.component.html',
-  styleUrls: ['./dialog-stationery.component.scss'],
+  selector: 'popup-add-stationery',
+  templateUrl: './popup-add-stationery.component.html',
+  styleUrls: ['./popup-add-stationery.component.scss'],
 })
-export class DialogStationeryComponent implements OnInit {
+export class PopupAddStationeryComponent implements OnInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
