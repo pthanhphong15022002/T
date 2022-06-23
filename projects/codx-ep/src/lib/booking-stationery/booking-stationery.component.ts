@@ -29,11 +29,13 @@ export class BookingStationeryComponent implements OnInit {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
+  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>
   @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   dataSelected: any;
+  columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
@@ -104,12 +106,12 @@ export class BookingStationeryComponent implements OnInit {
       },
       {
         id: '4',
-        text: 'List ',
-        type: ViewType.list,
+        text: 'Grid',
+        type: ViewType.grid,
         sameData: true,
         active: true,
         model: {
-          template: this.listItem,
+          template: this.gridTemplate,
         },
       },
     ];
@@ -125,6 +127,47 @@ export class BookingStationeryComponent implements OnInit {
         text: 'Xóa',
       },
     ];
+    // this.columnsGrid = [
+    //   {
+    //     field: 'bookingNo',
+    //     headerText: 'Số hiệu',
+    //     template: '',
+    //     width: 150,
+    //   },
+    //   {
+    //     field: 'title',
+    //     headerText: 'Tiêu đề',
+    //     template: '',
+    //     width: 150,
+    //   },
+    //   {
+    //     field: 'resourceName',
+    //     headerText: 'Tên phòng',
+    //     template: '',
+    //     width: 150,
+    //   },
+    //   {
+    //     field: 'bookingOn',
+    //     headerText: 'Ngày đặt',
+    //     template: this.itemCreate,
+    //     width: 150,
+    //   },
+    //   {
+    //     field: 'hours',
+    //     headerText: 'Số giờ đặt',
+    //     template: '',
+    //     width: 150,
+    //   },
+
+    //   {
+    //     field: 'equipments',
+    //     headerText: 'Thiết bị',
+    //     template: this.templateDevices,
+    //     width: 150,
+    //   },
+    //   { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
+    // ];
+
     this.cf.detectChanges();
   }
 
