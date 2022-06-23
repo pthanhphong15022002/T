@@ -7,9 +7,7 @@ import { LayoutComponent } from './layout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { RoomsComponent } from '../rooms/rooms.component';
 import { PopupAddRoomsComponent } from '../rooms/popup-add-rooms/popup-add-rooms.component';
-import { CarsComponent } from '../cars/cars.component';
 
 @NgModule({
   declarations: [

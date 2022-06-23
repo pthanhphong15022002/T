@@ -20,38 +20,22 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
-export class defaultRecource {}
 @Component({
   selector: 'setting-cars',
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
 export class CarsComponent implements OnInit, AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('view') viewBase: ViewsComponent;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
   dialog!: DialogRef;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
   isAdd = true;
   columnsGrid;
   dialogCar: FormGroup;
@@ -64,6 +48,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   idField = 'RecID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
+  
   moreFuncs = [
     {
       id: 'btnEdit',
