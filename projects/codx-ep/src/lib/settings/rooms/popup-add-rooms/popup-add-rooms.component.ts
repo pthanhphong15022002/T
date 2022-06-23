@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -83,7 +90,7 @@ export class PopupAddRoomsComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
-
+  valueOwnerChange(evt) {}
   onSaveForm() {
     if (this.dialogRoom.invalid == true) {
       console.log(this.dialogRoom);
@@ -103,5 +110,5 @@ export class PopupAddRoomsComponent implements OnInit {
     this.closeEdit.emit(data);
   }
 
-  getDeviceName(item){}
+  getDeviceName(item) {}
 }
