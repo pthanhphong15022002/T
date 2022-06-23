@@ -1,5 +1,5 @@
 export class TabModel {
-  name: string;
+  name: 'attachment' | 'history' | 'comment' | 'reference' | 'approve' | string;
   textDefault: string;
   isActive: boolean;
 }
