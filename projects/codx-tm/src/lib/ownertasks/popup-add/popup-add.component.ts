@@ -443,6 +443,41 @@ export class PopupAddComponent implements OnInit {
 
   eventApply(e: any) {
     console.log(e);
+    const t = this ;
+    var assignTo = '';
+    var i = 0 ;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            assignTo += obj?.data;
+            i++ ;
+            break;
+          case 'D':
+            //chua doi chay xong da moi chay tiep dang fail
+            var depID = obj?.data.substring(0, obj?.data.length - 1);
+            this.tmSv.getUserByDepartment(depID).subscribe(res=>{
+              if(res){
+                assignTo += res +";"; 
+                i++;
+              }
+            })
+            break;
+        }
+      }
+    
+        this.handleChangeUser(assignTo)
+    
+    }) 
+  }
+  handleChangeUser(assignTo){
+    if (assignTo != '') {
+      if (assignTo.split(';').length > 1)
+        assignTo = assignTo.substring(0, assignTo.length - 1);
+      if (this.task.assignTo && this.task.assignTo != '') this.task.assignTo += ";" + assignTo; else this.task.assignTo = assignTo
+      this.getListUser(this.task.assignTo);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChange(data) {
