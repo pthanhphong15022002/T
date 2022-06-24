@@ -34,6 +34,7 @@ export class PopupAddRoomsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger;
     this.data = dt?.data;
     this.dialog = dialog;
   }
@@ -45,9 +46,14 @@ export class PopupAddRoomsComponent implements OnInit {
       this.vllDevices = res.datas;
     });
 
-    this.bookingService.getComboboxName('Rooms', 'grvRooms').then((res) => {
-      this.cacheGridViewSetup = res;
-    });
+    this.bookingService
+      .getComboboxName(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        this.CbxName = res;
+      });
   }
 
   initForm() {
@@ -61,12 +67,17 @@ export class PopupAddRoomsComponent implements OnInit {
       .getFormGroup('Resources', 'grvResources')
       .then((item) => {
         this.dialogRoom = item;
+        this.dialogRoom.patchValue({
+          ranking: '1',
+          category: '1',
+          companyID: '1',
+        });
+
         if (this.data) {
           this.dialogRoom.patchValue(this.data);
         }
         this.isAfterRender = true;
       });
-    // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
   }
 
   valueChange(event: any) {
@@ -99,7 +110,7 @@ export class PopupAddRoomsComponent implements OnInit {
     if (!this.dialogRoom.value.linkType) {
       this.dialogRoom.value.linkType = '0';
     }
-    this.dialogRoom.value.resourceType = '2';
+    this.dialogRoom.value.resourceType = '1';
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();

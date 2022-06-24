@@ -31,8 +31,8 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
 export class RoomsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('statusCol') statusCol: TemplateRef<any>
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -78,8 +78,8 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       },
       {
         headerText: 'Xếp hạng',
-        template: this.rankingCol
-      }
+        template: this.rankingCol,
+      },
     ];
     this.views = [
       {
@@ -136,6 +136,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
         this.dataSelected,

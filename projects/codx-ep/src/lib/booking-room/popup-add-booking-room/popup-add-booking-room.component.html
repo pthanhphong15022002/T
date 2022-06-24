@@ -631,7 +631,11 @@
                     class="d-flex justify-content-between align-items-center mb-4"
                   >
                     <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      Văn phòng phẩm
+                      <codx-label
+                        name="lblStationery"
+                        default="Văn phòng phẩm"
+                        [formModel]="dialog.formModel"
+                      ></codx-label>
                     </h4>
                     <span class="icon-layers text-primary fs-1"></span>
                   </div>
@@ -845,6 +849,7 @@
                           </codx-combobox> -->
                           <codx-input
                             type="valuelist"
+                            field=""
                             [refValue]="CbxName['Interval']"
                             ngDefaultControl
                             [crrValue]="this.addEditForm.value.interval"
