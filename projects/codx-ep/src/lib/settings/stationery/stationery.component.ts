@@ -35,18 +35,12 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
 })
 export class StationeryComponent implements OnInit {
   @ViewChild('base') viewBase: ViewsComponent;
-  @ViewChild('panelLeftRsef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('stationeryResourceDialog')
-  stationeryResourceDialog: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-  @ViewChild('popuptemplate') popupTemp: TemplateRef<any>;
   @ViewChild('listItem') listItem: TemplateRef<any>;
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
+  @ViewChild('colorCol') colorCol: TemplateRef<any>
+  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>
   @Input('data') data;
   @Output() editData = new EventEmitter();
 
@@ -98,11 +92,6 @@ export class StationeryComponent implements OnInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
     private cf: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private activedRouter: ActivatedRoute
@@ -124,18 +113,47 @@ export class StationeryComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.columnsGrid = [
+      {
+        headerText: 'Sản phẩm',
+        width: '40%',
+        template: this.resourceNameCol,
+      },
+      {
+        headerText: 'Màu',
+        width: '20%',
+        template: this.colorCol,
+      },
+      {
+        field: 'costPrice',
+        width: '10%',
+        headerText: 'Giá mua gần nhất',
+      },
+      {
+        field: 'location',
+        width: '10%',
+        headerText: 'Quản lý kho',
+      },
+      {
+        headerText: 'Quản lý kho',
+        width: '20%',
+        template: this.ownerCol,
+      },
+    ];
+
     this.views = [
       {
         id: '1',
-        text: 'List',
-        type: ViewType.list,
+        text: 'Danh mục VPP',
+        type: ViewType.grid,
         sameData: true,
         active: true,
         model: {
-          template: this.listItem,
+          resources: this.columnsGrid
         },
       },
     ];
+    
     this.moreFunc = [
       {
         id: 'btnEdit',
