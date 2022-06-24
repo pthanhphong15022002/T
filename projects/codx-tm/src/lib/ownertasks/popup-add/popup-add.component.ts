@@ -202,13 +202,6 @@ export class PopupAddComponent implements OnInit {
 
   openTask(): void {
     const t = this;
-    // if (this.functionID == 'TMT03') {
-    //   // this.showAssignTo = true;
-    //   //cai nay thêm để test
-    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    //   this.getListUser(this.task.assignTo);
-    // }
-
     this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
@@ -260,13 +253,6 @@ export class PopupAddComponent implements OnInit {
   openAssignSchedule(task): void {
     const t = this;
     this.task = task;
-    // if (this.functionID == 'TMT03') {
-    //   // this.showAssignTo = true;
-    //   //cai nay thêm để test
-    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    //   this.getListUser(this.task.assignTo);
-    // }
-
     // this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -381,10 +367,10 @@ export class PopupAddComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-    this.attachment.saveFiles();
-
+  
     if (id) this.updateTask();
     else this.addTask();
+    this.attachment.saveFiles();
   }
 
   beforeSave(op: any) {
@@ -433,6 +419,8 @@ export class PopupAddComponent implements OnInit {
         this.dialog.dataService.afterSave.next(res);
         this.changeDetectorRef.detectChanges();
         this.notiService.notifyCode('E0680');
+        // this.dialog.close();
+        // this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
       }
     })
   }
