@@ -430,10 +430,12 @@ export class PopupAddComponent implements OnInit {
       this.listTaskResources,
       this.listTodo,
     ]).subscribe(res => {
-      if (res && res.length)
+      if (res && res.length) {
         this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
-      this.dialog.dataService.setDataSelected(res[0]);
-      this.dialog.dataService.afterSave.next(res);
+        this.dialog.dataService.setDataSelected(res[0]);
+        this.dialog.dataService.afterSave.next(res);
+        this.changeDetectorRef.detectChanges();
+      }
     })
   }
 
@@ -454,34 +456,34 @@ export class PopupAddComponent implements OnInit {
 
   eventApply(e: any) {
     console.log(e);
-    const t = this ;
+    const t = this;
     var assignTo = '';
-    var i = 0 ;
+    var i = 0;
     e.forEach(obj => {
       if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
             assignTo += obj?.data;
-            i++ ;
+            i++;
             break;
           case 'D':
             //chua doi chay xong da moi chay tiep dang fail
             var depID = obj?.data.substring(0, obj?.data.length - 1);
-            this.tmSv.getUserByDepartment(depID).subscribe(res=>{
-              if(res){
-                assignTo += res +";"; 
+            this.tmSv.getUserByDepartment(depID).subscribe(res => {
+              if (res) {
+                assignTo += res + ";";
                 i++;
               }
             })
             break;
         }
       }
-    
-        this.handleChangeUser(assignTo)
-    
-    }) 
+
+      this.handleChangeUser(assignTo)
+
+    })
   }
-  handleChangeUser(assignTo){
+  handleChangeUser(assignTo) {
     if (assignTo != '') {
       if (assignTo.split(';').length > 1)
         assignTo = assignTo.substring(0, assignTo.length - 1);
