@@ -9,6 +9,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
+import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 export const routes: Routes = [
@@ -31,7 +32,8 @@ export const routes: Routes = [
 const T_Component: Type<any>[] = [
   LayoutComponent,
   EmpContactsComponent,
-  EmployeesComponent
+  EmployeesComponent,
+  PopupAddEmployeesComponent,
 ]
 @NgModule({
   imports: [
@@ -42,7 +44,6 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
-    FormsModule
   ],
   exports: [
     RouterModule

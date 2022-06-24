@@ -60,8 +60,7 @@
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">Ưu tiên:</span>
               <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
-                [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async">
-                <span class="icon-18 icon-outlined_flag"></span> 
+                [style.color]="itemSelected?.priority | vll: 'L0186':'textColor' | async"> 
               </span>
               <span class="text-gray-700">{{ itemSelected?.priority | vll: "L0186":"text" | async }}</span>
             </div>
@@ -89,7 +88,7 @@
               <span [ngClass]="itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400' "><span
                   *ngIf=" itemSelected?.completedOn">{{
                   itemSelected?.completedOn
-                  | date: 'dd/MM/yyyy' }} {{" | "+ itemSelected?.estimated}}</span></span>
+                  | date: 'dd/MM/yyyy' }} {{" | "+ itemSelected?.compinleted}}</span></span>
             </div>
           </div>
         </div>

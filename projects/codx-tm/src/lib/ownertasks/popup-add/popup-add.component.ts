@@ -327,9 +327,6 @@ export class PopupAddComponent implements OnInit {
     this.listUser = [];
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi
-    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    // this.getListUser(this.task.assignTo);
     t.changeDetectorRef.detectChanges();
   }
 
@@ -435,6 +432,7 @@ export class PopupAddComponent implements OnInit {
         this.dialog.dataService.setDataSelected(res[0]);
         this.dialog.dataService.afterSave.next(res);
         this.changeDetectorRef.detectChanges();
+        this.notiService.notifyCode('E0680');
       }
     })
   }
@@ -445,7 +443,7 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           this.dialog.close();
-          this.notiService.notify(' Sửa đổi thành công !'); ///sau này có mess thì gán vào giờ chưa có
+          this.notiService.notifyCode('E0528');
         }
       });
   }
@@ -607,16 +605,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  // valueChangeUser(event) {
-  //   if (event?.valueSeleteds) {
-  //     this.task.assignTo = event?.valueSeleteds;
-  //   }
-  // this.listUser =  this.task.assignTo.split(";");
 
-  // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
-  //   this.listUserDetail = res ;
-  // })
-  // }
 
   getListUser(listUser) {
     this.listMemo2OfUser = [];
@@ -732,12 +721,7 @@ export class PopupAddComponent implements OnInit {
       t.actionSave(id);
     }
   }
-  popup(evt: any) {
-    this.attachment.openPopup();
-  }
-  fileAdded(e) {
-    console.log(e);
-  }
+
 
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
@@ -749,5 +733,11 @@ export class PopupAddComponent implements OnInit {
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;
+  }
+  addFile(evt: any) {
+    this.attachment.openPopup();
+  }
+  fileAdded(e) {
+    console.log(e);
   }
 }
