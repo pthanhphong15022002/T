@@ -59,18 +59,18 @@
 </ng-template>
 
 <ng-template #ownerCol let-data>
-  <div class="d-flex">
+  <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectName="AD_Users"></codx-img>
     <div>
       <div>{{ data.owner }}</div>
       <div></div>
     </div>
-    <div class="has-action-menu">
+    <div class="action-menu">
       <codx-mfunc
-      [formModel]="viewBase.formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
     </div>
   </div>
 </ng-template>

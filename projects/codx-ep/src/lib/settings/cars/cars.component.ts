@@ -28,13 +28,17 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
   styleUrls: ['cars.component.scss'],
 })
 export class CarsComponent implements OnInit, AfterViewInit {
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
+  columnGrids: any
   dialog!: DialogRef;
   isAdd = true;
   columnsGrid;
@@ -70,14 +74,33 @@ export class CarsComponent implements OnInit, AfterViewInit {
   ) {}
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã xe',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên xe',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol
+      }
+    ];
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục xe',
+        type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template: this.template,
+          resources: this.columnGrids
         },
       },
     ];
