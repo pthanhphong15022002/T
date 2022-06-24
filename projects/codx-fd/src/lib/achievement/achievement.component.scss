@@ -1,0 +1,299 @@
+.chart-get {
+    margin-left: -200px;
+}
+
+.total-coins-received {
+    margin-top: -110px;
+    margin-left: 81px;
+    font-size: 1.3rem;
+}
+
+.mt-9 {
+    margin-top: 100px !important;
+    height: 500px !important;
+}
+
+.chart-received {
+    width: 363.25px;
+}
+
+.chart-sended {
+    width: 363.25px;
+}
+
+.lbl-coin {
+    color: gray;
+    font-size: 1.2rem;
+    margin-left: 150px;
+    font-weight: 600;
+}
+
+.box-wallets {
+    border: 2px solid #eee;
+    border-radius: 4px !important;
+    padding: 10px 15px 0;
+}
+
+.top-100 {
+    margin-top: 100px;
+}
+
+.w-0 {
+    width: 0px;
+}
+
+.h-0 {
+    height: 0px;
+}
+
+.white {
+    background-color: white;
+    color: white;
+}
+
+.p-a {
+    position: relative;
+}
+
+.list-performance {
+    min-height: 558px;
+}
+
+.min-w-400px {
+    min-width: 400px !important
+}
+
+.w-400px {
+    width: 400px !important
+}
+
+.pl-3,
+.px-3 {
+    padding-left: 2.75rem !important;
+    margin-right: -25px;
+}
+
+.pd-r-0 {
+    padding-right: 0px;
+}
+
+.top-item {
+    width: 125px;
+}
+
+.top1 .top-pic {
+    width: 76px;
+    height: 90px;
+    background: url("../../../../../src/assets/demos/svg/top1.svg") center top no-repeat;
+}
+
+.top2 {
+    padding-top: 55px !important;
+}
+
+.top2 .top-pic {
+    width: 80px;
+    height: 60px;
+    background: url("../../../../../src/assets/demos/svg/top2.svg") center top no-repeat;
+}
+
+.top3 {
+    padding-top: 55px !important;
+}
+
+.top3 .top-pic {
+    width: 80px;
+    height: 60px;
+    background: url("../../../../../src/assets/demos/svg/top3.svg") center top no-repeat;
+}
+
+.top2 .symbol,
+.top3 .symbol {
+    left: 39px;
+    top: 3px;
+    border: thin
+}
+
+.top1 .symbol {
+    left: 35.3px;
+    top: 24px;
+    border: thin
+}
+
+.top-name {
+    margin-top: 5px;
+}
+
+.modal-title .text-center {
+    text-align: center;
+}
+
+.organize {
+    min-width: 177.84px !important;
+}
+
+.text-dark-50 {
+    color: #666666 !important;
+}
+
+.top-champion {
+    height: 159px !important;
+}
+
+.left-5 {
+    margin-left: 5px;
+}
+
+.left-30 {
+    margin-left: 30px;
+}
+
+.pd-r-30 {
+    padding-right: 30px;
+}
+
+.process-performance {
+    position: relative;
+    height: 62px;
+    margin-top: 50px;
+    right: 80px;
+    margin-left: 80px;
+}
+
+.bg-platinum {
+    height: 8px;
+    position: absolute;
+    left: 0;
+    top: 0px;
+    right: -80px;
+    background-color: #f5f5f7;
+    display: block;
+    border-radius: 6px;
+}
+
+.process-v .process-item {
+    position: relative;
+    margin-right: 10px;
+}
+
+.process-v .process-item::before {
+    position: absolute;
+    display: block;
+    height: 1px;
+    left: 20px;
+    right: -20px;
+    top: 16px;
+    background-color: #eee;
+    content: "";
+    z-index: 1;
+}
+
+.process-v .process-item:last-child::before {
+    display: none;
+}
+
+.process-v .process-item .btn {
+    z-index: 9;
+    position: relative;
+}
+
+.symbol.symbol-30.ng-star-inserted .symbol-label {
+    font-size: 13px !important;
+}
+
+.process-bar {
+    position: absolute;
+    top: 0;
+    height: 8px;
+    border-radius: 6px;
+    background-color: #f7f7f8;
+}
+
+.process-value {
+    text-align: right;
+    top: 15px;
+    position: absolute;
+    white-space: nowrap;
+    text-indent: 100%;
+}
+
+.process-value .text-dark span {
+    padding: 2px;
+    background-color: wheat;
+}
+
+.text-muted {
+    color: #91919f !important;
+}
+
+.process-number {
+    top: -24px;
+    position: absolute;
+    text-align: right;
+}
+
+.square-status {
+    width: 14px;
+    height: 14px;
+    border-radius: 5px;
+    margin-top: 2px;
+}
+
+.process-number span {
+    display: block;
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    right: -22px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    text-align: center;
+    line-height: 28px;
+    border: 2px #fff solid;
+    font-weight: 600;
+    color: #971fa9;
+}
+
+.font-size-h4 {
+    font-size: 1.35rem;
+}
+
+.font-weight-bold {
+    font-weight: 600;
+}
+
+.label.label-inline {
+    border-radius: 3px !important;
+    padding: 0 8px !important;
+    font-size: 11px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    white-space: nowrap;
+}
+
+.label.label-light-primary {
+    color: #3699ff;
+    background-color: #e1f0ff
+}
+
+.with-number .list-number {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffa800;
+    font-weight: 500;
+    background-color: #fff4de;
+}
+
+.left-15 {
+    margin-left: 15px !important;
+}
+
+.gray {
+    background-color: gray;
+}
