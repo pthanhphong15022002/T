@@ -13,6 +13,7 @@ import {
   Input,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import {
   tmpTaskResource,
@@ -21,12 +22,14 @@ import {
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
+import { AttachmentComponent } from '../attachment/attachment.component';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -218,5 +221,9 @@ export class AssignInfoComponent implements OnInit {
     this.listTodo = [];
     this.task = new TM_Tasks();
     this.task.status = '1';
+  }
+
+  fileAdded(e){
+
   }
 }

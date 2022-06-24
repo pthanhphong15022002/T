@@ -431,6 +431,8 @@ export class PopupAddComponent implements OnInit {
         this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
       this.dialog.dataService.setDataSelected(res[0]);
       this.dialog.dataService.afterSave.next(res);
+      this.dialog.close();
+      this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
     })
   }
 
@@ -718,12 +720,7 @@ export class PopupAddComponent implements OnInit {
       t.actionSave(id);
     }
   }
-  popup(evt: any) {
-    this.attachment.openPopup();
-  }
-  fileAdded(e) {
-    console.log(e);
-  }
+
 
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
@@ -735,5 +732,11 @@ export class PopupAddComponent implements OnInit {
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;
+  }
+  addFile(evt: any) {
+    this.attachment.openPopup();
+  }
+  fileAdded(e) {
+    console.log(e);
   }
 }
