@@ -18,7 +18,7 @@ import { UpdateStorageComponent } from './personals/storage/update-storage/updat
 import { AddStorageComponent } from './personals/storage/add-storage/add-storage.component';
 import { AddDetailStorageComponent } from './personals/storage/detail/add-detail-storage/add-detail-storage.component';
 import { UpdateDetailStorageComponent } from './personals/storage/detail/update-detail-storage/update-detail-storage.component';
-
+import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 export const routes: Routes = [
   {
     path: '',
@@ -27,6 +27,10 @@ export const routes: Routes = [
       {
         path: 'personals/:funcID',
         component: PersonalsComponent,
+      },
+      {
+        path: 'employeeinfo/:funcID',
+        component: EmployeeInfomationComponent,
       },
     ],
   },
@@ -45,6 +49,7 @@ const Component: Type<any>[] = [
   AddStorageComponent,
   AddDetailStorageComponent,
   UpdateDetailStorageComponent,
+  InfoLeftComponent,
 ];
 
 @NgModule({

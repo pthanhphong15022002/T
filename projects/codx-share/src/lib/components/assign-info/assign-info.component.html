@@ -74,7 +74,8 @@
             </div>
             <div class="d-flex justify-content-between mb-2 p-2">
                 <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-100px">Công việc:</div>
+                    <div class="w-100px"> <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
+                    </codx-label></div>
                     <div class="d-flex align-items-center w-100">
                         <codx-input 
                             type="text"
@@ -146,7 +147,8 @@
             </div> -->
             <div class="form-group mt-3 p-2">
                 <div class="d-flex align-items-center justify-content-between">
-                    <label>Nội dung chi tiết</label>
+                    <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Nội dung chi tiết">
+                    </codx-label>
                     <div class="dropdown">
                         <button
                             class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle"
@@ -174,7 +176,8 @@
             </div>
             <div class="row p-4">            
                 <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-100px">Thời hạn xử lý</div>
+                    <div class="w-100px"><codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Thời hạn xử lý"> 
+                    </codx-label></div>
                     <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
                     [crrValue]="task.dueDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
@@ -194,15 +197,20 @@
                     </div>  
                 </div>
             </div>
+            <div class="row ">
+                <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  [functionID]="functionID" (fileAdded)="fileAdded($event)"></attachment> 
+            </div>
         <!-- </div> -->
     </ng-template>
     <ng-template #footer >
         <!-- <div class="card-footer pt-4"> -->
             <div class="d-flex justify-content-between">
                 <div class="d-flex flex-stack">
-                    <button type="button" class="btn btn-light-primary me-3" >
-                        <i class="icon-cloud_upload fs-5"></i>Upload file
+                    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+                        <i class="icon-cloud_upload fs-5" ></i>Upload file
                     </button>
+
+                    <attachment #attachment objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> 
                     <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false" labelPosition="Before"></codx-input>
                     <div class="ms-2">Lưu làm template</div>
                 </div>                        
@@ -215,6 +223,7 @@
     </ng-template>
 </codx-form>
 
-<!-- <attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> -->
+
+    
 
 

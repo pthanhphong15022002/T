@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ButtonModel, CallFuncService, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
 
 @Component({
@@ -12,6 +14,11 @@ export class EmployeesComponent implements OnInit {
   button?: ButtonModel;
   columnsGrid = [];
   dialog!: DialogRef;
+  currentEmployee: boolean = true;
+  dataValue = "90";
+  predicate = "Status<@0";
+  functionID: string;
+  employee:HR_Employees  = new HR_Employees();
   
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
@@ -24,7 +31,25 @@ export class EmployeesComponent implements OnInit {
   constructor(
     private changedt: ChangeDetectorRef,
     private callfunc: CallFuncService,
-  ) { }
+    private router: Router,
+  ) {
+    var arrPara = this.router.url.match(/[^/]+/g);
+    var _class = arrPara && arrPara.length > 0 ? arrPara[2] : "employeeleave";
+    if (_class.split("?").length > 0) {
+      _class = _class.split("?")[0];
+    }
+    if (_class == "employee") {
+      this.currentEmployee = true;
+      this.predicate = "Status<@0";
+      this.dataValue = "90";
+      this.functionID == "HR003";
+    } else {
+      this.currentEmployee = false;
+      this.predicate = "Status==@0";
+      this.dataValue = "90";
+      this.functionID == "HR004";
+    }
+   }
 
   ngOnInit(): void {
     this.button = {

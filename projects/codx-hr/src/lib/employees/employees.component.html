@@ -1,7 +1,7 @@
 <codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
     method="GetModelFormEmployAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
-    (requestEnded)="requestEnded($event)" [selectedFirst]="true">
+    (requestEnded)="requestEnded($event)" [selectedFirst]="true" [predicate]='predicate' [dataValue]='dataValue'>
 </codx-views>
 
 <ng-template #cardTemp let-data>
