@@ -9,12 +9,18 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxMwpComponent } from './codx-mwp.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { EmployeeInfomationComponent } from './employeeinfomation/employee-infomation.component';
+import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    children: [],
+    children: [
+      {
+        path: 'employeeinfo/:funcID',
+        component: EmployeeInfomationComponent,
+      },
+    ],
   },
 ];
 
@@ -22,6 +28,7 @@ const Component: Type<any>[] = [
   LayoutComponent,
   CodxMwpComponent,
   EmployeeInfomationComponent,
+  InfoLeftComponent,
 ];
 
 @NgModule({

@@ -25,6 +25,10 @@ export const routes: Routes = [
         path: 'employee/:funcID',
         component: EmployeesComponent
       },
+      {
+        path: 'employeeleave/:funcID',
+        component: EmployeesComponent
+      },
     ],
   },
 ];
