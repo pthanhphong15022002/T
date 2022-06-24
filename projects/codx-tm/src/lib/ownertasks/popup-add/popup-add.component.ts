@@ -70,7 +70,6 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  //@ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment') attachment:AttachmentComponent 
   @ViewChild('tags') tagsComponent: TagsComponent;
   task: TM_Tasks = new TM_Tasks();
@@ -384,8 +383,8 @@ export class PopupAddComponent implements OnInit {
     this.task.taskType = this.param['TaskType'];
     this.attachment.saveFiles();
 
-    // if (id) this.updateTask();
-    // else this.addTask();
+    if (id) this.updateTask();
+    else this.addTask();
   }
 
   beforeSave(op: any) {
@@ -740,6 +739,7 @@ export class PopupAddComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
+    ///chỗ này không bắt được data
     console.log(e);
   }
 }

@@ -76,7 +76,6 @@ export class AssignTasksComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
@@ -314,7 +313,7 @@ export class AssignTasksComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add',true], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -330,19 +329,18 @@ export class AssignTasksComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
     });
   }
 
   copy(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
     });
   }
 

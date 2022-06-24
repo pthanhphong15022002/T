@@ -194,16 +194,19 @@
                     </div>  
                 </div>
             </div>
+            <div class="row ">
+                <attachment #attachment objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> 
+            </div>
         <!-- </div> -->
     </ng-template>
     <ng-template #footer >
         <!-- <div class="card-footer pt-4"> -->
             <div class="d-flex justify-content-between">
                 <div class="d-flex flex-stack">
-                    <button type="button" class="btn btn-light-primary me-3" >
-                        <i class="icon-cloud_upload fs-5"></i>Upload file
+                    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+                        <i class="icon-cloud_upload fs-5" ></i>Upload file
                     </button>
-                    
+
                     <attachment #attachment objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> 
                     <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false" labelPosition="Before"></codx-input>
                     <div class="ms-2">Lưu làm template</div>
@@ -217,9 +220,7 @@
     </ng-template>
 </codx-form>
 
-<ng-template>
-    <attachment #attachment type="center" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"
-      (fileAdded)="fileAdded($event)"></attachment>
-  </ng-template>
+
+    
 
 
