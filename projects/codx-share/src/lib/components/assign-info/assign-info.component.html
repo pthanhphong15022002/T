@@ -46,7 +46,8 @@
                         </div>  
                     </div>
                     <span class="btn btn-sm btn-icon btn-light-primary">
-                        <span class="icon-connection-point icon-18"></span>
+                        <!-- <span class="icon-connection-point icon-18"></span> -->
+                        <codx-share  (eventApply)="eventApply($event)" > </codx-share>
                     </span>   
                 </div>             
             </div>        
@@ -214,6 +215,9 @@
     </ng-template>
 </codx-form>
 
-<!-- <attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> -->
+<ng-template>
+    <attachment #attachment type="center" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"
+      (fileAdded)="fileAdded($event)"></attachment>
+  </ng-template>
 
 

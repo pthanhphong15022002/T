@@ -13,6 +13,7 @@ import {
   Input,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import {
   tmpTaskResource,
@@ -21,12 +22,14 @@ import {
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
+import { AttachmentComponent } from '../attachment/attachment.component';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -118,18 +121,23 @@ export class AssignInfoComponent implements OnInit {
   changeUser(e) {
     this.listMemo2OfUser = [];
     this.listUser = [];
+    var assignTo = e.data.join(';')
     if (e.data.length == 0) {
       this.task.assignTo = '';
       return ;
     } else if (this.task.assignTo != null && this.task.assignTo != '') {
-      this.task.assignTo += ';' + e.data;
-    } else this.task.assignTo = e.data;
+      this.task.assignTo += ';' + assignTo;
+    } else this.task.assignTo = assignTo;
 
     this.listUser = this.task.assignTo.split(';');
     this.listUser.forEach((u) => {
       var obj = { userID: u.userID, memo2: null };
       this.listMemo2OfUser.push(obj);
     });
+  }
+
+  eventApply(e){
+
   }
   saveAssign(id, isContinue) {
     if (this.task.assignTo == null || this.task.assignTo == '') {
@@ -213,5 +221,9 @@ export class AssignInfoComponent implements OnInit {
     this.listTodo = [];
     this.task = new TM_Tasks();
     this.task.status = '1';
+  }
+
+  fileAdded(e){
+
   }
 }

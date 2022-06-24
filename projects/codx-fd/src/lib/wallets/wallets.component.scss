@@ -87,7 +87,7 @@
 }
 
 .top2 {
-    padding-top: 55px;
+    padding-top: 55px !important;
 }
 
 .top2 .top-pic {
@@ -97,7 +97,7 @@
 }
 
 .top3 {
-    padding-top: 67px;
+    padding-top: 55px !important;
 }
 
 .top3 .top-pic {
@@ -108,13 +108,13 @@
 
 .top2 .symbol,
 .top3 .symbol {
-    left: 42px;
+    left: 41px;
     top: 3px;
 }
 
 .top1 .symbol {
-    left: 37px;
-    top: 25px;
+    left: 36px;
+    top: 24px;
 }
 
 .top-name {
@@ -131,4 +131,42 @@
 
 .text-dark-50 {
     color: #666666 !important;
+}
+
+.top-champion {
+    height: 159px !important;
+}
+
+.left-5 {
+    margin-left: 5px;
+}
+
+.with-number .list-number {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffa800;
+    font-weight: 500;
+    background-color: #fff4de;
+}
+
+.left-15 {
+    margin-left: 15px;
+}
+
+.card-body {
+    width: 360px;
+}
+
+.left-20 {
+    margin-left: -20px;
+}
+
+.pd-r-10 {
+    padding-right: 10px;
 }
