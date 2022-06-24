@@ -25,6 +25,7 @@ import {
   UrlUtil,
   NotificationsService,
   CacheService,
+  UIComponent
 } from 'codx-core';
 import * as moment from 'moment';
 import { CodxTMService } from '../codx-tm.service';
@@ -38,9 +39,8 @@ import { UpdateStatusPopupComponent } from '../ownertasks/update-status-popup/up
   templateUrl: './assigntasks.component.html',
   styleUrls: ['./assigntasks.component.css']
 })
-export class AssignTasksComponent implements OnInit {
+export class AssignTasksComponent extends UIComponent {
 
-  @ViewChild('view') view!: ViewsComponent;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -77,13 +77,12 @@ export class AssignTasksComponent implements OnInit {
     private inject: Injector,
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
-    private api: ApiHttpService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private tmSv: CodxTMService,
-    private callfc: CallFuncService
   ) {
+    super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -120,7 +119,7 @@ export class AssignTasksComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'TM';
     this.modelResource.className = 'TaskBusiness';

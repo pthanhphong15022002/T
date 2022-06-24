@@ -70,8 +70,8 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
-
+  //@ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachment') attachment:AttachmentComponent 
   @ViewChild('tags') tagsComponent: TagsComponent;
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
@@ -331,7 +331,6 @@ export class PopupAddComponent implements OnInit {
   }
 
   saveData(id) {
-    // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
@@ -383,8 +382,10 @@ export class PopupAddComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-    if (id) this.updateTask();
-    else this.addTask();
+    this.attachment.saveFiles();
+
+    // if (id) this.updateTask();
+    // else this.addTask();
   }
 
   beforeSave(op: any) {
@@ -735,7 +736,8 @@ export class PopupAddComponent implements OnInit {
     this.listTaskResources = listTaskResources;
   }
   addFile(evt: any) {
-    this.attachment.openPopup();
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
   }
   fileAdded(e) {
     console.log(e);
