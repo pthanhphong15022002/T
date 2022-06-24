@@ -260,6 +260,8 @@
                       <div class="form-switch1">
                         <codx-input
                           #checkbox
+                          field="online"
+                          [Group]="addEditForm"
                           type="switch"
                           id="switchOnl"
                           [checked]="this.addEditForm.value.online"
@@ -271,8 +273,13 @@
                         >
                         </codx-input>
                         <span class="fw-bold ms-2"
-                          ><label for="switchOnl">Họp online</label></span
-                        >
+                          ><label for="switchOnl"
+                            ><codx-label
+                              fiedName="Online"
+                              default="Họp online"
+                              [formModel]="dialog.formModel"
+                            ></codx-label></label
+                        ></span>
                       </div>
                       <!--begin: btn-icon-->
                       <span class="text-end align-items-end">
@@ -821,8 +828,13 @@
                             (valueChange)="valueChange($event)"
                           ></codx-input>
                           <span class="fw-bold ms-2"
-                            ><label for="switch">Lặp lại</label></span
-                          >
+                            ><label for="switch"
+                              ><codx-label
+                                name="lblAgain"
+                                default="Lặp lại"
+                                [formModel]="dialog.formModel"
+                              ></codx-label></label
+                          ></span>
                         </div>
                         <!--end::Switch-->
                         <!--begin::Label-->
@@ -961,13 +973,13 @@
         </div>
         <div class="d-flex justify-content-end">
           <div class="form-check form-check-solid form-switch">
-            <input
+            <codx-input
               class="form-check-input w-35px h-20px"
-              type="checkbox"
+              type="switch"
               id="googleswitch"
               [checked]="item.isSelected"
               (change)="checkedChange($event, item)"
-            />
+            ></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
         </div>

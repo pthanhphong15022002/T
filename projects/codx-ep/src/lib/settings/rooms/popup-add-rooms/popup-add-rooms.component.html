@@ -5,216 +5,6 @@
   [footer]="footer"
   [dialog]="dialog"
 >
-  <!-- <ng-template #body>
-    <div class="container">
-      <div class="card card-custom cdx-add border-radius-0">
-        <div class="card-body scroll-y my-7">
-          <form [formGroup]="dialogRoom" *ngIf="isAfterRender">
-            <div class="row mb-4">
-              <codx-label
-                class="fs-5 fw-bold"
-                default="Tên phòng họp"
-                fiedName="ResourceName"
-                [formModel]="dialog.formModel"
-              >
-              </codx-label>
-              <div class="d-flex position-relative">
-                <div class="w-100">
-                  <codx-input
-                    type="text"
-                    class="form-control flex-grow-1 me-3 w-100"
-                    ControlName="resourceName"
-                    [Group]="dialog"
-                  >
-                  </codx-input>
-                </div>
-                <div class="ml-2 room-icon" style="display: none">
-                  <codx-input
-                    type="vllicon"
-                    refValue="L1470"
-                    field="icon"
-                    class="btn btn-primary dropdown-toggle"
-                    (valueChange)="valueChange($event)"
-                  >
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-4">
-              <div class="col-6">
-                <codx-label
-                  class="fw-bold"
-                  default="Phân loại"
-                  fiedName="Ranking"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <codx-input
-                  type="valuelist"
-                  name="valuelist"
-                  ngDefaultControl
-                  [crrValue]="dialog.value.ranking"
-                  refValue="EP005"
-                  field="ranking"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-              <div class="col-3">
-                <codx-label
-                  class="fw-bold"
-                  default="Diện tích (m2)"
-                  fiedName="Area"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <codx-input
-                  type="text"
-                  class="form-control"
-                  ControlName="area"
-                  [Group]="dialog"
-                >
-                </codx-input>
-              </div>
-              <div class="col-3">
-                <codx-label
-                  class="fw-bold"
-                  default="Sức chứa (người)"
-                  fiedName="Capacity"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <codx-input
-                  type="text"
-                  class="form-control"
-                  ControlName="capacity"
-                  [Group]="dialog"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div class="col-8">
-                <codx-label
-                  class="fw-bold"
-                  default="Vị trí"
-                  fiedName="Location"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <codx-input
-                  type="text"
-                  class="form-control"
-                  placeholder=""
-                  ControlName="location"
-                  [Group]="dialog"
-                >
-                </codx-input>
-              </div>
-              <div class="col-4">
-                <codx-label
-                  class="fw-bold"
-                  default="Đơn vị"
-                  fiedName="CompanyID"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <codx-input
-                  service="EP"
-                  type="combobox"
-                  name="combobox"
-                  crrValue=""
-                  ngDefaultControl
-                  [refValue]="CbxName['Companies']"
-                  [loadFull]="true"
-                  field="companyID"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div class="col-12">
-                <codx-label
-                  class="fw-bold"
-                  default="Người quản lí"
-                  fiedName="Owner"
-                  [formModel]="dialog.formModel"
-                >
-                </codx-label>
-                <div class="position-relative">
-                  <codx-input
-                    service="AD"
-                    type="combobox"
-                    name="combobox"
-                    [crrValue]="dialog.value.owner"
-                    ngDefaultControl
-                    field="owner"
-                    [refValue]="CbxName['owner']"
-                    (valueChange)="valueOwnerChange($event)"
-                  >
-                  </codx-input>
-                  <div
-                    class="position-absolute translate-middle-y top-50 end-0 me-3"
-                  >
-                    <span class="icon-person_pin_circle"> </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div class="col-12">
-                <codx-label class="fw-bold" default="Mô tả" fiedName="Note">
-                </codx-label>
-                <codx-input
-                  type="textarea"
-                  class="test-textarea"
-                  field="note"
-                  placeholder=""
-                  [crrValue]="dialog.value.note"
-                  rows="3"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="row mb-4">
-              <div
-                class="d-flex justify-content-between align-items-center mb-4"
-              >
-                <codx-label
-                  class="fw-bold"
-                  default="Thiết bị"
-                  fiedName="Equipments"
-                >
-                </codx-label>
-                <span class="icon-select_all text-primary icon-20"></span>
-              </div>
-              <div class="d-flex align-items-center fw-bold">
-                <ng-container *ngFor="let item of lstDevices">
-                  <span class="text-dark fs-5 icon-wifi me-3">
-                    <span class="fs-6 ms-1">{{ getDeviceName(item) }}</span>
-                  </span>
-                </ng-container>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="dialog.formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template> -->
 </codx-form>
 <ng-template #body>
   <div class="container">
@@ -251,8 +41,6 @@
                     class="btn btn-primary dropdown-toggle"
                   >
                   </codx-input>
-                  <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon> -->
                 </div>
               </div>
             </div>
@@ -268,19 +56,19 @@
               <codx-label
                 class="fw-bold"
                 default="Phân loại"
-                fiedName="Ranking"
+                fiedName="Category"
                 [formModel]="dialog.formModel"
               >
               </codx-label>
               <!--end::Label-->
               <!--begin::Input-->
               <codx-input
-                type="text"
-                class="form-control"
-                placeholder=""
-                ControlName="code"
-                [Group]="dialogRoom"
-                [crrValue]="dialogRoom.value.code"
+                type="combobox"
+                name="combobox"
+                ControlName="category"
+                dataValue="1"
+                refValue="EP001"
+                [crrValue]="dialogRoom.value.category"
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
@@ -288,35 +76,37 @@
 
             <div class="col-3">
               <!--begin::Label-->
-              <codx-label class="fw-bold" default="Số chỗ" fiedName="Capacity">
+              <codx-label
+                class="fw-bold"
+                default="Diện tích(m2)"
+                fiedName="Capacity"
+                [formModel]="dialog.formModel"
+              >
               </codx-label>
               <!--end::Label-->
               <!--begin::Input-->
               <codx-input
-                type="number"
-                class="form-control"
-                placeholder=""
-                value="0"
-                [min]="0"
+                type="text"
+                [Group]="dialogRoom"
+                ControlName="capacity"
                 field="capacity"
                 [crrValue]="dialogRoom.value.capacity"
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
             </div>
-            <div class="col-6">
+            <div class="col-3">
               <codx-label
                 class="fw-bold"
-                default="Phân loại"
+                default="Sức chứa(người)"
                 fiedName="Ranking"
+                [formModel]="dialog.formModel"
               >
               </codx-label>
               <codx-input
-                type="valuelist"
-                name="valuelist"
-                ngDefaultControl
-                [crrValue]="dialogRoom.value.ranking"
-                refValue="EP005"
+                type="text"
+                ControlName="ranking"
+                [Group]="dialogRoom"
                 field="ranking"
                 (valueChange)="valueChange($event)"
               >
@@ -325,15 +115,19 @@
           </div>
           <div class="row mb-4">
             <div class="col-8">
-              <codx-label class="fw-bold" default="Nguồn" fiedName="Category">
+              <codx-label
+                class="fw-bold"
+                default="Vị trí"
+                fiedName="Location"
+                [formModel]="dialog.formModel"
+              >
               </codx-label>
               <codx-input
-                type="valuelist"
-                name="valuelist"
+                type="combobox"
+                name="combobox"
                 ngDefaultControl
-                [crrValue]="dialogRoom.value.category"
-                refValue="VL005"
-                field="category"
+                [crrValue]="dialogRoom.value.location"
+                field="location"
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
@@ -342,16 +136,19 @@
             <!--end::Col-->
             <!--begin::Col-->
             <div class="col-4">
-              <codx-label class="fw-bold" default="Đơn vị" fiedName="CompanyID">
+              <codx-label
+                class="fw-bold"
+                default="Đơn vị"
+                fiedName="CompanyID"
+                [formModel]="dialog.formModel"
+              >
               </codx-label>
               <codx-input
-                service="EP"
                 type="combobox"
                 name="combobox"
-                crrValue=""
+                [crrValue]="dialogRoom.value.companies"
                 ngDefaultControl
                 refValue="Companies"
-                [loadFull]="true"
                 field="companyID"
                 (valueChange)="valueChange($event)"
               >
@@ -365,54 +162,32 @@
           <div class="row mb-4">
             <!--begin::Col-->
             <div class="w-100">
-              <codx-label class="fw-bold" default="Tài xế" fiedName="LinkID">
+              <codx-label
+                class="fw-bold"
+                default="Người quản lí"
+                fiedName="Owner"
+                [formModel]="dialog.formModel"
+              >
               </codx-label>
-              <!-- <codx-input
-                service="EP"
+              <codx-input
                 type="combobox"
                 name="combobox"
-                [crrValue]="dialogRoom.value.linkID"
+                [crrValue]="dialogRoom.value.owner"
                 ngDefaultControl
-                refValue="EP_Rooms"
-                [loadFull]="true"
-                field="LinkID"
+                refValue="Users"
+                field="owner"
                 (valueChange)="valueChange($event)"
               >
-              </codx-input> -->
+              </codx-input>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-12">
               <codx-label
-                class="fw-bold"
-                default="Người điều phối"
-                fiedName="Owner"
-              >
-              </codx-label>
-              <div class="position-relative">
-                <codx-input
-                  service="AD"
-                  type="combobox"
-                  name="combobox"
-                  ngDefaultControl
-                  [loadFull]="true"
-                  [crrValue]="[dialogRoom.value.owner]"
-                  field="owner"
-                  [refValue]="cacheGridViewSetup.Owner"
-                >
-                </codx-input>
-                <div
-                  class="position-absolute translate-middle-y top-50 end-0 me-3"
-                >
-                  <span class="icon-person_pin_circle"> </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-12">
-              <codx-label default="Mô tả" fiedName="Note"></codx-label>
-              <!-- <codx-label default="Mô tả" class="fs-5 fw-bold mb-2"></codx-label> -->
+                default="Mô tả"
+                fiedName="Note"
+                [formModel]="dialog.formModel"
+              ></codx-label>
               <codx-input
                 type="textarea"
                 class="test-textarea"

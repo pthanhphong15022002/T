@@ -81,7 +81,19 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       this.vllDevices = res.datas;
     });
   }
-  clickMF(evt?: any, data?: any) {}
+
+  clickMF(evt?: any, data?: any) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
+    }
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
