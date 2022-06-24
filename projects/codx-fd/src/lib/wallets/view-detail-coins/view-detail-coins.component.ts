@@ -53,7 +53,6 @@ export class ViewDetailCoinsComponent implements OnInit {
   constructor(
     private changedr: ChangeDetectorRef,
     private layoutService: LayoutService,
-    private authStore: AuthStore,
     private location: Location,
     private route: ActivatedRoute,
   ) {
