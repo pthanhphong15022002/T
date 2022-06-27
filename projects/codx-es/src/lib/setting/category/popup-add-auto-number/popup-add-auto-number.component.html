@@ -3,7 +3,7 @@
   <ng-template popup add #bodyPopup>
     <div class="form-group mt-3">
       <codx-label fiedName="AutoNoCode" default="Định dạng đánh số tự động" formName="AutoNumbers"
-        gridViewName="grvAutoNumbers">
+        gridViewName="grvAutoNumbers" [formModel]="formModel">
       </codx-label>
       <div class="d-flex">
         <div class="w-100 me-2">
@@ -26,7 +26,7 @@
         <codx-label fiedName="StringFormat" [formModel]="dialog.formModel" default="Định dạng số tự động">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.stringFormat"
-          refValue="L0089" field="stringFormat" (valueChange)="valueChange($event)">
+          [refValue]="cbxName['StringFormat']" field="stringFormat" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6">
@@ -44,20 +44,21 @@
         <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
         </codx-label>
         <codx-input type="text" name="text" ngDefaultControl ControlName="fixedString" [Group]="dialogAutoNum"
-          field="fixedString">
+          field="fixedString" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-3">
         <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="text" name="text" ngDefaultControl ControlName="separator" [Group]="dialogAutoNum">
+        <codx-input type="text" name="text" ngDefaultControl ControlName="separator" [Group]="dialogAutoNum"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-3">
         <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.dateFormat"
-          refValue="L0088" field="dateFormat" (valueChange)="valueChange($event)">
+          [refValue]="cbxName['DateFormat']" field="dateFormat" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
@@ -73,7 +74,7 @@
         <codx-label fiedName="Interval" [formModel]="dialog.formModel" default="Chu kỳ reset ">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAutoNum.value.interval"
-          refValue="" field="interval" (valueChange)="valueChange($event)">
+          [refValue]="cbxName['Interval']" field="interval" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>

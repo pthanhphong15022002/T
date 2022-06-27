@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AuthStore,
   CacheService,
@@ -7,6 +8,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
   selector: 'lib-popup-add-auto-number',
@@ -19,6 +21,14 @@ export class PopupAddAutoNumberComponent implements OnInit {
   isAfterRender = false;
   formModel: FormModel;
   formModelData: FormModel;
+  autoNoCode;
+  lastNumber = '';
+
+  cbxName;
+  vllStringFormat;
+  vllDateFormat;
+
+  isAdd: boolean = true;
 
   headerText = 'Thiết lập số tự động';
   subHeaderText = '';
@@ -27,11 +37,14 @@ export class PopupAddAutoNumberComponent implements OnInit {
     private auth: AuthStore,
     private cache: CacheService,
     private fb: FormBuilder,
+    private esService: CodxEsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formModelData = data?.data;
+    this.formModelData = data?.data[0];
+    this.autoNoCode = data?.data[1];
+    this.isAdd = data?.data[2];
   }
 
   ngOnInit(): void {
@@ -39,63 +52,72 @@ export class PopupAddAutoNumberComponent implements OnInit {
   }
 
   initForm() {
-    this.cache
-      .gridViewSetup('AutoNumbers', 'grvAutoNumbers')
-      .subscribe((gv) => {
-        var model = {};
-        if (gv) {
-          const user = this.auth.get();
-          for (const key in gv) {
-            var b = false;
-            if (Object.prototype.hasOwnProperty.call(gv, key)) {
-              const element = gv[key];
-              element.fieldName =
-                element.fieldName.charAt(0).toLowerCase() +
-                element.fieldName.slice(1);
-              model[element.fieldName] = [];
+    this.formModel = new FormModel();
+    this.formModel.entityName = 'AD_AutoNumbers';
+    this.formModel.formName = 'AutoNumbers';
+    this.formModel.gridViewName = 'grvAutoNumbers';
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          console.log(res);
 
-              if (element.fieldName == 'owner') {
-                model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
-                model[element.fieldName].push(new Date());
-              } else if (element.fieldName == 'stop') {
-                model[element.fieldName].push(false);
-              } else if (element.fieldName == 'orgUnitID') {
-                model[element.fieldName].push(user['buid']);
-              } else if (
-                element.dataType == 'Decimal' ||
-                element.dataType == 'Int'
-              ) {
-                model[element.fieldName].push(0);
-              } else if (
-                element.dataType == 'Bool' ||
-                element.dataType == 'Boolean'
-              )
-                model[element.fieldName].push(false);
-              else if (element.fieldName == 'createdBy') {
-                model[element.fieldName].push(user.userID);
-              } else {
-                model[element.fieldName].push(null);
-              }
-
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(
-              //     Validators.compose([Validators.required])
-              //   );
-              // } else {
-              //   model[element.fieldName].push(Validators.compose([]));
-              // }
-            }
-          }
-          this.dialogAutoNum = this.fb.group(model, { updateOn: 'blur' });
+          this.dialogAutoNum = res;
           this.isAfterRender = true;
-          console.log(this.dialogAutoNum);
+        }
+      });
+
+    // this.cbxName = this.esService.getComboboxName1(
+    //   this.formModel.formName,
+    //   this.formModel.gridViewName
+    // );
+    // console.log('cbxName', this.cbxName);
+
+    // console.log(this.cbxName.DateFormat);
+
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          debugger;
+          this.cbxName = res;
+          console.log('cbxName', this.cbxName);
+          let obj = JSON.parse(JSON.stringify(res));
+          console.log(obj);
+
+          console.log('cbxName', this.cbxName['StringFormat']);
+
+          this.cache
+            .valueList(this.cbxName['DateFormat'])
+            .subscribe((vllDFormat) => {
+              this.vllDateFormat = vllDFormat.datas;
+              console.log(this.vllDateFormat);
+            });
+
+          this.cache
+            .valueList(this.cbxName['StringFormat'])
+            .subscribe((vllSFormat) => {
+              this.vllStringFormat = vllSFormat.datas;
+              console.log(this.vllStringFormat);
+            });
         }
       });
   }
 
-  valueChange(event) {}
+  valueChange(event: any) {
+    if (event?.field) {
+      if (event?.data === Object(event?.data))
+        this.dialogAutoNum.patchValue({ [event['field']]: event.data.value });
+      else this.dialogAutoNum.patchValue({ [event['field']]: event.data });
+    }
+  }
 
-  onSaveForm() {}
+  onSaveForm() {
+    if (this.dialogAutoNum.invalid == true) {
+      return;
+    }
+
+    let res = this.esService.addEditAutoNumbers(this.dialogAutoNum, this.isAdd);
+    console.log('result', res);
+  }
 }
