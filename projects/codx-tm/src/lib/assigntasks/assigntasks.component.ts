@@ -346,9 +346,42 @@ export class AssignTasksComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
-      .subscribe();
+    if (data.status == 9) {
+      this.notiService.notifyCode('TM001');
+      return;
+    }
+    var isCanDelete = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '1') {
+              isCanDelete = false;
+              return;
+            }
+          });
+          if (!isCanDelete) {
+            this.notiService.notifyCode('TM001');
+          } else {
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+                if (res[0]) {
+                  this.notiService.notifyCode('TM004');
+                }
+              });
+          }
+        }
+      });
   }
   sendemail(data){
     
