@@ -12,15 +12,19 @@ import { SelectweekComponent } from './components/selectweek/selectweek.componen
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
+import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
+import { CalendarDateComponent } from './components/calendardate/calendardate.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
+  ThumbnailComponent,
   BreadcumbComponent,
   SelectweekComponent,
   ViewFileDialogComponent,
   CodxTabsComponent,
   ImageGridComponent,
+  CalendarDateComponent
 ];
 
 @NgModule({

@@ -1,0 +1,130 @@
+<codx-views #viewBase  [entityName]="'OD_Dispatches'" [views]="views" [assemblyName]="'OD'" 
+[className]="'DispatchesBusiness'" [autoLoad]="false">
+</codx-views>
+
+<ng-template #panelLeftRef>
+<div class="home-container">
+  <div class="row">
+    <!-- <button (click)="popup($event)" class="btn btn-sm btn-success">thêm file 2</button>
+    <attachment #attachment objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> -->
+    <div class="col-12">
+      <div class="card bg-white">
+        <div class="row">
+          <div class="col-9">
+            <div class="metro-task">
+              <div (click)="ChangeData('1', '')" class="cursor-pointer metro-item bg-primary">
+                <div class="text-white font-size-sm">Chưa xử lý</div>
+                <div class="text-white font-weight-bold task-number">{{this.CountByStatus("1")}}</div>
+              </div>
+              <div (click)="ChangeData('4', '')" class="cursor-pointer metro-item bg-info">
+                <div class="text-white font-size-sm">Hoãn lại</div>
+                <div class="text-white font-weight-bold task-number">{{this.CountByStatus("4")}}</div>
+              </div>
+              <div (click)="ChangeData('1', 'overdate')" class="cursor-pointer metro-item bg-warning">
+                <div class="text-white font-size-sm">Quá hạn</div>
+                <div class="text-white font-weight-bold task-number">{{this.CountByOverDate()}}</div>
+              </div>
+              <div (click)="ChangeData('1', 'urgency')" class="cursor-pointer metro-item bg-danger">
+                <div class="text-white font-size-sm">Khẩn cấp</div>
+                <div class="text-white font-weight-bold task-number">{{this.CountByAmergency()}}</div>
+              </div>
+            </div>  
+          </div> 
+          <div class="col-3 od-calendar">
+            <div class="float-end cursor-pointer"> 
+              <calendardate (dateChanged)="dateChangeEvent($event)"></calendardate>
+            </div>
+            <!-- <ejs-calendar #calendar (navigated)="onLoadDate($event)" start='month' depth='month'
+              cssClass="width-calendar" class='e-customStyle' title=""> 
+            </ejs-calendar>  -->
+          </div>
+        </div>          
+      </div>
+      <div class="card bg-white h-60">
+        <div class="row">
+          <div class="col-6">    
+              <div class="chartTop">{{this.title1}}</div>       
+              <ejs-chart #chartcontainer1 style='display:block;' [chartArea]='chartArea1' [height]="height" [width]='width' align='center' id='chartcontainer1' [primaryXAxis]='primaryXAxis1' [legendSettings]="legendSettings1"  (selectionComplete)="onPointClick($event, 'chart1')" (pointClick)="onPointClick($event, 'chart1')"
+                [primaryYAxis]='primaryYAxis1' [tooltip]='tooltip1' (loaded)='loaded($event)' (load)='load($event)'>
+                <e-series-collection *ngIf="data2 && data2.length > 0">                                   
+                  <e-series *ngFor="let row of data2; let i = index" [dataSource]='row.data'  type='Line' xName='x' yName='y' [name]='row.name' width='2'> </e-series>
+                </e-series-collection>
+              </ejs-chart>             
+          </div>
+
+          <!-- <div class="col-6">    
+            <div class="chartTop">{{this.title1}}</div>       
+            <ejs-chart #chartcontainer1 style='display:block;' [chartArea]='chartArea1' [height]="height" [width]='width' align='center' id='chartcontainer1' [primaryXAxis]='primaryXAxis1' [legendSettings]="legendSettings1"  (selectionComplete)="onPointClick($event, 'chart1')" (pointClick)="onPointClick($event, 'chart1')"
+              [primaryYAxis]='primaryYAxis1' [tooltip]='tooltip1' (loaded)='loaded($event)' (load)='load($event)'>
+              <e-series-collection *ngIf="data2 && data2.length > 0">                                   
+                <e-series *ngFor="let row of data2; let i = index" [dataSource]='row.data'  type='Line' xName='x' yName='y' [name]='row.name' width='2'> </e-series>
+              </e-series-collection>
+            </ejs-chart>             
+          </div> -->
+          <div class="col-4">            
+            <div class="chartBottom">
+              <div class="chartTop2">{{this.title2}}</div>
+              <!-- <div *ngIf="percent != null && percent.length > 0">
+                <div *ngFor="let x of percent; let i=index" title="{{chartText[i]}}" (click)="onChartLineClick(chartText[i])" class="w-100 float-start">
+                  <div [class]="ChartClass(i+1)" [ngStyle]="{'width': percent[i]}">{{chartText[i]}}</div>                 
+                </div>                                
+              </div>  -->
+              <ejs-chart  (axisLabelRender)='axisLabelRender($event)' #chartcontainer2 (selectionComplete)="onPointClick($event, 'chart2')" (pointClick)="onPointClick($event, 'chart2')" style='display:block;' [chartArea]='chartArea2' [height]="height2" [width]='width' align='center' id='chartcontainer2' [primaryXAxis]='primaryXAxis2' [primaryYAxis]='primaryYAxis2' 
+              [tooltip]='tooltip2' (pointRender)='pointRender($event)' [legendSettings]='legendSettings2' (load)='load($event)'>
+                <e-series-collection>
+                    <e-series [dataSource]='this.odService.DataChart7' type='Bar' name='Users' xName='x' yName='y' height=10 width=10 tooltipMappingName='country' [marker]='marker2'> </e-series>
+                </e-series-collection>
+              </ejs-chart>
+            </div>              
+          </div>
+                          
+          <div class="col-2">
+            <div [class]="GetTabSelected('1')" (click)="Tabclick('1')">
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <span class="icon-doc_out text-primary fs-1 me-2"></span>
+                    <span class="fs-1 fw-bold text-primary">{{this.TotalCVDen()}}</span>
+                </div>
+                <div class="fw-bold text-primary text-center">Công văn đến</div>
+            </div> 
+            <div [class]="GetTabSelected('2')" (click)="Tabclick('2')">
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <span class="icon-doc_in text-success fs-1 me-2"></span>
+                    <span class="fs-1 fw-bold text-success">{{this.TotalCVDi()}}</span>
+                </div>
+                <div class="fw-bold text-success text-center">Công văn đi</div>
+            </div>
+            <!-- <div class="tm-box box-warning w-200px p-6"> -->
+            <div [class]="GetTabSelected('3')" (click)="Tabclick('3')">
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <span class="icon-developer_mode text-warning fs-1 me-2"></span>
+                    <span class="fs-1 fw-bold text-warning">{{this.TotalCVNB()}}</span>
+                </div>
+                <div class="fw-bold text-warning text-center">Công văn nội bộ</div>
+            </div>       
+          </div>            
+        </div>
+      </div>
+      <div class="card bg-white">
+        <div class="row">
+          <div class="col-3">
+<<<<<<< HEAD
+            <od-charts type="8" [item]="odService.DataChart8" center_title="chart8"></od-charts>      
+=======
+            <od-charts type="8"  [item]="odService.DataChart8" center_title="chart8"></od-charts>      
+>>>>>>> dc7d5166549742e42b5a21690ea6460efed8fa3b
+          </div> 
+          <div class="col-3">
+            <od-charts type="9" [item]="odService.DataChart9"  center_title="chart9"></od-charts>      
+          </div>
+          <div class="col-3">
+            <od-charts type="10" [item]="odService.DataChart10" center_title="chart10"></od-charts>      
+          </div>
+          <div class="col-3">
+            <od-charts type="11" [item]="odService.DataChart11"  center_title="chart11"></od-charts>      
+          </div>
+        </div>
+      </div>
+    </div>   
+  </div>  
+</div>
+</ng-template>

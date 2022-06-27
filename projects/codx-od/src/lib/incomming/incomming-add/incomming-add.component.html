@@ -1,0 +1,306 @@
+<form [formGroup]="dispatchForm"  class="h-100">
+  <codx-form 
+    [headerText]="headerText" 
+    [subHeader]="subHeader" 
+    [body]="body" 
+    [footer]="footer" 
+    [dialog]="dialog" 
+    [formModel]="formModel"
+  >
+  </codx-form>
+</form>
+<ng-template #subHeader>
+  <div class="d-flex justify-content-end my-2">
+    <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()"> <!--  -->
+      <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+    </span>
+    <span class="btn btn-sm btn-warning btn-pill ms-2">
+      <i class="icon-scanner icon-16 me-2"></i>Scan
+    </span>
+  </div>
+  <div>
+  </div>
+</ng-template>
+<ng-template popup adde #body>
+  <div class="mb-3">
+    <attachment 
+    #attachment 
+    [objectType]="formModel?.entityName"
+    [objectId]="''"
+    hideBtnSave="1"  
+    hideFolder="1" 
+    hideUploadBtn="1"  
+    hideDes="1"
+    [functionID]="formModel?.funcID"
+    (fileAdded)="fileAdded($event)"
+    (fileCount)="getfileCount($event)"
+  >
+  </attachment>
+  </div>
+
+<ng-container *ngIf="files">
+  <div class="mb-5">
+    <thumbnail
+    [data]="getJSONString(files)"
+  ></thumbnail>
+  </div>
+</ng-container>
+  <!--  -->
+<!--  <ng-container *ngIf="dfDis.File">
+    <thumbnail  [data]="getJSONString(dfDis['File'])"></thumbnail>
+    <div class="d-flex align-items-center  mt-8 mb-8" *ngFor="let item of dfDis.File">
+      <img class="w-20px me-3" src="{{getExtension(item.extension)}}" />
+      <div class="d-flex flex-column flex-grow-1">
+        <span class="text-dark fs-6">{{item?.fileName}} ({{formatBytes(item?.fileSize)}})</span>
+      </div>
+    </div> 
+  </ng-container> -->
+  <div class="fw-bold fs-6 text-primary">THÔNG TIN VĂN BẢN</div>
+  <div class="tab-horizone mt-6">
+    <ul ngbNav #nav1="ngbNav" [(activeId)]="activeAngecy" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink (click)="hideDept()">Đơn vị</a>
+        <ng-template ngbNavContent>
+          <div class="d-flex align-items-center">
+            <codx-input
+              type="combobox"
+              placeholder="Nhập đơn vị"
+              refValue="Agencies"
+              field="agencyName"
+              style="width:100%"
+              [crrValue]="this.dispatch?.agencyID != this.dispatch?.agencyName ? this.dispatch?.agencyID : this.dispatch?.agencyName"
+              (valueChange)="changeValueAgency($event)"
+              [multiple]="false"
+            >
+            </codx-input>
+           
+          <!--   <codx-input
+            placeholder="Nhập đơn vị"
+            style="width:100%"
+            type="text"
+            [crrValue]="this.dispatch?.agencyName"
+            (valueChange)="changeValueAgencyText($event)"
+          >
+          </codx-input> -->
+            <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')">Add</span>
+          </div>
+          <!-- <p>Chi tiết</p> -->
+          <!-- <attachment  objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001" ></attachment> -->
+        </ng-template>
+      </li>
+      <li *ngIf="showAgency" [ngbNavItem]="2">
+        <a ngbNavLink>Phòng ban</a>
+        <ng-template ngbNavContent>
+          <div class="d-flex align-items-center">
+            <codx-combobox
+              refValue="AgencyDepts"
+              type="combobox"  
+              placeholder="Phòng ban"
+              style="width:100%"
+              (valueChange)="changeValueDept($event)"
+              [pageSize]="'20'"
+              
+            > 
+          <!--  [predicate]="'parentID@0'"
+            [dataValue]="idAgency" -->
+            </codx-combobox>
+            <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')">Add</span>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav1"></div>
+  </div>
+
+  <!-- <div class="mt-2">
+    <div class="d-flex align-items-center btn-group">
+      <div class="p-2"><span class="btn-link active" (click)="changeFormAgency(1)">Đơn vị</span></div>
+      <div class="p-2" *ngIf="showAgency"><span class="btn-link" (click)="changeFormAgency(9)">Phòng ban</span></div>
+    </div>
+    <div class="form-group mt-2 d-flex align-items-center">
+      <codx-input
+        refValue="Agencies"
+        type="combobox"  
+        placeholder="Chọn đơn vị"
+        ngDefaultControl
+        style="width:100%"
+        >
+      </codx-input>
+        <span class="btn btn-primary ms-3" (click)="openFormAgency()">Add</span>
+        <ejs-combobox *ngIf="!showCbxAgency" id='games' #sample [dataSource]='lstAgency'  [fields]='fieldAgency' [placeholder]="'Chọn đơn vị'" (change)="changeValueAgency($event)" style="width:100%"></ejs-combobox>
+        <ejs-combobox *ngIf="showCbxAgency"  id='games' #sample [dataSource]='lstDept'  [fields]='fieldAgency' [placeholder]="'Chọn phòng ban'" (change)="changeValueDept($event)" style="width:100%"></ejs-combobox>
+        <span class="btn btn-primary ms-3" (click)="openFormAgency()">Add</span>
+      </div>
+      
+  </div>
+  <div class="form-group mt-3">
+    <label>Đơn vị | Phòng ban</label>
+    <div class="d-flex flex-stack">
+      <div class="w-100">
+        <codx-combobox 
+            service="OD" 
+            assemblyName="ERM.Business.OD"
+            className="DispatchesBusiness"  
+            method=""
+            name="combobox"  
+            placeholder="Default combobox"
+            ngDefaultControl
+            refValue="<ComboboxName>"
+            field="<FieldValue>"
+            [pageSize]="5"
+            [allowFilter]=true>
+        </codx-combobox>
+      </div>
+      <span class="btn btn-primary ms-3">Add</span>
+    </div>
+  </div>  -->
+  <div class="form-group row mt-3">
+    <div class="col-6">
+      <codx-label default='Phân loại'></codx-label>
+      <codx-valuelist 
+        type="valuelist" 
+        [placeholder]="'Chọn phân loại'" 
+        [name]="gridViewSetup['Category']['referedValue']" [value]="dispatch?.category"  (valueChange)="changeValueCategory($event)"></codx-valuelist>
+    </div>
+    <div class="col-6">
+      <codx-label default='Nguồn'></codx-label>
+      <codx-valuelist [placeholder]="'Chọn nguồn'" [name]="gridViewSetup['Source']['referedValue']" [value]="dispatch?.source"  (valueChange)="changeValueSource($event)"></codx-valuelist>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="col-4">
+      <codx-label default='Số văn bản'></codx-label>
+      <codx-input type="text" class="form-control" [crrValue]="dispatch?.refNo" (valueChange)="changeValueRefNo($event)" ></codx-input>
+    </div>
+    <div class="col-4">
+      <codx-label default='Ngày văn bản'></codx-label>
+      <codx-input 
+        type="dateTime" 
+        [crrValue]="dispatch?.refDate"  
+        format="d" 
+        field="date"
+        (valueChange)="changeValueRefDate($event)" >
+      </codx-input>
+    </div>
+    <div class="col-2">
+      <codx-label default='Số trang'></codx-label>
+      <codx-input type="number" [crrValue]="dispatch?.pages"  [min]="0" [showSpinButton]="false" class="form-control" (valueChange)="changeValuePage($event)" ></codx-input>
+    </div>
+    <div class="col-2">
+      <codx-label default='Số bản'></codx-label>
+      <codx-input type="number" [crrValue]="dispatch?.copies" [min]="0" [showSpinButton]="false" class="form-control" (valueChange)="changeValueCopies($event)" ></codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label default='Trích yếu'></codx-label>
+    <codx-input 
+      type="textarea" 
+      class="w-100" 
+      [crrValue]="dispatch?.title"
+      (valueChange)="changeValueTags($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="col-6">
+      <codx-label default='Mức độ khẩn'></codx-label>
+      <codx-valuelist [placeholder]="'Chọn mức độ khẩn'" [value]="dispatch.urgency" [name]="gridViewSetup['Urgency']['referedValue']" (valueChange)="changeValueUrgency($event)" ></codx-valuelist>
+    </div>
+    <div class="col-6">
+      <codx-label default='Cấp bảo mật'></codx-label>
+      <codx-valuelist [placeholder]="'Chọn cấp bảo mật'" [value]="dispatch.security" [name]="gridViewSetup['Security']['referedValue']" (valueChange)="changeValueSecurity($event)" ></codx-valuelist>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label default='Nơi nhận'></codx-label>
+    <div class="d-flex">
+      <codx-input
+        #DeptID
+        type="combobox"
+        [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
+        placeholder="Chọn nơi nhận"
+        style="width:100%"
+        [multiple]="false"
+        [crrValue]="dispatch?.deptID"
+        (valueChange)="changeValueBUID($event, DeptID)"
+      >
+      </codx-input>
+      <codx-input
+        type="Combobox"
+        name="combobox"
+        [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
+        refType="P"
+        field="popup"
+        (valueChange)="changeValueBUID($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="col-6">
+      <codx-label default='Hình thức nhận'></codx-label>
+      <codx-valuelist 
+        [placeholder]="'Chọn hình thức nhận'" 
+        [name]="gridViewSetup!=null?gridViewSetup['SendMode']['referedValue']:null" 
+        (valueChange)="changeValueSendMode($event)" 
+        [value]="dispatch?.sendMode"
+        ></codx-valuelist>
+    </div>
+    <div class="col-3">
+      <codx-label default='Ngày nhận'></codx-label>
+      <codx-input 
+        type="dateTime" 
+        format="d" 
+        field="date"
+        (valueChange)="changeValueDispatchOn($event)" 
+        [crrValue]="dispatch?.dispatchOn"
+      >
+    </codx-input>
+    </div>
+    <div class="col-3">
+      <codx-label default='Thời hạn xử lý'></codx-label>
+      <codx-input 
+        type="dateTime" 
+        format="d" 
+        field="date"
+        (valueChange)="changeValueDeadLine($event)"
+        [crrValue]="dispatch?.deadline"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label default='Người chịu trách nhiệm'></codx-label>
+    <div class="d-flex">
+      <codx-input
+        [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
+        placeholder="Chọn tài khoản"
+        type="combobox"
+        style="width:100%"
+        (valueChange)="changeValueOwner($event)"
+        [crrValue]="dispatch?.owner"
+      >
+      </codx-input>
+      <codx-input
+        type="Combobox"
+        name="combobox"
+        [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
+        refType="P"
+        field="popup"
+        (valueChange)="changeValueBUID($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+  <button class="btn btn-primary" (click)="onSaveDispatch()">
+      Lưu
+    </button>
+  </div>
+</ng-template>
+<ng-template #tmpagency let-dialog>
+  <app-od-agency [dialog]="dialog" [data]="data"></app-od-agency>
+</ng-template>
+<app-viewfiledialog></app-viewfiledialog>

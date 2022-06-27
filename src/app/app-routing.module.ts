@@ -70,6 +70,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-mwp/src/lib/codx-mwp.module').then((m) => m.CodxMwpModule),
       },
+      {
+        path: 'od',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-od/src/lib/codx-od.module').then((m) => m.CodxODModule),
+      }, 
       { path: '**', redirectTo: 'error/404' }
     ]
   },
