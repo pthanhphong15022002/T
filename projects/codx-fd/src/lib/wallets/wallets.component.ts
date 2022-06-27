@@ -178,6 +178,7 @@ export class WalletsComponent implements OnInit {
   tenant: string;
 
   @ViewChild("listview") listview;
+  @ViewChild("listview") listView: CodxListviewComponent;
   @ViewChild("subheader") subheader;
   @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
@@ -194,7 +195,7 @@ export class WalletsComponent implements OnInit {
     private tenantStore: TenantStore,
     private changedr: ChangeDetectorRef,
     private cache: CacheService,
-    private codxService: CodxService,
+    public codxService: CodxService,
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
 
@@ -227,7 +228,6 @@ export class WalletsComponent implements OnInit {
       this.funcID = param["funcID"]
       this.changedr.detectChanges();
     });
-
     this.setPredicate();
   }
 
@@ -243,6 +243,7 @@ export class WalletsComponent implements OnInit {
       },
     ]
     this.userPermission = this.viewbase.userPermission;
+    this.listView.dataService.dataObj = 'Coins';
     this.changedr.detectChanges();
   }
 
@@ -267,7 +268,6 @@ export class WalletsComponent implements OnInit {
           this.dt.detectChanges();
         }
       });
-
   }
 
   maxTotal = 0;
@@ -606,6 +606,6 @@ export class WalletsComponent implements OnInit {
   }
 
   openViewDetailCoins(userID) {
-    this.codxService.navigate('', `fd/detailcoins/FDR021`, { userID: userID });
+    this.codxService.navigate('FDR021', '', { userID: userID });
   }
 }

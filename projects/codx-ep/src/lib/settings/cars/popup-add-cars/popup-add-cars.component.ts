@@ -9,11 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import {
-  CacheService,
-  DialogData,
-  DialogRef,
-} from 'codx-core';
+import { CacheService, DialogData, DialogRef } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -28,12 +24,12 @@ export class PopupAddCarsComponent implements OnInit {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   cacheGridViewSetup: any;
+  CbxName: any;
   dialogCar: FormGroup;
   dialog: any;
 
   constructor(
     private cacheSv: CacheService,
-    private cr: ChangeDetectorRef,
     private bookingService: CodxEpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -47,23 +43,15 @@ export class PopupAddCarsComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    this.cacheSv.valueList('EPS22').subscribe((res) => {
-      this.vllDevices = res.datas;
-    });
-
-    this.bookingService.getComboboxName('Cars', 'grvCars').then((res) => {
-      this.cacheGridViewSetup = res;
-    });
-  }
-
-  setdata(data: any) {
-    this.isAdd = false;
-    if (!data.recID) {
-      this.isAdd = true;
-      this.initForm();
-    } else {
-      this.dialogCar.patchValue(data);
-    }
+    this.bookingService
+      .getComboboxName(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        this.CbxName = res;
+        console.log('cbx', this.CbxName);
+      });
   }
 
   initForm() {
@@ -71,6 +59,11 @@ export class PopupAddCarsComponent implements OnInit {
       .gridViewSetup('Resources', 'EP_Resources')
       .subscribe((item) => {
         this.editResources = item;
+        this.dialogCar.patchValue({
+          ranking: '1',
+          category: '1',
+          owner: ''
+        });
       });
 
     this.bookingService
@@ -82,7 +75,6 @@ export class PopupAddCarsComponent implements OnInit {
         }
         this.isAfterRender = true;
       });
-    // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
   }
 
   valueChange(event: any) {
@@ -107,9 +99,13 @@ export class PopupAddCarsComponent implements OnInit {
     return true;
   }
 
-  valueCbxChange(evt: any) {
-    if (evt.length > 0) {
-      this.dialogCar.patchValue({ owner: evt[0] });
+  valueCbxChange(event: any) {
+    if (event?.field != null) {
+      if (event.data instanceof Object) {
+        this.dialogCar.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.dialogCar.patchValue({ [event['field']]: event.data });
+      }
     }
   }
 

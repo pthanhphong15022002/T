@@ -44,10 +44,8 @@
           </ng-template>
           <ng-template #content class="ms-10">
             <div class="form-group">
-              <label>
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
                 </codx-label>
-              </label>
               <codx-input field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
                 (valueChange)="valueChange($event)">
               </codx-input>
@@ -156,15 +154,12 @@
                 <div class="fw-bold fs-6 text-primary">Tài liệu đính kèm</div>
               </div>
               <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">Thêm file</button>
-              <ng-template>
-                <attachment #attachment type="center" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"
-                  (fileAdded)="fileAdded($event)"></attachment>
-              </ng-template>
-
             </div>
-            add attachfile cho nay
+            <!-- add attachfile cho nay -->
             <div class="d-flex align-items-center file-item mt-5">
-              <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
+              <attachment #attachment  [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  [functionID]="functionID" (fileAdded)="fileAdded($event)"></attachment> 
+
+              <!-- <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <span class="text-dark">Bang-chamcongthang6-V2.doc</span>
                 <div class="d-flex mt-1">
@@ -198,7 +193,7 @@
                     </div>
                   </a>
                 </div>
-              </div>
+              </div> -->
             </div>
           </ng-template>
         </e-tabitem>

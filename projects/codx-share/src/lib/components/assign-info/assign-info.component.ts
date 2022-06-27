@@ -29,7 +29,7 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachment') attachment:AttachmentComponent 
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -68,7 +68,6 @@ export class AssignInfoComponent implements OnInit {
     };
     this.dialog = dialog;
     this.user = this.authStore.get();
-    // this.functionID = this.activedRouter.snapshot.params['funcID'];
     this.functionID = this.dialog.formModel.funcID;
   }
 
@@ -100,7 +99,6 @@ export class AssignInfoComponent implements OnInit {
     //   });
     // }
     this.changeDetectorRef.detectChanges();
-    // this.viewBase.currentView.openSidebarRight();
   }
   openTask() {}
 
@@ -146,6 +144,7 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     this.convertToListTaskResources();
+    this.attachment.saveFiles() ;
     this.tmSv
       .saveAssign([
         this.task,
@@ -223,7 +222,12 @@ export class AssignInfoComponent implements OnInit {
     this.task.status = '1';
   }
 
-  fileAdded(e){
-
+  addFile(evt: any) {
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    ///chỗ này không bắt được data
+    console.log(e);
   }
 }

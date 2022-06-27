@@ -60,5 +60,6 @@
     </div>
 </ng-template>
 <ng-template #itemContent let-dataItem>
-    <read-more [content]="dataItem.content" [limit]="200" [completeWords]="true"></read-more>
+    <!-- <read-more [content]="dataItem.content" [limit]="200" [completeWords]="true"></read-more> -->
+    <span [innerHTML]="dataItem.content"></span>
 </ng-template>
