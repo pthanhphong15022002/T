@@ -108,18 +108,18 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
   ngOnChanges(changes: SimpleChanges): void {
   }
   onInit(): void {
-    alert(this.view.formModel.funcID)
     /*  this.routerActive.params
     .subscribe(params => {
       this.view.loaded = false;
       this.loadView();
     });
     //this.loadView(); */
+   /*  this.router.params.subscribe((params) => {
+      //this.lstDtDis = null;
+    }) */
     this.view.dataService.predicates = "Status=@0"
     this.view.dataService.dataValues = "1"
-    this.button = {
-      id: 'btnAdd',
-    };
+  
     /* this.options.Page = 0,
     this.options.PageLoading = false;
     this.options.PageSize = 10;
@@ -158,9 +158,9 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     this.codxService.getAutoNumber(this.view.formModel.funcID, "OD_Agencies", "AgencyID").subscribe((dt: any) => {
       this.objectIDFile = dt;
     });
-    this.autoLoad = true;
+    //this.autoLoad = true;
     this.lstDtDis = [];
-    this.autoLoad = false;
+    //this.autoLoad = false;
     this.detectorRef.detectChanges();
   }
 
@@ -201,14 +201,12 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
       },
     },
   ];
-  this.view.dataService.methodSave = 'SaveDispatchAsync';
-  this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-  this.loadView();
   this.button = {
     id: 'btnAdd',
   };
-    this.autoLoad = true;
-    this.detectorRef.detectChanges();
+  this.view.dataService.methodSave = 'SaveDispatchAsync';
+  this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
+  this.getGridViewSetup();
   }
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -240,7 +238,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
         if(x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
         else 
         {
-          debugger;
+          //debugger;
           this.view.dataService.update(x.event).subscribe();
           this.view.dataService.setDataSelected(x.event);
          // this.view.dataService.remove(x.event).subscribe();
@@ -498,7 +496,13 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
   clickChangeStatus(status: any) {
     this.view.dataService.predicates = "Status=@0"
     this.view.dataService.dataValues = status
-    this.view.dataService.load().subscribe();
+    this.view.dataService.load().subscribe(item=>{
+      if(item[0]) this.lstDtDis = this.getDtDis(item[0].recID)
+      else
+      {
+        this.lstDtDis = item[0];
+      }
+    });
   }
  
 

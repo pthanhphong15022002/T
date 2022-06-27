@@ -16,7 +16,7 @@ export class ExtendDeadlineComponent implements OnInit {
   @ViewChild("form") form : CodxFormComponent;
   dtExtendDeadline  = new extendDeadline();
   deadlineForm = new FormGroup({
-    extendOn: new FormControl(),
+    extendOn: new FormControl(''),
     reason : new FormControl()
   });
   constructor(
@@ -26,7 +26,7 @@ export class ExtendDeadlineComponent implements OnInit {
   { 
   }
   ngOnInit(): void {
-    console.log(this.data);
+    this.deadlineForm.get("extendOn").setValue(this.data?.deadline);
   }
   onSave()
   {
@@ -35,6 +35,7 @@ export class ExtendDeadlineComponent implements OnInit {
     this.odService.extendDeadLinee(this.deadlineForm.value).subscribe((item)=>{
       if(item.status == 0)
         this.dialog.close();
+        
       this.notifySvr.notify(item.message);
     })
   }

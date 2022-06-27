@@ -28,7 +28,7 @@ export class IncommingAddComponent implements OnInit {
   formModel : any;
   fileCount : number = 0;
   files: any;
-  odRecID: any;
+  hideThumb = false;
   dispatchForm = new FormGroup({
     agency: new FormControl(),
     title : new FormControl()
@@ -51,8 +51,6 @@ export class IncommingAddComponent implements OnInit {
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
     this.dispatch.status = '1';
-    this.dispatch.createdOn = new Date();
-
     //this.dialog.dataService.apiSave = (t, data) = this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'TestApiBool', this.data);
    /*  this.dialog.dataService.apiUpdate = this.api.execSv<any>(
       'TM',
@@ -65,22 +63,16 @@ export class IncommingAddComponent implements OnInit {
     this.headerText = this.data["headerText"];
     this.type = this.data["type"];
     this.formModel = this.data["formModel"];
-    if(this.type == "add")
-    {
-      this.dispatch.refDate = new Date();
-      this.dispatch.dispatchOn = new Date();
-    }
     if(this.type == "edit")
       {
         this.odService.getDetailDispatch(this.data.data.recID).subscribe(item=>{
           this.files = item.files;
-          if(this.files) this.fileCount = this.files.length
         })
       }
   }
 
-  fileAdded(event) { 
-    console.log(event);
+  fileAdded(event:any) { 
+    if(event?.data) this.hideThumb = true  
   }
 
  //Mở form thêm mới đơn vị / phòng ban
@@ -266,27 +258,12 @@ export class IncommingAddComponent implements OnInit {
     }
     if(this.type == "edit")
     {
-      this.dispatch.dispatchOn = new Date();
-      this.dispatch.refDate = new Date();
-      this.odService.updateDispatch(this.dispatch , false).subscribe((item) => {
+      let dltDis = true;
+      if(this.fileCount == 0) dltDis = false; 
+      this.odService.updateDispatch(this.dispatch , dltDis).subscribe((item) => {
         if (item.status == 0) {
-          this.odRecID = item.data.recID;
-          //this.listview.addHandler(item.data, true, "recID");
-          /* if(this.fileAdd!= undefined && this.fileAdd!= null && this.fileAdd.length >0)
-          {
-            this.fileAdd.forEach((elm)=>{
-              this.fileService.updateFileByObjectIDType(elm.objectId,item.data.recID,"OD_Dispatches").subscribe((item)=>{
-                //console.log(item);
-              })
-            })
-          }
-          this.fileAdd = null; 
-          
-          //this.dialog.dataService.add(item,0,true).subscribe();*/
-          //this.dialog.dataService.setDataSelected(item.data);
-          //this.dialog.dataService.setDataSelected(item.data);
-          //this.attachment.saveFiles();
-         
+          this.attachment.objectId = item.data.recID;
+          if(dltDis) this.attachment.saveFiles();
           this.dialog.close(item.data);
         }
         this.notifySvr.notify(item.message); 
