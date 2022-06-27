@@ -11,9 +11,6 @@ import { PopupAddComponent } from '../ownertasks/popup-add/popup-add.component';
 })
 export class SprintsComponent implements OnInit {
   @ViewChild('view') view!: ViewsComponent;
-  @ViewChild('panelLeftRef') panelLeft?: TemplateRef<any>;
-  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
-  @ViewChild('tmpRight') sidebarRight?: TemplateRef<any>;
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -25,8 +22,6 @@ export class SprintsComponent implements OnInit {
   dialog!: DialogRef;
   itemSelected: any;
   user: any
-  funcID: string
-  moreFunc
   constructor(
     private inject: Injector,
     private tmSv: CodxTMService,
@@ -37,8 +32,7 @@ export class SprintsComponent implements OnInit {
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
-    this.dataValue = this.user.userID
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.dataValue = this.user.userID;
   }
   ngOnInit(): void {
 

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DialogData } from 'codx-core';
+import { DialogData, DialogRef } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -18,31 +18,33 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class PopupSignatureComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
-  currentTab: number = 0;
+  currentTab: number = 1;
   dataFile: any = null;
   Signature1: any = null;
   Signature2: any = null;
   Stamp: any = null;
 
-  dialog: Dialog;
+  headerText = 'Chọn chữ kí';
 
+  dialog: DialogRef;
   dialogSignature: FormGroup;
 
   constructor(
     private cr: ChangeDetectorRef,
     @Optional() data?: DialogData,
-    @Optional() dialog?: Dialog
+    @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.dialogSignature = data?.data;
-    console.log('aaaaaaaaaaaaaaaaa', this.dialogSignature);
   }
 
   ngOnInit(): void {}
 
-  onSavePopup() {
+  onSaveForm() {
     this.attachment.onMultiFileSave(null);
   }
+
+  onSavePopup() {}
 
   fileAdded(event, currentTab) {
     switch (currentTab) {

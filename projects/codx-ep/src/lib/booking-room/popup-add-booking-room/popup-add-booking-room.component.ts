@@ -55,8 +55,14 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   selectDate = null;
   startTime: any = null;
   endTime: any = null;
+  startDate: any;
+  endDate: any;
   isFullDay = false;
-
+  resource!: any;
+  beginHour = 0;
+  beginMinute = 0;
+  endHour = 0;
+  endMinute = 0;
   public headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Người tham dự', iconCss: 'icon-person_add' },
@@ -64,7 +70,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
 
-  isAdd = true;
+  isAdd = false;
   data: any = {};
   dialog: any;
   isSaveSuccess = false;
@@ -75,17 +81,14 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     private notification: NotificationsService,
     private cfService: CallFuncService,
     private api: ApiHttpService,
+    private modalService: NgbModal,
     private callFuncService: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
-    console.log('dataaaaaaaaa', this.data);
-    // this.bookingService.getModelPage('EPT1').then((res) => {
-    //   if (res) this.modelPage = res;
-    //   console.log('constructor', this.modelPage);
-    // });
   }
   ngAfterViewInit(): void {
     if (this.dialog) {
@@ -134,14 +137,26 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
       .then((item) => {
         this.addEditForm = item;
         this.isAfterRender = true;
+        if (!this.isAdd) {
+          this.addEditForm && this.addEditForm.patchValue(this.data);
+          console.log(this.addEditForm.value);
+        }
       });
     this.link = null;
     this.selectDate = null;
     this.endTime = null;
     this.startTime = null;
   }
-
+  beforeSave(option: any) {
+    let itemData = this.addEditForm.value;
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
   onSaveForm() {
+    if (this.resource) {
+      console.log(this.resource);
+    }
     if (this.addEditForm.invalid == true) {
       return;
     }
@@ -178,66 +193,40 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
       });
       if (!this.addEditForm.value.resourceID) {
         this.addEditForm.value.resourceID =
-          '4ef9b480-d73c-11ec-b612-e454e8919646';
+          'd501dea4-e636-11ec-a4e6-8cec4b569fde';
       }
-      var date = new Date(this.addEditForm.value.startDate);
-      this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
-    this.dialog.dataService.dataSelected = this.addEditForm.value;
-    this.dialog.dataService.save().subscribe((res: any) => {
-      if (res) {
-        this.isSaveSuccess = true;
-      }
-      console.log(res);
-    });
-    // this.api
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.addEditForm.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     debugger;
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeForm();
-    //   });
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isSaveSuccess = true;
+        }
+      });
   }
 
   valueChange(event) {
     if (event?.field == 'day') {
-      this.isFullDay = event.data?.checked;
-      if (event.data?.checked == true) {
-        this.startTime = new Date();
-        this.startTime = new Date(
-          this.startTime.getFullYear(),
-          this.startTime.getMonth(),
-          this.startTime.getDate(),
-          0,
-          0,
-          0,
-          0
-        );
-        this.endTime = new Date(
-          this.startTime.getFullYear(),
-          this.startTime.getMonth(),
-          this.startTime.getDate(),
-          23,
-          59,
-          59,
-          59
-        );
-        this.setDate();
+      this.isFullDay = event.data;
+      if (this.isFullDay) {
+        this.startTime = '00:00';
+        this.endTime = '23:59';
       } else {
         this.endTime = null;
         this.startTime = null;
       }
     } else if (event?.field) {
-      if (event.data instanceof Object) {
-        this.addEditForm.patchValue({ [event['field']]: event.data.value });
+      if (event?.field === 'resourceID') {
+        this.addEditForm.patchValue({ resourceID: event.data[0] });
       } else {
-        this.addEditForm.patchValue({ [event['field']]: event.data });
+        if (event.data instanceof Object) {
+          this.addEditForm.patchValue({ [event['field']]: event.data.value });
+        } else {
+          this.addEditForm.patchValue({ [event['field']]: event.data });
+        }
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   closeForm() {
@@ -256,17 +245,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 300, 400);
-    // this.modalService
-    //   .open(this.popupDevice, { centered: true, size: 'md' })
-    //   .result.then(
-    //     (result) => {
-    //       this.lstDeviceRoom = JSON.parse(JSON.stringify(this.tmplstDevice));
-    //     },
-    //     (reason) => {
-    //       this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-    //     }
-    //   );
+    var dialog = this.callFuncService.openForm(template, '', 300, 430);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -281,57 +260,64 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   valueDateChange(event: any) {
-    this.selectDate = event.data;
+    this.selectDate = event.data.fromDate;
+    if (this.selectDate) {
+      this.addEditForm.patchValue({ bookingOn: this.selectDate });
+    }
+
     this.setDate();
   }
 
   valueStartTimeChange(event: any) {
-    this.startTime = event.value;
+    this.startTime = event.data.fromDate;
     this.isFullDay = false;
     this.setDate();
   }
 
   valueEndTimeChange(event: any) {
-    this.endTime = event.value;
+    this.endTime = event.data.toDate;
     this.isFullDay = false;
     this.setDate();
   }
 
   setDate() {
-    if (this.selectDate != null) {
-      if (this.startTime != null) {
-        let hour = this.startTime.getHours();
-        let minutes = this.startTime.getMinutes();
-        var startDate = new Date(
-          this.selectDate.getFullYear(),
-          this.selectDate.getMonth(),
-          this.selectDate.getDate(),
-          hour,
-          minutes,
-          0,
-          0
-        );
-        this.addEditForm.patchValue({ startDate: startDate });
-      }
-      if (this.endTime != null) {
-        let hour = this.endTime.getHours();
-        let minutes = this.endTime.getMinutes();
-        var endDate = new Date(
-          this.selectDate.getFullYear(),
-          this.selectDate.getMonth(),
-          this.selectDate.getDate(),
-          hour,
-          minutes,
-          0,
-          0
-        );
-        this.addEditForm.patchValue({ endDate: this.endTime });
+    if (this.startTime) {
+      this.beginHour = parseInt(this.startTime.split(':')[0]);
+      this.beginMinute = parseInt(this.startTime.split(':')[1]);
+      if (this.selectDate) {
+        if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
+          this.startDate = new Date(
+            this.selectDate.setHours(this.beginHour, this.beginMinute, 0)
+          );
+          if (this.startDate) {
+            this.addEditForm.patchValue({ startDate: this.startDate });
+          }
+        }
+        console.log(this.startDate);
       }
     }
-    this.changeDetectorRef.detectChanges();
+    if (this.endTime) {
+      this.endHour = parseInt(this.endTime.split(':')[0]);
+      this.endMinute = parseInt(this.endTime.split(':')[1]);
+      if (this.selectDate) {
+        if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
+          this.endDate = new Date(
+            this.selectDate.setHours(this.endHour, this.endMinute, 0)
+          );
+          if (this.endDate) {
+            this.addEditForm.patchValue({ endDate: this.endDate });
+          }
+        }
+        console.log(this.endDate);
+      }
+      if (this.beginHour > this.endHour || this.beginMinute > this.endMinute) {
+        this.notification.notify('Thời gian không hợp lệ!', 'error');
+      }
+    }
   }
 
   checkedOnlineChange(event) {
+    debugger;
     this.addEditForm.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });

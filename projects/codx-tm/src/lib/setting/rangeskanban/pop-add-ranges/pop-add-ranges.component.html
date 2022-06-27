@@ -5,7 +5,7 @@
         <div class="form-group">
           <div class="form-group mt-3">
             <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban"
-              default="Mã nhóm công việc">
+              default="Mã danh mục">
             </codx-label>
             <div style="width: 400px">
               <codx-input field="RangeID" [attr.disabled]="!isAddMode ? '' : null" type="text"
@@ -15,10 +15,10 @@
           </div>
           <div class="form-group mt-3">
             <codx-label fiedName="RangeName" formName="RangesKanban" gridViewName="grvRangesKanban"
-              default="Nhóm công việc">
+              default="Mô tả">
             </codx-label>
             <codx-input field="RangeName" type="text" class="form-control" [crrValue]="ranges.rangeName"
-              placeholder="Nhóm công việc" (valueChange)="valueChange($event)">
+              placeholder="Mô tả" (valueChange)="valueChange($event)">
             </codx-input>
 
           </div>

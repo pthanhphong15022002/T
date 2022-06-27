@@ -4,15 +4,20 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
   CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
+import { CodxEsService } from '../../codx-es.service';
 
 export class Approver {}
 @Component({
@@ -27,6 +32,8 @@ export class ApprovalStepComponent implements OnInit {
   @Output() addEditItem = new EventEmitter();
 
   currentStepNo = 1;
+  dialog: DialogRef;
+  formModel: FormModel;
   approvers = [];
   data;
 
@@ -34,10 +41,20 @@ export class ApprovalStepComponent implements OnInit {
     private cfService: CallFuncService,
     private api: ApiHttpService,
     private notify: NotificationsService,
-    private cr: ChangeDetectorRef
-  ) {}
+    private cr: ChangeDetectorRef,
+    private esService: CodxEsService,
+    @Optional() data: DialogData
+  ) {
+    this.transId = data?.data ?? '';
+  }
 
   ngOnInit(): void {
+    debugger;
+    this.esService.getFormModel('EST04').then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
     console.log('transID', this.transId);
     this.initForm();
   }
@@ -84,4 +101,6 @@ export class ApprovalStepComponent implements OnInit {
     this.initForm();
     this.cr.detectChanges();
   }
+
+  onSaveForm() {}
 }

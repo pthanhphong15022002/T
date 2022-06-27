@@ -44,10 +44,8 @@
           </ng-template>
           <ng-template #content class="ms-10">
             <div class="form-group">
-              <label>
                 <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
                 </codx-label>
-              </label>
               <codx-input field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
                 (valueChange)="valueChange($event)">
               </codx-input>
@@ -141,30 +139,27 @@
                 <!-- <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
                   <i class="icon-person_add_alt fs-5 me-1"></i>
                 </button> -->
-                <codx-share  (eventApply)="eventApply($event)"> </codx-share>
+                <codx-share  (eventApply)="eventApply($event)" > </codx-share>
               </div>
-              <!-- <div class="symbol-group">
+              <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
                   <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">
                   </codx-img>
                 </ng-container>
-              </div> -->
+              </div>
             </ng-container>
             <div class="d-flex align-items-center justify-content-between mt-6">
               <div class="d-flex align-items-center mb-3">
                 <span class="icon-attach icon-18 me-2 text-primary"></span>
                 <div class="fw-bold fs-6 text-primary">Tài liệu đính kèm</div>
               </div>
-              <button (click)="popup($event)" class="btn btn-sm btn-light-primary">Thêm file</button>
-              <ng-template>
-                <attachment #attachment type="center" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"
-                  (fileAdded)="fileAdded($event)"></attachment>
-              </ng-template>
-
+              <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">Thêm file</button>
             </div>
-            add attachfile cho nay
+            <!-- add attachfile cho nay -->
             <div class="d-flex align-items-center file-item mt-5">
-              <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
+              <attachment #attachment  [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  [functionID]="functionID" (fileAdded)="fileAdded($event)"></attachment> 
+
+              <!-- <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <span class="text-dark">Bang-chamcongthang6-V2.doc</span>
                 <div class="d-flex mt-1">
@@ -198,7 +193,7 @@
                     </div>
                   </a>
                 </div>
-              </div>
+              </div> -->
             </div>
           </ng-template>
         </e-tabitem>

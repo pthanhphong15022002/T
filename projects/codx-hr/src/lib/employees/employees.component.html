@@ -1,7 +1,7 @@
 <codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
     method="GetModelFormEmployAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
-    (requestEnded)="requestEnded($event)" [selectedFirst]="true">
+    (requestEnded)="requestEnded($event)" [selectedFirst]="true" [predicate]='predicate' [dataValue]='dataValue'>
 </codx-views>
 
 <ng-template #cardTemp let-data>
@@ -143,4 +143,13 @@
             <span *ngIf="data?.senioritydate">{{data?.senioritydate }}</span>
         </div>
     </div>
+</ng-template>
+
+<ng-template #itemAction let-data>
+    <a (click)="edit(data)" class="action-item">
+        <div class="d-flex align-items-center btn-tooltip">
+            <span class="icon-edit icon-20 ml-2 mr-2"></span>
+            <span class="tooltiptext">Edit</span>
+        </div>
+    </a>
 </ng-template>

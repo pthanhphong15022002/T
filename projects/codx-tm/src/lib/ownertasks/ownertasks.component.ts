@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
@@ -11,25 +10,20 @@ import { ActivatedRoute } from '@angular/router';
 import {
   DataRequest,
   ViewModel,
-  ViewsComponent,
   ViewType,
   RequestOption,
   ButtonModel,
   ResourceModel,
-  CallFuncService,
   SidebarModel,
   DialogRef,
-  ApiHttpService,
   AuthStore,
-  CodxScheduleComponent,
   UrlUtil,
   NotificationsService,
-  CacheService,
+  UIComponent,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxTMService } from '../codx-tm.service';
-import { TM_Tasks } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
@@ -37,8 +31,8 @@ import { UpdateStatusPopupComponent } from './update-status-popup/update-status-
   templateUrl: './ownertasks.component.html',
   styleUrls: ['./ownertasks.component.scss'],
 })
-export class OwnerTasksComponent implements OnInit {
-  @ViewChild('view') view!: ViewsComponent;
+export class OwnerTasksComponent extends UIComponent {
+
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -74,14 +68,12 @@ export class OwnerTasksComponent implements OnInit {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private api: ApiHttpService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private tmSv: CodxTMService,
-    private callfc: CallFuncService
   ) {
+    super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -120,7 +112,7 @@ export class OwnerTasksComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'TM';
     this.modelResource.className = 'TaskBusiness';
@@ -301,7 +293,6 @@ export class OwnerTasksComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           res.forEach((ele) => {
             this.dayoff = res;
           });
@@ -316,7 +307,7 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -332,21 +323,21 @@ export class OwnerTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }
 
   copy(data) {
     // data.taskID = null;
     // data.recID = null;
-   
+
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
     });
   }
 
@@ -372,7 +363,7 @@ export class OwnerTasksComponent implements OnInit {
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '750px';
-    this.dialog = this.callfunc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
+    this.dialog = this.callfc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
     this.dialog.closed.subscribe(e => {
       console.log(e);
     })

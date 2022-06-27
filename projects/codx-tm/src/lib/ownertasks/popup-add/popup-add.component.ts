@@ -70,8 +70,7 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('attachment') attachment:AttachmentComponent 
   @ViewChild('tags') tagsComponent: TagsComponent;
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
@@ -203,13 +202,6 @@ export class PopupAddComponent implements OnInit {
 
   openTask(): void {
     const t = this;
-    // if (this.functionID == 'TMT03') {
-    //   // this.showAssignTo = true;
-    //   //cai nay thêm để test
-    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    //   this.getListUser(this.task.assignTo);
-    // }
-
     this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
@@ -261,13 +253,6 @@ export class PopupAddComponent implements OnInit {
   openAssignSchedule(task): void {
     const t = this;
     this.task = task;
-    // if (this.functionID == 'TMT03') {
-    //   // this.showAssignTo = true;
-    //   //cai nay thêm để test
-    //   this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
-    //   this.getListUser(this.task.assignTo);
-    // }
-
     // this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -327,14 +312,10 @@ export class PopupAddComponent implements OnInit {
     this.listUser = [];
     this.listUserDetail = [];
     this.listMemo2OfUser = [];
-    //thêm giá trị đê add thử copy -sau nay xóa đi
-    //this.task.assignTo = 'PMNHI;VVQUANG'; ///tesst
-    // this.getListUser(this.task.assignTo);
     t.changeDetectorRef.detectChanges();
   }
 
   saveData(id) {
-    // this.task.assignTo = 'ADMIN;PMNHI;VVQUANG;NVHAO'; ///tesst
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
@@ -386,8 +367,10 @@ export class PopupAddComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
+  
     if (id) this.updateTask();
     else this.addTask();
+    this.attachment.saveFiles();
   }
 
   beforeSave(op: any) {
@@ -416,14 +399,30 @@ export class PopupAddComponent implements OnInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
-        }
-      });
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.dialog.close();
+    //       this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+    //     }
+    //   });
+    this.tmSv.addTask([
+      this.task,
+      this.functionID,
+      this.listTaskResources,
+      this.listTodo,
+    ]).subscribe(res => {
+      if (res && res.length) {
+        this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+        this.dialog.dataService.setDataSelected(res[0]);
+        this.dialog.dataService.afterSave.next(res);
+        this.changeDetectorRef.detectChanges();
+        this.notiService.notifyCode('E0680');
+        // this.dialog.close();
+        // this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+      }
+    })
   }
 
   updateTask() {
@@ -432,7 +431,7 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           this.dialog.close();
-          this.notiService.notify(' Sửa đổi thành công !'); ///sau này có mess thì gán vào giờ chưa có
+          this.notiService.notifyCode('E0528');
         }
       });
   }
@@ -443,6 +442,41 @@ export class PopupAddComponent implements OnInit {
 
   eventApply(e: any) {
     console.log(e);
+    const t = this;
+    var assignTo = '';
+    var i = 0;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            assignTo += obj?.data;
+            i++;
+            break;
+          case 'D':
+            //chua doi chay xong da moi chay tiep dang fail
+            var depID = obj?.data.substring(0, obj?.data.length - 1);
+            this.tmSv.getUserByDepartment(depID).subscribe(res => {
+              if (res) {
+                assignTo += res + ";";
+                i++;
+              }
+            })
+            break;
+        }
+      }
+
+      this.handleChangeUser(assignTo)
+
+    })
+  }
+  handleChangeUser(assignTo) {
+    if (assignTo != '') {
+      if (assignTo.split(';').length > 1)
+        assignTo = assignTo.substring(0, assignTo.length - 1);
+      if (this.task.assignTo && this.task.assignTo != '') this.task.assignTo += ";" + assignTo; else this.task.assignTo = assignTo
+      this.getListUser(this.task.assignTo);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChange(data) {
@@ -559,16 +593,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  // valueChangeUser(event) {
-  //   if (event?.valueSeleteds) {
-  //     this.task.assignTo = event?.valueSeleteds;
-  //   }
-  // this.listUser =  this.task.assignTo.split(";");
 
-  // this.api.exec<any>("SYS", "ERM.Business.AD", "UsersBusiness", "GetListByID", this.listUser).subscribe(res=>{
-  //   this.listUserDetail = res ;
-  // })
-  // }
 
   getListUser(listUser) {
     this.listMemo2OfUser = [];
@@ -684,12 +709,7 @@ export class PopupAddComponent implements OnInit {
       t.actionSave(id);
     }
   }
-  popup(evt: any) {
-    this.attachment.openPopup();
-  }
-  fileAdded(e) {
-    console.log(e);
-  }
+
 
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
@@ -701,5 +721,13 @@ export class PopupAddComponent implements OnInit {
       listTaskResources.push(tmpTR);
     });
     this.listTaskResources = listTaskResources;
+  }
+  addFile(evt: any) {
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    ///chỗ này không bắt được data
+    console.log(e);
   }
 }

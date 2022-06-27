@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
@@ -25,11 +25,8 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import {
-  AddGridData,
-  CodxEsService,
-  ModelPage,
-} from '../../../codx-es.service';
+import { isBuffer } from 'util';
+import { AddGridData, CodxEsService } from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
 @Component({
@@ -37,18 +34,18 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
   templateUrl: './popup-add-signature.component.html',
   styleUrls: ['./popup-add-signature.component.scss'],
 })
-export class PopupAddSignatureComponent implements OnInit {
+export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
   // @ViewChild('attachment', { static: false }) attachment: AttachmentComponent;
   // @ViewChild(AttachmentComponent) attachment: AttachmentComponent;
   @ViewChild('content') content;
 
-  dataGrid: AddGridData;
+  isAdd = true;
+  isSaveSuccess = false;
   dialogSignature: FormGroup;
   cbxName: any;
   isAfterRender: boolean = false;
-  isAdd: boolean = true;
   currentTab = 1;
   type;
   objectIDFile: any;
@@ -60,7 +57,7 @@ export class PopupAddSignatureComponent implements OnInit {
   Signature2: any = null;
   Stamp: any = null;
   dialog: any;
-  data: any;
+  data: any = null;
   headerText = 'Thêm mới chữ ký số';
   subHeaderText = 'Tạo & upload file văn bản';
 
@@ -72,19 +69,21 @@ export class PopupAddSignatureComponent implements OnInit {
     private cfService: CallFuncService,
     private codxService: CodxService,
     private readonly auth: AuthService,
-    @Optional() dt?: DialogData,
+    @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = data?.data[0];
+    this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
+    console.log(this.data);
+    if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
   }
 
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        console.log(item);
         this.dialogSignature = item;
         this.dialogSignature.patchValue({
           signatureType: '1',
@@ -93,8 +92,16 @@ export class PopupAddSignatureComponent implements OnInit {
           spanTime: 0,
           stop: false,
         });
+        if (!this.isAdd) {
+          this.dialogSignature.patchValue(this.data);
+          this.dialogSignature.addControl(
+            'recID',
+            new FormControl(this.data.recID)
+          );
+        }
+        console.log(this.dialogSignature.value);
+
         this.isAfterRender = true;
-        this.isAdd = true;
         this.Signature1 = null;
         this.Signature2 = null;
         this.Stamp = null;
@@ -123,10 +130,27 @@ export class PopupAddSignatureComponent implements OnInit {
       });
   }
 
-  onSavePopup() {
-    if (this.content) {
-      this.attachment.onMultiFileSave(null);
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
+        this.dialog.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialog.dataService.saveFailed.next(null);
+        });
+      }
     }
+  }
+
+  beforeSave(option: any) {
+    let itemData = this.dialogSignature.value;
+    if (this.isAdd) {
+      option.method = 'AddNewAsync';
+    } else {
+      option.method = 'EditAsync';
+    }
+
+    option.data = [itemData, this.isAdd];
+    return true;
   }
 
   onSaveForm() {
@@ -134,29 +158,12 @@ export class PopupAddSignatureComponent implements OnInit {
       return;
     }
 
-    console.log(this.dialogSignature);
+    this.data = this.dialogSignature.value;
 
-    // this.api
-    //   .callSv(
-    //     'ES',
-    //     'ERM.Business.ES',
-    //     'SignaturesBusiness',
-    //     'AddEditSignatureAsync',
-    //     [this.dialogSignature.value, this.isAdd, '']
-    //   )
-    //   .subscribe((res) => {
-    //     this.dataGrid = new AddGridData();
-    //     if (res && res.msgBodyData[0][0] == true) {
-    //       this.dataGrid.dataItem = res.msgBodyData[0][1];
-    //       this.dataGrid.isAdd = this.isAdd;
-    //       this.dataGrid.key = 'recID';
-    //       this.notification.notify('Successfully');
-    //       this.closeForm(this.dataGrid);
-    //     } else {
-    //       this.notification.notify('Fail');
-    //       this.closeForm(null);
-    //     }
-    //   });
+    this.dialog.dataService.dataSelected = this.data;
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
   valueChange(event: any) {
@@ -164,6 +171,12 @@ export class PopupAddSignatureComponent implements OnInit {
       if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
+    }
+  }
+
+  onSavePopup() {
+    if (this.content) {
+      this.attachment.onMultiFileSave(null);
     }
   }
 
@@ -176,25 +189,13 @@ export class PopupAddSignatureComponent implements OnInit {
     this.cfService.openForm(
       PopupSignatureComponent,
       'Thêm mới ghi chú',
-      747,
-      570,
+      800,
+      600,
       '',
       this.dialogSignature
     );
 
     this.cr.detectChanges();
-  }
-
-  nextStep() {
-    this.currentTab += 1;
-    this.cr.detectChanges();
-  }
-
-  previousStep() {
-    if (this.currentTab > 0) {
-      this.currentTab -= 1;
-      this.cr.detectChanges();
-    }
   }
 
   public lstDtDis: any;
@@ -242,12 +243,6 @@ export class PopupAddSignatureComponent implements OnInit {
       }
     }
     return JSON.stringify(data);
-  }
-
-  close() {}
-
-  popup(evt: any, type) {
-    // this.attachment.openPopup();
   }
 
   changeTab(tab) {
