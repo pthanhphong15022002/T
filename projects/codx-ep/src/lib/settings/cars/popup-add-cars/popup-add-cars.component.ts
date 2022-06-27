@@ -17,9 +17,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import {
-  CodxEpService,
-} from '../../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
   selector: 'popup-add-cars',
@@ -103,6 +101,7 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   ngOnChange(): void {}
+
   beforeSave(option: any) {
     let itemData = this.dialogCar.value;
     if (!itemData.resourceID) {
@@ -114,11 +113,13 @@ export class PopupAddCarsComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
+
   valueCbxChange(evt: any) {
     if (evt.length > 0) {
       this.dialogCar.patchValue({ owner: evt[0] });
     }
   }
+
   onSaveForm() {
     if (this.dialogCar.invalid == true) {
       console.log(this.dialogCar);
@@ -132,6 +133,7 @@ export class PopupAddCarsComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
   }
+
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);

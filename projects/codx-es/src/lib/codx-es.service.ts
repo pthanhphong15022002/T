@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
   DataRequest,
+  FormModel,
   NotificationsService,
   UploadFile,
   UserModel,
 } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
-export class ModelPage {
-  funcID = '';
-  gridViewName = '';
-  formName = '';
-  entity = '';
-}
 
 export class AddGridData {
   dataItem: any = null;
@@ -94,17 +89,18 @@ export class CodxEsService {
     private notificationsService: NotificationsService
   ) {}
 
-  getModelPage(functionID): Promise<ModelPage> {
-    return new Promise<ModelPage>((resolve, rejects) => {
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
-        var modelPage = new ModelPage();
+        var formModel = new FormModel();
         if (funcList) {
-          modelPage.entity = funcList?.entityName;
-          modelPage.formName = funcList?.formName;
-          modelPage.gridViewName = funcList?.gridViewName;
-          modelPage.funcID = funcList?.functionID;
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
         }
-        resolve(modelPage);
+        resolve(formModel);
       });
     });
   }
@@ -149,13 +145,13 @@ export class CodxEsService {
                 model[element.fieldName].push(null);
               }
 
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(
-              //     Validators.compose([Validators.required])
-              //   );
-              // } else {
-              //   model[element.fieldName].push(Validators.compose([]));
-              // }
+              if (element.isRequire) {
+                model[element.fieldName].push(
+                  Validators.compose([Validators.required])
+                );
+              } else {
+                model[element.fieldName].push(Validators.compose([]));
+              }
             }
           }
         }
@@ -232,7 +228,6 @@ export class CodxEsService {
       data
     );
   }
-  
 
   getTotalGByCategory() {
     let data = new DataRequest();

@@ -28,6 +28,7 @@ import { SignatureComponent } from './setting/signature/signature.component';
 import { MarkSignatureComponent } from './sign-file/mark-signature/mark-signature.component';
 import { SignFileComponent } from './sign-file/sign-file.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { PopupAddAutoNumberComponent } from './setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 const routes: Routes = [
   {
@@ -77,7 +78,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [LayoutComponent, DashboardComponent, CodxEsComponent],
+  declarations: [LayoutComponent, DashboardComponent, CodxEsComponent, PopupAddAutoNumberComponent],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),

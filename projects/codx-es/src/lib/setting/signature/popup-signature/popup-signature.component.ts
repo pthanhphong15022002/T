@@ -35,7 +35,7 @@ export class PopupSignatureComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.dialogSignature.patchValue(data);
+    this.dialogSignature = data?.data;
   }
 
   ngOnInit(): void {}
