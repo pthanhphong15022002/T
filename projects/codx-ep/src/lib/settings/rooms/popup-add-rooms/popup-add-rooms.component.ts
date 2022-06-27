@@ -34,17 +34,12 @@ export class PopupAddRoomsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.data = dt?.data;
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
     this.initForm();
-
-    this.cacheSv.valueList('EPS21').subscribe((res) => {
-      this.vllDevices = res.datas;
-    });
 
     this.bookingService
       .getComboboxName(
@@ -53,24 +48,20 @@ export class PopupAddRoomsComponent implements OnInit {
       )
       .then((res) => {
         this.CbxName = res;
+        console.log('Cbx', this.CbxName)
       });
   }
 
   initForm() {
-    this.cacheSv
-      .gridViewSetup('Resources', 'EP_Resources')
-      .subscribe((item) => {
-        this.editResources = item;
-      });
-
     this.bookingService
-      .getFormGroup('Resources', 'grvResources')
+      .getFormGroup(this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName)
       .then((item) => {
         this.dialogRoom = item;
         this.dialogRoom.patchValue({
           ranking: '1',
           category: '1',
-          companyID: '1',
+          owner: ''
         });
 
         if (this.data) {
@@ -80,7 +71,7 @@ export class PopupAddRoomsComponent implements OnInit {
       });
   }
 
-  valueChange(event: any) {
+  valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
         this.dialogRoom.patchValue({ [event['field']]: event.data.value });
@@ -101,7 +92,7 @@ export class PopupAddRoomsComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
-  valueOwnerChange(evt) {}
+
   onSaveForm() {
     if (this.dialogRoom.invalid == true) {
       console.log(this.dialogRoom);
@@ -120,6 +111,4 @@ export class PopupAddRoomsComponent implements OnInit {
     this.initForm();
     this.closeEdit.emit(data);
   }
-
-  getDeviceName(item) {}
 }

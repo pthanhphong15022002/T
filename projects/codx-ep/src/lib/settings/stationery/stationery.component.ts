@@ -29,7 +29,7 @@ import {
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 
 @Component({
-  selector: 'app-stationery',
+  selector: 'setting-stationery',
   templateUrl: './stationery.component.html',
   styleUrls: ['./stationery.component.scss'],
 })

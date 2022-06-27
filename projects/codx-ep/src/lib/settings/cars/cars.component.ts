@@ -4,17 +4,13 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -66,9 +62,6 @@ export class CarsComponent implements OnInit, AfterViewInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {}
@@ -136,16 +129,13 @@ export class CarsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
         option
       );
     });
-  }
-
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
   }
 
   edit(evt?) {
@@ -156,6 +146,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
@@ -163,6 +154,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       );
     });
   }
+
   delete(evt?) {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
@@ -170,20 +162,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       this.dataSelected = res;
     });
   }
-  deleteResource(item) {
-    console.log(item);
-    if (confirm('Are you sure to delete')) {
-      this.api
-        .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-          item.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.notificationsService.notify('Xóa thành công!');
-          }
-        });
-    }
-  }
+
 
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
@@ -196,5 +175,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
       default:
         break;
     }
+  }
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 }

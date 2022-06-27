@@ -1,6 +1,6 @@
 <codx-form
   headerText="Thêm mới phòng họp"
-  subHeaderText="Tạo & upload file văn bản"
+  subHeaderText="Thêm mới phòng họp"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
@@ -9,7 +9,6 @@
 >
 </codx-form>
 <ng-template #body>
-  <!-- <form> -->
   <div class="row mb-4">
     <div style="width: 88%">
       <codx-label
@@ -27,7 +26,7 @@
             ControlName="resourceName"
             [Group]="dialogRoom"
             [crrValue]="dialogRoom.value.resourceName"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueCbxChange($event)"
           >
           </codx-input>
         </div>
@@ -66,7 +65,7 @@
         ControlName="ranking"
         [refValue]="CbxName['Ranking']"
         [crrValue]="dialogRoom.value.ranking"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>
@@ -88,7 +87,7 @@
         ControlName="area"
         field="area"
         [crrValue]="dialogRoom.value.area"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>
@@ -105,7 +104,7 @@
         ControlName="capacity"
         [Group]="dialogRoom"
         field="capacity"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>
@@ -125,7 +124,7 @@
         ngDefaultControl
         [crrValue]="dialogRoom.value.location"
         field="location"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
       <!--end::Input-->
@@ -143,11 +142,11 @@
       <codx-input
         type="combobox"
         name="combobox"
-        [crrValue]="dialogRoom.value.companies"
         ngDefaultControl
-        refValue="Companies"
+        [refValue]="CbxName['CompanyID']"
+        [crrValue]="dialogRoom.value.companyID"
         field="companyID"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>
@@ -169,12 +168,12 @@
       <codx-input
         type="combobox"
         name="combobox"
-        [crrValue]=""
         ngDefaultControl
-        refValue="Users"
+        [refValue]="CbxName['Owner']"
+        [crrValue]="dialogRoom.value.owner"
         field="owner"
         multiple="false"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>
@@ -194,7 +193,7 @@
         placeholder=""
         rows="3"
         ControlName="note"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueCbxChange($event)"
       >
       </codx-input>
     </div>

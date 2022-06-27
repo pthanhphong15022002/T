@@ -195,30 +195,14 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         this.addEditForm.value.resourceID =
           'd501dea4-e636-11ec-a4e6-8cec4b569fde';
       }
-      //var date = new Date(this.addEditForm.value.startDate);
-      //this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
-    //this.dialog.dataService.dataSelected = this.addEditForm.value;
-    debugger;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res: any) => {
         if (res) {
           this.isSaveSuccess = true;
         }
-        console.log(res);
       });
-    // this.api
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.addEditForm.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     debugger;
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeForm();
-    //   });
   }
 
   valueChange(event) {

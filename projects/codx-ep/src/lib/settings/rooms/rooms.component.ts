@@ -10,6 +10,7 @@ import {
   Input,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
@@ -24,7 +25,7 @@ import {
 
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 @Component({
-  selector: 'app-rooms',
+  selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
@@ -45,7 +46,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   vllDevices = [];
   lstDevices = [];
-  funcID = 'EPS21';
+  funcID: string;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -57,12 +58,12 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   method = 'GetListAsync';
 
   constructor(
-    private api: ApiHttpService,
     private cacheSv: CacheService,
-    private cr: ChangeDetectorRef,
-    private callFunc: CallFuncService
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
   ) {}
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.columnGrids = [
       {
         field: 'resourceID',
@@ -100,6 +101,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
@@ -145,10 +147,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
-
   edit(evt?) {
     let item = this.viewBase.dataService.dataSelected;
     if (evt) item = evt;
@@ -157,6 +155,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
         this.dataSelected,
@@ -164,13 +163,16 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       );
     });
   }
+
   delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        this.dataSelected = res;
-      });
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
   }
 
-  closeEditForm(evt) {}
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
+  }
 }
