@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddStorageComponent } from './add-storage.component';
+import { AddUpdateStorageComponent } from './add-update-storage.component';
 
-describe('AddStorageComponent', () => {
-  let component: AddStorageComponent;
-  let fixture: ComponentFixture<AddStorageComponent>;
+describe('AddUpdateStorageComponent', () => {
+  let component: AddUpdateStorageComponent;
+  let fixture: ComponentFixture<AddUpdateStorageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddStorageComponent ]
+      declarations: [ AddUpdateStorageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddStorageComponent);
+    fixture = TestBed.createComponent(AddUpdateStorageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,4 +1,50 @@
-<div id="kt_drawer_note" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="note"
+<codx-form [header]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template #header>
+        <codx-label name="lblHeaderText" formName="Storages" default="Thêm mới kho lưu trữ"></codx-label>
+    </ng-template>
+
+    <ng-template popup add #body>
+        <div class="card-body">
+            <div class="form-group">
+                <codx-label name="lblStorageTitle" formName="Storages" default="Kho lưu trữ"></codx-label>
+                <codx-input type="text" field="title" (valueChange)="valueChange($event)" ngDefaultControl
+                    [crrValue]="">
+                </codx-input>
+            </div>
+            <div class="form-group mt-3">
+                <codx-label name="lblStorageMemo" formName="Storages" default="Diễn giải"></codx-label>
+                <codx-input type="textarea" field="memo" placeholder="textarea" class="test-textarea" ngDefaultControl
+                    [crrValue]="" (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+            <div class="form-group row mt-3">
+                <div class="col-12">
+                    <codx-label name="lblStorageImg" formName="Storages" default="Hình hiển thị"></codx-label>
+                </div>
+                <div class="col-12">
+                    <div class="upload-img">
+                        <codx-img #imageUpLoad [width]="200" [objectType]="'WP_Storages'" aria-disabled="true"
+                            [funcId]="'WPT0395'" [isAllowEdit]="true"></codx-img>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-light-primary" (click)="dialog.close()">
+                <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+            </button>
+            <button type="button" class="btn btn-primary ms-1" (click)="addStorage()" *ngIf="!readOnly">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>
+
+<!-- <div id="kt_drawer_note" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="note"
     data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
     data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_addStorage_toggle"
     data-kt-drawer-close="#kt_drawer_note_close">
@@ -59,4 +105,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
