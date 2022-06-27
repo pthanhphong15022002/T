@@ -83,7 +83,7 @@
       <div class="menu-item">
         <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
           routerLinkActive="active">
-          <span class="menu-icon">
+          <span class="menu-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{f.customName}}">
             <img class="w-25px" src="../../../{{f.smallIcon}}" />
           </span>
           <span class="menu-title">{{f.customName}}</span>
