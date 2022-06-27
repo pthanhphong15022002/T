@@ -418,9 +418,8 @@ export class PopupAddComponent implements OnInit {
         this.dialog.dataService.setDataSelected(res[0]);
         this.dialog.dataService.afterSave.next(res);
         this.changeDetectorRef.detectChanges();
-        this.notiService.notifyCode('E0680');
-        // this.dialog.close();
-        // this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+        this.dialog.close();
+        this.notiService.notifyCode('TM005');    
       }
     })
   }

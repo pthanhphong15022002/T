@@ -82,7 +82,7 @@ export class OwnerTasksComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
       case 'edit':
         this.edit(data);
@@ -107,7 +107,7 @@ export class OwnerTasksComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
     }
   }
@@ -301,7 +301,7 @@ export class OwnerTasksComponent extends UIComponent {
   }
   //#endregion schedule
 
-  show() {
+  add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -328,9 +328,6 @@ export class OwnerTasksComponent extends UIComponent {
   }
 
   copy(data) {
-    // data.taskID = null;
-    // data.recID = null;
-
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
