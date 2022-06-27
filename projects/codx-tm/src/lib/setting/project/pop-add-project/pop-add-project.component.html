@@ -1,4 +1,8 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form headerText="" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template #subHeaderText>
+    aaaaaaaa
+  </ng-template>
+
   <ng-template popup adde #body>
     <div class="card-body">
       <div class="row">
@@ -87,7 +91,7 @@
             <codx-label fiedName="Note" formName="Projects" gridViewName="grvProjects" default="Ghi chú">
             </codx-label>
             <codx-input type="textarea" field="note" [crrValue]="projects.note" class="form-control"
-            (valueChange)="changeMemo($event)"></codx-input>
+              (valueChange)="changeMemo($event)"></codx-input>
           </div>
         </div>
       </div>
@@ -95,7 +99,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
-      </div>
+      <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+    </div>
   </ng-template>
 </codx-form>
