@@ -31,6 +31,9 @@ export class ApprovalStepComponent implements OnInit {
   @Input() transId = '';
   @Output() addEditItem = new EventEmitter();
 
+  headerText = 'Qui trình duyệt';
+  subHeaderText;
+
   currentStepNo = 1;
   dialog: DialogRef;
   formModel: FormModel;
@@ -49,7 +52,6 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;

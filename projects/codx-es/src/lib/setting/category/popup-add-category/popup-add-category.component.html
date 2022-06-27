@@ -33,8 +33,10 @@
       </div>
     </div>
     <div class="d-flex align-items-center mt-3">
-      <codx-input #checkbox type="switch" id="switch" [checked]="this.dialogCategory.value.eSign" labelPosition="After"
-        field="eSign" [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
+      <codx-input #checkbox type="switch" id="switch" [crrValue]="dialogCategory.value.eSign"
+        [checked]="dialogCategory.value.eSign" labelPosition="After" field="eSign" [disabled]="false"
+        class="test-switch" (valueChange)="valueChange($event)">
+      </codx-input>
       <label class="ms-2">
         <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="dialog.formModel"></codx-label>
       </label>
@@ -61,7 +63,7 @@
     <div class=" row mt-3">
       <div class="d-flex flex-stack mt-3">
         <div class="fw-bolder ">
-          <codx-label default="Đánh số văn bản" fiedName="LastNumber" [formModel]="dialog.formModel">
+          <codx-label default="Đánh số văn bản" fiedName="AutoNumber" [formModel]="dialog.formModel">
           </codx-label>
         </div>
         <span class="text-end align-items-end">
@@ -73,7 +75,7 @@
       </div>
       <div class="col-6">
         <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" [Group]="dialogCategory"
-          ControlName="lastNumber" disabled="true">
+          ControlName="autoNumber" disabled="true">
         </codx-input>
       </div>
 

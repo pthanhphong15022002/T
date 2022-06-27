@@ -11,6 +11,7 @@ import {
   UserModel,
 } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
+import { debug } from 'util';
 
 export class AddGridData {
   dataItem: any = null;
@@ -145,13 +146,13 @@ export class CodxEsService {
                 model[element.fieldName].push(null);
               }
 
-              if (element.isRequire) {
-                model[element.fieldName].push(
-                  Validators.compose([Validators.required])
-                );
-              } else {
-                model[element.fieldName].push(Validators.compose([]));
-              }
+              // if (element.isRequire) {
+              //   model[element.fieldName].push(
+              //     Validators.compose([Validators.required])
+              //   );
+              // } else {
+              //   model[element.fieldName].push(Validators.compose([]));
+              // }
             }
           }
         }
@@ -176,9 +177,29 @@ export class CodxEsService {
           }
         }
       });
-      resolve(obj);
+      resolve(obj as Object);
     });
   }
+
+  // getComboboxName1(formName, gridView) {
+  //   debugger;
+  //   var obj: { [key: string]: any } = {};
+  //   this.cache.gridViewSetup(formName, gridView).subscribe((res) => {
+  //     if (res) {
+  //       for (const key in res) {
+  //         if (Object.prototype.hasOwnProperty.call(res, key)) {
+  //           const element = res[key];
+  //           if (element.referedValue != null) {
+  //             obj[key] = element.referedValue;
+  //           }
+  //         }
+  //       }
+  //       return obj;
+  //     } else {
+  //       return null;
+  //     }
+  //   });
+  // }
 
   execEP(
     className: string,
@@ -296,6 +317,18 @@ export class CodxEsService {
       'GetByProcessIDAsync',
       recID
     );
+  }
+
+  addEditAutoNumbers(data: FormGroup, isAdd: boolean) {
+    this.api
+      .callSv('SYS', 'SYS', 'AutoNumbersBusiness', 'SettingAutoNumberAsync')
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          return res.msgBodyData[0];
+        } else {
+          return null;
+        }
+      });
   }
 }
 export class LayoutModel {

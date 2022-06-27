@@ -1,3 +1,4 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { FormsModule } from '@angular/forms';
@@ -36,6 +37,11 @@ import { ProjectComponent } from './setting/project/project.component';
 import { PopAddProjectComponent } from './setting/project/pop-add-project/pop-add-project.component';
 import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.component';
 import { PopAddProjectgroupComponent } from './setting/projectgroups/pop-add-projectgroup/pop-add-projectgroup.component';
+import { ReportsComponent } from './reports/reports.component';
+import { TaskDailyComponent } from './reports/task-daily/task-daily.component';
+import { HomeReportComponent } from './reports/home-report/home-report.component';
+import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
+import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 export const routes: Routes = [
   {
     path: '',
@@ -89,6 +95,24 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'reports',
+        component: ReportsComponent,
+        children: [
+          {
+            path: ':funcID',
+            component: HomeReportComponent
+          },
+          {
+            path: 'taskdaily/:funcID',
+            component: TaskDailyComponent
+          },
+          {
+            path: 'taskbyprojects/:funcID',
+            component: TaskByProjectsComponent
+          },
+        ]
+      },
+      {
         path: 'home/:funcID',
         component: DashboardComponent
       },
@@ -123,8 +147,12 @@ const T_Component: Type<any>[] = [
   ProjectComponent,
   PopAddProjectComponent,
   ProjectgroupsComponent,
-  PopAddProjectgroupComponent
-  
+  PopAddProjectgroupComponent,
+  ReportsComponent,
+  TaskDailyComponent,
+  HomeReportComponent,
+  TaskByProjectsComponent,
+  ProjectChartComponent
 ]
 @NgModule({
   imports: [
@@ -142,7 +170,8 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   exports: [
     RouterModule
