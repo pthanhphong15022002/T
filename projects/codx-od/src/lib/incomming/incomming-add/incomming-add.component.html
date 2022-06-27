@@ -24,21 +24,20 @@
 <ng-template popup adde #body>
   <div>
     <attachment 
-    #attachment 
-    [objectType]="formModel?.entityName"
-    [objectId]="''"
-    hideBtnSave="1"  
-    hideFolder="1" 
-    hideUploadBtn="1"  
-    hideDes="1"
-    [functionID]="formModel?.funcID"
-    (fileAdded)="fileAdded($event)"
-    (fileCount)="getfileCount($event)"
-  >
-  </attachment>
+      #attachment 
+      [objectType]="formModel?.entityName"
+      hideBtnSave="1"  
+      hideFolder="1" 
+      hideUploadBtn="1"  
+      hideDes="1"
+      [functionID]="formModel?.funcID"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+    >
+    </attachment>
   </div>
 
-<ng-container *ngIf="files">
+<ng-container *ngIf="files && !hideThumb">
   <div class="mb-5">
     <thumbnail
     [data]="getJSONString(files)"

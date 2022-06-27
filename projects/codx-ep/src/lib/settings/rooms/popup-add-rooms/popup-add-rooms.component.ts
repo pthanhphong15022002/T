@@ -48,20 +48,22 @@ export class PopupAddRoomsComponent implements OnInit {
       )
       .then((res) => {
         this.CbxName = res;
-        console.log('Cbx', this.CbxName)
+        console.log('Cbx', this.CbxName);
       });
   }
 
   initForm() {
     this.bookingService
-      .getFormGroup(this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName)
+      .getFormGroup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
       .then((item) => {
         this.dialogRoom = item;
         this.dialogRoom.patchValue({
           ranking: '1',
           category: '1',
-          owner: ''
+          owner: '',
         });
 
         if (this.data) {

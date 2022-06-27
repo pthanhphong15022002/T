@@ -26,11 +26,13 @@
               </ng-container>
         </div>
             <div class="form-group mt-4">
-                <label>Mô tả chi tiết</label>
-                <codx-input type="textarea" 
+                <codx-label default="Mô tả chi tiết" class="text-primary"></codx-label>
+                <codx-input 
+                    type="textarea" 
                     class="w-100" 
                     [crrValue]="''"
-                    (valueChange)="valueChangeComment($event)">
+                    (valueChange)="valueChangeComment($event)"
+                >
                 </codx-input>
             </div>
     </ng-template>

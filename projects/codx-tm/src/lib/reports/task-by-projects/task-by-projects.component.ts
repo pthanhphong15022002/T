@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, ViewType, CallFuncService } from 'codx-core';
+import { ViewModel, ViewType, CallFuncService, ViewsComponent, SidebarModel, DialogRef } from 'codx-core';
 import { ProjectChartComponent } from './project-chart/project-chart.component';
 
 @Component({
@@ -13,12 +13,14 @@ export class TaskByProjectsComponent implements OnInit {
   @ViewChild("itemRateTaskDone", { static: true }) itemRateTaskDone: TemplateRef<any>;
   @ViewChild("itemRateTaskDoneTime", { static: true }) itemRateTaskDoneTime: TemplateRef<any>;
 
+  @ViewChild('view') view!: ViewsComponent;
 
   constructor(
     private callfc: CallFuncService
   ) { }
   columnsGrid = [];
   views: Array<ViewModel> = [];
+  dialog!: DialogRef;
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -45,6 +47,9 @@ export class TaskByProjectsComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 1500, 800, '', item);
+    this.dialog = this.callfc.openForm(ProjectChartComponent, 'ERM_Phát triển nội bộ', 1500, 800, '', item);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
   }
 }

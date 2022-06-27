@@ -263,6 +263,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   openFormFuncID(val: any , datas:any = null) {
    
     var funcID = val?.functionID;
+    if(!datas)
+      datas = this.data;
     switch (funcID) {
       case "edit":
         {
@@ -272,6 +274,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             this.dialog = this.callfunc.openSide(IncommingAddComponent, {
               gridViewSetup: this.gridViewSetup,
               headerText:"Chỉnh sửa công văn đến",
+              formModel: this.formModel,
               type: "edit",
               data: datas
             }, option);
@@ -286,7 +289,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                       //this.view.dataService.setDataSelected(x.event);
                       this.data = item;
-                      this.data.lstUserID = getListImg(item.relations)
+                      this.data.lstUserID = getListImg(item.relations);
                       this.htmlAgency();
                     });
                 //});
@@ -399,9 +402,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           option.FormModel = this.view?.formModel;
+          
           this.dialog = this.callfunc.openSide(SharingComponent, {
             gridViewSetup: this.gridViewSetup,
-            option: option
+            option: option,
+            files : this.data?.files
           }, option);
           this.dialog.closed.subscribe(x=>{
             if(x.event != null) 
@@ -543,5 +548,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   getJSONString(data) {
     return JSON.stringify(data);    
+  }
+  getSubTitle(relationType:any , agencyName:any)
+  {
+    return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
   }
 }
