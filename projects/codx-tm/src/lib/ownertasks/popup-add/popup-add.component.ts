@@ -129,7 +129,7 @@ export class PopupAddComponent implements OnInit {
     // this.openDialogFolder(this.contentAddUser, '');
   }
 
-  changeMeno2User(message, id) {
+  changeMemo2User(message, id) {
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
     if (index != -1) {
       this.listMemo2OfUser.forEach((obj) => {
