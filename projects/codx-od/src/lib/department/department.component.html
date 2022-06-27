@@ -1,0 +1,38 @@
+<div class="card w-100 rounded-0 border-0">
+  <div class="card-body">
+      <div class="form-group mt-3">
+          <label>Tên phòng ban</label>
+          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.AgencyName"/>
+      </div>
+      <div class="form-group mt-3">
+          <label>Người đại diện</label>
+          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.ContactName"/>
+      </div>
+      <div class="form-group mt-3">
+          <label>Chức vụ</label>
+          <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.JobTitle"/>
+      </div>
+      <div class="form-group row mt-3">
+          <div class="col-6">
+              <label>Điện thoại</label>
+              <input type="text" class="form-control" placeholder="" [(ngModel)]="dtAgency.Phone"/>
+          </div>
+          <div class="col-6">
+              <label>Fax</label>
+              <input type="text" class="form-control" placeholder="" />
+          </div>
+      </div>
+      <div class="form-group mt-3">
+          <label>Ghi chú</label>
+          <codx-input type="textarea" field="textarea" placeholder="" (valueChange)="changeValueNote($event)">
+          </codx-input>
+      </div>
+      ...
+  </div>
+  <div class="card-footer pt-4">
+      <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="saveAgency()">Lưu</button>
+
+      </div>
+  </div>
+</div>

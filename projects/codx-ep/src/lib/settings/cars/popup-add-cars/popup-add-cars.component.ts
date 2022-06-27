@@ -20,7 +20,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class PopupAddCarsComponent implements OnInit {
   @Input() editResources: any;
   @Input() isAdd = true;
-  @Input() data = {};
+  @Input() data! :any ;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   cacheGridViewSetup: any;
@@ -34,7 +34,8 @@ export class PopupAddCarsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
   }
 
@@ -89,11 +90,6 @@ export class PopupAddCarsComponent implements OnInit {
 
   beforeSave(option: any) {
     let itemData = this.dialogCar.value;
-    if (!itemData.resourceID) {
-      this.isAdd = true;
-    } else {
-      this.isAdd = false;
-    }
     option.method = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;

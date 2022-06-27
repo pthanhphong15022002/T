@@ -1,0 +1,76 @@
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full 
+    (clickMF)="openFormFuncID($event,data)" 
+    (click)="click(data)"
+    [typeMF]="'hover'" 
+    [iconCss]=""
+    [title]="extractContent(data.title)" 
+    [desc]="data.agencyName"
+    [status]="data.status" 
+    [statusVll]="gridViewSetup['Status']['referedValue']" 
+    [date]="data.createdOn" 
+    cardCss="card-template border-bottom px-2 py-3" 
+    [formModel]="view.formModel"
+    [resources]="(data.createdBy!= undefined ? data.createdBy : '') + (data.owner!=null?';'+data.owner:'')"
+    [resourceObjType]="'AD_Users'"
+    [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Status']['referedValue']"
+    [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [modeImgs]="false"
+    [bookmark]="data.isBookmark"
+    [titleLine]="2"
+  >
+  </codx-temp-full>
+</ng-template>
+<ng-template #panelLeft>
+  <div class="codx_e-main codx_left">
+    <div class="codx_e-header">
+      <div class="d-flex align-items-center btn-tabs ">
+        <div class="d-flex align-items-center text-dark me-1 cursor-pointer" (click)="clickChangeStatus('1')">
+          <i class="icon-format_list_numbered icon-16"></i>
+          <span class="ms-2 fw-bold fs-7">Chờ xử lý</span>
+        </div>
+        <div class="d-flex align-items-center text-dark me-1 cursor-pointer ms-3" (click)="clickChangeStatus('3')">
+          <i class=" icon-sort icon-16"></i>
+          <span class="ms-2 fw-bold fs-7">Đang xử lý</span>
+        </div>
+        <div class="d-flex align-items-center text-dark me-1 cursor-pointer ms-3" (click)="clickChangeStatus('7')">
+          <i class="icon-check icon-16"></i>
+          <span class="ms-2 fw-bold fs-7">Chờ duyệt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #panelRightRef>
+  <app-view-detail 
+    #viewdetail
+    [data]="lstDtDis" 
+    [gridViewSetup]="gridViewSetup"
+    [view]="view"
+    (uploaded)="getDtDis($event)"
+  >
+  </app-view-detail>
+</ng-template>
+<!-- 
+<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
+<app-viewfiledialog></app-viewfiledialog> -->
+<codx-views #view 
+  [views]="views" 
+  (buttonClick)="click($event)" 
+  [button]="button"
+  [entityName]="'OD_Dispatches'"
+  [method]="'GetListByStatusAsync'" 
+  [assemblyName]="'OD'" 
+  [className]="'DispatchesBusiness'"
+  (selectedChange)="selectFirst($event)"
+  [selectedFirst]="true"  
+  idField="recID"
+  (requestEnded)="requestEnded($event)"
+>
+</codx-views>
+<!-- 
+<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
+<app-viewfiledialog></app-viewfiledialog> -->

@@ -1,0 +1,58 @@
+<div ngbDropdown class="d-inline-block shortCalendar"  [ngStyle]="{'width': this.mode == 1 ? '450px' : '400px'}">  
+  <div ngbDropdownToggle class="d-flex align-items-center float-end">
+    <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-white">
+      <i class="icon-keyboard_arrow_left icon-16"></i>
+    </button>  
+    <span class="icon-calendar icon-18 mx-1 cursor-pointer"></span>
+    <span class="cursor-pointer text-dark fw-bold mx-1">{{displayMonth()}}</span>
+    <span class="cursor-pointer text-dark fw-bold mx-1">{{year}}</span>
+    <button type="button" class="cursor-pointer btn btn-icon btn-sm btn-white">
+      <i class="icon-keyboard_arrow_right icon-16"></i>
+    </button>
+  </div>
+  <div ngbDropdownMenu aria-labelledby="dropdownForm1">
+    <ejs-tab id="element" #element headerPlacement="Left" (selected)="clickTabs($event)" >
+      <div class="e-tab-header col-4">      
+        <div name='day' class="p-2 cursor-pointer w-1oo">{{headerText[1].text}}</div> 
+        <div name='week' class="p-2 cursor-pointer w-1oo">{{headerText[2].text}}</div> 
+        <div name='month' class="p-2 cursor-pointer w-1oo">{{headerText[3].text}}</div> 
+        <div name='year' class="p-2 cursor-pointer w-1oo">{{headerText[4].text}}</div> 
+        <div name='range' class="p-2 cursor-pointer w-1oo">{{headerText[5].text}}</div> 
+      </div>
+      <div class="e-content col-7">             
+        <div>
+          <ejs-calendar (change)="selectDate($event, 'day')" [value]='fromDate'
+          cssClass="width-calendar" class='e-customStyle' title=""> 
+          </ejs-calendar> 
+        </div>          
+        <div class="e-content col-8 e-lib e-touch col-week">            
+          <div class="w-100 e-item e-active">              
+            <div class="e-header e-month for-week d-flex justify-content-between p-3">
+              <div class="e-day e-title fw-bolder week-title" aria-atomic="true" aria-live="assertive" aria-label="title">{{year}}</div>
+              <div class="e-icon-container">
+                <span (click)="goYear('down')" class="icon-keyboard_arrow_down icon-20 week-button" ></span>
+                <span (click)="goYear('up')" class="icon-keyboard_arrow_up icon-20 week-button"></span>
+              </div>
+            </div>              
+          </div>
+          <div class="e-icon-container e-header e-month m-1">
+            <span *ngFor='let in of counter(); let i = index' (click)="selectWeek(i)" [class]="checkWeek(i)">
+              <span>{{i+1}}</span>
+            </span>
+          </div>            
+        </div>
+        <div>
+          <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'month')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Year' depth='Year' title=""> 
+          </ejs-calendar> 
+        </div>
+        <div>
+          <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'year')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Decade' depth='Decade' title=""> 
+          </ejs-calendar> 
+        </div>
+        <div class="p-2 col-week">  
+          <ejs-daterangepicker (change)="changeDate($event)"  [startDate]='fromDate' [endDate]='toDate'></ejs-daterangepicker>
+        </div>          
+      </div>
+    </ejs-tab>
+  </div>
+</div>
