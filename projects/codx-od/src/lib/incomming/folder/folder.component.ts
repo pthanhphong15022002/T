@@ -3,10 +3,6 @@ import { inforSentEMail, assignTask } from '../../models/dispatch.model';
 import { DispatchService } from '../../services/dispatch.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { AuthStore, CacheService, DataRequest, DialogData, NotificationsService, ViewsComponent } from 'codx-core';
-import { formatBytes } from '../../function/default.function';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
-import { AttachmentComponent } from '@shared/components/attachment/attachment.component';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 @Component({
   selector: 'app-od-folder',
   templateUrl: './folder.component.html',

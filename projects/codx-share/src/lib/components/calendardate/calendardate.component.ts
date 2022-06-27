@@ -1,9 +1,4 @@
 import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Optional, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { DialogData, NotificationsService, ViewsComponent } from 'codx-core';
-
-import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
-import { FileService } from '@shared/services/file.service';
 import moment from 'moment';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 // import moment from 'moment';
@@ -31,12 +26,8 @@ export class CalendarDateComponent implements OnInit, OnChanges {
  
   public headerText: Object = [{ text: 'Ngày hết hạn' },{ text: 'Ngày' }, { text: 'Tuần' }, { text: 'Tháng' }, { text: 'Năm' }, { text: 'Khoảng thời gian' }];
   constructor(
-    private odService: DispatchService, 
     private changeDetectorRef: ChangeDetectorRef, 
-    private formBuilder: FormBuilder,
-    private notifySvr: NotificationsService,
-    private systemDialogService: SystemDialogService,
-    private fileService: FileService
+
   ) 
   { 
       

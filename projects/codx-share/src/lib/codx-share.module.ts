@@ -14,6 +14,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { CalendarDateComponent } from './components/calendardate/calendardate.component';
+import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -29,7 +31,7 @@ const T_Component: Type<any>[] = [
 
 @NgModule({
   declarations: T_Component,
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, TabAllModule ,DateRangePickerModule],
   exports: [T_Component],
 })
 export class CodxShareModule {}
