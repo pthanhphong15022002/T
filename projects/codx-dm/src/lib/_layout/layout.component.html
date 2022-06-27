@@ -78,8 +78,18 @@
   </ng-template>
   <!-- end::TOPBAR -->
 
-  <ng-template #asideMenu>
-    <ng-container *ngFor="let f of funcs$ | async">      
+  <ng-template #asideMenu>        
+    <div class="menu-item">
+      <a class="menu-link without-sub" href="javascript:;">
+        <button  class="btn btn-outline-primary btn-pill btn-lg"
+          id="kt_demo_panel_toggle" data-toggle="tooltip">
+          <i class="icon-add"></i>
+          <span class="font-size-lg">{{titleAddFolder}}</span>
+        </button>
+      </a>
+    </div>
+
+    <ng-container *ngFor="let f of funcs$ | async">
       <div class="menu-item">
         <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
           routerLinkActive="active">
@@ -90,5 +100,22 @@
         </a>
       </div>
     </ng-container>
+
+    <div class="menu-item">
+      <div class="menu-link without-sub">
+        <span class="menu-icon">
+          <span class="icon-wb_cloudy icon-20"></span>
+        </span>
+        <span class="menu-title">{{titleStorage}}</span>
+      </div>
+    </div>
+
+    <div class="menu-item">      
+      <div  class="progress mx-6 mt-2" style="height: 1px;">
+        <div role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar" style="width: 0.4%;">
+        </div>
+      </div>
+      <div class="mt-2 mx-5 mr-10 text-light">{{titleHddUsed}}</div>    
+    </div>
   </ng-template>
 </ng-container>
