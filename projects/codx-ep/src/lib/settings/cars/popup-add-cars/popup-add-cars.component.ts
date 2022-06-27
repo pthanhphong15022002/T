@@ -9,18 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-<<<<<<< HEAD
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ApiHttpService,
-  CacheService,
-  DialogData,
-  DialogRef,
-  NotificationsService,
-} from 'codx-core';
-=======
 import { CacheService, DialogData, DialogRef } from 'codx-core';
->>>>>>> 3649beba81a9d4bab31d75fab7d0ad362446c6ba
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -73,7 +62,7 @@ export class PopupAddCarsComponent implements OnInit {
         this.dialogCar.patchValue({
           ranking: '1',
           category: '1',
-          owner: ''
+          owner: '',
         });
       });
 
@@ -98,11 +87,6 @@ export class PopupAddCarsComponent implements OnInit {
     }
   }
 
-<<<<<<< HEAD
-  ngOnChange(): void {}
-
-=======
->>>>>>> 3649beba81a9d4bab31d75fab7d0ad362446c6ba
   beforeSave(option: any) {
     let itemData = this.dialogCar.value;
     if (!itemData.resourceID) {
@@ -115,11 +99,6 @@ export class PopupAddCarsComponent implements OnInit {
     return true;
   }
 
-<<<<<<< HEAD
-  valueCbxChange(evt: any) {
-    if (evt.length > 0) {
-      this.dialogCar.patchValue({ owner: evt[0] });
-=======
   valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
@@ -127,7 +106,6 @@ export class PopupAddCarsComponent implements OnInit {
       } else {
         this.dialogCar.patchValue({ [event['field']]: event.data });
       }
->>>>>>> 3649beba81a9d4bab31d75fab7d0ad362446c6ba
     }
   }
 
