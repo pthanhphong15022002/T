@@ -37,3 +37,16 @@
   <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" (click)="click(data)">
   </codx-temp-full>
 </ng-template>
+
+<ng-template #signatureType let-data>
+  <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{data.signatureType|vll:'ES001':'text'|async}}</span>
+</ng-template>
+
+<ng-template #supplier let-data>
+  <div class="d-flex justify-content-center has-action-menu">
+    <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{data.supplier|vll:'ES006':'text'|async}}</span>
+    <div class="action-menu">
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover"></codx-mfunc>
+    </div>
+  </div>
+</ng-template>

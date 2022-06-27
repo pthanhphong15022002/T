@@ -5,10 +5,11 @@ import {
   ApiHttpService,
   CallFuncService,
   CodxService,
+  FormModel,
   ViewsComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEsService, ModelPage } from '../../codx-es.service';
+import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
 
 @Component({
@@ -23,7 +24,7 @@ export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
   currentTab = 0;
-  modelPage: ModelPage;
+  formModel: FormModel;
   isAfterRender = false;
   objectIDFile: String;
   dialogSignature: FormGroup;
@@ -46,14 +47,14 @@ export class PopupAddSignFileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.esService.getModelPage('EST01').then((res) => {
+    this.esService.getFormModel('EST01').then((res) => {
       if (res) {
-        this.modelPage = res;
+        this.formModel = res;
 
         this.initForm();
 
         this.esService
-          .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
+          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
           .then((res) => {
             if (res) this.cbxName = res;
           });
@@ -63,7 +64,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   initForm() {
     this.esService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogSignFile = res;
@@ -76,8 +77,8 @@ export class PopupAddSignFileComponent implements OnInit {
           });
           this.codxService
             .getAutoNumber(
-              this.modelPage.funcID,
-              this.modelPage.entity,
+              this.formModel.funcID,
+              this.formModel.entityName,
               'CategoryID'
             )
             .subscribe((dt: any) => {

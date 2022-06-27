@@ -9,8 +9,13 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, DialogData, NotificationsService } from 'codx-core';
-import { CodxEsService, ModelPage } from '../../../codx-es.service';
+import {
+  ApiHttpService,
+  DialogData,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
+import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
   selector: 'popup-add-approval-step',
@@ -26,7 +31,7 @@ export class PopupAddApprovalStepComponent implements OnInit {
   isAfterRender = false;
   isAdd = true;
 
-  modelPage: ModelPage;
+  formModel: FormModel;
   dialogApprovalStep: FormGroup;
   cbxName;
   link;
@@ -58,14 +63,14 @@ export class PopupAddApprovalStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.esService.getModelPage('EST04').then((res) => {
+    this.esService.getFormModel('EST04').then((res) => {
       if (res) {
-        this.modelPage = res;
-        console.log(this.modelPage);
+        this.formModel = res;
+        console.log(this.formModel);
       }
 
       this.esService
-        .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
+        .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
         .then((res) => {
           this.cbxName = res;
           console.log('cbx', this.cbxName);
@@ -76,7 +81,7 @@ export class PopupAddApprovalStepComponent implements OnInit {
 
   initForm() {
     this.esService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
         this.isAfterRender = true;

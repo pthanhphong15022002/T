@@ -25,11 +25,8 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import {
-  AddGridData,
-  CodxEsService,
-  ModelPage,
-} from '../../../codx-es.service';
+import { isBuffer } from 'util';
+import { AddGridData, CodxEsService } from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
 @Component({
@@ -44,6 +41,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   // @ViewChild(AttachmentComponent) attachment: AttachmentComponent;
   @ViewChild('content') content;
 
+  isAdd = true;
   isSaveSuccess = false;
   dialogSignature: FormGroup;
   cbxName: any;
@@ -75,9 +73,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data?.data;
+    this.data = data?.data[0];
+    this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
     console.log(this.data);
+    if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
   }
 
   initForm() {
@@ -85,14 +85,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogSignature = item;
-        this.dialogSignature.addControl(
-          'recID',
-          new FormControl(this.data.recID)
-        );
-        this.dialogSignature.addControl(
-          '_uuid',
-          new FormControl(this.data._uuid)
-        );
         this.dialogSignature.patchValue({
           signatureType: '1',
           supplier: '1',
@@ -100,8 +92,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           spanTime: 0,
           stop: false,
         });
-        if (this.data != null) {
+        if (!this.isAdd) {
           this.dialogSignature.patchValue(this.data);
+          this.dialogSignature.addControl(
+            'recID',
+            new FormControl(this.data.recID)
+          );
         }
         console.log(this.dialogSignature.value);
 
@@ -145,10 +141,16 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSavePopup() {
-    if (this.content) {
-      this.attachment.onMultiFileSave(null);
+  beforeSave(option: any) {
+    let itemData = this.dialogSignature.value;
+    if (this.isAdd) {
+      option.method = 'AddNewAsync';
+    } else {
+      option.method = 'EditAsync';
     }
+
+    option.data = [itemData, this.isAdd];
+    return true;
   }
 
   onSaveForm() {
@@ -156,39 +158,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    debugger;
-    console.log(this.dialogSignature);
     this.data = this.dialogSignature.value;
-    console.log(this.dialog.dataService.dataSelected);
-    this.dialog.dataService.dataSelected = this.data;
-    this.dialog.dataService.save().subscribe((res: any) => {
-      if (res) {
-        this.isSaveSuccess = true;
-      }
-      console.log(res);
-    });
 
-    // this.api
-    //   .callSv(
-    //     'ES',
-    //     'ERM.Business.ES',
-    //     'SignaturesBusiness',
-    //     'AddEditSignatureAsync',
-    //     [this.dialogSignature.value, this.isAdd, '']
-    //   )
-    //   .subscribe((res) => {
-    //     this.dataGrid = new AddGridData();
-    //     if (res && res.msgBodyData[0][0] == true) {
-    //       this.dataGrid.dataItem = res.msgBodyData[0][1];
-    //       this.dataGrid.isAdd = this.isAdd;
-    //       this.dataGrid.key = 'recID';
-    //       this.notification.notify('Successfully');
-    //       this.closeForm(this.dataGrid);
-    //     } else {
-    //       this.notification.notify('Fail');
-    //       this.closeForm(null);
-    //     }
-    //   });
+    this.dialog.dataService.dataSelected = this.data;
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
   valueChange(event: any) {
@@ -196,6 +171,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
+    }
+  }
+
+  onSavePopup() {
+    if (this.content) {
+      this.attachment.onMultiFileSave(null);
     }
   }
 
