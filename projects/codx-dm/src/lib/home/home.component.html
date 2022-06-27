@@ -1,0 +1,30 @@
+<codx-views  #view [showToolBar]="true"  [autoLoad]="true" 
+[entityName]="'DM_FolderInfo'"
+[method]="'GetFoldersAsync'" 
+[className]="'FolderBussiness'"
+[assemblyName]="'DM'" 
+idField="recID"
+[views]="views"
+(selectedChange)="onSelectionChanged($event)"
+[button]="button"
+></codx-views>
+
+<ng-template #templateMain let-data>
+  <div *ngIf="(checkUserForder(data)) then noContext else context">
+  </div>
+  <ng-template #noContext>
+      <div oncontextmenu="return false;" class="d-flex align-items-center mb-2" #item>
+          <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
+      </div>
+  </ng-template>
+  <ng-template #context>
+      <div class="d-flex align-items-center mb-2">
+          <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>            
+      </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #templateRight>
+  <!-- file and folder here -->
+   
+</ng-template>
