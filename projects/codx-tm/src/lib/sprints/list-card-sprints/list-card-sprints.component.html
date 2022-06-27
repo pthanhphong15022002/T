@@ -6,7 +6,7 @@
         Danh sách view board cá nhân được bạn chia sẻ
       </div>
       <div class="view-listbox card-with-dropdown pl-6 row">
-        <ng-container>
+        <!-- <ng-container>
           <div class="task-card card-with-dropdown-item col-2 flex" style="
               background-color: rgb(204, 228, 231);
               border-radius: 5%;
@@ -28,10 +28,10 @@
               </div>
             </div>
           </div>
-        </ng-container>
+        </ng-container> -->
         <codx-listview type="cardView" #lstViewBoard service="TM" assemblyName="ERM.Business.TM"
           className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
-          [predicate]="predicateViewBoards" class="h-100" [formModel]="formModel" [itemTemplate]="itemViewBoard">
+          [predicate]="predicateViewBoards" class="h-300px" [formModel]="formModel" [itemTemplate]="itemViewBoard">
         </codx-listview>
       </div>
       <div class="clear mb-6 d-flex justify-content-end pr-9">
@@ -50,7 +50,7 @@
       <div class="view-listbox pl-6">
         <codx-listview type="cardView" #lstProjectBoard service="TM" assemblyName="ERM.Business.TM"
           className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
-          [predicate]="predicateProjectBoards" class="h-100" [formModel]="formModel" [itemTemplate]="itemViewBoard">
+          [predicate]="predicateProjectBoards" class="h-300px" [formModel]="formModel" [itemTemplate]="itemViewBoard">
         </codx-listview>
       </div>
       <div class="clear mb-6 d-flex justify-content-end pr-9">
@@ -67,7 +67,7 @@
 
 <ng-template #itemViewBoard let-data>
   <codx-card-center cardCss="border h-100" [formModel]="formModel" (click)="clickMF($event, data)" (click)="click(data)"
-    [imageId]="data.iterationID" [title]="data.iterationName" [content]="data.memo || 'memo'" [date]="data.createdOn"
+    [imageId]="data.iterationID" [title]="data.iterationName" [content]="data.memo" [date]="data.createdOn"
     [resources]="" [resourceObjType]="" [resourceNum]="">
   </codx-card-center>
 </ng-template>

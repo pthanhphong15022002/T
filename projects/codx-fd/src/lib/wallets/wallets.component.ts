@@ -1,7 +1,7 @@
 import { Valuelist } from './../models/model';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent, CodxService } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AccumulationChart, AccumulationChartComponent, MarkerSettingsModel } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
@@ -20,8 +20,6 @@ export class Data_Line {
 
 
 export class WalletsComponent implements OnInit {
-
-  count1 = 0;
 
   public chartArea: Object = {
     border: {
@@ -180,10 +178,13 @@ export class WalletsComponent implements OnInit {
   tenant: string;
 
   @ViewChild("listview") listview;
+  @ViewChild("listview") listView: CodxListviewComponent;
   @ViewChild("subheader") subheader;
   @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
 
   constructor(
@@ -194,6 +195,7 @@ export class WalletsComponent implements OnInit {
     private tenantStore: TenantStore,
     private changedr: ChangeDetectorRef,
     private cache: CacheService,
+    public codxService: CodxService,
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
 
@@ -226,7 +228,6 @@ export class WalletsComponent implements OnInit {
       this.funcID = param["funcID"]
       this.changedr.detectChanges();
     });
-
     this.setPredicate();
   }
 
@@ -234,14 +235,15 @@ export class WalletsComponent implements OnInit {
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: true,
         model: {
-          template: this.iTemplateLeft,
-        }
-      },]
-    console.log("check view", this.view)
+          panelLeftRef: this.templateLeft,
+        },
+      },
+    ]
     this.userPermission = this.viewbase.userPermission;
+    this.listView.dataService.dataObj = 'Coins';
     this.changedr.detectChanges();
   }
 
@@ -297,22 +299,45 @@ export class WalletsComponent implements OnInit {
 
   caculateY() {
     if (this.maxTotal > 0) {
-      if (this.maxTotal % 50 == 0) {
-        if (this.maxTotal < 200) {
-          this.interval = 10
-        } else if (this.maxTotal >= 200 && this.maxTotal <= 400) {
-          this.interval = 50
-        } else {
-          this.interval = 100
+      if (this.maxTotal <= 50) {
+        if (this.maxTotal % 10 == 0) {
+          if (this.maxTotal <= 10) {
+            this.interval = 1;
+          } else if (this.maxTotal >= 20 && this.maxTotal <= 30) {
+            this.interval = 5;
+          } else {
+            this.interval = 10;
+          }
         }
       } else {
-        for (let i = 1; i <= 100; i++) {
-          this.maxTotal += i;
-          this.caculateY();
-          break;
+        if (this.maxTotal % 50 == 0) {
+          if (this.maxTotal < 200) {
+            this.interval = 10
+          } else if (this.maxTotal >= 200 && this.maxTotal <= 400) {
+            this.interval = 50
+          } else {
+            this.interval = 100
+          }
+        } else {
+          for (let i = 1; i <= 100; i++) {
+            this.maxTotal += i;
+            this.caculateY();
+            break;
+          }
         }
       }
     } else if (this.maxTotal < 0) {
+      if (this.maxTotal >= -50) {
+        if (this.maxTotal % 10 == 0) {
+          if (this.maxTotal >= -10) {
+            this.interval = -1;
+          } else if (this.maxTotal <= -20 && this.maxTotal >= -30) {
+            this.interval = -5;
+          } else {
+            this.interval = -10;
+          }
+        }
+      } 
       if (this.maxTotal % 50 == 0) {
         if (this.maxTotal > -200) {
           this.interval = -10
@@ -340,22 +365,18 @@ export class WalletsComponent implements OnInit {
     switch (e.field) {
       case "toDate":
         if (e.data?.toDate != undefined) {
-          var value = new Date(e.data);
+          var value = new Date(e.data?.toDate);
           this.toDate = value;
-          this.options.predicate += " && TransDate <= @1";
-          this.options.dataValue += ";" + value.toISOString();
         }
         break;
       case "firstDay":
         if (e.data?.fromDate != undefined) {
-          var value = new Date(e.data);
+          var value = new Date(e.data?.fromDate);
           value.setDate(value.getDate());
           this.firstDay = value;
         }
         break;
       case "vllOrganize":
-        // this.dataValueCombobox = e.data;
-        // this.predicateCombobox = "Key=@0";
         this.vllOrganize_value = e.data;
         this.getComboboxName();
         break;
@@ -389,8 +410,6 @@ export class WalletsComponent implements OnInit {
   }
 
   setPredicate() {
-    this.count1++;
-    console.log("check count", this.count1)
     this.options.predicate = "(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3)";
     this.options.dataValue = "1;2;4;5";
     var predicate = "",
@@ -509,7 +528,6 @@ export class WalletsComponent implements OnInit {
       arr = [{ key: this.getLabelName(this.data_Send[y]?.key), value: this.data_Send[y]?.value }];
       this.chartDatas_Send.push(arr[0]);
     }
-
     this.totalDataSended = total;
     this.colorSend = this.colors_Send[0]?.backgroundColor
     this.dt.detectChanges();
@@ -587,4 +605,7 @@ export class WalletsComponent implements OnInit {
     this.heightList = wh - 60 + "";
   }
 
+  openViewDetailCoins(userID) {
+    this.codxService.navigate('FDR021', '', { userID: userID });
+  }
 }

@@ -1,37 +1,34 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" assemblyName="ERM.Business.FD"
-    className="KudosTransBusiness" method="GetDataAchievementAsync" [showToolBar]="false" [views]="views"
-    [predicate]="options.predicate" [dataValue]="options.dataValue" >
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [showToolBar]="false" [views]="views"
+    [autoLoad]="false">
 </codx-views>
 
-
-
-<div #templateLeft>
+<ng-template #templateLeft>
     <div class="page-home page-master">
         <div class="d-flex flex-row w-100">
             <div class="d-flex flex-column w-100" id="erm_content">
                 <div class="container d-flex pb-0 pd-r-0">
-                    <div class="w-100 pr-6 mt-3">
+                    <div class="w-100 pr-6 mt-3 left-20 pd-r-10">
                         <div class="d-flex align-items-top">
                             <div class="mr-3 w-150px">
                                 <div class="d-flex flex-column mb-3">
                                     <codx-label name="lblfirstDay" formName="FD_KudosTrans" default="Từ ngày">
                                     </codx-label>
-                                    <codx-input type="datetime" dataformat="d" class="form-control"
-                                        [crrValue]="firstDate" field="firstDay" ngDefaultControl
+                                    <codx-input type="datetime" format="d" class="form-control" [crrValue]="firstDate"
+                                        field="firstDay" ngDefaultControl
                                         (valueChange)="valueChange($event, 'firstDay')">
                                     </codx-input>
                                 </div>
                             </div>
-                            <div class="mr-3 w-150px">
+                            <div class="mr-3 w-150px left-5">
                                 <div class="d-flex flex-column mb-3" #ToDate>
                                     <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày">
                                     </codx-label>
-                                    <codx-input type="datetime" dataformat="d" class="form-control" [crrValue]="toDate"
+                                    <codx-input type="datetime" format="d" class="form-control" [crrValue]="toDate"
                                         field="toDate" ngDefaultControl (valueChange)="valueChange($event, 'toDate')">
                                     </codx-input>
                                 </div>
                             </div>
-                            <div class="mr-3">
+                            <div class="mr-3 left-5">
                                 <div class="d-flex flex-column mb-3" #Organize>
                                     <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức">
                                     </codx-label>
@@ -39,20 +36,20 @@
                                         <codx-input class="form-control" type="valuelist" field="vllOrganize"
                                             refValue="L1483" (valueChange)="valueChange($event, 'vllOrganize')">
                                         </codx-input>
-                                        <div class="organize" *ngIf="comboboxName">
+                                        <div class="organize left-5" *ngIf="comboboxName">
                                             <codx-input class="form-control" type="combobox" field="Organize"
                                                 [refValue]="comboboxName"
                                                 (valueChange)="valueChange($event, 'Organize')">
                                             </codx-input>
                                         </div>
-                                        <div class="organize" *ngIf="!comboboxName">
+                                        <div class="organize left-5" *ngIf="!comboboxName">
                                             <codx-input class="form-control" type="combobox">
                                             </codx-input>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mr-3 w-200px">
+                            <div class="mr-3 w-200px left-5">
                                 <div class="d-flex flex-column mb-3" #Employee>
                                     <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên">
                                     </codx-label>
@@ -190,8 +187,7 @@
                                 <div class="top-item top2">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img
-                                                [objectId]="lstRate[1]?.employeeID ? lstRate[1]?.employeeID : lstRate[1]?.userID"
+                                            <codx-img [objectId]="lstRate[1]?.userID"
                                                 [objectName]="lstRate[1]?.employeeName" objectType="AD_Users"
                                                 width="40">
                                             </codx-img>
@@ -207,8 +203,7 @@
                                 <div class="top-item top1">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img [width]="50"
-                                                [objectId]="lstRate[0]?.employeeID ? lstRate[0]?.employeeID : lstRate[0]?.userID"
+                                            <codx-img [width]="50" [objectId]="lstRate[0]?.userID"
                                                 [objectName]="lstRate[0]?.employeeName" objectType="AD_Users">
                                             </codx-img>
                                         </div>
@@ -223,8 +218,7 @@
                                 <div class="top-item top3">
                                     <div class="top-pic w-100">
                                         <div>
-                                            <codx-img [width]="40"
-                                                [objectId]="lstRate[2]?.employeeID ? lstRate[2]?.employeeID : lstRate[2]?.userID"
+                                            <codx-img [width]="40" [objectId]="lstRate[2]?.userID"
                                                 [objectName]="lstRate[2]?.employeeName" objectType="AD_Users">
                                             </codx-img>
                                         </div>
@@ -238,20 +232,11 @@
                                 </div>
                             </div>
                             <div class="list-performance pt-2">
-                                <!-- <codx-listview #listview [pageSize]="10" [loadFull]="true" service="FD"
-                                    assemblyName="ERM.Business.FD" className="KudosTransBusiness"
-                                    method="GetDataAchievementAsync" [predicate]="options.predicate"
-                                    [dataValue]="options.dataValue" entityName="FD_KudosTrans"
-                                    [itemTemplate]="TemplateList" [dataObj]="'Coins'" [height]="heightList"
-                                    [itemTemplateLoading]="" [parentIdField]="" [autoLoad]="loadList">
-                                </codx-listview> -->
-
-                                <ng-template #iTemplateLeft let-data>
-                                    <codx-temp-full
-                                        [imageId]="data?.userID" imageObjType="AD_Users" [title]="data?.employeeName"
-                                        [subTitle]="data?.orgUnitName" [formModel]="view.formModel">
-                                    </codx-temp-full>
-                                </ng-template>
+                                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD"
+                                    className="KudosTransBusiness" method="GetDataAchievementAsync"
+                                    [predicate]="options.predicate" [dataValue]="options.dataValue"
+                                    entityName="FD_KudosTrans" [itemTemplate]="TemplateList" [height]="heightList">
+                                </codx-listview>
                             </div>
                         </div>
                     </div>
@@ -259,15 +244,13 @@
             </div>
         </div>
     </div>
-</div>
+</ng-template>
 
-
-<!-- <ng-template #template let-item>
-    <div class="d-flex align-items-center user-card list-item mb-4">
+<ng-template #TemplateList let-item>
+    <div class="d-flex align-items-center user-card list-item mb-4" (click)="codxService.navigate('FDR021')">
         <div class="symbol symbol-40 symbol-circle with-number mr-4">
-            <codx-img class="symbol symbol-40 symbol-circle mr-2"
-                [objectId]="item?.employeeID ? item?.employeeID : item?.userID" [objectName]="item?.employeeName"
-                objectType="AD_Users">
+            <codx-img class="symbol symbol-40 symbol-circle mr-2" [objectId]="item?.userID"
+                [objectName]="item?.employeeName" objectType="AD_Users">
             </codx-img>
             <div *ngIf="item?.rate == 1">
                 <span class="list-number top-premium" style="background-color: palevioletred; color: white;">{{
@@ -288,7 +271,7 @@
                     }}</span>
             </div>
         </div>
-        <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex flex-column flex-grow-1 left-15">
             <div class="text-dark font-weight-bold">
                 {{ item?.employeeName }}
             </div>
@@ -300,4 +283,4 @@
             </div>
         </div>
     </div>
-</ng-template> -->
+</ng-template>

@@ -91,8 +91,6 @@ export class EmpContactsComponent implements OnInit {
         sameData:true,
         model: {
           template: this.cardTemp,
-          // resources: this.columnsGrid,
-          // panelLeftRef: this.panelLeftRef,
         }
       },
      
@@ -163,5 +161,19 @@ export class EmpContactsComponent implements OnInit {
 
   requestEnded(evt: any) {
 
+  }
+
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'btnAdd':
+        // this.show();
+        break;
+      // case 'edit':
+      //   this.edit(data);
+      //   break;
+      // case 'delete':
+      //   this.delete(data);
+      //   break;
+    }
   }
 }

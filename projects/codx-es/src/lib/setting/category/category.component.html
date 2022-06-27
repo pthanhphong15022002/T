@@ -4,6 +4,67 @@
   (requestEnded)="closeEditForm($event)">
 </codx-views>
 
+<ng-template #process let-data>
+  <div class="has-action-menu">
+    <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 0">
+      <div id="progress-bar"></div>
+      <ul id="progress-num">
+        <ng-container *ngFor="let item of getCount(data?.countStep)">
+          <li class="step">{{item}}</li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="center w-400 mt-5 mb-3" *ngIf="data?.countStep == 0">
+      <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel">
+      </codx-label>
+    </div>
+    <div class="action-menu">
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover"></codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #listItem let-data>
+  <div class="task-row py-3 px-6">
+
+    <table class="table w-100 table-action-menu">
+      <tbody>
+        <td class="w-25">
+          <div class="d-flex justify-content-center">
+            {{data.categoryID}}
+          </div>
+        </td>
+        <td class="w-15">
+          <div class="d-flex justify-content-center">
+            {{data.categoryName}}
+          </div>
+        </td>
+        <td class="w-15">
+          <div class="d-flex justify-content-center">
+            <span
+              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.signatureType|vll:'ES001':'text'|async}}</span>
+          </div>
+        </td>
+        <td class="w-150px">
+          <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 0">
+            <div id="progress-bar"></div>
+            <ul id="progress-num">
+              <ng-container *ngFor="let item of getCount(data?.countStep)">
+                <li class="step">{{item}}</li>
+              </ng-container>
+            </ul>
+          </div>
+          <div class="center" *ngIf="data?.countStep == 0">
+            Chưa thiết lập
+          </div>
+        </td>
+      </tbody>
+    </table>
+  </div>
+  <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" (click)="click(data)">
+  </codx-temp-full>
+</ng-template>
+
 <!-- <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons"
   (buttonClick)="addNew($event)" [moreFuncs]="moreFunc"> </codx-views>
 
@@ -26,19 +87,7 @@
 
 </ng-template>
 
-<ng-template #process let-dataItem>
-  <div id="progress" class="cdx-progress mt-3" *ngIf="dataItem?.countStep > 0">
-    <div id="progress-bar"></div>
-    <ul id="progress-num">
-      <ng-container *ngFor="let item of getCount(dataItem?.countStep)">
-        <li class="step">{{item}}</li>
-      </ng-container>
-    </ul>
-  </div>
-  <div class="center" *ngIf="dataItem?.countStep == 0">
-    Chưa thiết lập
-  </div>
-</ng-template>
+
 
 <ng-template #noName let-dataItem>
   <div class="d-flex align-items-center">

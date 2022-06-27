@@ -294,7 +294,6 @@ export class PopupAddStationeryComponent implements OnInit {
     }
   }
   popupTab() {
-    debugger;
     this.cfService.openForm(this.popupTemp, 'Chọn màu');
   }
   getlstDevice(items: string) {

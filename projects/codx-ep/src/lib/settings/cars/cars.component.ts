@@ -4,17 +4,13 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -28,13 +24,17 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
   styleUrls: ['cars.component.scss'],
 })
 export class CarsComponent implements OnInit, AfterViewInit {
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
+  columnGrids: any
   dialog!: DialogRef;
   isAdd = true;
   columnsGrid;
@@ -62,9 +62,6 @@ export class CarsComponent implements OnInit, AfterViewInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {
@@ -72,14 +69,33 @@ export class CarsComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã xe',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên xe',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol
+      }
+    ];
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục xe',
+        type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template: this.template,
+          resources: this.columnGrids
         },
       },
     ];
@@ -115,16 +131,13 @@ export class CarsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         [this.dataSelected,true],
         option
       );
     });
-  }
-
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
   }
 
   edit(evt?) {
@@ -134,6 +147,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         [this.dataSelected,false],
@@ -141,6 +155,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       );
     });
   }
+
   delete(evt?) {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
@@ -148,20 +163,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       this.dataSelected = res;
     });
   }
-  deleteResource(item) {
-    console.log(item);
-    if (confirm('Are you sure to delete')) {
-      this.api
-        .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-          item.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.notificationsService.notify('Xóa thành công!');
-          }
-        });
-    }
-  }
+
 
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
@@ -174,5 +176,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
       default:
         break;
     }
+  }
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 }
