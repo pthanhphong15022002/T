@@ -61,10 +61,7 @@ export class ForwardComponent implements OnInit {
   saveForward()
   {
     this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forward).subscribe((item)=>{
-      if(item.status==0)
-      {
-        this.dialog.close(item.data);
-      }
+      if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })
   }

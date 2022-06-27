@@ -31,9 +31,11 @@
                     </div>
                 </div>
             </div>
-            <ng-container *ngIf="data.files != null && data.files.length>0">
-                
-            </ng-container>
+            <ng-container *ngIf="data.files">
+                <thumbnail
+                  [data]="getJSONString(data.files)"
+                ></thumbnail>
+              </ng-container>
             <!-- <div class="d-flex align-items-center justify-content-between mt-8 mb-8">
                 <ng-container *ngIf="data.files != null && data.files.length>0">
                     <div class="d-flex  mt-8 mb-8" *ngFor="let item of data.files">

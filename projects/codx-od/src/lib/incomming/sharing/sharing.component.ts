@@ -12,6 +12,7 @@ import { DialogData, DialogRef, NotificationsService } from 'codx-core';
 export class SharingComponent implements OnInit {
   dialog      : any;
   data:any;
+  files: any;
   formModel : any;
   dataDis = new permissionDis();
   percentage100 = false;
@@ -37,7 +38,6 @@ export class SharingComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) 
   { 
-    debugger;
     this.data = dt?.data
     this.dialog = dialog;
   }
@@ -46,6 +46,7 @@ export class SharingComponent implements OnInit {
     //alert(this.recID);
     this.gridViewSetup = this.data["gridViewSetup"];
     this.formModel = this.data?.option?.FormModel;
+    this.files = this.data?.files;
   }
 
   close()
