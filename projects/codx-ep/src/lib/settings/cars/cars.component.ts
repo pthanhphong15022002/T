@@ -48,7 +48,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-  
+
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -67,7 +67,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
     private notificationsService: NotificationsService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
-  ) {}
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.views = [
@@ -91,7 +93,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   tmplstDevice = [];
 
   ngOnInit(): void {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+
   }
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -115,7 +117,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        this.dataSelected,
+        [this.dataSelected,true],
         option
       );
     });
@@ -126,16 +128,15 @@ export class CarsComponent implements OnInit, AfterViewInit {
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
-    if (evt) item = evt;
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = item;
+    this.dataSelected = this.viewBase.dataService.dataSelected;
+    if (evt) this.dataSelected = evt;
+    this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        this.dataSelected,
+        [this.dataSelected,false],
         option
       );
     });
