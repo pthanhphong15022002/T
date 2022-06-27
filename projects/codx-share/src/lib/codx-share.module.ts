@@ -9,22 +9,23 @@ import { AssignInfoComponent } from './components/assign-info/assign-info.compon
 
 import { NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
+import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ImageGridComponent } from './components/image-grid/image-grid.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
   BreadcumbComponent,
   SelectweekComponent,
-  ViewFileDialogComponent
-]
+  ViewFileDialogComponent,
+  CodxTabsComponent,
+  ImageGridComponent,
+];
 
 @NgModule({
   declarations: T_Component,
-  imports: [
-    CommonModule,
-    FormsModule,
-    CodxCoreModule,
-  ],
-  exports: [T_Component]
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule],
+  exports: [T_Component],
 })
-export class CodxShareModule { }
+export class CodxShareModule {}

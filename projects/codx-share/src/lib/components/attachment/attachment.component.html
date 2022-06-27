@@ -1,5 +1,5 @@
 <div  class="card w-100 rounded-0 border-0">
-    <div *ngIf="type != 'center'" class="card-header pe-5">
+    <!-- <div *ngIf="type != 'center'" class="card-header pe-5">
         <div class="card-title">
         <h2 class="m-0">Upload tài liệu</h2>
         </div>
@@ -10,7 +10,7 @@
                 <span class="icon-close icon-18"></span>
             </button>
         </div>
-    </div>
+    </div> -->
     <div class="card-body">
         <form name="frm_file1"> 
             <div class="offcanvas-wrapper">
@@ -26,22 +26,23 @@
                         </div>
                     </div>
                 </div>
-                <div  [ngStyle]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">
+                <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">
                     <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
                         class="drop-zoon h-100px p-3 cancelEvent">
-                        <div class="drop-text d-flex justify-content-center">Drap & Drop</div>
-
+                        <div class="drop-text d-flex justify-content-center">
+                            <codx-label default='Drap & Drop'></codx-label>                            
+                        </div>
                     </div>
                     <div appDragDropFileUpload class="btn-choose-file">
                         <div class="btn btn-light-primary justify-content-center">
-                            Chọn file
+                            <codx-label default='Chọn file'></codx-label>    
                         </div>
                         <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                     </div>
                 </div>
                 <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
                     <div class="d-flex flex-grow-1">
-                        <img  class="w-35px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
+                        <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                         <!-- <codx-img class="h-35px me-3"></codx-img> -->
                         <div class="d-flex flex-column flex-grow-1">
                             <span class="text-dark">{{file.fileName}}</span>
@@ -77,90 +78,26 @@
                                 <span class="navi-icon">
                                     <span class="icon-clear icon-18"></span>
                                 </span>
-                                <span class="navi-text">Xóa</span>
-                            </a>
-                            <!-- <a ngbDropdownItem class="dropdown-item" *ngIf="userPermission?.delete!=0">
-                                <div class="d-flex align-items-center" (click)="clickItem('delete')">
-                                    <span class="icon-delete text-danger icon-16"></span>
-                                    <span class="ms-2">Xóa</span>
-                                </div>
-                            </a> -->
+                                <span class="navi-text">
+                                    <codx-label default='Xóa'></codx-label> 
+                                </span>
+                            </a>                          
                         </div>
-                    </div>
-
-                    <!-- <div ngbDropdown class="dropdown">
-                        <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton1" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="icon-more_vert icon-20"></span>
-                        </button>
-                        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-sm" aria-labelledby="dropdownMenuButton1">
-                            <ul class="navi navi-hover">
-                                <li class="navi-item">
-                                    <a class="navi-link">
-                                        <span class="navi-icon">
-                                            <span class="icon-edit icon-18"></span>
-                                        </span>
-                                        <span class="navi-text">Chỉnh sửa</span>
-                                    </a>
-                                </li>
-                                <li class="navi-item">
-                                    
-                                </li>
-                            </ul>
-                        </div>
-                    </div> -->
-
-                    <!-- <div ngbDropdown class="dropdown">
-                        <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="icon-more_vert icon-20"></span>
-                        </button>
-                        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-sm" aria-labelledby="dropdownMenuButton">
-                            <ul class="navi navi-hover">
-                                <li class="navi-item">
-                                    <a class="navi-link">
-                                        <span class="navi-icon">
-                                            <span class="icon-edit icon-18"></span>
-                                        </span>
-                                        <span class="navi-text">Chỉnh sửa</span>
-                                    </a>
-                                </li>
-                                <li class="navi-item">
-                                    <a ngbDropdownItem class="navi-link" (click)="onDeleteUploaded(file.fileName)">
-                                        <span class="navi-icon">
-                                            <span class="icon-clear icon-18"></span>
-                                        </span>
-                                        <span class="navi-text">Xóa</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> -->
+                    </div>                   
                 </div>
             </div>           
         </form>
     </div>
     <div *ngIf="hideBtnSave == '0'" class="card-footer pt-4">
         <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary" (click)="onMultiFileSave(null)">Upload</button>
+            <button type="submit" class="btn btn-primary" (click)="onMultiFileSave(null)">
+                Upload
+            </button>
         </div>
     </div>
 </div>
 
-<ng-template #openFolder let-dialog>
-    <!-- <div class="card-header pe-5">
-        <div class="card-title">
-            <h2 class="m-0">Chọn thư mục</h2>
-        </div>      
-    </div> -->
-    <!-- <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">
-           
-        </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
-            <i class="icon-close icon-20 text-dark text-hover-primary"></i>
-        </button>
-    </div> -->
+<ng-template #openFolder let-dialog>   
     <div class="card-body">
         <form name="frm_move">
             <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd"

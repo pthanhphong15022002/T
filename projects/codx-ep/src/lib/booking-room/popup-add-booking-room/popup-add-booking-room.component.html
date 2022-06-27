@@ -44,15 +44,15 @@
                       ></span>
                     </div>
                     <!--end::Label-->
-                    <codx-input
+                    <!-- <codx-input
                       type="combobox"
-                      ControlName="resourceID"
-                      [crrValue]="addEditForm.value.resourceID"
+                      field="resourceID"
+                      [crrValue]="resource"
                       [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
                       [multiple]="false"
                       (valueChange)="valueChange($event)"
-                    ></codx-input>
+                    ></codx-input> -->
                   </div>
 
                   <div
@@ -138,6 +138,7 @@
                         class="test-datetime"
                         field="datetime"
                         placeholder="datetime"
+                        [crrValue]="startTime"
                         format="t"
                         (valueChange)="valueStartTimeChange($event)"
                       >
@@ -148,7 +149,7 @@
                       <codx-label
                         class="fw-bold"
                         default="Đến giờ"
-                        fiedName="ResourceID"
+                        fiedName="EndDate"
                         [formModel]="dialog.formModel"
                       >
                       </codx-label>
@@ -159,6 +160,7 @@
                         class="test-datetime"
                         field="datetime"
                         placeholder="datetime"
+                        [crrValue]="endTime"
                         format="t"
                         (valueChange)="valueEndTimeChange($event)"
                       >
@@ -258,6 +260,8 @@
                       <div class="form-switch1">
                         <codx-input
                           #checkbox
+                          field="online"
+                          [Group]="addEditForm"
                           type="switch"
                           id="switchOnl"
                           [checked]="this.addEditForm.value.online"
@@ -269,8 +273,13 @@
                         >
                         </codx-input>
                         <span class="fw-bold ms-2"
-                          ><label for="switchOnl">Họp online</label></span
-                        >
+                          ><label for="switchOnl"
+                            ><codx-label
+                              fiedName="Online"
+                              default="Họp online"
+                              [formModel]="dialog.formModel"
+                            ></codx-label></label
+                        ></span>
                       </div>
                       <!--begin: btn-icon-->
                       <span class="text-end align-items-end">
@@ -291,9 +300,9 @@
                     <!--end::Label-->
                     <!--begin::Input-->
                     <div class="d-flex align-items-center fw-bold">
-                      <a href="" *ngIf="this.addEditForm.value.online"
-                        >{{ addEditForm.value.onlineUrl }}</a
-                      >
+                      <a href="" *ngIf="this.addEditForm.value.online">{{
+                        addEditForm.value.onlineUrl
+                      }}</a>
                     </div>
                     <!--end::Input-->
                   </div>
@@ -622,7 +631,11 @@
                     class="d-flex justify-content-between align-items-center mb-4"
                   >
                     <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      Văn phòng phẩm
+                      <codx-label
+                        name="lblStationery"
+                        default="Văn phòng phẩm"
+                        [formModel]="dialog.formModel"
+                      ></codx-label>
                     </h4>
                     <span class="icon-layers text-primary fs-1"></span>
                   </div>
@@ -819,8 +832,13 @@
                             (valueChange)="valueChange($event)"
                           ></codx-input>
                           <span class="fw-bold ms-2"
-                            ><label for="switch">Lặp lại</label></span
-                          >
+                            ><label for="switch"
+                              ><codx-label
+                                name="lblAgain"
+                                default="Lặp lại"
+                                [formModel]="dialog.formModel"
+                              ></codx-label></label
+                          ></span>
                         </div>
                         <!--end::Switch-->
                         <!--begin::Label-->
@@ -831,6 +849,7 @@
                           </codx-combobox> -->
                           <codx-input
                             type="valuelist"
+                            field=""
                             [refValue]="CbxName['Interval']"
                             ngDefaultControl
                             [crrValue]="this.addEditForm.value.interval"
@@ -852,9 +871,14 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
-      <button class="btn btn-light-primary">Sửa</button>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
     </div>
   </ng-template>
 </codx-form>
@@ -947,20 +971,20 @@
         <div class="d-flex">
           <span class="text-dark icon-wifi me-2 p-1"></span>
           <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fw-bolder"
-              >{{ item.text }}</a
-            >
+            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
+              item.text
+            }}</a>
           </div>
         </div>
         <div class="d-flex justify-content-end">
           <div class="form-check form-check-solid form-switch">
-            <input
+            <codx-input
               class="form-check-input w-35px h-20px"
-              type="checkbox"
+              type="switch"
               id="googleswitch"
               [checked]="item.isSelected"
               (change)="checkedChange($event, item)"
-            />
+            ></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
         </div>

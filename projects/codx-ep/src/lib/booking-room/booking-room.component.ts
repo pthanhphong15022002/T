@@ -70,7 +70,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
   dataValue = '1';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'BookingsBusiness';
   method = 'GetEventsAsync';
   Height = '500px';
@@ -369,12 +369,6 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       case 'btnAdd':
         this.addNew();
         break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
-        break;
     }
   }
   onDragDrop(evt: any) {
@@ -392,7 +386,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         PopupAddBookingRoomComponent,
-        this.dataSelected,
+        [this.dataSelected, true],
         option
       );
     });
@@ -409,7 +403,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         PopupAddBookingRoomComponent,
-        this.viewBase.dataService.dataSelected,
+        [item, false],
         option
       );
     });

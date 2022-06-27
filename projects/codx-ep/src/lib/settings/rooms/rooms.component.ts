@@ -10,6 +10,7 @@ import {
   Input,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
@@ -23,58 +24,73 @@ import {
 } from 'codx-core';
 
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
-
-export class defaultRecource {}
 @Component({
-  selector: 'app-rooms',
+  selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit, AfterViewInit {
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('popuptemplate') popupTemp: TemplateRef<any>;
-  @Input('data') data;
-  @Output() editData = new EventEmitter();
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   devices: any;
-  columnsGrid;
   dataSelected: any;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
+  columnGrids: any;
   addEditForm: FormGroup;
   isAdd = false;
   dialog!: DialogRef;
+  vllDevices = [];
+  lstDevices = [];
+  funcID: string;
+  showToolBar = 'true';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '1';
+  idField = 'recID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
+
   constructor(
-    private api: ApiHttpService,
     private cacheSv: CacheService,
-    private cr: ChangeDetectorRef,
-    private callFunc: CallFuncService
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
   ) {}
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã phòng',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên phòng',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol,
+      },
+    ];
     this.views = [
       {
         sameData: true,
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục phòng',
+        type: ViewType.grid,
         active: true,
         model: {
-          template: this.template,
+          resources: this.columnGrids,
         },
       },
     ];
@@ -84,26 +100,25 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     };
   }
 
-  vllDevices = [];
-  lstDevices = [];
-  tmplstDevice = [];
-  funcID = 'EPS21';
-  showToolBar = 'true';
-  service = 'EP';
-  assemblyName = 'EP';
-  entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
-  idField = 'recID';
-  className = 'ResourcesBusiness';
-  Height = '500px';
-  method = 'GetListAsync';
   ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
   }
-  clickMF(evt?: any, data?: any) {}
+
+  clickMF(evt?: any, data?: any) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
+    }
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -123,6 +138,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
         this.dataSelected,
@@ -131,53 +147,32 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) item = evt;
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = item;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callFunc.openSide(
+        PopupAddRoomsComponent,
+        this.dataSelected,
+        option
+      );
+    });
+  }
+
+  delete(evt?) {
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
+  }
+
   closeDialog(evt?) {
     this.dialog && this.dialog.close();
   }
-
-  edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callFunc.openSide(
-          PopupAddRoomsComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
-  }
-  delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        this.dataSelected = res;
-      });
-  }
-
-  saveRoom() {
-    // if (this.dialog.status == 'INVALID') {
-    //   console.log('result', this.dialog.value);
-    //   this.notificationsService.notify('"area" and "capacity" is not null!');
-    //   return;
-    // }
-  }
-  getlstDevice(items: string) {
-    this.lstDevices = items.split(';');
-    return this.lstDevices;
-  }
-
-  getDeviceName(value) {
-    let device = this.vllDevices.find((x) => x.value == value);
-    if (device) return device.text;
-  }
-
-  deleteResource(item) {
-    console.log(item);
-    this.callFunc.openForm(this.popupTemp, 'Xóa', 450, 250);
-  }
-  closeEditForm(evt) {}
 }

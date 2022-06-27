@@ -22,3 +22,8 @@
           [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
           {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
   </ng-template>
+  <ng-template #itemNote let-data>
+    <div [innerHTML]="data.note">
+  
+    </div>
+  </ng-template>

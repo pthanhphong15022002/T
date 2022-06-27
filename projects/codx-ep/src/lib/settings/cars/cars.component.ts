@@ -4,26 +4,20 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
-export class defaultRecource {}
 @Component({
   selector: 'setting-cars',
   templateUrl: 'cars.component.html',
@@ -32,26 +26,16 @@ export class defaultRecource {}
 export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
+  columnGrids: any
   dialog!: DialogRef;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
   isAdd = true;
   columnsGrid;
   dialogCar: FormGroup;
@@ -61,9 +45,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
   dataValue = '2';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
+  
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -77,22 +62,38 @@ export class CarsComponent implements OnInit, AfterViewInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {}
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã xe',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên xe',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol
+      }
+    ];
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục xe',
+        type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template: this.template,
+          resources: this.columnGrids
         },
       },
     ];
@@ -121,22 +122,20 @@ export class CarsComponent implements OnInit, AfterViewInit {
         break;
     }
   }
+
   addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
         option
       );
     });
-  }
-
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
   }
 
   edit(evt?) {
@@ -147,6 +146,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
         this.dataSelected,
@@ -154,6 +154,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       );
     });
   }
+
   delete(evt?) {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
@@ -161,20 +162,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       this.dataSelected = res;
     });
   }
-  deleteResource(item) {
-    console.log(item);
-    if (confirm('Are you sure to delete')) {
-      this.api
-        .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-          item.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.notificationsService.notify('Xóa thành công!');
-          }
-        });
-    }
-  }
+
 
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
@@ -188,7 +176,8 @@ export class CarsComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-  closeEditForm(evt?) {
-    //this.viewBase.currentView.closeSidebarRight();
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 }
