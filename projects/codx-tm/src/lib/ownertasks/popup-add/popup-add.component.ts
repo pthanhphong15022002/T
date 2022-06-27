@@ -61,10 +61,7 @@ export class PopupAddComponent implements OnInit {
   openMemo2 = false;
   showPlan = true;
   showAssignTo = false;
-  dataAddNew = new BehaviorSubject<any>(null);
-  isAddNew = this.dataAddNew.asObservable();
-  updateData = new BehaviorSubject<any>(null);
-  isUpdate = this.updateData.asObservable();
+  isAdd = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -362,7 +359,7 @@ export class PopupAddComponent implements OnInit {
       this.isCheckCheckListControl ||
       this.isCheckAttachmentControl;
     if (checkLogic) {
-      this.notiService.notifyCode('TM002');
+      // this.notiService.notifyCode('TM002');
       return;
     }
     this.convertToListTaskResources();
@@ -404,7 +401,7 @@ export class PopupAddComponent implements OnInit {
     //   .subscribe((res) => {
     //     if (res.save) {
     //       this.dialog.close();
-    //       this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+    //       this.notiService.notifyCode('TM005');  
     //     }
     //   });
     this.tmSv.addTask([
@@ -421,7 +418,7 @@ export class PopupAddComponent implements OnInit {
         this.dialog.close();
         this.notiService.notifyCode('TM005');    
       }
-    })
+    }) //Xài cái này bị la á , đợi fix xong chỉnh lại=))
   }
 
   updateTask() {
@@ -429,6 +426,7 @@ export class PopupAddComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
           this.dialog.close();
           this.notiService.notifyCode('E0528');
         }
@@ -452,9 +450,9 @@ export class PopupAddComponent implements OnInit {
             i++;
             break;
           case 'D':
-            //chua doi chay xong da moi chay tiep dang fail
+            //chưa chạy xong câu lệnh này đã view ra...
             var depID = obj?.data.substring(0, obj?.data.length - 1);
-            this.tmSv.getUserByDepartment(depID).subscribe(res => {
+            t.tmSv.getUserByDepartment(depID).subscribe(res => {
               if (res) {
                 assignTo += res + ";";
                 i++;
@@ -658,7 +656,6 @@ export class PopupAddComponent implements OnInit {
 
     console.log('task required', this.required.taskName);
   }
-  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
@@ -692,15 +689,6 @@ export class PopupAddComponent implements OnInit {
     } else this.task.assignTo = '';
   }
 
-  openDialog() {
-    // let obj = {
-    //   formName: 'demo',
-    //   control: '1',
-    //   value: '5',
-    //   text: 'demo nè',
-    // };
-    // this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', obj);
-  }
 
   closeConfirm(e: any, t: PopupAddComponent, id: string) {
     t.dialog.close();

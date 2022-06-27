@@ -454,4 +454,3 @@ export class AssignTasksComponent extends UIComponent {
   }
 }
 
-// }

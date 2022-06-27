@@ -342,7 +342,11 @@ export class OwnerTasksComponent extends UIComponent {
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
-      .subscribe();
+      .subscribe((res)=>{
+      if(res[0]){
+        this.notiService.notifyCode("TM004");
+      }
+      });
   }
   sendemail(data) {
 
@@ -371,7 +375,8 @@ export class OwnerTasksComponent extends UIComponent {
   }
 
   requestEnded(evt: any) {
-
+    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    this.view.currentView
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -383,7 +388,6 @@ export class OwnerTasksComponent extends UIComponent {
     }
   }
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }
