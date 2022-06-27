@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formGroup]="addEditForm"
+  [formGroup]="dialogStationery"
   *ngIf="isAfterRender"
 >
   <ng-template popup add #body>
@@ -30,7 +30,8 @@
                       <codx-label
                         class="fw-bold"
                         default="Tên sản phẩm"
-                        fiedName="ResourceID"
+                        fiedName="ResourceName"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                     </div>
@@ -39,8 +40,8 @@
                       type="text"
                       name="text"
                       ControlName="resourceName"
-                      [crrValue]="addEditForm.value.resourceID"
-                      [Group]="addEditForm"
+                      [crrValue]="dialogStationery.value.resourceName"
+                      [Group]="dialogStationery"
                     ></codx-input>
                   </div>
 
@@ -50,6 +51,7 @@
                         class="fw-bold"
                         default="Nhóm"
                         fiedName="GroupID"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -57,7 +59,7 @@
                         type="combobox"
                         class="form-control"
                         field="groupID"
-                        [crrValue]="addEditForm.value.groupID"
+                        [crrValue]="dialogStationery.value.groupID"
                         [refValue]="CbxName['GroupID']"
                       >
                       </codx-input>
@@ -68,6 +70,7 @@
                         class="fw-bold"
                         default="Mã số"
                         fiedName="ResourceID"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -78,8 +81,8 @@
                         type="text"
                         name="text"
                         ControlName="resourceID"
-                        [crrValue]="addEditForm.value.resourceID"
-                        [Group]="addEditForm"
+                        [crrValue]="dialogStationery.value.resourceID"
+                        [Group]="dialogStationery"
                         [refValue]="CbxName['ResourceID']"
                       ></codx-input>
                       <!--end::Input-->
@@ -92,17 +95,18 @@
                       class="fw-bold"
                       default="Kho"
                       fiedName="Location"
+                      [formModel]="dialog.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
                     <!-- <codx-combobox service="SYS" name="combobox" placeholder="" ngDefaultControl refValue="Users"
-                        file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="addEditForm">
+                        file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="dialogStationery">
                       </codx-combobox> -->
                     <codx-input
                       type="text"
                       ControlName="Location"
-                      [crrValue]="addEditForm.value.location"
-                      [Group]="addEditForm"
+                      [crrValue]="dialogStationery.value.location"
+                      [Group]="dialogStationery"
                       [refValue]="CbxName['Location']"
                       [multiple]="false"
                       (valueChange)="valueChange($event)"
@@ -116,6 +120,7 @@
                       class="fw-bold"
                       default="Người điều phối"
                       fiedName="Owner"
+                      [formModel]="dialog.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -124,7 +129,7 @@
                         service="AD"
                         type="combobox"
                         name="combobox"
-                        [crrValue]="addEditForm.value.owner"
+                        [crrValue]="dialogStationery.value.owner"
                         ngDefaultControl
                         field="owner"
                         refValue="CbxName['Owner']"
@@ -145,6 +150,7 @@
                       class="fw-bold"
                       default="Mô tả chi tiết"
                       fiedName="Memo"
+                      [formModel]="dialog.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -152,9 +158,10 @@
                       type="textarea"
                       class="test-textarea"
                       field="memo"
+                      [crrValue]="dialogStationery.value.memo"
+                      placeholder=""
+                      rows="3"
                       ControlName="memo"
-                      placeholder="textarea"
-                      [crrValue]="addEditForm.value.memo"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -181,13 +188,13 @@
                   <div class="d-flex flex-column mb-4">
                     <!--begin::Title-->
                     <codx-img
-                      funcId="FEDS0122"
+                      funcId="this.dialog.formModel.funcId"
                       #imageUpLoad
                       aria-disabled="true"
-                      objectType="FD_Gifts"
+                      objectType="this.dialog.formModel.entityName"
                       [isAllowEdit]="true"
                       [width]="90"
-                      [objectId]="addEditForm.value.resourceID"
+                      [objectId]="dialogStationery.value.Icon"
                     >
                     </codx-img>
                   </div>
@@ -241,7 +248,11 @@
                     class="d-flex justify-content-between align-items-center mb-4"
                   >
                     <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      Thông tin khác
+                      <codx-label
+                        name="lblInformation"
+                        default="Thông tin khác"
+                        [formModel]="dialog.formModel"
+                      ></codx-label>
                     </h4>
                     <span class="icon-layers text-primary fs-1"></span>
                   </div>
@@ -253,6 +264,7 @@
                         class="fw-bold"
                         default="Số lượng hiện có"
                         fiedName="AvailableQty"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -263,8 +275,8 @@
                         type="text"
                         name="text"
                         ControlName="availableQty"
-                        [crrValue]="addEditForm.value.availableQty"
-                        [Group]="addEditForm"
+                        [crrValue]="dialogStationery.value.availableQty"
+                        [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -274,6 +286,7 @@
                         default="Số lượng yêu cầu"
                         fiedName="ReservedQty"
                         aria-disabled="false"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -284,8 +297,8 @@
                         type="text"
                         name="text"
                         ControlName="reservedQty"
-                        [crrValue]="addEditForm.value.reservedQty"
-                        [Group]="addEditForm"
+                        [crrValue]="dialogStationery.value.reservedQty"
+                        [Group]="dialogStationery"
                         [refValue]="CbxName['ReservedQty']"
                       ></codx-input>
                       <!--end::Input-->
@@ -295,6 +308,7 @@
                         class="fw-bold"
                         default="Số lượng còn lại"
                         fiedName="CurrentQty"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -305,8 +319,8 @@
                         type="text"
                         name="text"
                         ControlName="currentQty"
-                        [crrValue]="addEditForm.value.currentQty"
-                        [Group]="addEditForm"
+                        [crrValue]="dialogStationery.value.currentQty"
+                        [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -317,6 +331,7 @@
                         class="fw-bold"
                         default="Giá mua sau cùng"
                         fiedName="CostPrice"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -327,8 +342,8 @@
                         type="text"
                         name="text"
                         ControlName="costPrice"
-                        [crrValue]="addEditForm.value.costPrice"
-                        [Group]="addEditForm"
+                        [crrValue]="dialogStationery.value.costPrice"
+                        [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -339,6 +354,7 @@
                       class="fw-bold"
                       default="Ghi chú"
                       fiedName="Note"
+                      [formModel]="dialog.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -348,7 +364,7 @@
                       field="note"
                       ControlName="note"
                       placeholder="textarea"
-                      [crrValue]="addEditForm.value.note"
+                      [crrValue]="dialogStationery.value.note"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -362,9 +378,14 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
-      <button class="btn btn-light-primary">Sửa</button>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
     </div>
   </ng-template>
 </codx-form>

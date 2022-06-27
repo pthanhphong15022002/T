@@ -23,7 +23,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   enableAddtodolist: boolean = false;
   listTodo: any;
   todoAddText: any;
-  title : 'Tạo mới công việc';
+  title = 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
   readOnly = false;

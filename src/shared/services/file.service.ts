@@ -89,7 +89,13 @@ export class FileService implements OnDestroy {
         }
         return window.btoa(binary);
     }
-
+    deleteFileByObjectIDType(objectID: string,  objectType: string,  forever: boolean): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "DeleteByObjectIDAsync", [objectID, objectType, forever]);
+    }
+    
+    updateFileByObjectIDType(objectID_old: string, objectID_new: string,  objectType: string): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "UpdateFileByObjectIDTypeAsync", [objectID_old, objectID_new, objectType]);
+    }
     getFileDuplicate(fileName: string, folderId): Observable<any> {
         return this.api.exec<string>("DM", "FileBussiness", "GetFileNameDuplicateAsync", [fileName, folderId]);
     }

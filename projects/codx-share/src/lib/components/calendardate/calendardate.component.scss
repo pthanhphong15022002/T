@@ -1,0 +1,84 @@
+.shortCalendar {
+    width: 400px;
+    float: right;
+}
+
+.show {
+    position: relative;
+    z-index: 99999;   
+    width: 100%;
+    float: left;
+}
+
+.e-calendar .e-header .e-title, .e-bigger.e-small .e-calendar .e-header .e-title {
+    color: #343a40;
+}
+
+.e-calendar .e-content td:hover span.e-day, .e-calendar .e-content td:focus span.e-day, .e-bigger.e-small .e-calendar .e-content td:hover span.e-day, .e-bigger.e-small .e-calendar .e-content td:focus span.e-day {
+    background-color: red;
+    border: 2px solid;
+    color: #212529;
+}
+
+.active {
+    content: '&#xf0da;';
+}
+
+ul.navi li {
+    list-style: none;
+}
+
+.width-calendar {
+    width: 280px !important;
+    border: none;
+}
+
+.label-week {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    margin: 2px;
+    // border: 1px #eee solid;
+    border-radius: 2px!important;
+    cursor: pointer;    
+}
+
+.col-week {
+    margin-left: 12px;
+}
+
+.week-selected {
+    border: 1px solid #0d6efd;    
+    background-color: #0257d5 !important;
+    color: #fff;
+}
+
+.today-week {
+    border: 1px solid #0d6efd;    
+}
+
+.week-title {   
+    height: 28px;
+    line-height: 28px;
+}
+
+.week-button {
+    width: 28px;
+    height: 28px;
+    padding: 2px;
+    line-height: 28px;
+    margin: 0px 4px;
+    cursor: pointer;
+    border-radius: 4px!important;
+}
+
+.week-button:hover {
+    color: white;
+    background-color: #6c757d;
+}
+
+.label-week:hover {
+  background-color: #e9ecef;  
+}

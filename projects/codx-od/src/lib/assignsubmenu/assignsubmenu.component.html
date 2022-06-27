@@ -1,0 +1,75 @@
+<!-- <ng-container *ngIf="this.roles != null">
+    <div  *ngFor="let item of this.roles">
+        <div class="d-flex align-items-center ms-4">
+            <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+            <div class="fs-7 text-gray-500">{{item.text}}</div>
+        </div>
+    </div>               
+</ng-container> -->
+
+<ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+    <ng-container *ngIf="this.roles != null">
+        <div  *ngFor="let item of this.roles">
+            <li>
+                <a ngbDropdownItem href="#">  
+                    <div class="d-flex align-items-center ms-4">
+                        <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+                        <div class="fs-7 text-gray-500">{{item.text}}</div>
+                    </div>        
+                </a>
+            </li>
+        </div>
+    </ng-container>
+    <!-- <li>
+        <a ngbDropdownItem href="#">  
+            <div class="d-flex align-items-center ms-4">
+                <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+                <div class="fs-7 text-gray-500">Chịu trách nhiệm</div>
+            </div>        
+        </a>
+    </li>
+    <li>
+        <a ngbDropdownItem href="#">
+            <div class="d-flex align-items-center ms-4">
+                <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+                <div class="fs-7 text-gray-500">Thực hiện</div>
+            </div>   
+        </a>
+    </li>
+    <li>
+        <a ngbDropdownItem href="#">
+            <div class="d-flex align-items-center ms-4">
+                <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+                <div class="fs-7 text-gray-500">Thông báo<</div>
+            </div>   
+        </a>
+    </li>
+    <div class="separator mt-3 opacity-75"></div>
+    <li>
+        <a ngbDropdownItem href="#">
+            <div class="d-flex align-items-center ms-4">
+                <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+                <div class="fs-7 text-gray-500">Tư vấn</div>
+            </div>   
+        </a>
+    </li> -->
+</ul>
+
+<!-- <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1"  class="d-flex justify-content-end">
+    <li ngbDropdownItem class="d-flex align-items-center ms-4">
+        <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+        <div class="fs-7 text-gray-500">Chịu trách nhiệm</div>
+    </li>
+    <li ngbDropdownItem class="d-flex align-items-center ms-4">
+        <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+        <div class="fs-7 text-gray-500">Thực hiện</div>
+    </li>
+    <li ngbDropdownItem class="d-flex align-items-center ms-4">
+        <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+        <div class="fs-7 text-gray-500">Thông báo</div>
+    </li>
+    <li ngbDropdownItem class="d-flex align-items-center ms-4">
+        <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
+        <div class="fs-7 text-gray-500">Tư vấn</div>
+    </li>
+</ul> -->

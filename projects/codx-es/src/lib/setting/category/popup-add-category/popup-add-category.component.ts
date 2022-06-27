@@ -107,6 +107,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (!this.isAdd) {
             this.dialogCategory.patchValue(this.data);
           }
+          console.log('dialogCategory', this.dialogCategory);
         }
       });
     this.isSaved = false;
@@ -158,14 +159,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openAutoNumPopup() {
-    this.cfService.openForm(
-      PopupAddAutoNumberComponent,
-      '',
-      750,
-      600,
-      '',
-      this.dialog.formModel
-    );
+    this.cfService.openForm(PopupAddAutoNumberComponent, '', 570, 650, '', [
+      this.dialog.formModel,
+      this.dialogCategory.value.categoryID,
+    ]);
   }
 
   openPopupApproval() {

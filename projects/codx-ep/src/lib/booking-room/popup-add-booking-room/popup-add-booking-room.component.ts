@@ -317,7 +317,6 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   checkedOnlineChange(event) {
-    debugger;
     this.addEditForm.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });

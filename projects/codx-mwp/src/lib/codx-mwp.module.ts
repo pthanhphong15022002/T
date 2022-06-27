@@ -15,10 +15,10 @@ import { ImgComponent } from './personals/img/img.component';
 import { VideoComponent } from './personals/video/video.component';
 import { StorageComponent } from './personals/storage/storage.component';
 import { UpdateStorageComponent } from './personals/storage/update-storage/update-storage.component';
-import { AddStorageComponent } from './personals/storage/add-storage/add-storage.component';
 import { AddDetailStorageComponent } from './personals/storage/detail/add-detail-storage/add-detail-storage.component';
 import { UpdateDetailStorageComponent } from './personals/storage/detail/update-detail-storage/update-detail-storage.component';
 import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
+import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
 export const routes: Routes = [
   {
     path: '',
@@ -46,7 +46,7 @@ const Component: Type<any>[] = [
   StorageComponent,
   UpdateStorageComponent,
   DetailStorageComponent,
-  AddStorageComponent,
+  AddUpdateStorageComponent,
   AddDetailStorageComponent,
   UpdateDetailStorageComponent,
   InfoLeftComponent,
