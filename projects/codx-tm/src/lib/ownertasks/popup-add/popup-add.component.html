@@ -220,6 +220,8 @@
                   border-style: none;
                   margin-top: 3px;
                   outline: none;" />
+                  <!-- <codx-input *ngIf="openMemo2" type="text"  name="txtMemo2" field="memo2" [crrValue]="task.memo2" [class]="'class-memo'" placeholder="Ghi chú phân công..."
+                  [readOnly]="readOnly"></codx-input> -->
             </div>
           </ng-template>
         </e-tabitem>
@@ -259,11 +261,13 @@
 
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 == null">
                         <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-                          (keydown.enter)="changeMemo2User($event.target.value,item?.userID)" style="
+                        (keydown.enter)="changeMemo2User($event.target.value,item?.userID)" style="
                             border-width: thin;
                             border-style: none;
                             margin-top: 3px;
                             outline: none;" />
+                             <!-- <codx-input  type="text"  name="txtMemo2" field="memo2" [crrValue]="task.memo2" [class]="'class-memo'" placeholder="Ghi chú phân công..."
+                  [readOnly]="readOnly"></codx-input> -->
                       </div>
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 != null">
                         <input name="txtTaskMemo2" value={{listMemo2OfUser[i]?.memo2}}

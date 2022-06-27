@@ -220,35 +220,26 @@ export class PopupAddComponent implements OnInit {
   }
 
   openInfo(id, action) {
-    const t = this;
-    t.task = new TM_Tasks();
-    t.readOnly = action === 'edit' ? false : true;
-    t.title =
+    this.task = new TM_Tasks();
+    this.readOnly = action === 'edit' ? false : true;
+    this.title =
       action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
-    t.disableAddToDo = true;
+      this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        t.task = res[0];
-        this.tags = t.task.tags;
-        t.listUserDetail = res[1] || [];
-        t.listTodo = res[2];
-        t.listMemo2OfUser = res[3];
-        if (t.task.assignTo != null) {
-          t.listUser = t.task.assignTo.split(';');
-          this.getListUser(this.task.assignTo);
-        } else {
-          this.listUser = [];
-          this.listUserDetail = [];
-          this.listMemo2OfUser = [];
-        }
-        t.changeDetectorRef.detectChanges();
+        this.task = res[0];
+        this.tags = this.task.tags;
+        this.listUserDetail = res[1] || [];
+        this.listTodo = res[2];
+        this.listMemo2OfUser = res[3];
+         this.listUser = this.task.assignTo?.split(";") || [] ;
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   openAssignSchedule(task): void {
-    const t = this;
     this.task = task;
     // this.task.estimated = 0;
     this.readOnly = false;
