@@ -1,4 +1,3 @@
-import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { CarsComponent } from './settings/cars/cars.component';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
@@ -92,7 +91,11 @@ const Components: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [Components, PopupRequestStationeryComponent, PopupListStationeryComponent],
+  declarations: [
+    Components,
+    PopupRequestStationeryComponent,
+    PopupListStationeryComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
