@@ -1,8 +1,9 @@
-<codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
-    (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-    method="GetModelFormEmployAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
-    (requestEnded)="requestEnded($event)" [selectedFirst]="true" [itemSelected]="itemSelected">
+<codx-views #view funcID="HRT04" service="HR" entityName="HR_Employees" [views]="views" idField="employeeID"
+    (selectedChange)="selectedChange($event)" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
+    method="GetModelFormEmployAsync" [showToolBar]="true" (requestEnded)="requestEnded($event)" [selectedFirst]="true"
+    [predicate]="predicate" [dataValue]="dataValue" [itemSelected]="itemSelected">
 </codx-views>
+
 
 <ng-template #cardTemp let-data>
     <codx-card-center cardCss="border h-100" [imageId]="data.employeeID" [title]="data.employeeName"
@@ -15,10 +16,10 @@
     <tr>
         <td>
             <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" (clickMF)="clickMF($event,data)">
-            </codx-mfunc> 
+            </codx-mfunc>       
         </td>
         <td>
-            <div class="d-flex align-items-top">             
+            <div class="d-flex align-items-top">       
                 <div class="d-flex align-items-start">
                     <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.employeeID"
                         objectType="HR_Employees" [objectName]="data.employeeName">
@@ -283,17 +284,11 @@
     </div>
 </ng-template>
 
-<!-- <ng-template #itemAction let-data>
-    <a (click)="edit(data)" class="action-item">
+<ng-template #itemAction let-data>
+    <a class="action-item" (click)="edit(data)">
         <div class="d-flex align-items-center btn-tooltip">
             <span class="icon-edit icon-20 ml-2 mr-2"></span>
             <span class="tooltiptext">Edit</span>
-        </div>
-    </a>
-    <a class="action-item">
-        <div class="d-flex align-items-center btn-tooltip" (click)="copy(data)">
-            <span class="icon-content_copy icon-18 text-warning ml-2 mr-2"></span>
-            <span class="tooltiptext">Copy</span>
         </div>
     </a>
     <a class="action-item" (click)="delete(data)">
@@ -302,4 +297,4 @@
             <span class="tooltiptext">Delete</span>
         </div>
     </a>
-</ng-template> -->
+</ng-template>

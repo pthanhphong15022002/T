@@ -178,19 +178,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       '',
       this.dialogCategory.value.id
     );
-    console.log(this.viewApprovalSteps);
-
-    if (this.isAdd) {
-      this.onSaveForm(false);
-    } else {
-      this.transID = this.dialogCategory.value.recID;
-      this.modalService
-        .open(this.popupModal, { centered: true, size: 'xl' })
-        .result.then(
-          (result) => {},
-          (reason) => {}
-        );
-    }
   }
 
   closePopup() {}
