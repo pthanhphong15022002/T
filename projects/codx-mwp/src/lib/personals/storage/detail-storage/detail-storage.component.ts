@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { AuthStore } from 'codx-core';
-import { UpdateDetailStorageComponent } from '../update-detail-storage/update-detail-storage.component';
 
 @Component({
   selector: 'app-detail-storage',

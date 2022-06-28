@@ -26,7 +26,7 @@ const T_Component: Type<any>[] = [
   ViewFileDialogComponent,
   CodxTabsComponent,
   ImageGridComponent,
-  CalendarDateComponent
+  CalendarDateComponent,
 ];
 
 @NgModule({
