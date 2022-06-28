@@ -129,7 +129,7 @@ export class PopupAddComponent implements OnInit {
     // this.openDialogFolder(this.contentAddUser, '');
   }
 
-  changeMemo2User(message, id) {
+  changeMemo2OfUser(message, id) {
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
     if (index != -1) {
       this.listMemo2OfUser.forEach((obj) => {
@@ -707,5 +707,23 @@ export class PopupAddComponent implements OnInit {
   fileAdded(e) {
     ///chỗ này không bắt được data
     console.log(e);
+  }
+  changeMemo2(e,id){
+    var message = e?.data ;
+    var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
+    if (index != -1) {
+      this.listMemo2OfUser.forEach((obj) => {
+        if (obj.userID == id) {
+          obj.memo2 = message;
+          return;
+        }
+      });
+    } else {
+      var memo2OfUser = {
+        userID: id,
+        memo2: message,
+      };
+      this.listMemo2OfUser.push(memo2OfUser);
+    }
   }
 }
