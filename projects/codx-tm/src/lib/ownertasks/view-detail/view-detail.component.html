@@ -177,9 +177,9 @@
         </div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
-            <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input> -->
+             <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input>  -->
             <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
-            <span></span>{{ " " + item.memo }}
+            <span>{{ " " + item.memo }}</span>
           </ng-container>
         </div>
       </div>
