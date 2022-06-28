@@ -1,5 +1,11 @@
-<codx-form [formGroup]="dialogSignFile" *ngIf="isAfterRender">
-  <div class="card-body card-scroll mx-5">
+<codx-form
+  [formGroup]="dialogSignFile"
+  *ngIf="isAfterRender"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
     <div class="tab-content py-5">
       <div
         class="tab-pane fade"
@@ -45,7 +51,6 @@
       >
         <div class="mb-3">
           <div class="text-center mb-3">
-            <!--begin::Title-->
             <codx-label
               name=""
               [formModel]="formModel"
@@ -53,9 +58,7 @@
               default="Bổ sung thông tin tài liệu"
               class=""
             ></codx-label>
-            <!--end::Title-->
           </div>
-          <!--begin::panel-->
           <div class="card w-90 rounded-0 border-0">
             <div class="card-body scroll-y my-7">
               <!--begin::form-group-->
@@ -63,8 +66,7 @@
                 <codx-label
                   fiedName="Title"
                   default="Tên tài liệu"
-                  gridViewName="grvUsers"
-                  formName="Users"
+                  [formModel]="formModel"
                 >
                 </codx-label>
                 <!--begin::Title-->
@@ -89,8 +91,7 @@
                 <div class="col-6">
                   <codx-label
                     fiedName="CategoryID"
-                    gridViewName="grvUsers"
-                    formName="Users"
+                    [formModel]="formModel"
                     default="Phân loại"
                   >
                   </codx-label>
@@ -108,8 +109,7 @@
                 <div class="col-6">
                   <codx-label
                     fiedName="Priority"
-                    default="Mức độ ưu tiên"
-                    gridViewName="grvUsers"
+                    [formModel]="formModel"
                     formName="Users"
                   >
                   </codx-label>
@@ -130,8 +130,7 @@
                 <div class="col-6">
                   <codx-label
                     fiedName="RefNo"
-                    gridViewName="grvUsers"
-                    formName="Users"
+                    [formModel]="formModel"
                     default="Số văn bản"
                   >
                   </codx-label>
@@ -149,8 +148,7 @@
                   <codx-label
                     fiedName="Pages"
                     default="Số trang"
-                    gridViewName="grvUsers"
-                    formName="Users"
+                    [formModel]="formModel"
                   >
                   </codx-label>
                   <codx-input
@@ -170,8 +168,7 @@
               <div class="form-group row mt-3">
                 <codx-label
                   fiedName="EmployeeID"
-                  gridViewName="grvUsers"
-                  formName="Users"
+                  [formModel]="formModel"
                   default="Người yêu cầu"
                 >
                 </codx-label>
@@ -192,8 +189,7 @@
               <div class="form-group row mt-3">
                 <codx-label
                   fiedName="DeptID"
-                  gridViewName="grvUsers"
-                  formName="Users"
+                  [formModel]="formModel"
                   default="Phòng ban"
                   [formModel]=""
                 >
@@ -291,35 +287,37 @@
         </div>
       </div>
     </div>
-  </div>
-</codx-form>
+  </ng-template>
 
-<div class="card-footer pt-4 border-0" #footer>
-  <div class="d-flex justify-content-between">
-    <button
-      type="button"
-      class="btn btn-light-primary me-3"
-      *ngIf="currentTab != 0"
-      (click)="openPopup(process)"
-    >
-      <codx-label
-        name=""
-        [formModel]="formModel"
-        class=""
-        default="Qui trình mẫu"
-        class=""
-      ></codx-label>
-    </button>
-    <div *ngIf="currentTab == 0"></div>
-    <button
-      type="button"
-      class="btn btn-light-primary"
-      (click)="continue(currentTab)"
-    >
-      Tiếp tục
-    </button>
-  </div>
-</div>
+  <ng-template #footer>
+    <div class="card-footer pt-4 border-0">
+      <div class="d-flex justify-content-between">
+        <button
+          type="button"
+          class="btn btn-light-primary me-3"
+          *ngIf="currentTab != 0"
+          (click)="openPopup(process)"
+        >
+          <codx-label
+            name=""
+            [formModel]="formModel"
+            class=""
+            default="Qui trình mẫu"
+            class=""
+          ></codx-label>
+        </button>
+        <div *ngIf="currentTab == 0"></div>
+        <button
+          type="button"
+          class="btn btn-light-primary"
+          (click)="continue(currentTab)"
+        >
+          Tiếp tục
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>
 
 <ng-template #content>
   <div class="card-body scroll-y" style="height: 500px">
@@ -329,8 +327,7 @@
         class="fw-bold"
         default="Mô tả"
         fiedName="Memo"
-        gridViewName="grvUsers"
-        formName="Users"
+        [formModel]="formModel"
       >
       </codx-label>
       <!--end::Label-->
@@ -350,8 +347,7 @@
           <codx-label
             default="Hành động"
             fiedName="StepType"
-            gridViewName="grvUsers"
-            formName="Users"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -368,8 +364,7 @@
           <codx-label
             default="Thời gian xử lí (giờ)"
             fiedName="Leadtime"
-            gridViewName="grvUsers"
-            formName="Users"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -392,8 +387,7 @@
         <codx-label
           default="Người xét duyệt"
           fiedName="Attendees"
-          gridViewName="grvUsers"
-          formName="Users"
+          [formModel]="formModel"
         >
         </codx-label>
         <span class="icon-group_add text-primary fs-1"></span>
@@ -510,8 +504,7 @@
           <codx-label
             default="Cho ý kiến khi duyệt"
             fiedName="ApproveControl"
-            formName="Users"
-            gridviewName="grvUsers"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -528,8 +521,7 @@
           <codx-label
             default="Cho ý kiến khi từ chối"
             fiedName="RejectControl"
-            formName="Users"
-            gridviewName="grvUsers"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -551,8 +543,7 @@
           <codx-label
             default="Xử lí động khi quá hạn"
             fiedName="OverdueControl"
-            formName="Users"
-            gridviewName="grvUsers"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -569,8 +560,7 @@
           <codx-label
             default="Thời gian nhắc"
             fiedName="Reminder"
-            formName="Users"
-            gridviewName="grvUsers"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
@@ -587,8 +577,7 @@
           <codx-label
             default="Số lần lặp"
             fiedName="Loops"
-            formName="Users"
-            gridviewName="grvUsers"
+            [formModel]="formModel"
           >
           </codx-label>
           <codx-input
