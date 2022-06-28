@@ -21,7 +21,8 @@
       <div *ngFor="let h of data?.rangeLines; let i = index">
         <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
       </div>
-      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
+      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue"
+          (click)="readMore(data)">{{
           !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
     <td>
@@ -37,8 +38,8 @@
       {{data.createdOn | date: 'dd/MM/yyyy'}}
     </td>
     <td>
-      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected" (clickMF)="clickMF($event,data)">
-
+      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+        (clickMF)="clickMF($event,data)">
       </codx-mfunc>
     </td>
   </tr>
