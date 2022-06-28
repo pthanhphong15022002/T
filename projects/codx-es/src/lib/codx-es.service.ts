@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
   DataRequest,
+  FormModel,
   NotificationsService,
   UploadFile,
   UserModel,
 } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
-export class ModelPage {
-  funcID = '';
-  gridViewName = '';
-  formName = '';
-  entity = '';
-}
+import { debug } from 'util';
 
 export class AddGridData {
   dataItem: any = null;
@@ -94,17 +90,18 @@ export class CodxEsService {
     private notificationsService: NotificationsService
   ) {}
 
-  getModelPage(functionID): Promise<ModelPage> {
-    return new Promise<ModelPage>((resolve, rejects) => {
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
-        var modelPage = new ModelPage();
+        var formModel = new FormModel();
         if (funcList) {
-          modelPage.entity = funcList?.entityName;
-          modelPage.formName = funcList?.formName;
-          modelPage.gridViewName = funcList?.gridViewName;
-          modelPage.funcID = funcList?.functionID;
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
         }
-        resolve(modelPage);
+        resolve(formModel);
       });
     });
   }
@@ -180,9 +177,29 @@ export class CodxEsService {
           }
         }
       });
-      resolve(obj);
+      resolve(obj as Object);
     });
   }
+
+  // getComboboxName1(formName, gridView) {
+  //   debugger;
+  //   var obj: { [key: string]: any } = {};
+  //   this.cache.gridViewSetup(formName, gridView).subscribe((res) => {
+  //     if (res) {
+  //       for (const key in res) {
+  //         if (Object.prototype.hasOwnProperty.call(res, key)) {
+  //           const element = res[key];
+  //           if (element.referedValue != null) {
+  //             obj[key] = element.referedValue;
+  //           }
+  //         }
+  //       }
+  //       return obj;
+  //     } else {
+  //       return null;
+  //     }
+  //   });
+  // }
 
   execEP(
     className: string,
@@ -215,6 +232,53 @@ export class CodxEsService {
       'SignFilesBusiness',
       'GetAsync',
       data
+    );
+  }
+
+  getTotalGByApproveStatus() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByApproveStatusAsync',
+      data
+    );
+  }
+
+  getTotalGByCategory() {
+    let data = new DataRequest();
+    data.formName = 'SignFiles';
+    data.gridViewName = 'grvSignFiles';
+    data.entityName = 'ES_SignFiles';
+    data.pageLoading = false;
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTotalGByCategoryAsync',
+      data
+    );
+  }
+
+  getDocsGByDays() {
+    let model = new DataRequest();
+    model.formName = 'SignFiles';
+    model.gridViewName = 'grvSignFiles';
+    model.entityName = 'ES_SignFiles';
+    model.pageLoading = false;
+    let month = (new Date().getMonth() + 1).toString();
+
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetDocsGByDayAsync',
+      [model, month]
     );
   }
 
@@ -253,6 +317,18 @@ export class CodxEsService {
       'GetByProcessIDAsync',
       recID
     );
+  }
+
+  addEditAutoNumbers(data: FormGroup, isAdd: boolean) {
+    this.api
+      .callSv('SYS', 'SYS', 'AutoNumbersBusiness', 'SettingAutoNumberAsync')
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          return res.msgBodyData[0];
+        } else {
+          return null;
+        }
+      });
   }
 }
 export class LayoutModel {

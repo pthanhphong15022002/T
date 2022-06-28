@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { ApiHttpService, AuthStore, UploadFile, UserModel } from 'codx-core';
+import { ApiHttpService, AuthStore, FormModel, UploadFile, UserModel, CacheService } from 'codx-core';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
@@ -19,7 +19,8 @@ export class CodxTMService {
   constructor(
     //private cache: CacheService,
     private api: ApiHttpService,
-    private authStore: AuthStore 
+    private authStore: AuthStore, 
+    private cache: CacheService
   ) {
     this.user = this.authStore.get();
   }
@@ -243,6 +244,14 @@ export class CodxTMService {
     );
   }
 
+  getUserByDepartment(depID){
+    return this.api.execSv<any>('HR',
+    'HR',
+    'OrganizationUnitsBusiness',
+    'GetUserByDepartmentAsync',
+    depID)
+  }
+
   getChartData(
     model: Object,
     daySelectedFrom: Date,
@@ -270,6 +279,22 @@ export class CodxTMService {
   ) {
     if (!Array.isArray(list) || list.length == 0) return {};
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
+  }
+
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+        }
+        resolve(formModel);
+      });
+    });
   }
 }
 

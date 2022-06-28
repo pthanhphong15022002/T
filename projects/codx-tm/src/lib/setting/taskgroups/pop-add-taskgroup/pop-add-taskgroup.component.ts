@@ -23,7 +23,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   enableAddtodolist: boolean = false;
   listTodo: any;
   todoAddText: any;
-  title : 'Tạo mới công việc';
+  title = 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
   readOnly = false;
@@ -62,7 +62,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber("TM00632", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
+      this.getAutonumber("TMS032", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
 
         this.taskGroups.taskGroupID = key;
         this.taskGroups.approvalControl = "0";

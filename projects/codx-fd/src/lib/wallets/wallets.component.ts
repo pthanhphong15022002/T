@@ -1,6 +1,8 @@
+import { Valuelist } from './../models/model';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent, CodxService } from 'codx-core';
+import { LayoutModel } from '@shared/models/layout.model';
 import { AccumulationChart, AccumulationChartComponent, MarkerSettingsModel } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
 declare var _;
@@ -18,6 +20,7 @@ export class Data_Line {
 
 
 export class WalletsComponent implements OnInit {
+
   public chartArea: Object = {
     border: {
       width: 0
@@ -48,7 +51,7 @@ export class WalletsComponent implements OnInit {
   dataListView: any = [];
   checkdataListView = false;
 
-  funcID = 'FED201';
+  funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;
@@ -148,7 +151,7 @@ export class WalletsComponent implements OnInit {
   emloyeeID = "";
   predicate = "";
   dataValue = "";
-  comboboxName = 'HRDepartments';
+  comboboxName = '';
   lstDataChart = [];
   ishide = true;
   loadList = false;
@@ -161,6 +164,8 @@ export class WalletsComponent implements OnInit {
     label: 'empty',
     data: [],
   }];
+  L1483 = [];
+  vllOrganize_value: any;
   predicateCombobox: any;
   dataValueCombobox: any;
 
@@ -173,27 +178,32 @@ export class WalletsComponent implements OnInit {
   tenant: string;
 
   @ViewChild("listview") listview;
+  @ViewChild("listview") listView: CodxListviewComponent;
   @ViewChild("subheader") subheader;
-  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
+  @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
 
   constructor(
-    injector: Injector,
     private dt: ChangeDetectorRef,
     private api: ApiHttpService,
+    private router: Router,
     private route: ActivatedRoute,
     private tenantStore: TenantStore,
     private changedr: ChangeDetectorRef,
     private cache: CacheService,
-    private router: Router,
+    public codxService: CodxService,
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
 
-    this.route.params.subscribe(param => {
-      this.funcID = param["funcID"]
-    });
+    this.cache.valueList('L1483').subscribe((res) => {
+      if (res) {
+        this.L1483 = res.datas;
+      }
+    })
   }
 
   button: Array<ButtonModel> = [{
@@ -207,29 +217,39 @@ export class WalletsComponent implements OnInit {
 
   ngOnInit(): void {
     this.options.pageLoading = false;
-    this.options.entityName = "FED_KudosTrans";
-    this.options.entityPermission = "FED_KudosTrans";
+    this.options.entityName = "FD_KudosTrans";
+    this.options.entityPermission = "FD_KudosTrans";
     this.options.gridViewName = "grvKudosTrans";
     this.options.formName = "KudosTrans";
     this.options.funcID = this.funcID;
     this.options.dataObj = "Coins";
+
+    this.route.params.subscribe(param => {
+      this.funcID = param["funcID"]
+      this.changedr.detectChanges();
+    });
+    this.setPredicate();
   }
 
   ngAfterViewInit() {
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: true,
         model: {
-          template: this.panelLeftRef,
-        }
-      },]
+          panelLeftRef: this.templateLeft,
+        },
+      },
+    ]
+    this.userPermission = this.viewbase.userPermission;
+    this.listView.dataService.dataObj = 'Coins';
+    this.changedr.detectChanges();
   }
 
   LoadData() {
     this.api
-      .execSv<any>("FED", "FED", "KudosTransBusiness", "LoadDataWalletAsync", [
+      .execSv<any>("FD", "FD", "KudosTransBusiness", "LoadDataWalletAsync", [
         this.options
       ])
       .subscribe((res) => {
@@ -279,22 +299,45 @@ export class WalletsComponent implements OnInit {
 
   caculateY() {
     if (this.maxTotal > 0) {
-      if (this.maxTotal % 50 == 0) {
-        if (this.maxTotal < 200) {
-          this.interval = 10
-        } else if (this.maxTotal >= 200 && this.maxTotal <= 400) {
-          this.interval = 50
-        } else {
-          this.interval = 100
+      if (this.maxTotal <= 50) {
+        if (this.maxTotal % 10 == 0) {
+          if (this.maxTotal <= 10) {
+            this.interval = 1;
+          } else if (this.maxTotal >= 20 && this.maxTotal <= 30) {
+            this.interval = 5;
+          } else {
+            this.interval = 10;
+          }
         }
       } else {
-        for (let i = 1; i <= 100; i++) {
-          this.maxTotal += i;
-          this.caculateY();
-          break;
+        if (this.maxTotal % 50 == 0) {
+          if (this.maxTotal < 200) {
+            this.interval = 10
+          } else if (this.maxTotal >= 200 && this.maxTotal <= 400) {
+            this.interval = 50
+          } else {
+            this.interval = 100
+          }
+        } else {
+          for (let i = 1; i <= 100; i++) {
+            this.maxTotal += i;
+            this.caculateY();
+            break;
+          }
         }
       }
     } else if (this.maxTotal < 0) {
+      if (this.maxTotal >= -50) {
+        if (this.maxTotal % 10 == 0) {
+          if (this.maxTotal >= -10) {
+            this.interval = -1;
+          } else if (this.maxTotal <= -20 && this.maxTotal >= -30) {
+            this.interval = -5;
+          } else {
+            this.interval = -10;
+          }
+        }
+      } 
       if (this.maxTotal % 50 == 0) {
         if (this.maxTotal > -200) {
           this.interval = -10
@@ -315,43 +358,55 @@ export class WalletsComponent implements OnInit {
 
   valueChange(e, f) {
     if (f == 'Organize') {
-      this.orgUnit = e[0];
+      this.orgUnit = e?.data[0];
     } else if (f == 'Employee') {
-      this.emloyeeID = e[0];
+      this.emloyeeID = e?.data[0];
     }
     switch (e.field) {
       case "toDate":
-        if(e.data?.toDate != undefined) {
-          var value = new Date(e.data);
+        if (e.data?.toDate != undefined) {
+          var value = new Date(e.data?.toDate);
           this.toDate = value;
-          this.options.predicate += " && TransDate <= @1";
-          this.options.dataValue += ";" + value.toISOString();
         }
         break;
       case "firstDay":
-        if(e.data?.fromDate != undefined) {
-          var value = new Date(e.data);
+        if (e.data?.fromDate != undefined) {
+          var value = new Date(e.data?.fromDate);
           value.setDate(value.getDate());
           this.firstDay = value;
         }
         break;
       case "vllOrganize":
-        // this.dataValueCombobox = e.data;
-        // this.predicateCombobox = "Key=@0";
-        // this.comboboxName = 'HRCompany';
+        this.vllOrganize_value = e.data;
+        this.getComboboxName();
         break;
       case "Organize":
-        this.orgUnit = e[0];
+        this.orgUnit = e?.data[0];
         break;
       case "Employee":
-        this.emloyeeID = e[0];
+        this.emloyeeID = e?.data[0];
         break;
       default:
         break;
     }
     if (e.field != "vllOrganize" || f != "vllOrganize") {
-      this.setPredicate();
+      if (f == 'Employee' || f == 'Organize') {
+        if (e?.data.length != 0) {
+          this.setPredicate();
+        }
+      } else if (f == 'toDate' || f == 'firstDay') {
+        if (e?.data?.fromDate != undefined || e?.data?.fromDate != undefined) {
+          this.setPredicate();
+        }
+      }
     }
+  }
+
+  getComboboxName() {
+    this.comboboxName = '';
+    var a = this.L1483.find(x => x.value == this.vllOrganize_value);
+    this.comboboxName = a.text;
+    this.changedr.detectChanges();
   }
 
   setPredicate() {
@@ -412,11 +467,9 @@ export class WalletsComponent implements OnInit {
       },
     };
     if (type == 1) {
-      // this.doughnutChartPlugins[0] = css;
       this.dt.detectChanges();
       return;
     }
-    // this.doughnutChartPlugins_SEND[0] = css;
     this.dt.detectChanges();
   }
 
@@ -462,7 +515,6 @@ export class WalletsComponent implements OnInit {
     let i = 1;
     var total = 0;
     this.data_Send.forEach((e) => {
-      // this.chartDatas_Send.push(e);
       this.chartLabels_Send.push(this.getLabelName(e.key));
       this.colors_Send[0].backgroundColor.push("#" + this.L1422[i].color);
       total += e.value;
@@ -476,7 +528,6 @@ export class WalletsComponent implements OnInit {
       arr = [{ key: this.getLabelName(this.data_Send[y]?.key), value: this.data_Send[y]?.value }];
       this.chartDatas_Send.push(arr[0]);
     }
-
     this.totalDataSended = total;
     this.colorSend = this.colors_Send[0]?.backgroundColor
     this.dt.detectChanges();
@@ -554,4 +605,7 @@ export class WalletsComponent implements OnInit {
     this.heightList = wh - 60 + "";
   }
 
+  openViewDetailCoins(userID) {
+    this.codxService.navigate('FDR021', '', { userID: userID });
+  }
 }

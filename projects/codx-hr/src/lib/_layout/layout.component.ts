@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'HR';
+  module = 'HR1';
   constructor(inject: Injector) {
     super(inject);
     this.codxService.init(this.module);

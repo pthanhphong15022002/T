@@ -1,3 +1,4 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +33,15 @@ import { HomeSettingComponent } from './setting/homesetting/home-setting.compone
 import { PopAddRangesComponent } from './setting/rangeskanban/pop-add-ranges/pop-add-ranges.component';
 import { AssignTasksComponent } from './assigntasks/assigntasks.component';
 import { ViewDetailAssignTasksComponent } from './assigntasks/view-detail-assign-tasks/view-detail-assign-tasks.component';
+import { ProjectComponent } from './setting/project/project.component';
+import { PopAddProjectComponent } from './setting/project/pop-add-project/pop-add-project.component';
+import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.component';
+import { PopAddProjectgroupComponent } from './setting/projectgroups/pop-add-projectgroup/pop-add-projectgroup.component';
+import { ReportsComponent } from './reports/reports.component';
+import { TaskDailyComponent } from './reports/task-daily/task-daily.component';
+import { HomeReportComponent } from './reports/home-report/home-report.component';
+import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
+import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 export const routes: Routes = [
   {
     path: '',
@@ -74,6 +84,32 @@ export const routes: Routes = [
             path: 'rangeskanban/:funcID',
             component: RangesKanbanComponent
           },
+          {
+            path: 'project/:funcID',
+            component: ProjectComponent
+          },
+          {
+            path: 'projectgroups/:funcID',
+            component: ProjectgroupsComponent
+          },
+        ]
+      },
+      {
+        path: 'reports',
+        component: ReportsComponent,
+        children: [
+          {
+            path: ':funcID',
+            component: HomeReportComponent
+          },
+          {
+            path: 'taskdaily/:funcID',
+            component: TaskDailyComponent
+          },
+          {
+            path: 'taskbyprojects/:funcID',
+            component: TaskByProjectsComponent
+          },
         ]
       },
       {
@@ -107,7 +143,16 @@ const T_Component: Type<any>[] = [
   RangesKanbanComponent,
   PopAddRangesComponent,
   AssignTasksComponent,
-  ViewDetailAssignTasksComponent
+  ViewDetailAssignTasksComponent,
+  ProjectComponent,
+  PopAddProjectComponent,
+  ProjectgroupsComponent,
+  PopAddProjectgroupComponent,
+  ReportsComponent,
+  TaskDailyComponent,
+  HomeReportComponent,
+  TaskByProjectsComponent,
+  ProjectChartComponent
 ]
 @NgModule({
   imports: [
@@ -125,7 +170,8 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   exports: [
     RouterModule

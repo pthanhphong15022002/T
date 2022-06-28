@@ -17,9 +17,9 @@ export class ListCardSprintsComponent implements OnInit {
   model = new DataRequest();
   gridView: any;
   predicateViewBoards =
-    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and (!@2.Contains(outerIt.IterationID)) AND ProjectID=null';
+    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
   predicateProjectBoards =
-    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and (!@2.Contains(outerIt.IterationID)) AND ProjectID!=null';
+    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
   totalRowMyBoard: number = 6;
   totalRowProjectBoard: number = 6;
   totalViewBoards: number = 0;

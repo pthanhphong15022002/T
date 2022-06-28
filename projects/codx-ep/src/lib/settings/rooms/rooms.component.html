@@ -1,150 +1,38 @@
 <codx-views
   #view
-  funcID="EPS21"
+  [funcID]="funcID"
   [showToolBar]="true"
-  service="EP"
-  assemblyName="EP"
-  entityName="EP_Resources"
-  predicate="ResourceType=@0"
-  dataValue="1"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
-  idField="recID"
-  className="ResourcesBusiness"
-  method="GetListAsync"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeDialog($event)"
 >
 </codx-views>
 
-<ng-template #itemTemplate let-data>
-  <div class="task-row py-3 px-6">
-    <table class="table w-100 table-action-menu">
-      <tbody>
-        <td class="w-25">
-          {{data.resourceID}}
-        </td>
-        <td class="w-25">
-          {{data.resourceName}}
-        </td>
-        <td class="w-25">
-          <div class="d-flex justify-content-center">
-            <span
-              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.status|vll:'EP002':'text'|async}}</span>
-          </div>
-        </td>
-        <td class="w-150px">
-          {{ data.ranking|vll:'EP005':'text'|async }}
-        </td>
-        <!-- <td class="w-150px">1 Chai / Người / Lần</td> -->
-      </tbody>
-    </table>
-  </div>
-  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (click)="click(data)"
-    iconCss="icon-flag" iconCss2="icon-security" [imageId]="data.owner" imageObjType="AD_Users" [title]="data.resourceName"
-    icoSubTitleCss="icon-assignment" [subTitle]="data.resourceID" [content]="data.memo" [status]="data.status"
-    statusVll="EP005" [date]="data.createdOn" [resources]="data.owner" resourceObjType="AD_Users"
-    [formModel]="view.formModel">
-  </codx-temp-full> -->
-</ng-template>
-<ng-template #panelLeftRef> </ng-template>
-
-<ng-template #gridTemplate>
-  <h1>Danh sách phòng</h1>
-  <codx-gridview
-    #gridView
-    [columnsGrid]="columnsGrid"
-    [allowSorting]=""
-    [sortSettings]=""
-    [allowGrouping]=""
-    [groupSettings]=""
-    [editSettings]=""
-    [selectionOptions]=""
-    [rowHeight]="40"
-    [pageSize]="10"
-    funcId="EPS21"
-    assemblyName="EP"
-    entityName="EP_Resources"
-    className="ResourcesBusiness"
-    method="GetListAsync"
-    predicate="ResourceType=@0"
-    dataValue="1"
-    [pageSize]="15"
-    height="500px"
-    [showColumnMenu]="true"
-    [filterSettings]=""
-    [allowFiltering]=""
-    [allowResizing]=""
-  >
-  </codx-gridview>
+<ng-template #statusCol let-data>
+  <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+    data.status | vll: "EP002":"text" | async
+  }}</span>
 </ng-template>
 
-<ng-template #GiftIDCell let-dataItem>
-  <ng-template #popuptemplate let-modal>
-    <div class="modal-body">
-      <p>Bạn có muốn xóa</p>
+<ng-template #rankingCol let-data>
+  <div class="has-action-menu">
+    {{ data.ranking | vll: "EP005":"text" | async }}
+    <div class="action-menu">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger" (click)="delete(dataItem)">
-        Xóa
-      </button>
-    </div>
-  </ng-template>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="edit(dataItem)"
-      >
-        <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item d-flex align-items-center">
-      <div
-        class="d-flex align-items-center btn-tooltip"
-        (click)="deleteResource(dataItem)"
-      >
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
-  </div>
-</ng-template>
-
-<ng-template #Devices let-dataItem>
-  <div class="d-flex align-items-center fw-bold">
-    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"
-        ><span class="fs-6 ms-1">{{
-          item | vll: "EP012":"text" | async
-        }}</span></span
-      >
-    </ng-container>
-  </div>
-</ng-template>
-
-<ng-template #ranking let-dataItem>
-  <div class="d-flex justify-content-center">
-    <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-      dataItem.ranking | vll: "EP005":"text" | async
-    }}</span>
-  </div>
-</ng-template>
-
-<ng-template #roomResourceDialog>
-  <dialog-room-resource-editor
-    #editor
-    [data]="data"
-    (closeEdit)="closeEditForm($event)"
-  ></dialog-room-resource-editor>
-</ng-template>
-
-<ng-template #Devices let-dataItem>
-  <div class="d-flex align-items-center fw-bold">
-    <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"
-        ><span class="fs-6 ms-1">{{ getDeviceName(item) }}</span></span
-      >
-    </ng-container>
   </div>
 </ng-template>

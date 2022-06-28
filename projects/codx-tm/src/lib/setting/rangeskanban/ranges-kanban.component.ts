@@ -70,6 +70,8 @@ export class RangesKanbanComponent implements OnInit {
         resources: this.columnsGrid,
       }
     }];
+    // this.view.dataService.methodSave = 'AddRangeKanbanAsync';
+
   }
 
   show() {

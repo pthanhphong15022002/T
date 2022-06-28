@@ -17,6 +17,9 @@ export class TM_Projects {
     projectManeger: String;
     location: String;
     startDate: Date;
+    endDate: Date;
+    estimated: number;
+
     finishDate: Date;
     memo: String;
     status: String= '1';

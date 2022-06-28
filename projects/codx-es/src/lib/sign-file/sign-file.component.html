@@ -15,6 +15,9 @@
   [selectedFirst]="true"
   (selectedChange)="changeItemDetail($event)"
   [autoLoad]="autoLoad"
+  (buttonClick)="click($event)"
+  [button]="button"
+
 >
 </codx-views>
 
@@ -25,6 +28,7 @@
     [imageId]="data.categoryID? data.categoryID : 'ADMIN'"
     imageObjType=""
     [title]="data.title"
+    [desc]="data.abstract"
     icoSubTitleCss="icon-assignment"
     [subTitle]="data.positionName"
     [content]="data.memo"
@@ -47,7 +51,7 @@
       (click)="clickChangeTaskViewStatus('1')"
     >
       <i class="icon-format_list_numbered icon-16"></i>
-      <span class="ms-2 fw-bold">Mới tạo</span>
+      <codx-label name="lblTitleNew" [formModel]="codxViews.formModel" default="Mới tạo" class="ms-2 fw-bold"></codx-label>
     </button>
     <button
       class="btn btn-white text-dark me-1"
@@ -55,7 +59,7 @@
       (click)="clickChangeTaskViewStatus('2')"
     >
       <i class="icon-spellcheck icon-16"></i>
-      <span class="ms-2 fw-bold">Chờ duyệt</span>
+      <codx-label name="lblTitlePending" [formModel]="codxViews.formModel" default="Chờ duyệt" class="ms-2 fw-bold"></codx-label>
     </button>
     <button
       class="btn btn-white text-dark me-1"
@@ -63,7 +67,7 @@
       (click)="clickChangeTaskViewStatus('3')"
     >
       <i class="icon-download_done icon-16"></i>
-      <span class="ms-2 fw-bold">Hoàn tất</span>
+      <codx-label name="lblTitleDone" [formModel]="codxViews.formModel" default="Hoàn tất" class="ms-2 fw-bold"></codx-label>
     </button>
   </div>
 </ng-template>
@@ -88,7 +92,7 @@
           aria-label="Close"
           (click)="modal.dismiss()"
         >
-          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+          <codx-label name="" fiedName="" formName="" default="" class="icon-close icon-20 text-dark text-hover-primary"></codx-label>
         </button>
       </div>
     </div>

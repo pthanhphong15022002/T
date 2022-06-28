@@ -4,16 +4,13 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   ButtonModel,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
-  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -21,48 +18,37 @@ import {
 } from 'codx-core';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
-export class defaultRecource {}
 @Component({
   selector: 'setting-cars',
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarResourceComponent implements OnInit, AfterViewInit {
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
+export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('carResourceDialog') carResourceDialog: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('editor') editor: PopupAddCarsComponent;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-  @ViewChild('category', { static: true }) category: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
+  columnGrids: any
   dialog!: DialogRef;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
-  editform: FormGroup;
   isAdd = true;
   columnsGrid;
+  dialogCar: FormGroup;
+  funcID: string;
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
+  idField = 'recID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
+
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -76,43 +62,42 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
-    ) {}
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã xe',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên xe',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol
+      }
+    ];
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục xe',
+        type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template: this.template,
+          resources: this.columnGrids
         },
       },
-    ];
-    this.columnsGrid = [
-      {
-        field: 'resourceName',
-        headerText: 'Xe',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'category',
-        headerText: 'Nguồn',
-        template: this.category,
-        width: 150,
-      },
-      {
-        field: 'ranking',
-        headerText: 'Phân loại',
-        template: this.ranking,
-        width: 150,
-      },
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 50 },
     ];
     this.buttons = {
       id: 'btnAdd',
@@ -123,7 +108,9 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
   lstDevices = [];
   tmplstDevice = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -137,57 +124,46 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-  addNew(evt?) {
+
+  addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        this.dataSelected,
+        [this.dataSelected,true],
         option
       );
     });
   }
 
   edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddCarsComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+    this.dataSelected = this.viewBase.dataService.dataSelected;
+    if (evt) this.dataSelected = evt;
+    this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callFunc.openSide(
+        PopupAddCarsComponent,
+        [this.dataSelected,false],
+        option
+      );
+    });
   }
+
   delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        console.log(res);
-        this.dataSelected = res;
-      });
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
   }
-  deleteResource(item) {
-    console.log(item);
-    if (confirm('Are you sure to delete')) {
-      this.api
-        .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-          item.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.notificationsService.notify('Xóa thành công!');
-          }
-        });
-    }
-  }
+
 
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
@@ -195,13 +171,14 @@ export class CarResourceComponent implements OnInit, AfterViewInit {
         this.edit(data);
         break;
       case 'delete':
-        this.delete();
+        this.delete(data);
         break;
       default:
         break;
     }
   }
-  closeEditForm(evt?) {
-    //this.viewBase.currentView.closeSidebarRight();
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 }

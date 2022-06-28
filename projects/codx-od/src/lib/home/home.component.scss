@@ -1,0 +1,161 @@
+/*** task list ***/
+.task-viewlist {
+    width: 100%;
+    overflow: auto;
+}
+
+.metro-task {
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.metro-task .metro-item {
+    width: 140px;
+    height: 80px;
+    float: left;
+    margin-right: 12px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.task-number {
+    font-size: 24px;
+    position: absolute;
+    left: 12px;
+    bottom: 2px;
+}
+
+.metro-item.bg-danger {
+    // background: url("../../src/assets/demos/svg/bg-danger-icon.png") no-repeat 115% 90%;
+    background-color: var(--danger);
+}
+
+.metro-item.bg-primary {
+    // background: url("../../src/assets/demos/svg/bg-primary-icon.png") no-repeat 115% 90%;
+    background-color: var(--primary);
+}
+
+.metro-item.bg-info {
+    // background: url("../../src/assets/demos/svg/bg-info-icon.png") no-repeat 115% 90%;
+    background-color: var(--info);
+}
+
+.metro-item.bg-warning {
+    // background: url("../../src/assets/demos/svg/bg-warning-icon.png") no-repeat 115% 90%;
+    background-color: var(--warning);
+}
+
+.home-container {
+    padding: 16px;
+}
+
+.h-60 {
+    height: 57%;
+} 
+
+.e-content, .e-footer-container {
+    display: none;
+}
+
+.chartTop {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 20px;     
+}
+
+// .f-right {
+//     float: right;
+// }
+
+// .f-left {
+//     float: left;
+// }
+
+
+.color1 {
+    background-color: rgb(0,53,199);
+}
+
+.color2 {
+    background-color: rgb(33, 179, 210);
+}
+
+.color3 {
+    background-color: rgb(6, 211, 184);
+}
+
+.color4 {
+    background-color: rgb(62 ,175, 169);
+}
+
+.color5 {
+    background-color: rgb(252, 149, 75);
+}
+
+.color6 {
+    background-color: rgb(251, 185, 137);
+}
+
+.color7 {
+    background-color: rgb(252, 213, 184);
+}
+
+.color8 {
+    background-color: rgb(255, 228, 208);
+}
+
+.color9 {
+    background-color: rgb(255, 236, 222);
+}
+
+.color10 {
+    background-color: rgb(255, 237, 224);
+}
+
+.chart7 {
+    display: contents;
+}
+
+.e-customStyle {
+    float: right;
+}
+
+.od-calendar {
+    padding: 0px;
+    height: 40px;
+}
+
+.lineChart {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;   
+    white-space: nowrap;
+    border-radius: 3px!important;
+}
+
+.chartTop2 {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 20px;
+    max-width: 110px;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    max-width: 360px;
+    white-space: nowrap;
+}
+
+#chartcontainer2 path {
+    min-height: 50px;
+}
+
+.chartBottom {
+    // position: absolute;
+    // bottom: 30px;
+}
+
+.selectedTab  {
+    background-color: rgb(237, 237, 237);
+    // color: white;
+}

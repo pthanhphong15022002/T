@@ -1,38 +1,49 @@
-<codx-form headerText="{{title}}" [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog"
-  [openMore]="true">
-  <ng-template #subHeader>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template popup adde #body>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags"
+      (valueChange)="valueChangeTags($event)"></codx-tag>
 
-    <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
-    <span class="btn btn-sm btn-light-primary btn-pill me-2">Customize</span>
-    <div class="dropdown" id="tag_toggle">
-      <div class="topbar-item" data-toggle="dropdown">
-        <span class="btn btn-sm btn-secondary btn-pill btn-dropdown">Tag +</span>
-      </div>
-      <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
-        <div class="quick-search quick-search-dropdown" id="tag_dropdown">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Tag..." />
-            <div class="input-group-append">
-              <button class="btn btn-secondary" type="button">Lưu</button>
+    <!-- <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex mb-5">
+        <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
+        <span class="btn btn-sm btn-light-primary btn-pill me-2">Customize</span>
+        <div class="dropdown" id="tag_toggle">
+          <div class="topbar-item" data-toggle="dropdown">
+            <span class="btn btn-sm btn-secondary btn-pill btn-dropdown">Tag +</span>
+          </div>
+          <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
+            <div class="quick-search quick-search-dropdown" id="tag_dropdown">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Tag..." />
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" type="button">Lưu</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-  </ng-template>
-  <ng-template popup adde #body>
-
+      <div class="btn-extand d-flex justify-content-end">
+        <a class="text-dark-75 text-hover-primary d-flex align-items-center" style="cursor:pointer;"
+          (click)="extendShow()">
+          <span class="me-2 text-dark">
+            <codx-label name="lblExtend" formName="Tasks" default="Mở rộng"></codx-label>
+          </span>
+          <span class="icon-login icon-20 ms-1"></span>
+        </a>
+      </div>
+    </div> -->
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
-          <ng-template #headerText>
+          <ng-template #headerText class="me-10 border-0 ">
             <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
-              <div class="fw-bold">Thông tin chung</div>
+              <div class="fw-bold"><codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
+              </codx-label></div>
             </div>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content class="ms-10">
             <div class="form-group">
               <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
               </codx-label>
@@ -45,62 +56,80 @@
               <div id="errorCopy" autofocus *ngIf="!required.taskName" class="invalid-feedback">
                 Tên công việc. -->
             </div>
-            <div class="form-group">
-              <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Nhóm triển khai">
-              </codx-label>
+            <div class="form-group mt-3">
+              <label>
+                <codx-label name="TaskGroups" formName="Tasks"  default="Nhóm triển khai">
+                </codx-label>
+              </label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
                 placeholder="Nhóm công việc" refValue="TaskGroups" loadFull="true" field="taskGroupID"
                 (valueChange)="cbxChange($event)" [multiple]="false" [crrValue]="task.taskGroupID">
               </codx-input>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mt-3">
               <div class="col-6">
-                <codx-label fiedName="TaskGroupID" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
-                </codx-label>
-                <codx-input type="dateTime" class="test-datetime" format="f" field="dueDate" [disabled]="readOnly"
-                  (valueChange)="changeTime($event)">
+                <label>
+                  <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
+                  </codx-label>
+                </label>
+                <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
+                  [crrValue]="task.dueDate" [disabled]="readOnly" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
-                <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
-                </codx-label>
+                <label>
+                  <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
+                  </codx-label>
+                </label>
                 <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"
                   [disabled]="readOnly" [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
               </div>
             </div>
-
-            <div class="separator separator-content  border-primary my-10 " (click)="showPlan = !showPlan">
-              <div class="d-flex align-items-center w-auto extend-title text-nowrap cursor-pointer">
-                <span class="text-primary text-hover-primary_darker fw-bolder me-1">Kế hoạch</span>
-                <span *ngIf="showPlan"
-                  class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                <span *ngIf="!showPlan"
-                  class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+            <div class="extend-function">
+              <hr />
+              <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
+                <div class="d-flex align-items-center w-auto extend-title">
+                  <span class="text-primary text-hover-primary_darker fw-bold me-1">
+                    <codx-label name="Plan" formName="Tasks" default="Kế hoạch"></codx-label>
+                  </span>
+                  <span *ngIf="showPlan"
+                    class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+                  <span *ngIf="!showPlan"
+                    class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+                </div>
               </div>
             </div>
-
-
             <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
-              <div class="form-group row ">
+              <div class="form-group row mt-3">
                 <div class="col-4">
-                  <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
-                  </codx-label>
-                  <codx-input type="dateTime" class="test-datetime" placeholder="datetime" [crrValue]="task.startDate"
-                    format="f" (valueChange)="changeTime($event)">
+                  <label>
+                    <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
+                    </codx-label>
+                  </label>
+                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
+                    placeholder="datetime" [crrValue]="task.startDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
-                  <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
-                  </codx-label>
-                  <codx-input name="endDate" type="dateTime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" format="f" (valueChange)="changeTime($event)">
+                  <label>
+                    <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
+                    </codx-label>
+                  </label>
+                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
+                    placeholder="datetime" [crrValue]="task.endDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
-                  <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks" default="Số giờ thực hiện">
-                  </codx-label>
-                  <input type="number" class="form-control" [disabled]="readOnly" [(ngModel)]="task.estimated" />
+                  <label>
+                    <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks"
+                      default="Số giờ thực hiện">
+                    </codx-label>
+                  </label>
+                  <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
+                    [crrValue]="task.estimated" (valueChange)="valueChange($event)">
+                  </codx-input>
+
                 </div>
               </div>
             </ng-container>
@@ -108,35 +137,37 @@
               <div class="d-flex align-items-center justify-content-between mt-6">
                 <div class="d-flex align-items-center mb-3">
                   <span class="icon-person icon-18 me-2 text-primary"></span>
-                  <div class="fw-bold fs-6 text-primary">Phân công cho</div>
+                  <div class="fw-bold fs-6 text-primary">
+                    <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
+                    </codx-label>
+                  </div>
                 </div>
-                <!-- <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
-                  <i class="icon-person_add_alt fs-5 me-1"></i>
-                </button> -->
-                <codx-share  (eventApply)="eventApply($event)"> </codx-share>
+                <codx-share (eventApply)="eventApply($event)"> </codx-share>
               </div>
-              <!-- <div class="symbol-group">
+              <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
                   <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">
                   </codx-img>
                 </ng-container>
-              </div> -->
+              </div>
             </ng-container>
             <div class="d-flex align-items-center justify-content-between mt-6">
               <div class="d-flex align-items-center mb-3">
                 <span class="icon-attach icon-18 me-2 text-primary"></span>
-                <div class="fw-bold fs-6 text-primary">Tài liệu đính kèm</div>
+                <div class="fw-bold fs-6 text-primary"><codx-label fiedName="Attachments" formName="Tasks" gridViewName="grvTasks" default="Tài liệu đính kèm"></codx-label>
+                  </div>
               </div>
-              <button (click)="popup($event)" class="btn btn-sm btn-light-primary">Thêm file</button>
-              <ng-template>
-                <attachment #attachment type="center" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"
-                  (fileAdded)="fileAdded($event)"></attachment>
-              </ng-template>
-
+              <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">
+              <codx-label name="AddFile" formName="Tasks" default="Thêm file"></codx-label>
+              </button>
             </div>
-            add attachfile cho nay
+          
             <div class="d-flex align-items-center file-item mt-5">
-              <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
+              <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+                hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
+                (fileAdded)="fileAdded($event)"></attachment>
+
+              <!-- <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <span class="text-dark">Bang-chamcongthang6-V2.doc</span>
                 <div class="d-flex mt-1">
@@ -170,7 +201,7 @@
                     </div>
                   </a>
                 </div>
-              </div>
+              </div> -->
             </div>
           </ng-template>
         </e-tabitem>
@@ -179,11 +210,12 @@
           <ng-template #headerText>
             <div class="d-flex align-items-center">
               <span class="icon-article icon-18 me-2"></span>
-              <div class="fw-bold">Mô tả công việc</div>
+              <div class="fw-bold"><codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>   
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
-            <div class="form-group">
+            <div class="form-group mt-3">
               <div class="d-flex align-items-center justify-content-between">
                 <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Mô tả chi tiết">
                 </codx-label>
@@ -191,12 +223,15 @@
               </div>
               <codx-input type="textarea" field="memo" [crrValue]="task.memo" [disabled]="readOnly" class="form-control"
                 (valueChange)="changeMemo($event)"></codx-input>
-              <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..."
+              <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..."
                 type="text" [readOnly]="readOnly" class="col-md-8" style="
                   border-width: thin;
                   border-style: none;
                   margin-top: 3px;
-                  outline: none;" />
+                  outline: none;" /> -->
+              <codx-input *ngIf="openMemo2" type="text" field="memo2" [crrValue]="task.memo2"
+                (valueChange)="valueChange($event)" placeholder="Ghi chú phân công..." [readOnly]="readOnly">
+              </codx-input>
             </div>
           </ng-template>
         </e-tabitem>
@@ -205,18 +240,20 @@
           <ng-template #headerText>
             <div class="d-flex align-items-center">
               <span class="icon-person_outline icon-18 me-2"></span>
-              <div class="fw-bold">Phân công cho</div>
+              <div class="fw-bold">
+                <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
+                </codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
             <div class="d-flex align-items-center justify-content-between mt-4">
               <div class="d-flex align-items-center">
                 <span class="icon-person icon-16 me-2 text-primary"></span>
-                <div class="fw-bold fs-6 text-primary">Phân công cho</div>
+                <div class="fw-bold fs-6 text-primary"><codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
+                </codx-label></div>
               </div>
-              <button *ngIf="!readOnly" type="button" class="btn btn-sm btn-light-primary" (click)="openDialog()">
-                <i class="icon-person_add_alt fs-5 me-1"></i>Add user
-              </button>
+              <codx-share (eventApply)="eventApply($event)"> </codx-share>
             </div>
             <div>
               <ng-container *ngFor="let item of listUserDetail; index as i">
@@ -234,22 +271,28 @@
                           {{item.departmentName}}</span></div>
 
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 == null">
-                        <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-                          (keydown.enter)="changeMeno2User($event.target.value,item?.userID)" style="
+                        <!-- <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
+                        (keydown.enter)="changeMemo2OfUser($event.target.value,item?.userID)" style="
                             border-width: thin;
                             border-style: none;
                             margin-top: 3px;
-                            outline: none;" />
+                            outline: none;" /> -->
+                        <codx-input type="text" field="memo2" (valueChange)="changeMemo2($event,item?.userID)"
+                          placeholder="Ghi chú phân công..." [readOnly]="readOnly"></codx-input>
                       </div>
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 != null">
-                        <input name="txtTaskMemo2" value={{listMemo2OfUser[i]?.memo2}}
+                        <!-- <input name="txtTaskMemo2" value={{listMemo2OfUser[i]?.memo2}}
                           placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-                          (keydown.enter)="changeMeno2User($event.target.value,item?.userID)" style="
+                          (keydown.enter)="changeMemo2OfUser($event.target.value,item?.userID)" style="
                             border-width: thin;
                             border-style: none;
                             margin-top: 3px;
-                            outline: none;" />
+                            outline: none;" /> -->
+                        <codx-input type="text" field="memo2" [crrValue]="listMemo2OfUser[i]?.memo2"
+                          (valueChange)="changeMemo2($event,item?.userID)" placeholder="Ghi chú phân công..."
+                          [readOnly]="readOnly"></codx-input>
                       </div>
+
 
                     </div>
                   </div>
@@ -257,7 +300,9 @@
                     <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
                       <div class="d-flex align-item-center">
                         <span class="icon-close icon-16 text-danger me-2"></span>
-                        <span class="text-hover-danger">Delete</span>
+                        <span class="text-hover-danger">
+                          <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
+                        </span>
                       </div>
                     </a>
                   </div>
@@ -270,14 +315,18 @@
           <ng-template #headerText>
             <div class="d-flex align-items-center">
               <span class="icon-check_box icon-18 me-2"></span>
-              <div class="fw-bold">Công việc cần làm</div>
+              <div class="fw-bold">
+                <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm"></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
             <div class="d-flex align-items-center justify-content-between mt-4">
               <div class="d-flex align-items-center">
                 <span class="icon-playlist_add_check icon-16 me-2 text-primary"></span>
-                <div class="fw-bold fs-6 text-primary">Công việc cần làm</div>
+                <div class="fw-bold fs-6 text-primary">
+                  <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm"></codx-label>
+                </div>
               </div>
             </div>
             <div>
@@ -354,7 +403,9 @@
           <ng-template #headerText>
             <div class="d-flex align-items-center">
               <span class="icon-insert_link icon-18 me-2"></span>
-              <div class="fw-bold">Tham chiếu</div>
+              <div class="fw-bold">
+                <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content>
@@ -402,7 +453,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-between">
       <button class="btn btn-light-primary" (click)="dialog.close()">
-        <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+        <codx-label name="Close" formName="TM_Tasks" default="Đóng"></codx-label>
       </button>
       <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">
         <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>

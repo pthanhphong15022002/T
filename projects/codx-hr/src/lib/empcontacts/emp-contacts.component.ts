@@ -14,15 +14,23 @@ export class EmpContactsComponent implements OnInit {
   displayCard = false;
   predicate = "Status<@0";
   dataValue = '90';
+  columnsGrid = [];
   @ViewChild('chartOrg') chartOrg: CodxListviewComponent;
   @ViewChild('employList') employList: CodxListviewComponent;
   isShowTree = true;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('chart') chart: TemplateRef<any>;
-  @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('cardview') cardview: TemplateRef<any>;
+  // @ViewChild('chart') chart: TemplateRef<any>;
+  // @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
+  @ViewChild('itemBirthDay', { static: true }) itemBirthDay: TemplateRef<any>;
+  @ViewChild('itemJoinOn', { static: true }) itemJoinOn: TemplateRef<any>;
+  @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
+  @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
+  @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   constructor(
@@ -54,29 +62,38 @@ export class EmpContactsComponent implements OnInit {
         text: ' Card',
       },
     ];
+    this.columnsGrid = [
+      { field: 'employeeName', headerText: 'Họ và tên', width: 200, template: this.itemEmployee },
+      { field: 'birthDay', headerText: 'Ngày sinh', width: 100, template: this.itemBirthDay },
+      { field: 'phone', headerText: 'Di động', width: 100, template: this.itemPhone },
+      { field: 'email', headerText: 'Email', width: 200, template: this.itemEmail },
+      { field: 'joinedOn', headerText: 'Ngày vào làm', width: 140, template: this.itemJoinOn },
+      { field: 'statusName', headerText: 'Trạng thái', template: this.itemStatusName, width: 140 },
+    ];
   }
 
   ngAfterViewInit(): void {
     this.views = [
       {
         id: '1',
-        type: ViewType.listdetail,
+        type: ViewType.grid,
         active: true,
         sameData:true,
         model: {
-          template: this.itemTemplate,
-          // panelRightRef: this.panelRightRef,
+          resources: this.columnsGrid,
+          panelLeftRef: this.panelLeftRef,
         }
       },
       {
-        id: '1',
+        id: '2',
         type: ViewType.card,
-        active: false,
+        active: true,
         sameData:true,
         model: {
-          template: this.itemTemplate,
+          template: this.cardTemp,
         }
       },
+     
     ];
     this.changedt.detectChanges();
   }
@@ -144,5 +161,19 @@ export class EmpContactsComponent implements OnInit {
 
   requestEnded(evt: any) {
 
+  }
+
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'btnAdd':
+        // this.show();
+        break;
+      // case 'edit':
+      //   this.edit(data);
+      //   break;
+      // case 'delete':
+      //   this.delete(data);
+      //   break;
+    }
   }
 }

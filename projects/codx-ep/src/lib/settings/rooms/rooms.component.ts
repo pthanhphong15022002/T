@@ -9,206 +9,170 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   ButtonModel,
   CacheService,
   CallFuncService,
-  CodxGridviewComponent,
-  NotificationsService,
+  DialogRef,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TITLE_HEADER_CLASS } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
-import { enter } from '@syncfusion/ej2-grids';
-import { DialogRoomResourceComponent } from './dialog/editor.component';
-
-export class defaultRecource {}
+import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 @Component({
-  selector: 'app-rooms',
+  selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit, AfterViewInit {
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('roomResourceDialog') carResourceDialog: TemplateRef<any>;
-  @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('editor') editor: DialogRoomResourceComponent;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('popuptemplate') popupTemp: TemplateRef<any>;
-  @Input('data') data;
-  @Output() editData = new EventEmitter();
-  views: Array<ViewModel> = [];
-  buttons: Array<ButtonModel> = [];
-  moreFunc: Array<ButtonModel> = [];
-  devices: any;
-  columnsGrid;
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
-  dialog: FormGroup;
-  isAdd = false;
-  constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
-    private cr: ChangeDetectorRef,
-    private callFunc: CallFuncService
-  ) {}
-  moreFuncs = [
-    {
-      id: 'btnEdit',
-      icon: 'icon-list-checkbox',
-      text: 'Chỉnh sửa',
-    },
-    {
-      id: 'btnDelete',
-      icon: 'icon-list-checkbox',
-      text: 'Xóa',
-    },
-  ];
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
 
+  views: Array<ViewModel> = [];
+  buttons: ButtonModel;
+  moreFuncs: Array<ButtonModel> = [];
+  devices: any;
+  dataSelected: any;
+  columnGrids: any;
+  addEditForm: FormGroup;
+  isAdd = false;
+  dialog!: DialogRef;
+  vllDevices = [];
+  lstDevices = [];
+  funcID: string;
+  showToolBar = 'true';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '1';
+  idField = 'recID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
+
+  constructor(
+    private cacheSv: CacheService,
+    private callFunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {}
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã phòng',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên phòng',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol,
+      },
+    ];
     this.views = [
       {
         sameData: true,
         id: '1',
-        type: ViewType.list,
+        text: 'Danh mục phòng',
+        type: ViewType.grid,
         active: true,
         model: {
-          template: this.template
+          resources: this.columnGrids,
         },
       },
     ];
 
-    this.columnsGrid = [
-      {
-        field: 'resourceName',
-        headerText: 'Tên phòng',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'ranking',
-        headerText: 'Phân loại',
-        template: this.ranking,
-        width: 150,
-      },
-      // { field: 'ranking', headerText: 'Phân loại', template: '', width: 150 },
-      {
-        field: 'equipments',
-        headerText: 'Thiết bị',
-        template: this.templateDevices,
-        width: 150,
-      },
-      {
-        field: 'noName',
-        headerText: '',
-        template: this.GiftIDCell,
-        width: 80,
-      },
-    ];
+    this.buttons = {
+      id: 'btnAdd',
+    };
   }
 
-  vllDevices = [];
-  lstDevices = [];
-  tmplstDevice = [];
-
   ngOnInit(): void {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
   }
-  clickMF(evt?:any, data?:any){
 
-  }
-  click(evt?:any){
-
-  }
-  addNew(evt: any) {
-    this.isAdd = true;
-    this.editor && this.editor.setdata(evt);
-    //this.viewBase.currentView.openSidebarRight();
-    this.cr.detectChanges();
-  }
-  edit(evt: any) {
-    this.isAdd = false;
-    this.editor && this.editor.setdata(evt);
-    //this.viewBase.currentView.openSidebarRight();
-    this.cr.detectChanges();
-  }
-
-  closeEditForm(event) {
-    if (event?.dataItem) {
-      this.gridView.addHandler(event.dataItem, event.isAdd, event.key);
-    }
-    //this.viewBase.currentView.closeSidebarRight();
-    this.cr.detectChanges();
-  }
-  openForm(item) {
-    this.data = item;
-    this.editData.emit(item);
-    //this.viewBase.currentView.openSidebarRight();
-    this.cr.detectChanges();
-  }
-
-  saveRoom() {
-    if (this.dialog.status == 'INVALID') {
-      console.log('result', this.dialog.value);
-      this.notificationsService.notify('"area" and "capacity" is not null!');
-      return;
+  clickMF(evt?: any, data?: any) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
     }
   }
-  getlstDevice(items: string) {
-    this.lstDevices = items.split(';');
-    return this.lstDevices;
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
+  }
+  addNew(evt?) {
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callFunc.openSide(
+        PopupAddRoomsComponent,
+        this.dataSelected,
+        option
+      );
+    });
   }
 
-  getDeviceName(value) {
-    let device = this.vllDevices.find((x) => x.value == value);
-    if (device) return device.text;
+  edit(evt?) {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) item = evt;
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = item;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.dialog = this.callFunc.openSide(
+        PopupAddRoomsComponent,
+        this.dataSelected,
+        option
+      );
+    });
   }
 
-  deleteResource(item) {
-    console.log(item);
-    this.callFunc.openForm(this.popupTemp, 'Xóa', 450, 250);
+  delete(evt?) {
+    let delItem = this.viewBase.dataService.dataSelected;
+    if (evt) delItem = evt;
+    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+      this.dataSelected = res;
+    });
   }
-  delete(item) {
-    this.api
-      .execSv('EP', 'EP', 'ResourcesBusiness', 'DeleteResourceAsync', [
-        item.recID,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.notificationsService.notify('Xóa thành công!');
-          this.gridView.removeHandler(item, 'recID');
-          this.closeEditForm(item);
-        }
-        this.cr.detectChanges();
-      });
+
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
   }
 }

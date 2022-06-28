@@ -30,11 +30,11 @@
 
 .box-wallets {
     border: 2px solid #eee;
-    border-radius: 4px!important;
+    border-radius: 4px !important;
     padding: 10px 15px 0;
 }
 
-.top-100 { 
+.top-100 {
     margin-top: 100px;
 }
 
@@ -53,4 +53,120 @@
 
 .p-a {
     position: relative;
+}
+
+.list-performance {
+    min-height: 558px;
+}
+
+.min-w-400px {
+    min-width: 400px !important
+}
+
+.w-400px {
+    width: 400px !important
+}
+
+.pl-3,
+.px-3 {
+    padding-left: 0.75rem !important
+}
+
+.pd-r-0 {
+    padding-right: 0px;
+}
+
+.top-item {
+    width: 125px;
+}
+
+.top1 .top-pic {
+    width: 76px;
+    height: 90px;
+    background: url("../../../../../src/assets/demos/svg/top1.svg") center top no-repeat;
+}
+
+.top2 {
+    padding-top: 55px !important;
+}
+
+.top2 .top-pic {
+    width: 80px;
+    height: 60px;
+    background: url("../../../../../src/assets/demos/svg/top2.svg") center top no-repeat;
+}
+
+.top3 {
+    padding-top: 55px !important;
+}
+
+.top3 .top-pic {
+    width: 80px;
+    height: 60px;
+    background: url("../../../../../src/assets/demos/svg/top3.svg") center top no-repeat;
+}
+
+.top2 .symbol,
+.top3 .symbol {
+    left: 41px;
+    top: 3px;
+}
+
+.top1 .symbol {
+    left: 36px;
+    top: 24px;
+}
+
+.top-name {
+    margin-top: 5px;
+}
+
+.modal-title .text-center {
+    text-align: center;
+}
+
+.organize {
+    min-width: 177.84px !important;
+}
+
+.text-dark-50 {
+    color: #666666 !important;
+}
+
+.top-champion {
+    height: 159px !important;
+}
+
+.left-5 {
+    margin-left: 5px;
+}
+
+.with-number .list-number {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffa800;
+    font-weight: 500;
+    background-color: #fff4de;
+}
+
+.left-15 {
+    margin-left: 15px;
+}
+
+.card-body {
+    width: 360px;
+}
+
+.left-20 {
+    margin-left: -20px;
+}
+
+.pd-r-10 {
+    padding-right: 10px;
 }

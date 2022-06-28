@@ -13,6 +13,7 @@ import {
   Input,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import {
   tmpTaskResource,
@@ -21,12 +22,14 @@ import {
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
+import { AttachmentComponent } from '../attachment/attachment.component';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
+  @ViewChild('attachment') attachment:AttachmentComponent 
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -44,12 +47,12 @@ export class AssignInfoComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  actionAssign = new BehaviorSubject<any>(null);
-  isActionAssign = this.actionAssign.asObservable();
-  dataAddNew = new BehaviorSubject<any>(null);
-  isAddNew = this.dataAddNew.asObservable();
-  updateData = new BehaviorSubject<any>(null);
-  isUpdate = this.updateData.asObservable();
+  // actionAssign = new BehaviorSubject<any>(null);
+  // isActionAssign = this.actionAssign.asObservable();
+  // dataAddNew = new BehaviorSubject<any>(null);
+  // isAddNew = this.dataAddNew.asObservable();
+  // updateData = new BehaviorSubject<any>(null);
+  // isUpdate = this.updateData.asObservable();
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -65,7 +68,6 @@ export class AssignInfoComponent implements OnInit {
     };
     this.dialog = dialog;
     this.user = this.authStore.get();
-    // this.functionID = this.activedRouter.snapshot.params['funcID'];
     this.functionID = this.dialog.formModel.funcID;
   }
 
@@ -74,11 +76,10 @@ export class AssignInfoComponent implements OnInit {
   }
 
   showPanel() {
-    //this.viewBase.currentView.openSidebarRight();
+  
   }
   closePanel() {
     this.dialog.close()
-    //this.viewBase.currentView.closeSidebarRight();
   }
 
   openInfo() {
@@ -97,7 +98,6 @@ export class AssignInfoComponent implements OnInit {
     //   });
     // }
     this.changeDetectorRef.detectChanges();
-    // this.viewBase.currentView.openSidebarRight();
   }
   openTask() {}
 
@@ -118,18 +118,23 @@ export class AssignInfoComponent implements OnInit {
   changeUser(e) {
     this.listMemo2OfUser = [];
     this.listUser = [];
+    var assignTo = e.data.join(';')
     if (e.data.length == 0) {
       this.task.assignTo = '';
       return ;
-    } else if (this.task.assignTo != null || this.task.assignTo != '') {
-      this.task.assignTo += ';' + e.data;
-    } else this.task.assignTo = e.data;
+    } else if (this.task.assignTo != null && this.task.assignTo != '') {
+      this.task.assignTo += ';' + assignTo;
+    } else this.task.assignTo = assignTo;
 
     this.listUser = this.task.assignTo.split(';');
     this.listUser.forEach((u) => {
       var obj = { userID: u.userID, memo2: null };
       this.listMemo2OfUser.push(obj);
     });
+  }
+
+  eventApply(e){
+
   }
   saveAssign(id, isContinue) {
     if (this.task.assignTo == null || this.task.assignTo == '') {
@@ -138,6 +143,7 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     this.convertToListTaskResources();
+    this.attachment.saveFiles() ;
     this.tmSv
       .saveAssign([
         this.task,
@@ -146,20 +152,19 @@ export class AssignInfoComponent implements OnInit {
         this.listTodo,
       ])
       .subscribe((res) => {
-        if (res.data && res.data.length) {
-          res.data.forEach((dt) => {
-            var data = dt;
-            if (data.taskID == id) {
-              this.updateData.next(data);
-            } else this.dataAddNew.next(data);
-          });
-          this.notiService.notify('Giao việc thành công !');
+        if (res && res.length) {
+          this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+          this.dialog.dataService.setDataSelected(res[0]);
+          this.dialog.dataService.afterSave.next(res);
+          this.changeDetectorRef.detectChanges();
+          this.dialog.close();
+          this.notiService.notifyCode('TM006');    
           if (!isContinue) {
             this.closePanel();
           }
           this.resetForm();
         } else {
-          this.notiService.notifyCode('TM002'); /// call sau
+          this.notiService.notify('Giao việc không thành công ! Hãy thử lại'); /// call sau
           return;
         }
       });
@@ -213,5 +218,14 @@ export class AssignInfoComponent implements OnInit {
     this.listTodo = [];
     this.task = new TM_Tasks();
     this.task.status = '1';
+  }
+
+  addFile(evt: any) {
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    ///chỗ này không bắt được data
+    console.log(e);
   }
 }

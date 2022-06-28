@@ -1,49 +1,40 @@
 <codx-views
   #view
-  funcID="EPS22"
+  [funcID]="funcID"
   [showToolBar]="true"
-  service="EP"
-  assemblyName="EP"
-  entityName="EP_Resources"
-  predicate="ResourceType=@0"
-  dataValue="2"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
-  idField="recID"
-  className="ResourcesBusiness"
-  method="GetListAsync"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeDialog($event)"
 >
 </codx-views>
-<ng-template #itemTemplate let-data>
-  <div class="task-row py-3 px-6">
-    <table class="table w-100 table-action-menu">
-      <tbody>
-        <td class="w-25">
-          {{ data.resourceID }}
-        </td>
-        <td class="w-25">
-          {{ data.resourceName }}
-        </td>
-        <td class="w-25">
-          <div class="d-flex justify-content-center">
-            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-              data.status | vll: "EP002":"text" | async
-            }}</span>
-          </div>
-        </td>
-        <td class="w-150px">
-          {{ data.ranking | vll: "EP005":"text" | async }}
-        </td>
-        <!-- <td class="w-150px">1 Chai / Người / Lần</td> -->
-      </tbody>
-    </table>
-  </div>
-  <codx-temp-full
-    (clickMF)="clickMF($event, data)"
-    [formModel]="viewBase.formModel"
-  >
-  </codx-temp-full>
-  <ng-template #panelLeftRef> </ng-template>
+
+<ng-template #statusCol let-data>
+  <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+    data.status | vll: "EP002":"text" | async
+  }}</span>
 </ng-template>
+
+<ng-template #rankingCol let-data>
+  <div class="has-action-menu">
+    {{ data.ranking | vll: "EP005":"text" | async }}
+    <div class="action-menu">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
+    </div>
+  </div>
+  
+</ng-template>
+
