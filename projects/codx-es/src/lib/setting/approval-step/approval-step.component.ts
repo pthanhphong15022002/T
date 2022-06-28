@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  ButtonModel,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -18,6 +19,7 @@ import {
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { CodxEsService } from '../../codx-es.service';
+import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
 export class Approver {}
 @Component({
@@ -46,9 +48,11 @@ export class ApprovalStepComponent implements OnInit {
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
-    @Optional() data: DialogData
+    @Optional() data: DialogData,
+    @Optional() dialog: DialogRef
   ) {
     this.transId = data?.data ?? '';
+    this.dialog = dialog;
   }
 
   ngOnInit(): void {
@@ -85,10 +89,16 @@ export class ApprovalStepComponent implements OnInit {
       transID: this.transId,
       stepNo: this.currentStepNo,
     };
-    // this.cfService.openForm(content, '', 750, 1000).subscribe((res) => {
-    //   res.close = this.close();
-    // });
-    this.addEditItem.emit(data);
+
+    // this.addEditItem.emit(data);
+    this.cfService.openForm(
+      PopupAddApprovalStepComponent,
+      '',
+      750,
+      1000,
+      'EST04',
+      data
+    );
   }
 
   addHandler(data, stepNo: number) {
@@ -105,4 +115,21 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   onSaveForm() {}
+
+  openFormFuncID(val: any, data: any) {}
+  click(evt: ButtonModel) {
+    // switch (evt.id) {
+    //   case 'btnAdd':
+    //     this.show();
+    //     break;
+    //   case 'edit':
+    //     this.edit();
+    //     break;
+    //   case 'delete':
+    //     this.delete();
+    //     break;
+    // }
+  }
+
+  clickMF(event: any, data) {}
 }

@@ -41,6 +41,8 @@ export class PopupAddApprovalStepComponent implements OnInit {
 
   dialog: any;
   tmpData: any;
+  header1 = 'Thiết lập qui trình duyệt';
+  subHeaderText = 'Qui trình duyệt';
 
   public headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
@@ -48,6 +50,9 @@ export class PopupAddApprovalStepComponent implements OnInit {
     { text: 'Email/thông báo', iconCss: 'icon-email' },
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
+
+  headerText1;
+
   constructor(
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
