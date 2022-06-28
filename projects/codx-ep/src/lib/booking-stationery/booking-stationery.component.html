@@ -6,7 +6,7 @@
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [predicate]="predicate"
-  [dataValue]="6"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="button"
   (buttonClick)="add($event)"
@@ -92,15 +92,11 @@
             <span>{{ data.currentQty }}</span>
           </div>
           <div class="d-flex align-items-center position-relative me-4">
-            <span
-              class="icon-shopping_cart icon-20 text-gray-400"
-            ></span>
+            <span class="icon-shopping_cart icon-20 text-gray-400"></span>
             <span>{{ data.reservedQty }}</span>
           </div>
           <div class="d-flex align-items-center position-relative me-4">
-            <span
-              class="icon-brightness_auto icon-20 text-gray-400"
-            ></span>
+            <span class="icon-brightness_auto icon-20 text-gray-400"></span>
             <span>{{ data.availableQty }}</span>
           </div>
         </div>

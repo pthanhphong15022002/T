@@ -14,15 +14,14 @@ import {
   DialogData,
   DialogRef,
 } from 'codx-core';
-import { Device } from '../../../booking-room/popup-add-booking-room/popup-add-booking-room.component';
-import { CodxEpService } from '../../../codx-ep.service';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
-  selector: 'popup-add-rooms',
-  templateUrl: 'popup-add-rooms.component.html',
-  styleUrls: ['popup-add-rooms.component.scss'],
+  selector: 'lib-popup-request-stationery',
+  templateUrl: './popup-request-stationery.component.html',
+  styleUrls: ['./popup-request-stationery.component.css'],
 })
-export class PopupAddRoomsComponent implements OnInit {
+export class PopupRequestStationeryComponent implements OnInit {
   @Input() data = {};
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -36,8 +35,8 @@ export class PopupAddRoomsComponent implements OnInit {
   isAfterRender = false;
   tmplstDevice = [];
   lstDeviceRoom = [];
-  headerText = 'Thêm mới phòng họp';
-  subHeaderText = 'Thêm mới phòng họp';
+  headerText = 'Yêu cầu văn phòng phẩm';
+  subHeaderText = 'Yêu cầu cho phòng';
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -52,16 +51,6 @@ export class PopupAddRoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.cacheSv.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-      this.vllDevices.forEach((item) => {
-        let device = new Device();
-        device.id = item.value;
-        device.text = item.text;
-        this.lstDeviceRoom.push(device);
-      });
-      this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-    });
     this.bookingService
       .getComboboxName(
         this.dialog.formModel.formName,
