@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
   views: Array<ViewModel> = [];
   formModel: FormModel
-  
+
   //#region chartline
   dataLineTrend: Object[] = [];
   lineXAxis: Object = {
@@ -209,7 +209,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private tmService: CodxTMService,
-    private changeDetectorRef: ChangeDetectorRef  ) {}
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.model = new DataRequest();
@@ -232,10 +232,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         active: false,
         sameData: true,
         model: {
-          template: this.templateLeft,
-        },
-      },
-    ];
+          panelLeftRef: this.templateLeft,
+        }
+      },]
     this.week = this.selectweekComponent?.week;
     this.fromDate = this.selectweekComponent?.fromDate;
     this.toDate = this.selectweekComponent?.toDate;

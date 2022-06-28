@@ -88,6 +88,7 @@ export class PopupAddSignFileComponent implements OnInit {
             approveControl: '1',
             approveStatus: '1',
           });
+
           this.codxService
             .getAutoNumber(
               this.formModel.funcID,
@@ -172,8 +173,8 @@ export class PopupAddSignFileComponent implements OnInit {
   valueChange(event) {
     if (event?.field) {
       if (event?.data === Object(event?.data))
-        this.dialogSignature.patchValue({ [event['field']]: event.data.value });
-      else this.dialogSignature.patchValue({ [event['field']]: event.data });
+        this.dialogSignFile.patchValue({ [event['field']]: event.data.value });
+      else this.dialogSignFile.patchValue({ [event['field']]: event.data });
 
       if (event.field == 'categoryID' && this.dialogSignFile.value != null) {
         this.dialogSignFile.patchValue({ approveControl: '1' });

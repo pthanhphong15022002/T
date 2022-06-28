@@ -38,9 +38,9 @@ export class StationeryComponent implements OnInit {
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
-  @ViewChild('colorCol') colorCol: TemplateRef<any>
+  @ViewChild('colorCol') colorCol: TemplateRef<any>;
   @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @Input('data') data;
   @Output() editData = new EventEmitter();
 
@@ -149,11 +149,11 @@ export class StationeryComponent implements OnInit {
         sameData: true,
         active: true,
         model: {
-          resources: this.columnsGrid
+          resources: this.columnsGrid,
         },
       },
     ];
-    
+
     this.moreFunc = [
       {
         id: 'btnEdit',
@@ -189,6 +189,7 @@ export class StationeryComponent implements OnInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         PopupAddStationeryComponent,
         this.dataSelected,
@@ -197,20 +198,23 @@ export class StationeryComponent implements OnInit {
     });
   }
 
-  edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddStationeryComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+  edit(data?) {
+    let editItem = this.viewBase.dataService.dataSelected;
+    if (data) {
+      editItem = data;
+    }
+    this.viewBase.dataService.edit(editItem).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        PopupAddStationeryComponent,
+        editItem,
+        option
+      );
+    });
   }
   delete(evt?) {
     this.viewBase.dataService
@@ -231,7 +235,18 @@ export class StationeryComponent implements OnInit {
     //this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
   }
 
-  clickMF(evt, data) {}
+  clickMF(evt, data) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
+    }
+  }
 
   click(data) {
     console.log(data);

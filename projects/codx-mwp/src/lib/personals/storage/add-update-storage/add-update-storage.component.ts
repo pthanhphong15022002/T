@@ -1,7 +1,7 @@
 import { FormGroup, FormControl } from '@angular/forms';
 import { Storages } from './../../../model/Storages.model';
 import { ActivatedRoute } from '@angular/router';
-import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService } from 'codx-core';
+import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService } from 'codx-core';
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, Optional } from '@angular/core';
 
 @Component({
@@ -34,8 +34,6 @@ export class AddUpdateStorageComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
-    console.log("check form add dialog", this.dialog)
-    console.log("check form add dt ", dt)
     this.formType = dt?.data[1];
     this.lstStorage = dt?.data[0];
 
@@ -76,9 +74,9 @@ export class AddUpdateStorageComponent implements OnInit {
     this.dataAdd.title = this.title;
     this.dataAdd.memo = this.memo;
 
-    this.details = [{ recID: null, refID: '62908918ad16643a2ff34a43', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: '62948c587969fe9d8b01d45b', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: '62948c627969fe9d8b01d464', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
+    // this.details = [{ recID: null, refID: '62ac2c92bb0da65669b5f476', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    // { recID: null, refID: '62ac2cb1bb0da65669b5f47e', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    // { recID: null, refID: '62b179566b658d72b11b4f31', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
     this.dataAdd.details = this.details;
 
 
@@ -96,9 +94,7 @@ export class AddUpdateStorageComponent implements OnInit {
           .subscribe((result) => {
             if (result) {
               this.loadData.emit();
-              this.lstStorage = dt.concat(this.dialog.dataService.data);
-              // this.dialog.dataService.setDataSelected(dt);
-              // this.dialog.dataService.afterSave.next(dt);
+              this.dialog.dataService.data.push(dt);
               this.changedt.detectChanges();
               this.notiService.notifyCode('E0680');
             }
