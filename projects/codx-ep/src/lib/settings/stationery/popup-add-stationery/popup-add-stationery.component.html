@@ -180,7 +180,7 @@
                       </codx-label>
                       <span
                         class="icon-select_all text-primary icon-20"
-                        (click)="openPopupDevices()"
+                        (click)="openPopupDevice(popupColor)"
                       ></span>
                     </div>
                   </div>
@@ -513,15 +513,6 @@
   <div class="modal-body">
     <codx-colorpicker [(value)]="color" (valueChange)="valueChange($event)">
     </codx-colorpicker>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="add()">
-      <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
   </div>
 </ng-template>
 

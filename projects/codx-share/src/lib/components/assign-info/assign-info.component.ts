@@ -47,12 +47,12 @@ export class AssignInfoComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  actionAssign = new BehaviorSubject<any>(null);
-  isActionAssign = this.actionAssign.asObservable();
-  dataAddNew = new BehaviorSubject<any>(null);
-  isAddNew = this.dataAddNew.asObservable();
-  updateData = new BehaviorSubject<any>(null);
-  isUpdate = this.updateData.asObservable();
+  // actionAssign = new BehaviorSubject<any>(null);
+  // isActionAssign = this.actionAssign.asObservable();
+  // dataAddNew = new BehaviorSubject<any>(null);
+  // isAddNew = this.dataAddNew.asObservable();
+  // updateData = new BehaviorSubject<any>(null);
+  // isUpdate = this.updateData.asObservable();
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -76,11 +76,10 @@ export class AssignInfoComponent implements OnInit {
   }
 
   showPanel() {
-    //this.viewBase.currentView.openSidebarRight();
+  
   }
   closePanel() {
     this.dialog.close()
-    //this.viewBase.currentView.closeSidebarRight();
   }
 
   openInfo() {

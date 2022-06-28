@@ -15,6 +15,9 @@
   [selectedFirst]="true"
   (selectedChange)="changeItemDetail($event)"
   [autoLoad]="autoLoad"
+  (buttonClick)="click($event)"
+  [button]="button"
+  (requestEnded)="closeAddForm($event)"
 >
 </codx-views>
 
@@ -25,6 +28,7 @@
     [imageId]="data.categoryID? data.categoryID : 'ADMIN'"
     imageObjType=""
     [title]="data.title"
+    [desc]="data.abstract"
     icoSubTitleCss="icon-assignment"
     [subTitle]="data.positionName"
     [content]="data.memo"

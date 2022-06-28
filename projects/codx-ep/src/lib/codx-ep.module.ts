@@ -23,6 +23,8 @@ import { PopupAddBookingCarComponent } from './booking-car/popup-add-booking-car
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { PopupAddBookingRoomComponent } from './booking-room/popup-add-booking-room/popup-add-booking-room.component';
+import { PopupRequestStationeryComponent } from './booking-stationery/popup-request-stationery/popup-request-stationery.component';
+import { PopupListStationeryComponent } from './booking-stationery/popup-list-stationery/popup-list-stationery.component';
 
 const routes: Route[] = [
   {
@@ -90,7 +92,7 @@ const Components: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [Components],
+  declarations: [Components, PopupRequestStationeryComponent, PopupListStationeryComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

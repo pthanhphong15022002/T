@@ -135,6 +135,9 @@ export class PopupAddStationeryComponent implements OnInit {
           category: '1',
           owner: '',
         });
+        if (this.data) {
+          this.dialogStationery.patchValue(this.data);
+        }
         console.log(this.isAfterRender);
       });
   }
@@ -199,19 +202,19 @@ export class PopupAddStationeryComponent implements OnInit {
     }
   }
 
-  openPopupDevice() {
-    this.modalService
-      .open(this.popupDevice, { centered: true, size: 'md' })
-      .result.then(
-        (result) => {
-          this.lstDeviceRoom = JSON.parse(JSON.stringify(this.tmplstDevice));
-        },
-        (reason) => {
-          this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-        }
-      );
-    this.changeDetectorRef.detectChanges();
-  }
+  // openPopupDevice() {
+  //   this.modalService
+  //     .open(this.popupDevice, { centered: true, size: 'md' })
+  //     .result.then(
+  //       (result) => {
+  //         this.lstDeviceRoom = JSON.parse(JSON.stringify(this.tmplstDevice));
+  //       },
+  //       (reason) => {
+  //         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+  //       }
+  //     );
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -265,8 +268,9 @@ export class PopupAddStationeryComponent implements OnInit {
     console.log(evt);
   }
 
-  openPopupDevices() {
-    this.cfService.openForm(this.popupTemp, 'Chọn màu');
+  openPopupDevice(template: any) {
+    var dialog = this.cfService.openForm(template, '', 200, 430);
+    this.changeDetectorRef.detectChanges();
   }
 
   add() {

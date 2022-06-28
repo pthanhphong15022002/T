@@ -35,10 +35,10 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
-      {
-        path: 'employeeinfo/:funcID',
-        component: EmployeeInfomationComponent,
-      },
+      // {
+      //   path: 'employeeinfo/:funcID',
+      //   component: EmployeeInfomationComponent,
+      // },
     ],
   },
 ];

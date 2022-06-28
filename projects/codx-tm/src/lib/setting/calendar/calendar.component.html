@@ -1,0 +1,118 @@
+<div class="cal-toolbar d-flex align-items-center mb-3">
+  <div class="me-1 header-combo" *ngIf="param">
+    <codx-input
+      class="form-control min-w-200px"
+      style="width: 200px"
+      type="combobox"
+      placeholder="Lịch làm việc"
+      [crrValue]="param?.fieldValue"
+      service="BS"
+      [field]="'groupID'"
+      [refValue]="param?.referedValue"
+      [multiple]="false"
+      (valueChange)="changeCombobox($event)"
+    >
+    </codx-input>
+  </div>
+  <button
+    class="btn btn-icon btn-primary me-1"
+    (click)="openCalendarSettings()"
+  >
+    <span class="icon-settings text-white icon-18"></span>
+  </button>
+  <button class="btn btn-primary" (click)="addCalendar()">
+    <span>Thêm</span>
+  </button>
+</div>
+
+<div class="cal-container">
+  <codx-schedule
+    height="100%"
+    #schedule
+    [eventTemplate]="eventTemplate"
+    service="TM"
+    assemblyName="TM"
+    [templateResourceHeader]="resourceHeader"
+    className="TaskBusiness"
+    method="GetListDetailTasksAsync"
+    methodResource="GetUserByTasksAsync"
+    [cellFooterTemplate]="cellFooter"
+    [fields]="fields"
+    [selectedDate]="selectedDate"
+    [StartDate]="startDate"
+    [EndDate]="endDate"
+    [options]="model"
+    [optionsResource]="model"
+    entityName="TM_Tasks"
+    funcId=""
+    (onViewChange)="viewChange($event)"
+    [viewPreset]="viewPreset"
+    [minHeight]="minHeight"
+    eventStyle="colored"
+    [resourceTooltipTemplate]="resourceTootip"
+    (onEventClick)="onCellDblClickScheduler($event)"
+    (onDelete)="deleteTask($event)"
+    [statusColor]="status"
+    [eventEditFeature]="false"
+    [readOnly]="true"
+    [resourceField]="resourceField"
+    [templateCell]="cellTemplate"
+    currentView="Month"
+    isTimelineView="false"
+  >
+  </codx-schedule>
+   
+  <ng-template #cellTemplate let-data>
+    <div [innerHtml]="getCellContent(data.date)"></div>
+  </ng-template>
+  
+  <ng-template #eventTemplate let-data>
+    <div class="symbol symbol-40px symbol-circle me-4">
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
+    </div>
+  </ng-template>
+
+  <ng-template #resourceTootip let-data>
+    <div class="template-wrap symbol symbol-40px symbol-circle me-4">
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
+      <div class="res-text">Tên: {{ data.resourceData.userName }}</div>
+      <div class="res-text">Vị trí: {{ data.resourceData.positionName }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #resourceHeader let-data>
+    <div class="">
+      <div class="type">{{ data.resourceData.userName }}</div>
+      <div class="type">{{ data.resourceData.positionName }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #cellFooter let-data>
+    <div class="row border">
+      <button
+        ejs-button
+        id="more-details"
+        cssClass="e-flat"
+        (click)="edit(data)"
+      >
+        sửa
+      </button>
+      <button
+        ejs-button
+        id="delete"
+        cssClass="e-flat"
+        [isPrimary]="true"
+        (click)="deleteTask(data)"
+      >
+        xóa
+      </button>
+    </div>
+  </ng-template>
+</div>
+
