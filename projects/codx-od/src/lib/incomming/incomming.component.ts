@@ -1,9 +1,51 @@
-import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, OnChanges, SimpleChanges, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+  Injector,
+} from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CacheService, CallFuncService, CodxListviewComponent, CodxService, CodxTreeviewComponent, DataRequest, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { compareDate, extractContent, formatBytes, formatDtDis, getListImg } from '../function/default.function';
-import { permissionDis, updateDis, dispatch, inforSentEMail, extendDeadline, gridModels } from '../models/dispatch.model';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  CallFuncService,
+  CodxListviewComponent,
+  CodxService,
+  CodxTreeviewComponent,
+  DataRequest,
+  DialogRef,
+  NotificationsService,
+  RequestOption,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
+import {
+  compareDate,
+  extractContent,
+  formatBytes,
+  formatDtDis,
+  getListImg,
+} from '../function/default.function';
+import {
+  permissionDis,
+  updateDis,
+  dispatch,
+  inforSentEMail,
+  extendDeadline,
+  gridModels,
+} from '../models/dispatch.model';
 import { AgencyService } from '../services/agency.service';
 import { DispatchService } from '../services/dispatch.service';
 import { FileService } from '@shared/services/file.service';
@@ -15,72 +57,75 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 @Component({
   selector: 'app-incomming',
   templateUrl: './incomming.component.html',
-  styleUrls: ['./incomming.component.scss']
+  styleUrls: ['./incomming.component.scss'],
 })
-export class IncommingComponent extends UIComponent implements  AfterViewInit, OnChanges {
+export class IncommingComponent
+  extends UIComponent
+  implements AfterViewInit, OnChanges
+{
   @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('asideRight') asideRight: TemplateRef<any>;
   @ViewChild('cbxDept') cbxDept: ComboBoxComponent;
   @ViewChild('cbxAgency') cbxAgency: ComboBoxComponent;
-  @ViewChild("listview") listview: CodxListviewComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('treeAdd') treeAdd: CodxTreeviewComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
   public lstDtDis: any;
-  public lstUserID: any = "";
+  public lstUserID: any = '';
   public disEdit: any;
-  public txtLstAgency = "";
+  public txtLstAgency = '';
   public status: string;
   public predicate = '';
-  public dispatchType: string = "1";
+  public dispatchType: string = '1';
   public totalPage: number = 0;
   public fieldAgency: Object = { text: 'agencyName', value: 'agencyID' };
   public lstAgency: any;
   public lstDept: any;
-  public sort = [{ field: "CreatedOn", dir: "déc" }]
-  public switchTemplate = "new";
+  public sort = [{ field: 'CreatedOn', dir: 'déc' }];
+  public switchTemplate = 'new';
   public objectIDFile: any;
-  public objectType = "OD_Dispatches";
+  public objectType = 'OD_Dispatches';
   dialog!: DialogRef;
   button?: ButtonModel;
-  userPermission    : any;
-  checkUserPer      : any;
-  textNew           = "Thêm mới ";
-  textEdit          = "Chỉnh sửa ";
-  textCopy          = "Sao chép ";
-  compareDate       = compareDate;
-  formatBytes       = formatBytes;
-  extractContent    = extractContent;
-  crrDate           = new Date().getTime();
-  gridViewSetup     : any;
-  titleFormNew      = this.textNew;
-  dispatch          = new dispatch();
-  activeTab         = 'tab_1';
-  activeTabAg       = 'tab_ag1';
-  showCbxAgency     = false;
-  action            : any;
-  actionEdit        : any;
-  autoLoad          = false;
-  itemDelete        :any;
-  active            = 1; 
+  userPermission: any;
+  checkUserPer: any;
+  textNew = 'Thêm mới ';
+  textEdit = 'Chỉnh sửa ';
+  textCopy = 'Sao chép ';
+  compareDate = compareDate;
+  formatBytes = formatBytes;
+  extractContent = extractContent;
+  crrDate = new Date().getTime();
+  gridViewSetup: any;
+  titleFormNew = this.textNew;
+  dispatch = new dispatch();
+  activeTab = 'tab_1';
+  activeTabAg = 'tab_ag1';
+  showCbxAgency = false;
+  action: any;
+  actionEdit: any;
+  autoLoad = false;
+  itemDelete: any;
+  active = 1;
 
-  fileAdd           : any
-  funcID            = "ODT1"
-  idAgency          : any ;
+  fileAdd: any;
+  funcID = 'ODT1';
+  idAgency: any;
   ///////////Các biến data valuelist/////////////////
-  dvlSecurity: any
-  dvlUrgency: any
-  dvlStatus: any
-  dvlCategory: any
-  dvlStatusRel: any
-  dvlRelType: any
-  dvlStatusTM : any
-  dvlReCall   : any
-  widthAsideRight = "700px"
-  showAgency        = false;
+  dvlSecurity: any;
+  dvlUrgency: any;
+  dvlStatus: any;
+  dvlCategory: any;
+  dvlStatusRel: any;
+  dvlRelType: any;
+  dvlStatusTM: any;
+  dvlReCall: any;
+  widthAsideRight = '700px';
+  showAgency = false;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -94,7 +139,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   codxService: CodxService;
-  fileService : FileService;
+  fileService: FileService;
   constructor(inject: Injector) {
     super(inject);
     this.odService = inject.get(DispatchService);
@@ -104,22 +149,21 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     this.atSV = inject.get(AttachmentService);
     this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
-  };
-  ngOnChanges(changes: SimpleChanges): void {
   }
+  ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
+    alert(this.view.formModel.funcID);
     /*  this.routerActive.params
     .subscribe(params => {
       this.view.loaded = false;
       this.loadView();
     });
     //this.loadView(); */
-   /*  this.router.params.subscribe((params) => {
-      //this.lstDtDis = null;
-    }) */
-    this.view.dataService.predicates = "Status=@0"
-    this.view.dataService.dataValues = "1"
-  
+    this.view.dataService.predicates = 'Status=@0';
+    this.view.dataService.dataValues = '1';
+    this.button = {
+      id: 'btnAdd',
+    };
     /* this.options.Page = 0,
     this.options.PageLoading = false;
     this.options.PageSize = 10;
@@ -133,7 +177,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     /*this.atSV.isFileList.subscribe(item => {
        if (item != null) {
 
-   /*this.atSV.isFileList.subscribe(item => { 
+   /*this.atSV.isFileList.subscribe(item => {
       if (item != null) {
 
       }
@@ -145,27 +189,28 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     //   this.lstDept= item;
     // })
   }
-  
-  loadView()
-  {
+
+  loadView() {
     this.getGridViewSetup();
-    this.options.page = 0,
-    this.options.pageLoading = false;
+    (this.options.page = 0), (this.options.pageLoading = false);
     this.options.pageSize = 10;
-    this.options.dataValue = "1";
-    this.status = "1";
+    this.options.dataValue = '1';
+    this.status = '1';
     //this.loadData();
-    this.codxService.getAutoNumber(this.view.formModel.funcID, "OD_Agencies", "AgencyID").subscribe((dt: any) => {
-      this.objectIDFile = dt;
-    });
-    //this.autoLoad = true;
+    this.codxService
+      .getAutoNumber(this.view.formModel.funcID, 'OD_Agencies', 'AgencyID')
+      .subscribe((dt: any) => {
+        this.objectIDFile = dt;
+      });
+    this.autoLoad = true;
     this.lstDtDis = [];
-    //this.autoLoad = false;
+    this.autoLoad = false;
     this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
-    this.views = [/* {
+    this.views = [
+      /* {
       id: '1',
       type: 'content',
       active: true,
@@ -178,35 +223,37 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
         resizeable: false
       }
     } */
-    {
-      type: ViewType.listdetail,
-      active: true,
-      sameData: true,
-      model: {
-        template: this.template,
-        panelLeftRef: this.panelLeft,
-        panelRightRef: this.panelRight,
-        contextMenu: '',
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.template,
+          panelLeftRef: this.panelLeft,
+          panelRightRef: this.panelRight,
+          contextMenu: '',
+        },
       },
-    },
-    {
-      type: ViewType.listdetail,
-      active: true,
-      sameData: true,
-      model: {
-        template: this.template,
-        panelLeftRef: this.panelLeft,
-        panelRightRef: this.panelRight,
-        contextMenu: '',
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.template,
+          panelLeftRef: this.panelLeft,
+          panelRightRef: this.panelRight,
+          contextMenu: '',
+        },
       },
-    },
-  ];
-  this.button = {
-    id: 'btnAdd',
-  };
-  this.view.dataService.methodSave = 'SaveDispatchAsync';
-  this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-  this.getGridViewSetup();
+    ];
+    this.view.dataService.methodSave = 'SaveDispatchAsync';
+    this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
+    this.loadView();
+    this.button = {
+      id: 'btnAdd',
+    };
+    this.autoLoad = true;
+    this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -221,27 +268,33 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
         break;
     }
   }
- 
+
   show() {
     this.view.dataService.addNew(0).subscribe((res: any) => {
       //this.view.
-       //this.detectorRef.detectChanges();
+      //this.detectorRef.detectChanges();
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(IncommingAddComponent, {
-        gridViewSetup: this.gridViewSetup,
-        headerText:"Thêm mới công văn đến",
-        type: "add",
-        formModel : this.view.formModel
-      }, option);
-      this.dialog.closed.subscribe(x=>{
-        if(x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
-        else 
+      this.dialog = this.callfunc.openSide(
+        IncommingAddComponent,
         {
-          //debugger;
+          gridViewSetup: this.gridViewSetup,
+          headerText: 'Thêm mới công văn đến',
+          type: 'add',
+          formModel: this.view.formModel,
+        },
+        option
+      );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null)
+          this.view.dataService
+            .remove(this.view.dataService.dataSelected)
+            .subscribe();
+        else {
+          debugger;
           this.view.dataService.update(x.event).subscribe();
           this.view.dataService.setDataSelected(x.event);
-         // this.view.dataService.remove(x.event).subscribe();
+          // this.view.dataService.remove(x.event).subscribe();
           //this.view.dataService.add(x.event,0).subscribe();
           //this.view.dataService.setDataSelected(x.event);
           //debugger;
@@ -256,21 +309,24 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
       //     this.view.dataService.setDataSelected(e.event.data);
       //   }
       // });
-     
     });
   }
 
   edit() {
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      //this.dialog = this.callfunc.openSide(TestAddComponent, res, option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        //this.dialog = this.callfunc.openSide(TestAddComponent, res, option);
+      });
   }
 
   delete() {
     this.view.dataService.dataSelected = this.lstDtDis;
-    this.view.dataService.delete([this.view.dataService.dataSelected], this.beforeDel).subscribe();
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], this.beforeDel)
+      .subscribe();
   }
 
   beforeDel(opt: RequestOption) {
@@ -285,74 +341,87 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     //this.funcID
     this.cache.functionList(this.view.formModel.funcID).subscribe((fuc) => {
       console.log(fuc);
-      this.cache.gridViewSetup(fuc?.formName, fuc?.gridViewName).subscribe((grd) => {
-        this.gridViewSetup = grd;
-        if (grd["Security"]["referedValue"] != undefined)
-          this.cache.valueList(grd["Security"]["referedValue"]).subscribe((item) => {
-            this.dvlSecurity = item;
-          })
-        if (grd["Urgency"]["referedValue"] != undefined)
-          this.cache.valueList(grd["Urgency"]["referedValue"]).subscribe((item) => {
-            this.dvlUrgency = item;
-            //this.ref.detectChanges();
-          })
-        if (grd["Status"]["referedValue"] != undefined)
-          this.cache.valueList(grd["Status"]["referedValue"]).subscribe((item) => {
-            this.dvlStatus = item;
-            console.log(this.dvlStatus);
-            //this.ref.detectChanges();
-          })
-        if (grd["Category"]["referedValue"] != undefined)
-          this.cache.valueList(grd["Category"]["referedValue"]).subscribe((item) => {
-            this.dvlCategory = item;
-            //this.ref.detectChanges();
-          })
-      })
-    })
-    this.cache.valueList("OD008").subscribe((item) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+          if (grd['Security']['referedValue'] != undefined)
+            this.cache
+              .valueList(grd['Security']['referedValue'])
+              .subscribe((item) => {
+                this.dvlSecurity = item;
+              });
+          if (grd['Urgency']['referedValue'] != undefined)
+            this.cache
+              .valueList(grd['Urgency']['referedValue'])
+              .subscribe((item) => {
+                this.dvlUrgency = item;
+                //this.ref.detectChanges();
+              });
+          if (grd['Status']['referedValue'] != undefined)
+            this.cache
+              .valueList(grd['Status']['referedValue'])
+              .subscribe((item) => {
+                this.dvlStatus = item;
+                console.log(this.dvlStatus);
+                //this.ref.detectChanges();
+              });
+          if (grd['Category']['referedValue'] != undefined)
+            this.cache
+              .valueList(grd['Category']['referedValue'])
+              .subscribe((item) => {
+                this.dvlCategory = item;
+                //this.ref.detectChanges();
+              });
+        });
+    });
+    this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
-    })
-    this.cache.valueList("OD009").subscribe((item) => {
+    });
+    this.cache.valueList('OD009').subscribe((item) => {
       this.dvlStatusRel = item;
-    })
-    this.cache.valueList("OD010").subscribe((item) => {
+    });
+    this.cache.valueList('OD010').subscribe((item) => {
       this.dvlReCall = item;
-    })
-    this.cache.valueList("L0614").subscribe((item) => {
+    });
+    this.cache.valueList('L0614').subscribe((item) => {
       this.dvlStatusTM = item;
-    })
+    });
     //formName: string, gridName: string
   }
 
   //Load data đơn vị
   loadDataAgency() {
-    this.agService.loadDataAgencyCbx().subscribe(item => {
+    this.agService.loadDataAgencyCbx().subscribe((item) => {
       this.lstAgency = item;
-    })
+    });
   }
 
   //Load data phòng ban
   loadDataDept() {
-    this.agService.loadDataDepartmentCbx(this.idAgency).subscribe(item => {
+    this.agService.loadDataDepartmentCbx(this.idAgency).subscribe((item) => {
       this.lstDept = item;
-    })
+    });
   }
 
   closeSideBar(): void {
-    if(this.actionEdit == "1" && this.fileAdd != null && this.fileAdd.length >0)
-    {
-      
-      this.fileAdd.forEach((elm)=>{
-        this.fileService.deleteFileByObjectIDType(elm.objectId,this.objectType,true).subscribe((item)=>{
-          //alert(item);
-          if(item == true)
-            this.fileAdd = null;
-        })
-      })
+    if (
+      this.actionEdit == '1' &&
+      this.fileAdd != null &&
+      this.fileAdd.length > 0
+    ) {
+      this.fileAdd.forEach((elm) => {
+        this.fileService
+          .deleteFileByObjectIDType(elm.objectId, this.objectType, true)
+          .subscribe((item) => {
+            //alert(item);
+            if (item == true) this.fileAdd = null;
+          });
+      });
     }
     //this.viewbase.currentView.closeSidebarRight();
   }
-  
+
   openSideBar(): void {
     this.action = true;
     //this.viewbase.currentView.openSidebarRight();
@@ -360,13 +429,11 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
 
   //Mở form
   opensideBarRight() {
-    this.switchTemplate = "new";
+    this.switchTemplate = 'new';
     this.openSideBar();
   }
- 
-  
- 
-  //Mở form 
+
+  //Mở form
   openFormUploadFile() {
     this.attachment.openPopup();
     // this.atSV.openForm.next(true);
@@ -381,7 +448,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     var recID = recID;
     var relID = relID;
     var config = new AlertConfirmInputConfig();
-    config.type = "YesNo";
+    config.type = 'YesNo';
     /* this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền chia sẻ của người này. Bạn có muốn xác nhận không?", config).subscribe((res: Dialog) => {
       let that = this;
       res.close = function (e) {
@@ -398,7 +465,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     that.reloadFile();
   }
   reloadFile() {
-    this.atSV.isFileList.subscribe(item => {
+    this.atSV.isFileList.subscribe((item) => {
       if (item != null) {
         console.log(item);
       }
@@ -406,27 +473,23 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
   }
   closeAgency(e) {
     var dt = e.event;
-    if (dt == true) this.notifySvr.alert("Thêm mới đơn vị", "Thành công");
-    else this.notifySvr.alert("Thêm mới đơn vị", "Thất bại");
-
+    if (dt == true) this.notifySvr.alert('Thêm mới đơn vị', 'Thành công');
+    else this.notifySvr.alert('Thêm mới đơn vị', 'Thất bại');
   }
   //đóng form cập nhật tiến độ công việc
   closeUpdateExtend(e: any, that: IncommingComponent) {
-    if (e.event == true) that.notifySvr.notify("Thành công");
-    else if (e.event == false) that.notifySvr.notify("Thất bại");
+    if (e.event == true) that.notifySvr.notify('Thành công');
+    else if (e.event == false) that.notifySvr.notify('Thất bại');
   }
 
-  closeSaveToFolder(e: any, that: IncommingComponent) { 
-
-  }
+  closeSaveToFolder(e: any, that: IncommingComponent) {}
 
   //đóng form gia hạn deadline
   closeExtendDeadline(e: any, that: IncommingComponent) {
     if (e.event[0] == true) {
-      that.notifySvr.notify("Gia hạn thành công");
+      that.notifySvr.notify('Gia hạn thành công');
       //that.listview.addHandler(e.event[1], false, "recID")
-    }
-    else if (e.event[0] == false) that.notifySvr.notify("Gia hạn thất bại");
+    } else if (e.event[0] == false) that.notifySvr.notify('Gia hạn thất bại');
   }
   //////////////////////////////////////////////////////////////
   loadData() {
@@ -443,7 +506,7 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
     }) */
   }
   groupDispatchData(data: any) {
-  /*   var date = new Date();
+    /*   var date = new Date();
     var firstweek = date.getDate() - date.getDay(); // First day is the day of the month - the day of the week
     var lastweek = firstweek + 6; // last day is the first day + 6
     var today = date.toDateString();
@@ -479,67 +542,56 @@ export class IncommingComponent extends UIComponent implements  AfterViewInit, O
 
   //Hàm lấy thông tin chi tiết của công văn
   getDtDis(id: any) {
-    this.lstUserID = ""
-    this.odService.getDetailDispatch(id).subscribe(item => {
+    this.lstUserID = '';
+    this.odService.getDetailDispatch(id).subscribe((item) => {
       //this.getChildTask(id);
-      if(item) 
-      {
+      if (item) {
         this.lstDtDis = formatDtDis(item);
         //this.view.dataService.setDataSelected(this.lstDtDis);
       }
-      
     });
   }
-  
 
   //hàm render lại list view theo status công văn
   clickChangeStatus(status: any) {
-    this.view.dataService.predicates = "Status=@0"
-    this.view.dataService.dataValues = status
-    this.view.dataService.load().subscribe(item=>{
-      if(item[0]) this.lstDtDis = this.getDtDis(item[0].recID)
-      else
-      {
-        this.lstDtDis = item[0];
-      }
-    });
+    this.view.dataService.predicates = 'Status=@0';
+    this.view.dataService.dataValues = status;
+    this.view.dataService.load().subscribe();
   }
- 
 
   selectFirst(dt: any) {
-    var recID ;
-    if(dt.data) recID = dt.data.recID ;
+    var recID;
+    if (dt.data) recID = dt.data.recID;
     else recID = dt.recID;
-    this.getDtDis(recID)
+    this.getDtDis(recID);
   }
-  fileAdded(event:any) { 
-    this.fileAdd = event.data
+  fileAdded(event: any) {
+    this.fileAdd = event.data;
     this.dfDis.File = event.data;
   }
   getJSONString(data) {
-    return JSON.stringify(data);    
+    return JSON.stringify(data);
   }
-  refeshTaskView(e:any)
-  {
-    this.lstDtDis.relations  = e.data[0].relations;
-    this.lstDtDis.owner =  e.data[0].owner;
-    this.lstUserID = getListImg(this.lstDtDis.relations)
-    this.lstDtDis.lstIfRelation = [...this.lstDtDis.lstIfRelation, ...e.data[1]];
+  refeshTaskView(e: any) {
+    this.lstDtDis.relations = e.data[0].relations;
+    this.lstDtDis.owner = e.data[0].owner;
+    this.lstUserID = getListImg(this.lstDtDis.relations);
+    this.lstDtDis.lstIfRelation = [
+      ...this.lstDtDis.lstIfRelation,
+      ...e.data[1],
+    ];
     this.odService.getTaskByRefID(this.lstDtDis.recID).subscribe((res) => {
-      if(res != null)
-      {
+      if (res != null) {
         this.lstDtDis.listTask = res;
       }
     });
   }
- 
-  requestEnded(evt: any)
-  {
+
+  requestEnded(evt: any) {
     console.log(evt);
   }
-  openFormFuncID(val:any,data:any)
-  {
+  openFormFuncID(val: any, data: any) {
     //this.lstDtDis = data;
-    this.viewdetail.openFormFuncID(val,data);
+    this.viewdetail.openFormFuncID(val, data);
   }
 }
