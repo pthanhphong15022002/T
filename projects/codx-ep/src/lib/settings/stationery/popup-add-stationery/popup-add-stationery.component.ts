@@ -49,7 +49,7 @@ export class PopupAddStationeryComponent implements OnInit {
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
-  addEditForm: FormGroup;
+  dialogStationery: FormGroup;
   chosenDate = null;
   CbxName: any;
   link = '';
@@ -63,7 +63,7 @@ export class PopupAddStationeryComponent implements OnInit {
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
   data: any = {};
-  dialog: any;
+  dialog: DialogRef;
   isAdd = true;
 
   formModel: FormModel;
@@ -128,49 +128,38 @@ export class PopupAddStationeryComponent implements OnInit {
     this.bookingService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.addEditForm = item;
+        this.dialogStationery = item;
         this.isAfterRender = true;
-
+        this.dialogStationery.patchValue({
+          ranking: '1',
+          category: '1',
+          owner: '',
+        });
         console.log(this.isAfterRender);
       });
   }
-
+  beforeSave(option: any) {
+    let itemData = this.dialogStationery.value;
+    if (!itemData.resourceID) {
+      this.isAdd = true;
+    } else {
+      this.isAdd = false;
+    }
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
   onSaveForm() {
-    // let equipments = '';
-    // this.lstDeviceRoom.forEach((element) => {
-    //   if (element.isSelected) {
-    //     if (equipments == '') {
-    //       equipments += element.id;
-    //     } else {
-    //       equipments += ';' + element.id;
-    //     }
-    //   }
-    // });
-    // this.addEditForm.patchValue({ equipments: equipments });
-    // if (this.isAdd) {
-    //   this.addEditForm.patchValue({
-    //     category: '1',
-    //     status: '1',
-    //     resourceType: '1',
-    //   });
-    //   if (!this.addEditForm.value.resourceID) {
-    //     this.addEditForm.value.resourceID =
-    //       '4ef9b480-d73c-11ec-b612-e454e8919646';
-    //   }
-    //   var date = new Date(this.addEditForm.value.startDate);
-    //   this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
-    // }
-
-    this.addEditForm.value.linkType = '0';
-    this.addEditForm.value.resourceType = '6';
-    this.api
-      .callSv(
-        'EP',
-        'ERM.Business.EP',
-        'ResourcesBusiness',
-        'AddEditItemAsync',
-        [this.addEditForm.value, this.isAdd]
-      )
+    if (this.dialogStationery.invalid == true) {
+      console.log(this.dialogStationery);
+      return;
+    }
+    if (!this.dialogStationery.value.linkType) {
+      this.dialogStationery.value.linkType = '0';
+    }
+    this.dialogStationery.value.resourceType = '6';
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         this.imageUpload
           .updateFileDirectReload(res.msgBodyData[0].resourceID)
@@ -193,7 +182,7 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   valueOwnerChange(event) {
-    if (event) this.addEditForm.patchValue({ owner: event[0] });
+    if (event) this.dialogStationery.patchValue({ owner: event[0] });
   }
   closeForm() {
     this.initForm();
@@ -235,12 +224,12 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   checkedOnlineChange(event) {
-    this.addEditForm.patchValue({
+    this.dialogStationery.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });
 
-    if (!this.addEditForm.value.online)
-      this.addEditForm.patchValue({ onlineUrl: null });
+    if (!this.dialogStationery.value.online)
+      this.dialogStationery.patchValue({ onlineUrl: null });
     this.changeDetectorRef.detectChanges();
   }
 
@@ -253,7 +242,7 @@ export class PopupAddStationeryComponent implements OnInit {
       .open(this.addLink, { centered: true, size: 'md' })
       .result.then(
         (result) => {
-          this.addEditForm.patchValue({ onlineUrl: this.link });
+          this.dialogStationery.patchValue({ onlineUrl: this.link });
         },
         (reason) => {}
       );
@@ -264,7 +253,7 @@ export class PopupAddStationeryComponent implements OnInit {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.addEditForm.patchValue(data);
+      this.dialogStationery.patchValue(data);
     }
   }
 
@@ -287,9 +276,11 @@ export class PopupAddStationeryComponent implements OnInit {
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.addEditForm.patchValue({ [event['field']]: event.data.value });
+        this.dialogStationery.patchValue({
+          [event['field']]: event.data.value,
+        });
       } else {
-        this.addEditForm.patchValue({ [event['field']]: event.data });
+        this.dialogStationery.patchValue({ [event['field']]: event.data });
       }
     }
   }

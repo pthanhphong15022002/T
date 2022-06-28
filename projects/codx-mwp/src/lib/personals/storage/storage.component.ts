@@ -1,20 +1,20 @@
-import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel, ButtonModel, SidebarModel, DialogRef, CallFuncService, UIComponent, CodxListviewComponent } from 'codx-core';
 import { UpdateStorageComponent } from './update-storage/update-storage.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AddStorageComponent } from './add-storage/add-storage.component';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, TemplateRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, TemplateRef, Input, Injector, AfterViewInit } from '@angular/core';
 import { PersonalsComponent } from '../personals.component';
 import { DetailStorageComponent } from './detail/detail-storage/detail-storage.component';
 import { LayoutModel } from '@shared/models/layout.model';
+import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
 
 @Component({
   selector: 'app-storage',
   templateUrl: './storage.component.html',
   styleUrls: ['./storage.component.scss']
 })
-export class StorageComponent implements OnInit {
-@Input() formModel:FormModel;
+export class StorageComponent extends UIComponent implements OnInit, AfterViewInit {
+  @Input() formModel: FormModel;
   user: any;
   dataValue = '';
   predicate = 'CreatedBy=@0';
@@ -31,26 +31,30 @@ export class StorageComponent implements OnInit {
   views = [];
   userPermission: any;
   modelResource: ResourceModel;
+  dialog!: DialogRef;
+  moreFuncs: Array<ButtonModel> = [];
+  listStorage = [];
 
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
-  @ViewChild('lstStorage') lstStorage: AddStorageComponent;
+  @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
   @ViewChild('lstUpdateStorage') lstUpdateStorage: UpdateStorageComponent;
   @ViewChild('dataUpdateStorage') dataUpdateStorage: UpdateStorageComponent;
   @ViewChild('detail', { read: ViewContainerRef }) detail!: ViewContainerRef;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('cardTemp') cardTemp : TemplateRef<any>;
-  @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('listView') listView: CodxListviewComponent;
 
-  constructor(private authStore: AuthStore,
+  constructor(private inject: Injector,
+    private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
-    private api: ApiHttpService,
     private modalService: NgbModal,
   ) {
+    super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
     this.route.params.subscribe(params => {
@@ -58,14 +62,14 @@ export class StorageComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
+  onInit(): void {
   }
 
   ngAfterViewInit() {
+    this.listStorage = this.view.dataService.data;
   }
 
-  testdate(dr){
-    console.log(dr);
+  testdate(dr) {
   }
 
   openFormMoreFunc(e) {
@@ -76,9 +80,22 @@ export class StorageComponent implements OnInit {
   }
 
   formAddNoteBook() {
-    this.lstStorage.lstStorage = this.lstCardStorage;
-    this.dataSort = [];
-    this.changedt.detectChanges();
+    // this.lstStorage.lstStorage = this.lstCardStorage;
+    // this.dataSort = [];
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.data, 'add'], option);
+      this.dialog.closed.subscribe(x => {
+        if (x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
+        else {
+          this.view.dataService.update(x.event).subscribe();
+          this.view.dataService.setDataSelected(x.event);
+        }
+      });
+    });
   }
 
   formUpdateStorage(e) {

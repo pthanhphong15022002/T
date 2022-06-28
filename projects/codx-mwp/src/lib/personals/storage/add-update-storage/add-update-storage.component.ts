@@ -1,15 +1,15 @@
 import { FormGroup, FormControl } from '@angular/forms';
 import { Storages } from './../../../model/Storages.model';
 import { ActivatedRoute } from '@angular/router';
-import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService } from 'codx-core';
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService } from 'codx-core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, Optional } from '@angular/core';
 
 @Component({
-  selector: 'app-add-storage',
-  templateUrl: './add-storage.component.html',
-  styleUrls: ['./add-storage.component.scss']
+  selector: 'app-add-update-storage',
+  templateUrl: './add-update-storage.component.html',
+  styleUrls: ['./add-update-storage.component.scss']
 })
-export class AddStorageComponent implements OnInit {
+export class AddUpdateStorageComponent implements OnInit {
 
   title: any;
   memo: any;
@@ -17,16 +17,29 @@ export class AddStorageComponent implements OnInit {
   lstStorage: any = [];
   details: any = [];
   formAddStorage: FormGroup;
-  
+  dialog: any;
+  readOnly = false;
+  formType = '';
+
   @Input() dataAdd = new Storages();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
-  
+
   constructor(private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
-    private api: ApiHttpService,) { }
+    private api: ApiHttpService,
+    private notiService: NotificationsService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef) {
+    this.dialog = dialog;
+    console.log("check form add dialog", this.dialog)
+    console.log("check form add dt ", dt)
+    this.formType = dt?.data[1];
+    this.lstStorage = dt?.data[0];
+
+  }
 
   ngOnInit(): void {
     this.initFormGroup();
@@ -63,11 +76,11 @@ export class AddStorageComponent implements OnInit {
     this.dataAdd.title = this.title;
     this.dataAdd.memo = this.memo;
 
-    this.details = [{recID: null, refID: '62908918ad16643a2ff34a43', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN'},
-    {recID: null, refID: '62948c587969fe9d8b01d45b', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN'},
-    {recID: null, refID: '62948c627969fe9d8b01d464', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN'},];
+    this.details = [{ recID: null, refID: '62908918ad16643a2ff34a43', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    { recID: null, refID: '62948c587969fe9d8b01d45b', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    { recID: null, refID: '62948c627969fe9d8b01d464', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
     this.dataAdd.details = this.details;
-    
+
 
     this.api.exec<any>(
       'ERM.Business.WP',
@@ -83,8 +96,11 @@ export class AddStorageComponent implements OnInit {
           .subscribe((result) => {
             if (result) {
               this.loadData.emit();
-              this.lstStorage.addHandler(dt, true, 'recID');
+              this.lstStorage = dt.concat(this.dialog.dataService.data);
+              // this.dialog.dataService.setDataSelected(dt);
+              // this.dialog.dataService.afterSave.next(dt);
               this.changedt.detectChanges();
+              this.notiService.notifyCode('E0680');
             }
           });
       }

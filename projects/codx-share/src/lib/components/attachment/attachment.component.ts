@@ -16,7 +16,6 @@ import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, NotificationsService, ViewsComponent } from 'codx-core';
-import * as moment from 'moment';
 import { AttachmentService } from './attachment.service';
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -53,11 +52,13 @@ export class AttachmentComponent implements OnInit  {
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
+  @Input() hideDes = "0";
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;
+  @Output() fileCount = new EventEmitter<any>();
  // @Input('openFolder') openFolder: ViewsComponent;
   
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -310,7 +311,10 @@ export class AttachmentComponent implements OnInit  {
 
   onMultiFileSave(modal = null) {        
       let total = this.fileUploadList.length;
-      var that = this;       
+      var that = this;     
+      for(var i=0; i<total; i++) {
+        this.fileUploadList[i].objectId = this.objectId;
+      }  
       this.atSV.fileListAdded = [];
       if (total > 1) {          
         var done = this.fileService.addMultiFile(this.fileUploadList).toPromise().then(res => {
@@ -744,14 +748,17 @@ export class AttachmentComponent implements OnInit  {
           fileUpload.folderId = this.folderId;            
           fileUpload.permissions = this.remotePermission;            
           this.fileUploadList.push(Object.assign({}, fileUpload));
+         
         }
       }
-      
+      this.fileCount.emit(files.length);
       files = null;             
       if (this.file) 
         this.file.nativeElement.value = "";      
       //  this.dmSV.fileUploadList.next(this.fileUploadList);
+      this.fileAdded.emit({ data: this.fileUploadList });
       this.changeDetectorRef.detectChanges();
+     
       return false;
   }
 }

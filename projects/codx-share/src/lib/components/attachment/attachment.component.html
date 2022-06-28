@@ -11,7 +11,7 @@
             </button>
         </div>
     </div> -->
-    <div class="card-body">
+    <div class="card-body p-0">
         <form name="frm_file1"> 
             <div class="offcanvas-wrapper">
                 <div *ngIf="hideFolder != '1'" class="modal-subheader">
@@ -40,7 +40,7 @@
                         <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                     </div>
                 </div>
-                <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
+                <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-1">
                     <div class="d-flex flex-grow-1">
                         <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                         <!-- <codx-img class="h-35px me-3"></codx-img> -->
@@ -50,7 +50,7 @@
                                 <div class="text-gray-800 me-3">{{file.uploadDate}}</div>
                                 <div class="text-gray-800">{{file.userName}}</div>
                             </div>
-                            <div class="d-flex flex-column flex-grow-1">
+                            <div  *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1">
                                 <span class="text-dark"></span>
                                 <div class="d-flex">
                                     <codx-input
