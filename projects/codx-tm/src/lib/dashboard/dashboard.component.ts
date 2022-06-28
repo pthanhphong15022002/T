@@ -215,7 +215,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         active: false,
         sameData: true,
         model: {
-          template: this.templateLeft,
+          panelLeftRef: this.templateLeft,
         }
       },]
     this.week = this.selectweekComponent?.week;
