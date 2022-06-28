@@ -22,6 +22,7 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemCheckListControlVll', { static: true }) itemCheckListControlVll: TemplateRef<any>;
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+  @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
 
@@ -54,18 +55,19 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: '', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
-      { field: 'note', headerText: 'Ghi chú', width: 180, template: this.itemNote },
-      { field: 'approvalControl', headerText: 'Xét duyệt?', template: this.itemApprovalControlVll, width: 140 },
-      { field: 'projectControl', headerText: 'Chọn dự án', template: this.itemProjectControlVll, width: 140 },
-      { field: 'attachmentControl', headerText: 'Đính kèm file', template: this.itemAttachmentControl, width: 140 },
-      { field: 'checkListControl', headerText: 'Nhập việc cần làm', template: this.itemCheckListControlVll, width: 180 },
-      { field: 'checkList', headerText: 'CheckList', template: this.itemCheckList, width: 100 },
-      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.itemCreate, width: 100 }
+      { field: 'note', headerText: 'Ghi chú', width: 180 },
+      { field: 'approvalControl', headerText: 'Xét duyệt?', width: 140 },
+      { field: 'projectControl', headerText: 'Chọn dự án', width: 140 },
+      { field: 'attachmentControl', headerText: 'Đính kèm file', width: 140 },
+      { field: 'checkListControl', headerText: 'Nhập việc cần làm', width: 180 },
+      { field: 'checkList', headerText: 'CheckList', width: 100 },
+      { field: 'createName', headerText: 'Người tạo', width: 200 },
+      { field: 'createdOn', headerText: 'Ngày tạo', width: 100 },
+      { field: '', headerText: '#', width: 30 },
+
     ];
     this.button = {
       id: 'btnAdd',
@@ -112,6 +114,7 @@ export class TaskGroupComponent implements OnInit {
       active: true,
       model: {
         resources: this.columnsGrid,
+        template: this.grid
       }
     }];
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';

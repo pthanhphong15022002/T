@@ -1,20 +1,94 @@
-<codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
-  className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
-  [moreFuncs]="moreFuncs" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
-  idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
+<codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
+  method="GetListTaskGroupsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
+  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="taskGroupID" [pageSize]="100"
+  [selectedFirst]="true">
 </codx-views>
 
-<!-- <ng-template #itemTemplate let-data>
-  <codx-view-grid (click)="clickMF($event,data)" [taskgroupID]="data.taskGroupID" [taskGroupName]="data.taskGroupName"
-    [note]="data.note" [approvalControlVll]="data.approvalControl" [projectControlVll]="data.projectControl"
-    [attachmentControl]="data.attachmentControl" [checkListControlVll]="data.checkListControl"
-    [checkList]="data.checkList" [createBy]="data.createName" [createdOn]="data.createdOn">
-  </codx-view-grid>
-</ng-template> -->
+<ng-template #grid let-data>
+  <tr>
+    <td>
+      {{data.taskGroupID}}
+    </td>
+    <td>
+      {{data.taskGroupName}}
+    </td>
+    <td>
+      {{data.taskGroupName2}}
+    </td>
+    <td>
+      <div [innerHTML]="data.note">
+      </div>
+    </td>
+    <td>
+      <div class="badge badge-danger me-2" [style.border-color]="
+  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+" [style.background-color]="
+  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+" [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
+        {{data?.approvalControl|vll:"L1433":"text"|async}}
+      </div>
+    </td>
+    <td>
+      <div class="badge badge-danger me-2" [style.border-color]="
+  (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+" [style.background-color]="
+  (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+" [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
+        {{data?.projectControl|vll:"L1462":"text"|async}}
+      </div>
+    </td>
+    <td>
+      <div class="badge badge-danger me-2" [style.border-color]="
+      (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
+    " [style.background-color]="
+      (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
+    " [style.color]="data?.attachmentControl | vll: 'L1462':'color' | async" style="border: none">
+        {{data?.attachmentControl|vll:"L1462":"text"|async}}
+      </div>
+    </td>
+    <td>
+      <div class="badge badge-danger me-2" [style.border-color]="
+  (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+" [style.background-color]="
+  (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+" [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+        {{data?.checkListControl|vll:"L1463":"text"|async}}
+      </div>
+    </td>
+    <td>
+      <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
+        <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
+          *ngIf=" (i<3 || data.disableReadmore) ">
+          <label class="checkbox checkbox-square checkbox-sm mb-0">
+            <codx-input type="checkbox" checked="checked" disabled>
+            </codx-input>
+            <span></span> {{item}}
+          </label>
+        </div>
+      </ng-container>
+      <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
+          (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+    </td>
+    <td>
+      <div class="d-flex align-items-center" #itemCreateBy>
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
+        </codx-img>
+        <div class="text-dark font-size-lg" placement="bottom">
+          {{data.createName}}
+        </div>
+      </div>
+    </td>
+    <td>
+      {{data.createdOn | date: 'dd/MM/yyyy'}}
+    </td>
+    <td>
+      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+        (clickMF)="clickMF($event,data)">
 
-<ng-template #GiftIDCell let-data>
-  
+      </codx-mfunc>
+    </td>
+  </tr>
 </ng-template>
 
 

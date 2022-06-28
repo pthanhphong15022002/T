@@ -20,6 +20,6 @@ export class SettingComponent implements OnInit, OnDestroy {
     this.tmService.layoutcpn.next(new LayoutModel(true, 'Thiết lập', false, false));
   }
   ngOnDestroy(): void {
-    this.tmService.layoutcpn.next(new LayoutModel(false, 'Quản lý công việc', true, false));
+    this.tmService.layoutcpn.next(new LayoutModel(false, 'Danh mục', true, false));
   }
 }

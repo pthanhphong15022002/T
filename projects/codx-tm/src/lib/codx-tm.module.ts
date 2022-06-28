@@ -1,3 +1,7 @@
+import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
+import { PopupEditCalendarComponent } from './setting/calendar/popup-edit-calendar/popup-edit-calendar.component';
+import { PopupAddEventComponent } from './setting/calendar/popup-add-event/popup-add-event.component';
+import { PopupAddCalendarComponent } from './setting/calendar/popup-add-calendar/popup-add-calendar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
@@ -42,6 +46,7 @@ import { TaskDailyComponent } from './reports/task-daily/task-daily.component';
 import { HomeReportComponent } from './reports/home-report/home-report.component';
 import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
+import { CalendarComponent } from './setting/calendar/calendar.component';
 export const routes: Routes = [
   {
     path: '',
@@ -91,6 +96,10 @@ export const routes: Routes = [
           {
             path: 'projectgroups/:funcID',
             component: ProjectgroupsComponent
+          },
+          {
+            path: 'calendar/:funcID',
+            component: CalendarComponent
           },
         ]
       },
@@ -152,7 +161,12 @@ const T_Component: Type<any>[] = [
   TaskDailyComponent,
   HomeReportComponent,
   TaskByProjectsComponent,
-  ProjectChartComponent
+  ProjectChartComponent,
+  CalendarComponent,
+  PopupAddCalendarComponent,
+  PopupAddEventComponent,
+  PopupEditCalendarComponent,
+  PopupAddDayoffsComponent
 ]
 @NgModule({
   imports: [
