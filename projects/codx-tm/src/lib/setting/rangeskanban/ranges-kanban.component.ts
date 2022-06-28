@@ -1,5 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NotificationsService } from 'codx-core';
+import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
+import { BS_Ranges } from '../../models/BS_Ranges.model';
 import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component';
 
 @Component({
@@ -8,11 +11,6 @@ import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component
   styleUrls: ['./ranges-kanban.component.css']
 })
 export class RangesKanbanComponent implements OnInit {
-  @ViewChild("itemCreateBy", { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild("GiftIDCell", { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild("itemCreate", { static: true }) itemCreateOn: TemplateRef<any>;
-  @ViewChild("itemListReadmore", { static: true }) itemListReadmore: TemplateRef<any>;
-  @ViewChild("itemNote", { static: true }) itemNote: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
@@ -24,7 +22,8 @@ export class RangesKanbanComponent implements OnInit {
   views: Array<ViewModel> = [];
   itemSelected: any;
   constructor(private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService) { }
+    private callfunc: CallFuncService, private notiService: NotificationsService,
+    ) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -68,10 +67,10 @@ export class RangesKanbanComponent implements OnInit {
         this.show();
         break;
       case 'edit':
-         this.edit(data);
+        this.edit(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }
@@ -116,6 +115,17 @@ export class RangesKanbanComponent implements OnInit {
     });
   }
 
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], this.beforeDel).subscribe();
+  };
+
+  beforeDel(opt: RequestOption) {
+    opt.methodName = 'DeleteRangesKanbanAsync';
+    opt.data = this.itemSelected.rangeID;
+    return true;
+  }
+  
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;

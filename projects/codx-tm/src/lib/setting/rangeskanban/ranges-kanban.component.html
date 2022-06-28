@@ -37,7 +37,7 @@
       {{data.createdOn | date: 'dd/MM/yyyy'}}
     </td>
     <td>
-      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" (clickMF)="clickMF($event,data)">
+      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected" (clickMF)="clickMF($event,data)">
 
       </codx-mfunc>
     </td>
