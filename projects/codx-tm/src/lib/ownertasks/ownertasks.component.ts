@@ -32,7 +32,6 @@ import { UpdateStatusPopupComponent } from './update-status-popup/update-status-
   styleUrls: ['./ownertasks.component.scss'],
 })
 export class OwnerTasksComponent extends UIComponent {
-
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -71,7 +70,7 @@ export class OwnerTasksComponent extends UIComponent {
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTMService,
+    private tmSv: CodxTMService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -82,7 +81,7 @@ export class OwnerTasksComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
       case 'edit':
         this.edit(data);
@@ -96,7 +95,7 @@ export class OwnerTasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT025':  // cái này xem lại , nên có biến gì đó để xét
+      case 'TMT025': // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
       default:
@@ -107,7 +106,7 @@ export class OwnerTasksComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
     }
   }
@@ -186,7 +185,7 @@ export class OwnerTasksComponent extends UIComponent {
           eventModel: this.fields,
           resourceModel: this.resourceField,
           template: this.eventTemplate,
-          template3: this.cellTemplate
+          template3: this.cellTemplate,
         },
       },
     ];
@@ -301,16 +300,20 @@ export class OwnerTasksComponent extends UIComponent {
   }
   //#endregion schedule
 
-  show() {
+  add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'add'], option);
-      this.dialog.closed.subscribe(e => {
+      this.dialog = this.callfc.openSide(
+        PopupAddComponent,
+        [this.view.dataService.dataSelected, 'add'],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
         console.log(e);
-      })
+      });
     });
   }
 
@@ -318,38 +321,76 @@ export class OwnerTasksComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
-      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'edit'], option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '750px';
+        this.dialog = this.callfc.openSide(
+          PopupAddComponent,
+          [this.view.dataService.dataSelected, 'edit'],
+          option
+        );
+      });
   }
 
   copy(data) {
-    // data.taskID = null;
-    // data.recID = null;
-
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected, 'copy'], option);
+      this.dialog = this.callfc.openSide(
+        PopupAddComponent,
+        [this.view.dataService.dataSelected, 'copy'],
+        option
+      );
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
-      .subscribe();
+    if (data.status == 9) {
+      this.notiService.notifyCode('TM001');
+      return;
+    }
+    var isCanDelete = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '1') {
+              isCanDelete = false;
+              return;
+            }
+          });
+          if (!isCanDelete) {
+            this.notiService.notifyCode('TM001');
+          } else {
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+                if (res[0]) {
+                  this.notiService.notifyCode('TM004');
+                }
+              });
+          }
+        }
+      });
   }
-  sendemail(data) {
-
-  }
+  sendemail(data) {}
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -363,30 +404,34 @@ export class OwnerTasksComponent extends UIComponent {
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '750px';
-    this.dialog = this.callfc.openSide(AssignInfoComponent, this.view.dataService.dataSelected, option);
-    this.dialog.closed.subscribe(e => {
+    this.dialog = this.callfc.openSide(
+      AssignInfoComponent,
+      this.view.dataService.dataSelected,
+      option
+    );
+    this.dialog.closed.subscribe((e) => {
       console.log(e);
-    })
+    });
   }
 
-  changeView(evt: any) {
-
-  }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {
-
+    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    this.view.currentView;
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
-      this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data).subscribe(res => {
-        if (res) {
-          this.view.dataService.update(e.data);
-        }
-      });
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.update(e.data);
+          }
+        });
     }
   }
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }
@@ -459,6 +504,6 @@ export class OwnerTasksComponent extends UIComponent {
     );
   }
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected)
+    this.clickMF(e.e, this.itemSelected);
   }
 }

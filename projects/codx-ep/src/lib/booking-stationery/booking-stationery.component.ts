@@ -30,7 +30,7 @@ export class BookingStationeryComponent implements OnInit {
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
-  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
+  @ViewChild('usageRateCol') usageRateCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button: ButtonModel;
@@ -89,21 +89,19 @@ export class BookingStationeryComponent implements OnInit {
 
     this.columnsGrid = [
       {
-        field: 'resourceName',
         headerText: 'Sản phẩm',
-        width: 150,
+        width: '75%',
         template: this.resourceNameCol,
       },
       {
         field: 'costPrice',
         headerText: 'Đơn giá',
-        width: 150,
-        template: this.costPriceCol,
+        width: '10%',
       },
       {
-        field: '',
         headerText: 'Định mức sử dụng',
-        width: 150,
+        width: '15%',
+        template: this.usageRateCol
       },
     ];
 
@@ -123,27 +121,17 @@ export class BookingStationeryComponent implements OnInit {
         text: 'Card',
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.cardItem,
         },
       },
       {
         id: '3',
-        text: 'List',
-        type: ViewType.list,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.listItem,
-        },
-      },
-      {
-        id: '4',
         text: 'Grid',
         type: ViewType.grid,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resources: this.columnsGrid,
         },

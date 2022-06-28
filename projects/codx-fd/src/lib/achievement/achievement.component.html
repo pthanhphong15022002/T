@@ -206,10 +206,10 @@
                 </div>
               </div>
               <div class="list-performance">
-                <codx-listview #listview [pageSize]="10" [loadFull]="true" service="FD" assemblyName="ERM.Business.FD"
+                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD"
                   className="KudosTransBusiness" method="GetDataAchievementAsync" [predicate]="options.predicate"
                   [dataValue]="options.dataValue" entityName="FD_KudosTrans" [itemTemplate]="TemplateList"
-                  [height]="heightList" [autoLoad]="loadList">
+                  [height]="heightList">
                 </codx-listview>
               </div>
             </div>

@@ -81,6 +81,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     private notification: NotificationsService,
     private cfService: CallFuncService,
     private api: ApiHttpService,
+    private modalService: NgbModal,
     private callFuncService: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -88,10 +89,6 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
-    // this.bookingService.getModelPage('EPT1').then((res) => {
-    //   if (res) this.modelPage = res;
-    //   console.log('constructor', this.modelPage);
-    // });
   }
   ngAfterViewInit(): void {
     if (this.dialog) {
@@ -198,56 +195,22 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         this.addEditForm.value.resourceID =
           'd501dea4-e636-11ec-a4e6-8cec4b569fde';
       }
-      //var date = new Date(this.addEditForm.value.startDate);
-      //this.addEditForm.value.bookingOn = new Date(date.setHours(0, 0, 0, 0));
     }
-    //this.dialog.dataService.dataSelected = this.addEditForm.value;
-    debugger;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res: any) => {
         if (res) {
           this.isSaveSuccess = true;
         }
-        console.log(res);
       });
-    // this.api
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.addEditForm.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     debugger;
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeForm();
-    //   });
   }
 
   valueChange(event) {
     if (event?.field == 'day') {
-      this.isFullDay = event.data?.checked;
-      if (event.data?.checked == true) {
-        this.startTime = new Date();
-        this.startTime = new Date(
-          this.startTime.getFullYear(),
-          this.startTime.getMonth(),
-          this.startTime.getDate(),
-          0,
-          0,
-          0,
-          0
-        );
-        this.endTime = new Date(
-          this.startTime.getFullYear(),
-          this.startTime.getMonth(),
-          this.startTime.getDate(),
-          23,
-          59,
-          59,
-          59
-        );
-        this.setDate();
+      this.isFullDay = event.data;
+      if (this.isFullDay) {
+        this.startTime = '00:00';
+        this.endTime = '23:59';
       } else {
         this.endTime = null;
         this.startTime = null;
@@ -263,8 +226,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         }
       }
     }
-    if (this.isFullDay) {
-    }
+    this.changeDetectorRef.detectChanges();
   }
 
   closeForm() {
@@ -283,17 +245,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 300, 400);
-    // this.modalService
-    //   .open(this.popupDevice, { centered: true, size: 'md' })
-    //   .result.then(
-    //     (result) => {
-    //       this.lstDeviceRoom = JSON.parse(JSON.stringify(this.tmplstDevice));
-    //     },
-    //     (reason) => {
-    //       this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-    //     }
-    //   );
+    var dialog = this.callFuncService.openForm(template, '', 300, 430);
     this.changeDetectorRef.detectChanges();
   }
 

@@ -40,12 +40,12 @@ export class defaultRecource {}
 export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('listItem') listItem: TemplateRef<any>;
+  @ViewChild('gridView') gridView: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('sideBarRightRef') sideBarRightRef: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('signatureType', { static: true }) signatureType;
   @ViewChild('supplier', { static: true }) supplier;
   @ViewChild('oTPControl', { static: true }) oTPControl;
@@ -82,47 +82,19 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.button = {
       id: 'btnAdd',
     };
-  }
-
-  button: ButtonModel;
-  funcID: string;
-  service = 'ES';
-  assemblyName = 'ES';
-  entityName = 'ES_Signatures';
-  predicate = '';
-  dataValue = '';
-  idField = 'recID';
-  className = 'SignaturesBusiness';
-  method = 'GetListAsync';
-
-  ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
-    this.viewBase.dataService.methodSave = 'AddNewAsync';
-    this.viewBase.dataService.methodUpdate = 'EditAsync';
-    this.views = [
-      {
-        sameData: true,
-        id: '1',
-        type: ViewType.list,
-        active: true,
-        model: {
-          template: this.listItem,
-        },
-      },
-    ];
 
     this.columnsGrid = [
       {
         field: 'email',
         headerText: 'Email',
         template: '',
-        width: 150,
+        width: 200,
       },
       {
         field: 'fullName',
         headerText: 'Tên',
         template: '',
-        width: 150,
+        width: 200,
       },
       {
         field: 'signatureType',
@@ -162,10 +134,51 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       },
       { field: 'noName', headerText: '', template: this.noName, width: 30 },
     ];
+  }
+
+  button: ButtonModel;
+  funcID: string;
+  service = 'ES';
+  assemblyName = 'ES';
+  entityName = 'ES_Signatures';
+  predicate = '';
+  dataValue = '';
+  idField = 'recID';
+  className = 'SignaturesBusiness';
+  method = 'GetListAsync';
+
+  ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
+
+    this.views = [
+      {
+        sameData: true,
+        id: '1',
+        type: ViewType.list,
+        active: false,
+        model: {
+          template: this.listItem,
+        },
+      },
+      {
+        sameData: true,
+        id: '1',
+        type: ViewType.grid,
+        active: true,
+        model: {
+          resources: this.columnsGrid,
+        },
+      },
+    ];
+
     this.cr.detectChanges();
   }
 
-  closeEditForm(event) {}
+  closeEditForm(event) {
+    this.dialog && this.dialog.close();
+  }
 
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -190,7 +203,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddSignatureComponent,
-        this.viewBase.dataService.dataSelected,
+        [this.viewBase.dataService.dataSelected, true],
         option
       );
     });
@@ -210,7 +223,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
       this.dialog = this.callfunc.openSide(
         PopupAddSignatureComponent,
-        this.viewBase.dataService.dataSelected,
+        [item, false],
         option
       );
     });
@@ -237,28 +250,28 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteSignature(dataItem) {
-    if (confirm('Are you sure to delete')) {
-      this.api
-        .execSv('ES', 'ES', 'SignaturesBusiness', 'DeleteSignatureAsync', [
-          dataItem.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.gridView.removeHandler(dataItem, 'recID');
-          }
-        });
-    }
-  }
+  // deleteSignature(dataItem) {
+  //   if (confirm('Are you sure to delete')) {
+  //     this.api
+  //       .execSv('ES', 'ES', 'SignaturesBusiness', 'DeleteSignatureAsync', [
+  //         dataItem.recID,
+  //       ])
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.gridView.removeHandler(dataItem, 'recID');
+  //         }
+  //       });
+  //   }
+  // }
 
-  closeSidebar(event) {
-    if (event?.dataItem) {
-      this.gridView.addHandler(event.dataItem, event.isAdd, event.key);
-    }
-    this.cr.detectChanges();
+  // closeSidebar(event) {
+  //   if (event?.dataItem) {
+  //     this.gridView.addHandler(event.dataItem, event.isAdd, event.key);
+  //   }
+  //   this.cr.detectChanges();
 
-    //this.gridView.addHandler(e)
-  }
+  //   //this.gridView.addHandler(e)
+  // }
 
   getLinkImg(data) {
     return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;

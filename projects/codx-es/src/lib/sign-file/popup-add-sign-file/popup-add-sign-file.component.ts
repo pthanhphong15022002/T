@@ -1,14 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
 import {
   ApiHttpService,
   CallFuncService,
   CodxService,
+  DialogData,
+  DialogRef,
+  FormModel,
   ViewsComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEsService, ModelPage } from '../../codx-es.service';
+import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
 
 @Component({
@@ -23,7 +32,7 @@ export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
   currentTab = 0;
-  modelPage: ModelPage;
+  formModel: FormModel;
   isAfterRender = false;
   objectIDFile: String;
   dialogSignature: FormGroup;
@@ -35,6 +44,9 @@ export class PopupAddSignFileComponent implements OnInit {
   processID: String = '';
   transID: String = '';
 
+  dialog: DialogRef;
+  data;
+
   showPlan: boolean = true;
   constructor(
     private esService: CodxEsService,
@@ -42,28 +54,30 @@ export class PopupAddSignFileComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
     private api: ApiHttpService,
-    private fileService: FileService
-  ) {}
+    private fileService: FileService,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    this.formModel = data?.data[0].formModel;
+    console.log(this.formModel);
+
+    this.data = data;
+  }
 
   ngOnInit(): void {
-    this.esService.getModelPage('EST01').then((res) => {
-      if (res) {
-        this.modelPage = res;
+    this.initForm();
 
-        this.initForm();
-
-        this.esService
-          .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-          .then((res) => {
-            if (res) this.cbxName = res;
-          });
-      }
-    });
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) this.cbxName = res;
+      });
   }
 
   initForm() {
     this.esService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogSignFile = res;
@@ -76,8 +90,8 @@ export class PopupAddSignFileComponent implements OnInit {
           });
           this.codxService
             .getAutoNumber(
-              this.modelPage.funcID,
-              this.modelPage.entity,
+              this.formModel.funcID,
+              this.formModel.entityName,
               'CategoryID'
             )
             .subscribe((dt: any) => {

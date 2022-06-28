@@ -6,7 +6,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read" iconCss2="icon-flag"
+    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read" [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll:'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
     [title]="data.userName" icoStatusVll="L0186" icoSubTitleCss="icon-assignment" [subTitle]="data.positionName"
     [content]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo"
@@ -75,9 +75,9 @@
   <button class="btn btn-light-primary" (click)="delete(data)">
     Xóa
   </button> -->
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
     [title]="data.userName" [formModel]=" view.formModel">
-  </codx-temp-full>
+  </codx-temp-full> -->
 </ng-template>
 
 

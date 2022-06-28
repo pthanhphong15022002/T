@@ -41,35 +41,39 @@ export class PopupAddRoomsComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    this.cacheSv.valueList('EPS21').subscribe((res) => {
-      this.vllDevices = res.datas;
-    });
-
-    this.bookingService.getComboboxName('Rooms', 'grvRooms').then((res) => {
-      this.cacheGridViewSetup = res;
-    });
+    this.bookingService
+      .getComboboxName(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        this.CbxName = res;
+        console.log('Cbx', this.CbxName);
+      });
   }
 
   initForm() {
-    this.cacheSv
-      .gridViewSetup('Resources', 'EP_Resources')
-      .subscribe((item) => {
-        this.editResources = item;
-      });
-
     this.bookingService
-      .getFormGroup('Resources', 'grvResources')
+      .getFormGroup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
       .then((item) => {
         this.dialogRoom = item;
+        this.dialogRoom.patchValue({
+          ranking: '1',
+          category: '1',
+          owner: '',
+        });
+
         if (this.data) {
           this.dialogRoom.patchValue(this.data);
         }
         this.isAfterRender = true;
       });
-    // this.editform.patchValue({ ranking: '1', category: '1', companyID: '1' });
   }
 
-  valueChange(event: any) {
+  valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
         this.dialogRoom.patchValue({ [event['field']]: event.data.value });
@@ -90,7 +94,7 @@ export class PopupAddRoomsComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
-  valueOwnerChange(evt) {}
+
   onSaveForm() {
     if (this.dialogRoom.invalid == true) {
       console.log(this.dialogRoom);
@@ -99,7 +103,7 @@ export class PopupAddRoomsComponent implements OnInit {
     if (!this.dialogRoom.value.linkType) {
       this.dialogRoom.value.linkType = '0';
     }
-    this.dialogRoom.value.resourceType = '2';
+    this.dialogRoom.value.resourceType = '1';
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
@@ -109,6 +113,4 @@ export class PopupAddRoomsComponent implements OnInit {
     this.initForm();
     this.closeEdit.emit(data);
   }
-
-  getDeviceName(item) {}
 }

@@ -25,6 +25,7 @@ import {
   UrlUtil,
   NotificationsService,
   CacheService,
+  UIComponent
 } from 'codx-core';
 import * as moment from 'moment';
 import { CodxTMService } from '../codx-tm.service';
@@ -38,9 +39,8 @@ import { UpdateStatusPopupComponent } from '../ownertasks/update-status-popup/up
   templateUrl: './assigntasks.component.html',
   styleUrls: ['./assigntasks.component.css']
 })
-export class AssignTasksComponent implements OnInit {
+export class AssignTasksComponent extends UIComponent {
 
-  @ViewChild('view') view!: ViewsComponent;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -76,14 +76,12 @@ export class AssignTasksComponent implements OnInit {
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private api: ApiHttpService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private tmSv: CodxTMService,
-    private callfc: CallFuncService
   ) {
+    super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -120,7 +118,7 @@ export class AssignTasksComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'TM';
     this.modelResource.className = 'TaskBusiness';
@@ -315,7 +313,7 @@ export class AssignTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'add',true], option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -331,27 +329,59 @@ export class AssignTasksComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent,[this.view.dataService.dataSelected,'edit',true], option);
     });
   }
 
   copy(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy(this.view.dataService.dataSelected.taskID).subscribe((res: any) => {
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
       this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
+      this.dialog = this.callfc.openSide(PopupAddComponent, [this.view.dataService.dataSelected,'copy',true], option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) => this.beforeDel(opt))
-      .subscribe();
+    if (data.status == 9) {
+      this.notiService.notifyCode('TM001');
+      return;
+    }
+    var isCanDelete = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '1') {
+              isCanDelete = false;
+              return;
+            }
+          });
+          if (!isCanDelete) {
+            this.notiService.notifyCode('TM001');
+          } else {
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+                if (res[0]) {
+                  this.notiService.notifyCode('TM004');
+                }
+              });
+          }
+        }
+      });
   }
   sendemail(data){
     
@@ -457,4 +487,3 @@ export class AssignTasksComponent implements OnInit {
   }
 }
 
-// }

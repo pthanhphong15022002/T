@@ -1,10 +1,11 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { AccumulationChartModule, ChartAllModule, ChartModule, ColumnSeriesService, DataLabelService, LineSeriesService, StripLineService } from '@syncfusion/ej2-angular-charts';
+import { AccumulationChartModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import { ProgressBar, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { AchievementComponent } from './achievement/achievement.component';
@@ -21,11 +22,10 @@ export const routes: Routes = [
       {
         path: 'coins/:funcID',
         component: WalletsComponent,
-        children: [
-          {
-            path: 'detailcoins/:funcID',
-            component: ViewDetailCoinsComponent,
-          }]
+      },
+      {
+        path: 'detailcoins/:funcID',
+        component: ViewDetailCoinsComponent,
       },
       {
         path: 'statistical/:funcID',
@@ -48,7 +48,7 @@ const Component: Type<any>[] = [
 ];
 
 @NgModule({
-  imports: [
+  imports: [ 
     CommonModule,
     FormsModule,
     OverlayModule,
@@ -57,13 +57,13 @@ const Component: Type<any>[] = [
     CodxCoreModule,
     AccumulationChartModule,
     ChartAllModule,
+    ProgressBarModule,
     RouterModule.forChild(routes),
   ],
   exports: [
     RouterModule
   ],
   declarations: Component,
-  providers: [StripLineService, ColumnSeriesService, DataLabelService, LineSeriesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {

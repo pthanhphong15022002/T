@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataItem } from '@shared/models/folder.model';
 import {
@@ -21,12 +21,10 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { debug } from 'console';
-import {
-  AddGridData,
-  CodxEsService,
-  ModelPage,
-} from '../../../codx-es.service';
+import { AddGridData, CodxEsService } from '../../../codx-es.service';
 import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
+import { PopupAddApprovalStepComponent } from '../../approval-step/popup-add-approval-step/popup-add-approval-step.component';
+import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
 @Component({
   selector: 'popup-add-category',
   templateUrl: './popup-add-category.component.html',
@@ -54,7 +52,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   transID: String = '';
   stepNo: number = -1;
 
-  dialogAutoNum: FormGroup;
   isAfterAuto = false;
   cbxNameAuto: any;
 
@@ -75,7 +72,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = data;
+    this.data = data?.data[0];
+    this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
   }
   ngAfterViewInit(): void {}
@@ -88,8 +86,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) this.cbxName = res;
       });
-
-    this.initAutoNumber();
   }
 
   initForm() {
@@ -100,29 +96,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory = res;
           this.isAfterRender = true;
           this.dialogCategory.patchValue({ eSign: true, signatureType: '1' });
+          this.dialogCategory.addControl(
+            'countStep',
+            new FormControl(this.data.countStep ?? 0)
+          );
+          this.dialogCategory.addControl(
+            'id',
+            new FormControl(this.data.id ?? '')
+          );
+          if (!this.isAdd) {
+            this.dialogCategory.patchValue(this.data);
+          }
+          console.log('dialogCategory', this.dialogCategory);
         }
       });
-    this.isAdd = true;
     this.isSaved = false;
-  }
-
-  initAutoNumber() {
-    this.esService.getFormGroup('AutoNumbers', 'grvAutoNumbers').then((res) => {
-      if (res) {
-        this.dialogAutoNum = res;
-        this.isAfterAuto = true;
-
-        this.dialogAutoNum.patchValue({ step: 1 });
-      }
-    });
-
-    this.esService
-      .getComboboxName('AutoNumbers', 'grvAutoNumbers')
-      .then((res) => {
-        if (res) {
-          this.cbxNameAuto = res;
-        }
-      });
   }
 
   valueChange(event) {
@@ -131,31 +119,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
       else this.dialogCategory.patchValue({ [event['field']]: event.data });
     }
-  }
-
-  valueChange1(event) {
-    if (event?.field) {
-      if (event?.data === Object(event?.data))
-        this.dialogAutoNum.patchValue({
-          [event['field']]: event.data.value ?? event.data.checked,
-        });
-      else this.dialogAutoNum.patchValue({ [event['field']]: event.data });
-    }
-  }
-
-  onSaveAutoNumber() {
-    if (this.dialogAutoNum.invalid == true) {
-      return;
-    }
-
-    this.api
-      .callSv('SYS', 'AD', 'AutoNumbersBusiness', 'SettingAutoNumberAsync', [
-        this.dialogAutoNum.value,
-      ])
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-        }
-      });
   }
 
   onSaveForm(isClose) {
@@ -195,11 +158,26 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
   }
 
-  openPopup(content, title) {
-    this.cfService.openForm(content, title, 750, 1000);
+  openAutoNumPopup() {
+    this.cfService.openForm(PopupAddAutoNumberComponent, '', 570, 650, '', [
+      this.dialog.formModel,
+      this.dialogCategory.value.categoryID,
+    ]);
   }
 
-  openPopupModal() {
+  openPopupApproval() {
+    if (this.isAdd) {
+      this.onSaveForm(false);
+    }
+
+    this.cfService.openForm(
+      ApprovalStepComponent,
+      '',
+      900,
+      600,
+      '',
+      this.dialogCategory.value.id
+    );
     console.log(this.viewApprovalSteps);
 
     if (this.isAdd) {
