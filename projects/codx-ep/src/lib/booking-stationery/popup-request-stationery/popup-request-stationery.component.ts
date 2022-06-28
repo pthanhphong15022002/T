@@ -19,7 +19,7 @@ import { CodxEpService } from '../../codx-ep.service';
 @Component({
   selector: 'lib-popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
-  styleUrls: ['./popup-request-stationery.component.css'],
+  styleUrls: ['./popup-request-stationery.component.scss'],
 })
 export class PopupRequestStationeryComponent implements OnInit {
   @Input() data = {};
