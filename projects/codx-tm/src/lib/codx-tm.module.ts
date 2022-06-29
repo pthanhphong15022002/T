@@ -27,7 +27,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
@@ -47,6 +46,7 @@ import { HomeReportComponent } from './reports/home-report/home-report.component
 import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
+import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 export const routes: Routes = [
   {
     path: '',
@@ -67,11 +67,11 @@ export const routes: Routes = [
       {
         path: 'sprinttasks/:funcID',
         component: SprintsTasksComponent,
-        // children: [
-        //   {
-        //     path: ':id',
-        //     component: SprintsTasksComponent,
-        //   }]
+        children: [
+          {
+            path: ':id',
+            component: SprintsTasksComponent,
+          }]
       },
       {
         path: 'setting',
@@ -141,7 +141,6 @@ const T_Component: Type<any>[] = [
   DashboardComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
-  ListCardSprintsComponent,
   SprintsTasksComponent,
   ViewDetailsTaskComponent,
   UpdateStatusPopupComponent,
@@ -166,7 +165,8 @@ const T_Component: Type<any>[] = [
   PopupAddCalendarComponent,
   PopupAddEventComponent,
   PopupEditCalendarComponent,
-  PopupAddDayoffsComponent
+  PopupAddDayoffsComponent,
+  PopupShareSprintsComponent
 ]
 @NgModule({
   imports: [

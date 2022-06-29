@@ -21,18 +21,20 @@
       <div *ngFor="let h of data?.rangeLines; let i = index">
         <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
       </div>
-      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue"
-          (click)="readMore(data)">{{
+      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
           !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
-    <td class="rowphoto">
-      <div class="d-flex align-items-center" #itemCreateBy>
+    <td>
+      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users"
+       imageWidth="25" [desc]="data.createName">
+      </codx-temp-full>
+      <!-- <div class="d-flex align-items-center" #itemCreateBy>
         <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
         </codx-img>
         <div class="text-dark font-size-lg" placement="bottom" style="margin-left: 20px;">
           {{data.createName}}
         </div>
-      </div>
+      </div> -->
     </td>
     <td class="rowphoto">
       {{data.createdOn | date: 'dd/MM/yyyy'}}
