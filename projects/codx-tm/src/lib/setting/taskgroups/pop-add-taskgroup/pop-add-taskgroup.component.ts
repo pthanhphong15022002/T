@@ -236,7 +236,7 @@ export class PopAddTaskgroupComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+          this.notiService.notify('Thêm mới công việc thành công');
         }
       });
     // this.tmSv.addTaskGroup(this.taskGroups)
@@ -257,6 +257,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     })
       .subscribe((res) => {
         if (res.save) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
           this.dialog.close();
           this.notiService.notify('Chỉnh sửa thành công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
         }
