@@ -60,6 +60,7 @@ export class SprintsTasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getParams();
   }
 
   ngAfterViewInit(): void {
