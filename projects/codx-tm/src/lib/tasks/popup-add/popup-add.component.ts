@@ -461,7 +461,7 @@ export class PopupAddComponent implements OnInit {
       if (assignTo.split(';').length > 1)
         assignTo = assignTo.substring(0, assignTo.length - 1);
       if (this.task.assignTo && this.task.assignTo != '') this.task.assignTo += ";" + assignTo; else this.task.assignTo = assignTo
-      this.getListUser(this.task.assignTo);
+      this.getListUser(assignTo);
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -583,12 +583,13 @@ export class PopupAddComponent implements OnInit {
 
 
   getListUser(listUser) {
-    this.listMemo2OfUser = [];
+    // this.listMemo2OfUser = [];
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
-    this.listUser = listUser.split(';');
-    this.listUser.forEach((u) => {
+    var arrUser = listUser.split(';');
+    this.listUser= this.listUser.concat(arrUser) ;
+    arrUser.forEach((u) => {
       var obj = { userID: u.userID, memo2: null };
       this.listMemo2OfUser.push(obj);
     });
@@ -601,7 +602,7 @@ export class PopupAddComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = res;
+        this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
 
