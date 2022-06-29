@@ -7,8 +7,6 @@ import {
   TemplateRef,
 } from '@angular/core';
 import {
-  ApiHttpService,
-  AuthStore,
   DataRequest,
   UserModel,
   ViewType,

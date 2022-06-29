@@ -41,7 +41,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
-      
+
     this.taskGroups = {
       ...this.taskGroups,
       ...dt?.data[0],
@@ -227,47 +227,61 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   //save
+
+
+  beforeSave(op: any) {
+    var data = [];
+    if (this.isAddMode) {
+      op.method = 'AddTaskGroupsAsync';
+      data = [
+        this.taskGroups,
+        this.isAddMode
+      ];
+    } else {
+      op.method = 'UpdateTaskGroupsAsync';
+      data = [
+        this.taskGroups,
+        this.isAddMode
+      ];
+    }
+
+
+    op.data = data;
+    return true;
+  }
+
   addRow() {
-    var t = this;
-    this.dialog.dataService.save((opt: any) => {
-      opt.data = [this.taskGroups];
-      return true;
-    })
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
-          this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công');
+         // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+          this.dialog.dataService.setDataSelected(res.save);
+          this.dialog.dataService.afterSave.next(res);
+          this.changDetec.detectChanges();
+          // this.dialog.dataService.setDataSelected(res[0]);
+      //    this.dialog.close();
+          //   this.notiService.notifyCode('E0528');
         }
       });
-    // this.tmSv.addTaskGroup(this.taskGroups)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify(res[0].message);
-    //       t.data = res[1];
-    //     }
-    //   })
     this.closePanel();
   }
 
   updateRow() {
-    var t = this;
-    this.dialog.dataService.save((opt: any) => {
-      opt.data = [this.taskGroups];
-      return true;
-    })
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res.save) {
+        if (res.update) {
           this.dialog.dataService.setDataSelected(res.update[0]);
           this.dialog.close();
-          this.notiService.notify('Chỉnh sửa thành công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+          //   this.notiService.notifyCode('E0528');
         }
       });
-    this.closePanel();
   }
 
   lstSavecheckList: any = [];
 
-  OnSaveForm() {
+  onSave() {
     this.lstSavecheckList = [];
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {

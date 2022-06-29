@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
 
 @Component({
   selector: 'lib-employees-leave',
@@ -13,6 +14,7 @@ export class EmployeesLeaveComponent implements OnInit {
   predicate = "Status=@0";
   currentEmployee: boolean = false;
   itemSelected: any;
+  dialog!: DialogRef;
 
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
@@ -26,6 +28,7 @@ export class EmployeesLeaveComponent implements OnInit {
   constructor(
     private changedt: ChangeDetectorRef,
     private notiService: NotificationsService,
+    private callfunc: CallFuncService,
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +38,7 @@ export class EmployeesLeaveComponent implements OnInit {
       { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      // { headerText: 'Hành động', width: 200 },
+      { headerText: 'Hành động', width: 200, template: this.itemAction },
     ];
   }
 
@@ -89,16 +92,16 @@ export class EmployeesLeaveComponent implements OnInit {
   }
 
   edit(data?) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '750px';
-    //   this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'edit'], option);
-    // });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
+      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, [this.view.dataService.dataSelected, 'edit'], option);
+    });
   }
 
   clickMF(e: any, data?: any) {
