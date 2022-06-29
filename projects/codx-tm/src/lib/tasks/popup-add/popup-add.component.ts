@@ -24,8 +24,7 @@ import { StatusTaskGoal } from '../../models/enum/enum';
 import { TaskGoal } from '../../models/task.model';
 import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
-import { BehaviorSubject } from 'rxjs';
-import { I } from '@angular/cdk/keycodes';
+
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -123,10 +122,6 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  onAddUser(event) {
-    this.changeDetectorRef.detectChanges();
-    // this.openDialogFolder(this.contentAddUser, '');
-  }
 
   changeMemo2OfUser(message, id) {
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
