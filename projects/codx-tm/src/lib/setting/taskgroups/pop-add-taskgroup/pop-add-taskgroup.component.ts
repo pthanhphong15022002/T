@@ -23,11 +23,11 @@ export class PopAddTaskgroupComponent implements OnInit {
   enableAddtodolist: boolean = false;
   listTodo: any;
   todoAddText: any;
-  title : 'Tạo mới công việc';
+  title = 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
   readOnly = false;
-
+  action = "";
   dialog: any;
   isAfterRender = false;
   isAddMode = true;
@@ -39,13 +39,14 @@ export class PopAddTaskgroupComponent implements OnInit {
     private tmSv: CodxTMService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
-
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
+      
     this.taskGroups = {
       ...this.taskGroups,
-      ...dt?.data,
+      ...dt?.data[0],
     };
+    this.action = dt.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -57,20 +58,25 @@ export class PopAddTaskgroupComponent implements OnInit {
       if (res)
         this.gridViewSetup = res
     })
+    if (this.action === 'edit') {
+      this.openForm(this.taskGroups, false);
+    }
   }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber("TMS032", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
+      if (this.isAddMode == true) {
+        this.getAutonumber("TMS032", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
 
-        this.taskGroups.taskGroupID = key;
-        this.taskGroups.approvalControl = "0";
-        this.taskGroups.projectControl = "0";
-        this.taskGroups.attachmentControl = "0";
-        this.taskGroups.checkListControl = "0";
-        this.listTodo = [];
-      })
+          this.taskGroups.taskGroupID = key;
+          this.taskGroups.approvalControl = "0";
+          this.taskGroups.projectControl = "0";
+          this.taskGroups.attachmentControl = "0";
+          this.taskGroups.checkListControl = "0";
+          this.listTodo = [];
+        })
+      }
     })
   }
 
@@ -192,19 +198,47 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.dialog.close()
     //this.viewBase.currentView.closeSidebarRight();
   }
+
+  openForm(data, isAddMode) {
+    if (isAddMode == false) {
+      this.isAddMode = false;
+      this.taskGroups = new TM_TaskGroups();
+      this.title = 'Chỉnh sửa nhóm công việc';
+      this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'GetTaskGroupByIdAsync', data.taskGroupID).subscribe((res) => {
+        if (res) {
+          data = res;
+          this.taskGroups = data;
+          if (data.checkList) {
+            for (let item of data.checkList.split(";")) {
+              if (this.listTodo == null)
+                this.listTodo = []
+              var todo = new ToDo;
+              todo.status = true;
+              todo.text = item;
+              this.listTodo.push(Object.assign({}, todo));
+            }
+          }
+          this.changDetec.detectChanges();
+
+        }
+      })
+    }
+    // this.renderer.addClass(popup, 'drawer-on');
+  }
+
   //save
   addRow() {
     var t = this;
-    this.dialog.dataService.save((opt:any)=>{
+    this.dialog.dataService.save((opt: any) => {
       opt.data = [this.taskGroups];
       return true;
     })
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
-      }
-    });
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+          this.notiService.notify('Thêm mới công việc thành công');
+        }
+      });
     // this.tmSv.addTaskGroup(this.taskGroups)
     //   .subscribe((res) => {
     //     if (res) {
@@ -217,13 +251,17 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   updateRow() {
     var t = this;
-    this.tmSv.updateTaskGroup(this.taskGroups)
+    this.dialog.dataService.save((opt: any) => {
+      opt.data = [this.taskGroups];
+      return true;
+    })
       .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
+        if (res.save) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
+          this.dialog.close();
+          this.notiService.notify('Chỉnh sửa thành công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
         }
-      })
+      });
     this.closePanel();
   }
 

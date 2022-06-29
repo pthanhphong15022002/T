@@ -29,24 +29,18 @@ import {
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 
 @Component({
-  selector: 'app-stationery',
+  selector: 'setting-stationery',
   templateUrl: './stationery.component.html',
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent implements OnInit {
   @ViewChild('base') viewBase: ViewsComponent;
-  @ViewChild('panelLeftRsef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('stationeryResourceDialog')
-  stationeryResourceDialog: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-  @ViewChild('popuptemplate') popupTemp: TemplateRef<any>;
   @ViewChild('listItem') listItem: TemplateRef<any>;
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
+  @ViewChild('colorCol') colorCol: TemplateRef<any>;
+  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @Input('data') data;
   @Output() editData = new EventEmitter();
 
@@ -98,11 +92,6 @@ export class StationeryComponent implements OnInit {
     },
   ];
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
-    private notificationsService: NotificationsService,
     private cf: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private activedRouter: ActivatedRoute
@@ -124,18 +113,47 @@ export class StationeryComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.columnsGrid = [
+      {
+        headerText: 'Sản phẩm',
+        width: '40%',
+        template: this.resourceNameCol,
+      },
+      {
+        headerText: 'Màu',
+        width: '20%',
+        template: this.colorCol,
+      },
+      {
+        field: 'costPrice',
+        width: '10%',
+        headerText: 'Giá mua gần nhất',
+      },
+      {
+        field: 'location',
+        width: '10%',
+        headerText: 'Quản lý kho',
+      },
+      {
+        headerText: 'Quản lý kho',
+        width: '20%',
+        template: this.ownerCol,
+      },
+    ];
+
     this.views = [
       {
         id: '1',
-        text: 'List',
-        type: ViewType.list,
+        text: 'Danh mục VPP',
+        type: ViewType.grid,
         sameData: true,
         active: true,
         model: {
-          template: this.listItem,
+          resources: this.columnsGrid,
         },
       },
     ];
+
     this.moreFunc = [
       {
         id: 'btnEdit',
@@ -171,6 +189,7 @@ export class StationeryComponent implements OnInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         PopupAddStationeryComponent,
         this.dataSelected,
@@ -179,20 +198,23 @@ export class StationeryComponent implements OnInit {
     });
   }
 
-  edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddStationeryComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+  edit(data?) {
+    let editItem = this.viewBase.dataService.dataSelected;
+    if (data) {
+      editItem = data;
+    }
+    this.viewBase.dataService.edit(editItem).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        PopupAddStationeryComponent,
+        editItem,
+        option
+      );
+    });
   }
   delete(evt?) {
     this.viewBase.dataService
@@ -213,7 +235,18 @@ export class StationeryComponent implements OnInit {
     //this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
   }
 
-  clickMF(evt, data) {}
+  clickMF(evt, data) {
+    switch (evt.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+      default:
+        break;
+    }
+  }
 
   click(data) {
     console.log(data);

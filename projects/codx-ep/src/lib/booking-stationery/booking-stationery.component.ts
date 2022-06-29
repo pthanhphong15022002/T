@@ -17,7 +17,9 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
+import { isBuffer } from 'util';
+import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
+import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
 
 @Component({
   selector: 'codx-stationery',
@@ -30,7 +32,7 @@ export class BookingStationeryComponent implements OnInit {
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
-  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
+  @ViewChild('usageRateCol') usageRateCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button: ButtonModel;
@@ -76,9 +78,14 @@ export class BookingStationeryComponent implements OnInit {
   ngAfterViewInit(): void {
     this.moreFunc = [
       {
-        id: 'btnEdit',
-        icon: 'icon-list-checkbox',
-        text: 'Chỉnh sửa',
+        id: 'btnAdd',
+        icon: 'icon-shopping_cart',
+        text: 'Yêu cầu VPP',
+      },
+      {
+        id: 'btnAddNew',
+        icon: 'icon-playlist_add_check',
+        text: 'Danh sách yêu cầu',
       },
       {
         id: 'btnDelete',
@@ -89,21 +96,19 @@ export class BookingStationeryComponent implements OnInit {
 
     this.columnsGrid = [
       {
-        field: 'resourceName',
         headerText: 'Sản phẩm',
-        width: 150,
+        width: '75%',
         template: this.resourceNameCol,
       },
       {
         field: 'costPrice',
         headerText: 'Đơn giá',
-        width: 150,
-        template: this.costPriceCol,
+        width: '10%',
       },
       {
-        field: '',
         headerText: 'Định mức sử dụng',
-        width: 150,
+        width: '15%',
+        template: this.usageRateCol,
       },
     ];
 
@@ -123,27 +128,17 @@ export class BookingStationeryComponent implements OnInit {
         text: 'Card',
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.cardItem,
         },
       },
       {
         id: '3',
-        text: 'List',
-        type: ViewType.list,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.listItem,
-        },
-      },
-      {
-        id: '4',
         text: 'Grid',
         type: ViewType.grid,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resources: this.columnsGrid,
         },
@@ -157,6 +152,9 @@ export class BookingStationeryComponent implements OnInit {
       case 'btnAdd':
         this.addNew();
         break;
+      case 'btnAddNew':
+        this.addNewStationery();
+        break;
       case 'btnEdit':
         this.edit();
         break;
@@ -165,35 +163,55 @@ export class BookingStationeryComponent implements OnInit {
         break;
     }
   }
-
-  addNew(evt?) {
+  addNewStationery(evt?) {
+    let dataItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      dataItem = evt;
+    }
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
-        PopupAddStationeryComponent,
-        this.dataSelected,
+        PopupListStationeryComponent,
+        dataItem,
+        option
+      );
+    });
+  }
+  addNew(evt?) {
+    let dataItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      dataItem = evt;
+    }
+    this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.viewBase?.currentView?.dataService;
+      this.dialog = this.callfunc.openSide(
+        PopupRequestStationeryComponent,
+        dataItem,
         option
       );
     });
   }
 
   edit(evt?) {
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '750px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
-          PopupAddStationeryComponent,
-          this.viewBase.dataService.dataSelected,
-          option
-        );
-      });
+    // this.viewBase.dataService
+    //   .edit(this.viewBase.dataService.dataSelected)
+    //   .subscribe((res) => {
+    //     this.dataSelected = this.viewBase.dataService.dataSelected;
+    //     let option = new SidebarModel();
+    //     option.Width = '750px';
+    //     option.DataService = this.viewBase?.currentView?.dataService;
+    //     this.dialog = this.callfunc.openSide(
+    //       PopupAddStationeryComponent,
+    //       this.viewBase.dataService.dataSelected,
+    //       option
+    //     );
+    //   });
   }
   delete(evt?) {
     this.viewBase.dataService

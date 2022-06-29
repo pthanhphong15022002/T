@@ -6,10 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
-
+import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
+import { EmployeesLeaveComponent } from './employeesleave/employees-leave.component';
+import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
+import { PositionsComponent } from './positions/positions.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 export const routes: Routes = [
@@ -25,6 +28,18 @@ export const routes: Routes = [
         path: 'employee/:funcID',
         component: EmployeesComponent
       },
+      {
+        path: 'employeeleave/:funcID',
+        component: EmployeesLeaveComponent
+      },
+      {
+        path: 'reportingline/:funcID',
+        component: PositionsComponent
+      },
+      {
+        path: 'employeeinfo/:funcID',
+        component: EmployeeInfomationComponent,
+      },
     ],
   },
 ];
@@ -34,6 +49,9 @@ const T_Component: Type<any>[] = [
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
+  PositionsComponent,
+  PopupAddPositionsComponent,
+  EmployeesLeaveComponent
 ]
 @NgModule({
   imports: [

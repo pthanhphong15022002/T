@@ -39,6 +39,7 @@ export class defaultRecource {}
 })
 export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -64,7 +65,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   entityName = 'ES_Categories';
   predicate = '';
   dataValue = '';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'CategoriesBusiness';
   method = 'GetListAsync';
 
@@ -142,8 +143,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         sameData: true,
         id: '1',
         type: ViewType.list,
+        active: false,
+        model: {
+          template: this.listItem,
+        },
+      },
+      {
+        sameData: true,
+        id: '1',
+        type: ViewType.grid,
         active: true,
-        model: {},
+        model: {
+          resources: this.columnsGrid,
+        },
       },
     ];
     this.cr.detectChanges();
@@ -172,7 +184,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        this.dataSelected,
+        [this.viewBase.dataService.dataSelected, true],
         option
       );
     });
@@ -186,14 +198,17 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
+      option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        this.viewBase.dataService.dataSelected,
+        [item, false],
         option
       );
     });
   }
+
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
     if (evt) {
@@ -202,6 +217,17 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
     });
+  }
+
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
   }
 
   closeEditForm(event) {}

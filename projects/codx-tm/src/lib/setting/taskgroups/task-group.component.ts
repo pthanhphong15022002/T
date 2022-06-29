@@ -22,6 +22,7 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemCheckListControlVll', { static: true }) itemCheckListControlVll: TemplateRef<any>;
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+  @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
 
@@ -54,18 +55,19 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
       { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
-      { field: 'note', headerText: 'Ghi chú', width: 180, template: this.itemNote },
-      { field: 'approvalControl', headerText: 'Xét duyệt?', template: this.itemApprovalControlVll, width: 140 },
-      { field: 'projectControl', headerText: 'Chọn dự án', template: this.itemProjectControlVll, width: 140 },
-      { field: 'attachmentControl', headerText: 'Đính kèm file', template: this.itemAttachmentControl, width: 140 },
-      { field: 'checkListControl', headerText: 'Nhập việc cần làm', template: this.itemCheckListControlVll, width: 180 },
-      { field: 'checkList', headerText: 'CheckList', template: this.itemCheckList, width: 100 },
-      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.itemCreate, width: 100 }
+      { field: 'note', headerText: 'Ghi chú', width: 180 },
+      { field: 'approvalControl', headerText: 'Xét duyệt?', width: 140 },
+      { field: 'projectControl', headerText: 'Chọn dự án', width: 140 },
+      { field: 'attachmentControl', headerText: 'Đính kèm file', width: 140 },
+      { field: 'checkListControl', headerText: 'Nhập việc cần làm', width: 180 },
+      { field: 'checkList', headerText: 'CheckList', width: 100 },
+      { field: 'createName', headerText: 'Người tạo', width: 200 },
+      { field: 'createdOn', headerText: 'Ngày tạo', width: 100 },
+      { field: '', headerText: '#', width: 30 },
+
     ];
     this.button = {
       id: 'btnAdd',
@@ -112,9 +114,13 @@ export class TaskGroupComponent implements OnInit {
       active: true,
       model: {
         resources: this.columnsGrid,
+        template: this.grid
       }
     }];
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
+    this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
+    this.view.dataService.methodDelete = 'DeleteTaskGroupAsync';
+
   }
 
 
@@ -146,32 +152,37 @@ export class TaskGroupComponent implements OnInit {
     });
   }
 
-  edit(data) {
-    this.view.dataService.dataSelected = data;
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], this.beforeDel)
-      .subscribe();
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+              
+              });
   }
 
   beforeDel(opt: RequestOption) {
-    opt.service = 'TM';
-    opt.assemblyName = 'TM';
-    opt.className = 'TaskBusiness';
-    opt.methodName = 'TestApi';
+    var itemSelected = opt.data[0][0];
+    opt.methodName = 'DeleteTaskGroupAsync';
+    
+    opt.data = itemSelected.taskGroupID;
     return true;
   }
-
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;

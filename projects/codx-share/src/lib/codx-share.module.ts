@@ -11,6 +11,10 @@ import { NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
+import { CalendarDateComponent } from './components/calendardate/calendardate.component';
+import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
 import { TreeviewCommentComponent } from './components/treeview-comment/treeview-comment.component';
 import { ReadMoreComponent } from './components/readmore/readmore.component';
 import { Readmorev2Component } from './components/readmorev2/readmorev2.component';
@@ -20,10 +24,13 @@ import { TruncatePipe } from './pipe/truncate.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
+  ThumbnailComponent,
   BreadcumbComponent,
   SelectweekComponent,
   ViewFileDialogComponent,
   CodxTabsComponent,
+  ImageGridComponent,
+  CalendarDateComponent,
   TreeviewCommentComponent,
   ReadMoreComponent,
   Readmorev2Component,

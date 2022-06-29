@@ -6,19 +6,21 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read" iconCss2="icon-flag"
+    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read"
+    [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll:'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
     [title]="data.userName" icoStatusVll="L0186" icoSubTitleCss="icon-assignment" [subTitle]="data.positionName"
-    [content]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo"
+    [desc2]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo"
     resourceObjType="AD_Users" [formModel]="view.formModel">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" [icoStatus]="data.priority" icoStatusVll="L0186"
-    [title]="data.userName" icoSubTitleCss="icon-flag" [subTitle]="data.positionName" [content]="data.memo||'memo'"
-    [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data"
-    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter">
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event,data)"
+    [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag"
+    [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
+    [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel"
+    [setting]="setting" [footer]="cardImgFooter">
   </codx-card-img>
 </ng-template>
 
@@ -75,9 +77,9 @@
   <button class="btn btn-light-primary" (click)="delete(data)">
     Xóa
   </button> -->
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
     [title]="data.userName" [formModel]=" view.formModel">
-  </codx-temp-full>
+  </codx-temp-full> -->
 </ng-template>
 
 
@@ -86,5 +88,5 @@
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
   [predicate]="predicate" [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)"
-  (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
+  (onDragDrop)="onDragDrop($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>

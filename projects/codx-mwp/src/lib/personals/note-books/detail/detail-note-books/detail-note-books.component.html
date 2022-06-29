@@ -1,0 +1,58 @@
+<codx-views [views]="views" [buttons]="button" [funcID]="funcID" [showToolBar]="true"
+    (buttonClick)="openFormCreateDetail($event)"></codx-views>
+<ng-template #panelLeft>
+    <ng-container *ngIf="recID">
+        <div class="pw-search">
+            <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
+        </div>
+        <!-- <codx-listview #lstView entityName="WP_Notes" pageSize="20" predicate="TransID=@0" [dataValue]="recID"
+            (valueProperty)="valueProperty($event)" [itemTemplate]="template">
+        </codx-listview> -->
+        <codx-gridview #lstGrid entityName="WP_Notes" pageSize="20" predicate="TransID=@0" [dataValue]="recID"
+            (onSelected)="onSelected($event)" [columnsGrid]="columnsGrid" service="WP" [height]="'300'"
+            [showColumnMenu]='true' [gridViewName]="'grvNoteBooks'">
+        </codx-gridview>
+    </ng-container>
+</ng-template>
+
+<ng-template #memo let-item>
+    <span [innerHTML]="item.memo"></span>
+</ng-template>
+
+<ng-template #iconMoreFunc let-item>
+    <span class="icon-more_vert icon-20 text-dark-75" placement="bottom"
+        container="body" (click)="openFormMoreFunc(item)"></span>
+</ng-template>
+
+<ng-template #moreFunc>
+    <div class="formMoreFunc">
+        <div class="d-flex font-1-3">
+            <li></li>
+            <div (click)="formUpdate(item)">
+                <div aria-expanded="false" class="moreFunc">
+                    <codx-label name="lblUpdateNote" formName="Notes" default="Cập nhật ghi chú"></codx-label>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="d-flex font-1-3">
+            <li></li>
+            <div (click)="onDelete(item.recID)">
+                <codx-label name="lblDeleteNote" formName="Notes" default="Xóa"></codx-label>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tag>
+    <span class="badge badge-primary me-1">Project</span>
+    <span class="badge badge-success me-1">Customize</span>
+</ng-template>
+
+<ng-template #createdOn let-item>
+    <span>{{item.createdOn | date:'dd-MM-yyy'}}</span>
+</ng-template>
+
+<ng-template #modifiedOn let-item>
+    <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+</ng-template>

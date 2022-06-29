@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, ButtonModel, DataRequest, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, DataRequest, NotificationsService, ResourceModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 
 @Component({
@@ -18,9 +18,15 @@ export class SprintsTasksComponent implements OnInit {
   @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('sprintsCalendar') sprintsCalendar: TemplateRef<any> | null;
   @ViewChild('sprintsSchedule') sprintsSchedule: TemplateRef<any> | null;
-
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>| null;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>| null;
+  resourceKanban?: ResourceModel;
+  modelResource: ResourceModel;
+  selectedDate = new Date();
+  startDate: Date;
+  endDate: Date;
+  dayoff = [];
+  gridView:any
   user: any;
   funcID: any;
   iterationID: string = '';
@@ -29,6 +35,21 @@ export class SprintsTasksComponent implements OnInit {
   viewsActive: Array<ViewModel> = [];
   itemSelected: any;
   moreFuncs: Array<ButtonModel> = [];
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'userID' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
+
   constructor(
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
@@ -51,6 +72,17 @@ export class SprintsTasksComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'TM';
+    this.modelResource.className = 'TaskBusiness';
+    this.modelResource.service = 'TM';
+    this.modelResource.method = 'GetUserByTasksAsync';
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'TM';
+    this.resourceKanban.assemblyName = 'TM';
+    this.resourceKanban.className = 'TaskBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.loadData();
   }
   loadData() {
@@ -63,7 +95,6 @@ export class SprintsTasksComponent implements OnInit {
       active: false,
       model: {
         template: this.template,
-        // sideBarLeftRef: this.asideLeft,
       },
     },
     {
@@ -83,10 +114,10 @@ export class SprintsTasksComponent implements OnInit {
       type: ViewType.kanban,
       sameData: true,
       active: false,
-      model: {
-        template: this.sprintsKanban,
-        // sideBarLeftRef: this.asideLeft,
-      },
+      // request2: this.resourceKanban,
+        model: {
+          template: this.sprintsKanban,
+        },
     },
     {
       id: '7',
@@ -95,7 +126,7 @@ export class SprintsTasksComponent implements OnInit {
       text: 'calendar',
       active: false,
       model: {
-        template: this.sprintsCalendar,
+         template: this.sprintsCalendar,
         //sideBarLeftRef: this.asideLeft,
       },
     },
@@ -105,12 +136,16 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       text: 'schedule',
       active: false,
+      // request2: this.modelResource,
       model: {
-        template: this.sprintsSchedule,
-        // sideBarLeftRef: this.asideLeft,
+        // eventModel: this.fields,
+        // resourceModel: this.resourceField,
+        // template: this.eventTemplate,
+        // template3: this.sprintsSchedule,
       },
     },
     ];
+
     if (this.iterationID == '') {
       this.viewsActive.forEach((obj) => {
         if (obj.id == '1') {
@@ -118,6 +153,7 @@ export class SprintsTasksComponent implements OnInit {
         }
       });
       this.views = this.viewsActive
+      this.dt.detectChanges() ;
     } else {
       this.tmSv.getSprints(this.iterationID).subscribe((res) => {
         if (res) {
@@ -128,14 +164,66 @@ export class SprintsTasksComponent implements OnInit {
             }
           });
           this.views = this.viewsActive
+          this.dt.detectChanges() ;
         }
       });
     }
+    
   }
   
-  changeView(evt: any) {
-    console.log('evt: ', evt);
-    var t = this;
+ 
+
+  changeView(evt: any) {}
+
+  viewChange(evt: any) {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    console.log(evt);
+    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+    this.startDate = evt?.fromDate;
+    this.endDate = evt?.toDate;
+    //Thêm vào option predicate
+    this.model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
+      ],
+    };
+    //reload data
+    // this.schedule.reloadDataSource();
+    // this.schedule.reloadResource();
+  }
+
+  getCellContent(evt: any) {
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+          }
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
+        }
+      }
+    }
+
+    return ``;
   }
 
   requestEnded(evt: any) {
@@ -143,9 +231,17 @@ export class SprintsTasksComponent implements OnInit {
     //   this.dialog.close();
     // }
   }
-  aaa(val: any) {
-    console.log(val);
-  }
+  onDragDrop(e: any) {
+    // if (e.type == 'drop') {
+    //   this.api
+    //     .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.view.dataService.update(e.data);
+    //       }
+    //     });
+    }
+  
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;

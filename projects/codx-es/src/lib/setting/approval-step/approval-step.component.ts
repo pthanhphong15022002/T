@@ -4,15 +4,22 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  Optional,
   Output,
   ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
+  ButtonModel,
   CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
+import { CodxEsService } from '../../codx-es.service';
+import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
 export class Approver {}
 @Component({
@@ -26,7 +33,12 @@ export class ApprovalStepComponent implements OnInit {
   @Input() transId = '';
   @Output() addEditItem = new EventEmitter();
 
+  headerText = 'Qui trình duyệt';
+  subHeaderText;
+
   currentStepNo = 1;
+  dialog: DialogRef;
+  formModel: FormModel;
   approvers = [];
   data;
 
@@ -34,10 +46,21 @@ export class ApprovalStepComponent implements OnInit {
     private cfService: CallFuncService,
     private api: ApiHttpService,
     private notify: NotificationsService,
-    private cr: ChangeDetectorRef
-  ) {}
+    private cr: ChangeDetectorRef,
+    private esService: CodxEsService,
+    @Optional() data: DialogData,
+    @Optional() dialog: DialogRef
+  ) {
+    this.transId = data?.data ?? '';
+    this.dialog = dialog;
+  }
 
   ngOnInit(): void {
+    this.esService.getFormModel('EST04').then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
     console.log('transID', this.transId);
     this.initForm();
   }
@@ -66,10 +89,16 @@ export class ApprovalStepComponent implements OnInit {
       transID: this.transId,
       stepNo: this.currentStepNo,
     };
-    // this.cfService.openForm(content, '', 750, 1000).subscribe((res) => {
-    //   res.close = this.close();
-    // });
-    this.addEditItem.emit(data);
+
+    // this.addEditItem.emit(data);
+    this.cfService.openForm(
+      PopupAddApprovalStepComponent,
+      '',
+      750,
+      1000,
+      'EST04',
+      data
+    );
   }
 
   addHandler(data, stepNo: number) {
@@ -84,4 +113,23 @@ export class ApprovalStepComponent implements OnInit {
     this.initForm();
     this.cr.detectChanges();
   }
+
+  onSaveForm() {}
+
+  openFormFuncID(val: any, data: any) {}
+  click(evt: ButtonModel) {
+    // switch (evt.id) {
+    //   case 'btnAdd':
+    //     this.show();
+    //     break;
+    //   case 'edit':
+    //     this.edit();
+    //     break;
+    //   case 'delete':
+    //     this.delete();
+    //     break;
+    // }
+  }
+
+  clickMF(event: any, data) {}
 }

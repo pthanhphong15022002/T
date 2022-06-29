@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
-import { ErmComponent } from '../ermcomponent/erm.component';
 import 'lodash';
 import { FilesService } from 'codx-core';
+import { ErmComponent } from '../ermcomponent/erm.component';
 @Component({
   selector: 'lv-image-grid',
   templateUrl: './image-grid.component.html',

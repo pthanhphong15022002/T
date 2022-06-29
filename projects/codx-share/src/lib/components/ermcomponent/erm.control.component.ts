@@ -1,6 +1,6 @@
 import { Component, Injector } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { environment } from "src/environments/environment";
-import { ApiHttpService } from "@core/services";
 //import { AppInjector } from './app-injector';
 
 @Component({

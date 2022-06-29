@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PopupAddCategoryComponent } from './edit-category.component';
+import { PopupAddCategoryComponent } from './popup-add-category.component';
 
 describe('EditCategoryComponent', () => {
   let component: PopupAddCategoryComponent;

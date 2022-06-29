@@ -1,0 +1,26 @@
+<!-- <div *ngIf="total > 0" class="control-section"> -->
+<div style="position: relative;">
+    <ejs-accumulationchart  #pie style='display:block; width: 100%'  height="175px" (chartMouseClick)="onChartMouseClick($event)" (pointClick)="onPointClick($event)
+    " [legendSettings]="legendSettings" [tooltip]="tooltip"  (textRender) ="onTextRender($event)" (animationComplete)="onAnimationComplete($event)" selectionMode='Point' (load)='load($event)' (loaded)='loaded($event)'>
+        <e-accumulation-series-collection>
+            <e-accumulation-series name='Revenue' [palettes]="palettes"
+            [dataSource]='data' xName='x' yName='y' [startAngle]="startAngle" [endAngle]="endAngle" 
+            explode="true" explodeOffset="5%" radius="80%" innerRadius="75%" [dataLabel]="dataLabel"> </e-accumulation-series>
+        </e-accumulation-series-collection>
+    </ejs-accumulationchart>      
+    <div id={{center_title}} (name)="center_title" style="color: black;  position: absolute; left: 112px !important"></div>              
+</div>
+<!-- </div> -->
+<!--
+    [dataSource]="statEquipments"
+    xName="equipment"
+    yName="percent"
+    innerText="ABC"
+    startAngle="0"
+    endAngle="360"
+    innerRadius="75%"
+    radius="80%"
+    [dataLabel]="dataLabel"
+    explode="true"
+    explodeOffset="5%"
+-->
