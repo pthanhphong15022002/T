@@ -143,7 +143,7 @@ export class PopupAddSprintsComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = res;
+        this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
   onDeleteUser(userID) {
@@ -201,13 +201,35 @@ export class PopupAddSprintsComponent implements OnInit {
     console.log(e)
   }
 
-  eventApply(e) {
-    // let obj = {
-    //   formName: 'demo',
-    //   control: '1',
-    //   value: '5',
-    //   text: 'demo nè',
-    // };
-    //   this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+   //caí này chạy tạm đã
+   eventApply(e: any) {
+    var resources = '';
+    var i = 0;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            resources += obj?.data;
+            this.valueSelectUser(resources)
+            break;
+          // case 'D':
+          //   //chưa chạy xong câu lệnh này đã view ra...
+          //   const t = this;
+          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
+          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
+          //     if (res) {
+          //       assignTo += res + ";";
+          //       this.valueSelectUser(assignTo)
+          //     }
+          //   })
+          //   break;
+        }
+      }
+    })
   }
+  valueSelectUser(resources) {
+    this.getListUser(resources)
+     this.changeDetectorRef.detectChanges();
+   }
+
 }
