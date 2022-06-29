@@ -62,7 +62,7 @@ export class PopupAddSprintsComponent implements OnInit {
       // this.openTask();
     } else {
       if (this.action == 'copy')
-        return this.getSprintsCoppied(this.taskBoard.iterationID);
+         this.getSprintsCoppied(this.taskBoard.iterationID);
       else this.openInfo(this.taskBoard.iterationID, this.action);
     }
   }
@@ -103,9 +103,12 @@ export class PopupAddSprintsComponent implements OnInit {
       .save((option: any) => this.beforeSave(option, isAdd))
       .subscribe((res) => {
         if (res.save) {
-          this.dialog.close();
-          // this.notiService.notifyCode('TM005');
+          this.notiService.notifyCode('TM005');
         }
+        if (res.update) {
+        this.notiService.notifyCode('E0528');
+        }
+        this.dialog.close();
       });
   }
 
@@ -173,34 +176,33 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   openInfo(interationID, action) {
-    const t = this;
-    t.taskBoard = new TM_Sprints();
+    this.taskBoard = new TM_Sprints();
 
-    t.readOnly = action === 'edit' ? false : true;
-    t.title =
+    this.readOnly = action === 'edit' ? false : true;
+    this.title =
       action === 'edit' ? 'Chỉnh sửa task board' : 'Xem chi tiết task board';
-    t.tmSv.getSprints(interationID).subscribe((res) => {
+      this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
-        t.taskBoard = res;
-        if (t.taskBoard.resources) t.getListUser(t.taskBoard.resources);
+        this.taskBoard = res;
+        if (this.taskBoard.resources) this.getListUser(this.taskBoard.resources);
         else this.listUserDetail = [];
-        t.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   getSprintsCoppied(interationID) {
-    const t = this;
-    t.title = 'Copy task boads';
-    t.readOnly = false;
-    t.listUserDetail = [];
-    t.taskBoard = new TM_Sprints();
-    t.tmSv.getSprints(interationID).subscribe((res) => {
+    this.title = 'Copy task boads';
+    this.readOnly = false;
+    this.listUserDetail = [];
+    this.taskBoard = new TM_Sprints();
+    this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
-        t.taskBoard.projectID = res.projectID;
-        t.taskBoard.iterationName = res.iterationName;
-        t.taskBoard.memo = res.memo;
-        t.changeDetectorRef.detectChanges();
+        this.taskBoard.projectID = res.projectID;
+        this.taskBoard.iterationName = res.iterationName;
+        this.taskBoard.viewMode = res.viewMode;
+        this.taskBoard.memo = res.memo;
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
