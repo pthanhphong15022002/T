@@ -45,7 +45,7 @@ export class PopAddRangesComponent implements OnInit {
       ...this.ranges,
       ...dd?.data[0],
     };
-    this.action = dd?.data[1];
+    this.action = dd?.data[1]; //lấy edit để mở form edit
 
     this.lstRangeLine = [];
     this.dialog = dialog;
@@ -242,11 +242,11 @@ export class PopAddRangesComponent implements OnInit {
   }
 
 
-  OnSaveForm() {
+  onSave() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res.save) {
+        if (res) {
           this.lstSaveRangeLine = [];
           if (this.lstRangeLine != null) {
             for (let item1 of this.lstRangeLine) {
@@ -259,13 +259,14 @@ export class PopAddRangesComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
-          this.dialog.close();
+          // this.dialog.dataService.setDataSelected(res)
           // if(this.isAddMode==true)
           //   this.notiService.notify('Thêm mới khoảng thời gian thành công');
           //   else
           //   this.notiService.notify('Chỉnh sửa khoảng thời gian thành công');
 
         }
+       
       });
   }
 

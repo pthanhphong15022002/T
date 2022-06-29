@@ -14,6 +14,7 @@ export class PopupAddDayoffsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   calendateDate: any;
   evtCDDate: any;
+  data:any;
   
   constructor(
     private api: ApiHttpService,
@@ -21,9 +22,12 @@ export class PopupAddDayoffsComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.data = dt?.data;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.data)
+  }
 
   ngAfterViewInit(): void {}
 
