@@ -27,7 +27,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { ListCardSprintsComponent } from './sprints/list-card-sprints/list-card-sprints.component';
 import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
 import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './ownertasks/update-status-popup/update-status-popup.component';
@@ -142,7 +141,6 @@ const T_Component: Type<any>[] = [
   DashboardComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
-  ListCardSprintsComponent,
   SprintsTasksComponent,
   ViewDetailsTaskComponent,
   UpdateStatusPopupComponent,
