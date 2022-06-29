@@ -24,6 +24,10 @@ export class ForwardComponent implements OnInit {
   @Input() viewbase: ViewsComponent;
   @Input() gridViewSetup     : any;
   @Output() save : EventEmitter<any> = new EventEmitter();
+  forwardForm = new FormGroup({
+    userID: new FormControl(),
+    comment : new FormControl()
+  });
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -43,24 +47,10 @@ export class ForwardComponent implements OnInit {
     this.files = this.data?.files;
   }
 
-  close()
+  onSave()
   {
-    //this.viewbase.currentView.closeSidebarRight();
-  }
-
-  valueChangeTo(val:any)
-  {
-    if(val?.data != null) this.forward.userID = val?.data.join(";");
-  }
-
-  valueChangeComment(val:any)
-  {
-    this.forward.comment = extractContent(val?.data);
-  }
-
-  saveForward()
-  {
-    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forward).subscribe((item)=>{
+    this.forwardForm.value.userID = this.forwardForm.value.userID.join(";");
+    this.odService.forwardDispatch(this.dialog.dataService.dataSelected.recID , this.forwardForm.value).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })

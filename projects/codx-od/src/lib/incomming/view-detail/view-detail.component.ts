@@ -72,15 +72,14 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         this.userID = this.authStore.get().userID;
         this.htmlAgency();
         this.getDataValuelist();
-        this.getPermission(this.data.recID);
   }
   htmlAgency()
   {
     this.desc = '<div class="d-flex">';
     if(this.data?.agencyName != undefined &&  this.data?.agencyName!= "")
-      this.desc += '<div class="d-flex align-items-center me-6"><span class="icon-business icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
+      this.desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
     if(this.data?.txtLstAgency != undefined && this.data?.txtLstAgency!= "")
-      this.desc +='<div class="d-flex align-items-center me-6""><span class="me-3">Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
+      this.desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
   }
    ///////////////Các function format valuelist///////////////////////
    fmTextValuelist(val: any, type: any) {
@@ -265,9 +264,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     var funcID = val?.functionID;
     if(!datas)
       datas = this.data;
+    else 
+    {
+      var index = this.view.dataService.data.findIndex(object => {
+        return object.recID === datas.recID;
+      });
+      datas = this.view.dataService.data[index];
+    }
     switch (funcID) {
       case "edit":
         {
+
           this.view.dataService.edit(datas).subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view?.currentView?.dataService;
@@ -285,6 +292,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
                 //this.view.dataService.update(x.event).subscribe();
                 //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
+                
+                  this.view.dataService.update(x.event).subscribe();
                   if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                       //this.view.dataService.setDataSelected(x.event);
@@ -325,14 +334,15 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         }
       case "copy":
       {
-        this.view.dataService.setDataSelected(datas);
+        this.view.dataService.dataSelected = datas ;
         this.view.dataService.copy(0).subscribe((res: any) => {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(IncommingAddComponent, {
             gridViewSetup: this.gridViewSetup,
             headerText:"Sao chép công văn đến",
-            type: "copy"
+            type: "copy",
+            formModel: this.formModel
           }, option);
           this.dialog.closed.subscribe(x=>{
             if(x.event == null) 
@@ -425,7 +435,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             config.type = "YesNo";
             this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn thu hồi?", config).closed.subscribe(x=>{
               if(x.event.status == "Y")
-                this.recall(this.view.dataService.dataSelected.recID);
+                this.recall(datas.recID);
             })
           break;
         }
@@ -474,7 +484,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT110":
       case "ODT209":
         {
-          this.odService.bookMark(this.view.dataService.dataSelected.recID).subscribe((item) => {
+          this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
             {
               this.view.dataService.update(item.data).subscribe();
@@ -549,8 +559,21 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   getJSONString(data) {
     return JSON.stringify(data);    
   }
-  getSubTitle(relationType:any , agencyName:any)
+  getSubTitle(relationType:any , agencyName:any , shareBy: any , createdBy :any)
   {
-    return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
+    if(relationType == "1")
+      return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
+    return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
+  }
+  changeData(data:any)
+  {
+    this.data.updates = data.updates;
+    this.data.percentage = data.percentage;
+    
+   /*  let info = this.data.listInformationRel;
+   
+    this.view.dataService.update(data).subscribe(item=>{
+      this.data.listInformationRel = info;
+    }); */
   }
 }
