@@ -61,6 +61,7 @@ export class SprintsTasksComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.getParams();
   }
 
   ngAfterViewInit(): void {
