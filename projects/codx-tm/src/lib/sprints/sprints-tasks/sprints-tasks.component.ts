@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, ButtonModel, DataRequest, NotificationsService, ResourceModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, DataRequest, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { CodxTMService } from '../../codx-tm.service';
   templateUrl: './sprints-tasks.component.html',
   styleUrls: ['./sprints-tasks.component.css']
 })
-export class SprintsTasksComponent implements OnInit {
+export class SprintsTasksComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeft?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -42,14 +42,15 @@ export class SprintsTasksComponent implements OnInit {
   
 
   constructor(
+    private inject: Injector,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
     private dt: ChangeDetectorRef,
-    private api: ApiHttpService,
     private authStore: AuthStore,
     private cf: ChangeDetectorRef,
     private activedRouter: ActivatedRoute,
   ) {
+    super(inject);
     this.user = this.authStore.get();
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
@@ -59,7 +60,7 @@ export class SprintsTasksComponent implements OnInit {
     this.model.dataObj = JSON.stringify(dataObj);
   }
 
-  ngOnInit(): void {
+  onInit(): void {
   }
 
   ngAfterViewInit(): void {
@@ -116,9 +117,12 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       text: 'calendar',
       active: false,
+      request2: this.modelResource,
       model: {
-         template: this.sprintsCalendar,
-        //sideBarLeftRef: this.asideLeft,
+        eventModel: this.fields,
+        resourceModel: this.resourceField,
+        template: this.eventTemplate,
+        template3: this.cellTemplate,
       },
     },
     {
@@ -158,12 +162,9 @@ export class SprintsTasksComponent implements OnInit {
           this.dt.detectChanges() ;
         }
       });
-    }
-    
+    }   
   }
   
- 
-
   changeView(evt: any) {}
 
   //#region schedule

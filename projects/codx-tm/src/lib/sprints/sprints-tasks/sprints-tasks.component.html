@@ -67,20 +67,8 @@
 
 <ng-template #eventTemplate let-data>
   <div>{{data.taskName}}</div>
-
-  <!-- <div>
-    <div>{{data.taskName}}</div>
-  </div>
-  <button class="btn btn-light-primary" (click)="edit(data)">
-    Sửa
-  </button>
-  <button class="btn btn-light-primary" (click)="delete(data)">
-    Xóa
-  </button> -->
-  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-    [title]="data.userName" [formModel]=" view.formModel">
-  </codx-temp-full> -->
 </ng-template>
+
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" [predicate]="" [dataValue]=""
