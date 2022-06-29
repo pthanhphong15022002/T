@@ -67,11 +67,11 @@ export const routes: Routes = [
       {
         path: 'sprinttasks/:funcID',
         component: SprintsTasksComponent,
-        // children: [
-        //   {
-        //     path: ':id',
-        //     component: SprintsTasksComponent,
-        //   }]
+        children: [
+          {
+            path: ':id',
+            component: SprintsTasksComponent,
+          }]
       },
       {
         path: 'setting',

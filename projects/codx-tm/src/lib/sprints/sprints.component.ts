@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  CodxService,
   CRUDService,
   DataRequest,
   DialogRef,
@@ -67,6 +68,7 @@ export class SprintsComponent extends UIComponent {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
+    private codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -94,6 +96,17 @@ export class SprintsComponent extends UIComponent {
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
+      case 'TMT041': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        this.shareBoard(e,data);
+        break;
+      case 'TMT042': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        this.viewBoard(e,data);
+        break;
+      default:
         break;
     }
   }
@@ -172,16 +185,18 @@ export class SprintsComponent extends UIComponent {
   }
 
   delete(data: any) {
-     this.view.dataService.dataSelected = data;
+    this.view.dataService.dataSelected = data;
     // this.itemSelected = data;
     this.view.dataService
-      .delete([this.lstViewBoard.dataService.dataSelected],(opt)=>
+      .delete([this.lstViewBoard.dataService.dataSelected], (opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('TM004');
-          (this.lstViewBoard.dataService as CRUDService).remove(this.itemSelected).subscribe()
+          (this.lstViewBoard.dataService as CRUDService)
+            .remove(this.itemSelected)
+            .subscribe();
         }
       });
   }
@@ -193,6 +208,18 @@ export class SprintsComponent extends UIComponent {
     opt.method = 'DeleteSprintsByIDAsync';
     opt.data = this.itemSelected.iterationID;
     return true;
+  }
+  sendemail(data) {}
+
+  shareBoard(e,data) {
+    
+  
+  }
+
+  viewBoard(e,data) {
+        this.urlView = e?.url
+        if(data.iterationID !=this.user.userID) this.urlView+='/'+data.iterationID
+        this.codxService.navigate('', this.urlView)
   }
 
   changeView(evt: any) {
