@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  CRUDService,
   DataRequest,
   DialogRef,
   NotificationsService,
@@ -80,6 +81,7 @@ export class SprintsComponent extends UIComponent {
   }
 
   clickMF(e: any, data: any) {
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -115,9 +117,9 @@ export class SprintsComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddEditSprintAsync';
-    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
-    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
+    // this.view.dataService.methodSave = 'AddEditSprintAsync';
+    // this.view.dataService.methodUpdate = 'AddEditSprintAsync';
+    // this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -170,8 +172,8 @@ export class SprintsComponent extends UIComponent {
   }
 
   delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.itemSelected = data;
+     this.view.dataService.dataSelected = data;
+    // this.itemSelected = data;
     this.view.dataService
       .delete([this.lstViewBoard.dataService.dataSelected],(opt)=>
         this.beforeDel(opt)
@@ -179,17 +181,16 @@ export class SprintsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('TM004');
+          (this.lstViewBoard.dataService as CRUDService).remove(this.itemSelected).subscribe()
         }
       });
-
-      // this.lstViewBoard.delete()
   }
 
   beforeDel(opt: any) {
     opt.service = 'TM';
     opt.assemblyName = 'ERM.Business.TM';
     opt.className = 'SprintsBusiness';
-    opt.methodName = 'DeleteSprintsByIDAsync';
+    opt.method = 'DeleteSprintsByIDAsync';
     opt.data = this.itemSelected.iterationID;
     return true;
   }
