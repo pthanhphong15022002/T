@@ -58,9 +58,9 @@ export class PopAddTaskgroupComponent implements OnInit {
       if (res)
         this.gridViewSetup = res
     })
-    // if (this.action === 'edit') {
-    //   this.openForm(this.taskGroups, false);
-    // }
+    if (this.action === 'edit') {
+      this.openForm(this.taskGroups, false);
+    }
   }
 
   initForm() {
@@ -251,13 +251,16 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   updateRow() {
     var t = this;
-    this.tmSv.updateTaskGroup(this.taskGroups)
+    this.dialog.dataService.save((opt: any) => {
+      opt.data = [this.taskGroups];
+      return true;
+    })
       .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
+        if (res.save) {
+          this.dialog.close();
+          this.notiService.notify('Chỉnh sửa thành công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
         }
-      })
+      });
     this.closePanel();
   }
 

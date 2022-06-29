@@ -259,7 +259,6 @@ export class PopAddRangesComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
-          this.dialog.close();
           // if(this.isAddMode==true)
           //   this.notiService.notify('Thêm mới khoảng thời gian thành công');
           //   else
@@ -267,6 +266,8 @@ export class PopAddRangesComponent implements OnInit {
 
         }
       });
+      this.dialog.close();
+
   }
 
   deletePopup(index) {
