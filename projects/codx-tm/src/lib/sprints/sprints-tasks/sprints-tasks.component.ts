@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, ButtonModel, DataRequest, NotificationsService, ResourceModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
@@ -17,9 +17,12 @@ export class SprintsTasksComponent implements OnInit {
   @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
   @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('sprintsCalendar') sprintsCalendar: TemplateRef<any> | null;
-  @ViewChild('sprintsSchedule') sprintsSchedule: TemplateRef<any> | null;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>| null;
   @ViewChild('itemTemplate') template!: TemplateRef<any>| null;
+
+  @Input() calendarID: string;
+
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   selectedDate = new Date();
@@ -35,20 +38,8 @@ export class SprintsTasksComponent implements OnInit {
   viewsActive: Array<ViewModel> = [];
   itemSelected: any;
   moreFuncs: Array<ButtonModel> = [];
-  fields = {
-    id: 'taskID',
-    subject: { name: 'taskName' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
-  };
-  resourceField = {
-    Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
-    TextField: 'userName',
-    Title: 'Resources',
-  };
+  
+  
 
   constructor(
     private tmSv: CodxTMService,
@@ -136,12 +127,12 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       text: 'schedule',
       active: false,
-      // request2: this.modelResource,
+      request2: this.modelResource,
       model: {
-        // eventModel: this.fields,
-        // resourceModel: this.resourceField,
-        // template: this.eventTemplate,
-        // template3: this.sprintsSchedule,
+        eventModel: this.fields,
+        resourceModel: this.resourceField,
+        template: this.eventTemplate,
+        template3: this.cellTemplate,
       },
     },
     ];
@@ -174,6 +165,23 @@ export class SprintsTasksComponent implements OnInit {
  
 
   changeView(evt: any) {}
+
+  //#region schedule
+
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'userID' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
 
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -225,6 +233,43 @@ export class SprintsTasksComponent implements OnInit {
 
     return ``;
   }
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TM_Parameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+        }
+      });
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
+  }
+  //#endregion schedule
 
   requestEnded(evt: any) {
     // if (evt) {
