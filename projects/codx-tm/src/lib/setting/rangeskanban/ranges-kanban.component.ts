@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@a
 import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
+import { BS_Ranges } from '../../models/BS_Ranges.model';
 import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component';
 
 @Component({
@@ -11,12 +12,7 @@ import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component
 })
 export class RangesKanbanComponent implements OnInit {
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
-  @ViewChild("itemCreateBy", { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild("GiftIDCell", { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild("itemCreate", { static: true }) itemCreateOn: TemplateRef<any>;
-  @ViewChild("itemListReadmore", { static: true }) itemListReadmore: TemplateRef<any>;
-  @ViewChild("itemNote", { static: true }) itemNote: TemplateRef<any>;
-  @ViewChild("moreFun", { static: true }) templateMore: TemplateRef<any>;
+
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
 
@@ -27,17 +23,18 @@ export class RangesKanbanComponent implements OnInit {
   itemSelected: any;
   constructor(private dt: ChangeDetectorRef,
     private callfunc: CallFuncService, private notiService: NotificationsService,
-  ) { }
+    ) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
       { field: 'rangeID', headerText: 'Mã', width: 200 },
       { field: 'rangeName', headerText: 'Mô tả', width: 250 },
-      { field: 'note', headerText: 'Ghi chú', width: 200, },// template: this.itemNote },
-      { field: 'rangeID', headerText: 'Khoảng thời gian' },// template: this.itemListReadmore, width: 200 },
-      { field: 'createdBy', headerText: 'Người tạo' },// template: this.itemCreatedBy, width: 180 },
-      { field: 'createdOn', headerText: 'ngày tạo' },//template: this.itemCreateOn, width: 150 },
-      { field: '', headerText: '#', width: 50 }// template: this.templateMore },
+      { field: 'note', headerText: 'Ghi chú', width: 200 },
+      { field: 'rangeID', headerText: 'Khoảng thời gian', width: 200 },
+      { field: 'createdBy', headerText: 'Người tạo', width: 180 },
+      { field: 'createdOn', headerText: 'ngày tạo', width: 150 },
+      { field: '', headerText: '#', width: 30 },
+
     ];
     this.button = {
       id: 'btnAdd',
@@ -98,11 +95,10 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopAddRangesComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-      })
+      option.Width = '750px'; // s k thấy gửi từ ben đây,
+
+      this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'add'], option);
+      
     });
   }
 
@@ -131,15 +127,13 @@ export class RangesKanbanComponent implements OnInit {
     opt.data = itemSelected.rangeID;
     return true;
   }
-
+  
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;
   }
   requestEnded(evt: any) {
-    // if (evt) {
-    //   this.dialog.close();
-    // }
+   this.dialog && this.dialog.close();
   }
   aaa(val: any) {
     console.log(val);
