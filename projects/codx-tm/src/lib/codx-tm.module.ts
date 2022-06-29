@@ -57,12 +57,12 @@ export const routes: Routes = [
         component: OwnerTasksComponent,
       },
       {
-        path: 'viewboards/:funcID',
-        component: SprintsComponent,
+        path: 'assigntasks/:funcID',
+        component: OwnerTasksComponent,
       },
       {
-        path: 'assigntasks/:funcID',
-        component: AssignTasksComponent,
+        path: 'viewboards/:funcID',
+        component: SprintsComponent,
       },
       {
         path: 'sprinttasks/:funcID',

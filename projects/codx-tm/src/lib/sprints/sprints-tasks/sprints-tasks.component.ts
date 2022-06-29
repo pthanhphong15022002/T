@@ -18,8 +18,8 @@ export class SprintsTasksComponent implements OnInit {
   @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('sprintsCalendar') sprintsCalendar: TemplateRef<any> | null;
   @ViewChild('sprintsSchedule') sprintsSchedule: TemplateRef<any> | null;
-  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>| null;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>| null;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   selectedDate = new Date();
@@ -35,6 +35,21 @@ export class SprintsTasksComponent implements OnInit {
   viewsActive: Array<ViewModel> = [];
   itemSelected: any;
   moreFuncs: Array<ButtonModel> = [];
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'userID' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
+
   constructor(
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
@@ -80,7 +95,6 @@ export class SprintsTasksComponent implements OnInit {
       active: false,
       model: {
         template: this.template,
-       
       },
     },
     {
@@ -122,15 +136,16 @@ export class SprintsTasksComponent implements OnInit {
       sameData: true,
       text: 'schedule',
       active: false,
-      request2: this.modelResource,
+      // request2: this.modelResource,
       model: {
-        eventModel: this.fields,
-        resourceModel: this.resourceField,
-        template: this.eventTemplate,
-        template3: this.sprintsSchedule,
+        // eventModel: this.fields,
+        // resourceModel: this.resourceField,
+        // template: this.eventTemplate,
+        // template3: this.sprintsSchedule,
       },
     },
     ];
+
     if (this.iterationID == '') {
       this.viewsActive.forEach((obj) => {
         if (obj.id == '1') {
@@ -138,6 +153,7 @@ export class SprintsTasksComponent implements OnInit {
         }
       });
       this.views = this.viewsActive
+      this.dt.detectChanges() ;
     } else {
       this.tmSv.getSprints(this.iterationID).subscribe((res) => {
         if (res) {
@@ -148,25 +164,14 @@ export class SprintsTasksComponent implements OnInit {
             }
           });
           this.views = this.viewsActive
+          this.dt.detectChanges() ;
         }
       });
     }
+    
   }
   
-  fields = {
-    id: 'taskID',
-    subject: { name: 'taskName' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
-  };
-  resourceField = {
-    Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
-    TextField: 'userName',
-    Title: 'Resources',
-  };
+ 
 
   changeView(evt: any) {}
 
