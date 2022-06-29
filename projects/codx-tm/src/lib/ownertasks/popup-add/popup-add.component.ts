@@ -68,7 +68,7 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
-  @ViewChild('attachment') attachment:AttachmentComponent 
+  @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild('tags') tagsComponent: TagsComponent;
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
@@ -223,7 +223,7 @@ export class PopupAddComponent implements OnInit {
     this.readOnly = action === 'edit' ? false : true;
     this.title =
       action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
-      this.disableAddToDo = true;
+    this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
@@ -232,7 +232,7 @@ export class PopupAddComponent implements OnInit {
         this.listUserDetail = res[1] || [];
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
-         this.listUser = this.task.assignTo?.split(";") || [] ;
+        this.listUser = this.task.assignTo?.split(";") || [];
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -354,7 +354,7 @@ export class PopupAddComponent implements OnInit {
     }
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-  
+
     if (id) this.updateTask();
     else this.addTask();
     this.attachment.saveFiles();
@@ -391,7 +391,7 @@ export class PopupAddComponent implements OnInit {
     //   .subscribe((res) => {
     //     if (res.save) {
     //       this.dialog.close();
-    //       this.notiService.notifyCode('TM005');  
+    //       this.notiService.notifyCode('TM005');
     //     }
     //   });
     this.tmSv.addTask([
@@ -406,7 +406,7 @@ export class PopupAddComponent implements OnInit {
         this.dialog.dataService.afterSave.next(res);
         this.changeDetectorRef.detectChanges();
         this.dialog.close();
-        this.notiService.notifyCode('TM005');    
+        this.notiService.notifyCode('TM005');
       }
     }) //Xài cái này bị la á , đợi fix xong chỉnh lại=))
   }
@@ -426,7 +426,7 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-//caí này chạy tạm đã
+  //caí này chạy tạm đã
   eventApply(e: any) {
     var assignTo = '';
     var i = 0;
@@ -682,7 +682,7 @@ export class PopupAddComponent implements OnInit {
 
   closeConfirm(e: any, t: PopupAddComponent, id: string) {
     if (e?.status == 'Y') {
-       t.actionSave(id);
+      t.actionSave(id);
     }
   }
 
@@ -706,8 +706,8 @@ export class PopupAddComponent implements OnInit {
     ///chỗ này không bắt được data
     console.log(e);
   }
-  changeMemo2(e,id){
-    var message = e?.data ;
+  changeMemo2(e, id) {
+    var message = e?.data;
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
     if (index != -1) {
       this.listMemo2OfUser.forEach((obj) => {

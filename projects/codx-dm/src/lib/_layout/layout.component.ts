@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'DM';
   public titleAddFolder = 'Tạo thư mục';
-  public titleStorage =  'Dung lượng lưu trữ';
+  public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
   constructor(
     inject: Injector,
@@ -21,23 +21,23 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.codxService.init(this.module);
   }
 
-  onInit(): void {   
-    this.funcs$.subscribe(res => {
+  onInit(): void {
+    this.codxService.modulesOb$.subscribe(res => {
       console.log(res);
     })
   }
 
   onAfterViewInit(): void {
-    this.cache.message("DM060").subscribe(item => {      
+    this.cache.message("DM060").subscribe(item => {
       if (item != null) {
-        this.titleAddFolder  = item.description;
-      }                       
+        this.titleAddFolder = item.description;
+      }
     });
 
-    this.cache.message("DM061").subscribe(item => {      
+    this.cache.message("DM061").subscribe(item => {
       if (item != null) {
-        this.titleStorage  = item.description;
-      }                       
+        this.titleStorage = item.description;
+      }
     });
   }
 

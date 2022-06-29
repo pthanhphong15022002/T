@@ -246,7 +246,7 @@ export class PopAddRangesComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res.save) {
+        if (res) {
           this.lstSaveRangeLine = [];
           if (this.lstRangeLine != null) {
             for (let item1 of this.lstRangeLine) {
@@ -259,7 +259,7 @@ export class PopAddRangesComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
-          this.dialog.dataService.setDataSelected(res.save[0])
+          this.dialog.dataService.setDataSelected(res)
           // if(this.isAddMode==true)
           //   this.notiService.notify('Thêm mới khoảng thời gian thành công');
           //   else
