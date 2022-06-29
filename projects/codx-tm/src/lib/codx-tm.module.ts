@@ -62,7 +62,7 @@ export const routes: Routes = [
       },
       {
         path: 'assigntasks/:funcID',
-        component: AssignTasksComponent,
+        component: OwnerTasksComponent,
       },
       {
         path: 'sprinttasks/:funcID',
