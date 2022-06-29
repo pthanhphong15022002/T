@@ -1,0 +1,133 @@
+<!-- <div *ngIf="checkUpdate == true">
+    <app-update-detail-note-book #file></app-update-detail-note-book>
+</div> -->
+<codx-form [header]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template #header>
+        <!-- <codx-label name="lblHeaderText" formName="Storages" default="Thêm mới sổ tay" *ngIf="formType == 'add'">
+        </codx-label>
+        <codx-label name="lblHeaderText" formName="Storages" default="Cập nhật sổ tay" *ngIf="formType == 'edit'">
+        </codx-label> -->
+    </ng-template>
+
+
+    <ng-template popup add #body>
+        <div class="fs-1 fw-bolder">
+            <codx-label name="lblTitle" formName="Notes" default="Nội dung"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="d-flex my-2">
+                    <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
+                    <span class="btn btn-sm btn-success btn-pill me-2">Customize</span>
+                    <div class="dropdown" id="tag_toggle">
+                        <div class="topbar-item" data-toggle="dropdown">
+                            <span class="btn btn-sm btn-secondary btn-pill btn-dropdown">
+                                <codx-label name="lblTitle" formName="Notes" default="Tag +"></codx-label>
+                            </span>
+                        </div>
+                        <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
+                            <div class="quick-search quick-search-dropdown" id="tag_dropdown">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Tag..." />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-md btn-secondary" type="button">
+                                            <codx-label name="lblTitle" formName="Notes" default="Lưu"></codx-label>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <codx-label name="lblTitle" formName="Notes" default="Tiêu đề"></codx-label>
+                    <codx-input type="text" field="title" placeholder="" [crrValue]="note?.title"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-4">
+                    <div class="d-flex align-items-center">
+                        <span class="icon-attach icon-16 me-2 text-primary"></span>
+                        <div class="fw-bold fs-6 text-primary">
+                            <codx-label name="lblFile" formName="NoteBooks" default="Tài liệu đính kèm"></codx-label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light-primary" (click)="popup($event)">
+                        <i class="icon-add fs-5 me-1"></i>
+                        <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center file-item mt-3">
+                    <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <span class="text-dark fw-bold">Bang-chamcongthang6-V2.doc</span>
+                        <div class="d-flex">
+                            <div class="text-gray-600">20/07/2021</div>
+                            <div class="mx-2 text-gray-500">|</div>
+                            <div class="text-gray-600">Lê Phạm Thương Hoài</div>
+                        </div>
+                    </div>
+                    <div ngbDropdown class="dropdown">
+                        <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton"
+                            aria-expanded="false">
+                            <span class="icon-more_vert icon-20"></span>
+                        </button>
+                        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a ngbDropdownItem>
+                                <div class="d-flex align-items-center">
+                                    <span class="icon-edit text-warning icon-18"></span>
+                                    <span class="ms-2">
+                                        <codx-label name="lblTitle" formName="Notes" default="Chỉnh sửa"></codx-label>
+                                    </span>
+                                </div>
+                            </a>
+                            <a ngbDropdownItem>
+                                <div class="d-flex align-items-center">
+                                    <span class="icon-list_alt text-primary icon-18"></span>
+                                    <span class="ms-2">
+                                        <codx-label name="lblTitle" formName="Notes" default="Xem thông tin">
+                                        </codx-label>
+                                    </span>
+                                </div>
+                            </a>
+                            <a ngbDropdownItem>
+                                <div class="d-flex align-items-center">
+                                    <span class="icon-clear text-danger icon-18"></span>
+                                    <span class="ms-2">
+                                        <codx-label name="lblTitle" formName="Notes" default="Xóa"></codx-label>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <codx-input type="textarea" field="memo" placeholder="" [crrValue]="note?.memo" class="test-area"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+        <!-- 
+        <attachment #attachment type="center" objectType="WP_Notes" functionID="WPT03941"
+            (fileAdded)="fileAdded($event)"></attachment> -->
+
+        <div class="d-flex align-items-center file-item mt-3">
+            <div class="d-flex flex-column flex-grow-1">
+                <attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1" hideFolder="1"
+                    hideUploadBtn="1" functionID="MWP00941" (fileAdded)="fileAdded($event)"></attachment>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-light-primary" (click)="dialog.close()">
+                <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+            </button>
+            <button type="button" class="btn btn-primary ms-1" (click)="saveNoteBookDetails()" *ngIf="!readOnly">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

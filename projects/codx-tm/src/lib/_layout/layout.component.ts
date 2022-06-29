@@ -1,29 +1,23 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Component, ViewChild, ElementRef, Injector } from '@angular/core';
 import {
   LayoutBaseComponent
 } from 'codx-core';
-import { Observable } from 'rxjs';
+
 @Component({
-  selector: 'lib-layout',
+  selector: 'codx-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
-  onInit(): void {
-    this.funcs$.subscribe(res => {
-      console.log(res);
+  onInit() { }
 
-    })
-  }
-
-  onAfterViewInit(): void {
+  onAfterViewInit() {
 
   }
-
 }

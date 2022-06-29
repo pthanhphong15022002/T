@@ -1,8 +1,6 @@
-import { Valuelist } from './../models/model';
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent, CodxService } from 'codx-core';
-import { LayoutModel } from '@shared/models/layout.model';
 import { AccumulationChart, AccumulationChartComponent, MarkerSettingsModel } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
 declare var _;
@@ -337,7 +335,7 @@ export class WalletsComponent implements OnInit {
             this.interval = -10;
           }
         }
-      } 
+      }
       if (this.maxTotal % 50 == 0) {
         if (this.maxTotal > -200) {
           this.interval = -10

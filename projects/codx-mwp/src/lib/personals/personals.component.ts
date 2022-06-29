@@ -19,7 +19,6 @@ export class PersonalsComponent implements OnInit {
   funcID = "";
   default = true;
   views = [];
-  userPermission: any;
   showHeader: boolean = true;
   moreFunc: any[] = [
     { functionID: `MWP0091`, description: "Bài viết", smallIcon: "mwp_post" },
@@ -63,8 +62,7 @@ export class PersonalsComponent implements OnInit {
         },
       },
     ]
-    this.userPermission = this.viewbase.userPermission;
-    this.changedt.detectChanges();
+    this.changedt.detectChanges(); 
   }
 
   getFunctionList() {

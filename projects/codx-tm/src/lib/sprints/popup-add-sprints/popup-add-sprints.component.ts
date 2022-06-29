@@ -25,17 +25,15 @@ import { TM_Sprints } from '../../models/TM_Sprints.model';
   styleUrls: ['./popup-add-sprints.component.css'],
 })
 export class PopupAddSprintsComponent implements OnInit {
-  @Input() taskBoard = new TM_Sprints();
-  title = 'Task Board';
+  taskBoard = new TM_Sprints();
+  title = 'Thêm Task Board';
   readOnly = false;
   listUserDetail = [];
-  // dataAddNew = new BehaviorSubject<any>(null);
-  // isAddNew = this.dataAddNew.asObservable();
-  // updateData = new BehaviorSubject<any>(null);
-  // isUpdate = this.updateData.asObservable();
+  action: string = '';
   dialog: any;
   user: any;
-  @Input('viewBase') viewBase: ViewsComponent;
+  funcID: string = '';
+  // @Input('viewBase') viewBase: ViewsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -48,12 +46,37 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    // this.task = dt?.data;
+    this.taskBoard = {
+      ...this.taskBoard,
+      ...dt?.data[0],
+    };
+    this.action = dt?.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.funcID = this.dialog.formModel.funcID;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.taskBoard.iterationID) {
+      // this.openTask();
+    } else {
+      if (this.action == 'copy')
+        return this.getSprintsCoppied(this.taskBoard.iterationID);
+      else this.openInfo(this.taskBoard.iterationID, this.action);
+    }
+  }
+
+  beforeSave(op: any) {
+    var data = [];
+    op.method = 'AddEditSprintAsync';
+    if (this.taskBoard.iterationID != null) {
+      data = [this.taskBoard, false];
+    } else {
+      data = [this.taskBoard, true];
+    }
+    op.data = data;
+    return true;
+  }
 
   saveData(id) {
     if (
@@ -63,9 +86,7 @@ export class PopupAddSprintsComponent implements OnInit {
       return this.notiService.notify('Tên Task Board không được để trống !');
     if (this.taskBoard.projectID == '') this.taskBoard.projectID = null;
     if (!this.taskBoard.isShared) this.taskBoard.resources = null;
-    if (id) {
-      this.addTaskBoard(this.taskBoard, false);
-    } else this.addTaskBoard(this.taskBoard, true);
+     var isAdd
   }
 
   addTaskBoard(taskBoard, isAdd: boolean) {
@@ -122,7 +143,7 @@ export class PopupAddSprintsComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = res;
+        this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
   onDeleteUser(userID) {
@@ -156,7 +177,6 @@ export class PopupAddSprintsComponent implements OnInit {
         if (t.taskBoard.resources) t.getListUser(t.taskBoard.resources);
         else this.listUserDetail = [];
         t.changeDetectorRef.detectChanges();
-        t.showPanel();
       }
     });
   }
@@ -172,21 +192,44 @@ export class PopupAddSprintsComponent implements OnInit {
         t.taskBoard.projectID = res.projectID;
         t.taskBoard.iterationName = res.iterationName;
         t.taskBoard.memo = res.memo;
-        t.changeDetectorRef.detectChanges();
-        t.showPanel();
+        t.changeDetectorRef.detectChanges();    
       }
     });
   }
-  showPanel() {}
-  closePanel() {}
-
-  openDialog() {
-    // let obj = {
-    //   formName: 'demo',
-    //   control: '1',
-    //   value: '5',
-    //   text: 'demo nè',
-    // };
-    //   this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+ 
+  valueChangeShared(e){
+    console.log(e)
   }
+
+   //caí này chạy tạm đã
+   eventApply(e: any) {
+    var resources = '';
+    var i = 0;
+    e.forEach(obj => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            resources += obj?.data;
+            this.valueSelectUser(resources)
+            break;
+          // case 'D':
+          //   //chưa chạy xong câu lệnh này đã view ra...
+          //   const t = this;
+          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
+          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
+          //     if (res) {
+          //       assignTo += res + ";";
+          //       this.valueSelectUser(assignTo)
+          //     }
+          //   })
+          //   break;
+        }
+      }
+    })
+  }
+  valueSelectUser(resources) {
+    this.getListUser(resources)
+     this.changeDetectorRef.detectChanges();
+   }
+
 }

@@ -1,7 +1,7 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -31,6 +31,7 @@ const Component: Type<any>[] = [LayoutComponent, CodxWpComponent];
     RouterModule.forChild(routes),
   ],
   exports: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CodxWpModule {
   public static forRoot(

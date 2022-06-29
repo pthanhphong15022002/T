@@ -13,21 +13,22 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   headerCSSClasses?: string;
   headerHTMLAttributes: any = {};
   headerLeft: string = 'menu';
-  asideDisplay: boolean=false;
+  asideDisplay: boolean = false;
   asideCSSClasses?: string;
   @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   user: UserModel | null = null;
 
-  public funcs$: Observable<any> ;
+  public funcs$: Observable<any>;
 
   constructor(
     private layout: LayoutService,
     private auth: AuthService,
     public codxService: CodxService,
   ) {
+    debugger;
     this.codxService.init('OD');
-    this.funcs$= this.codxService.getFuncs('OD');
+    //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
   ngOnInit(): void {
@@ -41,6 +42,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    debugger;
     if (this.codxHeader) {
       for (const key in this.headerHTMLAttributes) {
         if (this.headerHTMLAttributes.hasOwnProperty(key)) {
@@ -55,78 +57,78 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.imageViewer?.reloadImageWhenUpload();
   }
 
-  public contentResized(size: any){
+  public contentResized(size: any) {
     // if(size){
     //   console.log(JSON.stringify(size));
     // }
   }
 
-/* public funcs$: Observable<any> = of([
-  {
-    functionID: 'OD',
-    customName: 'Quản lý công văn',
-    separator: true
-  },
-  {
-    functionID: 'ODT1',
-    customName: 'Dashboard',
-    smallIcon: 'assets/Icons_Final/P006_Hosonhanvien.svg',
-    comingSoon: false,
-    separator: false,
-    childs: [],
-    url:"/od/home"
-  }, 
-  {
-    functionID: 'OTD2',
-    customName: 'Báo cáo',
-    smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-    comingSoon: false,
-    separator: false,
-    childs: [],
-    url:"/od/incomming/funcID=OD"
-  }, 
-  {
-    functionID: '',
-    customName: '',
-    smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-    comingSoon: false,
-    separator: true,
-  }, 
-  {
-    functionID: 'ODT3',
-    customName: 'Công văn đến',
-    smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-    comingSoon: false,
-    separator: false,
-    childs: [],
-    url:"/od/incomming"
-  },    
-  {
-    functionID: 'ODT4',
-    customName: 'Công văn đi',
-    smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
-    comingSoon: false,
-    separator: false,
-    url:"/od/subhome",
-    childs: []
-  },
-  {
-    functionID: 'ODT5',
-    customName: 'Công văn nội bộ',
-    smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
-    comingSoon: false,
-    separator: false,
-    childs: [],
-    url:"/od/incomming"
-  }, 
-  {
-    functionID: 'ODT6',
-    customName: 'Tìm kiếm văn bản',
-    smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
-    comingSoon: false,
-    separator: false,
-    url:"/od/subhome",
-    childs: []
-  }   
-]); */
+  /* public funcs$: Observable<any> = of([
+    {
+      functionID: 'OD',
+      customName: 'Quản lý công văn',
+      separator: true
+    },
+    {
+      functionID: 'ODT1',
+      customName: 'Dashboard',
+      smallIcon: 'assets/Icons_Final/P006_Hosonhanvien.svg',
+      comingSoon: false,
+      separator: false,
+      childs: [],
+      url:"/od/home"
+    },
+    {
+      functionID: 'OTD2',
+      customName: 'Báo cáo',
+      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
+      comingSoon: false,
+      separator: false,
+      childs: [],
+      url:"/od/incomming/funcID=OD"
+    },
+    {
+      functionID: '',
+      customName: '',
+      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
+      comingSoon: false,
+      separator: true,
+    },
+    {
+      functionID: 'ODT3',
+      customName: 'Công văn đến',
+      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
+      comingSoon: false,
+      separator: false,
+      childs: [],
+      url:"/od/incomming"
+    },
+    {
+      functionID: 'ODT4',
+      customName: 'Công văn đi',
+      smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
+      comingSoon: false,
+      separator: false,
+      url:"/od/subhome",
+      childs: []
+    },
+    {
+      functionID: 'ODT5',
+      customName: 'Công văn nội bộ',
+      smallIcon: 'assets/Icons_Final/C001_Mangxahoinoibo.svg',
+      comingSoon: false,
+      separator: false,
+      childs: [],
+      url:"/od/incomming"
+    },
+    {
+      functionID: 'ODT6',
+      customName: 'Tìm kiếm văn bản',
+      smallIcon: 'assets/Icons_Final/C007_Tailieuso.svg',
+      comingSoon: false,
+      separator: false,
+      url:"/od/subhome",
+      childs: []
+    }
+  ]); */
 }
