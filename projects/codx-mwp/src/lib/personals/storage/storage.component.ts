@@ -1,5 +1,4 @@
 import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel, ButtonModel, SidebarModel, DialogRef, CallFuncService, UIComponent, CodxListviewComponent } from 'codx-core';
-import { UpdateStorageComponent } from './update-storage/update-storage.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, TemplateRef, Input, Injector, AfterViewInit } from '@angular/core';
@@ -34,8 +33,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
 
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
-  @ViewChild('lstUpdateStorage') lstUpdateStorage: UpdateStorageComponent;
-  @ViewChild('dataUpdateStorage') dataUpdateStorage: UpdateStorageComponent;
   @ViewChild('detail', { read: ViewContainerRef }) detail!: ViewContainerRef;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
@@ -79,10 +76,10 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
-        // this.edit(data);
+        this.edit(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }
@@ -105,10 +102,25 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     });
   }
 
+  edit(data: any) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.dataSort = [];
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog.closed.subscribe(x => {
+        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      });
+    });
+  }
+
   formUpdateStorage(e) {
     this.dataSort = [];
-    this.lstUpdateStorage.lstStorage = this.lstCardStorage;
-    this.dataUpdateStorage.data = e;
   }
 
   openFormUpdateBackground(content, data) {
@@ -116,13 +128,14 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     this.modalService.open(content, { centered: true });
   }
 
-  onDelete(data) {
+  delete(data) {
     this.api
       .exec<any>('ERM.Business.WP', 'StoragesBusiness', 'DeleteStorageAsync', data.recID)
       .subscribe((res) => {
-        var dt = res;
-        // this.lstCardStorage.removeHandler(dt, "recID");
-        this.changedt.detectChanges();
+        if (res) {
+          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.changedt.detectChanges();
+        }
       });
   }
 
