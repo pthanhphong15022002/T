@@ -34,7 +34,8 @@ export class PopupAddCarsComponent implements OnInit {
   CbxName: any;
   dialogCar: FormGroup;
   dialog: any;
-
+  headerText = 'Thêm mới xe';
+  subHeaderText = 'Thêm mới xe';
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
