@@ -1,8 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Optional } from '@angular/core';
-import { agency } from '../models/agency.model';
-import { permissionDis, updateDis , dispatch, inforSentEMail, extendDeadline } from '../models/dispatch.model';
-import { AgencyService } from '../services/agency.service';
-import { DispatchService } from '../services/dispatch.service';
+import { agency } from '../../models/agency.model';
+import { permissionDis, updateDis , dispatch, inforSentEMail, extendDeadline } from '../../models/dispatch.model';
+import { AgencyService } from '../../services/agency.service';
+import { DispatchService } from '../../services/dispatch.service';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { CodxService, DialogData, NotificationsService } from 'codx-core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';

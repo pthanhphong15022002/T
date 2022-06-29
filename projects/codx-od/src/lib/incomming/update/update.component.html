@@ -20,29 +20,29 @@
         <div class="card-body" [formGroup]="updateForm" (ngSubmit)="onFormSubmit()">
             <div class="row">
                 <div class="col-5">
-                    <label>Ngày cập nhật</label>
+                    <codx-label default='Ngày cập nhật'></codx-label>
                     <codx-input 
-                        type="datetime" 
-                        class="test-datetime" 
-                        field="datetime" 
-                        placeholder="datetime" 
-                        ControlName="updateOn"
+                        type="dateTime" 
+                        format="d" 
+                        field="date"
                         [Group]="updateForm"
-                        dataformat="d"
-                        [crrValue]="dtDisUpdate.updatedOn==null?currentDate:dtDisUpdate.updatedOn"
+                        ControlName="updateOn"
+                        [ngClass]="{ 'is-invalid': submitted && f.updateOn.errors }"
                     >
                     </codx-input>
                 </div>
-                <div class="col-7">
+                <div class="col-7 align-items-center">
                     <codx-label default="Kết quả thực hiện"></codx-label>
-                    <div class="d-flex align-items-start">
+                    <div class="d-flex align-items-center">
                         <codx-input 
                             type="number" 
-                            [min]="0" 
+                            [min]="this.data?.percentage ? this.data?.percentage : 0"
+                            [max]="100" 
                             cssClass="form-control" 
                             ControlName="percentage"
                             [Group]="updateForm"
-                            [crrValue]="dtDisUpdate?.percentage">
+                            [ngClass]="{ 'is-invalid': submitted && f.percentage.errors }"
+                            >
                         </codx-input>
                         <div class="d-flex align-items-center ms-3">
                             <codx-input  
@@ -50,7 +50,6 @@
                                 class="test-check"   
                                 ControlName="percentage100"
                                 [Group]="updateForm" 
-                                (valueChange)="changeValue100Percentage($event)"
                             >
                             </codx-input>
                             <codx-label default="Hoàn thành 100%" class="ms-2 w-150px"></codx-label>

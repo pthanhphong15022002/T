@@ -62,7 +62,7 @@ export class PersonalsComponent implements OnInit {
         },
       },
     ]
-    this.changedt.detectChanges();
+    this.changedt.detectChanges(); 
   }
 
   getFunctionList() {

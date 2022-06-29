@@ -11,41 +11,9 @@ import {
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import {
-  AlertConfirmInputConfig,
-  ApiHttpService,
-  AuthStore,
-  ButtonModel,
-  CacheService,
-  CallFuncService,
-  CodxListviewComponent,
-  CodxService,
-  CodxTreeviewComponent,
-  DataRequest,
-  DialogRef,
-  NotificationsService,
-  RequestOption,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewsComponent,
-  ViewType,
-} from 'codx-core';
-import {
-  compareDate,
-  extractContent,
-  formatBytes,
-  formatDtDis,
-  getListImg,
-} from '../function/default.function';
-import {
-  permissionDis,
-  updateDis,
-  dispatch,
-  inforSentEMail,
-  extendDeadline,
-  gridModels,
-} from '../models/dispatch.model';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CacheService, CallFuncService, CodxListviewComponent, CodxService, CodxTreeviewComponent, DataRequest, DialogModel, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { compareDate, extractContent, formatBytes, formatDtDis, getListImg } from '../function/default.function';
+import { permissionDis, updateDis, dispatch, inforSentEMail, extendDeadline, gridModels } from '../models/dispatch.model';
 import { AgencyService } from '../services/agency.service';
 import { DispatchService } from '../services/dispatch.service';
 import { FileService } from '@shared/services/file.service';
@@ -53,6 +21,7 @@ import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'app-incomming',
@@ -74,6 +43,8 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
+  @ViewChild('tmpexport') tmpexport!: TemplateRef<any>;
+  
   public lstDtDis: any;
   public lstUserID: any = '';
   public disEdit: any;
@@ -159,11 +130,15 @@ export class IncommingComponent
       this.loadView();
     });
     //this.loadView(); */
-    this.view.dataService.predicates = 'Status=@0';
-    this.view.dataService.dataValues = '1';
-    this.button = {
-      id: 'btnAdd',
-    };
+   /*  this.router.params.subscribe((params) => {
+      //this.lstDtDis = null;
+    }) */
+    if(this.view)
+    {
+      this.view.dataService.predicates = "Status=@0"
+      this.view.dataService.dataValues = "1"
+    }
+  
     /* this.options.Page = 0,
     this.options.PageLoading = false;
     this.options.PageSize = 10;
@@ -189,25 +164,7 @@ export class IncommingComponent
     //   this.lstDept= item;
     // })
   }
-
-  loadView() {
-    this.getGridViewSetup();
-    (this.options.page = 0), (this.options.pageLoading = false);
-    this.options.pageSize = 10;
-    this.options.dataValue = '1';
-    this.status = '1';
-    //this.loadData();
-    this.codxService
-      .getAutoNumber(this.view.formModel.funcID, 'OD_Agencies', 'AgencyID')
-      .subscribe((dt: any) => {
-        this.objectIDFile = dt;
-      });
-    this.autoLoad = true;
-    this.lstDtDis = [];
-    this.autoLoad = false;
-    this.detectorRef.detectChanges();
-  }
-
+  
   ngAfterViewInit(): void {
     this.views = [
       /* {
@@ -248,7 +205,8 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-    this.loadView();
+    //this.loadView();
+    this.getGridViewSetup();
     this.button = {
       id: 'btnAdd',
     };
@@ -390,50 +348,10 @@ export class IncommingComponent
     //formName: string, gridName: string
   }
 
-  //Load data đơn vị
-  loadDataAgency() {
-    this.agService.loadDataAgencyCbx().subscribe((item) => {
-      this.lstAgency = item;
-    });
-  }
-
-  //Load data phòng ban
-  loadDataDept() {
-    this.agService.loadDataDepartmentCbx(this.idAgency).subscribe((item) => {
-      this.lstDept = item;
-    });
-  }
-
-  closeSideBar(): void {
-    if (
-      this.actionEdit == '1' &&
-      this.fileAdd != null &&
-      this.fileAdd.length > 0
-    ) {
-      this.fileAdd.forEach((elm) => {
-        this.fileService
-          .deleteFileByObjectIDType(elm.objectId, this.objectType, true)
-          .subscribe((item) => {
-            //alert(item);
-            if (item == true) this.fileAdd = null;
-          });
-      });
-    }
-    //this.viewbase.currentView.closeSidebarRight();
-  }
-
-  openSideBar(): void {
-    this.action = true;
-    //this.viewbase.currentView.openSidebarRight();
-  }
-
-  //Mở form
-  opensideBarRight() {
-    this.switchTemplate = 'new';
-    this.openSideBar();
-  }
-
-  //Mở form
+ 
+  
+ 
+  //Mở form 
   openFormUploadFile() {
     this.attachment.openPopup();
     // this.atSV.openForm.next(true);
@@ -593,5 +511,9 @@ export class IncommingComponent
   openFormFuncID(val: any, data: any) {
     //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
+  }
+  exportFile()
+  {
+    this.callfunc.openForm(this.tmpexport,null,null,600)
   }
 }

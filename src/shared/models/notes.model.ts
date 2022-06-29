@@ -4,6 +4,7 @@ export class Notes {
     recID: string;
     transID: string;
     noteType: string;
+    title: string;
     memo: string;
     pictures: object;
     checkList: any[];
