@@ -390,7 +390,7 @@ export class OwnerTasksComponent extends UIComponent {
         }
       });
   }
-  sendemail(data) {}
+  sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -414,7 +414,7 @@ export class OwnerTasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     //this.dialog && this.dialog.close(); sai vẫn bị đóng
