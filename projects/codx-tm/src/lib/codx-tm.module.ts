@@ -1,3 +1,4 @@
+import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupEditCalendarComponent } from './setting/calendar/popup-edit-calendar/popup-edit-calendar.component';
 import { PopupAddEventComponent } from './setting/calendar/popup-add-event/popup-add-event.component';
@@ -5,7 +6,6 @@ import { PopupAddCalendarComponent } from './setting/calendar/popup-add-calendar
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
-import { FormsModule } from '@angular/forms';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewDetailComponent } from './tasks/view-detail/view-detail.component';
@@ -42,8 +42,10 @@ import { HomeReportComponent } from './reports/home-report/home-report.component
 import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
+import { FormsModule } from '@angular/forms';
+import { MyDashboardComponent } from './reports/mydashboard/mydashboard.component';
+import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
-import { TasksComponent } from './tasks/tasks.component';
 export const routes: Routes = [
   {
     path: '',
@@ -109,6 +111,14 @@ export const routes: Routes = [
             component: HomeReportComponent
           },
           {
+            path: 'mydashboard/:funcID',
+            component: MyDashboardComponent
+          },
+          {
+            path: 'teamdashboard/:funcID',
+            component: TeamDashboardComponent
+          },
+          {
             path: 'taskdaily/:funcID',
             component: TaskDailyComponent
           },
@@ -161,7 +171,9 @@ const T_Component: Type<any>[] = [
   PopupEditCalendarComponent,
   PopupAddDayoffsComponent,
   PopupShareSprintsComponent,
-  TasksComponent
+  TasksComponent,
+  MyDashboardComponent,
+  TeamDashboardComponent
 ]
 @NgModule({
   imports: [
