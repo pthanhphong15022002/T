@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LayoutModel } from '@shared/models/layout.model';
 import { ApiHttpService } from 'codx-core';
 import { BehaviorSubject, finalize, catchError, map, Observable, of } from 'rxjs';
 
@@ -9,6 +10,9 @@ export class CodxHrService {
 
   acction = new BehaviorSubject<string>(null);
   title = new BehaviorSubject<string>(null);
+  layoutcpn = new BehaviorSubject<LayoutModel>(null);
+  layoutChange = this.layoutcpn.asObservable();
+
   constructor(private api: ApiHttpService,) { }
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
 
