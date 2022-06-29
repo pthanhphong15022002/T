@@ -1,0 +1,148 @@
+<!-- <div class="box-link">main-header</div> -->
+
+<codx-views #codxViews [funcID]="funcID" entityName="WP_News" [views]="views" [showToolBar]="false">
+</codx-views>
+<ng-template #panelLeftRef>
+  <div class="news-main">
+    <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
+      <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
+    </div>
+    <ng-container *ngIf="newsItem">
+      <div class="row" >
+        <div class="col-6">
+          <div class="news-card news-hot">
+            <codx-img imageType="square" width="200" (click)="clickViewDeital(newsItem)" class="h-250px" [objectId]="newsItem.recID"
+              objectType="WP_News"></codx-img>
+            <div class="fs-4 fw-bolder mt-2 news-title">
+              {{ newsItem?.subject }}
+            </div>
+            <div class="text-gray-700 mt-1" >
+              {{newsItem?.subContent | maxlenght:200}}
+            </div>
+            <div class="fs-7 text-gray-400 mt-1">
+              {{ newsItem?.createdOn | fmDT }}
+            </div>
+          </div>
+        </div>
+        <div class="col-6 ps-9 hotnews-right">
+          <div *ngFor="let item of listNews" class="row" (click)="clickViewDeital(item)">
+            <div class="col-4">
+              <div class="news-card-img" >
+                <codx-img width="100" imageType="square" class="w-100" [objectId]="item.recID" objectType="WP_News"></codx-img>
+                <div class="news-category">
+                  <span class="badge badge-danger">
+                    <codx-label formName="News" name="lblCategory" [default]="item.category"></codx-label>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-8" >
+              <div class="fs-5 fw-bolder news-title">
+                {{ item.subject }}
+              </div>
+              <div class="text-gray-700 news-des">
+                  {{item.subContent | maxlenght:100}}
+              </div>
+              <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="listSlider">
+      <div class="news-carousel" >
+        <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
+          [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
+          <ng-template ngbSlide *ngFor="let list of listSlider">
+            <div class="row">
+              <div *ngFor="let item of list" class="col-4">
+                <div (click)="clickViewDeital(item)" class="news-card news-slider">
+                  <codx-img class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News" width="300">
+                  </codx-img>
+                  <div class="fs-6 mt-2 news-title fw-bolder">{{item.subject}}</div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
+    </ng-container>
+    
+    <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray"><codx-label formName="News" name="lblInternal" default="Tin nội bộ"></codx-label> </div>
+    <ng-container *ngIf="isHome; else catagory">
+      <ng-container *ngIf="predicate">
+        <div class="row news-catagory">
+          <codx-listview [emptyTemplate]="empty" #listView [itemTemplate]="listGroup" title="" [funcId]="functionID" [entityName]="entityName"
+            [gridViewName]="gridViewName" type="listView" [predicate]="predicate" [dataValue]="datavalue" predicates="NewsType = @0"
+            dataValues="1" [groupBy]="'vllText'" [loadFull]="true" method="GetListNewsAsync" service="WP"
+            assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
+          <ng-template #listGroup let-item>
+            <div (click)="clickViewDeital(item)" class="row">
+              <div class="col-2">
+                <codx-img width="100" class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
+              </div>
+              <div class="col-10">
+                <div class="fs-5 mt-2 news-title fw-bolder">{{item.subject}}</div>
+                <div class="text-gray-700 mt-1">
+                  {{item.subContent | maxlenght:200}}
+                </div>
+                <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="row">
+    <ng-template #catagory>
+      <ng-container  *ngIf="predicate">
+        <div class="px-12 mt-6">
+          <codx-listview #listCategory [emptyTemplate]="empty" [itemTemplate]="listOld" title="" [funcId]="functionID" [entityName]="entityName"
+            [gridViewName]="gridViewName" [predicate]="predicate" [dataValue]="datavalue" [dataObj]="'list'" page="1"
+            [pageSize]="6" predicates="NewsType = @0" dataValues="1" method="GetListNewsAsync" service="WP"
+            assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
+        </div>
+      </ng-container>
+      <ng-template #listOld let-item>
+        <div (click)="clickViewDeital(item)" class="row mb-6">
+          <div class="col-2">
+            <codx-img class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News" width="100"></codx-img>
+          </div>
+          <div class="col-10">
+            <div class="fs-5 news-title fw-bolder" >{{item.subject}}</div>
+            <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
+            <div class="text-gray-700 mt-1">
+              {{item.subContent | maxlenght:200}}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+  <div class="more-function">
+    <div class="d-flex flex-column">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <span class="postnews mt-3">
+        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+        <div class="d-flex btn-postnews">
+
+          <a (click)="clickShowPopupCreate()" class="btn btn-icon btn-primary me-3"><i
+              class="icon-video_call fs-1"></i></a>
+          <a (click)="clickShowPopupCreate()" class="btn btn-icon btn-primary"><i class="icon-post_add fs-1"></i></a>
+        </div>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #panelRightRef>
+  <app-popup-create (loadData)="loadData()"></app-popup-create>
+</ng-template>
+
+<ng-template #empty>
+  <div class="text-center">
+      <img style="max-width:700px" src="../../../../assets/img/EmptyDataPortal.png" />
+  </div>
+</ng-template>

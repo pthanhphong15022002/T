@@ -63,7 +63,6 @@ const Component: Type<any>[] = [
     RouterModule
   ],
   declarations: Component,
-  providers: [StripLineService, ColumnSeriesService, DataLabelService, LineSeriesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {

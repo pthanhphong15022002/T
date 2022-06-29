@@ -28,12 +28,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
       },
-      // {
-      //   path: 'mwp',
-      //   canActivate: [AuthGuard],
-      //   loadChildren: () =>
-      //     import('/modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
-      // },
+      {
+        path: 'wp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
+      },
       {
         path: 'ep',
         canActivate: [AuthGuard],

@@ -232,6 +232,7 @@ export class Permission {
     form: string;
     createdOn: Date;
     approvalStatus: string;
+    createdBy: string;
 }
 
 export class FileDownload {
