@@ -7,17 +7,17 @@
 
 <ng-template #grid let-data>
   <tr>
-    <td>
+    <td class="rowphoto">
       {{data.rangeID}}
     </td>
-    <td>
+    <td class="rowphoto">
       {{data.rangeName}}
     </td>
-    <td>
+    <td class="rowphoto">
       <div [innerHTML]="data.note">
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <div *ngFor="let h of data?.rangeLines; let i = index">
         <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
       </div>
@@ -36,10 +36,10 @@
         </div>
       </div> -->
     </td>
-    <td>
+    <td class="rowphoto">
       {{data.createdOn | date: 'dd/MM/yyyy'}}
     </td>
-    <td>
+    <td class="rowphoto">
       <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
         (clickMF)="clickMF($event,data)">
       </codx-mfunc>
@@ -47,14 +47,14 @@
   </tr>
 </ng-template>
 
-
-<!-- <ng-template #itemListReadmore let-data>
+<ng-template #itemListReadmore let-data>
   <div *ngFor="let h of data?.rangeLines; let i = index">
     <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
   </div>
   <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
-          !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+      !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
 </ng-template>
+
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
     <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
@@ -64,11 +64,20 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #itemCreate let-data>
   {{data.createdOn | date: 'dd/MM/yyyy'}}
 </ng-template>
+
 <ng-template #itemNote let-data>
   <div [innerHTML]="data.note">
-
   </div>
-</ng-template> -->
+</ng-template>
+
+<ng-template #moreFun let-data>
+  <div>
+    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+      (clickMF)="clickMF($event,data)">
+    </codx-mfunc>
+  </div>
+</ng-template>

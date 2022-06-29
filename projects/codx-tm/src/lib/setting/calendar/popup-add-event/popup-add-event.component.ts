@@ -22,11 +22,12 @@ export class PopupAddEventComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.dialog = dialog;
     this.data = dt?.data;
   }
 
-  ngOnInit(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef): void {
-    this.dialog = dialog;
+  ngOnInit(): void {
+   console.log(this.data)
   }
 
   ngAfterViewInit(): void {}

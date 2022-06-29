@@ -16,6 +16,7 @@ import {
   DialogRef,
 } from 'codx-core';
 import {
+  CalendarDateModel,
   CalendarWeekModel,
   DaysOffModel,
 } from '../../../models/calendar.model';
@@ -59,22 +60,21 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
     this.cache.valueList('L1481').subscribe((res) => {
       this.vlls = res.datas;
     });
-      this.api
-        .execSv<any>(
-          APICONSTANT.SERVICES.BS,
-          APICONSTANT.ASSEMBLY.BS,
-          APICONSTANT.BUSINESS.BS.Calendars,
-          'GetSettingCalendarAsync',
-          this.calendarID
-        )
-        .subscribe((res) => {
-          if (res) {
-            debugger;
-            this.dayOff = res[0];
-            this.handleWeekDay(res[1]);
-            this.calendateDate = res[2];
-          }
-        });
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'GetSettingCalendarAsync',
+        this.calendarID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayOff = res[0];
+          this.handleWeekDay(res[1]);
+          this.calendateDate = res[2];
+        }
+      });
   }
 
   ngAfterViewInit(): void {}
@@ -156,6 +156,7 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
       'Thêm Lễ/Tết/Sự kiện',
       800,
       800,
+      '',
       this.evtData
     );
   }
@@ -180,20 +181,21 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
 
   //Modal calendarDate
   openCalendarDate(data = null) {
-    this.callfc.openForm(PopupAddDayoffsComponent, 'Thêm ngày nghỉ', 800, 800);
-    //   .subscribe((res: Dialog) => {
-    //     let _this = this;
-    //     _this.evtCDDate = new CalendarDateModel();
-    //     if (data) _this.evtCDDate = data;
-    //     _this.evtCDDate.calendarID = this.calendarID;
-    //     _this.evtCDDate.calendarDate = data?.calendarDate
-    //       ? new Date(data.calendarDate)
-    //       : new Date();
-    //     _this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
-    //     res.close = function (e) {
-    //       return _this.close(e, _this);
-    //     };
-    //   });
+    this.evtCDDate = new CalendarDateModel();
+    if (data) this.evtCDDate = data;
+    this.evtCDDate.calendarID = this.calendarID;
+    this.evtCDDate.calendarDate = data?.calendarDate
+      ? new Date(data.calendarDate)
+      : new Date();
+    this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
+    this.callfc.openForm(
+      PopupAddDayoffsComponent,
+      'Thêm ngày nghỉ',
+      800,
+      800,
+      '',
+      this.evtCDDate
+    );
   }
 
   removeCalendarDate(item) {

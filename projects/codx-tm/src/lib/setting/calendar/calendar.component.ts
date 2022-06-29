@@ -84,7 +84,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     DayOffs: 'dayoff',
     CalendarDate: 'calendarDate',
   };
-  param: any;
+  param: any = 'STD';
 
   fields = {
     id: 'taskID',
