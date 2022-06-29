@@ -28,10 +28,10 @@ import { PopupAddComponent } from './popup-add/popup-add.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
   selector: 'test-views',
-  templateUrl: './ownertasks.component.html',
-  styleUrls: ['./ownertasks.component.scss'],
+  templateUrl: './tasks.component.html',
+  styleUrls: ['./tasks.component.scss'],
 })
-export class OwnerTasksComponent extends UIComponent {
+export class TasksComponent extends UIComponent {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
