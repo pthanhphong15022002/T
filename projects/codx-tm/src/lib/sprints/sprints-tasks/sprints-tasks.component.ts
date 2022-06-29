@@ -9,14 +9,10 @@ import { CodxTMService } from '../../codx-tm.service';
   styleUrls: ['./sprints-tasks.component.css']
 })
 export class SprintsTasksComponent extends UIComponent {
-  @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('panelLeftRef') panelLeft?: TemplateRef<any>;
+
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('sprintsTaskDetails') sprintsTaskDetails: TemplateRef<any> | null;
   @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
   @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
-  @ViewChild('sprintsCalendar') sprintsCalendar: TemplateRef<any> | null;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>| null;
   @ViewChild('itemTemplate') template!: TemplateRef<any>| null;
