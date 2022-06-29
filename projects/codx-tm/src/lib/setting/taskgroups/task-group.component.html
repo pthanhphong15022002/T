@@ -61,9 +61,8 @@
         <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
           *ngIf=" (i<3 || data.disableReadmore) ">
           <label class="checkbox checkbox-square checkbox-sm mb-0">
-            <codx-input type="checkbox" checked="checked" disabled>
+            <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
             </codx-input>
-            <span></span> {{item}}
           </label>
         </div>
       </ng-container>
@@ -71,13 +70,16 @@
           (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
     <td>
-      <div class="d-flex align-items-center" #itemCreateBy>
+      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users"
+       imageWidth="25" [desc]="data.createName">
+      </codx-temp-full>
+      <!-- <div class="d-flex align-items-center" #itemCreateBy>
         <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
         </codx-img>
         <div class="text-dark font-size-lg" placement="bottom">
           {{data.createName}}
         </div>
-      </div>
+      </div> -->
     </td>
     <td>
       {{data.createdOn | date: 'dd/MM/yyyy'}}

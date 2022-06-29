@@ -13,6 +13,8 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  CodxService,
+  CRUDService,
   DataRequest,
   DialogRef,
   NotificationsService,
@@ -26,6 +28,7 @@ import {
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
+import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
 
 @Component({
   selector: 'lib-sprints',
@@ -66,6 +69,7 @@ export class SprintsComponent extends UIComponent {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
+    private codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -80,6 +84,7 @@ export class SprintsComponent extends UIComponent {
   }
 
   clickMF(e: any, data: any) {
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -92,6 +97,17 @@ export class SprintsComponent extends UIComponent {
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
+      case 'TMT041': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        this.shareBoard(e, data);
+        break;
+      case 'TMT042': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        this.viewBoard(e, data);
+        break;
+      default:
         break;
     }
   }
@@ -115,9 +131,9 @@ export class SprintsComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddEditSprintAsync';
-    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
-    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
+    // this.view.dataService.methodSave = 'AddEditSprintAsync';
+    // this.view.dataService.methodUpdate = 'AddEditSprintAsync';
+    // this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -171,27 +187,79 @@ export class SprintsComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.itemSelected = data;
+    // this.itemSelected = data;
     this.view.dataService
-      .delete([this.lstViewBoard.dataService.dataSelected],(opt)=>
+      .delete([this.lstViewBoard.dataService.dataSelected], (opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('TM004');
+          (this.lstViewBoard.dataService as CRUDService)
+            .remove(this.itemSelected)
+            .subscribe();
         }
       });
-
-      // this.lstViewBoard.delete()
   }
 
   beforeDel(opt: any) {
     opt.service = 'TM';
     opt.assemblyName = 'ERM.Business.TM';
     opt.className = 'SprintsBusiness';
-    opt.methodName = 'DeleteSprintsByIDAsync';
+    opt.method = 'DeleteSprintsByIDAsync';
     opt.data = this.itemSelected.iterationID;
     return true;
+  }
+  sendemail(data) {}
+
+  shareBoard(e, data) {
+    var listUserDetail = [];
+    if (data.iterationID) {
+      var obj = {
+        boardAction: data,
+        listUserDetail: listUserDetail,
+      };
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'SprintsBusiness',
+          'GetListUserSharingOfSprintsByIDAsync',
+          data.iterationID
+        )
+        .subscribe((res) => {
+          if (res) obj.listUserDetail = res;
+          this.openPopupShare(obj);
+        });
+    }
+  }
+  openPopupShare(obj) {
+    this.callfc
+      .openForm(
+        PopupShareSprintsComponent,
+        'Chia sẻ view board',
+        350,
+        510,
+        '',
+        obj
+      )
+      // .subscribe((dt: any) => {
+      //   var that = this;
+      //   dt.close = function (e) {
+      //     return that.closePopup(e, that);
+      //   };
+      // });
+  }
+
+  // closePopup(e,t:SprintsComponent){
+
+  // }
+
+  viewBoard(e, data) {
+    this.urlView = e?.url;
+    if (data.iterationID != this.user.userID)
+      this.urlView += '/' + data.iterationID;
+    this.codxService.navigate('', this.urlView);
   }
 
   changeView(evt: any) {
