@@ -1,10 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
 import {
   ApiHttpService,
   CallFuncService,
   CodxService,
+  DialogData,
+  DialogRef,
   FormModel,
   ViewsComponent,
 } from 'codx-core';
@@ -36,6 +44,9 @@ export class PopupAddSignFileComponent implements OnInit {
   processID: String = '';
   transID: String = '';
 
+  dialog: DialogRef;
+  data;
+
   showPlan: boolean = true;
   constructor(
     private esService: CodxEsService,
@@ -43,23 +54,25 @@ export class PopupAddSignFileComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
     private api: ApiHttpService,
-    private fileService: FileService
-  ) {}
+    private fileService: FileService,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    this.formModel = data?.data[0].formModel;
+    console.log(this.formModel);
+
+    this.data = data;
+  }
 
   ngOnInit(): void {
-    this.esService.getFormModel('EST01').then((res) => {
-      if (res) {
-        this.formModel = res;
+    this.initForm();
 
-        this.initForm();
-
-        this.esService
-          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-          .then((res) => {
-            if (res) this.cbxName = res;
-          });
-      }
-    });
+    this.esService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) this.cbxName = res;
+      });
   }
 
   initForm() {
@@ -75,6 +88,7 @@ export class PopupAddSignFileComponent implements OnInit {
             approveControl: '1',
             approveStatus: '1',
           });
+
           this.codxService
             .getAutoNumber(
               this.formModel.funcID,
@@ -159,8 +173,8 @@ export class PopupAddSignFileComponent implements OnInit {
   valueChange(event) {
     if (event?.field) {
       if (event?.data === Object(event?.data))
-        this.dialogSignature.patchValue({ [event['field']]: event.data.value });
-      else this.dialogSignature.patchValue({ [event['field']]: event.data });
+        this.dialogSignFile.patchValue({ [event['field']]: event.data.value });
+      else this.dialogSignFile.patchValue({ [event['field']]: event.data });
 
       if (event.field == 'categoryID' && this.dialogSignFile.value != null) {
         this.dialogSignFile.patchValue({ approveControl: '1' });

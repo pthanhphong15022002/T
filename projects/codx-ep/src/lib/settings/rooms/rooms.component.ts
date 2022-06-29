@@ -158,7 +158,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
-        this.dataSelected,
+        item,
         option
       );
     });

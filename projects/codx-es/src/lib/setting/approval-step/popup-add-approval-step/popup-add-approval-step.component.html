@@ -1,491 +1,434 @@
-<div class="card card-custom cdx-tab">
-  <div class="card-header border-0">
-    <!--begin::Title-->
-    <div class="d-flex align-items-start">
-      <!--begin::Symbol-->
-      <div class="symbol symbol-24px me-4">
-        <span class="symbol-label bg-primary">
-          <i class="icon-add_box text-white"></i>
-        </span>
-      </div>
-      <!--end::Symbol-->
-      <!--begin::Content-->
-      <div class="me-5">
-        <!--begin::Title-->
-        <span class="card-label fw-bolder text-dark fs-2">Thiết lập qui trình duyệt</span>
-        <!--end::Title-->
-        <!--begin::Desc-->
-        <span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"> Qui trình duyệt</span>
-        <!--end::Desc-->
-      </div>
-      <!--end::Content-->
-    </div>
-    <!--end::Title-->
-
-    <!--begin::toolbar-->
-    <div class="card-toolbar">
-      <div class="text-gray-400 fw-bolder fs-7 text-end">
-        <!--begin::Number-->
-        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary" aria-label="Close"
-          (click)="closeForm()">
-          <i class="icon-close fs-1 text-dark text-hover-primary"></i>
-        </button>
-        <a class="text-dark-75 text-hover-primary d-flex align-items-center d-block">
-          <span class="mr-2 text-dark">Mở rộng</span>
-          <span class="icon-login fs-1 ml-1"></span></a>
-        <!--end::Number-->
-      </div>
-      <!--end::toolbar-->
-    </div>
-  </div>
-  <div class="card-body scroll-y" style="height: 500px;">
-    <form [formGroup]="dialogApprovalStep" *ngIf="isAfterRender">
-      <div class="tab-content">
-        <!-- Render the Tab Component -->
-        <ejs-tab id="tab_orientation" #orientationTab [showCloseButton]='false' heightAdjustMode='Auto'
-          headerPlacement="Left">
-          <e-tabitems>
-            <e-tabitem [header]='headerText[0]'>
-              <ng-template #content>
-                <div id="rome" class="tabpanel">
-                  <div class="tab-content">
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Mô tả" fiedName="Memo"formName="Users" gridviewName="grvUsers">
-                      </codx-label>
-                      <!--end::Label-->
-                      <codx-input type="text" name="text" ControlName="memo" [Group]="dialogApprovalStep" placeholder=""
-                        ngDefaultControl class="form-control"></codx-input>
-                    </div>
-                    <div class="d-flex flex-column mb-4">
-                      <div class=" row mt-3">
-                        <div class="col-6">
-                          <codx-label default="Hành động" fiedName="StepType"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['StepType']" field="stepType" (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                        <div class="col-5">
-                          <codx-label default="Thời gian xử lí (giờ)" fiedName="Leadtime"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="number" name="number" field="leadtime" ngDefaultControl [min]="0"
-                            placeholder="0" (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Title-->
-                      <div class="d-flex justify-content-between align-items-center mb-4 ">
-                        <codx-label default="Người xét duyệt" fiedName="Attendees"formName="Users" gridviewName="grvUsers">
+<codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [formModel]="formModel">
+  <ng-template popup add #body>
+    <div class="tab-content">
+      <ejs-tab id="tab_orientation" #orientationTab [showCloseButton]='false' heightAdjustMode='Auto'
+        headerPlacement="Left">
+        <e-tabitems>
+          <e-tabitem [header]='headerText[0]'>
+            <ng-template #content>
+              <div id="rome" class="tabpanel">
+                <div class="tab-content">
+                  <div class="d-flex flex-column mb-4">
+                    <codx-label class=" fw-bold" default="Mô tả" fiedName="Memo" formName="Users"
+                      gridviewName="grvUsers">
+                    </codx-label>
+                    <codx-input type="text" name="text" ControlName="memo" [Group]="dialogApprovalStep" placeholder=""
+                      ngDefaultControl class="form-control"></codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <div class=" row mt-3">
+                      <div class="col-6">
+                        <codx-label default="Hành động" fiedName="StepType" [formModel]="formModel">
                         </codx-label>
-                        <span class=" icon-group_add text-primary fs-1"></span>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['StepType']"
+                          field="stepType" (valueChange)="valueChange($event)">
+                        </codx-input>
                       </div>
-                      <!--end::Title-->
-                      <!--begin::User item-->
-                      <div class="d-flex align-items-center mb-4">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-35px symbol-circle me-4">
-                          <codx-img #image objectId="ADMIN"></codx-img>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1">
-                          <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
-                            Hoàn</div>
-                          <span class="text-muted font-weight-bold">Chủ trì cuộc họp</span>
-                        </div>
-                        <!--end::Text-->
-                      </div>
-                      <!--end::User item-->
-                      <!--begin::User item-->
-                      <div class="d-flex align-items-center mb-4">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-35px symbol-circle me-4">
-                          <codx-img #image objectId="ADMIN"></codx-img>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1">
-                          <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
-                            Hoàn</div>
-                          <span class="text-muted font-weight-bold">Thành viên</span>
-                        </div>
-                        <!--end::Text-->
-                      </div>
-                      <!--end::User item-->
-                    </div>
-
-                    <div class="d-flex flex-column mb-4">
-                      <div class=" row mt-3">
-                        <div class="col-4">
-                          <div class="d-flex align-items-center">
-                            <codx-input #checkbox type="switch" id="switch"
-                              [checked]="this.dialogApprovalStep.value.representative" labelPosition="After"
-                              field="representative" [disabled]="false" class="test-switch"
-                              (valueChange)="valueChange($event)"></codx-input>
-                            <label class="ms-2">Duyệt đại diện</label>
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="d-flex align-items-center">
-                            <codx-input #checkbox type="switch" id="switch"
-                              [checked]="this.dialogApprovalStep.value.sequential" labelPosition="After"
-                              field="sequential" [disabled]="false" class="test-switch"
-                              (valueChange)="valueChange($event)"></codx-input>
-                            <label class="ms-2">Duyệt tuần tự</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="d-flex flex-column mb-4">
-                      <codx-label default="Đóng góp ý kiến" fiedName="Attendees"formName="Users" gridviewName="grvUsers">
-                      </codx-label>
-                      <div class=" row mt-3">
-                        <div class="col-6">
-                          <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['ApproveControl']" field="approveControl"
-                            (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                        <div class="col-6">
-                          <codx-label default="Cho ý kiến khi từ chối" fiedName="RejectControl"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['RejectControl']" field="rejectControl"
-                            (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
+                      <div class="col-5">
+                        <codx-label default="Thời gian xử lí (giờ)" fiedName="Leadtime" formName="Users"
+                          gridviewName="grvUsers">
+                        </codx-label>
+                        <codx-input type="number" name="number" field="leadtime" ngDefaultControl [min]="0"
+                          placeholder="0" (valueChange)="valueChange($event)">
+                        </codx-input>
                       </div>
                     </div>
                   </div>
-                </div>
-              </ng-template>
-            </e-tabitem>
-            <e-tabitem [header]='headerText[1]'>
-              <ng-template #content>
 
-                <div id="rome" class="tabpanel">
-                  <div class="tab-content">
-                    <!--begin::Title-->
+                  <div class="d-flex flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 ">
-                      <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                        <codx-label default="Người xét duyệt" fiedName="Attendees"formName="Users" gridviewName="grvUsers">
-                        </codx-label>
-                      </h4>
+                      <codx-label default="Người xét duyệt" fiedName="Attendees" formName="Users"
+                        gridviewName="grvUsers">
+                      </codx-label>
                       <span class=" icon-group_add text-primary fs-1"></span>
                     </div>
-                    <!--end::Title-->
-                    <!--begin::User item-->
                     <div class="d-flex align-items-center mb-4">
-                      <!--begin::Symbol-->
-                      <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
-                        data-bs-original-title="Trần Quốc Hoàn">
-                        <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
-                        <span
-                          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
+                      <div class="symbol symbol-35px symbol-circle me-4">
+                        <codx-img #image objectId="ADMIN"></codx-img>
                       </div>
-                      <!--end::Symbol-->
-                      <!--begin::Text-->
                       <div class="d-flex flex-column flex-grow-1">
                         <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
                           Hoàn</div>
                         <span class="text-muted font-weight-bold">Chủ trì cuộc họp</span>
                       </div>
-                      <!--end::Text-->
-
                     </div>
-                    <!--end::User item-->
-                    <!--begin::User item-->
                     <div class="d-flex align-items-center mb-4">
-                      <!--begin::Symbol-->
-                      <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
-                        data-bs-original-title="Võ Văn Quang">
-                        <img class="empImg" alt="Pic"
-                          src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
-                        <span class="symbol-badge badge badge-circle bg-dark top-100 start-100 text-white fs-8">0</span>
+                      <div class="symbol symbol-35px symbol-circle me-4">
+                        <codx-img #image objectId="ADMIN"></codx-img>
                       </div>
-                      <!--end::Symbol-->
-                      <!--begin::Text-->
                       <div class="d-flex flex-column flex-grow-1">
                         <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
                           Hoàn</div>
                         <span class="text-muted font-weight-bold">Thành viên</span>
                       </div>
-                      <!--end::Text-->
-                      <!--begin::label-->
-                      <div class="d-flex flex-column justify-content-end">
-                        <span class="badge badge-light-danger mb-1">Không tham gia</span>
-                        <span class="text-muted font-weight-bold text-center"> 1 giờ trước </span>
-                      </div>
-                      <!--end::label-->
                     </div>
-                    <!--end::User item-->
-                    <div class="text-center">
-                      <div class="Participants d-flex align-items-center w-275px mx-auto">
-                        <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                          <span
-                            class="badge badge-sm badge-circle btn-danger top-100 start-100 text-white fs-8 me-1">A</span>
-                          Chủ trì
-                        </a>
-                        <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                          <span
-                            class="badge badge-sm badge-circle btn-success top-100 start-100 text-white fs-8 me-1">S</span>
-                          Thư ký
-                        </a>
-                        <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                          <span
-                            class="badge badge-sm badge-circle btn-primary top-100 start-100 text-white fs-8 me-1">P</span>
-                          Tham dự
-                        </a>
-                      </div>
-                    </div>
-
                   </div>
-                </div>
-              </ng-template>
-            </e-tabitem>
-            <e-tabitem [header]='headerText[2]'>
-              <ng-template #content>
-                <div id="rome" class="tabpanel">
 
-                  <div class="tab-content">
-                    <!--begin::Title-->
-                    <div class="d-flex justify-content-between align-items-center mb-4 ">
-                      <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                        <codx-label default="Thiết lập mẫu email cho từng trường hợp:"formName="Users" gridviewName="grvUsers"
-                          fiedName="Attendees">
-                        </codx-label>
-                      </h4>
-                    </div>
-
-
-                    <!--end::Title-->
-                    <div class="d-flex flex-column mb-4">
-                      <div class=" row mt-1">
-                        <div class="col-4">
-                          <div class="d-flex align-items-center">
-                            <codx-input #checkbox type="switch" id="switch"
-                              [checked]="this.dialogApprovalStep.value.eSign" labelPosition="After" field="eSign"
-                              [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
-                            <label class="ms-2 mt-1">
-                              <codx-label default="Gửi email"formName="Users" gridviewName="grvUsers" fiedName="Attendees">
-                              </codx-label>
-                            </label>
-                          </div>
+                  <div class="d-flex flex-column mb-4">
+                    <div class=" row mt-3">
+                      <div class="col-4">
+                        <div class="d-flex align-items-center">
+                          <codx-input #checkbox type="switch" id="switch"
+                            [checked]="this.dialogApprovalStep.value.representative" labelPosition="After"
+                            field="representative" [disabled]="false" class="test-switch"
+                            (valueChange)="valueChange($event)"></codx-input>
+                          <codx-label fiedName="Representative" default="Duyệt đại diện" [formModel]="formModel"
+                            class="ms-2"></codx-label>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="d-flex align-items-center">
+                          <codx-input #checkbox type="switch" id="switch"
+                            [checked]="this.dialogApprovalStep.value.sequential" labelPosition="After"
+                            field="sequential" [disabled]="false" class="test-switch"
+                            (valueChange)="valueChange($event)"></codx-input>
+                          <codx-label fiedName="Sequential" default="Duyệt tuần tự" [formModel]="formModel"
+                            class="ms-2"></codx-label>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email gửi yêu cầu duyệt" fiedName="Category"
-                       formName="Users" gridviewName="grvUsers">
-                      </codx-label>
-                      <!--end::Label-->
-
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
+                  <div class="d-flex flex-column mb-4">
+                    <codx-label default="Đóng góp ý kiến" fiedName="Attendees" [formModel]="formModel">
+                    </codx-label>
+                    <div class=" row mt-3">
+                      <div class="col-6">
+                        <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                          [refValue]="cbxName['ApproveControl']" field="approveControl"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
+                      <div class="col-6">
+                        <codx-label default="Cho ý kiến khi từ chối" fiedName="RejectControl" [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                          [refValue]="cbxName['RejectControl']" field="rejectControl"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
                     </div>
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email đồng thuận/duyệt" fiedName="Category"
-                       formName="Users" gridviewName="grvUsers">
-                      </codx-label>
-                      <!--end::Label-->
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem [header]='headerText[1]'>
+            <ng-template #content>
 
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
-                    </div>
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email từ chối" fiedName="Category"formName="Users" gridviewName="grvUsers">
+              <div id="rome" class="tabpanel">
+                <div class="tab-content">
+                  <!--begin::Title-->
+                  <div class="d-flex justify-content-between align-items-center mb-4 ">
+                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
+                      <codx-label default="Người xét duyệt" fiedName="Attendees" [formModel]="formModel">
                       </codx-label>
-                      <!--end::Label-->
-
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
+                    </h4>
+                    <span class=" icon-group_add text-primary fs-1"></span>
+                  </div>
+                  <!--end::Title-->
+                  <!--begin::User item-->
+                  <div class="d-flex align-items-center mb-4">
+                    <!--begin::Symbol-->
+                    <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
+                      data-bs-original-title="Trần Quốc Hoàn">
+                      <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
+                      <span
+                        class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
                     </div>
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email trả làm lại" fiedName="Category"
-                       formName="Users" gridviewName="grvUsers">
+                    <!--end::Symbol-->
+                    <!--begin::Text-->
+                    <div class="d-flex flex-column flex-grow-1">
+                      <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
+                        Hoàn</div>
+                      <span class="text-muted font-weight-bold">Chủ trì cuộc họp</span>
+                    </div>
+                    <!--end::Text-->
+
+                  </div>
+                  <!--end::User item-->
+                  <!--begin::User item-->
+                  <div class="d-flex align-items-center mb-4">
+                    <!--begin::Symbol-->
+                    <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
+                      data-bs-original-title="Võ Văn Quang">
+                      <img class="empImg" alt="Pic"
+                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
+                      <span class="symbol-badge badge badge-circle bg-dark top-100 start-100 text-white fs-8">0</span>
+                    </div>
+                    <!--end::Symbol-->
+                    <!--begin::Text-->
+                    <div class="d-flex flex-column flex-grow-1">
+                      <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
+                        Hoàn</div>
+                      <span class="text-muted font-weight-bold">Thành viên</span>
+                    </div>
+                    <!--end::Text-->
+                    <!--begin::label-->
+                    <div class="d-flex flex-column justify-content-end">
+                      <span class="badge badge-light-danger mb-1">Không tham gia</span>
+                      <span class="text-muted font-weight-bold text-center"> 1 giờ trước </span>
+                    </div>
+                    <!--end::label-->
+                  </div>
+                  <!--end::User item-->
+                  <div class="text-center">
+                    <div class="Participants d-flex align-items-center w-275px mx-auto">
+                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
+                        <span
+                          class="badge badge-sm badge-circle btn-danger top-100 start-100 text-white fs-8 me-1">A</span>
+                        Chủ trì
+                      </a>
+                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
+                        <span
+                          class="badge badge-sm badge-circle btn-success top-100 start-100 text-white fs-8 me-1">S</span>
+                        Thư ký
+                      </a>
+                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
+                        <span
+                          class="badge badge-sm badge-circle btn-primary top-100 start-100 text-white fs-8 me-1">P</span>
+                        Tham dự
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem [header]='headerText[2]'>
+            <ng-template #content>
+              <div id="rome" class="tabpanel">
+
+                <div class="tab-content">
+                  <!--begin::Title-->
+                  <div class="d-flex justify-content-between align-items-center mb-4 ">
+                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
+                      <codx-label default="Thiết lập mẫu email cho từng trường hợp:" [formModel]="formModel"
+                        fiedName="Attendees">
                       </codx-label>
-                      <!--end::Label-->
+                    </h4>
+                  </div>
 
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
+
+                  <!--end::Title-->
+                  <div class="d-flex flex-column mb-4">
+                    <div class=" row mt-1">
+                      <div class="col-4">
+                        <div class="d-flex align-items-center">
+                          <codx-input #checkbox type="switch" id="switch"
+                            [checked]="this.dialogApprovalStep.value.eSign" labelPosition="After" field="eSign"
+                            [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
+                          <label class="ms-2 mt-1">
+                            <codx-label default="Gửi email" [formModel]="formModel" fiedName="Attendees">
+                            </codx-label>
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email xin hủy yêu cầu duyệt" fiedName="Category"
-                       formName="Users" gridviewName="grvUsers">
+                  </div>
+
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email gửi yêu cầu duyệt" fiedName="Category"
+                      [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email đồng thuận/duyệt" fiedName="Category"
+                      [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email từ chối" fiedName="Category" [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email trả làm lại" fiedName="Category"
+                      [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email xin hủy yêu cầu duyệt" fiedName="Category"
+                      [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <!--begin::Label-->
+                    <codx-label class=" fw-bold" default="Email nhắc duyệt quá hạn" fiedName="Category"
+                      [formModel]="formModel">
+                    </codx-label>
+                    <!--end::Label-->
+
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                      [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
+                      field="category" (valueChange)="valueChange($event)">
+                    </codx-input>
+                  </div>
+                  <div class="d-flex align-items-center mb-4">
+                    <span class="fw-bolder text-gray-800 d-block mb-2 text-primary">
+                      <codx-label default="Thời gian gửi" [formModel]="formModel" name="lblTime">
                       </codx-label>
-                      <!--end::Label-->
+                    </span>
 
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
-                    </div>
-                    <div class="d-flex flex-column mb-4">
-                      <!--begin::Label-->
-                      <codx-label class=" fw-bold" default="Email nhắc duyệt quá hạn" fiedName="Category"
-                       formName="Users" gridviewName="grvUsers">
-                      </codx-label>
-                      <!--end::Label-->
 
-                      <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                        [crrValue]="this.dialogApprovalStep.value.category" [refValue]="cbxName['Category']"
-                        field="category" (valueChange)="valueChange($event)">
-                      </codx-input>
+                  </div>
+                  <div class="d-flex flex-column mb-4">
+                    <div class=" row mt-1">
+                      <div class="col-3">
+                        <div class="d-flex align-items-center">
+                          <codx-input #checkbox type="switch" id="switch"
+                            [checked]="this.dialogApprovalStep.value.eSign" labelPosition="After" field="eSign"
+                            [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
+                          <label class="ms-2 mt-1">
+                            <codx-label default="Gửi ngay" [formModel]="formModel" fiedName="Attendees">
+                            </codx-label>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="d-flex align-items-center">
+                          <label class="ml-2 mt-1">
+                            <codx-label default="Gửi vào lúc" [formModel]="formModel" fiedName="Attendees">
+                            </codx-label>
+                          </label>
+                          <div class="col-6">
+                            <ejs-timepicker id="workHourStart" showClearButton="false" [value]="this.time"
+                              class="test-datetime" (change)="valueEndTimeChange($event)"
+                              [value]="dialogApprovalStep.value.endDate"></ejs-timepicker>
+                          </div>
+
+                        </div>
+                      </div>
                     </div>
-                    <div class="d-flex align-items-center mb-4">
-                      <span class="fw-bolder text-gray-800 d-block mb-2 text-primary">
-                        <codx-label default="Thời gian gửi"formName="Users" gridviewName="grvUsers" name="lblTime">
+                  </div>
+                  <div class="separator my-5"></div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem [header]='headerText[3]'>
+            <ng-template #content>
+              <div id="rome" class="tabpanel">
+                <div class="tab-content">
+                  <div class="d-flex justify-content-center mb-4" (click)="extendShowPlan()">
+                    <div class="d-flex align-items-center w-auto extend-title">
+                      <span class="text-blue text-hover-primary_darker fw-bolder me-1">
+                        <codx-label name="lblOverdue" default="Thiết lập xử lí quá hạn" [formModel]="formModel">
                         </codx-label>
                       </span>
-
-
+                      <span *ngIf="showPlan"
+                        class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+                      <span *ngIf="!showPlan"
+                        class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
                     </div>
-                    <div class="d-flex flex-column mb-4">
-                      <div class=" row mt-1">
-                        <div class="col-3">
-                          <div class="d-flex align-items-center">
-                            <codx-input #checkbox type="switch" id="switch"
-                              [checked]="this.dialogApprovalStep.value.eSign" labelPosition="After" field="eSign"
-                              [disabled]="false" class="test-switch" (valueChange)="valueChange($event)"></codx-input>
-                            <label class="ms-2 mt-1">
-                              <codx-label default="Gửi ngay"formName="Users" gridviewName="grvUsers" fiedName="Attendees">
-                              </codx-label>
-                            </label>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="d-flex align-items-center">
-                            <label class="ml-2 mt-1">
-                              <codx-label default="Gửi vào lúc"formName="Users" gridviewName="grvUsers" fiedName="Attendees">
-                              </codx-label>
-                            </label>
-                            <div class="col-6">
-                              <ejs-timepicker id="workHourStart" showClearButton="false" [value]="this.time"
-                                class="test-datetime" (change)="valueEndTimeChange($event)"
-                                [value]="dialogApprovalStep.value.endDate"></ejs-timepicker>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="separator my-5"></div>
                   </div>
-                </div>
-              </ng-template>
-            </e-tabitem>
-            <e-tabitem [header]='headerText[3]'>
-              <ng-template #content>
-                <div id="rome" class="tabpanel">
-                  <div class="tab-content">
-                    <div class="d-flex justify-content-center mb-4" (click)="extendShowPlan()">
-                      <div class="d-flex align-items-center w-auto extend-title">
-                        <span class="text-blue text-hover-primary_darker fw-bolder me-1">Thiết lập xử lí quá hạn</span>
-                        <span *ngIf="showPlan"
-                          class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                        <span *ngIf="!showPlan"
-                          class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+                  <div class="d-flex flex-column mb-4" *ngIf="showPlan">
+                    <div class="row mt-3 ">
+                      <div class="col-6">
+                        <codx-label default="Xử lí động khi quá hạn" fiedName="OverdueControl" [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                          [refValue]="cbxName['OverdueControl']" field="overdueControl"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
+                      <div class="col-3">
+                        <codx-label default="Thời gian nhắc" fiedName="Reminder" [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['Reminder']"
+                          field="reminder" (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
+                      <div class="col-3">
+                        <codx-label default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="number" name="number" ngDefaultControl [min]="0" placeholder="0" field="loops"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
                       </div>
                     </div>
-                    <div class="d-flex flex-column mb-4" *ngIf="showPlan">
-                      <div class="row mt-3 ">
-                        <div class="col-6">
-                          <codx-label default="Xử lí động khi quá hạn" fiedName="OverdueControl"
-                           formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['OverdueControl']" field="overdueControl"
-                            (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                        <div class="col-3">
-                          <codx-label default="Thời gian nhắc" fiedName="Reminder"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['Reminder']" field="reminder" (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                        <div class="col-3">
-                          <codx-label default="Số lần lặp" fiedName="Loops"formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="number" name="number" ngDefaultControl [min]="0" placeholder="0"
-                            field="loops" (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
-                      </div>
+                  </div>
+                  <div class="d-flex justify-content-center mb-4" (click)="extendShowPlan1()">
+                    <div class="d-flex align-items-center w-auto extend-title">
+                      <span class="text-blue text-hover-primary_darker fw-bolder me-1">
+                        <codx-label name="lblCancel" default="Thiết lập hủy/thu hồi" [formModel]="formModel">
+                        </codx-label>
+                      </span>
+                      <span *ngIf="showPlan1"
+                        class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+                      <span *ngIf="!showPlan1"
+                        class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
                     </div>
-                    <div class="d-flex justify-content-center mb-4" (click)="extendShowPlan1()">
-                      <div class="d-flex align-items-center w-auto extend-title">
-                        <span class="text-blue text-hover-primary_darker fw-bolder me-1">Thiết lập hủy/thu hồi</span>
-                        <span *ngIf="showPlan1"
-                          class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                        <span *ngIf="!showPlan1"
-                          class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-column mb-4" *ngIf="showPlan1">
-                      <div class="row mt-3 ">
-                        <div class="col-7">
-                          <codx-label default="Cho phép hủy yêu cầu khi đã duyệt" fiedName="CancelControl"
-                           formName="Users" gridviewName="grvUsers">
-                          </codx-label>
-                          <codx-input type="valuelist" name="valuelist" ngDefaultControl
-                            [refValue]="cbxName['CancelControl']" field="cancelControl"
-                            (valueChange)="valueChange($event)">
-                          </codx-input>
-                        </div>
+                  </div>
+                  <div class="d-flex flex-column mb-4" *ngIf="showPlan1">
+                    <div class="row mt-3 ">
+                      <div class="col-7">
+                        <codx-label default="Cho phép hủy yêu cầu khi đã duyệt" fiedName="CancelControl"
+                          [formModel]="formModel">
+                        </codx-label>
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl
+                          [refValue]="cbxName['CancelControl']" field="cancelControl"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
                       </div>
                     </div>
                   </div>
                 </div>
-              </ng-template>
-            </e-tabitem>
-          </e-tabitems>
-        </ejs-tab>
-      </div>
-    </form>
-
-  </div>
-  <div class="card-footer border-0">
-    <div class="d-flex justify-content-between">
-      <!-- <button type="button" class="btn btn-light-primary me-3" (click)="popup($event)">
-    <i class="icon-cloud_upload fs-5"></i>Upload file
-   </button>
-   <button type="button" class="btn btn-light-primary me-3" (click)="popup($event)">
-    <i class="icon-cloud_upload fs-5"></i>Upload file
-   </button> -->
-      <!-- <div class="d-flex justify-content-end">
-    <a class="btn btn-primary font-weight-bold" (click)="onSaveForm()">Lưu</a>
-   </div> -->
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
+  </ng-template>
+  <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm()">Lưu</a>
+      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+      </a>
     </div>
+  </ng-template>
 
+</codx-form>
 
-  </div>
-</div>
 
 <ng-template #addLink let-modal>
   <div class="modal-header">

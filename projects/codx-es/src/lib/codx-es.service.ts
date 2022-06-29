@@ -177,29 +177,9 @@ export class CodxEsService {
           }
         }
       });
-      resolve(obj as Object);
+      resolve(obj as object);
     });
   }
-
-  // getComboboxName1(formName, gridView) {
-  //   debugger;
-  //   var obj: { [key: string]: any } = {};
-  //   this.cache.gridViewSetup(formName, gridView).subscribe((res) => {
-  //     if (res) {
-  //       for (const key in res) {
-  //         if (Object.prototype.hasOwnProperty.call(res, key)) {
-  //           const element = res[key];
-  //           if (element.referedValue != null) {
-  //             obj[key] = element.referedValue;
-  //           }
-  //         }
-  //       }
-  //       return obj;
-  //     } else {
-  //       return null;
-  //     }
-  //   });
-  // }
 
   execEP(
     className: string,
@@ -321,7 +301,7 @@ export class CodxEsService {
 
   addEditAutoNumbers(data: FormGroup, isAdd: boolean) {
     this.api
-      .callSv('SYS', 'SYS', 'AutoNumbersBusiness', 'SettingAutoNumberAsync')
+      .callSv('AD', 'AD', 'AutoNumbersBusiness', 'SettingAutoNumberAsync')
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           return res.msgBodyData[0];

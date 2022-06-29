@@ -5,7 +5,7 @@
 <ng-template #panelLeft>
     <div class="page-pw">
         <div class="pw-profile">
-            <img src="../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG" class="background">
+            <img class="background" src="../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG" class="background">
             <div class="d-flex align-items-center avatar">
                 <codx-img class="symbol symbol-100px symbol-circle me-4" [objectType]="'AD_Users'" [objectId]="'Admin'"
                     [objectName]="'Admin'" [width]="60">
@@ -73,19 +73,19 @@
             <app-posts></app-posts>
         </div> -->
         <div *ngIf="funcID == 'MWP0091'">
-            <app-posts></app-posts>
+            <app-posts [formModel]="view.formModel"></app-posts>
         </div>
         <div *ngIf="funcID == 'MWP0092'">
-            <app-img></app-img>
+            <app-img [formModel]="view.formModel"></app-img>
         </div>
-        <!-- <div *ngIf="funcID == (this.funcID + '3')">
-            <app-video></app-video>
+        <div *ngIf="funcID == 'MWP0093'">
+            <app-video [formModel]="view.formModel"></app-video>
         </div>
-        <div *ngIf="funcID == (this.funcID + '4')">
-            <app-note-books></app-note-books>
-        </div> -->
+        <div *ngIf="funcID == 'MWP0094'">
+            <app-note-books [formModel]="view.formModel"></app-note-books>
+        </div>
         <div *ngIf="funcID == 'MWP0095'">
-            <app-storage></app-storage>
+            <app-storage [formModel]="view.formModel"></app-storage>
         </div>        
     </div>
 </ng-template>

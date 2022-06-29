@@ -1,0 +1,65 @@
+:host(erm-listview > .card) {
+    background-color: transparent !important;
+}
+
+/***** Home ******/
+#kt_wrapper {
+    padding-top: 5px !important;
+}
+
+#erm_content {
+    height: calc(100vh - 10px);
+    overflow: auto;
+}
+
+#erm_content {
+    margin-top: 0px;
+}
+
+.home-center,
+.home-right {
+    height: calc(100vh - 54px);
+    overflow: auto;
+}
+
+codx-listview {
+    .card {
+        background-color: transparent !important;
+    }
+
+    .e-list-item {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+        background-color: #fff !important;
+        border-radius: 6px;
+    }
+}
+
+.share {
+    background-color: #adb5bd26;
+    border-radius: 24px;
+}
+
+.share-input {
+    padding: 8px 24px;
+}
+
+.tag {
+    vertical-align: super;
+}
+
+.tag-img {
+    width: 24px;
+}
+
+.tag-count {
+    vertical-align: top;
+    margin-left: 4px;
+}
+
+.formComment {
+    width: 777.23px;
+    height: 500px;
+    margin-left: 185px;
+    margin-top: 20px;
+}
