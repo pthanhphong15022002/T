@@ -47,6 +47,7 @@ import { HomeReportComponent } from './reports/home-report/home-report.component
 import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
+import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 export const routes: Routes = [
   {
     path: '',
@@ -166,7 +167,8 @@ const T_Component: Type<any>[] = [
   PopupAddCalendarComponent,
   PopupAddEventComponent,
   PopupEditCalendarComponent,
-  PopupAddDayoffsComponent
+  PopupAddDayoffsComponent,
+  PopupShareSprintsComponent
 ]
 @NgModule({
   imports: [

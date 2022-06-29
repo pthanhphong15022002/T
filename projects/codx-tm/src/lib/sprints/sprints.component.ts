@@ -28,6 +28,7 @@ import {
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
+import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
 
 @Component({
   selector: 'lib-sprints',
@@ -101,10 +102,10 @@ export class SprintsComponent extends UIComponent {
         this.sendemail(data);
         break;
       case 'TMT041': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        this.shareBoard(e,data);
+        this.shareBoard(e, data);
         break;
       case 'TMT042': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        this.viewBoard(e,data);
+        this.viewBoard(e, data);
         break;
       default:
         break;
@@ -211,15 +212,54 @@ export class SprintsComponent extends UIComponent {
   }
   sendemail(data) {}
 
-  shareBoard(e,data) {
-    
-  
+  shareBoard(e, data) {
+    var listUserDetail = [];
+    if (data.iterationID) {
+      var obj = {
+        boardAction: data,
+        listUserDetail: listUserDetail,
+      };
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'SprintsBusiness',
+          'GetListUserSharingOfSprintsByIDAsync',
+          data.iterationID
+        )
+        .subscribe((res) => {
+          if (res) obj.listUserDetail = res;
+          this.openPopupShare(obj);
+        });
+    }
+  }
+  openPopupShare(obj) {
+    this.callfc
+      .openForm(
+        PopupShareSprintsComponent,
+        'Chia sẻ view board',
+        350,
+        510,
+        '',
+        obj
+      )
+      // .subscribe((dt: any) => {
+      //   var that = this;
+      //   dt.close = function (e) {
+      //     return that.closePopup(e, that);
+      //   };
+      // });
   }
 
-  viewBoard(e,data) {
-        this.urlView = e?.url
-        if(data.iterationID !=this.user.userID) this.urlView+='/'+data.iterationID
-        this.codxService.navigate('', this.urlView)
+  // closePopup(e,t:SprintsComponent){
+
+  // }
+
+  viewBoard(e, data) {
+    this.urlView = e?.url;
+    if (data.iterationID != this.user.userID)
+      this.urlView += '/' + data.iterationID;
+    this.codxService.navigate('', this.urlView);
   }
 
   changeView(evt: any) {
