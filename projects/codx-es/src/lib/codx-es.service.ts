@@ -10,7 +10,14 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  map,
+  catchError,
+  finalize,
+  of,
+} from 'rxjs';
 import { debug } from 'util';
 
 export class AddGridData {
@@ -299,16 +306,31 @@ export class CodxEsService {
     );
   }
 
-  addEditAutoNumbers(data: FormGroup, isAdd: boolean) {
-    this.api
-      .callSv('AD', 'AD', 'AutoNumbersBusiness', 'SettingAutoNumberAsync')
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          return res.msgBodyData[0];
-        } else {
-          return null;
-        }
-      });
+  addEditAutoNumbers(data: FormGroup, isAdd: boolean): Observable<any> {
+    return this.api.exec<any>(
+      'AD',
+      'AutoNumbersBusiness',
+      'SettingAutoNumberAsync',
+      [data.value, isAdd]
+    );
+
+    // return this.api
+    //   .call(
+    //     'ERM.Business.AD',
+    //     'AutoNumbersBusiness',
+    //     'SettingAutoNumberAsync',
+    //     [data.value, isAdd]
+    //   )
+    //   .pipe(
+    //     map((data) => {
+    //       if (data.error) return;
+    //       return data.msgBodyData[0];
+    //     }),
+    //     catchError((err) => {
+    //       return of(undefined);
+    //     }),
+    //     finalize(() => null)
+    //   );
   }
 }
 export class LayoutModel {
