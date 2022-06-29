@@ -29,6 +29,7 @@ export class PopupAddSprintsComponent implements OnInit {
   title = 'Thêm Task Board';
   readOnly = false;
   listUserDetail = [];
+  resources = '';
   action: string = '';
   dialog: any;
   user: any;
@@ -66,14 +67,10 @@ export class PopupAddSprintsComponent implements OnInit {
     }
   }
 
-  beforeSave(op: any) {
+  beforeSave(op: any, isAdd) {
     var data = [];
     op.method = 'AddEditSprintAsync';
-    if (this.taskBoard.iterationID != null) {
-      data = [this.taskBoard, false];
-    } else {
-      data = [this.taskBoard, true];
-    }
+    data = [this.taskBoard, isAdd];
     op.data = data;
     return true;
   }
@@ -86,28 +83,35 @@ export class PopupAddSprintsComponent implements OnInit {
       return this.notiService.notify('Tên Task Board không được để trống !');
     if (this.taskBoard.projectID == '') this.taskBoard.projectID = null;
     if (!this.taskBoard.isShared) this.taskBoard.resources = null;
-     var isAdd
+    if (this.resources == '') this.taskBoard.resources = null;
+    else this.taskBoard.resources = this.resources;
+    var isAdd = id ? false : true;
+    this.addTaskBoard(isAdd);
   }
 
-  addTaskBoard(taskBoard, isAdd: boolean) {
-    this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
-      if (res) {
-        // if (taskBoard.iterationID) {
-        //   this.updateData.next(res);
-        // } else
-        //   this.dataAddNew.next(res);
-        // this.closeTaskBoard();
-      }
-    });
+  addTaskBoard(isAdd: boolean) {
+    // this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
+    //   if (res) {
+    //     // if (taskBoard.iterationID) {
+    //     //   this.updateData.next(res);
+    //     // } else
+    //     //   this.dataAddNew.next(res);
+    //     // this.closeTaskBoard();
+    //   }
+    // });
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option, isAdd))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+          // this.notiService.notifyCode('TM005');
+        }
+      });
   }
 
   closeTaskBoard() {
     this.listUserDetail = [];
     this.taskBoard = new TM_Sprints();
-    //data user để test
-    this.taskBoard.resources = 'PMNHI;NVHAO;NTLOI'; //test
-    this.getListUser(this.taskBoard.resources);
-    //this.viewBase.currentView.closeSidebarRight();
   }
   changeMemo(event: any) {
     var field = event.field;
@@ -118,7 +122,9 @@ export class PopupAddSprintsComponent implements OnInit {
     this.taskBoard[e.field] = e.data;
   }
   cbxChange(e: any) {
-    this.taskBoard.projectID = e[0];
+    if (e?.data.length>0) {
+      this.taskBoard[e.field] = e.data[0];
+    }
   }
   changText(e: any) {
     this.taskBoard.iterationName = e.data;
@@ -134,6 +140,8 @@ export class PopupAddSprintsComponent implements OnInit {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
+    if (this.resources == '') this.resources = listUser;
+    else this.resources += ';' + listUser;
     this.api
       .execSv<any>(
         'TM',
@@ -160,8 +168,8 @@ export class PopupAddSprintsComponent implements OnInit {
         resources += user.userID + ';';
       });
       resources = resources.slice(0, -1);
-      this.taskBoard.resources = resources;
-    } else this.taskBoard.resources = '';
+      this.resources = resources;
+    } else this.resources = '';
   }
 
   openInfo(interationID, action) {
@@ -192,25 +200,25 @@ export class PopupAddSprintsComponent implements OnInit {
         t.taskBoard.projectID = res.projectID;
         t.taskBoard.iterationName = res.iterationName;
         t.taskBoard.memo = res.memo;
-        t.changeDetectorRef.detectChanges();    
+        t.changeDetectorRef.detectChanges();
       }
     });
   }
- 
-  valueChangeShared(e){
-    console.log(e)
+
+  valueChangeShared(e) {
+    console.log(e);
   }
 
-   //caí này chạy tạm đã
-   eventApply(e: any) {
+  //caí này chạy tạm đã
+  eventApply(e: any) {
     var resources = '';
     var i = 0;
-    e.forEach(obj => {
+    e.forEach((obj) => {
       if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
             resources += obj?.data;
-            this.valueSelectUser(resources)
+            this.valueSelectUser(resources);
             break;
           // case 'D':
           //   //chưa chạy xong câu lệnh này đã view ra...
@@ -225,11 +233,13 @@ export class PopupAddSprintsComponent implements OnInit {
           //   break;
         }
       }
-    })
+    });
   }
   valueSelectUser(resources) {
-    this.getListUser(resources)
-     this.changeDetectorRef.detectChanges();
-   }
-
+    if (resources != '') {
+      resources = resources.substring(0, resources.length - 1);
+      this.getListUser(resources);
+      this.changeDetectorRef.detectChanges();
+    }
+  }
 }

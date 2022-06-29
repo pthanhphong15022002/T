@@ -131,9 +131,9 @@ export class SprintsComponent extends UIComponent {
         },
       },
     ];
-    // this.view.dataService.methodSave = 'AddEditSprintAsync';
-    // this.view.dataService.methodUpdate = 'AddEditSprintAsync';
-    // this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
+    this.view.dataService.methodSave = 'AddEditSprintAsync';
+    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
+    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -194,7 +194,7 @@ export class SprintsComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('TM004');
+          // this.notiService.notifyCode('TM004');
           (this.lstViewBoard.dataService as CRUDService)
             .remove(this.itemSelected)
             .subscribe();
