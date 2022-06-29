@@ -532,6 +532,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             })
             break;
           }
+        case "SYS001":
+          {
+            
+            break;
+          }
     }
   } 
   checkOpenForm(val:any)
