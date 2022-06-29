@@ -60,11 +60,14 @@
   </div>
 </ng-template>
 
-<ng-template #sprintsSchedule let-data>
+
+<ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
+  <div>{{data.taskName}}</div>
+
   <!-- <div>
     <div>{{data.taskName}}</div>
   </div>
