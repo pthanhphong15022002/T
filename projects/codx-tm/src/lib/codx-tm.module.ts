@@ -54,6 +54,10 @@ export const routes: Routes = [
         component: TasksComponent,
       },
       {
+        path: 'assigntasks/:funcID',
+        component: TasksComponent,
+      },
+      {
         path: 'viewboards/:funcID',
         component: SprintsComponent,
       },

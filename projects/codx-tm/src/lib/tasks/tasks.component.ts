@@ -60,6 +60,7 @@ export class TasksComponent extends UIComponent {
   user: any;
   funcID: string;
   gridView: any;
+  isAssignTask =false ;
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -76,6 +77,7 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if(this.funcID=='TMT03') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
   }
 
   clickMF(e: any, data?: any) {
@@ -308,7 +310,7 @@ export class TasksComponent extends UIComponent {
       option.Width = '750px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add'],
+        [this.view.dataService.dataSelected, 'add',this.isAssignTask],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -330,7 +332,7 @@ export class TasksComponent extends UIComponent {
         option.Width = '750px';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit'],
+          [this.view.dataService.dataSelected, 'edit',this.isAssignTask],
           option
         );
       });
@@ -345,7 +347,7 @@ export class TasksComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy'],
+        [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
         option
       );
     });
