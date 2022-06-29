@@ -1,4 +1,5 @@
-import { DetailStorageComponent } from './personals/storage/detail/detail-storage/detail-storage.component';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { UpdateNoteBookComponent } from './personals/note-books/update-note-book/update-note-book.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,10 +16,16 @@ import { ImgComponent } from './personals/img/img.component';
 import { VideoComponent } from './personals/video/video.component';
 import { StorageComponent } from './personals/storage/storage.component';
 import { UpdateStorageComponent } from './personals/storage/update-storage/update-storage.component';
-import { AddDetailStorageComponent } from './personals/storage/detail/add-detail-storage/add-detail-storage.component';
-import { UpdateDetailStorageComponent } from './personals/storage/detail/update-detail-storage/update-detail-storage.component';
 import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
+import { DetailStorageComponent } from './personals/storage/detail-storage/detail-storage.component';
+import { NoteBooksComponent } from './personals/note-books/note-books.component';
+import { UpdateDetailNoteBookComponent } from './personals/note-books/detail/update-detail-note-book/update-detail-note-book.component';
+import { AddDetailNoteBooksComponent } from './personals/note-books/detail/add-detail-note-books/add-detail-note-books.component';
+import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books/detail-note-books.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
+import { PostsComponent } from './personals/posts/posts.component';
 export const routes: Routes = [
   {
     path: '',
@@ -28,10 +35,10 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
-      {
-        path: 'employeeinfo/:funcID',
-        component: EmployeeInfomationComponent,
-      },
+      // {
+      //   path: 'employeeinfo/:funcID',
+      //   component: EmployeeInfomationComponent,
+      // },
     ],
   },
 ];
@@ -47,9 +54,14 @@ const Component: Type<any>[] = [
   UpdateStorageComponent,
   DetailStorageComponent,
   AddUpdateStorageComponent,
-  AddDetailStorageComponent,
-  UpdateDetailStorageComponent,
   InfoLeftComponent,
+  NoteBooksComponent,
+  AddUpdateNoteBookComponent,
+  UpdateNoteBookComponent,
+  AddDetailNoteBooksComponent,
+  UpdateDetailNoteBookComponent,
+  DetailNoteBooksComponent,
+  PostsComponent,
 ];
 
 @NgModule({
@@ -61,6 +73,7 @@ const Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    CodxShareModule,
   ],
   exports: [
     RouterModule,

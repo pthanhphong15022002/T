@@ -89,6 +89,7 @@ export class RangesKanbanComponent implements OnInit {
       }
     }];
     // this.view.dataService.methodSave = 'AddRangeKanbanAsync';
+    this.view.dataService.methodDelete = 'DeleteRangesKanbanAsync';
 
   }
 
@@ -124,8 +125,10 @@ export class RangesKanbanComponent implements OnInit {
   };
 
   beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0][0];
     opt.methodName = 'DeleteRangesKanbanAsync';
-    opt.data = this.itemSelected.rangeID;
+    
+    opt.data = itemSelected.rangeID;
     return true;
   }
 

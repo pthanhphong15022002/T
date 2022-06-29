@@ -60,7 +60,7 @@ export class SignFileComponent implements OnInit {
   dataSelected;
   SidebarModel;
 
-  dialog!: DialogRef;
+  dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
@@ -145,7 +145,7 @@ export class SignFileComponent implements OnInit {
     }
   }
 
-  closeEditForm(event) {
+  closeAddForm(event) {
     this.dialog && this.dialog.close();
   }
 
@@ -169,13 +169,12 @@ export class SignFileComponent implements OnInit {
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.codxViews?.currentView?.dataService;
-      debugger;
       option.FormModel = this.codxViews?.currentView?.formModel;
       this.dialog = this.callfunc.openForm(
         PopupAddSignFileComponent,
-        '',
-        500,
-        600,
+        'Thêm mới',
+        700,
+        650,
         '',
         [
           {

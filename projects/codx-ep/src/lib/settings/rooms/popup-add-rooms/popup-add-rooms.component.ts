@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -7,7 +8,13 @@ import {
   Output,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CacheService, DialogData, DialogRef } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+} from 'codx-core';
+import { Device } from '../../../booking-room/popup-add-booking-room/popup-add-booking-room.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -27,10 +34,15 @@ export class PopupAddRoomsComponent implements OnInit {
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
-
+  tmplstDevice = [];
+  lstDeviceRoom = [];
+  headerText = 'Thêm mới phòng họp';
+  subHeaderText = 'Thêm mới phòng họp';
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
+    private callFuncService: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -40,7 +52,16 @@ export class PopupAddRoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-
+    this.cacheSv.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;
+        this.lstDeviceRoom.push(device);
+      });
+      this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+    });
     this.bookingService
       .getComboboxName(
         this.dialog.formModel.formName,
@@ -95,11 +116,31 @@ export class PopupAddRoomsComponent implements OnInit {
     return true;
   }
 
+  checkedChange(event: any, device: any) {
+    let index = this.tmplstDevice.indexOf(device);
+    if (index != -1) {
+      this.tmplstDevice[index].isSelected = event.target.checked;
+    }
+  }
+  openPopupDevice(template: any) {
+    var dialog = this.callFuncService.openForm(template, '', 550, 430);
+    this.changeDetectorRef.detectChanges();
+  }
   onSaveForm() {
     if (this.dialogRoom.invalid == true) {
       console.log(this.dialogRoom);
       return;
     }
+    let equipments = '';
+    this.lstDeviceRoom.forEach((element) => {
+      if (element.isSelected) {
+        if (equipments == '') {
+          equipments += element.id;
+        } else {
+          equipments += ';' + element.id;
+        }
+      }
+    });
     if (!this.dialogRoom.value.linkType) {
       this.dialogRoom.value.linkType = '0';
     }

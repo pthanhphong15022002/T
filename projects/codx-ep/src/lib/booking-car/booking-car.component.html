@@ -91,7 +91,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #resourceTootip let-data>
   <div class="template-wrap">
     <div class="res-text">Tên: {{ data.resourceData.resourceName }}</div>
@@ -105,7 +104,11 @@
 <ng-template #cellFooter let-data>
   <div class="row border">
     <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
-      <codx-label name="lblEdit" default="Sửa" [formModel]="dialog.formModel"></codx-label>
+      <codx-label
+        name="lblEdit"
+        default="Sửa"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
     <button
       ejs-button
@@ -114,7 +117,11 @@
       [isPrimary]="true"
       (click)="deleteBooking(data)"
     >
-    <codx-label name="lblDelete" default="Xoá" [formModel]="dialog.formModel"></codx-label>
+      <codx-label
+        name="lblDelete"
+        default="Xoá"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
   </div>
 </ng-template>

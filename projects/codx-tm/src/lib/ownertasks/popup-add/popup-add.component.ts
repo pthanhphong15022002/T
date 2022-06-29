@@ -25,6 +25,7 @@ import { TaskGoal } from '../../models/task.model';
 import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
+import { I } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -96,8 +97,6 @@ export class PopupAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const t = this;
-    this.functionID = this.dialog.formModel.funcID;
     this.getParam();
     if (!this.task.taskID) {
       this.openTask();
@@ -427,10 +426,8 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-
+//caí này chạy tạm đã
   eventApply(e: any) {
-    console.log(e);
-    const t = this;
     var assignTo = '';
     var i = 0;
     e.forEach(obj => {
@@ -438,26 +435,28 @@ export class PopupAddComponent implements OnInit {
         switch (obj.objectType) {
           case 'U':
             assignTo += obj?.data;
-            i++;
+            this.valueSelectUser(assignTo)
             break;
           case 'D':
             //chưa chạy xong câu lệnh này đã view ra...
+            const t = this;
             var depID = obj?.data.substring(0, obj?.data.length - 1);
             t.tmSv.getUserByDepartment(depID).subscribe(res => {
               if (res) {
                 assignTo += res + ";";
-                i++;
+                this.valueSelectUser(assignTo)
               }
             })
             break;
         }
       }
-
-      this.handleChangeUser(assignTo)
-
     })
+    // setTimeout(() => {
+    //   // this will make the execution after the above boolean has changed
+    //   this.valueSelectUser(assignTo);
+    // }, 500);
   }
-  handleChangeUser(assignTo) {
+  valueSelectUser(assignTo) {
     if (assignTo != '') {
       if (assignTo.split(';').length > 1)
         assignTo = assignTo.substring(0, assignTo.length - 1);
@@ -682,9 +681,8 @@ export class PopupAddComponent implements OnInit {
 
 
   closeConfirm(e: any, t: PopupAddComponent, id: string) {
-    t.dialog.close();
     if (e?.status == 'Y') {
-      t.actionSave(id);
+       t.actionSave(id);
     }
   }
 
