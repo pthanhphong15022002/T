@@ -59,7 +59,6 @@
                   (valueChange)="weekdayChange($event, item)"
                 >
                 </codx-input>
-                <div>{{ item.checked }}</div>
               </td>
             </tr>
             <tr>
@@ -103,7 +102,6 @@
                   (valueChange)="weekdayChange($event, item)"
                 >
                 </codx-input>
-                <div>{{ item.checked }}</div>
               </td>
             </tr>
           </tbody>
@@ -144,7 +142,6 @@
                   [checked]="item.calendar == '1'"
                 >
                 </codx-input>
-                <div>{{ item.calendar == "1" }}</div>
               </td>
               <td class="text-center">
                 <codx-input
@@ -156,7 +153,6 @@
                   [checked]="item.calendar == '2' ? true : false"
                 >
                 </codx-input>
-                <div>{{ item.calendar == "2" ? true : false }}</div>
               </td>
               <td class="text-center">{{ item.day }}/{{ item.month }}</td>
 
