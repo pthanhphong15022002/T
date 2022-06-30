@@ -20,11 +20,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-<<<<<<< HEAD
-    this.codxService.fun$.subscribe();
-=======
     //this.funcs$.subscribe();
->>>>>>> 3ca2a79da225f5ed0ab776b07eea9cd32a6f5514
   }
 
   onAfterViewInit(): void { }
