@@ -15,9 +15,14 @@ export class LayoutComponent extends LayoutBaseComponent {
     super(inject);
   }
 
-  onInit() { }
+  onInit(): void {
+    // this.funcs$.subscribe(res => {
+    //   console.log(res);
 
-  onAfterViewInit() {
+    // })
+  }
+
+  onAfterViewInit(): void {
 
   }
 }
