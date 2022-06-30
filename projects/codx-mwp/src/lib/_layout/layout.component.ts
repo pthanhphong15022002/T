@@ -14,13 +14,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-<<<<<<< HEAD
     // this.funcs$.subscribe((res) => {
     // });
-=======
-    this.codxService.modulesOb$.subscribe((res) => {
-    });
->>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
   }
 
   onAfterViewInit(): void { }

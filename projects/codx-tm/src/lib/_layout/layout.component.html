@@ -81,11 +81,7 @@
   </ng-template>
   <!-- end::TOPBAR -->
   <ng-template #asideMenu>
-<<<<<<< HEAD
-    <!-- <ng-container *ngFor="let f of funcs$ | async">      
-=======
     <ng-container *ngFor="let f of codxService.modulesOb$ | async">
->>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
       <div class="menu-item">
         <a class="menu-link" href="javascript:;" (click)="codxService.navigate(f.functionID)" routerLinkActive="active"
           [ngbTooltip]="f.customName" placement="end" container="body">
