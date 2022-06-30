@@ -14,17 +14,12 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-<<<<<<< HEAD
 import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
-=======
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, NotificationsService, ViewsComponent } from 'codx-core';
->>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
 import { AttachmentService } from './attachment.service';
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
-  selector: 'attachment',
+  selector: 'attachment', 
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.scss'],
 })
