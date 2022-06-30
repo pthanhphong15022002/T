@@ -49,7 +49,7 @@ export class HomeComponent extends UIComponent {
   //loadedFolder: boolean;
   user: any;
   dialog!: DialogRef;
-  @ViewChild('attachment') attachment: AttachmentComponent 
+ // @ViewChild('attachment') attachment: AttachmentComponent 
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,

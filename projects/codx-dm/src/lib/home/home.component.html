@@ -14,7 +14,6 @@ idField="recID"
 <ng-template #templateMain let-data>
   <div *ngIf="(checkUserForder(data)) then noContext else context">
   </div>
-  
   <ng-template #noContext>
       <div oncontextmenu="return false;" class="d-flex align-items-center mb-2" #item>
           <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
@@ -31,10 +30,7 @@ idField="recID"
   <ng-container *ngTemplateOutlet="currView"></ng-container>
 </ng-template>
 
-<ng-template #templateCard>
-  <!-- <div *ngFor="let item of listFolder">
-    {{item.folderName}}<br>
-  </div>   -->
+<ng-template #templateCard> 
   <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
 </ng-template>
 <ng-template #templateSmallCard>
