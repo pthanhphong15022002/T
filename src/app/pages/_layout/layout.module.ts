@@ -10,7 +10,6 @@ import { ListPostComponent } from '@pages/home/list-post/list-post.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { AddPostComponent } from '@pages/home/list-post/popup-add/addpost/addpost.component';
 import { CommonModule } from '@angular/common';
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @NgModule({
   declarations: [
@@ -19,14 +18,14 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
     AddNoteComponent,
     HomeComponent,
     ListPostComponent,
-    AddPostComponent
+    AddPostComponent,
   ],
   imports: [
     CommonModule,
     PagesRoutingModule,
     SharedModule,
     CodxShareModule,
-    PickerModule
+    
   ],
   exports: [RouterModule],
 })

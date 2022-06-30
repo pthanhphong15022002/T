@@ -19,7 +19,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-    this.funcs$.subscribe();
+    //this.funcs$.subscribe();
   }
 
   onAfterViewInit(): void {}
