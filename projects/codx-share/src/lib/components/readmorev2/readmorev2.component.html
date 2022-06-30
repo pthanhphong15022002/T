@@ -1,0 +1,7 @@
+<div [innerHTML]="read ? content : shortContent">
+</div>
+<ng-container *ngIf="content.length > 700">
+    <a href="javascript:void(0)" *ngIf="!read" (click)="toggleContent()">
+        <codx-label formName="" name="lblViewmore" default="xem thêm"></codx-label>
+    </a>
+</ng-container>

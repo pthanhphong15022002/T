@@ -20,12 +20,12 @@
         </span>
       </div>
       <div class="form-group">
-        <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects"  default="Dự án"></codx-label> -->
+        <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects"  default="Dự án"></codx-label>  -->
         <codx-label name="ProjectName" formName="Sprints" default="Dự án"></codx-label>
         <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
-          ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
+           refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" 
           [disabled]="readOnly" [crrValue]="taskBoard.projectID">
-        </codx-input>
+        </codx-input> 
       </div>
       <div class="form-group ">
         <codx-label fiedName="ViewMode" formName="Sprints" gridViewName="grvSprints" default="Lưu mặc định">
@@ -71,8 +71,8 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end row">
       <div class="col-10">
-        <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After"
-          label="Chia sẽ board cho nguồn lực" [crrValue]="true"></codx-input>
+        <!-- <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After"
+          label="Chia sẽ board cho nguồn lực" [crrValue]="true"></codx-input> -->
         <span><input type="checkbox" [readOnly]="readOnly" [(ngModel)]="taskBoard.isShared"
             (change)="changeShare($event)"> </span>
         <span>

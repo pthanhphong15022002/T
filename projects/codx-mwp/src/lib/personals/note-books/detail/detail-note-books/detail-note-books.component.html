@@ -1,46 +1,24 @@
-<codx-views [views]="views" [buttons]="button" [funcID]="funcID" [showToolBar]="true"
-    (buttonClick)="openFormCreateDetail($event)"></codx-views>
-<ng-template #panelLeft>
-    <ng-container *ngIf="recID">
-        <div class="pw-search">
-            <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
-        </div>
-        <!-- <codx-listview #lstView entityName="WP_Notes" pageSize="20" predicate="TransID=@0" [dataValue]="recID"
-            (valueProperty)="valueProperty($event)" [itemTemplate]="template">
-        </codx-listview> -->
-        <codx-gridview #lstGrid entityName="WP_Notes" pageSize="20" predicate="TransID=@0" [dataValue]="recID"
-            (onSelected)="onSelected($event)" [columnsGrid]="columnsGrid" service="WP" [height]="'300'"
-            [showColumnMenu]='true' [gridViewName]="'grvNoteBooks'">
-        </codx-gridview>
-    </ng-container>
-</ng-template>
+<codx-views #view [views]="views" [button]="button" [funcID]="funcID" [showToolBar]="true" [autoLoad]="true"
+    (buttonClick)="openFormCreateDetail($event)" idField="recID" entityName="WP_Notes" service="WP"
+    entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue">
+</codx-views>
+
+<!-- <ng-container *ngIf="recID"> -->
+<!-- <div class="pw-search">
+        <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
+    </div> -->
+
+<!-- </ng-container> -->
+
 
 <ng-template #memo let-item>
     <span [innerHTML]="item.memo"></span>
 </ng-template>
 
 <ng-template #iconMoreFunc let-item>
-    <span class="icon-more_vert icon-20 text-dark-75" placement="bottom"
-        container="body" (click)="openFormMoreFunc(item)"></span>
-</ng-template>
-
-<ng-template #moreFunc>
-    <div class="formMoreFunc">
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div (click)="formUpdate(item)">
-                <div aria-expanded="false" class="moreFunc">
-                    <codx-label name="lblUpdateNote" formName="Notes" default="Cập nhật ghi chú"></codx-label>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div (click)="onDelete(item.recID)">
-                <codx-label name="lblDeleteNote" formName="Notes" default="Xóa"></codx-label>
-            </div>
-        </div>
+    <div style="width: 100px;height: 200px;margin-left: -90px;">
+        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)">
+        </codx-mfunc>
     </div>
 </ng-template>
 

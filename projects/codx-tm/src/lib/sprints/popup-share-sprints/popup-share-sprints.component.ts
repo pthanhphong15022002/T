@@ -112,14 +112,13 @@ export class PopupShareSprintsComponent implements OnInit {
   }
 
   valueSelectUser(resources) {
-   this.getListUser(resources)
-    this.changeDetectorRef.detectChanges();
+    if (resources != '') {
+      resources = resources.substring(0, resources.length - 1);
+      this.getListUser(resources);
+      this.changeDetectorRef.detectChanges();
+    }
   }
-  showControl(p, userID) {
-    this.userID = userID;
-    p.open();
-  }
-
+  
   getListUser(listUser) {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');

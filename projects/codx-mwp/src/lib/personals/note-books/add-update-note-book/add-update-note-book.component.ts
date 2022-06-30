@@ -11,14 +11,14 @@ export class AddUpdateNoteBookComponent implements OnInit {
 
   title: any;
   memo: any;
-  objectID: any;
   formAdd: FormGroup;
   readOnly = false;
-  lstNoteBook: any = [];
   dialog: any;
   formType = '';
+  formModel: any;
+  data: any;
 
-  @Input() dataAdd = new NoteBooks();
+  noteBooks: NoteBooks = new NoteBooks();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -30,6 +30,11 @@ export class AddUpdateNoteBookComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.formType = dt?.data[1];
+    this.formModel = dialog?.formModel;
+    if (this.formType == 'edit') {
+      this.noteBooks = this.dialog.dataService?.dataSelected;
+      this.data = this.dialog.dataService?.dataSelected;
+    }
   }
 
   ngOnInit(): void {
@@ -39,11 +44,8 @@ export class AddUpdateNoteBookComponent implements OnInit {
   valueChange(e) {
     if (e) {
       var field = e.field;
-      if (field == "title") {
-        this.title = e.data;
-      } else if (field == "memo") {
-        this.memo = e.data.value;
-      }
+      var dt = e.data;
+      this.noteBooks[field] = dt?.value ? dt?.value : dt;
     }
   }
 
@@ -61,33 +63,61 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  addNoteBooks() {
-    this.dataAdd.title = this.title;
-    this.dataAdd.memo = this.memo;
+  saveNoteBooks() {
+    if (this.formType == 'add') {
+      this.addNoteBooks();
+    } else this.updateNoteBook();
+  }
 
+  addNoteBooks() {
     this.api.exec<any>(
       'ERM.Business.WP',
       'NoteBooksBusiness',
       'CreateNoteBookAsync',
-      this.dataAdd
+      this.noteBooks
     ).subscribe((res) => {
       if (res) {
-        var dt = res;
-        this.objectID = dt.recID;
         this.imageUpload
-          .updateFileDirectReload(this.objectID)
+          .updateFileDirectReload(res.recID)
           .subscribe((result) => {
             if (result) {
               this.initForm();
               this.clearForm();
-              this.objectID = '';
               this.loadData.emit();
-
-              this.dialog.dataService.data.push(dt);
+              this.dialog.close();
+              this.dialog.dataService.data.push(res);
               this.changeDetectorRef.detectChanges();
             }
           });
       }
     })
+  }
+
+  updateNoteBook() {
+    this.dialog.dataService.save().subscribe(res => {
+      this.dialog.dataService.setDataSelected(res);
+      this.loadData.emit();
+      this.dialog.close();
+    })
+    // this.api.exec<any>(
+    //   'ERM.Business.WP',
+    //   'NoteBooksBusiness',
+    //   'UpdateNoteBookAsync',
+    //   [this.data?.recID, this.noteBooks]
+    // ).subscribe((res) => {
+    //   if (res) {
+    //     this.imageUpload
+    //       .updateFileDirectReload(this.data?.recID)
+    //       .subscribe((result) => {
+    //         if (result) {
+    //           this.loadData.emit();
+    //           this.dialog.close();
+    //           this.changeDetectorRef.detectChanges();
+    //         }
+    //       });
+    //     this.dialog.close();
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
   }
 }
