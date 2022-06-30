@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyDashboardComponent implements OnInit {
   model: DataRequest;
+  
 
   constructor(
     private api: ApiHttpService,

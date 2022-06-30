@@ -103,6 +103,6 @@ export class ProjectgroupsComponent implements OnInit {
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
-    // this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 }

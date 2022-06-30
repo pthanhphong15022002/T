@@ -20,6 +20,8 @@ import { ReadMoreComponent } from './components/readmore/readmore.component';
 import { Readmorev2Component } from './components/readmorev2/readmorev2.component';
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { TruncatePipe } from './pipe/truncate.pipe';
+import { CalendarNotesComponent } from './components/calendar-notes/calendar-notes.component';
+import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -37,6 +39,10 @@ const T_Component: Type<any>[] = [
   ReadMoreComponent,
   Readmorev2Component,
   ImageGridComponent,
+<<<<<<< HEAD
+=======
+  CalendarNotesComponent,
+>>>>>>> 8a5c996afebc9d3ba743b1e88e78a1f0a80917a1
 ];
 
 
@@ -47,7 +53,7 @@ const T_Pipe: Type<any>[] = [
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule,],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }
