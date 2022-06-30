@@ -1,0 +1,26 @@
+<codx-form [body]="body" [footer]="footer" [dialog]="dialogRef" >
+    <ng-template #body>
+        <div class="P-9">
+            <codx-input 
+            type="textarea" 
+            class="test-textarea" 
+            field="textarea" 
+            [crrValue]="dataNew.contents"
+            (valueChange)="valueChange($event)"
+            ngDefaultControl
+            >
+            </codx-input>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="card-footer pt-4">
+            <div class="d-flex justify-content-end">
+                <div class="d-flex">
+                    <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
+                        <codx-label [formName]="dialogRef.formModel.formName" name="lblSave" default="Lưu"></codx-label>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>

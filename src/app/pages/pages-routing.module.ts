@@ -10,12 +10,12 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home',
+        path: 'portal/:funcID',
         component: HomeComponent
       },
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'portal/WP',
         pathMatch: 'full',
       },
       {

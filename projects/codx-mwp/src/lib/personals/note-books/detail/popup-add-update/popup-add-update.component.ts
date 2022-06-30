@@ -70,7 +70,6 @@ export class PopupAddUpdate implements OnInit {
       [this.note]
     ).subscribe((res) => {
       if (res) {
-        debugger;
         this.dialog.close();
         this.dialog.dataService.data.push(res);
         this.changeDetectorRef.detectChanges();

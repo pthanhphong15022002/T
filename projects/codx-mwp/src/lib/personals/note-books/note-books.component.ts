@@ -81,9 +81,10 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     }
   }
 
-  openDetailPage(recID) {
+  openDetailPage(item) {
     //TM/Tasks/mF009?recid=[recid]&orderNo=[orderno]
-    this.codxService.navigate('MWP00941', '', {recID: recID});
+    // this.codxService.navigate('MWP00941', '', {recID: recID});
+    this.codxService.navigateMF('MWP00941', this.view.formModel.formName, this.view.formModel.gridViewName, item?.recID);
   }
 
   openFormMoreFunc(data: any) {
@@ -124,9 +125,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
@@ -156,9 +157,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.Width = '550px';
       this.view.dataService.data.pop();
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 

@@ -1,0 +1,156 @@
+.news {
+    padding: 24px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.title {
+    clear: both;
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(231, 229, 229, 0.863);
+}
+
+.news-item {
+    width: 60%;
+}
+
+.news-item-subject {
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0px;
+    padding: 8px 0px;
+}
+
+.news-mod {
+    padding: 4px;
+    border-bottom: 1px solid gray;
+}
+
+.news-mod-list {
+    list-style: none;
+    display: block;
+    padding: 0px;
+}
+
+.mod-list-item {
+    display: inline-block;
+    margin-right: 14px;
+}
+
+.news-item-detail {
+    padding: 12px 0px;
+}
+
+.news-item-img {
+    width: 100%;
+}
+
+.news-item-contents {
+    padding: 12px 0px;
+    text-align: justify;
+    font-size: 16px;
+}
+
+.views-tags {
+    width: 35%;
+}
+
+.views {}
+
+.views-list {
+    display: block;
+    list-style: none;
+    padding: 0px;
+}
+
+.views-list-item {
+    display: block;
+    margin-top: 8px;
+}
+
+.item-block {
+    display: flex;
+    color: #333;
+    justify-content: space-between;
+}
+
+.item-left {
+    width: 35%;
+}
+
+.item-left-img {
+    width: 100%;
+    height: 90px;
+}
+
+.item-rigth {
+    width: 60%;
+}
+
+.item-right-subject {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.item-right-views {
+    opacity: 0.8;
+    float: left;
+}
+
+.item-rigth-option {
+    margin: 0px;
+}
+
+.item-right-created {
+    opacity: 0.8;
+    float: right;
+}
+
+.text-blue {
+    font-size: 14px;
+    margin: 0px;
+    padding: 2px 0px;
+    color: blue;
+}
+
+.old {
+    padding: 24px 0px;
+}
+
+.old-list {
+    padding: 0px 12px;
+}
+
+.old-list-item {
+    margin-top: 8px;
+}
+
+.old-item-block {
+    color: #333;
+    display: inline;
+}
+
+.old-item-subject {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.old-item-created {
+    opacity: 0.8;
+}
+
+.bt {
+    border-top: 1px solid gray;
+}
+
+.bb {
+    border-bottom: 1px solid gray;
+}
+
+.more-function{
+    position: absolute;
+    right: 0;
+    bottom: 50px;
+}

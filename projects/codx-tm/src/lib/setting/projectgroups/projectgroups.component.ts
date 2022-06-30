@@ -24,7 +24,7 @@ export class ProjectgroupsComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   itemSelected: any;
   dialog!: DialogRef
-  constructor(private dt: ChangeDetectorRef, private callfunc: CallFuncService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private callfunc: CallFuncService) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -62,6 +62,7 @@ export class ProjectgroupsComponent implements OnInit {
         break;
     }
   }
+
   ngAfterViewInit(): void {
     this.views = [{
       type: ViewType.grid,
@@ -71,6 +72,7 @@ export class ProjectgroupsComponent implements OnInit {
         resources: this.columnsGrid,
       }
     }];
+    this.changeDetectorRef.detectChanges();
   }
 
   show() {

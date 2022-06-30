@@ -1,17 +1,5 @@
-<<<<<<< HEAD
-=======
-<!-- <container-element [ngSwitch]="this.type">
-    <some-element *ngSwitchCase="''">   
-        <card [dataFolders]="listFolder"></card>
-    </some-element>
-    <some-element *ngSwitchCase="'center'">
-      small card
-    </some-element>    
-</container-element> -->
-
->>>>>>> a929a081ef18d43f4ea59e8e0e4674d07f3d3b28
 <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">    
-    <ng-template #body>      
+  <ng-template #body>      
         <div class="card-body">
             <form name="frm_file1"> 
                 <div class="offcanvas-wrapper">
@@ -89,20 +77,20 @@
                 </div>           
             </form>
         </div>
-    </ng-template>
-    <ng-template #footer>      
-        <div *ngIf="hideBtnSave == '0'" class="card-footer pt-4">
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary" (click)="onMultiFileSave(null)">
-                    Upload
-                </button>
-            </div>
-        </div>
-    </ng-template>
+  </ng-template>    
+  <ng-template #footer>
+    <div *ngIf="hideBtnSave == '0'" class="card-footer pt-4">
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary" (click)="onMultiFileSave(null)">
+          Upload
+        </button>
+      </div>
+    </div>
+  </ng-template>
 </codx-form>
 
-<div  class="card w-100 rounded-0 border-0">
-    <!-- <div *ngIf="type != 'center'" class="card-header pe-5">
+<div class="card w-100 rounded-0 border-0">
+  <!-- <div *ngIf="type != 'center'" class="card-header pe-5">
         <div class="card-title">
         <h2 class="m-0">Upload tài liệu</h2>
         </div>
@@ -116,28 +104,28 @@
     </div> -->
 </div>
 
-<ng-template #openFolder let-dialog>   
-    <div class="card-body">
-        <form name="frm_move">
-            <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd"
-                entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false
-                idField="recID" parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)"
-                [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-            </codx-treeview>
+<ng-template #openFolder let-dialog>
+  <div class="card-body">
+    <form name="frm_move">
+      <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd" entityName="DM_FolderInfo"
+        service="DM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false idField="recID"
+        parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
+        [isOutput]="true" [isLoadChild]="false">
+      </codx-treeview>
 
-            <ng-template #templatetree let-data>
-                <div class="d-flex align-items-center mb-2" #item>
-                    <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
-                </div>
-            </ng-template>            
-        </form>
-    </div>
-    <div class="card-footer pt-4">
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
+      <ng-template #templatetree let-data>
+        <div class="d-flex align-items-center mb-2" #item>
+          <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
         </div>
-      </div>
-    <!-- <div class="modal-footer">
+      </ng-template>
+    </form>
+  </div>
+  <div class="card-footer pt-4">
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
+    </div>
+  </div>
+  <!-- <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="btnSelect" (click)="selectFolderPath(modal)">Select</button>
     </div> -->
 </ng-template>

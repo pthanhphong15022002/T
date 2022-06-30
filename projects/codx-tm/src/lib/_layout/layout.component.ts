@@ -14,7 +14,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(inject: Injector) {
     super(inject);
   }
- 
+
   onInit(): void {
     // this.funcs$.subscribe(res => {
     //   console.log(res);

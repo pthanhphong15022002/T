@@ -214,6 +214,7 @@ export class View {
 export class Permission {
     recID: string;
     id: string;
+    memberType:string;
     objectName: string;
     objectID: string;
     objectType: string;
@@ -244,6 +245,7 @@ export class Permission {
     form: string;
     createdOn: Date;
     approvalStatus: string;
+    createdBy: string;
 }
 
 export class FileDownload {

@@ -54,10 +54,6 @@
   >
   </app-view-detail>
 </ng-template>
-<!-- 
-<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
-<app-viewfiledialog></app-viewfiledialog> -->
-<button (click)="exportFile()">Export</button>
 <codx-views #view 
   [views]="views" 
   (buttonClick)="click($event)" 
@@ -72,9 +68,3 @@
   (requestEnded)="requestEnded($event)"
 >
 </codx-views>
-<ng-template #tmpexport let-dialog>
-  <codx-export [dialog]="dialog"></codx-export>
-</ng-template>
-<!-- 
-<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
-<app-viewfiledialog></app-viewfiledialog> -->
