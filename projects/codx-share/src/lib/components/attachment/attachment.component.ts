@@ -17,6 +17,7 @@ import { FolderService } from '@shared/services/folder.service';
 import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
 import { AttachmentService } from './attachment.service';
+
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
   selector: 'attachment', 
