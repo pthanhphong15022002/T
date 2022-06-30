@@ -252,13 +252,12 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   addRow() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save()
       .subscribe((res) => {
         if (res.save) {
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
           this.changDetec.detectChanges();
-     
         }
       });
     this.closePanel();
