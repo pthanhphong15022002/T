@@ -23,7 +23,7 @@ export class RangesKanbanComponent implements OnInit {
   itemSelected: any;
   constructor(private dt: ChangeDetectorRef,
     private callfunc: CallFuncService, private notiService: NotificationsService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -82,7 +82,6 @@ export class RangesKanbanComponent implements OnInit {
       model: {
         resources: this.columnsGrid,
         template: this.grid,
-
       }
     }];
     // this.view.dataService.methodSave = 'AddRangeKanbanAsync';
@@ -98,7 +97,7 @@ export class RangesKanbanComponent implements OnInit {
       option.Width = '750px'; // s k thấy gửi từ ben đây,
 
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'add'], option);
-      
+
     });
   }
 
@@ -123,17 +122,17 @@ export class RangesKanbanComponent implements OnInit {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0][0];
     opt.methodName = 'DeleteRangesKanbanAsync';
-    
+
     opt.data = itemSelected.rangeID;
     return true;
   }
-  
+
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;
   }
   requestEnded(evt: any) {
-   this.dialog && this.dialog.close();
+    this.dialog && this.dialog.close();
   }
   aaa(val: any) {
     console.log(val);
