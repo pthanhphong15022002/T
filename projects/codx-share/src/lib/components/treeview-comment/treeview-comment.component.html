@@ -37,7 +37,7 @@
                             style="margin-left: 5px;font-size: 18px;margin-top: -2px;">{{rootData.totalVote}}</span>
                     </div>
                 </ng-template>
-                <!-- <span class="ml-2 mt-1">{{rootData.totalVote}}</span> -->
+                <!-- <span class="ms-2 mt-1">{{rootData.totalVote}}</span> -->
             </span>
         </ng-container>
     </div>
@@ -48,7 +48,7 @@
         </span>
     </div>
 </div>
-<div class="row m-0 btn-comment p-2 b-t b-b">
+<div class="row m-0 btn-comment p-2 border-top border-bottom">
     <div class="col-6 p-0" (mouseenter)="PopoverEmpEnter(empPopover)">
         <div class="btn-like {{rootData.myVoted ? 'liked' : ''}} delay-500" placement="top" #empPopover="ngbPopover"
             [ngbPopover]="popContent">
@@ -76,7 +76,7 @@
                     <div *ngIf="rootData.myVotedType == '2'">
                         <span class="font-weight-bold ms-2" style="color: #FFA800;">
                             <codx-label formName="WP_Comments" name="lblPerfect" default="Tuyệt vời"></codx-label>
-                            
+
                         </span>
                     </div>
                     <div *ngIf="rootData.myVotedType == '3'">
@@ -92,11 +92,11 @@
                     <div *ngIf="rootData.myVotedType == '5'">
                         <span class="font-weight-bold ms-2" style="color: #E96200;">
                             <codx-label formName="WP_Comments" name="lblAmgry" default="Tức giận"></codx-label>
-                            
+
                         </span>
                     </div>
                     <!-- <div>
-                        <span  class="font-weight-bold ml-2" [style.color]=""></span>
+                        <span  class="font-weight-bold ms-2" [style.color]=""></span>
                     </div> -->
                 </div>
             </div>
@@ -136,8 +136,8 @@
     <ng-template #parentComment let-data>
         <div class="d-flex pt-2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
             <div>
-                <div class="symbol symbol-35 symbol-circle mr-3">
-                    <codx-img class="symbol symbol-35 symbol-circle" objectType="AD_Users" [objectId]="data?.createdBy">
+                <div class="me-3">
+                    <codx-img [width]="35" objectType="AD_Users" [objectId]="data?.createdBy">
                     </codx-img>
                 </div>
             </div>
@@ -205,8 +205,7 @@
         <div class="d-flex mod" (mouseleave)="PopoverEmpLeave(empPopover)">
             <ng-container *ngFor="let item of lstData">
                 <a class="mod-icon" (click)="votePost(rootData, item.value)">
-                    <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                        alt="Kiwi standing on oval"></a>
+                    <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
             </ng-container>
         </div>
 
@@ -336,9 +335,8 @@
                     <div class="tab-pane fade show active" id="tab_1" role="tabpanel">
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div class="d-flex align-items-center user-card py-4">
-                                <div class="symbol symbol-50 symbol-circle mr-4">
-                                    <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                        [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                <div class="me-4">
+                                    <codx-img [width]="40" [objectId]="userVoted.createdName" objectType="HR_Employees">
                                     </codx-img>
                                 </div>
                                 <div class="d-flex flex-column flex-grow-1">
@@ -346,7 +344,7 @@
                                     <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
                                     <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
                                 </div>
-                                <div class="ml-6" style="margin-right: 45px">
+                                <div class="ms-6" style="margin-right: 45px">
                                     <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                         alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                 </div>
@@ -357,9 +355,9 @@
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div *ngIf="userVoted.voteType == 1">
                                 <div class="d-flex align-items-center user-card py-4">
-                                    <div class="symbol symbol-50 symbol-circle mr-4">
-                                        <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                            [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -368,7 +366,7 @@
                                         <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
                                         </div>
                                     </div>
-                                    <div class="ml-6" style="margin-right: 45px">
+                                    <div class="ms-6" style="margin-right: 45px">
                                         <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                             alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                     </div>
@@ -380,9 +378,9 @@
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div *ngIf="userVoted.voteType == 2">
                                 <div class="d-flex align-items-center user-card py-4">
-                                    <div class="symbol symbol-50 symbol-circle mr-4">
-                                        <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                            [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -391,7 +389,7 @@
                                         <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
                                         </div>
                                     </div>
-                                    <div class="ml-6" style="margin-right: 45px">
+                                    <div class="ms-6" style="margin-right: 45px">
                                         <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                             alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                     </div>
@@ -403,9 +401,9 @@
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div *ngIf="userVoted.voteType == 3">
                                 <div class="d-flex align-items-center user-card py-4">
-                                    <div class="symbol symbol-50 symbol-circle mr-4">
-                                        <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                            [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -414,7 +412,7 @@
                                         <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
                                         </div>
                                     </div>
-                                    <div class="ml-6" style="margin-right: 45px">
+                                    <div class="ms-6" style="margin-right: 45px">
                                         <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                             alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                     </div>
@@ -426,9 +424,9 @@
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div *ngIf="userVoted.voteType == 4">
                                 <div class="d-flex align-items-center user-card py-4">
-                                    <div class="symbol symbol-50 symbol-circle mr-4">
-                                        <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                            [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -437,7 +435,7 @@
                                         <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
                                         </div>
                                     </div>
-                                    <div class="ml-6" style="margin-right: 45px">
+                                    <div class="ms-6" style="margin-right: 45px">
                                         <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                             alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                     </div>
@@ -449,9 +447,9 @@
                         <div *ngFor="let userVoted of lstUserVoted">
                             <div *ngIf="userVoted.voteType == 5">
                                 <div class="d-flex align-items-center user-card py-4">
-                                    <div class="symbol symbol-50 symbol-circle mr-4">
-                                        <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                            [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -460,7 +458,7 @@
                                         <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
                                         </div>
                                     </div>
-                                    <div class="ml-6" style="margin-right: 45px">
+                                    <div class="ms-6" style="margin-right: 45px">
                                         <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
                                             alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                                     </div>
@@ -484,9 +482,8 @@
     <ng-template #childComment let-childData>
         <div class="d-flex mt-2" [attr.dt]="setDicData(childData)">
             <div>
-                <div class="symbol symbol-35 symbol-circle mr-3">
-                    <codx-img class="symbol symbol-35 symbol-circle" objectType="AD_Users"
-                        [objectId]="childData?.createdBy">
+                <div class="me-3">
+                    <codx-img [width]="40" objectType="AD_Users" [objectId]="childData?.createdBy">
                     </codx-img>
                 </div>
             </div>
@@ -530,7 +527,7 @@
                             <span class="icon-reply icon-18"></span>
                         </span>
                         <span class="text-dark-75" (click)="loadSubComment(childData)">
-                            {{childData.totalRecord}} 
+                            {{childData.totalRecord}}
                             <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
                         </span>
                     </div>
