@@ -11,6 +11,9 @@ import { CommonModule } from '@angular/common';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
+import { MyTeamComponent } from '@pages/home/my-team/my-team.component';
+import { CodxCoreModule } from 'codx-core';
+import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +24,8 @@ import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-
     AddNoteComponent,
     SaveNoteComponent,
     UpdateNotePinComponent,
+    MyTeamComponent,
+    UpdateNoteComponent,
   ],
   imports: [
     CommonModule,
