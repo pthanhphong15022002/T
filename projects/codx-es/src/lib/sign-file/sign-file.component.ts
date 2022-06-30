@@ -5,18 +5,22 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonModel } from '@syncfusion/ej2-angular-buttons';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
+  ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  DialogRef,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEsService } from '../codx-es.service';
+import { PopupAddSignatureComponent } from '../setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
 
 @Component({
@@ -33,8 +37,12 @@ export class SignFileComponent implements OnInit {
     private callFunc: CallFuncService,
     private df: ChangeDetectorRef,
     private api: ApiHttpService,
-    private modalService: NgbModal
-  ) {}
+    private modalService: NgbModal,
+    private callfunc: CallFuncService,
+    private activedRouter: ActivatedRoute
+  ) {
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
   autoLoad = true;
   taskViewStt;
@@ -43,12 +51,16 @@ export class SignFileComponent implements OnInit {
   preStepNo;
   button;
 
-  funcID = 'EST01';
+  funcID: string;
   service = 'ES';
   assemblyName = 'ES';
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
   method = 'GetAsync';
+  dataSelected;
+  SidebarModel;
+
+  dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
   moreFunc: Array<ButtonModel> = [];
@@ -65,9 +77,14 @@ export class SignFileComponent implements OnInit {
   ngOnInit(): void {
     this.taskViewStt = '1';
     this.preStepNo = 0;
+    this.button = {
+      id: 'btnAdd',
+    };
   }
 
   ngAfterViewInit(): void {
+    this.codxViews.dataService.dataValue = '1';
+    this.codxViews.dataService.predicate = 'ApproveStatus=@0';
     this.views = [
       {
         type: ViewType.listdetail,
@@ -80,30 +97,15 @@ export class SignFileComponent implements OnInit {
         },
       },
     ];
-    this.codxViews.dataService.dataValue = '1';
-    this.codxViews.dataService.predicate = 'ApproveStatus=@0';
-  }
-
-  addNew(e) {
-    //this.viewChild.currentView.openSidebarRight();
-    this.modalService
-      .open(this.content, { centered: true, size: 'lg' })
-      .result.then(
-        (result) => {},
-        (reason) => {
-          if (this.editSFile) {
-            this.editSFile.deleteSignFile();
-          }
-        }
-      );
   }
 
   clickChangeTaskViewStatus(stt) {
-    this.taskViewStt = stt;
-    this.codxViews.dataService.predicate = 'ApproveStatus=@0';
-    this.codxViews.dataService.dataValue = stt;
-    this.codxViews.dataService.load().subscribe();
-    this.codxViews.currentView.resize(0, 1000);
+    if (this.taskViewStt != stt) {
+      this.taskViewStt = stt;
+      this.codxViews.dataService.predicate = 'ApproveStatus=@0';
+      this.codxViews.dataService.dataValue = stt;
+      this.codxViews.dataService.load().subscribe();
+    }
   }
 
   changeItemDetail(event) {
@@ -143,7 +145,86 @@ export class SignFileComponent implements OnInit {
     }
   }
 
-  click(e) {}
+  closeAddForm(event) {
+    this.dialog && this.dialog.close();
+  }
 
-  closeEditForm(e) {}
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew();
+        break;
+      case 'btnEdit':
+        this.edit();
+        break;
+      case 'btnDelete':
+        this.delete();
+        break;
+    }
+  }
+
+  addNew(evt?) {
+    this.codxViews.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.codxViews.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.codxViews?.currentView?.dataService;
+      option.FormModel = this.codxViews?.currentView?.formModel;
+      this.dialog = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        'Thêm mới',
+        700,
+        650,
+        '',
+        [
+          {
+            dataSelected: this.codxViews.dataService.dataSelected,
+            isAdd: true,
+            formModel: this.codxViews?.currentView?.formModel,
+          },
+        ]
+      );
+    });
+  }
+
+  edit(evt?) {
+    let item = this.codxViews.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.codxViews.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.codxViews.dataService.dataSelected;
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.codxViews?.currentView?.dataService;
+      option.FormModel = this.codxViews?.currentView?.formModel;
+
+      this.dialog = this.callfunc.openSide(
+        PopupAddSignatureComponent,
+        [item, false],
+        option
+      );
+    });
+  }
+
+  delete(evt?) {
+    let deleteItem = this.codxViews.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.codxViews.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  clickMF(event: any, data) {
+    switch (event?.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
+  }
 }

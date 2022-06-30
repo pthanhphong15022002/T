@@ -10,7 +10,15 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  map,
+  catchError,
+  finalize,
+  of,
+} from 'rxjs';
+import { debug } from 'util';
 
 export class AddGridData {
   dataItem: any = null;
@@ -145,13 +153,13 @@ export class CodxEsService {
                 model[element.fieldName].push(null);
               }
 
-              if (element.isRequire) {
-                model[element.fieldName].push(
-                  Validators.compose([Validators.required])
-                );
-              } else {
-                model[element.fieldName].push(Validators.compose([]));
-              }
+              // if (element.isRequire) {
+              //   model[element.fieldName].push(
+              //     Validators.compose([Validators.required])
+              //   );
+              // } else {
+              //   model[element.fieldName].push(Validators.compose([]));
+              // }
             }
           }
         }
@@ -176,7 +184,7 @@ export class CodxEsService {
           }
         }
       });
-      resolve(obj);
+      resolve(obj as object);
     });
   }
 
@@ -296,6 +304,33 @@ export class CodxEsService {
       'GetByProcessIDAsync',
       recID
     );
+  }
+
+  addEditAutoNumbers(data: FormGroup, isAdd: boolean): Observable<any> {
+    return this.api.exec<any>(
+      'AD',
+      'AutoNumbersBusiness',
+      'SettingAutoNumberAsync',
+      [data.value, isAdd]
+    );
+
+    // return this.api
+    //   .call(
+    //     'ERM.Business.AD',
+    //     'AutoNumbersBusiness',
+    //     'SettingAutoNumberAsync',
+    //     [data.value, isAdd]
+    //   )
+    //   .pipe(
+    //     map((data) => {
+    //       if (data.error) return;
+    //       return data.msgBodyData[0];
+    //     }),
+    //     catchError((err) => {
+    //       return of(undefined);
+    //     }),
+    //     finalize(() => null)
+    //   );
   }
 }
 export class LayoutModel {

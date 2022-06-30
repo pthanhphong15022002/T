@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
@@ -27,6 +28,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   functionID: string;
   isAfterRender = false;
   gridViewSetup: any;
+  action = '';
 
   constructor(
     private authStore: AuthStore,
@@ -42,6 +44,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       ...this.employee,
       ...dt?.data,
     };
+     this.action = dt.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -52,7 +55,13 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.cache.gridViewSetup('Employees', 'grvEmployees').subscribe(res => {
       if (res)
         this.gridViewSetup = res
-    })
+    });
+    if(this.action==='edit'){
+      this.title = 'Chỉnh sửa';
+    }
+    if(this.action==='copy'){
+      this.title = 'Sao chép';
+    }
   }
 
   initForm() {
@@ -121,45 +130,45 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
 
-  saveData(id) {
-    // if (this.employee.employeeID == null || this.employee.employeeID.trim() == '') {
-    //   this.notiService.notify('Mã nhân viên không được để trống !');
-    // }
-    // if 
-    //   (this.employee.employeeName == '' || this.employee.employeeName == null) {
-    //   this.notiService.notify('Tên nhân viên không được để trống !');
-    //   return;
-    // }
-    if (this.employee.gender == null) {
-      this.notiService.notify('Giới tính không được để trống !');
-    }
-    if (this.employee.positionID == null) {
-      this.notiService.notify('Chức danh công việc không được để trống !');
-    }
-    if (this.employee.orgUnitID == null) {
-      this.notiService.notify('Bộ phận không được để trống !');
-    }
-     else {
-      this.actionSave(id);
-    }
-  }
+  // saveData(id) {
+  //   // if (this.employee.employeeID == null || this.employee.employeeID.trim() == '') {
+  //   //   this.notiService.notify('Mã nhân viên không được để trống !');
+  //   // }
+  //   // if 
+  //   //   (this.employee.employeeName == '' || this.employee.employeeName == null) {
+  //   //   this.notiService.notify('Tên nhân viên không được để trống !');
+  //   //   return;
+  //   // }
+  //   if (this.employee.gender == null) {
+  //     this.notiService.notify('Giới tính không được để trống !');
+  //   }
+  //   if (this.employee.positionID == null) {
+  //     this.notiService.notify('Chức danh công việc không được để trống !');
+  //   }
+  //   if (this.employee.orgUnitID == null) {
+  //     this.notiService.notify('Bộ phận không được để trống !');
+  //   }
+  //    else {
+  //     this.actionSave(id);
+  //   }
+  // }
 
-  actionSave(id) {
-    this.isSaving = true;
-    this.api.call("ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.dataBind, this.isNew]).subscribe(res => {
-      this.isSaving = false;
-      if (res && res.msgBodyData[0]) {
-        if (res) {  
-          if (this.isNew == true) {
-            this.addEmployee();
-          }
-        }
-        else {
-          this.notiService.notify("Error");
-        }
-      }
-    });
-  }
+  // actionSave(id) {
+  //   this.isSaving = true;
+  //   this.api.call("ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.dataBind, this.isNew]).subscribe(res => {
+  //     this.isSaving = false;
+  //     if (res && res.msgBodyData[0]) {
+  //       if (res) {  
+  //         if (this.isNew == true) {
+  //           this.addEmployee();
+  //         }
+  //       }
+  //       else {
+  //         this.notiService.notify("Error");
+  //       }
+  //     }
+  //   });
+  // }
 
   beforeSave(op: any) {
     var data = [];
@@ -178,7 +187,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     .subscribe((res) => {
       if (res.save) {
         this.dialog.close();
-        this.notiService.notify('Thêm thành công'); ///sau này có mess thì gán vào giờ chưa có
+        this.notiService.notify('Thêm thành công'); 
       }
     });
   }

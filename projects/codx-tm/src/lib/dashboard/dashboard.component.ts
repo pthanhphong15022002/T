@@ -6,7 +6,13 @@ import {
   ChangeDetectorRef,
   TemplateRef,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, DataRequest, UserModel, ViewType, ViewModel } from 'codx-core';
+import {
+  DataRequest,
+  UserModel,
+  ViewType,
+  ViewModel,
+  FormModel,
+} from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
   AccPoints,
@@ -16,7 +22,11 @@ import {
   AccumulationChart,
   AnimationModel,
 } from '@syncfusion/ej2-angular-charts';
-import { ChartTaskRemind, RemiderOnDay, TaskRemind } from '../models/dashboard.model';
+import {
+  ChartTaskRemind,
+  RemiderOnDay,
+  TaskRemind,
+} from '../models/dashboard.model';
 import { CodxTMService } from '../codx-tm.service';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 
@@ -46,6 +56,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   taskRemind: TaskRemind = new TaskRemind();
   chartTaskRemind: ChartTaskRemind = new ChartTaskRemind();
   views: Array<ViewModel> = [];
+  formModel: FormModel
+
   //#region chartline
   dataLineTrend: Object[] = [];
   lineXAxis: Object = {
@@ -195,10 +207,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private tmService: CodxTMService,
-    private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private authStore: AuthStore
-  ) { }
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.model = new DataRequest();
@@ -206,6 +215,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
+
+    this.tmService.getFormModel('EST04').then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -215,7 +230,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         active: false,
         sameData: true,
         model: {
-          template: this.templateLeft,
+          panelLeftRef: this.templateLeft,
         }
       },]
     this.week = this.selectweekComponent?.week;
@@ -329,7 +344,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.positive = data.positive;
     this.rateTotalChangeValue = data.rate;
     let title = this.positive ? 'Tăng' : 'Giảm';
-    console.log(this.rateTotalChangeValue);
     this.rateTotalChange = `${title} hơn ${this.rateTotalChangeValue} % so với tuần trước`;
   }
 }

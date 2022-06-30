@@ -20,7 +20,11 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
-
+export class Device {
+  id;
+  text = '';
+  isSelected = false;
+}
 @Component({
   selector: 'popup-add-booking-car',
   templateUrl: 'popup-add-booking-car.component.html',
@@ -40,7 +44,8 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
   modelPage: ModelPage;
   CbxName: any;
   vllDevices = [];
-
+  lstDeviceRoom = [];
+  tmplstDevice = [];
   public headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Người đi cùng', iconCss: 'icon-person_add' },
@@ -64,13 +69,13 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
   }
   ngAfterViewInit(): void {
-    if(this.dialog){
-      if(!this.isSaveSuccess){
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
           this.dialog.dataService.saveFailed.next(null);
-        })
+        });
       }
-     }
+    }
   }
 
   ngOnInit(): void {
@@ -81,12 +86,23 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
       this.cacheSv.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
       });
+      this.cacheSv.valueList('EP012').subscribe((res) => {
+        console.log('Res: ', res);
 
+        this.vllDevices = res.datas;
+        this.vllDevices.forEach((item) => {
+          let device = new Device();
+          device.id = item.value;
+          device.text = item.text;
+          this.lstDeviceRoom.push(device);
+        });
+        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+      });
       this.bookingService
         .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
         .then((res) => {
           this.CbxName = res;
-          console.log('Cbx', this.CbxName)
+          console.log('Cbx', this.CbxName);
         });
     });
   }
@@ -137,6 +153,16 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
         this.dialogCarBooking.patchValue({ hours: hours });
       }
     }
+    let equipments = '';
+    this.lstDeviceRoom.forEach((element) => {
+      if (element.isSelected) {
+        if (equipments == '') {
+          equipments += element.id;
+        } else {
+          equipments += ';' + element.id;
+        }
+      }
+    });
     if (this.isAdd) {
       this.dialogCarBooking.patchValue({
         category: '1',
@@ -163,7 +189,12 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
         this.closeForm();
       });
   }
-
+  checkedChange(event: any, device: any) {
+    let index = this.tmplstDevice.indexOf(device);
+    if (index != -1) {
+      this.tmplstDevice[index].isSelected = event.target.checked;
+    }
+  }
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
@@ -178,19 +209,9 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
 
   isExist(deviceName) {}
 
-  openPopupDevice() {
-    // this.cfService
-    //   .openForm(this.popupDevice, 'title', 700, 900)
-    //   .subscribe((res) => {
-    //     res.close = this.close();
-    //   });
-    this.modalService
-      .open(this.popupDevice, { centered: true, size: 'md' })
-      .result.then(
-        (result) => {},
-        (reason) => {
-        }
-      );
+  openPopupDevice(template: any) {
+    var dialog = this.cfService.openForm(template, '', 550, 430);
+    this.cr.detectChanges();
   }
 
   close() {}

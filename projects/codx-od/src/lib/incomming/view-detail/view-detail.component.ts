@@ -1,0 +1,584 @@
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
+import { DispatchService } from '../../services/dispatch.service';
+import { FolderComponent } from '../folder/folder.component';
+import { ForwardComponent } from '../forward/forward.component';
+import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
+import { SendEmailComponent } from '../sendemail/sendemail.component';
+import { SharingComponent } from '../sharing/sharing.component';
+import { UpdateExtendComponent } from '../update/update.component';
+
+@Component({
+  selector: 'app-view-detail',
+  templateUrl: './view-detail.component.html',
+  styleUrls: ['./view-detail.component.scss']
+})
+export class ViewDetailComponent  implements OnInit , OnChanges {
+  active = 1;
+  desc: string = "";
+  checkUserPer: any;
+  userID:any;
+  @Input() data : any;
+  @Input() gridViewSetup:any;
+  @Input() view: ViewsComponent; 
+  @Input() getDataDispatch : Function;
+  @Output() uploaded = new EventEmitter<string>();
+  @ViewChild("tmpupdate") tmpupdate : any; 
+  @ViewChild("tmpdeadline") tmpdeadline : any; 
+  @ViewChild("tmpFolderCopy") tmpFolderCopy : any; 
+  extractContent = extractContent;
+  dvlSecurity:any;
+  dvlUrgency:any;
+  dvlStatus:any;
+  dvlCategory:any;
+  dvlRelType:any;
+  dvlStatusRel:any;
+  dvlReCall:any;
+  dvlStatusTM:any;
+  formModel:any;
+  dialog!: DialogRef;
+  constructor(
+    private api: ApiHttpService,
+    private cache: CacheService,
+    private odService: DispatchService,
+    private authStore: AuthStore,
+    private notifySvr : NotificationsService,
+    private callfunc: CallFuncService,
+    private ref: ChangeDetectorRef,
+  ) {
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.active = 1;
+    this.desc = '';
+    if(changes.data != null && changes.data != undefined) {
+      if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
+      {
+        this.userID = this.authStore.get().userID;
+        this.data = changes.data?.currentValue;
+        this.htmlAgency();
+        this.getDataValuelist();
+        this.getPermission(this.data.recID);
+
+      }
+    }
+  }
+  ngOnInit(): void {
+    this.active = 1;
+    this.desc = '';
+    this.formModel = this.view.formModel;
+        //this.data = this.view.dataService.dataSelected;
+        this.userID = this.authStore.get().userID;
+        this.htmlAgency();
+        this.getDataValuelist();
+  }
+  htmlAgency()
+  {
+    this.desc = '<div class="d-flex">';
+    if(this.data?.agencyName != undefined &&  this.data?.agencyName!= "")
+      this.desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
+    if(this.data?.txtLstAgency != undefined && this.data?.txtLstAgency!= "")
+      this.desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
+  }
+   ///////////////Các function format valuelist///////////////////////
+   fmTextValuelist(val: any, type: any) {
+    var name = "";
+    try {
+      switch (type) {
+        //Security
+        case "1":
+          {
+            var data = this.dvlSecurity?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+        // Mức độ khẩn
+        case "2":
+          {
+            var data = this.dvlUrgency?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+        // Trạng thái
+        case "3":
+          {
+            var data = this.dvlStatus?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+        // Trạng thái
+        case "4":
+          {
+            var data = this.dvlCategory?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+        // Trạng thái Status
+        case "5":
+          {
+            var data = this.dvlStatusRel?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+        // Trạng thái RelationType
+        case "6":
+          {
+            var data = this.dvlRelType?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+         // Trạng thái Status "TM"
+         case "7":
+          {
+            if(val == true) val = "1"
+            var data = this.dvlStatusTM?.datas.filter(function (el: any) { return el.value == val });
+            return data[0].text;
+          }
+      }
+      return name;
+    }
+    catch (ex) {
+      return "";
+    }
+  }
+  getDataValuelist()
+  {
+    if (this.gridViewSetup["Security"]["referedValue"] != undefined)
+      this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
+        this.dvlSecurity = item;
+      })
+    if (this.gridViewSetup["Urgency"]["referedValue"] != undefined)
+      this.cache.valueList(this.gridViewSetup["Urgency"]["referedValue"]).subscribe((item) => {
+        this.dvlUrgency = item;
+        //this.ref.detectChanges();
+      })
+    if (this.gridViewSetup["Status"]["referedValue"] != undefined)
+      this.cache.valueList(this.gridViewSetup["Status"]["referedValue"]).subscribe((item) => {
+        this.dvlStatus = item;
+        console.log(this.dvlStatus);
+        //this.ref.detectChanges();
+      })
+    if (this.gridViewSetup["Category"]["referedValue"] != undefined)
+      this.cache.valueList(this.gridViewSetup["Category"]["referedValue"]).subscribe((item) => {
+        this.dvlCategory = item;
+        //this.ref.detectChanges();
+      })
+    this.cache.valueList("OD008").subscribe((item) => {
+      this.dvlRelType = item;
+    })
+    this.cache.valueList("OD009").subscribe((item) => {
+      this.dvlStatusRel = item;
+    })
+    this.cache.valueList("OD010").subscribe((item) => {
+      this.dvlReCall = item;
+    })
+    this.cache.valueList("L0614").subscribe((item) => {
+      this.dvlStatusTM = item;
+    })
+  }
+  getTextColor(val: any, type: any) {
+    try {
+      switch (type) {
+        //Security
+        case "1":
+          {
+            var data = this.dvlSecurity?.datas.filter(function (el) { return el.value == val });
+            if (data[0].textColor == null) return "gray";
+            return data[0].textColor
+          }
+        //Mức độ khẩn
+        case "2":
+          {
+            var data = this.dvlUrgency?.datas.filter(function (el) { return el.value == val });
+            if (data[0].textColor == null) return "gray";
+            return data[0].textColor
+          }
+        //Trạng thái
+        case "3":
+          {
+            var data = this.dvlStatus?.datas.filter(function (el) { return el.value == val });
+            if (data[0].textColor == null) return "black";
+            return data[0].textColor
+          }
+        // Trạng thái Status
+        case "4":
+          {
+            var data = this.dvlStatusRel?.datas.filter(function (el) { return el.value == val });
+            if (data[0].textColor == null) return "black";
+            return data[0].textColor
+          }
+          // Trạng thái Status "TM"
+         case "5":
+          {
+            var data = this.dvlStatusTM?.datas.filter(function (el: any) { return el.value == val });
+            if (data[0].textColor == null) return "black";
+            return data[0].textColor;
+          }
+          // Trạng thái Status "TM"
+         case "6":
+          {
+            var data = this.dvlReCall?.datas.filter(function (el: any) { return el.value == val });
+            if (data[0].textColor == null) return "#B2862D";
+            return data[0].textColor;
+          }
+      }
+    }
+    catch (ex) {
+      return "gray";
+    }
+  }
+  getBgColor(val: any, type: any) {
+    try {
+      switch (type) {
+        //Trạng thái
+        case "3":
+          {
+            var data = this.dvlStatus?.datas.filter(function (el) { return el.value == val });
+            if (data[0].color == null) return "black";
+            return data[0].color
+          }
+        // Trạng thái Status
+        case "4":
+          {
+            var data = this.dvlStatusRel?.datas.filter(function (el) { return el.value == val });
+            if (data[0].color == null) return "black";
+            return data[0].color
+          }
+           // Trạng thái Status
+        case "5":
+          {
+            if(val == true) val = "1"
+            var data = this.dvlReCall?.datas.filter(function (el) { return el.value == val });
+            if (data[0].color == null) return "#F2CB7C";
+            return data[0].color
+          }
+      }
+    }
+    catch (ex) {
+      return "white";
+    }
+  }
+  getPermission(recID:any)
+  {
+    this.odService.checkUserPermiss(recID , this.userID).subscribe((item)=>{
+      if(item.status == 0) this.checkUserPer = item.data;
+    })
+  }
+  openFormFuncID(val: any , datas:any = null) {
+   
+    var funcID = val?.functionID;
+    if(!datas)
+      datas = this.data;
+    else 
+    {
+      var index = this.view.dataService.data.findIndex(object => {
+        return object.recID === datas.recID;
+      });
+      datas = this.view.dataService.data[index];
+    }
+    switch (funcID) {
+      case "edit":
+        {
+
+          this.view.dataService.edit(datas).subscribe((res: any) => {
+            let option = new SidebarModel();
+            option.DataService = this.view?.currentView?.dataService;
+            this.dialog = this.callfunc.openSide(IncommingAddComponent, {
+              gridViewSetup: this.gridViewSetup,
+              headerText:"Chỉnh sửa công văn đến",
+              formModel: this.formModel,
+              type: "edit",
+              data: datas
+            }, option);
+            this.dialog.closed.subscribe(x=>{
+              if(x.event != null &&  x.event.recID != undefined) 
+              {
+                //this.ref.detectChanges();
+                //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
+                //this.view.dataService.update(x.event).subscribe();
+                //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
+                
+                  this.view.dataService.update(x.event).subscribe();
+                  if(x.event.recID == this.view.dataService.dataSelected.recID)
+                    this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
+                      //this.view.dataService.setDataSelected(x.event);
+                      this.data = item;
+                      this.data.lstUserID = getListImg(item.relations);
+                      this.htmlAgency();
+                    });
+                //});
+              }
+            });
+          });
+          break;
+        }
+      case "delete":
+        {
+          /* var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa?", config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            {
+              this.deleteDispatchByID(this.view.dataService.dataSelected.recID);
+            }
+          }); */
+          this.view.dataService.delete([datas]).subscribe((item:any)=>{
+            if(item.status == 0)
+            {
+              this.odService.getDetailDispatch(this.view.dataService.data[0].recID).subscribe(item => {
+                this.data = formatDtDis(item);
+                this.view.dataService.setDataSelected(this.data);
+                this.data.lstUserID = getListImg(this.data.relations)
+                this.htmlAgency()
+              });
+            }
+            if(item?.message)
+              this.notifySvr.notify(item?.message);
+          });
+          break;
+        }
+      case "copy":
+      {
+        this.view.dataService.dataSelected = datas ;
+        this.view.dataService.copy(0).subscribe((res: any) => {
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          this.dialog = this.callfunc.openSide(IncommingAddComponent, {
+            gridViewSetup: this.gridViewSetup,
+            headerText:"Sao chép công văn đến",
+            type: "copy",
+            formModel: this.formModel
+          }, option);
+          this.dialog.closed.subscribe(x=>{
+            if(x.event == null) 
+            {
+              //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+              this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
+            }
+            else  this.view.dataService.update(x.event).subscribe();
+          });
+        });
+        break;
+      }
+      //Chuyển
+      case "ODT101":
+        {
+          /* if(this.checkOpenForm(funcID))
+          {
+            /*  
+          } */
+          debugger;
+          var data = datas;
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          this.dialog = this.callfunc.openSide(ForwardComponent, 
+            {
+              "gridViewSetup": this.gridViewSetup,
+              files : this.data?.files
+            }, option);
+          this.dialog.closed.subscribe(x=>{
+            if(x.event != null) 
+            {
+              this.data.owner = x.event[0].owner
+              this.data.lstUserID = getListImg(x.event[0].relations);
+              this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
+              this.view.dataService.update(x.event[0]).subscribe();
+            }
+          });
+          break;
+        }
+      //Giao việc
+      case "ODT102":
+        {
+          if(this.checkOpenForm(funcID))
+          {
+           
+          }
+          break;
+        }
+      //Cập nhật
+      case "ODT103":
+      case "ODT202":
+        {
+          if(this.checkOpenForm(funcID))
+          {
+            this.callfunc.openForm(this.tmpupdate, null, 600, 400);
+          }
+          break;
+        }
+      //Chia sẻ
+      case "ODT104" :
+      case "ODT203" :
+        {
+          if(this.checkOpenForm(funcID))
+          {
+           
+          }
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          option.FormModel = this.view?.formModel;
+          
+          this.dialog = this.callfunc.openSide(SharingComponent, {
+            gridViewSetup: this.gridViewSetup,
+            option: option,
+            files : this.data?.files
+          }, option);
+          this.dialog.closed.subscribe(x=>{
+            if(x.event != null) 
+            {
+              this.data.lstUserID = getListImg(x.event[0].relations);
+              this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1]);
+            }
+          });
+          break;
+        }
+      //Thu hồi
+      case "ODT105":
+      case "ODT204":
+        {
+          var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn thu hồi?", config).closed.subscribe(x=>{
+              if(x.event.status == "Y")
+                this.recall(datas.recID);
+            })
+          break;
+        }
+      //liên kết văn bản
+      case "ODT106":
+      case "ODT205":
+        {
+          if(this.checkOpenForm(funcID))
+          {
+          
+          }
+          break;
+        }
+      //Gia hạn
+      case "ODT107":
+      case "ODT206":
+        {
+          if(this.checkOpenForm(funcID))
+          {
+            this.callfunc.openForm(this.tmpdeadline,null,600, 400);
+          }
+          break;
+        }
+      //Quản lý phiên bản
+      case "ODT108":
+      case "ODT207":
+        {
+          if(this.checkOpenForm(funcID))
+          {
+           
+          }
+          break;
+        }
+      //Chuyển vào thư mục
+      case "ODT109":
+      case "ODT208":
+        {
+        //  if(this.checkOpenForm(funcID))
+         // {
+           // this.callfunc.openForm(FolderComponent, null, 600, 400);
+             this.callfunc.openForm(this.tmpFolderCopy, null, 600, 400);
+          //}
+          break;
+        }
+      //Bookmark
+      case "ODT110":
+      case "ODT209":
+        {
+          this.odService.bookMark(datas.recID).subscribe((item) => {
+            if (item.status == 0)
+            {
+              this.view.dataService.update(item.data).subscribe();
+              //this.view.dataService.update(item.data).subscribe();
+            } 
+              
+            this.notifySvr.notify(item.message);
+          });
+          break;
+        }
+      //Gửi email
+      case "sendemail":
+        {
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          this.dialog = this.callfunc.openSide(SendEmailComponent, {
+            "gridViewSetup": this.gridViewSetup,
+          }, option);
+          this.dialog.closed.subscribe(x=>{
+            if(x.event != null) 
+            {
+              this.data = x.event[0];
+              this.data.lstUserID = getListImg(x.event[0].relations);
+              this.data.listInformationRel = x.event[1]
+            }
+          });
+          break;
+        }
+        case "recallUser":
+          {
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?", config).closed.subscribe(x=>{
+              if(x.event.status == "Y")
+              {
+                this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
+                  if (item.status == 0) {
+                    this.data = item.data[0];
+                    this.data.lstUserID = getListImg(item.data[0].relations);
+                    this.data.listInformationRel = item.data[1]
+                  }
+                  this.notifySvr.notify(item.message);
+                })
+              }
+            })
+            break;
+          }
+        case "SYS001":
+          {
+            
+            break;
+          }
+    }
+  } 
+  checkOpenForm(val:any)
+  {
+    if(val == "ODT108" && this.checkUserPer?.created) return true;
+    else if((val == "ODT109" || val == "ODT110") && this.checkUserPer?.read) return true;
+    else if(this.checkUserPer?.created || this.checkUserPer?.owner) return true;
+    else this.notifySvr.notify("Bạn không có quyền thực hiện chức năng này.")
+    return false;
+  }
+  openpopup(template: any) {
+    this.callfunc.openForm(template);
+  }
+   //Thu hồi quyền
+   recall(id:any) {
+    this.odService.recallRelation(id).subscribe((item) => {
+      if (item.status == 0) {
+        this.data = item.data[0];
+        this.data.lstUserID = getListImg(item.data[0].relations);
+        this.data.listInformationRel = item.data[1]
+      }
+      this.notifySvr.notify(item.message);
+    })
+  }
+  getJSONString(data) {
+    return JSON.stringify(data);    
+  }
+  getSubTitle(relationType:any , agencyName:any , shareBy: any , createdBy :any)
+  {
+    if(relationType == "1")
+      return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
+    return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
+  }
+  changeData(data:any)
+  {
+    this.data.updates = data.updates;
+    this.data.percentage = data.percentage;
+    
+   /*  let info = this.data.listInformationRel;
+   
+    this.view.dataService.update(data).subscribe(item=>{
+      this.data.listInformationRel = info;
+    }); */
+  }
+}

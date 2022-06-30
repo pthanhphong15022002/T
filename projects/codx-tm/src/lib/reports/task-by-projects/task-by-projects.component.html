@@ -1,0 +1,28 @@
+<codx-views #view entityName="TM_Tasks" service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
+  method="ListReportProjectAsync" [views]="views" idField="projectID" [pageSize]="100" [selectedFirst]="true">
+</codx-views>
+
+<ng-template #itemOwner let-data>
+  <div class="flex align-items-center">
+    <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+      [numberImages]="4">
+    </codx-imgs>
+  </div>
+</ng-template>
+<ng-template #itemRateTaskDone let-data>
+  <div>
+    {{data.rateTaskDone | percent }}
+  </div>
+</ng-template>
+<ng-template #itemRateTaskDoneTime let-data>
+  <div>
+    {{data.rateTaskDoneTime | percent }}
+  </div>
+</ng-template>
+<ng-template #buttonPupop let-data>
+  <div>
+    <a class="action-item" style="cursor: pointer" (click)="openPopup(data)">
+      <span class=" icon-launch icon-18 ms-2 me-2"></span>
+    </a>
+  </div>
+</ng-template>

@@ -1,0 +1,100 @@
+<div class="card w-100 rounded-0 border-0">
+    <div class="card-header pe-5">
+        <div class="card-title">
+            <div class="">
+                <i class="icon-add_circle_outline text-primary icon-20"></i>
+            </div>
+            <div class="d-flex flex-column ms-3">
+                <h2 class="m-0">Cập nhật kết quả thực hiện</h2>
+                <div class="text-gray-400 fs-7">Cho phép cập nhật tiến độ theo tỷ lệ hoàn thành</div>
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-2"
+                id="kt_engage_demos_close" (click)="close()">
+                <span class="icon-close icon-20"></span>
+            </button>
+        </div>
+    </div>
+    <form  [formGroup]="updateForm" (ngSubmit)="onSaveUpdate()">
+        <div class="card-body" [formGroup]="updateForm" (ngSubmit)="onFormSubmit()">
+            <div class="row">
+                <div class="col-5">
+                    <codx-label default='Ngày cập nhật'></codx-label>
+                    <codx-input 
+                        type="dateTime" 
+                        format="d" 
+                        field="date"
+                        [Group]="updateForm"
+                        ControlName="updateOn"
+                        [ngClass]="{ 'is-invalid': submitted && f.updateOn.errors }"
+                    >
+                    </codx-input>
+                </div>
+                <div class="col-7 align-items-center">
+                    <codx-label default="Kết quả thực hiện"></codx-label>
+                    <div class="d-flex align-items-center">
+                        <codx-input 
+                            type="number" 
+                            [min]="this.data?.percentage ? this.data?.percentage : 0"
+                            [max]="100" 
+                            cssClass="form-control" 
+                            ControlName="percentage"
+                            [Group]="updateForm"
+                            [ngClass]="{ 'is-invalid': submitted && f.percentage.errors }"
+                            >
+                        </codx-input>
+                        <div class="d-flex align-items-center ms-3">
+                            <codx-input  
+                                type="switch"   
+                                class="test-check"   
+                                ControlName="percentage100"
+                                [Group]="updateForm" 
+                            >
+                            </codx-input>
+                            <codx-label default="Hoàn thành 100%" class="ms-2 w-150px"></codx-label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <label>Ghi chú</label>
+                    <codx-input 
+                        type="textarea" 
+                        field="textarea" 
+                        [format]="'ed2'" 
+                        class="w-100"
+                        ControlName="comment"
+                        [Group]="updateForm"
+                    >
+                    </codx-input>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex align-items-center mt-4">
+                        <codx-input  
+                            type="switch"
+                            ControlName="reporting"
+                            [Group]="updateForm"
+                        >
+                        </codx-input>
+                        <codx-label default="Báo cáo kết quả" class="ms-2"></codx-label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer pt-4">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-stack">
+                    <button type="button" class="btn btn-light-primary me-3" (click)="addFile()">
+                        <i class="icon-cloud_upload fs-5"></i>Upload file
+                    </button>
+                </div>
+                <div class="d-flex">
+                    <button type="button" class="btn btn-primary" type="submit">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- <codx-attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)" [hidden]=""></codx-attachment> -->

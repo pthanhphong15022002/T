@@ -25,17 +25,16 @@ import { TM_Sprints } from '../../models/TM_Sprints.model';
   styleUrls: ['./popup-add-sprints.component.css'],
 })
 export class PopupAddSprintsComponent implements OnInit {
-  @Input() taskBoard = new TM_Sprints();
-  title = 'Task Board';
+  taskBoard = new TM_Sprints();
+  title = 'Thêm Task Board';
   readOnly = false;
   listUserDetail = [];
-  // dataAddNew = new BehaviorSubject<any>(null);
-  // isAddNew = this.dataAddNew.asObservable();
-  // updateData = new BehaviorSubject<any>(null);
-  // isUpdate = this.updateData.asObservable();
+  resources = '';
+  action: string = '';
   dialog: any;
   user: any;
-  @Input('viewBase') viewBase: ViewsComponent;
+  funcID: string = '';
+  // @Input('viewBase') viewBase: ViewsComponent;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -48,12 +47,33 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    // this.task = dt?.data;
+    this.taskBoard = {
+      ...this.taskBoard,
+      ...dt?.data[0],
+    };
+    this.action = dt?.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.funcID = this.dialog.formModel.funcID;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.taskBoard.iterationID) {
+      // this.openTask();
+    } else {
+      if (this.action == 'copy')
+         this.getSprintsCoppied(this.taskBoard.iterationID);
+      else this.openInfo(this.taskBoard.iterationID, this.action);
+    }
+  }
+
+  beforeSave(op: any, isAdd) {
+    var data = [];
+    op.method = 'AddEditSprintAsync';
+    data = [this.taskBoard, isAdd];
+    op.data = data;
+    return true;
+  }
 
   saveData(id) {
     if (
@@ -63,30 +83,38 @@ export class PopupAddSprintsComponent implements OnInit {
       return this.notiService.notify('Tên Task Board không được để trống !');
     if (this.taskBoard.projectID == '') this.taskBoard.projectID = null;
     if (!this.taskBoard.isShared) this.taskBoard.resources = null;
-    if (id) {
-      this.addTaskBoard(this.taskBoard, false);
-    } else this.addTaskBoard(this.taskBoard, true);
+    if (this.resources == '') this.taskBoard.resources = null;
+    else this.taskBoard.resources = this.resources;
+    var isAdd = id ? false : true;
+    this.addTaskBoard(isAdd);
   }
 
-  addTaskBoard(taskBoard, isAdd: boolean) {
-    this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
-      if (res) {
-        // if (taskBoard.iterationID) {
-        //   this.updateData.next(res);
-        // } else
-        //   this.dataAddNew.next(res);
-        // this.closeTaskBoard();
-      }
-    });
+  addTaskBoard(isAdd: boolean) {
+    // this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
+    //   if (res) {
+    //     // if (taskBoard.iterationID) {
+    //     //   this.updateData.next(res);
+    //     // } else
+    //     //   this.dataAddNew.next(res);
+    //     // this.closeTaskBoard();
+    //   }
+    // });
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option, isAdd))
+      .subscribe((res) => {
+        if (res.save) {
+          this.notiService.notifyCode('TM005');
+        }
+        if (res.update) {
+        this.notiService.notifyCode('E0528');
+        }
+        this.dialog.close();
+      });
   }
 
   closeTaskBoard() {
     this.listUserDetail = [];
     this.taskBoard = new TM_Sprints();
-    //data user để test
-    this.taskBoard.resources = 'PMNHI;NVHAO;NTLOI'; //test
-    this.getListUser(this.taskBoard.resources);
-    //this.viewBase.currentView.closeSidebarRight();
   }
   changeMemo(event: any) {
     var field = event.field;
@@ -97,7 +125,9 @@ export class PopupAddSprintsComponent implements OnInit {
     this.taskBoard[e.field] = e.data;
   }
   cbxChange(e: any) {
-    this.taskBoard.projectID = e[0];
+    if (e?.data.length>0) {
+      this.taskBoard[e.field] = e.data[0];
+    }
   }
   changText(e: any) {
     this.taskBoard.iterationName = e.data;
@@ -113,6 +143,8 @@ export class PopupAddSprintsComponent implements OnInit {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
+    if (this.resources == '') this.resources = listUser;
+    else this.resources += ';' + listUser;
     this.api
       .execSv<any>(
         'TM',
@@ -122,7 +154,7 @@ export class PopupAddSprintsComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = res;
+        this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
   onDeleteUser(userID) {
@@ -139,54 +171,77 @@ export class PopupAddSprintsComponent implements OnInit {
         resources += user.userID + ';';
       });
       resources = resources.slice(0, -1);
-      this.taskBoard.resources = resources;
-    } else this.taskBoard.resources = '';
+      this.resources = resources;
+    } else this.resources = '';
   }
 
   openInfo(interationID, action) {
-    const t = this;
-    t.taskBoard = new TM_Sprints();
+    this.taskBoard = new TM_Sprints();
 
-    t.readOnly = action === 'edit' ? false : true;
-    t.title =
+    this.readOnly = action === 'edit' ? false : true;
+    this.title =
       action === 'edit' ? 'Chỉnh sửa task board' : 'Xem chi tiết task board';
-    t.tmSv.getSprints(interationID).subscribe((res) => {
+      this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
-        t.taskBoard = res;
-        if (t.taskBoard.resources) t.getListUser(t.taskBoard.resources);
+        this.taskBoard = res;
+        if (this.taskBoard.resources) this.getListUser(this.taskBoard.resources);
         else this.listUserDetail = [];
-        t.changeDetectorRef.detectChanges();
-        t.showPanel();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   getSprintsCoppied(interationID) {
-    const t = this;
-    t.title = 'Copy task boads';
-    t.readOnly = false;
-    t.listUserDetail = [];
-    t.taskBoard = new TM_Sprints();
-    t.tmSv.getSprints(interationID).subscribe((res) => {
+    this.title = 'Copy task boads';
+    this.readOnly = false;
+    this.listUserDetail = [];
+    this.taskBoard = new TM_Sprints();
+    this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
-        t.taskBoard.projectID = res.projectID;
-        t.taskBoard.iterationName = res.iterationName;
-        t.taskBoard.memo = res.memo;
-        t.changeDetectorRef.detectChanges();
-        t.showPanel();
+        this.taskBoard.projectID = res.projectID;
+        this.taskBoard.iterationName = res.iterationName;
+        this.taskBoard.viewMode = res.viewMode;
+        this.taskBoard.memo = res.memo;
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
-  showPanel() {}
-  closePanel() {}
 
-  openDialog() {
-    // let obj = {
-    //   formName: 'demo',
-    //   control: '1',
-    //   value: '5',
-    //   text: 'demo nè',
-    // };
-    //   this.callfc.openForm(CbxpopupComponent, 'Add User', 0, 0, '', 'obj');
+  valueChangeShared(e) {
+    console.log(e);
+  }
+
+  //caí này chạy tạm đã
+  eventApply(e: any) {
+    var resources = '';
+    var i = 0;
+    e.forEach((obj) => {
+      if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            resources += obj?.data;
+            this.valueSelectUser(resources);
+            break;
+          // case 'D':
+          //   //chưa chạy xong câu lệnh này đã view ra...
+          //   const t = this;
+          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
+          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
+          //     if (res) {
+          //       assignTo += res + ";";
+          //       this.valueSelectUser(assignTo)
+          //     }
+          //   })
+          //   break;
+        }
+      }
+    });
+  }
+  valueSelectUser(resources) {
+    if (resources != '') {
+      resources = resources.substring(0, resources.length - 1);
+      this.getListUser(resources);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

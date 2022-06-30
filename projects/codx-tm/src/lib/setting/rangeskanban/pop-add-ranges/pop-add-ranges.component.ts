@@ -31,6 +31,7 @@ export class PopAddRangesComponent implements OnInit {
   gridViewName = "";
   user: any;
   functionID: string;
+  action = '';
 
 
   constructor(private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
@@ -44,8 +45,9 @@ export class PopAddRangesComponent implements OnInit {
       ...this.ranges,
       ...dd?.data[0],
     };
-    this.lstRangeLine = [];
+    this.action = dd?.data[1]; //lấy edit để mở form edit
 
+    this.lstRangeLine = [];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -57,15 +59,22 @@ export class PopAddRangesComponent implements OnInit {
     this.cache.gridViewSetup('RangesKanban', 'grvRangesKanban').subscribe(res => {
       if (res)
         this.gridViewSetup = res
-    })
+    });
+    if(this.action==='edit'){
+      this.title = 'Chỉnh sửa khoảng giời gian';
+      this.openForm(this.ranges, false);
+    }
   }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber("TMS034", "BS_RangesKanban", "RangeID").subscribe(key => {
-        this.ranges.rangeID = key;
-      })
+      if(this.isAddMode==true){
+        this.getAutonumber("TMS034", "BS_RangesKanban", "RangeID").subscribe(key => {
+          this.ranges.rangeID = key;
+        })
+      }
+      
     })
   }
 
@@ -158,7 +167,6 @@ export class PopAddRangesComponent implements OnInit {
     if (!itemdata) {
       this.initPopup();
     }
-
     else if (!itemdata.recID) {
       var item = this.lstRangeLine.find(x => x.id == itemdata.id);
       this.initPopup(item);
@@ -197,6 +205,29 @@ export class PopAddRangesComponent implements OnInit {
     }
   }
 
+  openForm(data, isAddMode) {
+    if (isAddMode == false) {
+      this.isAddMode = false;
+      this.rangeLines = new RangeLine();
+      this.ranges = new BS_Ranges();
+
+      this.title = 'Chỉnh sửa khoảng thời gian công việc';
+      this.api.execSv<any>("BS", "BS", "RangesKanbanBusiness", "GetRangesKanbanAndLinesByIdAsync", data.rangeID).subscribe((res) => {
+        if (res) {
+          data = res;
+          this.ranges = data[0];
+          this.lstRangeLine = data[1];
+          if (this.lstRangeLine == null) {
+            this.lstRangeLine = [];
+          }
+          this.dt.detectChanges();
+        }
+
+      })
+    }
+    // this.renderer.addClass(popup, 'drawer-on');
+  }
+
   beforeSave(op: any) {
     var data = [];
     op.method = 'AddEditRangeAsync';
@@ -211,11 +242,11 @@ export class PopAddRangesComponent implements OnInit {
   }
 
 
-  OnSaveForm() {
+  onSave() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res.save) {
+        if (res) {
           this.lstSaveRangeLine = [];
           if (this.lstRangeLine != null) {
             for (let item1 of this.lstRangeLine) {
@@ -228,9 +259,14 @@ export class PopAddRangesComponent implements OnInit {
               this.lstSaveRangeLine.push(rangeline);
             }
           }
-          this.dialog.close();
-          this.notiService.notify('Thêm mới khoảng thời gian thành công'); ///sau này có mess thì gán vào giờ chưa có
+          // this.dialog.dataService.setDataSelected(res)
+          // if(this.isAddMode==true)
+          //   this.notiService.notify('Thêm mới khoảng thời gian thành công');
+          //   else
+          //   this.notiService.notify('Chỉnh sửa khoảng thời gian thành công');
+
         }
+       
       });
   }
 

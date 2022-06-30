@@ -133,15 +133,18 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     }
   }
   addNew(evt?) {
+    let dataItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      dataItem = evt;
+    }
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
-        this.dataSelected,
+        dataItem,
         option
       );
     });
@@ -158,7 +161,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddRoomsComponent,
-        this.dataSelected,
+        item,
         option
       );
     });
