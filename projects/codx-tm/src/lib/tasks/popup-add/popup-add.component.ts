@@ -24,8 +24,6 @@ import { StatusTaskGoal } from '../../models/enum/enum';
 import { TaskGoal } from '../../models/task.model';
 import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
-import { BehaviorSubject } from 'rxjs';
-import { I } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
