@@ -14,8 +14,7 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, NotificationsService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
 import { AttachmentService } from './attachment.service';
 // import { AuthStore } from '@core/services/auth/auth.store';
@@ -38,12 +37,14 @@ export class AttachmentComponent implements OnInit  {
   disableSave = false;
   breadcumb: string[];
   breadcumbLink = [];
-  codetitle = 'DM059';
-  title = 'Đã thêm file thành công';
+  codetitle = 'DM059';  
   codetitle2 = 'DM058';
+  titleDialog = "Thêm file";
+  title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
   fileUploadList: FileUpload[];
   remotePermission: Permission[];    
+  dialog: any;
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;    
@@ -70,8 +71,10 @@ export class AttachmentComponent implements OnInit  {
       private callfc: CallFuncService,
       private notificationsService: NotificationsService,
       @Optional() data?: DialogData,
-      @Optional() dialog?: Dialog) {
-      this.user = this.auth.get();       
+      @Optional() dialog?: DialogRef) { 
+      var d = data;
+      this.user = this.auth.get();     
+      this.dialog = dialog;  
       if (data != null) {
         this.objectType = data?.data.objectType;
         this.objectId = data?.data.objectId;
@@ -198,7 +201,7 @@ export class AttachmentComponent implements OnInit  {
     });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
-      this.folderService.getFolders(id, "3").subscribe(async res => {
+      this.folderService.getFolders(id).subscribe(async res => {
         tree.addChildNodes($data.dataItem, res);          
         that.changeDetectorRef.detectChanges();
       });
@@ -308,7 +311,9 @@ export class AttachmentComponent implements OnInit  {
     this.onMultiFileSave(modal);
   }
 
-  onMultiFileSave(modal = null) {        
+  onMultiFileSave(modal = null) {   
+   // this.dialog.close();
+   // return;
       let total = this.fileUploadList.length;
       var that = this;       
       this.atSV.fileListAdded = [];
@@ -596,7 +601,7 @@ export class AttachmentComponent implements OnInit  {
       //   }
       //   else this.dmSV.setDisableSave.next(false);
   
-        this.folderService.getFolders(id, "3").subscribe(async res => {
+        this.folderService.getFolders(id).subscribe(async res => {
           // that.treeAdd.addChildNodes(parent, res);
           var nodeAdd = new NodeTreeAdd();
           var list = [];

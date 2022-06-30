@@ -79,7 +79,7 @@
   <!-- end::TOPBAR -->
 
   <ng-template #asideMenu>
-    <ng-container *ngFor="let f of funcs$ | async">
+    <!-- <ng-container *ngFor="let f of funcs$ | async">
       <div class="menu-item">
         <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
           routerLinkActive="active">
@@ -89,6 +89,6 @@
           <span class="menu-title">{{f.customName}}</span>
         </a>
       </div>
-    </ng-container>
+    </ng-container> -->
   </ng-template>
 </ng-container>

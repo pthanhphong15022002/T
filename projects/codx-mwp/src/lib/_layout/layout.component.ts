@@ -14,8 +14,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-    this.funcs$.subscribe((res) => {
-    });
+    // this.funcs$.subscribe((res) => {
+    // });
   }
 
   onAfterViewInit(): void {}
