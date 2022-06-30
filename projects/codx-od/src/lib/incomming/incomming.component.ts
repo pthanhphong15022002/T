@@ -43,7 +43,6 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
-  @ViewChild('tmpexport') tmpexport!: TemplateRef<any>;
   
   public lstDtDis: any;
   public lstUserID: any = '';
@@ -249,7 +248,6 @@ export class IncommingComponent
             .remove(this.view.dataService.dataSelected)
             .subscribe();
         else {
-          debugger;
           this.view.dataService.update(x.event).subscribe();
           this.view.dataService.setDataSelected(x.event);
           // this.view.dataService.remove(x.event).subscribe();
@@ -514,6 +512,6 @@ export class IncommingComponent
   }
   exportFile()
   {
-    this.callfunc.openForm(this.tmpexport,null,null,600)
+    
   }
 }

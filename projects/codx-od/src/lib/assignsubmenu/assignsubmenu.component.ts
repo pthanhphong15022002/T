@@ -24,7 +24,6 @@ export class AssignSubMenuComponent {
     public palettes = [];
     public roles: any;
     constructor(private odService: DispatchService, private changeDetectRef: ChangeDetectorRef) { }
-    
     ngOnInit(): void {    
         this.odService.isRoles.subscribe(item => {
             if (item) {
@@ -33,7 +32,6 @@ export class AssignSubMenuComponent {
             }            
         });        
     }
-
     hover(ctrl) {
         ctrl.click();        
       }

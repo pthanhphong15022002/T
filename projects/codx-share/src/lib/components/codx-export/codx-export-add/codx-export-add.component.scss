@@ -1,0 +1,20 @@
+//:host {
+  
+ //}
+ .btn.pe-0{
+  padding-right: 0!important;
+}
+ .line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;  
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+}
+
+.hover-scroll-y{
+  margin-right: 0!important;
+}
