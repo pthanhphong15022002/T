@@ -53,4 +53,4 @@ const T_Pipe: Type<any>[] = [
   imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule {}
+export class CodxShareModule { }

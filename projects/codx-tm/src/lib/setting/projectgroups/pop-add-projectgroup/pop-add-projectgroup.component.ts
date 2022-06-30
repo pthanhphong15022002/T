@@ -31,7 +31,7 @@ export class PopAddProjectgroupComponent implements OnInit {
     private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dd?: DialogData,
-  ) { 
+  ) {
     this.projectGroups = {
       ...this.projectGroups,
       ...dd?.data[0],
@@ -126,15 +126,16 @@ export class PopAddProjectgroupComponent implements OnInit {
     return true;
   }
 
-  OnSaveForm(){
+  onSaveForm() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm nhóm dự án thành công'); ///sau này có mess thì gán vào giờ chưa có
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.dataService.setDataSelected(res);
+          this.dialog.close();
+          this.notiService.notify('Thêm nhóm dự án thành công'); ///sau này có mess thì gán vào giờ chưa có
+        }
+      });
   }
 
   valueApp(data) {
@@ -152,4 +153,4 @@ export class PopAddProjectgroupComponent implements OnInit {
     var dt = event.data;
     this.projectGroups.note = dt?.value ? dt.value : dt;
   }
-} 
+}
