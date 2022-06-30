@@ -39,8 +39,10 @@
           <ng-template #headerText class="me-10 border-0 ">
             <div class="d-flex align-items-center mb-2">
               <span class="icon-info icon-18 me-2"></span>
-              <div class="fw-bold"><codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
-              </codx-label></div>
+              <div class="fw-bold">
+                <codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
+                </codx-label>
+              </div>
             </div>
           </ng-template>
           <ng-template #content class="ms-10">
@@ -58,7 +60,7 @@
             </div>
             <div class="form-group mt-3">
               <label>
-                <codx-label name="TaskGroups" formName="Tasks"  default="Nhóm triển khai">
+                <codx-label name="TaskGroups" formName="Tasks" default="Nhóm triển khai">
                 </codx-label>
               </label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
@@ -142,7 +144,7 @@
                     </codx-label>
                   </div>
                 </div>
-                <codx-share (eventApply)="eventApply($event)"> </codx-share>
+                <codx-share (eventApply)="eventApply($event)" listName='L1906'> </codx-share>
               </div>
               <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
@@ -154,54 +156,20 @@
             <div class="d-flex align-items-center justify-content-between mt-6">
               <div class="d-flex align-items-center mb-3">
                 <span class="icon-attach icon-18 me-2 text-primary"></span>
-                <div class="fw-bold fs-6 text-primary"><codx-label fiedName="Attachments" formName="Tasks" gridViewName="grvTasks" default="Tài liệu đính kèm"></codx-label>
-                  </div>
+                <div class="fw-bold fs-6 text-primary">
+                  <codx-label fiedName="Attachments" formName="Tasks" gridViewName="grvTasks"
+                    default="Tài liệu đính kèm"></codx-label>
+                </div>
               </div>
               <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">
-              <codx-label name="AddFile" formName="Tasks" default="Thêm file"></codx-label>
+                <codx-label name="AddFile" formName="Tasks" default="Thêm file"></codx-label>
               </button>
             </div>
-          
+
             <div class="d-flex align-items-center file-item mt-5">
               <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
                 hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
                 (fileAdded)="fileAdded($event)"></attachment>
-
-              <!-- <codx-img class="h-35px me-2" #image objectId="ADMIN"></codx-img>
-              <div class="d-flex flex-column flex-grow-1">
-                <span class="text-dark">Bang-chamcongthang6-V2.doc</span>
-                <div class="d-flex mt-1">
-                  <div class="text-gray-600">20/07/2021</div>
-                  <div class="mx-2 text-gray-500">|</div>
-                  <div class="text-gray-600">Lê Phạm Thương Hoài</div>
-                </div>
-              </div>
-              <div class="dropdown">
-                <button class="btn btn-icon btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <span class="icon-more_vert icon-20"></span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                      <span class="icon-edit text-warning icon-18"></span>
-                      <span class="ms-3">Chỉnh sửa</span>
-                    </div>
-                  </a>
-                  <a class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                      <span class="icon-list_alt text-primary icon-18"></span>
-                      <span class="ms-3">Xem thông tin</span>
-                    </div>
-                  </a>
-                  <a class="dropdown-item">
-                    <div class="d-flex align-items-center">
-                      <span class="icon-clear text-danger icon-18"></span>
-                      <span class="ms-3">Xóa</span>
-                    </div>
-                  </a>
-                </div>
-              </div> -->
             </div>
           </ng-template>
         </e-tabitem>
@@ -210,7 +178,8 @@
           <ng-template #headerText>
             <div class="d-flex align-items-center">
               <span class="icon-article icon-18 me-2"></span>
-              <div class="fw-bold"><codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>   
+              <div class="fw-bold">
+                <codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>
               </div>
             </div>
           </ng-template>
@@ -250,10 +219,12 @@
             <div class="d-flex align-items-center justify-content-between mt-4">
               <div class="d-flex align-items-center">
                 <span class="icon-person icon-16 me-2 text-primary"></span>
-                <div class="fw-bold fs-6 text-primary"><codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
-                </codx-label></div>
+                <div class="fw-bold fs-6 text-primary">
+                  <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
+                  </codx-label>
+                </div>
               </div>
-              <codx-share (eventApply)="eventApply($event)"> </codx-share>
+              <codx-share (eventApply)="eventApply($event)" listName='L1906'> </codx-share>
             </div>
             <div>
               <ng-container *ngFor="let item of listUserDetail; index as i">
@@ -343,6 +314,8 @@
                           <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
                             [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
                             (change)="updateStatusTodoList(i)">
+                          <!-- <codx-input type="checkbox" [crrValue]="item.status"
+                            (valueChange)="updateStatusTodoList(i)"></codx-input> -->
                         </div>
                         <div class="" (click)="editTodo(i, item.text)" style="
                             margin-top: 4px; margin-left: 12px;">
@@ -356,12 +329,14 @@
                               height: 14px;
                               width: 14px;
                               margin-top: 5px" class="col-md-4">
+                            <!-- <codx-input type="checkbox"></codx-input> -->
                           </div>
                           <div class="">
                             <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
                               [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"
                               (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
                               placeholder="Add to do list..." />
+                            <!-- <codx-input type="text" [crrValue]="contentTodoEdit" (valueChange)="updateTodoList(txtTodoEdit.value)"  ></codx-input> -->
                           </div>
                         </div>
                       </div>
@@ -371,7 +346,9 @@
                     <a (click)="onDeleteTodo(i)" style="cursor: pointer">
                       <div>
                         <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
-                        <span><codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label></span>
+                        <span>
+                          <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
+                        </span>
                       </div>
                     </a>
                   </div>
@@ -381,10 +358,12 @@
                 <div class="checkbox-list">
                   <div class="d-flex flex-column flex-grow-1 w-100">
                     <div class="row">
-                      <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
+                      <!-- <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
                         height: 14px;
                         width: 14px;
-                        margin-top: 5px" class="col-md-4">
+                        margin-top: 5px" class="col-md-4"> -->
+                      <!-- <codx-input type="checkbox" 
+                              ></codx-input> -->
                       <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
                         (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
                         (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" class="col-md-8" style="margin-left: -17px;

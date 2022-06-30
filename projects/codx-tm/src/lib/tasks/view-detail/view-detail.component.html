@@ -160,7 +160,7 @@
         </div>
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
           class="symbol symbol-30px symbol-circle me-3">
-          <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4" >
           </codx-imgs>
         </div>
       </div>
@@ -177,11 +177,13 @@
         </div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
-             <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input>  -->
-             <div>
+            <div>
+              <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [crrValue]="item.status == '9'" [disabled]="true"></codx-input> 
+            </div>
+             <!-- <div>
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span>{{ " " + item.memo }}</span>
-             </div>
+             </div> -->
           </ng-container>
         </div>
       </div>
