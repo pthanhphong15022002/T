@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">    
     <ng-template #body>      
         <div class="card-body">
@@ -14,33 +13,6 @@
                                     <span class="icon-folder_open icon-18"></span>
                                 </a>
                             </div>
-=======
-<div  class="card w-100 rounded-0 border-0">
-    <!-- <div *ngIf="type != 'center'" class="card-header pe-5">
-        <div class="card-title">
-        <h2 class="m-0">Upload tài liệu</h2>
-        </div>
-        <div *ngIf="popup == '1'" class="card-toolbar">
-            <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
-                id="kt_engage_demos_close"
-                (click)="closePopup(null)">
-                <span class="icon-close icon-18"></span>
-            </button>
-        </div>
-    </div> -->
-    <div class="card-body p-0">
-        <form name="frm_file1"> 
-            <div class="offcanvas-wrapper">
-                <div *ngIf="hideFolder != '1'" class="modal-subheader">
-                    <div for="fileName" class="d-flex justify-content-between mb-1">
-                        <div class="d-flex align-items-center col-form-label pb-0">
-                            <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
-                        </div>
-                        <div *ngIf="disableFolderSelect()">
-                            <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
-                                <span class="icon-folder_open icon-18"></span>
-                            </a>
->>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
                         </div>
                     </div>
                     <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">
@@ -57,7 +29,6 @@
                             <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                         </div>
                     </div>
-<<<<<<< HEAD
                     <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
                         <div class="d-flex flex-grow-1">
                             <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
@@ -82,32 +53,6 @@
                                         <!-- <input class="form-control no-boder" placeholder="Mô tả tài liệu"
                                             [(ngModel)]='file.description' name="description"> -->
                                     </div>
-=======
-                </div>
-                <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-1">
-                    <div class="d-flex flex-grow-1">
-                        <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
-                        <!-- <codx-img class="h-35px me-3"></codx-img> -->
-                        <div class="d-flex flex-column flex-grow-1">
-                            <span class="text-dark">{{file.fileName}}</span>
-                            <div class="d-flex mt-1">
-                                <div class="text-gray-800 me-3">{{file.uploadDate}}</div>
-                                <div class="text-gray-800">{{file.userName}}</div>
-                            </div>
-                            <div  *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1">
-                                <span class="text-dark"></span>
-                                <div class="d-flex">
-                                    <codx-input
-                                        placeholder="Mô tả tài liệu"
-                                        style="width:100%"
-                                        class="form-control no-boder"
-                                        type="text"
-                                        [crrValue]="file.description"
-                                        (valueChange)="changeValueAgencyText($event)"                                       
-                                    > </codx-input>
-                                    <!-- <input class="form-control no-boder" placeholder="Mô tả tài liệu"
-                                        [(ngModel)]='file.description' name="description"> -->
->>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
                                 </div>
                             </div>
                         </div>
