@@ -8,13 +8,14 @@ import {
   Output,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   DialogData,
+  DialogRef,
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { debug } from 'console';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -39,7 +40,7 @@ export class PopupAddApprovalStepComponent implements OnInit {
   showPlan1 = true;
   time: any;
 
-  dialog: any;
+  dialog: DialogRef;
   tmpData: any;
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
@@ -59,7 +60,7 @@ export class PopupAddApprovalStepComponent implements OnInit {
     private notify: NotificationsService,
     private api: ApiHttpService,
     @Optional() data?: DialogData,
-    @Optional() dialog?: Dialog
+    @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.transId = data?.data.transID;
@@ -72,6 +73,7 @@ export class PopupAddApprovalStepComponent implements OnInit {
       if (res) {
         this.formModel = res;
         console.log(this.formModel);
+        this.dialog.formModel = this.formModel;
       }
 
       this.esService
@@ -154,8 +156,25 @@ export class PopupAddApprovalStepComponent implements OnInit {
             representative: false,
           });
         }
-      } else
+      } else {
         this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
+        if (
+          event.field == 'representative' &&
+          this.dialogApprovalStep.value.representative == true
+        ) {
+          this.dialogApprovalStep.patchValue({
+            sequential: false,
+          });
+        }
+        if (
+          event.field == 'sequential' &&
+          this.dialogApprovalStep.value.sequential == true
+        ) {
+          this.dialogApprovalStep.patchValue({
+            representative: false,
+          });
+        }
+      }
     }
     this.cr.detectChanges();
   }
