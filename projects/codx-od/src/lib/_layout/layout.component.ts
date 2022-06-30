@@ -26,6 +26,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     private auth: AuthService,
     public codxService: CodxService,
   ) {
+    debugger;
     this.codxService.init('OD');
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
@@ -41,6 +42,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    debugger;
     if (this.codxHeader) {
       for (const key in this.headerHTMLAttributes) {
         if (this.headerHTMLAttributes.hasOwnProperty(key)) {

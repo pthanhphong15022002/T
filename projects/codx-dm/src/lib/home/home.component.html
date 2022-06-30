@@ -7,6 +7,8 @@ idField="recID"
 [views]="views"
 (selectedChange)="onSelectionChanged($event)"
 [button]="button"
+(buttonClick)="addFile($event)"
+(viewChanged)="changeView($event)"
 ></codx-views>
 
 <ng-template #templateMain let-data>
@@ -24,7 +26,31 @@ idField="recID"
   </ng-template>
 </ng-template>
 
-<ng-template #templateRight>
-  <!-- file and folder here -->
-   
+<ng-template #templateRight>  
+  <ng-container *ngTemplateOutlet="currView"></ng-container>
 </ng-template>
+
+<ng-template #templateCard> 
+  <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+<ng-template #templateSmallCard>
+  <card type="smallcard" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+<ng-template #templateList>
+  <card type="list" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+
+<!-- <ng-template #templateRight>  
+  <container-element [ngSwitch]="this.viewIcon">
+    <some-element *ngSwitchCase="'icon-appstore'">   
+        <card [dataFolders]="listFolder"></card>
+    </some-element>
+    <some-element *ngSwitchCase="'icon-apps'">
+      small card
+    </some-element>
+    <some-element *ngSwitchCase="'icon-format_list_bulleted'">
+      list
+    </some-element>
+  </container-element>
+</ng-template> -->
+

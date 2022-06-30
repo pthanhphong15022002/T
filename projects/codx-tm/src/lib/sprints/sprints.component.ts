@@ -131,9 +131,9 @@ export class SprintsComponent extends UIComponent {
         },
       },
     ];
-    // this.view.dataService.methodSave = 'AddEditSprintAsync';
-    // this.view.dataService.methodUpdate = 'AddEditSprintAsync';
-    // this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
+    this.view.dataService.methodSave = 'AddEditSprintAsync';
+    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
+    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -194,7 +194,7 @@ export class SprintsComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('TM004');
+          // this.notiService.notifyCode('TM004');
           (this.lstViewBoard.dataService as CRUDService)
             .remove(this.itemSelected)
             .subscribe();
@@ -210,7 +210,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) {}
+  sendemail(data) { }
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -243,12 +243,12 @@ export class SprintsComponent extends UIComponent {
         '',
         obj
       )
-      // .subscribe((dt: any) => {
-      //   var that = this;
-      //   dt.close = function (e) {
-      //     return that.closePopup(e, that);
-      //   };
-      // });
+    // .subscribe((dt: any) => {
+    //   var that = this;
+    //   dt.close = function (e) {
+    //     return that.closePopup(e, that);
+    //   };
+    // });
   }
 
   // closePopup(e,t:SprintsComponent){
@@ -259,7 +259,7 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigate('', this.urlView);
+    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
   }
 
   changeView(evt: any) {
