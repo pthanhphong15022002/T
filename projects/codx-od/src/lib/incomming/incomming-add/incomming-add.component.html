@@ -1,4 +1,4 @@
-<form  [formGroup]="dispatchForm"   class="h-100">
+<form  [formGroup]="dispatchForm" class="h-100">
   <codx-form 
     [headerText]="headerText" 
     [subHeader]="subHeader" 
@@ -10,7 +10,7 @@
   </codx-form>
 </form>
 <ng-template #subHeader>
-  <div class="d-flex justify-content-end my-2">
+  <div class="d-flex align-items-center">
     <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()"> <!--  -->
       <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
     </span>
@@ -62,15 +62,11 @@
         <ng-template ngbNavContent>
           <div class="d-flex align-items-center">
             <codx-input
-              type="combobox"
-              placeholder="Nhập đơn vị"
-              refValue="Agencies"
+              [formModel]="formModel"
+              field="agencyName"
               style="width:100%"
-              [crrValue]="dispatch?.agencyName"
               (valueChange)="changeValueAgency($event)"
-              [multiple]="false"
               [ngClass]="{ 'is-invalid-a': submitted && checkAgenciesErrors }"
-              
             >
             </codx-input>
            <!--  (valueChange)="changeValueAgency($event)" -->
@@ -157,32 +153,31 @@
   <div class="form-group row mt-3">
     <div class="col-6">
       <codx-label default='Phân loại'></codx-label>
-      <codx-valuelist 
-        type="valuelist" 
-        [placeholder]="'Chọn phân loại'" 
-        [name]="gridViewSetup['Category']['referedValue']" 
-        [group]="dispatchForm"
-        controlName="category"
+      <codx-input
+        [formModel]="formModel"
+        field="category"
+        [Group]="dispatchForm"
+        ControlName="category"
       >
-      </codx-valuelist>
+      </codx-input>
     </div>
     <div class="col-6">
       <codx-label default='Nguồn'></codx-label>
-      <codx-valuelist 
-        [placeholder]="'Chọn nguồn'" 
-        [name]="gridViewSetup['Source']['referedValue']" 
-        [group]="dispatchForm"
-        controlName="source" 
+      <codx-input 
+        [formModel]="formModel"
+        field="source"
+        [Group]="dispatchForm"
+        ControlName="source" 
         >
-      </codx-valuelist>
+      </codx-input>
     </div>
   </div>
   <div class="form-group row mt-3">
     <div class="col-4">
       <codx-label default='Số văn bản'></codx-label>
       <codx-input 
-        type="text" 
-        class="form-control" 
+        [formModel]="formModel"
+        field="refNo" 
         [Group]="dispatchForm"
         ControlName="refNo"  >
       </codx-input>
@@ -190,9 +185,8 @@
     <div class="col-4">
       <codx-label default='Ngày văn bản'></codx-label>
       <codx-input 
-        type="dateTime" 
-        format="d" 
-        field="date"
+        [formModel]="formModel"
+        field="refDate" 
         [Group]="dispatchForm"
         ControlName="refDate"
        >
@@ -201,7 +195,8 @@
     <div class="col-2">
       <codx-label default='Số trang'></codx-label>
       <codx-input 
-        type="number" 
+        [formModel]="formModel"
+        field="pages"
         [min]="0" 
         [showSpinButton]="false"
         [Group]="dispatchForm"
@@ -212,7 +207,8 @@
     <div class="col-2">
       <codx-label default='Số bản'></codx-label>
       <codx-input 
-        type="number" 
+        [formModel]="formModel"
+        field="copies"
         [min]="0" 
         [showSpinButton]="false" 
         [Group]="dispatchForm"
@@ -224,8 +220,8 @@
   <div class="form-group">
     <codx-label default='Trích yếu'></codx-label>
     <codx-input 
-      type="textarea" 
-      class="w-100" 
+      [formModel]="formModel"
+      field="title"
       [format]="'ed2'"
       [Group]="dispatchForm"
       ControlName="title" 
@@ -236,38 +232,34 @@
   <div class="form-group row mt-3">
     <div class="col-6">
       <codx-label default='Mức độ khẩn'></codx-label>
-      <codx-valuelist 
-        [placeholder]="'Chọn mức độ khẩn'" 
-        [name]="gridViewSetup['Urgency']['referedValue']" 
-        [group]="dispatchForm"
-        controlName="urgency" 
-         >
-      </codx-valuelist>
+      <codx-input 
+        [formModel]="formModel"
+        field="urgency"
+        [Group]="dispatchForm"
+        ControlName="urgency" 
+      >
+      </codx-input>
     </div>
     <div class="col-6">
       <codx-label default='Cấp bảo mật'></codx-label>
-      <codx-valuelist 
-        [placeholder]="'Chọn cấp bảo mật'" 
-        [name]="gridViewSetup['Security']['referedValue']" 
-        [group]="dispatchForm"
-        controlName="security" 
+      <codx-input 
+        [formModel]="formModel"
+        field="security"
+        [Group]="dispatchForm"
+        ControlName="security" 
       >
-      </codx-valuelist>
+      </codx-input>
     </div>
   </div>
   <div class="form-group">
     <codx-label default='Nơi nhận'></codx-label>
     <div class="d-flex">
       <codx-input
-        #DeptID
-        type="combobox"
-        [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
-        placeholder="Chọn nơi nhận"
         style="width:100%"
-        [multiple]="false"
+        [formModel]="formModel"
+        field="deptID"
         [Group]="dispatchForm"
         ControlName="deptID" 
-        
         [ngClass]="{ 'is-invalid': submitted && f.deptID.errors }"
       >
       <!-- (valueChange)="changeValueBUID($event)" -->
@@ -286,19 +278,18 @@
   <div class="form-group row mt-3">
     <div class="col-6">
       <codx-label default='Hình thức nhận'></codx-label>
-      <codx-valuelist 
-        [placeholder]="'Chọn hình thức nhận'" 
-        [name]="gridViewSetup!=null?gridViewSetup['SendMode']['referedValue']:null" 
-        [group]="dispatchForm"
+      <codx-input 
+        [formModel]="formModel"
+        [Group]="dispatchForm"
+        field="sendMode"
         controlName="sendMode" 
-        ></codx-valuelist>
+        ></codx-input>
     </div>
     <div class="col-3">
       <codx-label default='Ngày nhận'></codx-label>
-      <codx-input 
-        type="dateTime" 
-        format="d" 
-        field="date"
+      <codx-input
+        [formModel]="formModel"
+        field="dispatchOn" 
         [Group]="dispatchForm"
         ControlName="dispatchOn" 
         [ngClass]="{ 'is-invalid': submitted && f.dispatchOn.errors }"
@@ -308,9 +299,8 @@
     <div class="col-3">
       <codx-label default='Thời hạn xử lý'></codx-label>
       <codx-input 
-        type="dateTime" 
-        format="d" 
-        field="date"
+        [formModel]="formModel"
+        field="deadline" 
         [Group]="dispatchForm"
         ControlName="deadline" 
         [ngClass]="{ 'is-invalid': submitted && f.deadline.errors }"
@@ -322,9 +312,8 @@
     <codx-label default='Người chịu trách nhiệm'></codx-label>
     <div class="d-flex">
       <codx-input
-        [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
-        placeholder="Chọn tài khoản"
-        type="combobox"
+        [formModel]="formModel"
+        field="owner" 
         style="width:100%"
         [Group]="dispatchForm"
         ControlName="owner" 

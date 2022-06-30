@@ -7,26 +7,26 @@
 
 <ng-template #grid let-data>
   <tr>
-    <td >
+    <td>
       {{data.rangeID}}
     </td>
     <td>
       {{data.rangeName}}
     </td>
-    <td >
+    <td>
       <div [innerHTML]="data.note">
       </div>
     </td>
-    <td >
+    <td>
       <div *ngFor="let h of data?.rangeLines; let i = index">
         <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
       </div>
-      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
+      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue"
+          (click)="readMore(data)">{{
           !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
     <td>
-      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users"
-       imageWidth="25" [desc]="data.createName">
+      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
       </codx-temp-full>
       <!-- <div class="d-flex align-items-center" #itemCreateBy>
         <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
@@ -36,10 +36,10 @@
         </div>
       </div> -->
     </td>
-    <td >
+    <td>
       {{data.createdOn | date: 'dd/MM/yyyy'}}
     </td>
-    <td >
+    <td>
       <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
         (clickMF)="clickMF($event,data)">
       </codx-mfunc>

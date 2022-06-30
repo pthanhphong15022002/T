@@ -6,17 +6,26 @@ import { LayoutComponent } from './layout.component';
 import { NotesHomeComponent } from '@pages/home/notes-home/notes-home.component';
 import { AddNoteComponent } from '@pages/home/notes-home/add-note/add-note.component';
 import { HomeComponent } from '@pages/home/home.component';
+import { ListPostComponent } from '@pages/home/list-post/list-post.component';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { AddPostComponent } from '@pages/home/list-post/popup-add/addpost/addpost.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     LayoutComponent,
     NotesHomeComponent,
     AddNoteComponent,
-    HomeComponent
+    HomeComponent,
+    ListPostComponent,
+    AddPostComponent,
   ],
   imports: [
+    CommonModule,
     PagesRoutingModule,
-    SharedModule
+    SharedModule,
+    CodxShareModule,
+    
   ],
   exports: [RouterModule],
 })

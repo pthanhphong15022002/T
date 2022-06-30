@@ -58,7 +58,7 @@
   
   <ng-template #itemProjectBoard let-data>
     <codx-card-center cardCss="border h-100" [formModel]="view.formModel" [iconCss]="data.sharedByOther?'icon-share':''"  [iconColorCss]="'blue'"
-      [imageId]="data.iterationID" [title]="data.iterationName" [content]="data.memo || 'memo'" [icoDescCss]="'icon-assignment'" [desc]="data.projectName" [desc2]="data.memo"
+      [imageId]="data.iterationID" [title]="data.iterationName" [icoDescCss]="'icon-assignment'" [desc]="data.projectName" [desc2]="data.memo"
       [resources]="data.resources" [resourceObjType]="'AD_Users'" [resourceNum]="4" (clickMF)="clickMF($event, data)">
     </codx-card-center>
   </ng-template>

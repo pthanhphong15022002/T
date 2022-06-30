@@ -68,6 +68,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
+    this.view.dataService.methodUpdate = 'UpdateNoteBookAsync';
   }
 
   clickMF(e: any, data?: any) {
@@ -83,7 +84,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   openDetailPage(recID) {
     //TM/Tasks/mF009?recid=[recid]&orderNo=[orderno]
-    this.codxService.navigate('MWP00941', '', {recID: recID});
+    this.codxService.navigate('MWP00941', '', { recID: recID });
   }
 
   openFormMoreFunc(data: any) {
@@ -107,7 +108,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.api
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
-        if(res) {
+        if (res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
           this.changedt.detectChanges();
         }

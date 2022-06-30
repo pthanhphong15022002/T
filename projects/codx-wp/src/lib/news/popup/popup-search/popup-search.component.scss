@@ -1,0 +1,41 @@
+.tag-item {
+    border: 1px solid rgb(216, 209, 209);
+    border-radius: 25px;
+    padding: 2px 10px;
+    font-size: 1rem;
+    list-style: 1.5;
+    background-color: #fff;
+}
+
+.isActive {
+    border: 1px solid rgba(17, 120, 180, 0.959);
+    color: rgba(17, 120, 180, 0.959);
+}
+
+.icon {
+    color: rgba(17, 120, 180, 0.959);
+}
+
+/******/
+
+.search-box {
+    border: 1px #eee solid;
+    border-radius: 30px !important;
+    width: 300px;
+    height: 32px;
+    padding: 2px 8px 2px;
+}
+
+.search-box input {
+    border: 0 !important;
+    border-radius: 30px !important;
+}
+
+.search-box .btn {
+    width: 32px;
+    height: 28px;
+    background-color: transparent !important;
+}
+.h-500{
+    height: 500px;
+}

@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -30,7 +31,7 @@ import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-
   templateUrl: './popup-add-category.component.html',
   styleUrls: ['./popup-add-category.component.scss'],
 })
-export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
+export class PopupAddCategoryComponent implements OnInit {
   @Output() closeForm = new EventEmitter();
   @Output() openAsideForm = new EventEmitter();
 
@@ -67,6 +68,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private notifyService: NotificationsService,
     private cfService: CallFuncService,
+    private cr: ChangeDetectorRef,
     private modalService: NgbModal,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -76,7 +78,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
   }
-  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.initForm();
@@ -111,6 +112,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         }
       });
     this.isSaved = false;
+    this.cr.detectChanges();
   }
 
   valueChange(event) {
@@ -119,6 +121,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
       else this.dialogCategory.patchValue({ [event['field']]: event.data });
     }
+    this.cr.detectChanges();
   }
 
   onSaveForm(isClose) {
@@ -156,6 +159,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         }
         if (isClose) this.close(this.dataGrid);
       });
+
+    this.cr.detectChanges();
   }
 
   openAutoNumPopup() {

@@ -24,7 +24,6 @@ import { StatusTaskGoal } from '../../models/enum/enum';
 import { TaskGoal } from '../../models/task.model';
 import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
-
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -34,10 +33,10 @@ export class PopupAddComponent implements OnInit {
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
-  listUser: any[] =[];
+  listUser: any[] = [];
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
-  listUserDetail: any[]=[];
-  listTodo: TaskGoal[]=[];
+  listUserDetail: any[] = [];
+  listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   disableAddToDo = true;
@@ -359,11 +358,11 @@ export class PopupAddComponent implements OnInit {
         return;
       }
     }
-    if (this.showAssignTo){
-      if(this.task.assignTo==null || this.task.assignTo==''){
-           //  this.notiService.notifyCode('code nao vao day ??');
-           this.notiService.notify('Thêm người được giao việc !');
-           return ;
+    if (this.showAssignTo) {
+      if (this.task.assignTo == null || this.task.assignTo == '') {
+        //  this.notiService.notifyCode('code nao vao day ??');
+        this.notiService.notify('Thêm người được giao việc !');
+        return;
       }
     }
 
@@ -620,7 +619,7 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() {}
+  extendShow() { }
 
   valueChangeTags(e) {
     this.task.tags = e.data;
