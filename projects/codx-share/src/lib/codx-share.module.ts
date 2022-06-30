@@ -13,8 +13,8 @@ import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { CalendarDateComponent } from './components/calendardate/calendardate.component';
-import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { TabAllModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { CodxExportComponent } from './components/codx-export/codx-export.component';
+import { CodxExportAddComponent } from './components/codx-export/codx-export-add/codx-export-add.component';
 import { TreeviewCommentComponent } from './components/treeview-comment/treeview-comment.component';
 import { ReadMoreComponent } from './components/readmore/readmore.component';
 import { Readmorev2Component } from './components/readmorev2/readmorev2.component';
@@ -32,6 +32,8 @@ const T_Component: Type<any>[] = [
   CodxTabsComponent,
   ImageGridComponent,
   CalendarDateComponent,
+  CodxExportComponent,
+  CodxExportAddComponent,
   TreeviewCommentComponent,
   ReadMoreComponent,
   Readmorev2Component,
