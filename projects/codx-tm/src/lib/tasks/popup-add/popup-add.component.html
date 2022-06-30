@@ -167,7 +167,7 @@
             </div>
 
             <div class="d-flex align-items-center file-item mt-5">
-              <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" 
+              <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
                 hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
                 (fileAdded)="fileAdded($event)"></attachment>
             </div>
@@ -306,43 +306,50 @@
             <div>
               <ng-container *ngFor="let item of listTodo; index as i">
                 <div
-                  class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item">
-                  <div class="checkbox-list">
-                    <div class="d-flex flex-column flex-grow-1 w-100">
+                  class="d-flex justify-content-between align-items-center checkbox-item mb-4 card-with-dropdown-item row">
+                  <div class="checkbox-list col-10">
+                    <div class="d-flex flex-column flex-grow-1 ">
                       <div class="flex" *ngIf="i != indexEditTodo">
                         <div class="">
-                          <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
-                            [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
-                            (change)="updateStatusTodoList(i)">
-                          <!-- <codx-input type="checkbox" [crrValue]="item.status"
+                          <span>
+                            <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
+                              [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
+                              (change)="updateStatusTodoList(i)">
+                            <!-- <codx-input type="checkbox" [crrValue]="item.status"
                             (valueChange)="updateStatusTodoList(i)"></codx-input> -->
-                        </div>
-                        <div class="" (click)="editTodo(i, item.text)" style="
-                            margin-top: 4px; margin-left: 12px;">
-                          {{ item.text }}
+                          </span>
+                          <span class="" (click)="editTodo(i, item.text)" style="
+                          margin-top: 4px; margin-left: 12px;">
+                            {{ item.text }}
+                          </span>
                         </div>
                       </div>
                       <div *ngIf="i == indexEditTodo">
                         <div class="flex">
                           <div class="">
-                            <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
+                            <span>
+                              <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1"
+                                style="margin-left: -8px;
                               height: 14px;
                               width: 14px;
                               margin-top: 5px" class="col-md-4">
-                            <!-- <codx-input type="checkbox"></codx-input> -->
-                          </div>
-                          <div class="">
-                            <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
-                              [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"
-                              (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
-                              placeholder="Add to do list..." />
-                            <!-- <codx-input type="text" [crrValue]="contentTodoEdit" (valueChange)="updateTodoList(txtTodoEdit.value)"  ></codx-input> -->
+                              <!-- <codx-input type="checkbox"></codx-input> -->
+
+                            </span>
+
+                            <span class="">
+                              <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
+                                [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"
+                                (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
+                                placeholder="Add to do list..." />
+                              <!-- <codx-input type="text" [crrValue]="contentTodoEdit" (valueChange)="updateTodoList(txtTodoEdit.value)"  ></codx-input> -->
+                            </span>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="!readOnly">
+                  <div class="col-2" *ngIf="!readOnly">
                     <a (click)="onDeleteTodo(i)" style="cursor: pointer">
                       <div>
                         <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
@@ -354,7 +361,7 @@
                   </div>
                 </div>
               </ng-container>
-              <div class="d-flex justify-content-between align-items-center checkbox-item mb-4" *ngIf="!readOnly">
+              <div class="d-flex justify-content-between align-items-center checkbox-item " *ngIf="!readOnly">
                 <div class="checkbox-list">
                   <div class="d-flex flex-column flex-grow-1 w-100">
                     <div class="row">
@@ -366,7 +373,7 @@
                               ></codx-input> -->
                       <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
                         (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
-                        (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" class="col-md-8" style="margin-left: -17px;
+                        (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" style="
                             border-width: thin;
                             border-style: none;
                             margin-top: 3px;
@@ -431,8 +438,11 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <button class="btn btn-light-primary" (click)="dialog.close()">
+      <!-- <button class="btn btn-light-primary" (click)="dialog.close()">
         <codx-label name="Close" formName="TM_Tasks" default="Đóng"></codx-label>
+      </button> -->
+      <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+        <i class="icon-cloud_upload fs-5"></i>Upload file
       </button>
       <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">
         <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
