@@ -1,0 +1,33 @@
+:root {
+    codx-view-content {
+        background-color: transparent;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    codx-view-content .card-body {
+        background-color: aqua;
+    }
+
+    .e-listview .e-list-item {
+        margin-bottom: 15px;
+        background-color: white;
+        border-radius: 6px;
+    }
+}
+
+codx-view-content {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+codx-view-content .card-body {
+    background-color: aqua;
+}
+
+.e-listview .e-list-item {
+    margin-bottom: 15px;
+    background-color: white;
+    border-radius: 6px;
+}

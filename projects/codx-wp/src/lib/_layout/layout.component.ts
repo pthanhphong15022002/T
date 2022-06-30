@@ -11,25 +11,26 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
   valueList: [];
 
-  constructor(private route: ActivatedRoute, private changedt: ChangeDetectorRef,private cache:CacheService,inject: Injector) {
+  constructor(private route: ActivatedRoute, private changedt: ChangeDetectorRef, private cache: CacheService, inject: Injector) {
     super(inject);
     this.codxService.init(this.module);
     this.cache.valueList('L1492').subscribe((value) => {
-      this.valueList = value.datas; });
+      this.valueList = value.datas;
+    });
   }
 
   onInit(): void {
-    this.funcs$.subscribe();
+    this.codxService.fun$.subscribe();
   }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 
 
   category = "news";
-  navigate(category = 'news'){
+  navigate(category = 'news') {
     this.category = category;
-    var funcID =  this.route.firstChild.snapshot.params["funcID"];
+    var funcID = this.route.firstChild.snapshot.params["funcID"];
     this.changedt.detectChanges();
-    this.codxService.navigate('', "wp/"+category+"/"+funcID);
+    this.codxService.navigate('', "wp/" + category + "/" + funcID);
   }
 }

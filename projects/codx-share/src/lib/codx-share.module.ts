@@ -20,6 +20,7 @@ import { ReadMoreComponent } from './components/readmore/readmore.component';
 import { Readmorev2Component } from './components/readmorev2/readmorev2.component';
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { TruncatePipe } from './pipe/truncate.pipe';
+import { CodxExportComponent } from './components/codx-export/codx-export.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -35,6 +36,7 @@ const T_Component: Type<any>[] = [
   ReadMoreComponent,
   Readmorev2Component,
   ImageGridComponent,
+  CodxExportComponent
 ];
 
 
@@ -44,8 +46,8 @@ const T_Pipe: Type<any>[] = [
 
 
 @NgModule({
-  declarations:[ T_Component,T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, ],
+  declarations: [T_Component, T_Pipe],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule,],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule {}
+export class CodxShareModule { }
