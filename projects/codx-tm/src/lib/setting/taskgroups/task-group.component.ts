@@ -63,7 +63,7 @@ export class TaskGroupComponent implements OnInit {
       { field: 'projectControl', headerText: 'Chọn dự án', width: 140 },
       { field: 'attachmentControl', headerText: 'Đính kèm file', width: 140 },
       { field: 'checkListControl', headerText: 'Nhập việc cần làm', width: 180 },
-      { field: 'checkList', headerText: 'CheckList', width: 100 },
+      { field: 'checkList', headerText: 'CheckList', width: 150 },
       { field: 'createName', headerText: 'Người tạo', width: 200 },
       { field: 'createdOn', headerText: 'Ngày tạo', width: 100 },
       { field: '', headerText: '#', width: 30 },

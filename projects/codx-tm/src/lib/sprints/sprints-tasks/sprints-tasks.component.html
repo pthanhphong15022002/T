@@ -60,24 +60,15 @@
   </div>
 </ng-template>
 
-<ng-template #sprintsSchedule let-data>
+
+<ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <!-- <div>
-    <div>{{data.taskName}}</div>
-  </div>
-  <button class="btn btn-light-primary" (click)="edit(data)">
-    Sửa
-  </button>
-  <button class="btn btn-light-primary" (click)="delete(data)">
-    Xóa
-  </button> -->
-  <!-- <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-    [title]="data.userName" [formModel]=" view.formModel">
-  </codx-temp-full> -->
+  <div>{{data.taskName}}</div>
 </ng-template>
+
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" [predicate]="" [dataValue]=""

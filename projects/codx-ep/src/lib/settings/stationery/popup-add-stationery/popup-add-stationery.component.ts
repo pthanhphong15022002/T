@@ -170,13 +170,8 @@ export class PopupAddStationeryComponent implements OnInit {
             if (result) {
               this.initForm();
               this.loadData.emit();
-
-              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-              // this.changedr.detectChanges();
             } else {
               this.initForm();
-              // this.listView.addHandler(res.msgBodyData[0], this.isAddMode, "giftID");
-              // this.changedr.detectChanges();
             }
           });
         this.onDone.emit([res.msgBodyData[0], this.isAdd]);

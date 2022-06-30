@@ -1,5 +1,4 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UpdateNoteBookComponent } from './update-note-book/update-note-book.component';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input } from '@angular/core';
@@ -7,6 +6,7 @@ import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
+import { A, I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-note-books',
@@ -26,13 +26,11 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   views = [];
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
-  
+
   @Input() formModel: FormModel;
 
   @ViewChild('lstCardNoteBooks') lstCardNoteBooks: CodxCardImgComponent;
   @ViewChild('lstNoteBook') lstNoteBook: AddUpdateNoteBookComponent;
-  @ViewChild('lstNoteBookUpdate') lstNoteBookUpdate: UpdateNoteBookComponent;
-  @ViewChild('appEdit') appEdit: UpdateNoteBookComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('inputSearch') inputSearch: CodxSearchBarComponent;
   @Output() loadData = new EventEmitter();
@@ -41,7 +39,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private codxService: CodxService,
+    public codxService: CodxService,
     private modalService: NgbModal,
   ) {
     super(inject);
@@ -75,16 +73,17 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
-        // this.edit(data);
+        this.edit(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }
 
   openDetailPage(recID) {
-    this.codxService.navigate('', `mwp/noteDetails/${this.funcID}`, { recID: recID });
+    //TM/Tasks/mF009?recid=[recid]&orderNo=[orderno]
+    this.codxService.navigate('MWP00941', '', {recID: recID});
   }
 
   openFormMoreFunc(data: any) {
@@ -104,20 +103,31 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     }, 5000);
   }
 
-  onDelete(data: any) {
+  delete(data: any) {
     this.api
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
-        var dt = res;
-        // this.lstCardNoteBooks.removeHandler(dt, "recID");
-        this.changedt.detectChanges();
+        if(res) {
+          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.changedt.detectChanges();
+        }
       });
   }
 
-  formUpdateNoteBook(data: any) {
-    this.appEdit.data = data;
-    this.lstNoteBookUpdate.lstNoteBook = this.lstCardNoteBooks;
-    this.changedt.detectChanges();
+  edit(data: any) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog.closed.subscribe(x => {
+        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      });
+    });
   }
 
   openFormUpdateBackground(content, recID) {
@@ -147,10 +157,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       this.view.dataService.data.pop();
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
       this.dialog.closed.subscribe(x => {
-        if (x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
-        else {
-          this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-        }
+        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
       });
     });
   }

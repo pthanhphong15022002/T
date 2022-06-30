@@ -22,10 +22,7 @@ export class ViewDetailsTaskComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  aaa(val:any)
-  {
-    console.log(val)
-  }
+
 
 }
 

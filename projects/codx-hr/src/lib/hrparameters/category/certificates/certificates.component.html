@@ -1,0 +1,20 @@
+<codx-views #view funcID="HRS0201" service="BS" entityName="BS_Certificates" [views]="views" [button]="button"
+    (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="CertificatesBusiness"
+    method="GetListAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
+    (requestEnded)="requestEnded($event)" [selectedFirst]="true" [itemSelected]="itemSelected">
+</codx-views>
+
+<ng-template #itemCreateBy let-dataItem>
+    <div class="d-flex align-items-center" #itemCreateBy>
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+        </codx-img>
+        <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+    </div>
+</ng-template>
+
+<ng-template #itemCreate let-data>
+    {{data.createdOn | date: "dd/mm/yyyy"}}
+</ng-template>
+<ng-template #itemStopCheck let-data>
+    <codx-input type="checkbox" name="checkbox" class="" [checked]="data.stop"></codx-input>
+</ng-template>

@@ -16,6 +16,7 @@ import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { CalendarDateComponent } from './components/calendardate/calendardate.component';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
+import { CodxExportComponent } from './components/codx-export/codx-export.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -27,6 +28,7 @@ const T_Component: Type<any>[] = [
   CodxTabsComponent,
   ImageGridComponent,
   CalendarDateComponent,
+  CodxExportComponent
 ];
 
 @NgModule({

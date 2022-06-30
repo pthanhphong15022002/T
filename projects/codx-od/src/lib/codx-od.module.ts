@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsComponent } from './charts/charts.component';
 import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { SharedModule } from '@shared/shared.module';
-import { DepartmentComponent } from './department/department.component';
+import { DepartmentComponent } from './incomming/department/department.component';
 import { ForwardComponent } from './incomming/forward/forward.component';
 //import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ODSearchComponent } from './searching/searching.component';

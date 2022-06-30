@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
@@ -27,6 +28,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   functionID: string;
   isAfterRender = false;
   gridViewSetup: any;
+  action = '';
 
   constructor(
     private authStore: AuthStore,
@@ -42,6 +44,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       ...this.employee,
       ...dt?.data,
     };
+     this.action = dt.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -52,7 +55,13 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.cache.gridViewSetup('Employees', 'grvEmployees').subscribe(res => {
       if (res)
         this.gridViewSetup = res
-    })
+    });
+    if(this.action==='edit'){
+      this.title = 'Chỉnh sửa';
+    }
+    if(this.action==='copy'){
+      this.title = 'Sao chép';
+    }
   }
 
   initForm() {
@@ -178,7 +187,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     .subscribe((res) => {
       if (res.save) {
         this.dialog.close();
-        this.notiService.notify('Thêm thành công'); ///sau này có mess thì gán vào giờ chưa có
+        this.notiService.notify('Thêm thành công'); 
       }
     });
   }
