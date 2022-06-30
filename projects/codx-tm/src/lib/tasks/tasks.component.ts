@@ -320,7 +320,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        console.log(e);
+        this.itemSelected=this.view.dataService.data[0]
       });
     });
   }
@@ -341,7 +341,12 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit',this.isAssignTask],
           option
         );
+        this.dialog.closed.subscribe((e) => {
+          this.itemSelected=this.view.dataService.dataSelected
+        });
+       
       });
+
   }
 
   copy(data) {
@@ -356,6 +361,9 @@ export class TasksComponent extends UIComponent {
         [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        this.itemSelected=this.view.dataService.data[0]
+      });
     });
   }
 
