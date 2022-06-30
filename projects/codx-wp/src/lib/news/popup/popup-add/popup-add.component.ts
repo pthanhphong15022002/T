@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
+import { preRender } from '@syncfusion/ej2-angular-buttons';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService } from 'codx-core';
+import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({
@@ -11,7 +13,7 @@ import { WP_News } from '../../../models/WP_News.model';
   styleUrls: ['./popup-add.component.css']
 })
 export class PopupAddComponent implements OnInit {
-
+ objNews = new WP_News();
   dateStart: Date;
   dateEnd: Date;
   subContent: string;
@@ -43,10 +45,11 @@ export class PopupAddComponent implements OnInit {
     private auth: AuthService,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
-    @Optional() dd?: Dialog,
+    @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
 
   ) {
+    this.objNews = dd?.data;
     this.dialogRef = dialog;
   }
   ngAfterViewInit(): void {
@@ -59,6 +62,14 @@ export class PopupAddComponent implements OnInit {
     this.initForm();
     this.user = this.auth.userValue;
   }
+
+  beforeSave(option: any) {
+    let itemData = this.objNews;
+    option.method = 'InsertNewsAsync';
+    option.data = [itemData];
+    return true;
+  }
+
   clickInsertNews() {
     if(this.lstRecevier.length <= 0){
       this.notifSV.notifyCode("WP012");
@@ -72,27 +83,28 @@ export class PopupAddComponent implements OnInit {
       this.notifSV.notifyCode("WP012");
       return;
     }
-    var objNews = new WP_News();
-    objNews.newsType = '1';
-    objNews.status = '2';
-    objNews.approveControl = "0";
-    objNews.createdOn = new Date();
-    objNews.createdBy = this.user.userID;
-    objNews.shareControl = this.shareControl;
-    objNews.tags = this.tagName;
-    objNews.category = this.formGroup.controls['fCategory'].value;
-    objNews.startDate = this.formGroup.controls['fDateStart'].value;
-    objNews.endDate = this.formGroup.controls['fDateEnd'].value;
-    objNews.subject = this.formGroup.controls['fSubject'].value;
-    objNews.subContent = this.formGroup.controls['fSubContent'].value;
-    objNews.contents = this.formGroup.controls['fContents'].value;
-    objNews.allowShare = this.formGroup.controls['fIsShare'].value;
-    objNews.createPost = this.formGroup.controls['fIsCreated'].value;
-    objNews.createdBy = this.user.userID;
+   
+    this.objNews.newsType = '1';
+    this.objNews.status = '2';
+    this.objNews.approveControl = "0";
+    this.objNews.createdOn = new Date();
+    this.objNews.createdBy = this.user.userID;
+    this.objNews.shareControl = this.shareControl;
+    this.objNews.tags = this.tagName;
+    this.objNews.category = this.formGroup.controls['fCategory'].value;
+    this.objNews.startDate = this.formGroup.controls['fDateStart'].value;
+    this.objNews.endDate = this.formGroup.controls['fDateEnd'].value;
+    this.objNews.subject = this.formGroup.controls['fSubject'].value;
+    this.objNews.subContent = this.formGroup.controls['fSubContent'].value;
+    this.objNews.contents = this.formGroup.controls['fContents'].value;
+    this.objNews.allowShare = this.formGroup.controls['fIsShare'].value;
+    this.objNews.createPost = this.formGroup.controls['fIsCreated'].value;
+    this.objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     // Owner
     var per1 = new Permission();
     per1.objectType = '1';
+    per1.memberType = "1";
     per1.objectID = this.user.userID;
     per1.objectName = this.user.userName;
     per1.create = true;
@@ -109,29 +121,23 @@ export class PopupAddComponent implements OnInit {
     lstPermissions.push(per1);
     this.lstRecevier.map(item => {
       var per = new Permission();
+      per.memberType = "3";
       per.objectType = this.objectType;
       per.objectID = item.UserID;
       per.objectName = item.UserName;
       per.read = true;
-      per.share = objNews.allowShare;
+      per.share = this.objNews.allowShare;
       per.share = true;
       per.isActive = true;
       per.createdBy = this.user.userID;
       per.createdOn = new Date();
       lstPermissions.push(per);
     })
-    objNews.permissions = lstPermissions;
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'InsertNewsAsync',
-        objNews
-      )
-      .subscribe((res1: any) => {
-        if (res1) {
-          let data = res1;
+    this.objNews.permissions = lstPermissions;
+   
+   this.dialogRef.dataService.save((opt: any) => this.beforeSave(opt)).subscribe((res: any) => {
+    if (res) {
+      let data = res;
           this.objectID = data.recID;
           this.imageUpload
             .updateFileDirectReload(data.recID)
@@ -142,14 +148,59 @@ export class PopupAddComponent implements OnInit {
                 this.objectType = '';
                 this.lstRecevier = [];
                 this.notifSV.notifyCode('E0026');
-                this.dialogRef.close();
-                this.changedt.detectChanges();
+                this.insertWPComment(data);
               }
             });
-        }
-      });
+    }
+  });
+   
+   
+   
+    // this.api
+    //   .execSv(
+    //     'WP',
+    //     'ERM.Business.WP',
+    //     'NewsBusiness',
+    //     'InsertNewsAsync',
+    //     this.objNews
+    //   )
+    //   .subscribe((res1: any) => {
+    //     if (res1) {
+    //       let data = res1;
+    //       this.objectID = data.recID;
+    //       this.imageUpload
+    //         .updateFileDirectReload(data.recID)
+    //         .subscribe((res2) => {
+    //           if (res2) {
+    //             this.initForm();
+    //             this.objectID = '';
+    //             this.objectType = '';
+    //             this.lstRecevier = [];
+    //             this.notifSV.notifyCode('E0026');
+    //             this.insertWPComment(data);
+    //           }
+    //         });
+    //     }
+    //   });
   }
   
+
+  insertWPComment(data: WP_News){
+    if(data.createPost){
+      var post = new WP_Comments();
+      post.category = "4";
+      post.refID = data.recID;
+      post.refType = "WP_News";
+      post.content = data.subject;
+      post.shareControl = data.shareControl;
+      post.permissions = data.permissions;
+      post.approveControl = "0";
+      post.createdBy = data.createdBy;
+      this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync", [post, null]).subscribe();
+    }
+    
+
+  }
   clearData(){
     this.lstRecevier = [];
     this.userRecevier = [];

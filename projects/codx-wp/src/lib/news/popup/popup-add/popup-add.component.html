@@ -1,5 +1,5 @@
-<codx-form [dialog]="dialogRef" [headerText]="headerText" [body]="body" [footer]="footer"></codx-form>
-<ng-template #body>
+<codx-form [dialog]="dialogRef" [headerText]="headerText" [body]="body" [footer]="footer">
+    <ng-template #body>
     <div class="card w-100 rounded-0 border-0">
         <div class="card-header">
             <div class="d-flex align-items-center">
@@ -8,7 +8,7 @@
                         <ng-containert *ngIf="lstRecevier.length == 1; else shareWith">
                             <div  class="fw-bolder fs-5">
                                 <span class="ms-2 me-2">{{user.userName}}</span>
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
                                 <span class="me-2 ">{{userRecevier.UserName}}</span>
                             </div>
                             <div class="symbol symbol-20px symbol-circle me-2">
@@ -18,9 +18,9 @@
                         <ng-template #shareWith>
                             <div  class="fw-bolder fs-5">
                                 <span class="ms-2 me-2">{{user.userName}}</span>
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
                                 <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default=" người khác "></codx-label>
+                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default=" người khác "></codx-label>
                             </div>
                         </ng-template>
                     </ng-container>
@@ -45,7 +45,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formName]="dialogRef.formModel.formName" name="lblCategory" default="Phân loại"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblCategory" default="Phân loại"></codx-label>
                 </div>
                 <codx-input type="valuelist" name="valuelist" ngDefaultControl refValue="L1492" field="fCategory"
                     [crrValue]="formGroup.controls['fCategory'].value" (valueChange)="valueChange($event)"></codx-input>
@@ -53,7 +53,7 @@
             <div class="form-group row mt-3">
                 <div class="col-6">
                     <div class="label">
-                        <codx-label [formName]="dialogRef.formModel.formName" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
+                        <codx-label [formModel]="dialogRef.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" field="fStartDate"
                         [crrValue]="formGroup.controls['fDateStart'].value" format="F" (valueChange)="valueChange($event)">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-6">
                     <div class="label">
-                        <codx-label [formName]="dialogRef.formModel.formName" name="lblEndDate" default="Ngày kết thúc"></codx-label>
+                        <codx-label [formModel]="dialogRef.formModel" name="lblEndDate" default="Ngày kết thúc"></codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" placeholder="datetime" field="fDateEnd"
                         [crrValue]="formGroup.controls['fDateEnd'].value" format="F"
@@ -70,7 +70,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formName]="dialogRef.formModel.formName"name="lblSubtitle" default="Tiêu đề"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel"name="lblSubtitle" default="Tiêu đề"></codx-label>
                 </div>
                 <codx-input type="text" class="form-control" placeholder="Tiêu đề" field="fSubject"
                     [crrValue]="formGroup.controls['fSubject'].value" (valueChange)="valueChange($event)" ngDefaultControl>
@@ -78,7 +78,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formName]="dialogRef.formModel.formName" name="lblDesciption" default="Mô tả"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblDesciption" default="Mô tả"></codx-label>
                 </div>
                 <codx-input type="text" class="form-control"  placeholder="Mô tả"
                     field="fSubContent" [crrValue]="formGroup.controls['fSubContent'].value"
@@ -86,7 +86,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formName]="dialogRef.formModel.formName" name="lblContents" default="Nội dung"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblContents" default="Nội dung"></codx-label>
                 </div>
                 <codx-input type="textarea" class="test-textarea" field="textarea" field="fContents"
                     [crrValue]="formGroup.controls['fContents'].value" placeholder="Nội dung" (valueChange)="valueChange($event)" ngDefaultControl>
@@ -96,7 +96,7 @@
             <div class="form-group row mt-3">
                 <div class="col-12">
                     <div class="label">
-                        <codx-label [formName]="dialogRef.formModel.formName" name="lblImage" default="Hình hiển thị"></codx-label>
+                        <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
                     </div>
                 </div>
                 <div class="col-6 view-img">
@@ -107,7 +107,7 @@
             <div class="form-group mt-3">
                 <div class="d-flex align-items-center mb-2">
                     <div class="label me-6">
-                        <codx-label [formName]="dialogRef.formModel.formName" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
+                        <codx-label [formModel]="dialogRef.formModel" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
                     </div>
                     <codx-input type="switch" [checked]="false" [disabled]="false" id="switchShared" labelPosition="Before"
                         field="fIsShare" [crrValue]="formGroup.controls['fIsShare'].value" class="test-switch"
@@ -115,7 +115,7 @@
                 </div>
                 <div class="d-flex align-items-center mb-2">
                     <div class="label me-6">
-                        <codx-label [formName]="dialogRef.formModel.formName" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
+                        <codx-label [formModel]="dialogRef.formModel" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
                     </div>
                     <codx-input type="switch" [checked]="false" [disabled]="false" id="switchCreated" labelPosition="Before"
                         field="fIsCreated" [crrValue]="formGroup.controls['fIsCreated'].value" class="test-switch"
@@ -130,9 +130,10 @@
         <div class="d-flex justify-content-between">
             <div class="d-flex">
                 <button (click)="clickInsertNews()" type="button" class="btn btn-light-primary">
-                    <codx-label [formName]="dialogRef.formModel.formName" name="lblSave" default="Lưu"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
                 </button>
             </div>
         </div>
     </div>
 </ng-template>
+</codx-form>

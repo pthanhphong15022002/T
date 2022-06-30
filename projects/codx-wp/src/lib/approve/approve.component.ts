@@ -1,14 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType } from 'codx-core';
+import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-approve',
   templateUrl: './approve.component.html',
   styleUrls: ['./approve.component.css']
 })
-export class ApproveComponent implements OnInit {
+export class ApproveComponent extends UIComponent implements OnInit {
+  onInit(): void {
+  }
   entityName = "";
   predicate = "";
   dataValue = "";
@@ -25,7 +27,16 @@ export class ApproveComponent implements OnInit {
   remakeApprove = "2";
   model = new DataRequest();
   views: Array<ViewModel> = [];
-  @ViewChild('panelLeftRight') panelLeftRight : TemplateRef<any>;
+  gridViewSetUp: any;
+  formModel: any;
+  dataSelected: any;
+  @ViewChild('template') template : TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
+
+
+  @ViewChild('codxViews') codxViews : ViewsComponent;
+
   navAsside = [
     {
       name:"await",
@@ -62,27 +73,30 @@ export class ApproveComponent implements OnInit {
   ]
   @ViewChild('listView') listView : CodxListviewComponent;
   constructor
-  (
-    private api:ApiHttpService,
+  ( inject: Injector,
     private dt:ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private auth:AuthService,
     private route: ActivatedRoute
   ) 
-  {}
+  {
+    super(inject);
+  }
   ngAfterViewInit(): void {
     this.views  = [{
-      id: "1",
-      type: ViewType.content,
+      type: ViewType.listdetail,
       active: true,
       model:{
-        panelLeftRef : this.panelLeftRight
+        template : this.template,
+        panelRightRef : this.panelRightRef
       }
     }]
+    this.formModel = this.codxViews.formModel;
+    this.getGridViewSetUp();
     this.clickNavApprove(null,this.navAsside[0].predicate,this.navAsside[0].datavalue);
   }
 
-  ngOnInit(): void {
+  OnInit(): void {
     this.route.params.subscribe((param) =>{
       var option = param["option"];
       this.funcID = param["funcID"];
@@ -106,6 +120,7 @@ export class ApproveComponent implements OnInit {
       }
       this.dataDetail = null;
       this.model.entityName = this.entityName;
+
       this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetTotalAdminPostAsync",this.model).subscribe(
         (res) => {
           if(res){
@@ -127,6 +142,14 @@ export class ApproveComponent implements OnInit {
 
   }
 
+
+  getGridViewSetUp(){
+    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) => {
+      this.cache.gridViewSetup(func?.formName, func?.gridViewName).subscribe((grd) => {
+        this.gridViewSetUp = grd;
+      })
+    })
+  }
   loadData(predicate:string,dataValue:string){
     if(this.listView)
     {

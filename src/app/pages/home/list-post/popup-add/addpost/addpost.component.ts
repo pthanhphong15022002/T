@@ -143,6 +143,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.checkValueTag = false;
     this.checkValueShare = false;
     this.checkOpenTags = false;
+    this.lstRecevier = [];
+    this.shareControl = "";
+    this.objectType = "";
   }
 
   getFile(files) {
@@ -241,13 +244,14 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       return;
     }
     this.data.content = this.message;
-    this.data.shareControl = "9"
+    this.data.shareControl = this.shareControl;
     this.data.category = "1";
     this.data.approveControl = "0";
     this.data.refType = "post";
     var lstPermissions: Permission[] = [];
     var per1 = new Permission();
     per1.objectType = '1';
+    per1.memberType = "1";
     per1.objectID = this.user.userID;
     per1.objectName = this.user.userName;
     per1.create = true;
@@ -261,35 +265,21 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     per1.isActive = true;
     per1.createdBy = this.user.userID;
     per1.createdOn = new Date();
-
-    // Admin
-    var per2 = new Permission();
-    per2.objectType = '7';
-    per2.create = true;
-    per2.update = true;
-    per2.delete = true;
-    per2.download = true;
-    per2.upload = true;
-    per2.assign = true;
-    per2.share = true;
-    per2.read = true;
-    per2.isActive = true;
-    per2.createdBy = this.user.userID;
-    per2.createdOn = new Date();
-
-    // User tag
-    var per3 = new Permission();
-    per3.objectType = 'U';
-    per3.objectID = 'PMNHI';
-    per3.objectName = 'Phan Mẫn Nhi';
-    per3.isActive = true;
-    per3.createdBy = this.user.userID;
-    per3.createdOn = new Date();
     lstPermissions.push(per1);
-    lstPermissions.push(per2);
-    lstPermissions.push(per3);
-    this.data.Permissions = lstPermissions;
 
+    this.lstRecevier.map((item) => {
+      var per = new Permission();
+      per.memberType = "3";
+      per.objectType = this.objectType;
+      per.objectID = item.UserID;
+      per.objectName = item.UserName;
+      per.read = true;
+      per.isActive = true;
+      per.createdBy = this.user.userID;
+      per.createdOn = new Date();
+      lstPermissions.push(per);
+    })
+    this.data.Permissions = lstPermissions;
 
     this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync",[this.data, this.shareWith])
     .subscribe((res: any) => {
@@ -344,20 +334,42 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       });
   }
 
-
+  lstRecevier = [];
+  shareControl:string = "";
+  objectType:string = "";
+  userRecevier:any;
+  eventApply(event:any){
+    var data = event[0];
+    var objectType = data.objectType;
+    if(objectType && !isNaN(Number(objectType))){
+      this.lstRecevier = data.data;
+      this.shareControl = objectType;
+    }
+    else
+    {
+      this.objectType = data.objectType;
+      this.lstRecevier = data.dataSelected;
+      this.shareControl = objectType;
+      if(objectType == "U" && this.lstRecevier.length == 1){
+          this.userRecevier = this.lstRecevier[0];
+      }
+    }
+    this.dt.detectChanges();
+  }
   sharePost() {
     if (!this.message) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
     this.data.content = this.message;
-    this.data.shareControl = "9"
+    this.data.shareControl = this.shareControl;
     this.data.category = "4";
     this.data.approveControl = "0";
     this.data.refID = this.dataShare.recID;
     var lstPermissions: Permission[] = [];
     var per1 = new Permission();
     per1.objectType = '1';
+    per1.memberType = "1";
     per1.objectID = this.user.userID;
     per1.objectName = this.user.userName;
     per1.create = true;
@@ -371,33 +383,19 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     per1.isActive = true;
     per1.createdBy = this.user.userID;
     per1.createdOn = new Date();
-
-    // Admin
-    var per2 = new Permission();
-    per2.objectType = '7';
-    per2.create = true;
-    per2.update = true;
-    per2.delete = true;
-    per2.download = true;
-    per2.upload = true;
-    per2.assign = true;
-    per2.share = true;
-    per2.read = true;
-    per2.isActive = true;
-    per2.createdBy = this.user.userID;
-    per2.createdOn = new Date();
-
-    // User tag
-    var per3 = new Permission();
-    per3.objectType = 'U';
-    per3.objectID = 'PMNHI';
-    per3.objectName = 'Phan Mẫn Nhi';
-    per3.isActive = true;
-    per3.createdBy = this.user.userID;
-    per3.createdOn = new Date();
     lstPermissions.push(per1);
-    lstPermissions.push(per2);
-    lstPermissions.push(per3);
+    this.lstRecevier.map((item) => {
+      var per = new Permission();
+      per.memberType = "3";
+      per.objectType = this.objectType;
+      per.objectID = item.UserID;
+      per.objectName = item.UserName;
+      per.read = true;
+      per.isActive = true;
+      per.createdBy = this.user.userID;
+      per.createdOn = new Date();
+      lstPermissions.push(per);
+    })
     this.data.Permissions = lstPermissions;
     this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync",[this.data, this.shareWith])
     .subscribe((res: any) => {

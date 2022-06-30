@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Post } from '@shared/models/post';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, AlertConfirmComponent } from 'codx-core';
+import { modelChanged } from '@syncfusion/ej2-grids';
+import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, AlertConfirmComponent, CodxService, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AddPostComponent } from './popup-add/addpost/addpost.component';
@@ -48,9 +49,14 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   predicate = "ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)";
   dataValue = "0;1;5";
   modal: DialogRef;
+  views:Array<ViewModel> = [];
   @Input() predicates = "";
   @Input() dataValues = "";
   @ViewChild('listview') listview : CodxListviewComponent;
+  @ViewChild('codxViews') codxViews : ViewsComponent;
+
+  @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
+
   @ViewChild('player') player;
   @ViewChild('modalpost') modalpost : AddPostComponent;
   @ViewChild('modalShare') modalShare;
@@ -66,8 +72,8 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     private api: ApiHttpService,
     private dt:ChangeDetectorRef,
     private callfc:CallFuncService,
+    private codxService:CodxService,
     private notifySvr: NotificationsService,
-   // private alertSvr : AlertConfirmService,
     public viewContainerRef: ViewContainerRef,
   ) {
     this.tenant = this.tenantStore.getName();
@@ -80,7 +86,13 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     });
   }
   ngAfterViewInit(): void {
-    this.listview.dataService.idField = 'recID'
+    this.views = [{
+      type : ViewType.content,
+      active: true,
+      model: {
+        panelLeftRef: this.panelLeftRef
+      }
+    }]
   }
 
   dataVll = [];
@@ -95,19 +107,26 @@ export class ListPostComponent implements OnInit,AfterViewInit {
 
   removePost(data:any) {
    this.notifySvr.alertCode('E0327').subscribe((res:any) => {
-    if(res){
-      var t = this;
-      res.close = function(e){
-        return t.closeAlert(e,data, t);
-        };
+    if(res.event.status == 'Y')
+    {
+      this.codxViews.dataService.delete(data).subscribe(res => {
+        this.api
+          .exec<any>(
+            'ERM.Business.WP',
+            'CommentBusiness',
+            'DeletePostAsync',
+            data.recID
+          )
+          .subscribe((res2) => {
+            if(res2)
+            {
+              this.notifySvr.notifyCode('E0026');
+              this.dt.detectChanges();
+            }
+          });
+      })
     }
    });
-  //  dialog.closed.subscribe((res:Dialog)=>{
-  //     var t = this;
-  //     res.close = function(e){
-  //       return t.closeAlert(e,data, t);
-  //       };;
-  //   })
   }
 
   closeAlert(e, data, t: ListPostComponent){
@@ -223,7 +242,6 @@ export class ListPostComponent implements OnInit,AfterViewInit {
       ])
       .subscribe((res) => {
         if (res) this.tagUsers = res;
-        console.log('CHECK TAG USER LIST', this.tagUsers);
       });
   }
 
@@ -264,4 +282,9 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     console.log('clickShowItem: ',data);
   }
 
+
+  naviagte(data:any){
+    let funcID = "WPT02"
+    this.codxService.navigate('', "wp/"+data.category+"/view-detail/"+data.recID + "/"+funcID);
+  }
 }

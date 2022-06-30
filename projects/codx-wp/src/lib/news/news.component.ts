@@ -11,7 +11,7 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
   styleUrls: ['./news.component.css']
 })
 export class NewsComponent implements OnInit {
-
+  dialogRef: any;
   functionID = 'WPT02';
   entityName = 'WP_News';
   gridViewName = 'grvNews';
@@ -167,20 +167,33 @@ export class NewsComponent implements OnInit {
       .subscribe();
   }
   clickShowPopupCreate() {
+    this.codxView.dataService.addNew().subscribe((res) => {
+      let option = new SidebarModel();
+      option.Width = '750px';
+      option.DataService = this.codxView?.currentView?.dataService;
+      this.dialogRef = this.callfc.openSide(
+        PopupAddComponent,
+        this.codxView.dataService.dataSelected,
+        option
+      );
+    });
    // this.viewbase.currentView.openSidebarRight();
-   let option = new SidebarModel();
-   option.DataService = this.codxView?.currentView?.dataService;
-   option.FormModel = this.codxView?.currentView?.formModel;
-   option.Width = '550px';
-   this.callfc.openSide(PopupAddComponent,null,option);
+  //  let option = new SidebarModel();
+  //  option.DataService = this.codxView?.currentView?.dataService;
+  //  option.FormModel = this.codxView?.currentView?.formModel;
+  //  option.Width = '550px';
+  //  this.dialogRef =  this.callfc.openSide(PopupAddComponent,this.codxView.dataService.dataSelected,option);
   }
 
   clickShowPopupSearch() {
-
-    this.callfc.openForm(PopupSearchComponent, "Tìm kiếm", 900, 700);
+    this.dialogRef = this.callfc.openForm(PopupSearchComponent, "Tìm kiếm", 900, 700);
   }
 
   clickClosePopup() {
     this.loadData();
+  }
+
+  closePopup(data?:any){
+    this.dialogRef && this.dialogRef.close();
   }
 }

@@ -202,6 +202,7 @@ export class View {
 export class Permission {
     recID: string;
     id: string;
+    memberType:string;
     objectName: string;
     objectID: string;
     objectType: string;

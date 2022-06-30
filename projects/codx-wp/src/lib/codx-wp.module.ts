@@ -9,6 +9,7 @@ import { CoreModule } from '@core/core.module';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
@@ -62,7 +63,8 @@ const Component: Type<any>[] =
   PopupEditComponent,
   ApproveComponent,
   PopupSearchComponent,
-  ElecticSearchComponent
+  ElecticSearchComponent,
+  ApproveDetailComponent
 ];
 
 @NgModule({

@@ -1,6 +1,8 @@
 <!-- <div class="box-link">main-header</div> -->
 
-<codx-views #codxViews [funcID]="funcID" entityName="WP_News" [views]="views" [showToolBar]="false">
+<codx-views #codxViews [funcID]="funcID" idField="recID" entityName="WP_News" [views]="views" [showToolBar]="false"
+(requestEnded)="closePopup($event)"
+>
 </codx-views>
 <ng-template #panelLeftRef>
   <div class="news-main">

@@ -1,8 +1,6 @@
 
 <codx-form [headerText]="title" subHeaderText="" [body]="body"  [dialog]="dialogRef">
     <ng-template popup adde #body>
-      <!-- <codx-tag [entityName]="dialogRef.formModel.entityName" [isEdit]="true" [value]="data.tags"
-        (valueChange)="valueChangeTags($event)"></codx-tag> -->
      <div class="body">
         <div class="my-3 d-flex">
             <div class="body-user-img symbol symbol-40 symbol-circle mr-3">
@@ -11,15 +9,31 @@
             </div>
             <div class="ms-2">
                 <p class="user-name">{{user?.userName}}</p>
+                <ng-container *ngIf="lstRecevier.length > 0">
+                    <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
+                        <div  class="fw-bolder fs-5">
+                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                            <span class="me-2 ">{{userRecevier.UserName}}</span>
+                        </div>
+                    </ng-container>
+                    <ng-template #shareWith>
+                        <div  class="fw-bolder fs-5">
+                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                            <span class="ms-2 me-2">{{lstRecevier.length}}</span>
+                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default=" người khác "></codx-label>
+                        </div>
+                    </ng-template>
+                </ng-container>
                 <div class="d-flex align-items-center justify-content-start user-square">
                     <div class="symbol symbol-20px symbol-circle me-2">
-                        <span class="fa-globe fas"></span>
+                        <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
                     </div>
                     <div class="text-dark fs-7">
                     </div>
                     <i class="icon-arrow_drop_down icon-16 text-dark"></i>
                 </div>
             </div>
+            
         </div>
         <div class="my-3 h-50">
             <codx-input type="textarea" class="test-textarea" [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
