@@ -96,10 +96,10 @@ export class PopupAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParam();
-    if (!this.task.taskID) {
+    if (this.action=='add') {
       this.openTask();
     } else {
-      if (this.action == 'copy') return this.getTaskCoppied(this.task.taskID);
+      if (this.action == 'copy')  this.getTaskCoppied(this.task.taskID);
       else this.openInfo(this.task.taskID, this.action);
     }
   }
@@ -192,7 +192,7 @@ export class PopupAddComponent implements OnInit {
   }
 
   openTask(): void {
-    const t = this;
+    this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
@@ -444,7 +444,7 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-  
+
   eventApply(e: any) {
     var assignTo = '';
     var listDepartmentID = '';
