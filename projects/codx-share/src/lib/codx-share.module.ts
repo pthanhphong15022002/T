@@ -11,12 +11,15 @@ import { NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { CalendarDateComponent } from './components/calendardate/calendardate.component';
-import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
-import { CodxExportComponent } from './components/codx-export/codx-export.component';
+import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { TabAllModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TreeviewCommentComponent } from './components/treeview-comment/treeview-comment.component';
+import { ReadMoreComponent } from './components/readmore/readmore.component';
+import { Readmorev2Component } from './components/readmorev2/readmorev2.component';
+import { ImageGridComponent } from './components/image-grid/image-grid.component';
+import { TruncatePipe } from './pipe/truncate.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -28,12 +31,21 @@ const T_Component: Type<any>[] = [
   CodxTabsComponent,
   ImageGridComponent,
   CalendarDateComponent,
-  CodxExportComponent
+  TreeviewCommentComponent,
+  ReadMoreComponent,
+  Readmorev2Component,
+  ImageGridComponent,
 ];
 
+
+const T_Pipe: Type<any>[] = [
+  TruncatePipe,
+]
+
+
 @NgModule({
-  declarations: T_Component,
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, TabAllModule ,DateRangePickerModule],
-  exports: [T_Component],
+  declarations:[ T_Component,T_Pipe],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, ],
+  exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule {}

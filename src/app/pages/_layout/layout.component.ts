@@ -9,10 +9,10 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
 
-  module = 'TM';
+  module = 'WP';
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init('TM');
+    this.codxService.init(this.module);
   }
 
   onInit() { }

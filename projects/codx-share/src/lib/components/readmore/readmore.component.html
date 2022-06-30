@@ -1,0 +1,6 @@
+<span [innerHTML]="content" [style.color]="textColor"></span>
+<ng-container *ngIf="showReadMore">
+    <a href="javascript:void(0)" *ngIf="!isContentToggled" (click)="toggleContent()">Read More</a>
+</ng-container>
+<!-- <a href="avascript:void(0)" *ngIf="!isContentToggled" (click)="toggleContent()">Read More</a> -->
+<!-- <a href="avascript:void(0)" *ngIf="isContentToggled" (click)="toggleContent()">Read Less</a> -->

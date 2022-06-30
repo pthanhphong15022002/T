@@ -29,6 +29,12 @@ export const routes: Routes = [
           import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
       },
       {
+        path: 'wp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
+      },
+      {
         path: 'dm',
         canActivate: [AuthGuard],
         loadChildren: () =>
