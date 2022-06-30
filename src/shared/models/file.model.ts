@@ -1,5 +1,17 @@
 import { AppRoutingModule } from "src/app/app-routing.module";
 
+export class DialogAttachmentType {
+    objectType: any;
+    objectId: any;
+    folderType: any;
+    functionID: any;
+    type: any;
+    popup: any;
+    hideBtnSave: any;
+    hideUploadBtn: any;
+    hideFolder: any;
+}
+
 export class DataReturn {
     status: any;
     message: any;
