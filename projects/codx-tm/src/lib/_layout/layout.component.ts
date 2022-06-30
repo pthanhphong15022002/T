@@ -14,10 +14,22 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(inject: Injector) {
     super(inject);
   }
+<<<<<<< HEAD
+ 
+  onInit(): void {
+    // this.funcs$.subscribe(res => {
+    //   console.log(res);
+
+    // })
+  }
+
+  onAfterViewInit(): void {
+=======
 
   onInit() { }
 
   onAfterViewInit() {
+>>>>>>> ab98fe20d5e918283b19bdd481fefe7a9330943f
 
   }
 }

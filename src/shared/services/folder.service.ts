@@ -53,11 +53,11 @@ export class FolderService implements OnDestroy {
         return data;
     }
 
-    getFolders(parentId: string, folderType: string = ''): Observable<any> {
+    getFolders(parentId: string): Observable<any> {
         this.options.entityName = "DM_FolderInfo";
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", [this.options, parentId]);
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
-        var data = this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", [this.options, folderType, parentId]);
+        var data = this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", [this.options,  parentId]);
         // var fileIbfo = data[0]
         return data;
     }

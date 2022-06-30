@@ -12,8 +12,9 @@ import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angu
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { BreadcrumbComponent, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { HomeComponent } from './home/home.component';
+import { CardComponent } from './views/card/card.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,7 @@ export const routes: Routes = [
 const T_Component: Type<any>[] = [
   LayoutComponent,
   HomeComponent,
+  CardComponent
 ]
 @NgModule({
   imports: [
