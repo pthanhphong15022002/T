@@ -1,52 +1,51 @@
-<codx-views #view entityName="TM_Projects" service="TM" assemblyName="ERM.Business.TM"
-  className="ProjectsBusiness" method="GetListProjectsAsync" [views]="views" [button]="button"
-  [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)" (buttonClick)="click($event)"
-  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)"
-  idField="ProjectID" [pageSize]="100" [selectedFirst]="true">
+<codx-views #view entityName="TM_Projects" service="TM" assemblyName="ERM.Business.TM" className="ProjectsBusiness"
+  method="GetListProjectsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
+  (viewChanged)="changeView($event)" (buttonClick)="click($event)" (requestEnded)="requestEnded($event)"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="projectID" [pageSize]="100"
+  [selectedFirst]="true">
 </codx-views>
 
 <ng-template #itemCreateBy let-dataItem>
-    <div class="d-flex align-items-center" #itemCreateBy>
-      <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
-      </codx-img>
-      <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
-    </div>
-  </ng-template>
-  <ng-template #itemManager let-dataItem>
-    <div class="d-flex align-items-center" #itemCreateBy>
-      <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.projectManeger" objectType="AD_Users">
-      </codx-img>
-      <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
-    </div>
-  </ng-template>
-  <ng-template #itemCreate let-data>
-    {{data.createdOn | date:'dd/MM/yyyy'}}
-  </ng-template>
-  <ng-template #itemStartdate let-data>
-    <div *ngIf="data.startDate==null">
-      {{data?.startDate }}
-    </div>
-    <div *ngIf="data.startDate!=null">
-      {{data?.startDate | date:'dd/MM/yyyy'}}
-    </div>
-  </ng-template>
-  <ng-template #itemEnddate let-data>
-    <div *ngIf="data.finishDate==null">
-      {{data?.finishDate }}
-    </div>
-    <div *ngIf="data.finishDate!=null">
-      {{data?.finishDate | date:'dd/MM/yyyy'}}
-    </div>
-  </ng-template>
-  
-  <ng-template #itemApprovalControlVll let-data>
-    <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
-        [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
-        {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
-  </ng-template>
-  <ng-template #itemStatusVll let-data>
-    <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
-      [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
-      {{data?.status|vll:"L0614":"text"|async}}</div>
-  </ng-template>
-  
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+  </div>
+</ng-template>
+<ng-template #itemManager let-dataItem>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.projectManeger" objectType="AD_Users">
+    </codx-img>
+    <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
+  </div>
+</ng-template>
+<ng-template #itemCreate let-data>
+  {{data.createdOn | date:'dd/MM/yyyy'}}
+</ng-template>
+<ng-template #itemStartdate let-data>
+  <div *ngIf="data.startDate==null">
+    {{data?.startDate }}
+  </div>
+  <div *ngIf="data.startDate!=null">
+    {{data?.startDate | date:'dd/MM/yyyy'}}
+  </div>
+</ng-template>
+<ng-template #itemEnddate let-data>
+  <div *ngIf="data.finishDate==null">
+    {{data?.finishDate }}
+  </div>
+  <div *ngIf="data.finishDate!=null">
+    {{data?.finishDate | date:'dd/MM/yyyy'}}
+  </div>
+</ng-template>
+
+<ng-template #itemApprovalControlVll let-data>
+  <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
+    [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+    {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+</ng-template>
+<ng-template #itemStatusVll let-data>
+  <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
+    [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
+    {{data?.status|vll:"L0614":"text"|async}}</div>
+</ng-template>
