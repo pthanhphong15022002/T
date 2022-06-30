@@ -100,6 +100,12 @@ export class TasksComponent extends UIComponent {
       case 'TMT025': // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
+      case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
+        //Chung làm
+      break;
+        case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
+        //Chung làm
+        break;
       default:
         this.changeStatusTask(e, data);
         break;
@@ -385,6 +391,7 @@ export class TasksComponent extends UIComponent {
               )
               .subscribe((res) => {
                 if (res[0]) {
+                  this.itemSelected = this.view.dataService.data[0] ;
                   this.notiService.notifyCode('TM004');
                 }
               });

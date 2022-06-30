@@ -87,7 +87,6 @@ export class PopupShareSprintsComponent implements OnInit {
   //caí này chạy tạm đã
   eventApply(e: any) {
     var resources = '';
-    var i = 0;
     e.forEach(obj => {
       if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
