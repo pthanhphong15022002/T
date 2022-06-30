@@ -444,7 +444,7 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-  //caí này chạy tạm đã
+  
   eventApply(e: any) {
     var assignTo = '';
     var listDepartmentID = '';
