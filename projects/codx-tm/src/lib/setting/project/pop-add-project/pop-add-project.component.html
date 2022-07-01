@@ -1,4 +1,4 @@
-<codx-form headerText="Thêm dự án" [subHeaderText]="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="title" [subHeaderText]="" [body]="body" [footer]="footer" [dialog]="dialog">
   <!-- <ng-template #subHeaderText>
     aaaaaaaa
   </ng-template> -->
@@ -54,7 +54,7 @@
             </codx-input> -->
 
             <!-- LVbao -->
-            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
+            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án" field="projectGroupID"
               refValue="ProjectGroups" loadFull="true" (valueChange)="cbxChangeProjectGroup($event)" [multiple]="false"
               [crrValue]="projects.projectGroupID">
             </codx-input>
@@ -97,8 +97,6 @@
                 placeholder="datetime" [crrValue]="projects.startDate" format="F" (valueChange)="changeTime($event)">
               </codx-input>
             </div>
-
-            <!-- #Bug01 -endDate -->
             <div class="col-4">
               <label>
                 <codx-label fiedName="EndDate" formName="Projects" gridViewName="grvProjects" default="Ngày kết thúc">
@@ -121,7 +119,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+      <button type="button" class="btn btn-primary" (click)="onSaveOrEdit()">Lưu</button>
     </div>
   </ng-template>
 </codx-form>

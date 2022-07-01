@@ -1,43 +1,85 @@
 <!-- <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"> -->
-<codx-form headerText="{{title}}" #form [body]="body" [footer]="footer" [data]="range" [formModel]="dialog.formModel"
-  [dialog]="dialog">
+<codx-form
+  headerText="{{ title }}"
+  #form
+  [body]="body"
+  [footer]="footer"
+  [data]="range"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
   <ng-template #body>
     <!-- <div class="card-body" *ngIf="isAfterRender && gridViewSetup"> -->
     <div class="card-body">
       <div class="row">
         <div class="form-group">
           <div class="form-group mt-3">
-            <codx-label fiedName="rangeID" [formModel]="form.formModel" default="Mã danh mục">
+            <codx-label
+              fiedName="rangeID"
+              [formModel]="form.formModel"
+              default="Mã danh mục"
+            >
             </codx-label>
             <div style="width: 400px">
-              <codx-input field="rangeID" [formModel]="form.formModel" [Group]="form.formGroup"
-                [attr.disabled]="!range.isNew() ? '' : null">
+              <codx-input
+                field="rangeID"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                [attr.disabled]="!range.isNew() ? '' : null"
+              >
               </codx-input>
             </div>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="rangeName" [formModel]="form.formModel" default="Mô tả">
+            <codx-label
+              fiedName="rangeName"
+              [formModel]="form.formModel"
+              default="Mô tả"
+            >
             </codx-label>
-            <codx-input field="rangeName" [formModel]="form.formModel" [Group]="form.formGroup">
+            <codx-input
+              field="rangeName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
             </codx-input>
-
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="note" [formModel]="form.formModel" default="Ghi chú">
+            <codx-label
+              fiedName="note"
+              [formModel]="form.formModel"
+              default="Ghi chú"
+            >
             </codx-label>
-            <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
-
+            <codx-input
+              field="note"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
           </div>
           <div class="workToDo">
-            <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+            <div
+              class="d-flex align-items-center justify-content-between mt-4 mb-3"
+            >
               <div class="d-flex align-items-center">
-                <codx-label class="text-primary font-weight-bold" name="txtDetail" [formModel]="form.formModel"
-                  default="Chi tiết khoảng thời gian"></codx-label>
+                <codx-label
+                  class="text-primary font-weight-bold"
+                  name="txtDetail"
+                  [formModel]="form.formModel"
+                  default="Chi tiết khoảng thời gian"
+                ></codx-label>
               </div>
               <div class="d-flex mt-2">
-                <a class="btn btn-sm btn-outline-secondary" (click)="openPopup(null,true,null)">
+                <a
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="openPopup(null, true, null)"
+                >
                   <i class="icon-add icon-16 text-dark-75"></i>
-                  <codx-label name="btnAdd" formName="System" default="Thêm mới"></codx-label>
+                  <codx-label
+                    name="btnAdd"
+                    formName="System"
+                    default="Thêm mới"
+                  ></codx-label>
                 </a>
               </div>
             </div>
@@ -54,23 +96,41 @@
               <tbody>
                 <tr *ngFor="let item of lstRangeLine; let index = index">
                   <td class="text-left">
-                    <label>{{item.breakName}}</label>
+                    <label>{{ item.breakName }}</label>
                   </td>
                   <td class="text-left">
-                    <label>{{item.breakValue}}</label>
+                    <label>{{ item.breakValue }}</label>
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <a class="action-item" (click)="openPopup(item, false, index)" style="cursor: pointer">
+                      <a
+                        class="action-item"
+                        (click)="openPopup(item, false, index)"
+                        style="cursor: pointer"
+                      >
                         <div class="d-flex align-items-center btn-tooltip">
                           <span class="icon-edit icon-18 ms-2 me-2"></span>
-                          <codx-label name="btnEdit" formName="System" default="Chỉnh sửa"></codx-label>
+                          <codx-label
+                            name="btnEdit"
+                            formName="System"
+                            default="Chỉnh sửa"
+                          ></codx-label>
                         </div>
                       </a>
-                      <a class="action-item" (click)="deletePopup(index)" style="cursor: pointer">
+                      <a
+                        class="action-item"
+                        (click)="deletePopup(index)"
+                        style="cursor: pointer"
+                      >
                         <div class="d-flex align-items-center btn-tooltip">
-                          <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
-                          <codx-label name="btnDelete" formName="System" default="Xóa"></codx-label>
+                          <span
+                            class="icon-close icon-20 text-danger ms-2 me-2"
+                          ></span>
+                          <codx-label
+                            name="btnDelete"
+                            formName="System"
+                            default="Xóa"
+                          ></codx-label>
                         </div>
                       </a>
                     </div>
@@ -98,7 +158,9 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        Lưu
+      </button>
     </div>
   </ng-template>
 </codx-form>

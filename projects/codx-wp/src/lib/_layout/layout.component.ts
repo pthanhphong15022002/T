@@ -11,16 +11,16 @@ import { Observable } from 'rxjs';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
   // aside=true;  
-  asideFixed = true;
-  toolbar = false;
+  // asideFixed = true;
+  // toolbar = false;
   valueList: [];
 
   constructor(private route: ActivatedRoute, private changedt: ChangeDetectorRef, private cache: CacheService, inject: Injector) {
 
     super(inject);
     //this.aside = true;
-    this.asideFixed = true;
-    this.toolbar = false;
+    // this.asideFixed = true;
+    // this.toolbar = false;
 
 
     //this.codxService.init(this.module);
