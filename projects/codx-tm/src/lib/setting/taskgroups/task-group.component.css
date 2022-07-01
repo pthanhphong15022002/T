@@ -1,0 +1,16 @@
+.rowphoto,
+.details {
+  border-color: #e0e0e0;
+  border-style: solid;
+}
+
+.rowphoto {
+  border-width: 1px 0px 0px 0px;
+  padding-top: 20px;
+}
+
+td {
+  padding: 2px 2px 3px 4px;
+  padding-top: 20px;
+
+}

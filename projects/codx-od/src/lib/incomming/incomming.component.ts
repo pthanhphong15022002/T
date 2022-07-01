@@ -43,7 +43,6 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
-  @ViewChild('tmpexport') tmpexport!: TemplateRef<any>;
   
   public lstDtDis: any;
   public lstUserID: any = '';
@@ -64,25 +63,19 @@ export class IncommingComponent
   button?: ButtonModel;
   userPermission: any;
   checkUserPer: any;
-  textNew = 'Thêm mới ';
-  textEdit = 'Chỉnh sửa ';
-  textCopy = 'Sao chép ';
   compareDate = compareDate;
   formatBytes = formatBytes;
   extractContent = extractContent;
   crrDate = new Date().getTime();
   gridViewSetup: any;
-  titleFormNew = this.textNew;
   dispatch = new dispatch();
-  activeTab = 'tab_1';
-  activeTabAg = 'tab_ag1';
   showCbxAgency = false;
   action: any;
   actionEdit: any;
   autoLoad = false;
   itemDelete: any;
   active = 1;
-
+  activeDiv = "1";
   fileAdd: any;
   funcID = 'ODT1';
   idAgency: any;
@@ -123,74 +116,15 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
-    alert(this.view.formModel.funcID);
-    /*  this.routerActive.params
-    .subscribe(params => {
-      this.view.loaded = false;
-      this.loadView();
-    });
-    //this.loadView(); */
-   /*  this.router.params.subscribe((params) => {
-      //this.lstDtDis = null;
-    }) */
     if(this.view)
     {
       this.view.dataService.predicates = "Status=@0"
       this.view.dataService.dataValues = "1"
     }
-  
-    /* this.options.Page = 0,
-    this.options.PageLoading = false;
-    this.options.PageSize = 10;
-    this.options.DataValue = "1";
-    this.status = "1";
-    //this.loadData();
-    this.getGridViewSetup();
-    this.codxService.getAutoNumber(this.funcID, "OD_Agencies", "AgencyID").subscribe((dt: any) => {
-      this.objectIDFile = dt;
-    }); */
-    /*this.atSV.isFileList.subscribe(item => {
-       if (item != null) {
-
-   /*this.atSV.isFileList.subscribe(item => {
-      if (item != null) {
-
-      }
-    });*/
-
-    //this.loadData();
-    //this.loadDataAgency();
-    // this.agService.loadDataDepartmentCbx("9").subscribe(item=>{
-    //   this.lstDept= item;
-    // })
   }
   
   ngAfterViewInit(): void {
     this.views = [
-      /* {
-      id: '1',
-      type: 'content',
-      active: true,
-      model: {
-        panelLeftRef: this.panelLeftRef,
-        panelRightRef: this.panelRightRef,
-        sideBarRightRef: this.asideRight,
-        widthAsideRight: this.widthAsideRight,
-        widthLeft: "350px",
-        resizeable: false
-      }
-    } */
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.template,
-          panelLeftRef: this.panelLeft,
-          panelRightRef: this.panelRight,
-          contextMenu: '',
-        },
-      },
       {
         type: ViewType.listdetail,
         active: true,
@@ -205,13 +139,10 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-    //this.loadView();
     this.getGridViewSetup();
     this.button = {
       id: 'btnAdd',
     };
-    this.autoLoad = true;
-    this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -249,24 +180,10 @@ export class IncommingComponent
             .remove(this.view.dataService.dataSelected)
             .subscribe();
         else {
-          debugger;
           this.view.dataService.update(x.event).subscribe();
           this.view.dataService.setDataSelected(x.event);
-          // this.view.dataService.remove(x.event).subscribe();
-          //this.view.dataService.add(x.event,0).subscribe();
-          //this.view.dataService.setDataSelected(x.event);
-          //debugger;
-          //debugger;
-          //this.view.dataService.setDataSelected(x.event);
         }
       });
-      // this.dialog.closed.subscribe((e)=>{
-      //   if(e.event != null)
-      //   {
-      //     debugger;
-      //     this.view.dataService.setDataSelected(e.event.data);
-      //   }
-      // });
     });
   }
 
@@ -276,7 +193,6 @@ export class IncommingComponent
       .subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
-        //this.dialog = this.callfunc.openSide(TestAddComponent, res, option);
       });
   }
 
@@ -475,8 +391,15 @@ export class IncommingComponent
     this.view.dataService.predicates = 'Status=@0';
     this.view.dataService.dataValues = status;
     this.view.dataService.load().subscribe();
+    this.activeDiv = status
   }
-
+  getIdUser(createdBy:any,owner:any)
+  {
+    var arr = [];
+    if(createdBy) arr.push(createdBy);
+    if(owner && createdBy != owner) arr.push(owner);
+    return arr.join(";");
+  }
   selectFirst(dt: any) {
     var recID;
     if (dt.data) recID = dt.data.recID;
@@ -514,6 +437,6 @@ export class IncommingComponent
   }
   exportFile()
   {
-    this.callfunc.openForm(this.tmpexport,null,null,600)
+    
   }
 }

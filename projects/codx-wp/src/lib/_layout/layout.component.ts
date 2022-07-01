@@ -4,10 +4,14 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
+
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
+  // aside=true;  
+  // asideFixed = true;
+  // toolbar = false;
   valueList: [];
 
   constructor(
@@ -19,20 +23,21 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.codxService.init(this.module, false,false,false);
     
     this.cache.valueList('L1492').subscribe((value) => {
-      this.valueList = value.datas; });
+      this.valueList = value.datas;
+    });
   }
 
   onInit(): void {
   }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 
 
   category = "news";
-  navigate(category = 'news'){
+  navigate(category = 'news') {
     this.category = category;
-    var funcID =  this.route.firstChild.snapshot.params["funcID"];
+    var funcID = this.route.firstChild.snapshot.params["funcID"];
     this.changedt.detectChanges();
-    this.codxService.navigate('', "wp/"+category+"/"+funcID);
+    this.codxService.navigate('', "wp/" + category + "/" + funcID);
   }
 }

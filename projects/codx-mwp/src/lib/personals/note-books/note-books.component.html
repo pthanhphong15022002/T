@@ -1,27 +1,34 @@
 <!-- <app-add-note-book #lstNoteBook></app-add-note-book>
 <app-update-note-book #appEdit #lstNoteBookUpdate></app-update-note-book> -->
+<codx-views #view [funcID]="funcID" service="WP" entityName="WP_NoteBooks" [showToolBar]="false" [views]="views"
+    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
+</codx-views>
 
 <div class="pw-container mt-6">
-    <div class="d-flex align-items-center justify-content-between pw-header w-1160px">
+    <div class="d-flex align-items-center justify-content-between pw-header">
         <div class="pw-search">
             <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
         </div>
-        <div class="d-flex justify-content-end align-items-center pw-toolbar">
-            <div class="text-dark me-1"><codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label></div>
-            <div class="text-primary"><codx-label name="lblDateUpdate" formName="NoteBooks" default="Ngày cập nhật"></codx-label></div>
+        <div class="d-flex justify-content-end align-items-center pw-toolbar right-20">
+            <div class="text-dark me-1">
+                <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
+            </div>
+            <div class="text-primary">
+                <codx-label name="lblDateUpdate" formName="NoteBooks" default="Ngày cập nhật"></codx-label>
+            </div>
             <div class="mx-2 text-gray-400">|</div>
             <div class="btn btn-icon btn-white">
                 <i class="icon-sort_A-Z icon-20" (click)="sortNoteBooks()"></i>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center left-20">
                 <!-- begin::Menu wrapper -->
-                <div class="btn btn-icon btn-active-light-primary position-relative"
-                    id="kt_drawer_addNoteBook_toggle" (click)="formAddNoteBook()">
-                    <button class="btn btn-primary btn-add" type="button" id="dropdownMenuButton1" aria-expanded="false"
-                        >
+                <div class="btn btn-icon btn-active-light-primary position-relative" id="kt_drawer_addNoteBook_toggle"
+                    (click)="formAddNoteBook()">
+                    <button class="btn btn-primary btn-add" type="button" id="dropdownMenuButton1"
+                        aria-expanded="false">
                         <div class="d-flex">
                             <div class="">
-                                <i class="icon-add icon-20 me-2"></i>   
+                                <i class="icon-add icon-20 me-2"></i>
                             </div>
                             <div class="">
                                 <codx-label name="lblAddNoteBook" formName="NoteBooks" default="Thêm"></codx-label>
@@ -35,19 +42,12 @@
     </div>
     <div class="pw-listcard mt-6">
         <div *ngFor="let item of view.dataService.data">
-            <div class="pw-card delay-500">
-                <codx-card-img cardCss="border mw-300px h-100" [imageObjType]="'WP_NoteBooks'" imgCss="" [imageId]="item.recID" [footer]="footer_card" typeMF="hover"
-                    (clickMF)="clickMF($event,item)" [formModel]="formModel" (click)="codxService.navigate('MWP00941')">
+            <div class="pw-card delay-500" (click)="openDetailPage(item)">
+                <codx-card-img cardCss="border h-100 w-250px rounded-4 " (clickMF)="clickMF($event,item)"
+                    [imageId]="item.recID" imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16"
+                    [title]="item.title" [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'" [formModel]="formModel">
                 </codx-card-img>
-                <ng-template #footer_card>
-                    <div class="d-flex align-items-center py-2 px-3">
-                        <img src="../assets/themes/mwp/default/light/img/mwp_storage.svg" class="icon">
-                        <div class="d-flex flex-column title-menu">
-                            <div class="text-dark fs-6 fw-bold">{{item.title}}</div>
-                            <div class="text-gray-500 text-italic" [innerHTML]="item.memo"></div>
-                        </div>
-                    </div>
-                </ng-template>
+                <!-- (click)="codxService.navigate('MWP00941')" -->
             </div>
         </div>
     </div>
@@ -57,8 +57,7 @@
     <div class="formMoreFunc">
         <div class="d-flex font-1-3">
             <li></li>
-            <div id="kt_drawer_updateNoteBook_toggle"
-                (click)="edit(data)">
+            <div id="kt_drawer_updateNoteBook_toggle" (click)="edit(data)">
                 <div aria-expanded="false" class="moreFunc">
                     <codx-label name="lblDeleteNote" formName="Notes" default="Chỉnh sửa sổ tay"></codx-label>
                 </div>
@@ -100,7 +99,3 @@
         </div>
     </div>
 </ng-template>
-
-<codx-views #view  [funcID]="funcID" service="WP" entityName="WP_NoteBooks" [showToolBar]="false" [views]="views"
-    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
-</codx-views>

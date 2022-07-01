@@ -1,0 +1,261 @@
+<div class="page-content d-flex flex-row pt-4">
+  <div class="w-75 border">
+    <div class="d-flex justify-content-around">
+      <div class="w-25 border">
+        <div class="card-body">
+          <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ taskRemind.taskOutOfDate }}
+          </div>
+          <div class="fw-bold text-gray-400">
+            <codx-label
+              name="lblOverdueTask"
+              default="Đã quá hạn"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+      <div class="w-25 border">
+        <div class="card-body">
+          <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ taskRemind.taskOutOfDate }}
+          </div>
+          <div class="fw-bold text-gray-400">
+            <codx-label
+              name="lblOverdueTask"
+              default="Đã quá hạn"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+      <div class="w-25 border">
+        <div class="card-body">
+          <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ taskRemind.taskOutOfDate }}
+          </div>
+          <div class="fw-bold text-gray-400">
+            <codx-label
+              name="lblOverdueTask"
+              default="Đã quá hạn"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-around">
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="100"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="100"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="100"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="100"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+    </div>
+    <div class="d-flex justify-content-around">
+      <div class="w-50 test">
+        <ejs-accumulationchart id="chart-task-group" [legendSettings]='legendSettings'>
+            <e-accumulation-series-collection>
+                <e-accumulation-series [dataSource]='piedata1' xName='x' yName='y' innerRadius='70%'></e-accumulation-series>
+            </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="w-50 test">
+        <ejs-accumulationchart id="chart-rate-done" [legendSettings]='legendSettings'>
+            <e-accumulation-series-collection>
+                <e-accumulation-series [dataSource]='piedata1' xName='x' yName='y' innerRadius='70%'></e-accumulation-series>
+            </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="">1.4</div>
+    </div>
+  </div>
+  <div class="w-25 border">
+    <div class="">2</div>
+  </div>
+</div>

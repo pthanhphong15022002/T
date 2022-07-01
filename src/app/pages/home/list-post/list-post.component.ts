@@ -8,7 +8,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
 @Component({
   selector: 'app-list-post',
   templateUrl: './list-post.component.html',
-  styleUrls: ['./list-post.component.scss']
+  styleUrls: ['./list-post.component.scss'],
 })
 export class ListPostComponent implements OnInit,AfterViewInit {
   service = "WP";
@@ -56,7 +56,7 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   @ViewChild('listview') listview : CodxListviewComponent;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
   @ViewChild('player') player;
-  @ViewChild('modalpost') modalpost : AddPostComponent;
+  @ViewChild('modalpost') modalpost: AddPostComponent;
   @ViewChild('modalShare') modalShare;
   @ViewChild('detail') detail;
   @Input() isShowCreate = true;
@@ -86,7 +86,7 @@ export class ListPostComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit(): void {
     this.views = [{
-      type : ViewType.content,
+      type: ViewType.content,
       active: true,
       model: {
         panelLeftRef: this.panelLeftRef
@@ -96,7 +96,6 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   }
 
   dataVll = [];
-
 
   ngOnDestroy() {
   }
@@ -184,50 +183,50 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   openModal() {
     var data = new Post();
     var obj = {
-      post : data,
+      post: data,
       status: "create"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent,"Tạo bài viết",600,0,"",obj,'',option);
+    this.modal = this.callfc.openForm(AddPostComponent, "Tạo bài viết", 600, 0, "", obj, '', option);
     this.modal.closed.subscribe();
   }
-  openEditModal(data:any){
+  openEditModal(data: any) {
     var obj = {
-      post : data,
+      post: data,
       status: "edit"
     }
-    this.modal = this.callfc.openForm(AddPostComponent,"Chỉnh sửa bài viết",600,0,"",obj);
+    this.modal = this.callfc.openForm(AddPostComponent, "Chỉnh sửa bài viết", 600, 0, "", obj);
 
   }
 
   openModalShare(data: any) {
     var obj = {
-      post : data,
+      post: data,
       status: "share"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent,"Chia sẽ bài viết",600,0,"",obj,'',option);
+    this.modal = this.callfc.openForm(AddPostComponent, "Chia sẽ bài viết", 600, 0, "", obj, '', option);
     this.modal.closed.subscribe();
   }
 
-  
 
-  
+
+
 
   openDetail(index, id) {
     this.detail.setData(index, id);
   }
 
 
-  pushComment(data:any){
+  pushComment(data: any) {
     this.listview.dataService.data.map((p) => {
-      if(p.recID == data.refID){
+      if (p.recID == data.refID) {
         p.listComment.push(data);
         return;
       }
@@ -277,15 +276,15 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     }
   }
 
-  clickClose(){
-    var modal = this.callfc.openForm(AddPostComponent,"")
+  clickClose() {
+    var modal = this.callfc.openForm(AddPostComponent, "")
   }
-  clickShowItem(data:any){
-    console.log('clickShowItem: ',data);
+  clickShowItem(data: any) {
+    console.log('clickShowItem: ', data);
   }
 
 
-  naviagte(data:any){
+  naviagte(data: any) {
     let funcID = "WPT02"
     this.api
       .execSv(

@@ -5,7 +5,7 @@ import { AttachmentService } from '../attachment/attachment.service';
 
 declare var $: any;
 @Component({
-  selector: 'app-breadcumb',
+  selector: 'codx-breadcumb',
   templateUrl: './breadcumb.component.html'
 })
 

@@ -6,57 +6,57 @@
 </codx-views>
 
 <ng-template #grid let-data>
-  <tr>
-    <td>
+  <tr >
+    <td class="rowphoto">
       {{data.taskGroupID}}
     </td>
-    <td>
+    <td class="rowphoto" placement="left" [ngbTooltip]="data.taskGroupName">
       {{data.taskGroupName}}
     </td>
-    <td>
+    <td class="rowphoto">
       {{data.taskGroupName2}}
     </td>
-    <td>
+    <td class="rowphoto">
       <div [innerHTML]="data.note">
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <div class="badge badge-danger me-2" [style.border-color]="
-  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-" [style.background-color]="
-  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-" [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
+    (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+  " [style.background-color]="
+    (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+  " [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
         {{data?.approvalControl|vll:"L1433":"text"|async}}
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <div class="badge badge-danger me-2" [style.border-color]="
-  (data?.projectControl | vll: 'L1462':'color' | async) + '30'
-" [style.background-color]="
-  (data?.projectControl | vll: 'L1462':'color' | async) + '30'
-" [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
+    (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+  " [style.background-color]="
+    (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+  " [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
         {{data?.projectControl|vll:"L1462":"text"|async}}
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <div class="badge badge-danger me-2" [style.border-color]="
-      (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
-    " [style.background-color]="
-      (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
-    " [style.color]="data?.attachmentControl | vll: 'L1462':'color' | async" style="border: none">
+        (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
+      " [style.color]="data?.attachmentControl | vll: 'L1462':'color' | async" style="border: none">
         {{data?.attachmentControl|vll:"L1462":"text"|async}}
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <div class="badge badge-danger me-2" [style.border-color]="
-  (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-" [style.background-color]="
-  (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-" [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+    (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+  " [style.background-color]="
+    (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+  " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
         {{data?.checkListControl|vll:"L1463":"text"|async}}
       </div>
     </td>
-    <td>
+    <td class="rowphoto">
       <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
         <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
           *ngIf=" (i<3 || data.disableReadmore) ">
@@ -69,22 +69,22 @@
       <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
           (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
-    <td>
-      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users"
-       imageWidth="25" [desc]="data.createName">
-      </codx-temp-full>
-      <!-- <div class="d-flex align-items-center" #itemCreateBy>
-        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
-        </codx-img>
-        <div class="text-dark font-size-lg" placement="bottom">
-          {{data.createName}}
+    <td class="rowphoto"> 
+      <!-- <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
+      </codx-temp-full> -->
+      
+      <div class="d-flex align-items-center" #itemCreateBy>
+          <codx-img class="symbol symbol-24 symbol-circle mr-3" width="25" [objectId]="data.createdBy" objectType="AD_Users">
+          </codx-img>
+          <div class="text-dark font-size-lg" placement="left" [ngbTooltip]="data.createName">
+            {{data.createName}}
+          </div>
         </div>
-      </div> -->
     </td>
-    <td>
+    <td class="rowphoto">
       {{data.createdOn | date: 'dd/MM/yyyy'}}
     </td>
-    <td>
+    <td class="rowphoto">
       <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
         (clickMF)="clickMF($event,data)">
 
@@ -94,7 +94,64 @@
 </ng-template>
 
 
-<ng-template #itemCreateBy let-dataItem>
+
+<ng-template #itemTaskGroupID let-data>
+  <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemTaskGroupName let-data>
+  <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemTaskGroupName2 let-data>
+  <codx-label fiedName="TaskGroupName2" formName="TaskGroups" gridViewName="grvTaskGroups" default="Tên khác">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemNote let-data>
+  <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemApprovalControl let-data>
+  <codx-label fiedName="ApprovalControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Xét duyệt?">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemProjectControl let-data>
+  <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Chọn dự án">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemAttachmentControl let-data>
+  <codx-label fiedName="AttachmentControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Đính kèm file">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemCheckListControl let-data>
+  <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhập việc cần làm">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemCheckList let-data>
+  <codx-label fiedName="CheckList" formName="TaskGroups" gridViewName="grvTaskGroups" default="Loại Checklist">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemCreatedBy let-data>
+  <codx-label fiedName="CreatedBy" formName="TaskGroups" gridViewName="grvTaskGroups" default="Người tạo">
+  </codx-label>
+</ng-template>
+
+<ng-template #itemCreatedOn let-data>
+  <codx-label fiedName="CreatedOn" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ngày tạo">
+  </codx-label>
+</ng-template>
+
+
+<!-- <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
     <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
     </codx-img>
@@ -155,11 +212,10 @@
       *ngIf=" (i<3 || data.disableReadmore) ">
       <label class="checkbox checkbox-square checkbox-sm mb-0">
         <input type="checkbox" checked="checked" disabled>
-        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
         <span></span> {{item}}
       </label>
     </div>
   </ng-container>
   <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
       (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
-</ng-template>
+</ng-template> -->

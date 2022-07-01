@@ -20,6 +20,7 @@ import { RouterModule } from '@angular/router';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { CoreModule } from '@core/core.module';
 import { TagsComponent } from './layout/tags/tags.component';
+import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
@@ -45,6 +46,7 @@ const T_Moudule: Type<any>[] = [
   RouterModule,
   InlineSVGModule,
   NgxSkeletonLoaderModule,
+  DateRangePickerModule,
   FormsModule
 ];
 @NgModule({
