@@ -178,7 +178,6 @@ export class NoteDrawerComponent implements OnInit {
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "DeleteNoteAsync", recID)
       .subscribe((res) => {
-        console.log("CHECK onDeleteNote", res)
         var dt = res;
         this.lstView.removeHandler(dt, "recID");
         this.changeDetectorRef.detectChanges();
@@ -238,7 +237,6 @@ export class NoteDrawerComponent implements OnInit {
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recIdOld, this.dataAdd])
       .subscribe((res) => {
-        console.log("CHECK onEditIsPin", res);
         this.changeDetectorRef.detectChanges();
       });
   }
