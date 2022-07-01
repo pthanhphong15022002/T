@@ -11,7 +11,7 @@
     </button>
   </div>
   <div ngbDropdownMenu aria-labelledby="dropdownForm1">
-    <!-- <ejs-tab id="element" #element headerPlacement="Left" (selected)="clickTabs($event)" > -->
+    <ejs-tab id="element" #element headerPlacement="Left" (selected)="clickTabs($event)" >
       <div class="e-tab-header col-4">      
         <div name='day' class="p-2 cursor-pointer w-1oo">{{headerText[1].text}}</div> 
         <div name='week' class="p-2 cursor-pointer w-1oo">{{headerText[2].text}}</div> 
@@ -21,9 +21,9 @@
       </div>
       <div class="e-content col-7">             
         <div>
-          <!-- <ejs-calendar (change)="selectDate($event, 'day')" [value]='fromDate'
+          <ejs-calendar (change)="selectDate($event, 'day')" [value]='fromDate'
           cssClass="width-calendar" class='e-customStyle' title=""> 
-          </ejs-calendar>  -->
+          </ejs-calendar> 
         </div>          
         <div class="e-content col-8 e-lib e-touch col-week">            
           <div class="w-100 e-item e-active">              
@@ -42,17 +42,17 @@
           </div>            
         </div>
         <div>
-          <!-- <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'month')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Year' depth='Year' title=""> 
-          </ejs-calendar>  -->
+          <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'month')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Year' depth='Year' title=""> 
+          </ejs-calendar> 
         </div>
         <div>
-          <!-- <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'year')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Decade' depth='Decade' title=""> 
-          </ejs-calendar>  -->
+          <ejs-calendar [value]='fromDate' (change)="selectDate($event, 'year')" cssClass="width-calendar" class='e-customStyle'  [showTodayButton]="false" start='Decade' depth='Decade' title=""> 
+          </ejs-calendar> 
         </div>
         <div class="p-2 col-week">  
-          <!-- <ejs-daterangepicker (change)="changeDate($event)"  [startDate]='fromDate' [endDate]='toDate'></ejs-daterangepicker> -->
+          <ejs-daterangepicker (change)="changeDate($event)"  [startDate]='fromDate' [endDate]='toDate'></ejs-daterangepicker>
         </div>          
       </div>
-    <!-- </ejs-tab> -->
+    </ejs-tab>
   </div>
 </div>

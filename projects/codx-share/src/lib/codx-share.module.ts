@@ -1,12 +1,10 @@
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule } from 'codx-core';
-
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
-
 import { NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
@@ -22,7 +20,8 @@ import { Readmorev2Component } from './components/readmorev2/readmorev2.componen
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { TruncatePipe } from './pipe/truncate.pipe';
 import { CalendarNotesComponent } from './components/calendar-notes/calendar-notes.component';
-import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
+import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -42,6 +41,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
+  CalendarDateComponent
 ];
 
 
@@ -52,7 +52,37 @@ const T_Pipe: Type<any>[] = [
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }
+/*
+
+const T_Moudule: Type<any>[] = [
+  CoreModule,
+  CommonModule,
+  MomentModule,
+  NgxSkeletonLoaderModule,
+  CodxCoreModule,
+  NgbModule,
+  ERMModule,
+  RouterModule,
+  InlineSVGModule,
+  NgxSkeletonLoaderModule,
+  FormsModule,
+  TabModule,
+  DateRangePickerModule 
+]
+@NgModule({
+  imports: [
+    T_Moudule
+  ],
+  declarations: [
+    T_Component
+  ],
+  exports: [
+    T_Moudule,
+    T_Component
+  ],
+})
+export class SharedModule { } */

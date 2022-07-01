@@ -190,17 +190,6 @@ export class IncommingComponent
           contextMenu: '',
         },
       },
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.template,
-          panelLeftRef: this.panelLeft,
-          panelRightRef: this.panelRight,
-          contextMenu: '',
-        },
-      },
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
