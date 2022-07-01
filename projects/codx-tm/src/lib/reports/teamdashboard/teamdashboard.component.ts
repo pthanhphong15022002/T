@@ -177,9 +177,31 @@ export class TeamDashboardComponent implements OnInit {
         'GetDataTeamDashboardAsync',
         this.model
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         console.log('Team Dashboard', res);
         this.dbData = res
+        this.piedata1 = [
+          {
+            x: 'Chưa thực hiện',
+            y: res.newTasks,
+          },
+          {
+            x: 'Đang thực hiên',
+            y: res.processingTasks,
+          },
+          {
+            x: 'Hoàn tất',
+            y: res.doneTasks,
+          },
+          {
+            x: 'Hoãn lại',
+            y: res.postponeTasks,
+          },
+          {
+            x: 'Bị huỷ',
+            y: res.canceledTasks,
+          },
+        ]
       });
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
