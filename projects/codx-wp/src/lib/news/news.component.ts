@@ -16,8 +16,12 @@ export class NewsComponent implements OnInit {
   entityName = 'WP_News';
   gridViewName = 'grvNews';
   fromName = 'News';
+  service = "WP";
+  assemblyName = "ERM.Business.WP";
+  className = "NewsBusiness"
+  method = "GetListNewsAsync";
   predicate = "";
-  datavalue = "5;null;2;";
+  dataValue = "5;null;2;";
   sortColumns = 'CreatedOn';
   sortDirections = 'desc';
   newsItem: any;
@@ -65,14 +69,13 @@ export class NewsComponent implements OnInit {
       var category = params["category"];
       switch (category) {
         case "news":
-          this.datavalue ="0;1;5;2;comanyinfo";
+          this.dataValue ="0;1;5;2;comanyinfo";
           this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus =@2 )) && Status =@3 && Category !=@4";
           break;
         default:
           this.isHome = false;
-          this.datavalue ="0;1;5;2;"+category;
+          this.dataValue ="0;1;5;2;"+category;
           this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus = @2)) && Status =@3 && Category =@4";
-          this.listNews
           break
       }
       this.funcID = this.route.snapshot.params["funcID"];
@@ -85,7 +88,7 @@ export class NewsComponent implements OnInit {
     var model1 = new DataRequest();
     model1.funcID = this.functionID;
     model1.predicate = this.predicate;
-    model1.dataValue = this.datavalue;
+    model1.dataValue = this.dataValue;
     model1.predicates = 'NewsType = @0';
     model1.dataValues = '1';
     model1.pageLoading = true;
@@ -168,10 +171,10 @@ export class NewsComponent implements OnInit {
   }
   clickShowPopupCreate() {
     let option = new SidebarModel();
-    option.DataService = this.codxView?.currentView?.dataService;
-    option.FormModel = this.codxView?.currentView?.formModel;
+    option.DataService = this.codxView.dataService;
+    option.FormModel = this.codxView.formModel;
     option.Width = '550px';
-    this.dialogRef =  this.callfc.openSide(PopupAddComponent,this.codxView.dataService.dataSelected,option);
+    this.dialogRef =  this.callfc.openSide(PopupAddComponent,option);
   }
 
   clickShowPopupSearch() {
@@ -182,7 +185,6 @@ export class NewsComponent implements OnInit {
     this.loadData();
   }
 
-  closePopup(data?:any){
-    this.dialogRef && this.dialogRef.close();
-  }
+
+ 
 }

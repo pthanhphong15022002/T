@@ -8,8 +8,8 @@
                         <div class="row">
                             <div class="col-1">
                                 <div class="">
-                                    <codx-img class="symbol symbol-50px symbol-circle"
-                                        [objectId]="data.createdBy" objectType="AD_Users" [width]="100">
+                                    <codx-img class="symbol symbol-50px symbol-circle" [width]="90"
+                                        [objectId]="data.createdBy" objectType="AD_Users" >
                                     </codx-img>
                                 </div>
                             </div>
@@ -121,19 +121,19 @@
                 <div class="d-flex flex-row-reverse">
                     <div class="navbar">
                         <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;" >
+                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;" (click)="clickApprovePost(data,cancelApprove)">
                                 <span><i class="icon-close me-1 text-danger fs-1 fw-bolder"></i></span>
                                 <codx-label formName="" name="lblCancel" default="TỪ CHỐI"></codx-label>
                             </a>
                         </div>
                         <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;" >
+                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;" (click)="clickApprovePost(data,remakeApprove)">
                                 <span><i class="icon-keyboard_return me-1 text-warning fs-1 fw-bolder"></i></span>
                                 <codx-label formName="" name="lbl" default="LÀM LẠI"></codx-label>
                             </a>
                         </div>
                         <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;">
+                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;" (click)="clickApprovePost(data,acceptApprove)">
                                 <span><i class="icon-check me-1 text-success fs-1 fw-bolder"></i></span>
                                 <codx-label formName="" name="lblApprove" default="DUYỆT"></codx-label>
                             </a>
@@ -148,7 +148,7 @@
                 <div class="col-1">
                     <div class="">
                         <codx-img slot="start" class="symbol symbol-50px symbol-circle"
-                            [objectId]="data.createdBy" objectType="AD_Users" [width]="100">
+                            [objectId]="data.createdBy" objectType="AD_Users" [width]="50">
                         </codx-img>
                     </div>
                 </div>

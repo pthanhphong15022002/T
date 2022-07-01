@@ -1,32 +1,39 @@
 
 
-<codx-views #codxViews funcID="WPT021" service="WP" entityName="WP_News"  idField="recID" assemblyName="ERM.Business.WP"
-  className="NewsBusiness" method="GetListNewByADMinAsync" [showToolBar]="false" [views]="views"[autoLoad]="true">
+<codx-views #codxViews 
+[funcID]="funcID" 
+[service]="service" 
+[entityName]="entityName" 
+idField="recID" 
+[assemblyName]="assemblyName"
+[className]="className" 
+[method]="method" 
+[predicate]="predicate" 
+[dataValue]="dataValue" 
+[showToolBar]="false" 
+[views]="views"
+[autoLoad]="true">
 </codx-views>
 
 <ng-tempalte #panelLeftRef>
     <div class="row">
             <ul class="nav ">
-                <li class="nav-item">
-                    <a class="nav-link text-primary fw-bolder" href="javascript:;">
-                        <codx-label formName="" [name]="'lbl'" [default]="'Chờ duyệt'"></codx-label>
-
+                <li class="nav-item" *ngFor="let item of navAsside">
+                    <a  (click)="clickNavApprove(item,item.predicate,item.datavalue)"  [class.text-muted]="!item.active" class="nav-link text-primary fw-bolder" href="javascript:;" (click)="clickNavApprove(item,item.predicate,item.datavalue)">
+                        <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
+                        <span>({{item.value}})</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-primary fw-bolder" href="javascript:;" >
-                        <codx-label formName="" [name]="'lbl'" [default]="'Đã duyệt'"></codx-label>
-                    </a>
-                </li>
-            </ul>
+        </ul>
     </div>
+    
 </ng-tempalte>
 <ng-template #panelRightRef>
-    <!-- <lib-approve-detail
+    <lib-approve-detail
         [data]="dataSelected"
         [option]="option"
         [formModel]="codxViews.formModel"
-    ></lib-approve-detail> -->
+    ></lib-approve-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -47,5 +54,10 @@
             </div>        
         </div>
     </div>
+    <codx-mfunc [formModel]="codxViews.formModel" [isBookMark]="false" (clickMF)="clickMF($event,data)" >
+
+    </codx-mfunc>
 </ng-template>
+
+
     

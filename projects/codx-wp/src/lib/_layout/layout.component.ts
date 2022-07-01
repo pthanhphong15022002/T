@@ -1,7 +1,6 @@
-import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CacheService, CodxService, LayoutBaseComponent } from 'codx-core';
-import { Observable } from 'rxjs';
+import { CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -24,7 +23,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-    this.codxService.fun$.subscribe();
   }
 
   onAfterViewInit(): void {}

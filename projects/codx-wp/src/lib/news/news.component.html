@@ -1,15 +1,24 @@
 <!-- <div class="box-link">main-header</div> -->
 
-<codx-views #codxViews [funcID]="funcID" idField="recID" entityName="WP_News" [views]="views" [showToolBar]="false"
-(requestEnded)="closePopup($event)"
+<codx-views #codxViews 
+[funcID]="funcID" 
+idField="recID"
+[entityName]="entityName" 
+[views]="views"
+[service]="service"
+[assemblyName]="assemblyName"
+[className]="className"
+[method]="method"
+[autoLoad]="true"
+[showToolBar]="false"
 >
 </codx-views>
 <ng-template #panelLeftRef>
   <div class="news-main">
-    <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
-      <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
-    </div>
-    <ng-container *ngIf="newsItem">
+    <ng-container *ngIf="newsItem;else empty">
+      <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
+        <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
+      </div>
       <div class="row" >
         <div class="col-6">
           <div class="news-card news-hot">
@@ -27,31 +36,33 @@
           </div>
         </div>
         <div class="col-6 ps-9 hotnews-right">
-          <div *ngFor="let item of listNews" class="row" (click)="clickViewDeital(item)">
-            <div class="col-4">
-              <div class="news-card-img" >
-                <codx-img width="100" imageType="square" class="w-100" [objectId]="item.recID" objectType="WP_News"></codx-img>
-                <div class="news-category">
-                  <span class="badge badge-danger">
-                    <codx-label formName="News" name="lblCategory" [default]="item.category"></codx-label>
-                  </span>
+          <ng-container *ngIf="listNews;else empty">
+            <div *ngFor="let item of listNews" class="row" (click)="clickViewDeital(item)">
+              <div class="col-4">
+                <div class="news-card-img" >
+                  <codx-img width="100" imageType="square" class="w-100" [objectId]="item.recID" objectType="WP_News"></codx-img>
+                  <div class="news-category">
+                    <span class="badge badge-danger">
+                      <codx-label formName="News" name="lblCategory" [default]="item.category"></codx-label>
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-8" >
-              <div class="fs-5 fw-bolder news-title">
-                {{ item.subject }}
+              <div class="col-8" >
+                <div class="fs-5 fw-bolder news-title">
+                  {{ item.subject }}
+                </div>
+                <div class="text-gray-700 news-des">
+                    {{item.subContent | maxlenght:100}}
+                </div>
+                <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
               </div>
-              <div class="text-gray-700 news-des">
-                  {{item.subContent | maxlenght:100}}
-              </div>
-              <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="listSlider">
+    <ng-container *ngIf="listSlider;else empty">
       <div class="news-carousel" >
         <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
           [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
@@ -70,12 +81,14 @@
       </div>
     </ng-container>
     
-    <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray"><codx-label formName="News" name="lblInternal" default="Tin nội bộ"></codx-label> </div>
     <ng-container *ngIf="isHome; else catagory">
       <ng-container *ngIf="predicate">
+        <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray">
+          <codx-label formName="News" name="lblInternal" default="Tin nội bộ"></codx-label>
+        </div>
         <div class="row news-catagory">
           <codx-listview [emptyTemplate]="empty" #listView [itemTemplate]="listGroup" title="" [funcId]="functionID" [entityName]="entityName"
-            [gridViewName]="gridViewName" type="listView" [predicate]="predicate" [dataValue]="datavalue" predicates="NewsType = @0"
+            [gridViewName]="gridViewName" type="listView" [predicate]="predicate" [dataValue]="dataValue" predicates="NewsType = @0"
             dataValues="1" [groupBy]="'vllText'" [loadFull]="true" method="GetListNewsAsync" service="WP"
             assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
           <ng-template #listGroup let-item>
@@ -102,7 +115,7 @@
       <ng-container  *ngIf="predicate">
         <div class="px-12 mt-6">
           <codx-listview #listCategory [emptyTemplate]="empty" [itemTemplate]="listOld" title="" [funcId]="functionID" [entityName]="entityName"
-            [gridViewName]="gridViewName" [predicate]="predicate" [dataValue]="datavalue" [dataObj]="'list'" page="1"
+            [gridViewName]="gridViewName" [predicate]="predicate" [dataValue]="dataValue" [dataObj]="'list'" page="1"
             [pageSize]="6" predicates="NewsType = @0" dataValues="1" method="GetListNewsAsync" service="WP"
             assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
         </div>
@@ -144,7 +157,7 @@
 </ng-template>
 
 <ng-template #empty>
-  <div class="text-center">
-      <img style="max-width:700px" src="../../../../assets/img/EmptyDataPortal.png" />
-  </div>
+  <!-- <div class="text-center">
+      <img style="max-width:700px" src="../assets/media/img/EmptyData.svg" />
+  </div> -->
 </ng-template>

@@ -4,26 +4,70 @@
         <div class="card-header">
             <div class="d-flex align-items-center">
                 <div class="d-flex align-items-center justify-content-start user-square ms-3">
-                    <ng-container *ngIf="lstRecevier.length > 0">
-                        <ng-containert *ngIf="lstRecevier.length == 1; else shareWith">
-                            <div  class="fw-bolder fs-5">
-                                <span class="ms-2 me-2">{{user.userName}}</span>
-                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                                <span class="me-2 ">{{userRecevier.UserName}}</span>
-                            </div>
-                            <div class="symbol symbol-20px symbol-circle me-2">
-                                <codx-img [objectId]="userRecevier?.UserID" objectType="AD_User"></codx-img>
-                            </div>
-                        </ng-containert>
-                        <ng-template #shareWith>
-                            <div  class="fw-bolder fs-5">
-                                <span class="ms-2 me-2">{{user.userName}}</span>
-                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                                <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                                <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default=" người khác "></codx-label>
-                            </div>
-                        </ng-template>
-                    </ng-container>
+                    <div class="d-flex align-items-center justify-content-start ">
+                        <div class="me-2">
+                            <codx-img [objectId]="user.userID" objectType="AD_Users" imageType="square" [width]="90"></codx-img>
+                        </div>
+                        <div>
+                            <span class="fw-bolder ms-2 me-2">{{user.userName}}</span>
+                            
+                            <ng-container *ngIf="lstRecevier.length > 0">
+                                <ng-container *ngIf="objectType=='U';else deparments">
+                                    <ng-containert *ngIf="lstRecevier.length == 1; else shareWith">
+                                        <div  class="fw-bolder fs-5 ms-2">
+                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
+                                            <span class="me-2 ">{{userRecevier.UserName}}</span>
+                                            <codx-img [objectId]="userRecevier.UserID" objectType="AD_Users" [width]="25" imageType="circle"></codx-img>
+                                        </div>
+                                    </ng-containert>
+                                    <ng-template #shareWith>
+                                        <div  class="fs-5 ms-2">
+                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
+                                            <span class="me-2 fw-bolder">{{userRecevier.UserName}}</span>
+                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="và "></codx-label>
+                                            <span class="ms-2 me-2">{{lstRecevier.length - 1}}</span>
+                                            <span class="fs-7 text-gray-600">{{shareControl| vll:'L1901':'text' | async}}</span>
+                                            <span 
+                                                class="tag" 
+                                                placement="bottom" 
+                                                #empPopover="ngbPopover"
+                                                [ngbPopover]="popContent"
+                                                (mouseenter)="PopoverEmpEnter(empPopover)"
+                                                (mouseleave)="PopoverEmpLeave(empPopover)"
+                                                >
+                                                <img class="tag-img" src="../../../../assets/img/fed/user-tag.png" />
+                                                <ng-template  #popContent>
+                                                    <div class="list-user">
+                                                        <div class="row" *ngFor="let item of lstRecevier">
+                                                            <div class="col-2">
+                                                                <codx-img 
+                                                                [objectId]="item.UserID" 
+                                                                objectName="AD_Users" 
+                                                                [width]="25" 
+                                                                imageType="circle">
+                                                            </codx-img>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <span class="ms-2 fs-6">{{item.UserName}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </span>
+                                        </div>
+                                    </ng-template>
+                                </ng-container>
+                                <ng-template #deparments>
+                                    <div  class="fw-bolder fs-5 ms-2">
+                                        <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với"></codx-label>
+                                        <span class="fs-7 text-gray-600">{{shareControl| vll:'L1901':'text' | async}}</span>
+                                        <span class="me-2 ms-2">{{recevierName}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
+                        </div>
+                    </div>
+                    
                     <div class="text-dark fs-7 ms-2">
                         <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
                     </div>
@@ -56,7 +100,7 @@
                         <codx-label [formModel]="dialogRef.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" field="StartDate"
-                        [crrValue]="formGroup.controls['fDateStart'].value" format="F" (valueChange)="valueChange($event)">
+                        [crrValue]="formGroup.controls['DateStart'].value" format="F" (valueChange)="valueChange($event)">
                       </codx-input>
                 </div>
                 <div class="col-6">

@@ -1,16 +1,19 @@
+import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent } from 'codx-core';
+import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService } from 'codx-core';
 
 @Component({
   selector: 'lib-approve',
   templateUrl: './approve.component.html',
   styleUrls: ['./approve.component.css']
 })
-export class ApproveComponent extends UIComponent implements OnInit {
-  onInit(): void {
-  }
+export class ApproveComponent implements OnInit {
+  service = "WP";
+  assemblyName = "ERM.Business.WP";
+  className = "NewsBusiness";
+  method = "GetListNewByADMinAsync";
   entityName = "";
   predicate = "CreatedBy =@0";
   dataValue = "";
@@ -33,10 +36,9 @@ export class ApproveComponent extends UIComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
-
-
-
   @ViewChild('codxViews') codxViews : ViewsComponent;
+  @ViewChild('listView') listView : CodxListviewComponent;
+
 
   navAsside = [
     {
@@ -72,20 +74,62 @@ export class ApproveComponent extends UIComponent implements OnInit {
       active:false
     },
   ]
-  @ViewChild('listView') listView : CodxListviewComponent;
   constructor
-  ( inject: Injector,
+  (
     private dt:ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private auth:AuthService,
+    private cache: CacheService,
+    private api : ApiHttpService,
     private route: ActivatedRoute
   ) 
   {
-    super(inject);
     this.dataValue = this.auth.userValue.userID;
   }
+  ngOnInit(): void {
+    this.route.params.subscribe((param) =>{
+      var option = param["option"];
+      this.funcID = param["funcID"];
+      this.option = option;
+      this.entityName = "WP_News";     
+      this.predicate = "Approver=@0 ";
+      this.dataValue =  this.auth.userValue.userID;
+      this.model.predicate= this.predicate;
+      this.model.dataValue = this.dataValue;
+      switch (option){
+        case "webpost":
+          break;
+        case "post":
+          this.entityName = "WP_Comments";
+          break;
+        default:
+          this.predicate = "CreatedBy=@0 ";
+          this.model.predicate = "CreatedBy=@0";
+          this.model.dataValue = this.auth.userValue.userID;
+          break;
+      }
+      this.dataDetail = null;
+      this.model.entityName = this.entityName;
+
+      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetTotalAdminPostAsync",this.model).subscribe(
+        (res) => {
+          if(res){
+            this.navAsside[0].value = res[0];
+            this.navAsside[1].value = res[1];
+            this.navAsside[2].value = res[2];
+            this.navAsside[3].value = res[3];
+            
+            this.navAsside[0].active = true;
+            this.navAsside[1].active = false;
+            this.navAsside[2].active = false;
+            this.navAsside[3].active = false;
+            this.dt.detectChanges();
+          }
+        }
+      )
+    });
+  }
   ngAfterViewInit(): void {
-    this.codxViews.dataService.setPredicate("CreatedBy = @0",[this.dataValue])
     this.views  = [{
       type: ViewType.listdetail,
       active: true,
@@ -96,55 +140,8 @@ export class ApproveComponent extends UIComponent implements OnInit {
         panelRightRef : this.panelRightRef
       }
     }];
-    let dataValue:string[] = ["ADMIN"];
-    // this.codxViews.dataService.setPredicate("CreatedBy=@0",["ADMIN"]);
+    this.clickNavApprove(null,this.navAsside[0].predicate,this.navAsside[0].datavalue)
     this.dt.detectChanges();
-  }
-
-  OnInit(): void {
-    // this.route.params.subscribe((param) =>{
-    //   var option = param["option"];
-    //   this.funcID = param["funcID"];
-    //   this.option = option;
-    //   this.entityName = "WP_News";     
-    //   this.predicate = "Approver=@0 ";
-    //   this.dataValue =  this.auth.userValue.userID;
-    //   this.model.predicate= this.predicate;
-    //   this.model.dataValue = this.dataValue;
-    //   switch (option){
-    //     case "webpost":
-    //       break;
-    //     case "post":
-    //       this.entityName = "WP_Comments";
-    //       break;
-    //     default:
-    //       this.predicate = "CreatedBy=@0 ";
-    //       this.model.predicate = "CreatedBy=@0";
-    //       this.model.dataValue = this.auth.userValue.userID;
-    //       break;
-    //   }
-    //   this.dataDetail = null;
-    //   this.model.entityName = this.entityName;
-
-    //   this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetTotalAdminPostAsync",this.model).subscribe(
-    //     (res) => {
-    //       if(res){
-    //         this.navAsside[0].value = res[0];
-    //         this.navAsside[1].value = res[1];
-    //         this.navAsside[2].value = res[2];
-    //         this.navAsside[3].value = res[3];
-            
-    //         this.navAsside[0].active = true;
-    //         this.navAsside[1].active = false;
-    //         this.navAsside[2].active = false;
-    //         this.navAsside[3].active = false;
-    //         this.dt.detectChanges();
-    //       }
-    //     }
-    //   )
-    //   this.clickNavApprove(null,this.navAsside[0].predicate,this.navAsside[0].datavalue)
-    // });
-
   }
 
 
@@ -156,13 +153,8 @@ export class ApproveComponent extends UIComponent implements OnInit {
     })
   }
   loadData(predicate:string,dataValue:string){
-    if(this.listView)
-    {
-      this.listView.entityName =  this.entityName;
-      this.listView.predicate = predicate;
-      this.listView.dataValue = dataValue;
-      this.dt.detectChanges();
-    }
+    this.codxViews.entityName = this.entityName;
+    this.codxViews.dataService.setPredicate(predicate,[dataValue]).subscribe();
   }
   clickViewDetail(recID:string,entityName:string){
     this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetNewsInforByADMinAsync",[recID,entityName])
@@ -171,7 +163,6 @@ export class ApproveComponent extends UIComponent implements OnInit {
         this.option == "mypost";
         this.dataSelected = res;
         this.dataDetail = res;
-        console.log(res)
         this.dt.detectChanges();
       }
     })
@@ -279,25 +270,36 @@ export class ApproveComponent extends UIComponent implements OnInit {
 
 
   itemSelected : any;
-  changeView(evt: any) { }
-
-  requestEnded(evt: any) {
-    //this.dialog && this.dialog.close(); sai vẫn bị đóng
-    this.view.currentView;
-  }
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
-      this.api
-        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(e.data);
-          }
-        });
-    }
-  }
   selectedChange(val: any) {
     this.itemSelected = val.data;
     this.dt.detectChanges();
+  }
+
+  clickMF(event:any,data:any){
+    switch(event.functionID){
+      case 'delete':
+        if(this.entityName == "WP_News"){
+          this.api.execSv(this.service,this.assemblyName,"NewsBusiness","DeleteNewsAsync",data.recID)
+          .subscribe((res:boolean) => {
+            if(res){
+              this.notifySvr.notifyCode('E0026');
+            }
+          })
+        }
+        else //WP_Comments
+        {
+          this.api.execSv(this.service,this.assemblyName,"CommentBusiness","DeletePostAsync",data.recID)
+          .subscribe((res:boolean) => {
+            if(res){
+              this.notifySvr.notifyCode('E0026');
+            }
+          })
+        }
+        break;
+      case 'edit':
+        break;
+      default:
+        break;
+    }
   }
 }

@@ -36,7 +36,7 @@
             
         </div>
         <div class="my-3 h-50">
-            <codx-input type="textarea" class="test-textarea" [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
+            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
         </div>
         <ng-container *ngIf="dataEdit?.recID">
             <div class="d-block mt-3">
