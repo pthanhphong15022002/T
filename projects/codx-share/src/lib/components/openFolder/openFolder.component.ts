@@ -14,18 +14,17 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
-import { OpenFolderComponent } from '../openFolder/openFolder.component';
-import { AttachmentService } from './attachment.service';
+import { AttachmentService } from '../attachment/attachment.service';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
-  selector: 'attachment',
-  templateUrl: './attachment.component.html',
-  styleUrls: ['./attachment.component.scss'],
+  selector: 'openFolder',
+  templateUrl: './openFolder.component.html',
+  styleUrls: ['./openFolder.component.scss'],
 })
-export class AttachmentComponent implements OnInit {
+export class OpenFolderComponent implements OnInit {
   user: any;
   titlemessage = 'Thông báo';
   remote = true;
@@ -41,13 +40,12 @@ export class AttachmentComponent implements OnInit {
   breadcumbLink = [];
   codetitle = 'DM059';
   codetitle2 = 'DM058';
-  titleDialog = "Thêm file";
+  titleDialog = "Chọn thư mục";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
-  @Input() formModel: any;
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;
@@ -80,15 +78,15 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != null) {
-      this.objectType = data?.data.objectType;
-      this.objectId = data?.data.objectId;
-      this.folderType = data?.data.folderType;
-      this.functionID = data?.data.functionID;
-      this.type = data?.data.type;
-      this.popup = data?.data.popup;
-      this.hideBtnSave = data?.data.hideBtnSave;
-    }
+    // if (data != null) {
+    //   this.objectType = data?.data.objectType;
+    //   this.objectId = data?.data.objectId;
+    //   this.folderType = data?.data.folderType;
+    //   this.functionID = data?.data.functionID;
+    //   this.type = data?.data.type;
+    //   this.popup = data?.data.popup;
+    //   this.hideBtnSave = data?.data.hideBtnSave;
+    // }
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -264,6 +262,8 @@ export class AttachmentComponent implements OnInit {
   }
 
   openFormFolder() {
+    this.dialog.close();
+    return;
     this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
       if (res != null) {
         this.listRemoteFolder = res;
@@ -275,21 +275,11 @@ export class AttachmentComponent implements OnInit {
             this.loadChildNode(res[0], 0, list);
           }
         }
-        this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
         this.changeDetectorRef.detectChanges();
         this.remotePermission = res[0].permissions;
       }
     });
 
-    // let option = new SidebarModel();
-    // option.DataService = this.view?.currentView?.dataService;
-    // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '750px';
-    
-    
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
 
     /* this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "").subscribe((dialog: Dialog)=>{
       let that = this;
@@ -518,7 +508,7 @@ export class AttachmentComponent implements OnInit {
     this.atSV.breadcumb.next(this.breadcumb);
     this.atSV.currentNode = '';
     this.atSV.folderId.next(this.selectId);
-    dialog.hide();
+    this.dialog.close();
     // var a = "";
     //dialog.hide(a);
     // this.closeOpenForm();

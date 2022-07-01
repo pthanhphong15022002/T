@@ -36,6 +36,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   currView?: TemplateRef<any>;
   path: string;
@@ -81,10 +82,26 @@ export class HomeComponent extends UIComponent {
   //  console.log($event);
   //  alert(1);
     //this.attachment.uploadFile(); 
+    /*
+    <attachment  
+      #attachment  
+      [objectType]="formModel?.entityName" 
+      hideBtnSave="1"   
+      hideFolder="1"  
+      hideUploadBtn="1"   
+      hideDes="1" 
+      [functionID]="formModel?.funcID" 
+      (fileAdded)="fileAdded($event)" 
+      (fileCount)="getfileCount($event)" 
+    > 
+    </attachment> 
+
+    */
     var data = new DialogAttachmentType;    
     data.objectType = "WP_Notes";
     data.objectId = "628c326c590addf224627f42"; 
-    data.functionID = "WPT03941";    
+    data.functionID = "WPT03941";  
+    data.type = 'popup';  
     // this.callfc.openForm(AttachmentComponent, "Upload tài liệu", 500, 700, null, data).subscribe((dialog: any) => {
     
     // });  
@@ -97,6 +114,18 @@ export class HomeComponent extends UIComponent {
     this.dialog.closed.subscribe(e => {
       console.log(e);
     })
+  }
+
+  getfileCount($event) {
+
+  }
+
+  fileAdded($event) {
+
+  }
+  
+  openFile() {
+    this.attachment.uploadFile();
   }
 
   getPath() {

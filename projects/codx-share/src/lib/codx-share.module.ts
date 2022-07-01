@@ -14,6 +14,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThumbnailComponent } from './components/thumbnail/thumbnail.component';
 import { CalendarDateComponent } from './components/calendardate/calendardate.component';
 import { CodxExportComponent } from './components/codx-export/codx-export.component';
+import { OpenFolderComponent } from './components/openFolder/openFolder.component';
 import { CodxExportAddComponent } from './components/codx-export/codx-export-add/codx-export-add.component';
 import { TreeviewCommentComponent } from './components/treeview-comment/treeview-comment.component';
 import { ReadMoreComponent } from './components/readmore/readmore.component';
@@ -26,6 +27,7 @@ import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
+  OpenFolderComponent,
   ThumbnailComponent,
   BreadcumbComponent,
   SelectweekComponent,
