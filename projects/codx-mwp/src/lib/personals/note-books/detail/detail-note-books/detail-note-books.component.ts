@@ -156,7 +156,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
   }
 
   edit(data) {
-    if(data) {
+    if (data) {
       this.view.dataService.dataSelected = data;
     }
 
@@ -167,9 +167,9 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openForm(PopupAddUpdate,
         'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.dataSelected, 'edit'], '', option
       );
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 

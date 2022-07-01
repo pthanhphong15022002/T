@@ -148,6 +148,10 @@ export class SprintsComponent extends UIComponent {
         [this.view.dataService.dataSelected, 'add'],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
+      
       //dialog.close();
     });
   }

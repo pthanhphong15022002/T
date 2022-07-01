@@ -69,22 +69,19 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-end row">
-      <div class="col-10">
-        <!-- <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After"
-          label="Chia sẽ board cho nguồn lực" [crrValue]="true"></codx-input> -->
-        <span><input type="checkbox" [readOnly]="readOnly" [(ngModel)]="taskBoard.isShared"
+    <div class="d-flex justify-content-between ">
+     
+        <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After"
+          label="Chia sẽ board cho nguồn lực" [crrValue]="taskBoard.isShared"></codx-input>
+        <!-- <span><input type="checkbox" [readOnly]="readOnly" [(ngModel)]="taskBoard.isShared"
             (change)="changeShare($event)"> </span>
-        <span>
-          <codx-label fiedName="IsShared" formName="Sprints" default="Chia sẽ board cho nguồn lực">
-          </codx-label>
-        </span>
-      </div>
-      <div class="col-2">
+        <span> -->
+          <!-- <codx-label fiedName="IsShared" formName="Sprints" default="Chia sẽ board cho nguồn lực">
+          </codx-label> -->
+        <!-- </span> -->
         <button type="button" class="btn btn-primary" (click)="saveData(taskBoard.iterationID)">
           <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
         </button>
-      </div>
     </div>
   </ng-template>
 </codx-form>
