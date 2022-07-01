@@ -11,7 +11,7 @@
                             <div class="modal-subheader">
                                 <div for="fileName" class="d-flex justify-content-between mb-1">
                                     <div class="d-flex align-items-center col-form-label pb-0">
-                                        <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                        <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                                     </div>
                                     <div *ngIf="disableFolderSelect()">
                                         <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -100,7 +100,7 @@
                     <div *ngIf="hideFolder != '1'" class="modal-subheader">
                         <div for="fileName" class="d-flex justify-content-between mb-1">
                             <div class="d-flex align-items-center col-form-label pb-0">
-                                <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                             </div>
                             <div *ngIf="disableFolderSelect()">
                                 <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -170,7 +170,7 @@
             </form>
         </div>
     </div>   
-    <thumbnail [files]="data"></thumbnail>     
+    <codx-thumbnail [files]="data"></codx-thumbnail>     
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

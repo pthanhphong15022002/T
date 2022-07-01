@@ -9,7 +9,7 @@ import { AttachmentService } from '../attachment/attachment.service';
 import { SystemDialogService } from './systemDialog.service';
 
 @Component({
-  selector: 'app-viewfiledialog',
+  selector: 'codx-viewfiledialog',
   templateUrl: './viewFileDialog.component.html',
   styleUrls: ['./viewFileDialog.component.scss'],
 

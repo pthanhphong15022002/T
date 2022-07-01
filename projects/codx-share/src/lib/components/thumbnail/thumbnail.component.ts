@@ -5,7 +5,7 @@ import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 @Component({
-  selector: 'thumbnail',
+  selector: 'codx-thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss']
 })
