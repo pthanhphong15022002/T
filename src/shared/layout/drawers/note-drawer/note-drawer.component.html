@@ -6,12 +6,12 @@
         <div class="card-header pe-5" id="kt_drawer_note_messenger_header">
             <div class="card-title">
                 <div class="d-flex justify-content-center flex-column me-3">
-                    <!-- <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
+                    <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
               me-1 mb-2 lh-1 cursor-pointer">Brian Cox</a>
                     <div class="mb-0 lh-1">
                         <span class="badge badge-success badge-circle w-10px h-10px me-1"></span><span
                             class="fs-7 fw-bold text-gray-400">Active</span>
-                    </div> -->
+                    </div>
                 </div>
             </div>
 
@@ -84,99 +84,102 @@
                 gridViewName="'grvNotes'" service="WP">
             </codx-listview>
             <ng-template #template let-item>
-                <div class="pd-note">
+                <div>
                     <div class="p-3 note-content mb-3">
                         <div class="checkbox-list">
-                            <!-- <div *ngIf="item.isPin == true"> -->
-                            <div *ngIf="item.memo != null">
-                                <div class="note-date d-flex justify-content-end align-items-center">
-                                    <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    <div class="dropdown ms-2">
-                                        <span class="icon-more_vert icon-18" placement="start" container="body"
+                            <div *ngIf="item.isPin == true">
+                                <div *ngIf="item.memo != null">
+                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        <div class="dropdown ms-2">
+                                            <span class="icon-more_vert icon-18" placement="start" container="body"
+                                            [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
                                             (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="d-flex flex-column note-option ms-3">
-                                    <span [innerHTML]="item.memo"></span>
-                                </div>
-                            </div>
-                            <div *ngIf="item.memo == null">
-                                <div class="note-date d-flex justify-content-end align-items-center">
-                                    <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    <div class="dropdown ms-2">
-                                        <span class="icon-more_vert icon-18" placement="start" container="body"
-                                            (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="d-flex flex-column note-option ms-3">
-                                    <div *ngFor="let itemList of item.checkList">
-                                        <div *ngIf="itemList.status == null">
-                                            <div class="my-1">
-                                                <div>.{{itemList.listNote}}</div>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="itemList.status != null">
-                                            <div class="my-1">
-                                                <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                    label="{{itemList.listNote}}"
-                                                    [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                    labelPosition="After" [disabled]="false" class="test-check"
-                                                    (valueChange)="valueChange($event)"></codx-input>
-                                            </div>
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <span [innerHTML]="item.memo"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.memo == null">
+                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        <div class="dropdown ms-2">
+                                            <span class="icon-more_vert icon-18" placement="start" container="body"
+                                            [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
+                                            (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <div *ngFor="let itemList of item.checkList">
+                                            <div *ngIf="itemList.status == null">
+                                                <div class="my-1">
+                                                    <div>.{{itemList.listNote}}</div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="itemList.status != null">
+                                                <div class="my-1">
+                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                        label="{{itemList.listNote}}"
+                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                        labelPosition="After" [disabled]="false" class="test-check"
+                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- </div>
                             <div *ngIf="item.isPin == false">
-                                <h1>-----------</h1> -->
-                            <!-- <div *ngIf="item.memo != null">
-                                <div class="note-date d-flex justify-content-end align-items-center">
-                                    <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    <div class="dropdown ms-2">
-                                        <span class="icon-more_vert icon-18" placement="start" container="body"
+                                <div *ngIf="item.memo != null">
+                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        <div class="dropdown ms-2">
+                                            <span class="icon-more_vert icon-18" placement="start" container="body"
+                                            [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
                                             (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
-                                <br>
-                                <div class="d-flex flex-column note-option ms-3">
-                                    <span [innerHTML]="item.memo"></span>
+                                <div *ngIf="item.memo == null">
+                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        <div class="dropdown ms-2">
+                                            <span class="icon-more_vert icon-18" placement="start" container="body"
+                                            [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
+                                            (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <div *ngFor="let itemList of item.checkList">
+                                            <div *ngIf="itemList.status == null">
+                                                <div class="my-1">
+                                                    <li>{{itemList.listNote}}</li>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="itemList.status != null">
+                                                <div class="my-1">
+                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                        label="{{itemList.listNote}}"
+                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                        labelPosition="After" [disabled]="false" class="test-check"
+                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div *ngIf="item.memo == null">
-                                <div class="note-date d-flex justify-content-end align-items-center">
-                                    <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    <div class="dropdown ms-2">
-                                        <span class="icon-more_vert icon-18" placement="start" container="body"
-                                            (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="d-flex flex-column note-option ms-3">
-                                    <div *ngFor="let itemList of item.checkList">
-                                        <div *ngIf="itemList.status == null">
-                                            <div class="my-1">
-                                                <li>{{itemList.listNote}}</li>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="itemList.status != null">
-                                            <div class="my-1">
-                                                <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                    label="{{itemList.listNote}}"
-                                                    [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                    labelPosition="After" [disabled]="false" class="test-check"
-                                                    (valueChange)="valueChange($event)"></codx-input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
-                <!-- </div> -->
             </ng-template>
         </div>
     </div>
