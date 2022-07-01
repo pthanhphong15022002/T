@@ -24,8 +24,8 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     iconCss="icon-flag"
-    [icoStatusVll]="'VL003'"
-    [imageId]="data.categoryID? data.categoryID : 'ADMIN'"
+    [icoStatusVll]="'ES002'"
+    [imageId]="data.categoryID"
     imageObjType=""
     [title]="data.title"
     [desc]="data.abstract"
@@ -76,27 +76,7 @@
   <lib-view-detail
     #viewdetail
     [itemDetail]="itemDetail"
-    style="height: 800px !important"
   >
   </lib-view-detail>
 </ng-template>
-<!-- 
-<ng-template #content let-modal>
-  <div class="modal-header" style="height: 20px">
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="d-flex justify-content-between align-items-center">
-        <h4 id="modal-basic-title"></h4>
-        <button
-          type="button"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          aria-label="Close"
-          (click)="modal.dismiss()"
-        >
-          <codx-label name="" fiedName="" formName="" default="" class="icon-close icon-20 text-dark text-hover-primary"></codx-label>
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <app-edit-sign-file #editSFile></app-edit-sign-file>
-</ng-template> -->

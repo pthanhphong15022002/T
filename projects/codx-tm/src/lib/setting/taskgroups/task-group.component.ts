@@ -11,17 +11,18 @@ import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.
 export class TaskGroupComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
-
-  @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
-  @ViewChild('itemStopCheck', { static: true }) itemStopCheck: TemplateRef<any>;
-  @ViewChild('itemApprovalControlVll', { static: true }) itemApprovalControlVll: TemplateRef<any>;
-  @ViewChild('itemProjectControlVll', { static: true }) itemProjectControlVll: TemplateRef<any>;
+  @ViewChild('itemTaskGroupID', { static: true }) itemTaskGroupID: TemplateRef<any>;
+  @ViewChild('itemTaskGroupName', { static: true }) itemTaskGroupName: TemplateRef<any>;
+  @ViewChild('itemTaskGroupName2', { static: true }) itemTaskGroupName2: TemplateRef<any>;
+  @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
+  @ViewChild('itemApprovalControl', { static: true }) itemApprovalControl: TemplateRef<any>;
+  @ViewChild('itemProjectControl', { static: true }) itemProjectControl: TemplateRef<any>;
   @ViewChild('itemAttachmentControl', { static: true }) itemAttachmentControl: TemplateRef<any>;
-  @ViewChild('itemCheckListControlVll', { static: true }) itemCheckListControlVll: TemplateRef<any>;
+  @ViewChild('itemCheckListControl', { static: true }) itemCheckListControl: TemplateRef<any>;
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+  @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
+  
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
@@ -55,17 +56,17 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'taskGroupID', headerText: 'Mã nhóm', width: 150 },
-      { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
-      { field: 'taskGroupName2', headerText: 'Tên khác', width: 200 },
-      { field: 'note', headerText: 'Ghi chú', width: 200 },
-      { field: 'approvalControl', headerText: 'Xét duyệt?', width: 140 },
-      { field: 'projectControl', headerText: 'Chọn dự án', width: 140 },
-      { field: 'attachmentControl', headerText: 'Đính kèm file', width: 140 },
-      { field: 'checkListControl', headerText: 'Nhập việc cần làm', width: 180 },
-      { field: 'checkList', headerText: 'CheckList', width: 200 },
-      { field: 'createName', headerText: 'Người tạo', width: 200 },
-      { field: 'createdOn', headerText: 'Ngày tạo', width: 100 },
+      { headerTemplate: this.itemTaskGroupID , width: 150 },
+      { headerTemplate: this.itemTaskGroupName , width: 200 },
+      { headerTemplate: this.itemTaskGroupName2 , width: 200 },
+      { headerTemplate: this.itemNote , width: 200 },
+      { headerTemplate: this.itemApprovalControl , width: 140 },
+      { headerTemplate: this.itemProjectControl , width: 140 },
+      { headerTemplate: this.itemAttachmentControl , width: 140 },
+      { headerTemplate: this.itemCheckListControl , width: 180 },
+      { headerTemplate: this.itemCheckList , width: 200 },
+      { headerTemplate: this.itemCreatedBy , width: 200 },
+      { headerTemplate: this.itemCreatedOn , width: 100 },
       { field: '', headerText: '#', width: 30 },
 
     ];

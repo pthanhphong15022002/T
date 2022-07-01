@@ -77,10 +77,11 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID=='TMT03') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
+    if(this.funcID=='TMT0203') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
   }
 
   clickMF(e: any, data?: any) {
+    this.itemSelected =data;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -168,8 +169,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.listdetail,
-        sameData: true,
         active: true,
+        sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -177,8 +178,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.kanban,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -186,8 +187,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.schedule,
-        sameData: true,
         active: false,
+        sameData: true,  
         request2: this.modelResource,
         model: {
           eventModel: this.fields,

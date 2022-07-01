@@ -1,43 +1,43 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-  <ng-template popup adde #body>
-    <div class="card-body" *ngIf="isAfterRender && gridViewSetup">
+<!-- <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"> -->
+<codx-form headerText="{{title}}" #form [body]="body" [footer]="footer" [data]="range" [formModel]="dialog.formModel"
+  [dialog]="dialog">
+  <ng-template #body>
+    <!-- <div class="card-body" *ngIf="isAfterRender && gridViewSetup"> -->
+    <div class="card-body">
       <div class="row">
         <div class="form-group">
           <div class="form-group mt-3">
-            <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban"
-              default="Mã danh mục">
+            <codx-label fiedName="rangeID" [formModel]="form.formModel" default="Mã danh mục">
             </codx-label>
             <div style="width: 400px">
-              <codx-input field="RangeID" [attr.disabled]="!isAddMode ? '' : null" type="text"
-                [crrValue]="ranges.rangeID">
+              <codx-input field="rangeID" [formModel]="form.formModel" [Group]="form.formGroup"
+                [attr.disabled]="!range.isNew() ? '' : null">
               </codx-input>
             </div>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="RangeName" formName="RangesKanban" gridViewName="grvRangesKanban"
-              default="Mô tả">
+            <codx-label fiedName="rangeName" [formModel]="form.formModel" default="Mô tả">
             </codx-label>
-            <codx-input field="RangeName" type="text" class="form-control" [crrValue]="ranges.rangeName"
-              placeholder="Mô tả" (valueChange)="valueChange($event)">
+            <codx-input field="rangeName" [formModel]="form.formModel" [Group]="form.formGroup">
             </codx-input>
 
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ghi chú">
+            <codx-label fiedName="note" [formModel]="form.formModel" default="Ghi chú">
             </codx-label>
-            <codx-input type="textarea" field="note" [crrValue]="ranges.note" class="form-control"
-              (valueChange)="changeMemo($event)"></codx-input>
-     
+            <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+
           </div>
           <div class="workToDo">
             <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
               <div class="d-flex align-items-center">
-                <span class="text-primary font-weight-bold">Chi tiết khoảng thời gian</span>
+                <codx-label class="text-primary font-weight-bold" name="txtDetail" [formModel]="form.formModel"
+                  default="Chi tiết khoảng thời gian"></codx-label>
               </div>
               <div class="d-flex mt-2">
                 <a class="btn btn-sm btn-outline-secondary" (click)="openPopup(null,true,null)">
                   <i class="icon-add icon-16 text-dark-75"></i>
-                  <span>Thêm mới</span>
+                  <codx-label name="btnAdd" formName="System" default="Thêm mới"></codx-label>
                 </a>
               </div>
             </div>
@@ -64,17 +64,17 @@
                       <a class="action-item" (click)="openPopup(item, false, index)" style="cursor: pointer">
                         <div class="d-flex align-items-center btn-tooltip">
                           <span class="icon-edit icon-18 ms-2 me-2"></span>
-                          <span class="tooltiptext">Edit</span>
+                          <codx-label name="btnEdit" formName="System" default="Chỉnh sửa"></codx-label>
                         </div>
                       </a>
                       <a class="action-item" (click)="deletePopup(index)" style="cursor: pointer">
                         <div class="d-flex align-items-center btn-tooltip">
                           <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
-                          <span class="tooltiptext">Delete</span>
+                          <codx-label name="btnDelete" formName="System" default="Xóa"></codx-label>
                         </div>
                       </a>
                     </div>
-                    
+
                     <!-- <div class="d-flex align-items-center">
                       <div class="Box-tools pull-right" style="vertical-align: middle;">
                         <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;"
@@ -103,8 +103,8 @@
   </ng-template>
 </codx-form>
 
-<ng-template #add let-modal>
-  <div class="modal-header">
+<ng-template #addRangeLines let-modal>
+  <!-- <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Khoảng thời gian</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
       <i class="icon-close icon-20 text-dark text-hover-primary"></i>
@@ -117,11 +117,8 @@
         </codx-label>
       </div>
       <div class="col-8">
-        <codx-input #BreakName name="BreakName" field="BreakName" type="text" class="form-control"
+        <codx-input #BreakName name="BreakName" field="BreakName" type="text"
           placeholder="Diễn giải" [crrValue]="rangeLines.breakName" (valueChange)="valueName($event)"></codx-input>
-        <!-- <codx-input name="BreakName" type="combobox" [refValue]="gridViewSetup.BreakName.refValue" field="BreakName"
-            placeholder="" [crrValue]="rangeLines.BreakName" (valueChange)="valueName($event)">
-          </codx-input> -->
       </div>
     </div>
     <div class="form-group row mt-3">
@@ -130,11 +127,8 @@
         </codx-label>
       </div>
       <div class="col-8 ">
-        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text" class="form-control"
+        <codx-input #BreakValue name="BreakValue" field="BreakValue" type="text"
           placeholder="Số ngày" [crrValue]="rangeLines.breakValue" (valueChange)="valueValue($event)"></codx-input>
-        <!-- <codx-input name="BreakValue" type="combobox" [refValue]="gridViewSetup.BreakValue.refValue" field="breakValue"
-            placeholder="" [crrValue]="rangeLines.BreakValue" (valueChange)="valueValue($event)">
-          </codx-input> -->
       </div>
     </div>
     <div class="text-muted mt-3">Người dùng nhập số âm (-) khi thiết lập khoảng thời gian quá khứ,
@@ -143,5 +137,5 @@
   </div>
   <div class="modal-footer" (click)="modal.close(lstRangeLine)">
     <button type="button" class="btn btn-primary">Lưu</button>
-  </div>
+  </div> -->
 </ng-template>

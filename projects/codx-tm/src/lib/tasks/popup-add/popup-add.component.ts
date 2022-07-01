@@ -96,26 +96,40 @@ export class PopupAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParam();
-    if (this.action=='add') {
+    if (this.action == 'add') {
       this.openTask();
     } else {
-      if (this.action == 'copy')  this.getTaskCoppied(this.task.taskID);
+      if (this.action == 'copy') this.getTaskCoppied(this.task.taskID);
       else this.openInfo(this.task.taskID, this.action);
     }
   }
 
   getParam(callback = null) {
+    // this.api
+    //   .execSv<any>(
+    //     APICONSTANT.SERVICES.SYS,
+    //     APICONSTANT.ASSEMBLY.CM,
+    //     APICONSTANT.BUSINESS.CM.Parameters,
+    //     'GetDictionaryByPredicatedAsync',
+    //     'TM_Parameters'
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.param = res;
+    //       return callback && callback(true);
+    //     }
+    //   });
     this.api
       .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetDictionaryByPredicatedAsync',
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
         'TM_Parameters'
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.param = JSON.parse(res.dataValue);
           return callback && callback(true);
         }
       });
@@ -198,7 +212,7 @@ export class PopupAddComponent implements OnInit {
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.task.status = '1';
-    this.task.priority = '1';
+    // this.task.priority = '1';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -324,14 +338,11 @@ export class PopupAddComponent implements OnInit {
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
-      this.notiService
-        .alertCode('TM002', { type: 'YesNo' })
-        .subscribe((dialog: any) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.closeConfirm(e, that, id);
-          };
-        });
+      this.notiService.alertCode('TM002').subscribe((res) => {
+        if (res?.event && res?.event?.status == 'Y') {
+          this.actionSave(id);
+        }
+      });
     } else {
       this.actionSave(id);
     }
@@ -508,6 +519,29 @@ export class PopupAddComponent implements OnInit {
       this.task[data.field] = data.data;
     }
   }
+  valueChangeEstimated(data) {
+    var num = Number.parseInt(data.data)
+    if (data.data && num) {
+      this.task[data.field] = data.data;
+      var estimated = num * 3600000;
+      if (!this.task.startDate) {
+        var crrDay = new Date();
+        this.task.startDate = moment(crrDay).toDate();
+        var time = crrDay.getTime();
+        var timeEndDate = time + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      } else {
+        var timeEndDate = this.task.startDate.getTime() + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      }
+   
+    }else{
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify("Giá trị nhập vào không phải là 1 số !")
+      this.task.estimated = 0
+    }
+    this.changeDetectorRef.detectChanges();
+  }
 
   changeVLL(data) {
     this.task.priority = data.data;
@@ -518,9 +552,13 @@ export class PopupAddComponent implements OnInit {
     this.task[data.field] = data.data.fromDate;
     if (data.field == 'startDate') {
       if (!this.task.endDate)
-        this.task.endDate = moment(new Date(data.data.fromDate))
-          .add(1, 'hours')
-          .toDate();
+        if (this.task.estimated) {
+          var timeEndDay = this.task.startDate.getTime() + this.task.estimated *3600000
+          this.task.endDate = moment(new Date(timeEndDay)).toDate();
+        } else
+          this.task.endDate = moment(new Date(data.data.fromDate))
+            .add(1, 'hours')
+            .toDate();
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate)
@@ -681,12 +719,6 @@ export class PopupAddComponent implements OnInit {
     } else this.task.assignTo = '';
   }
 
-  closeConfirm(e: any, t: PopupAddComponent, id: string) {
-    if (e?.status == 'Y') {
-      t.actionSave(id);
-    }
-  }
-
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
     this.listMemo2OfUser.forEach((obj) => {
@@ -703,7 +735,6 @@ export class PopupAddComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
   }
   changeMemo2(e, id) {

@@ -88,7 +88,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="extend-function">
+            <div class="extend-function" *ngIf="(param?.PlanControl =='0'|| param?.PlanControl == null)">
               <hr />
               <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
                 <div class="d-flex align-items-center w-auto extend-title">
@@ -102,7 +102,7 @@
                 </div>
               </div>
             </div>
-            <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
+            <ng-container *ngIf="(param?.PlanControl =='0'|| param?.PlanControl == null) && showPlan ">
               <div class="form-group row mt-3">
                 <div class="col-4">
                   <label>
@@ -129,7 +129,7 @@
                     </codx-label>
                   </label>
                   <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
-                    [crrValue]="task.estimated" (valueChange)="valueChange($event)">
+                    [crrValue]="task.estimated" (valueChange)="valueChangeEstimated($event)">
                   </codx-input>
 
                 </div>
@@ -167,9 +167,9 @@
             </div>
 
             <div class="d-flex align-items-center file-item mt-5">
-              <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
                 hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
-                (fileAdded)="fileAdded($event)"></attachment>
+                (fileAdded)="fileAdded($event)"></codx-attachment>
             </div>
           </ng-template>
         </e-tabitem>
@@ -334,9 +334,7 @@
                               width: 14px;
                               margin-top: 5px" class="col-md-4">
                               <!-- <codx-input type="checkbox"></codx-input> -->
-
                             </span>
-
                             <span class="">
                               <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
                                 [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"

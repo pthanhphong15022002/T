@@ -69,6 +69,8 @@ export class TM_Tasks {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+  departmentID: string
+  companyID :string
   write: boolean;
   extended :boolean;
   isAssign:boolean;

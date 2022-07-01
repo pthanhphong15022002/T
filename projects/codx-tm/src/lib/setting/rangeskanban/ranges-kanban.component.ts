@@ -28,17 +28,19 @@ export class RangesKanbanComponent implements OnInit {
   views: Array<ViewModel> = [];
   itemSelected: any;
   constructor(private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService, private notiService: NotificationsService,
+    private callfunc: CallFuncService,
+    private notiService: NotificationsService,
   ) { }
 
+  //#region Init
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRangeID  },
-      { field: 'rangeName', width: 250, headerTemplate: this.itemRangeName },
-      { field: 'note', width: 200 , headerTemplate: this.itemNote},
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRange },
-      { field: 'createdBy', width: 200, headerTemplate: this.itemCreatedBy },
-      { field: 'createdOn', width: 150, headerTemplate: this.itemCreatedOn },
+      {  width: 200, headerTemplate: this.itemRangeID  },
+      {  width: 250, headerTemplate: this.itemRangeName },
+      {  width: 200 , headerTemplate: this.itemNote},
+      {  width: 200, headerTemplate: this.itemRange },
+      {  width: 200, headerTemplate: this.itemCreatedBy },
+      { width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
 
     ];
@@ -60,26 +62,6 @@ export class RangesKanbanComponent implements OnInit {
     ];
   }
 
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.show();
-        break;
-    }
-  }
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'btnAdd':
-        this.show();
-        break;
-      case 'edit':
-        this.edit(data);
-        break;
-      case 'delete':
-        this.delete(data);
-        break;
-    }
-  }
   ngAfterViewInit(): void {
     this.views = [{
       type: ViewType.grid,
@@ -90,20 +72,35 @@ export class RangesKanbanComponent implements OnInit {
         template: this.grid,
       }
     }];
-    // this.view.dataService.methodSave = 'AddRangeKanbanAsync';
-    this.view.dataService.methodDelete = 'DeleteRangesKanbanAsync';
+    this.view.dataService.methodSave = '';
+    this.view.dataService.methodDelete = '';
 
   }
+  //#endregion
 
-  show() {
-    this.view.dataService.addNew().subscribe((res: any) => {
+  //#region CRUD Methods
+  add() {
+    this.view.dataService.addNew(0).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px'; // s k thấy gửi từ ben đây,
 
-      this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'add'], option);
+      this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
 
+    });
+
+    this.dialog.closed.subscribe((x) => {
+      if (x.event == null)
+        this.view.dataService
+          .remove(this.view.dataService.dataSelected)
+          .subscribe(x => {
+            this.dt.detectChanges();
+          });
+      else {
+        this.view.dataService.update(x.event).subscribe();
+        this.view.dataService.setDataSelected(x.event);
+      }
     });
   }
 
@@ -116,7 +113,7 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
     });
   }
 
@@ -132,7 +129,9 @@ export class RangesKanbanComponent implements OnInit {
     opt.data = itemSelected.rangeID;
     return true;
   }
+  //#endregion
 
+  //#region Functions
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;
@@ -154,4 +153,26 @@ export class RangesKanbanComponent implements OnInit {
     this.dt.detectChanges();
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
   }
+  //#endregion
+
+  //#region Events
+  buttonClick(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  moreFuncClick(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
+  }
+  //#endregion
 }
