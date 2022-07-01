@@ -3,10 +3,11 @@ import { CodxTMService } from './../../codx-tm.service';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
 import { Component, OnInit } from '@angular/core';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
-// import {
-//   GaugeTheme,
-//   ILoadedEventArgs,
-// } from '@syncfusion/ej2-angular-circulargauge'; -- cmt tạm vì pull lỗi
+import {
+  GaugeTheme,
+  ILoadedEventArgs,
+} from '@syncfusion/ej2-angular-circulargauge'; 
+//-- cmt tạm vì pull lỗi
 
 
 @Component({
@@ -39,16 +40,16 @@ export class MyDashboardComponent implements OnInit {
     color: '#fcde0b',
   };
   // custom code start
-  // cmt tạm vì pull lỗi
-  // public load(args: ILoadedEventArgs): void {
-  //   let selectedTheme: string = location.hash.split('/')[1];
-  //   selectedTheme = selectedTheme ? selectedTheme : 'Material';
-  //   args.gauge.theme = <GaugeTheme>(
-  //     (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
-  //       .replace(/-dark/i, 'Dark')
-  //       .replace(/contrast/i, 'Contrast')
-  //   );
-  // }
+  // cmt tạm vì pull l
+  public load(args: ILoadedEventArgs): void {
+    let selectedTheme: string = location.hash.split('/')[1];
+    selectedTheme = selectedTheme ? selectedTheme : 'Material';
+    args.gauge.theme = <GaugeTheme>(
+      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
+        .replace(/-dark/i, 'Dark')
+        .replace(/contrast/i, 'Contrast')
+    );
+  }
 
   public animation1: Object = { duration: 1500 };
   public markerWidth: number = 28;
