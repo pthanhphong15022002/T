@@ -45,7 +45,11 @@ export class ViewFileDialogComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
-      this.data = data.data;
+      if (data.data != null)
+        this.data = data.data;
+      else
+        this.data = data;
+        
       this.iD = this.data.recID;
       this.dialog = dialog;
   //  var data: any = this.auth.user$;
