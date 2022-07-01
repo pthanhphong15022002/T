@@ -1,0 +1,39 @@
+.contentediter {
+    height: 36px;
+    overflow-y: scroll;
+    color: #161719;
+}
+
+.flex {
+    display: flex;
+}
+
+.mod-icon {
+    padding: 6px 6px;
+}
+
+.comments {
+    background-color: #adb5bd26;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+.btn-send {
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.isHiden {
+    display: none;
+}
+
+.isShow {
+    display: block;
+}
+
+.feed-box input.codx-text {
+    border: 0;
+    padding-left: 0;
+    background-color: #f5f5f5;
+}

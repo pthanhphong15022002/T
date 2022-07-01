@@ -197,9 +197,6 @@
     </div>
   </ng-template>
 </codx-detail-tmp>
-<ng-template #tmpupdate let-dialog>
-  <app-od-update [dialog]="dialog" [view]="view" [data]="data" (save)="changeData($event)"></app-od-update>
-</ng-template>
 <ng-template #tmpdeadline let-dialog>
   <app-od-deadline [dialog]="dialog" [data]="data" [formModel]="formModel"></app-od-deadline>
 </ng-template>

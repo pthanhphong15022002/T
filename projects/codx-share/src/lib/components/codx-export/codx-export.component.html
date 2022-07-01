@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="separator my-2"></div>
-    <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex flex-column justify-content-between">
         <div class="d-flex flex-column">
             <div class="d-flex align-items-start mb-3">
                 <div class="w-30px mt-1">
@@ -44,7 +44,8 @@
                         ngang</i></div>
                 </div>
             </div>
-            <div class="d-flex align-items-start mb-3">
+            <div class="d-flex justify-content-between mb-3">
+              <div class="d-flex align-items-start">
                 <div class="w-30px mt-1">
                     <codx-input type="radio" name="radio-file" class="d-flex"></codx-input>
                 </div>
@@ -53,6 +54,13 @@
                     <div class="codx_des"><i class="text-gray-400">Xuất dữ liệu được chọn thành file excel có định dạng pivot table</i></div>
                     <div class="codx_des"><i class="text-gray-400">\\172.16.5.81\\Website\SureERP\logs</i></div>
                 </div>
+              </div>
+              <div class="d-flex align-items-end ms-6 ">
+                <button type="button"
+                  class=" btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1">
+                  Chọn file
+                </button>
+            </div>
             </div>
             <div class="d-flex align-items-start mb-3">
                 <div class="w-30px mt-1">
@@ -73,12 +81,6 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-end ms-6 ">
-            <button type="button"
-              class=" btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1">
-              Chọn file
-            </button>
-        </div>
     </div>
     <div class="separator my-2"></div>
     <div>
@@ -91,7 +93,9 @@
             </div>
             <div class="d-flex align-items-start ms-6 ">
               <button type="button"
-                class=" btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1">
+                class=" btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
+                (click)="openForm()"
+                >
                 Thêm
               </button>
             </div>

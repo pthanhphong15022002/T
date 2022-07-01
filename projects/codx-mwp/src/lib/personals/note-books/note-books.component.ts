@@ -68,7 +68,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
-    this.view.dataService.methodUpdate = 'UpdateNoteBookAsync';
   }
 
   clickMF(e: any, data?: any) {
@@ -82,9 +81,10 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     }
   }
 
-  openDetailPage(recID) {
+  openDetailPage(item) {
     //TM/Tasks/mF009?recid=[recid]&orderNo=[orderno]
-    this.codxService.navigate('MWP00941', '', { recID: recID });
+    // this.codxService.navigate('MWP00941', '', {recID: recID});
+    this.codxService.navigateMF('MWP00941', this.view.formModel.formName, this.view.formModel.gridViewName, item?.recID);
   }
 
   openFormMoreFunc(data: any) {
@@ -108,7 +108,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.api
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
-        if (res) {
+        if(res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
           this.changedt.detectChanges();
         }
@@ -125,9 +125,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 

@@ -208,7 +208,11 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   valueChangeShared(e) {
-    console.log(e);
+    this.taskBoard.isShared = e.data
+    if (!this.taskBoard.isShared) {
+      this.taskBoard.resources = null;
+      this.listUserDetail = [];
+    }
   }
 
   //caí này chạy tạm đã

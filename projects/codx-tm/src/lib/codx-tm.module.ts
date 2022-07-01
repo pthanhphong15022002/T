@@ -1,3 +1,4 @@
+import { MwpComponent } from './mwp/mwp.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupEditCalendarComponent } from './setting/calendar/popup-edit-calendar/popup-edit-calendar.component';
@@ -46,6 +47,8 @@ import { FormsModule } from '@angular/forms';
 import { MyDashboardComponent } from './reports/mydashboard/mydashboard.component';
 import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
+import { MwpViewDetailComponent } from './mwp/mwp-view-detail/mwp-view-detail.component';
+import { MwpPopupAddComponent } from './mwp/mwp-popup-add/mwp-popup-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -54,6 +57,10 @@ export const routes: Routes = [
       {
         path: 'mytasks/:funcID',
         component: TasksComponent,
+      },
+      {
+        path: 'mwp/:funcID',
+        component: MwpComponent
       },
       {
         path: 'assigntasks/:funcID',
@@ -173,7 +180,10 @@ const T_Component: Type<any>[] = [
   PopupShareSprintsComponent,
   TasksComponent,
   MyDashboardComponent,
-  TeamDashboardComponent
+  TeamDashboardComponent,
+  MwpComponent,
+  MwpViewDetailComponent,
+  MwpPopupAddComponent
 ]
 @NgModule({
   imports: [
