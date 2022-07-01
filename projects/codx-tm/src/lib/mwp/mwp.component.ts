@@ -1,7 +1,8 @@
-import { AuthStore, ButtonModel, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType, NotificationsService } from 'codx-core';
 import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PopupAddComponent } from '../tasks/popup-add/popup-add.component';
+import { MwpPopupAddComponent } from './mwp-popup-add/mwp-popup-add.component';
 
 @Component({
   selector: 'lib-mwp',
@@ -39,7 +40,7 @@ export class MwpComponent extends UIComponent {
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private dt: ChangeDetectorRef,
-
+    private notiService: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -53,7 +54,7 @@ export class MwpComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        // this.add();
+        this.add();
         break;
     }
   }
@@ -64,13 +65,13 @@ export class MwpComponent extends UIComponent {
         this.add();
         break;
       case 'edit':
-        // this.edit(data);
+        this.edit(data);
         break;
       case 'copy':
-        // this.copy(data);
+        this.copy(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
 
     }
@@ -149,7 +150,9 @@ export class MwpComponent extends UIComponent {
         },
       },
     ]
-
+    this.view.dataService.methodSave = 'AddTaskAsync';
+    this.view.dataService.methodUpdate = 'UpdateTaskAsync';
+    this.view.dataService.methodDelete = 'DeleteTaskAsync';
     this.dt.detectChanges();
 
   }
@@ -171,6 +174,86 @@ export class MwpComponent extends UIComponent {
     });
   }
 
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '750px';
+        this.dialog = this.callfc.openSide(
+          PopupAddComponent,
+          [this.view.dataService.dataSelected, 'edit',this.isAssignTask],
+          option
+        );
+      });
+  }
+
+  copy(data) {
+    this.view.dataService.copy().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '750px';
+      this.view.dataService.dataSelected = data;
+      this.dialog = this.callfc.openSide(
+        PopupAddComponent,
+        [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
+        option
+      );
+    });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    if (data.status == 9) {
+      this.notiService.notifyCode('TM001');
+      return;
+    }
+    var isCanDelete = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '1') {
+              isCanDelete = false;
+              return;
+            }
+          });
+          if (!isCanDelete) {
+            this.notiService.notifyCode('TM001');
+          } else {
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+                if (res[0]) {
+                  this.notiService.notifyCode('TM004');
+                }
+              });
+          }
+        }
+      });
+  }
+  sendemail(data) { }
+
+  beforeDel(opt: RequestOption) {
+    opt.methodName = 'DeleteTaskAsync';
+    opt.data = this.itemSelected.taskID;
+    return true;
+  }
   //#region schedule
 
   fields = {

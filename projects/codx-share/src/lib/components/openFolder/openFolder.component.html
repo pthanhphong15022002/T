@@ -1,0 +1,25 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
+    <ng-template #body>      
+        <div class="card-body">
+            <form name="frm_move">
+              <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd" entityName="DM_FolderInfo"
+                service="DM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false idField="recID"
+                parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
+                [isOutput]="true" [isLoadChild]="false">
+              </codx-treeview>
+              <ng-template #templatetree let-data>
+                <div class="d-flex align-items-center mb-2" #item>
+                  <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
+                </div>
+              </ng-template>
+            </form>
+         </div>          
+    </ng-template>    
+    <ng-template #footer>
+      <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
+        </div>
+      </div> 
+    </ng-template>
+</codx-form>

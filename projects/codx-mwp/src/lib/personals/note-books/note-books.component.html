@@ -5,11 +5,11 @@
 </codx-views>
 
 <div class="pw-container mt-6">
-    <div class="d-flex align-items-center justify-content-between pw-header w-1160px">
+    <div class="d-flex align-items-center justify-content-between pw-header">
         <div class="pw-search">
             <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
         </div>
-        <div class="d-flex justify-content-end align-items-center pw-toolbar">
+        <div class="d-flex justify-content-end align-items-center pw-toolbar right-20">
             <div class="text-dark me-1">
                 <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
             </div>
@@ -20,7 +20,7 @@
             <div class="btn btn-icon btn-white">
                 <i class="icon-sort_A-Z icon-20" (click)="sortNoteBooks()"></i>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center left-20">
                 <!-- begin::Menu wrapper -->
                 <div class="btn btn-icon btn-active-light-primary position-relative" id="kt_drawer_addNoteBook_toggle"
                     (click)="formAddNoteBook()">
@@ -42,28 +42,12 @@
     </div>
     <div class="pw-listcard mt-6">
         <div *ngFor="let item of view.dataService.data">
-            <div class="pw-card delay-500">
-                <!-- <codx-card-img cardCss="border mw-300px h-100" [imageObjType]="'WP_NoteBooks'" imgCss="" [imageId]="item.recID" [footer]="footer_card" typeMF="hover"
-                    (clickMF)="clickMF($event,item)" [formModel]="formModel" (click)="codxService.navigate('MWP00941')">
-                </codx-card-img> -->
-                <codx-card-img cardCss="border h-100 w-250px rounded-4 " (click)="openDetailPage(item)"
+            <div class="pw-card delay-500" (click)="openDetailPage(item)">
+                <codx-card-img cardCss="border h-100 w-250px rounded-4 " (clickMF)="clickMF($event,item)"
                     [imageId]="item.recID" imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16"
                     [title]="item.title" [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'" [formModel]="formModel">
                 </codx-card-img>
-
-
                 <!-- (click)="codxService.navigate('MWP00941')" -->
-
-
-                <!-- <ng-template #footer_card>
-                    <div class="d-flex align-items-center py-2 px-3">
-                        <img src="../assets/themes/mwp/default/light/img/mwp_storage.svg" class="icon">
-                        <div class="d-flex flex-column title-menu">
-                            <div class="text-dark fs-6 fw-bold">{{item.title}}</div>
-                            <div class="text-gray-500 text-italic" [innerHTML]="item.memo"></div>
-                        </div>
-                    </div>
-                </ng-template> -->
             </div>
         </div>
     </div>

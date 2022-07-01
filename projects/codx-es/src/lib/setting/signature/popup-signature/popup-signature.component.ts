@@ -41,7 +41,7 @@ export class PopupSignatureComponent implements OnInit {
   ngOnInit(): void {}
 
   onSaveForm() {
-    this.attachment.onMultiFileSave(null);
+    this.attachment.onMultiFileSave();
   }
 
   onSavePopup() {}
