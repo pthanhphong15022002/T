@@ -23,7 +23,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges
 {
   @ViewChild('attachment') attachment: AttachmentComponent
   data: any;
-  @Input() openMore: boolean = false;
   dialog: any;
   lblExtend: string = '';
   headerText: any;

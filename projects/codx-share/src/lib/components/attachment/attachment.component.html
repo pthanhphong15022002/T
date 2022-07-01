@@ -5,7 +5,7 @@
 <ng-template #popup>
     <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
         <ng-template #body>      
-                <div class="card-body">
+                <div class="card-body p-0">
                     <form name="frm_file1"> 
                         <div class="offcanvas-wrapper">
                             <div class="modal-subheader">
@@ -34,7 +34,7 @@
                                     <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                                 </div>
                             </div>
-                            <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
+                            <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
                                 <div class="d-flex flex-grow-1">
                                     <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                                     <!-- <codx-img class="h-35px me-3"></codx-img> -->
@@ -94,7 +94,7 @@
 </ng-template>
 <ng-template #inline>
     <div class="card w-100 rounded-0 border-0">
-        <div class="card-body">
+        <div class="card-body p-0">
             <form name="frm_file1"> 
                 <div class="offcanvas-wrapper">
                     <div *ngIf="hideFolder != '1'" class="modal-subheader">
@@ -123,7 +123,7 @@
                             <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                         </div>
                     </div> 
-                    <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
+                    <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
                         <div class="d-flex flex-grow-1">
                             <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                             <!-- <codx-img class="h-35px me-3"></codx-img> -->
