@@ -55,15 +55,15 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'taskGroupID', headerText: 'Mã nhóm', width: 100 },
+      { field: 'taskGroupID', headerText: 'Mã nhóm', width: 150 },
       { field: 'taskGroupName', headerText: 'Nhóm công việc', width: 200 },
-      { field: 'taskGroupName2', headerText: 'Tên khác', width: 100 },
-      { field: 'note', headerText: 'Ghi chú', width: 180 },
+      { field: 'taskGroupName2', headerText: 'Tên khác', width: 200 },
+      { field: 'note', headerText: 'Ghi chú', width: 200 },
       { field: 'approvalControl', headerText: 'Xét duyệt?', width: 140 },
       { field: 'projectControl', headerText: 'Chọn dự án', width: 140 },
       { field: 'attachmentControl', headerText: 'Đính kèm file', width: 140 },
       { field: 'checkListControl', headerText: 'Nhập việc cần làm', width: 180 },
-      { field: 'checkList', headerText: 'CheckList', width: 150 },
+      { field: 'checkList', headerText: 'CheckList', width: 200 },
       { field: 'createName', headerText: 'Người tạo', width: 200 },
       { field: 'createdOn', headerText: 'Ngày tạo', width: 100 },
       { field: '', headerText: '#', width: 30 },
