@@ -31,6 +31,24 @@ idField="recID"
 </ng-template>
 
 <ng-template #templateCard> 
+  <!-- <button id="text" (click)="">text</button> -->
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+    <i class="icon-add"></i>
+    <span class="font-size-lg">Open File</span>
+  </button>
+  <attachment  
+      #attachment  
+      [objectType]="'OD_Dispatches'"       
+      hideFolder="1"  
+      hideUploadBtn="1"   
+      hideDes="1" 
+      type="inline"
+      [functionID]="'ODT3'" 
+      (fileAdded)="fileAdded($event)" 
+      (fileCount)="getfileCount($event)" 
+    > 
+    </attachment>
+
   <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
 </ng-template>
 <ng-template #templateSmallCard>

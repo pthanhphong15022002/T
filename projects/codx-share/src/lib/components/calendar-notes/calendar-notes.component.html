@@ -7,7 +7,7 @@
         <span class="icon-more_vert icon-20" placement="start" [ngbPopover]="popContentTypeCalendar"
             [autoClose]="'outside'"></span>
     </div>
-    <div class="calendar-box position-relative mt-6">
+    <div class="calendar-box position-relative">
         <div class="form-calendar">
             <div *ngIf="typeCalendar == 'week'">
                 <selectweek (onChangeWeek)="setEventWeek()" (onChangeValue)="onChangeValueSelectedWeek($event)">
@@ -26,7 +26,7 @@
                 <codx-label name="lblPinNote" formName="Notes" default="Ghi chú của tôi"></codx-label>
             </div>
             <div class="ms-6 position-relative">
-                <button type="button" class="btn btn-none btn-sm dropdown-toggle ps-0" placement="start"
+                <button type="button" class="btn btn-icon dropdown-toggle" placement="start"
                     [ngbPopover]="popContentFilter" [autoClose]="'outside'" container="body">
                     <span class="icon-filter1 icon-18"></span>
                 </button>
@@ -158,7 +158,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="checkTM_TasksParam == true" class="p-3">
+        <div *ngIf="checkTM_TasksParam == true" class="p-5">
             <div class="fw-bold fs-6 text-primary mb-3">
                 <codx-label name="lblPinNote" formName="Notes" default="Công việc"></codx-label>
             </div>
