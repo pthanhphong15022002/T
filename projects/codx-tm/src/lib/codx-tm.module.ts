@@ -57,7 +57,7 @@ import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.co
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { MwpViewDetailComponent } from './mwp/mwp-view-detail/mwp-view-detail.component';
 import { MwpPopupAddComponent } from './mwp/mwp-popup-add/mwp-popup-add.component';
-import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+// import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge'; -- cmt tạm vì pull về bị lỗi
 export const routes: Routes = [
   {
     path: '',
@@ -146,13 +146,10 @@ export const routes: Routes = [
         ],
       },
       {
-<<<<<<< HEAD
         path: '',
         redirectTo: 'null',
-=======
-        path: 'home/:funcID',
-        component: DashboardComponent,
->>>>>>> 5c9a423939879596eb568424f84397bea6a911c7
+        // path: 'home/:funcID',
+        // component: DashboardComponent,
       },
       {
         path: '**',
@@ -213,7 +210,7 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    CircularGaugeModule,
+    // CircularGaugeModule, -- cmt tạm vì pull về bị lỗi
     TreeMapModule,
     DatePickerModule,
     TabModule,
