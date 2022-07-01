@@ -59,10 +59,6 @@ export const routes: Routes = [
         component: TasksComponent,
       },
       {
-        path: 'mwp/:funcID',
-        component: MwpComponent
-      },
-      {
         path: 'assigntasks/:funcID',
         component: TasksComponent,
       },
