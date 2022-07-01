@@ -1,11 +1,12 @@
-import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService, LayoutBaseComponent } from 'codx-core';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
+
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
@@ -20,7 +21,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
-   // this.codxService.fun$.subscribe();
+    // this.codxService.fun$.subscribe();
   }
 
   onAfterViewInit(): void { }
