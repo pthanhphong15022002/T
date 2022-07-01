@@ -5,6 +5,54 @@
   idField="ProjectGroupID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
 
+<ng-template #grid let-data>
+  <tr>
+    <td>
+      {{data.projectGroupID}}
+    </td>
+    <td>
+      {{data.projectGroupName}}
+    </td>
+    <td>
+      {{data.projectGroupName2}}
+    </td>
+
+    <td>
+      <div class="label label-xxs label-inline label-pill"
+        [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
+        [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+        {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+    </td>
+    <td>
+      <div [innerHTML]="data.note">
+
+      </div>
+    </td>
+    <!-- <td>
+      <div class="d-flex align-items-center" #itemCreateBy>
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
+        </codx-img>
+        <div class="text-dark font-size-lg" placement="bottom" >
+          {{data.createName}}
+        </div>
+      </div>
+    </td> -->
+    <td>
+      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
+      </codx-temp-full>
+    </td>
+    <td>
+      {{data.createdOn | date:'dd/MM/yyyy'}}
+
+    </td>
+    <td>
+      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+        (clickMF)="clickMF($event,data)">
+      </codx-mfunc>
+    </td>
+  </tr>
+</ng-template>
+
 <ng-template #itemCreateBy let-dataItem>
     <div class="d-flex align-items-center" #itemCreateBy>
       <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
@@ -24,6 +72,6 @@
   </ng-template>
   <ng-template #itemNote let-data>
     <div [innerHTML]="data.note">
-  
+
     </div>
   </ng-template>
