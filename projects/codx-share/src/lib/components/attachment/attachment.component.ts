@@ -14,13 +14,14 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
+import { OpenFolderComponent } from '../openFolder/openFolder.component';
 import { AttachmentService } from './attachment.service';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
-  selector: 'attachment',
+  selector: 'codx-attachment',
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.scss'],
 })
@@ -46,6 +47,8 @@ export class AttachmentComponent implements OnInit {
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
+  data: any;
+  @Input() formModel: any;
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;
@@ -60,7 +63,7 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
-  @Input('viewBase') viewBase: ViewsComponent;
+  @Input('viewBase') viewBase: ViewsComponent;    
   @Output() fileCount = new EventEmitter<any>();
   // @Input('openFolder') openFolder: ViewsComponent;
 
@@ -118,20 +121,18 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  closePopup(modal) {
+  closePopup() {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    if (this.popup == "1") {
-      if (this.type == 'center' && modal != null)
-        modal.hide();
-      else {
-        /*  this.viewBase.currentView.closeSidebarRight();
-         this.atSV.openAttachment.next(false);  */
-      }
+    this.data = this.atSV.fileListAdded;
+
+    if (this.type == "popup") {      
+      this.dialog.close();      
     }
 
     this.fileUploadList = [];
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {
@@ -277,11 +278,21 @@ export class AttachmentComponent implements OnInit {
             this.loadChildNode(res[0], 0, list);
           }
         }
+        this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
         this.changeDetectorRef.detectChanges();
         this.remotePermission = res[0].permissions;
       }
     });
 
+    // let option = new SidebarModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    // option.FormModel = this.view?.currentView?.formModel;
+    // option.Width = '750px';
+    
+    
+    // this.dialog.closed.subscribe(e => {
+    //   console.log(e);
+    // })
 
     /* this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "").subscribe((dialog: Dialog)=>{
       let that = this;
@@ -307,11 +318,11 @@ export class AttachmentComponent implements OnInit {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
   }
 
-  saveFiles(modal = null) {
-    this.onMultiFileSave(modal);
+  saveFiles() {
+    this.onMultiFileSave();
   }
 
-  onMultiFileSave(modal = null) {
+  onMultiFileSave() {
     // this.dialog.close();
     // return;
     let total = this.fileUploadList.length;
@@ -331,7 +342,7 @@ export class AttachmentComponent implements OnInit {
             this.atSV.fileList.next(this.fileUploadList);
             this.atSV.fileListAdded = addList;
             this.notificationsService.notify(this.title);
-            this.closePopup(modal);
+            this.closePopup();
             this.fileUploadList = [];
           }
           else {
@@ -350,7 +361,7 @@ export class AttachmentComponent implements OnInit {
             if (newlistNot.length > 0) {
               this.notificationsService.notify(newlistNot[0].message);
               //this.closeFileDialog('dms_file');
-              this.closePopup(modal);
+              this.closePopup();
             }
             else {
               this.fileUploadList = newUploadList;
@@ -397,7 +408,7 @@ export class AttachmentComponent implements OnInit {
       });
     }
     else if (total == 1) {
-      this.addFile(this.fileUploadList[0], modal);
+      this.addFile(this.fileUploadList[0]);
       this.atSV.fileList.next(this.fileUploadList);
     }
     else {
@@ -407,7 +418,7 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  addFile(fileItem: any, modal: any) {
+  addFile(fileItem: any) {
     var that = this;
     var done = this.fileService.addFile(fileItem).toPromise();
     if (done) {
@@ -417,12 +428,12 @@ export class AttachmentComponent implements OnInit {
           this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
-          this.closePopup(modal);
+          this.closePopup();
         }
         else if (item.status == 6) {
           // ghi đè
           fileItem.recID = item.data.recID;
-          this.rewriteFile(this.titlemessage, item.message, fileItem, modal);
+          this.rewriteFile(this.titlemessage, item.message, fileItem);
         }
         else
           this.notificationsService.notify(item.message);
@@ -433,7 +444,7 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  rewriteFile(title: any, message: any, item: FileUpload, modal: any) {
+  rewriteFile(title: any, message: any, item: FileUpload) {
     var that = this;
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";

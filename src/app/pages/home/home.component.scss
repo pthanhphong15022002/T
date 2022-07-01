@@ -1,0 +1,33 @@
+@media (min-width: 992px) {
+    .header-fixed.toolbar-fixed .wrapper {
+        padding-top: 50px;
+        //padding-top: get($header-config, fixed, height, desktop);
+    }
+
+    .aside-fixed .aside {
+        //top: get($header-config, fixed, height, desktop);
+        top: 52px;
+    }
+
+    .aside-enabled.aside-fixed.header-fixed .header {
+        left: 0;
+    }
+}
+
+.aside {
+    background-color: transparent;
+    box-shadow: none;
+
+    .menu-title,
+    .brand-text {
+        color: #202020 !important;
+    }
+
+    .btn-minimize {
+        visibility: hidden;
+    }
+}
+
+.form-myTeam {
+    margin-bottom: 15px;
+}

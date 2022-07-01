@@ -81,6 +81,7 @@ export class TasksComponent extends UIComponent {
   }
 
   clickMF(e: any, data?: any) {
+    this.itemSelected =data;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -99,6 +100,12 @@ export class TasksComponent extends UIComponent {
         break;
       case 'TMT025': // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
+        break;
+      case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
+        //Chung làm
+      break;
+        case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
+        //Chung làm
         break;
       default:
         this.changeStatusTask(e, data);
@@ -162,8 +169,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.listdetail,
-        sameData: true,
         active: true,
+        sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -171,8 +178,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.kanban,
-        sameData: true,
         active: false,
+        sameData: true,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -180,8 +187,8 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.schedule,
-        sameData: true,
         active: false,
+        sameData: true,  
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -314,7 +321,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        console.log(e);
+        this.itemSelected=this.view.dataService.data[0]
       });
     });
   }
@@ -335,7 +342,12 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit',this.isAssignTask],
           option
         );
+        this.dialog.closed.subscribe((e) => {
+          this.itemSelected=this.view.dataService.dataSelected
+        });
+       
       });
+
   }
 
   copy(data) {
@@ -350,6 +362,9 @@ export class TasksComponent extends UIComponent {
         [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        this.itemSelected=this.view.dataService.data[0]
+      });
     });
   }
 
@@ -385,6 +400,7 @@ export class TasksComponent extends UIComponent {
               )
               .subscribe((res) => {
                 if (res[0]) {
+                  this.itemSelected = this.view.dataService.data[0] ;
                   this.notiService.notifyCode('TM004');
                 }
               });

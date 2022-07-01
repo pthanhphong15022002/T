@@ -1,8 +1,8 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
-    <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" id="kt_aside" [asideMenu]="asideMenu">
-      </codx-aside>
+    <div class="page d-flex flex-row flex-column-fluid not-aside">
+      <!-- <codx-aside *ngIf="asideDisplay" id="kt_aside" [asideMenu]="asideMenu">
+      </codx-aside> -->
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header [class]="headerCSSClasses" [headerBar]="headerBar" class="header align-items-stretch"
           [headerRightBar]="headerRightBar" #codxHeader>
@@ -93,59 +93,43 @@
   </ng-template>
 
   <ng-template #headerBar>
-    <div class="menu d-flex align-items-center" >
+    <div class="menu d-flex align-items-center">
       <div>
         <div class="menu-item me-lg-1">
-          <a
-            [class.isActive]="category == 'home' "
-            routerlinkactive="active"
-            class="menu-link py-3"
-            (click)="navigate()"
-          >
+          <a [class.isActive]="category == 'home' " routerlinkactive="active" class="menu-link py-3"
+            (click)="navigate()">
             <span class="menu-title">
               <codx-label formName="News" name="lblHome" default="Tất cả"></codx-label>
             </span>
           </a>
         </div>
-        <div
-          class="menu-item me-lg-1"
-          *ngFor="let vll of valueList"
-        >
-          <a 
-            [class.isActive]="category == vll.value "
-            href="javascript:;"
-            routerlinkactive="active"
-            class="menu-link py-3"
-            (click)="navigate(vll.value)"
-          >
-            <span class="menu-title" >
+        <div class="menu-item me-lg-1" *ngFor="let vll of valueList">
+          <a [class.isActive]="category == vll.value " href="javascript:;" routerlinkactive="active"
+            class="menu-link py-3" (click)="navigate(vll.value)">
+            <span class="menu-title">
               <codx-label formName="News" name="lblVLLName" [default]="vll.text"></codx-label>
             </span>
           </a>
         </div>
-            
+
         <div class="menu-item me-lg-1">
-          <div
-            [class.isActive]="category == 'admin-post'"
-            class="menu-link py-3"
-            ngbDropdown
-           >
+          <div [class.isActive]="category == 'admin-post'" class="menu-link py-3" ngbDropdown>
             <span tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
               <codx-label formName="News" name="lblADmin" default="Quản trị bài viết"></codx-label>
             </span>
             <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
-                <a ngbDropdownItem  (click)="navigate('admin/mypost')" class="dropdown-item" href="javascript:;">
-                  <codx-label formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
-                </a>
-                <a ngbDropdownItem (click)="navigate('admin/webpost')" class="dropdown-item" href="javascript:;">
-                  <codx-label formName="News" name="lblADMinNews" default="Xét duyệt tin tức - sự kiện"></codx-label>
-                </a>
-                <a ngbDropdownItem (click)="navigate('admin/post')" class="dropdown-item" href="javascript:;">
-                  <codx-label formName="News" name="lblADMinNews" default="Xét duyệt bài viết MXH"></codx-label>
-                </a>
+              <a ngbDropdownItem (click)="navigate('admin/mypost')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
+              </a>
+              <a ngbDropdownItem (click)="navigate('admin/webpost')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt tin tức - sự kiện"></codx-label>
+              </a>
+              <a ngbDropdownItem (click)="navigate('admin/post')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt bài viết MXH"></codx-label>
+              </a>
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>

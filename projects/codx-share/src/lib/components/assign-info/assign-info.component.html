@@ -198,7 +198,7 @@
                 </div>
             </div>
             <div class="row ">
-                <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  [functionID]="functionID" (fileAdded)="fileAdded($event)"></attachment> 
+                <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  [functionID]="functionID" (fileAdded)="fileAdded($event)"></codx-attachment> 
             </div>
         <!-- </div> -->
     </ng-template>
@@ -209,8 +209,6 @@
                     <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
                         <i class="icon-cloud_upload fs-5" ></i>Upload file
                     </button>
-
-                    <attachment #attachment objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1"  hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> 
                     <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false" labelPosition="Before"></codx-input>
                     <div class="ms-2">Lưu làm template</div>
                 </div>                        
