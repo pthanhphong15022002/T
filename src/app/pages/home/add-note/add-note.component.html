@@ -7,12 +7,19 @@
     </ng-template> -->
 
     <ng-template popup add #body>
-
-
-        <div class="position-relative">
-            <div class="note-image">
-                <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]="objectID"
-                    [funcId]="'WP1234'" [isAllowEdit]="true" imageType="square"></codx-img>
+        <div class="flex">
+            <div class="">
+                <a (click)="onType('text')" class="icon-font_download icon-24"></a>
+            </div>
+            <div class="">
+                <a (click)="onType('list')" class="icon-list_alt icon-24"></a>
+            </div>
+            <div class="">
+                <a (click)="onType('check')" class="icon-check_box icon-24"></a>
+            </div>
+            <div class="icon-image icon-24" style="position: relative;">
+                <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]=""
+                    [funcId]="'WP1234'" [isAllowEdit]="true" width="100"></codx-img>
             </div>
 
             <div class="d-flex align-items-center pw-menu">
@@ -26,11 +33,13 @@
                 </div>
             </div>
         </div>
-
-        <div class="note-des mt-6" *ngIf="type == 'text'">
-            <codx-input type="textarea" field="textarea2" placeholder="textarea" crrValue=""
-                (valueChange)="valueChange($event)" format="ed2" [crrValue]="formAdd.controls['memo'].value">
-            </codx-input>
+        <br>
+        <div *ngIf="type == 'text'">
+            <div class="row">
+                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
+                </codx-input>
+            </div>
         </div>
         <div *ngIf="type == 'check' || type =='list'">
             <ng-container *ngFor="let item of listNote; index as i">
@@ -71,14 +80,17 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <div class="flex align-items-center">
-                <codx-label name="lblShowCalendar" formName="Notes" default="Hiển thị trên lịch"></codx-label>
-                <div class="ms-2">
-                    <codx-input type="switch" field="showCalendar" (valueChange)="valueChange($event)">
+            <div class="flex" style="margin-top: 10px;">
+                <div class="">
+                    <codx-label name="lblShowCalendar" formName="Notes" default="Hiển thị trên lịch"></codx-label>
+                </div>
+                <div class="" style="margin-left: 6px;">
+                    <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label" class="test-check"
+                        (valueChange)="valueChange($event)" [crrValue]="note?.showCalendar" [checked]="note?.showCalendar">
                     </codx-input>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary ms-1" (click)="onCreateNote()" *ngIf="!readOnly">
+            <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
                 <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
             </button>
         </div>

@@ -6,9 +6,7 @@ import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
 import {
   GaugeTheme,
   ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge'; 
-//-- cmt tạm vì pull lỗi
-
+} from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
   selector: 'my-dashboard',
@@ -40,7 +38,6 @@ export class MyDashboardComponent implements OnInit {
     color: '#fcde0b',
   };
   // custom code start
-  // cmt tạm vì pull l
   public load(args: ILoadedEventArgs): void {
     let selectedTheme: string = location.hash.split('/')[1];
     selectedTheme = selectedTheme ? selectedTheme : 'Material';
@@ -66,6 +63,41 @@ export class MyDashboardComponent implements OnInit {
   public piedata1: Object[];
   public piedata2: Object[];
   public legendSettings: Object;
+
+  //#region chartcolumn
+  dataColumn: Object[] = [];
+  dataLine: Object[] = [];
+  columnXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    rangePadding: 'None',
+    majorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    lineStyle: { width: 0 },
+    labelStyle: {
+      color: 'dark',
+    },
+  };
+
+  columnYAxis: Object = {
+    minimum: 0,
+    interval: 10,
+    labelStyle: {
+      color: 'gray',
+    },
+  };
+
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+
+  radius: Object = {
+    topLeft: 10,
+    topRight: 10,
+  };
+  //#endregion chartcolumn
 
   constructor(
     private api: ApiHttpService,
@@ -97,24 +129,30 @@ export class MyDashboardComponent implements OnInit {
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.piedata1 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata1 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
 
-    this.piedata2 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata2 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
     this.legendSettings = {
-       visible: true
-   };
+      visible: true,
+    };
   }
 
   private getInitData() {}

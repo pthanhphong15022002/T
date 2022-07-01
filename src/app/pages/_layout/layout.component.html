@@ -20,6 +20,7 @@
 
   <!-- begin:: Drawers -->
   <codx-messenger-drawer></codx-messenger-drawer>
+  <app-note-drawer></app-note-drawer>
   <codx-notify-drawer></codx-notify-drawer>
   <!-- <codx-user-drawer></codx-user-drawer> -->
   <!-- end:: Drawers -->
@@ -29,6 +30,15 @@
     <!-- CHAT -->
     <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <!-- <codx-chat-list></codx-chat-list> -->
+    </div>
+    <!-- NOTES -->
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+      <!-- begin::Menu wrapper -->
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span class="icon-sticky_note_2" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+      <!-- end::Menu wrapper -->
     </div>
     <!-- NOTIFICATIONS -->
     <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
@@ -88,6 +98,6 @@
           <span class="menu-title">{{f.customName}}</span>
         </a>
       </div>
-    </ng-container> 
+    </ng-container>
   </ng-template>
 </ng-container>
