@@ -29,7 +29,7 @@ export class ProjectgroupsComponent implements OnInit {
   @ViewChild('itemApprovalControlVll', { static: true })
   itemApprovalControlVll: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
-
+  @ViewChild('form') form: any;
   @ViewChild('view') view!: ViewsComponent;
 
   // BaoLV 2.TM - Danh mục nhóm dự án
@@ -45,7 +45,7 @@ export class ProjectgroupsComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private dt: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
