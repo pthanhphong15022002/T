@@ -96,10 +96,10 @@ export class PopupAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParam();
-    if (!this.task.taskID) {
+    if (this.action=='add') {
       this.openTask();
     } else {
-      if (this.action == 'copy') return this.getTaskCoppied(this.task.taskID);
+      if (this.action == 'copy')  this.getTaskCoppied(this.task.taskID);
       else this.openInfo(this.task.taskID, this.action);
     }
   }
@@ -192,7 +192,7 @@ export class PopupAddComponent implements OnInit {
   }
 
   openTask(): void {
-    const t = this;
+    this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.task = new TM_Tasks();
@@ -444,44 +444,61 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-  //caí này chạy tạm đã
+
   eventApply(e: any) {
     var assignTo = '';
-    var i = 0;
+    var listDepartmentID = '';
+    var listUserID = '';
+
     e.forEach((obj) => {
       if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
-            assignTo += obj?.data;
-            this.valueSelectUser(assignTo);
+            listUserID += obj.data;
             break;
           case 'D':
-            //chưa chạy xong câu lệnh này đã view ra...
-            const t = this;
-            var depID = obj?.data.substring(0, obj?.data.length - 1);
-            t.tmSv.getUserByDepartment(depID).subscribe((res) => {
-              if (res) {
-                assignTo += res + ';';
-                this.valueSelectUser(assignTo);
-              }
-            });
+            listDepartmentID += obj.data;
             break;
         }
       }
     });
-    // setTimeout(() => {
-    //   // this will make the execution after the above boolean has changed
-    //   this.valueSelectUser(assignTo);
-    // }, 500);
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          assignTo += res;
+          if (listUserID != '') assignTo += ';' + listUserID;
+          this.valueSelectUser(assignTo);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
   }
+
   valueSelectUser(assignTo) {
     if (assignTo != '') {
-      if (assignTo.split(';').length > 1)
-        assignTo = assignTo.substring(0, assignTo.length - 1);
-      if (this.task.assignTo && this.task.assignTo != '')
-        this.task.assignTo += ';' + assignTo;
-      else this.task.assignTo = assignTo;
-      this.getListUser(assignTo);
+      if (this.task.assignTo && this.task.assignTo != '') {
+        var arrAssign = assignTo.split(';');
+        var arrNew = [];
+        arrAssign.forEach((e) => {
+          if (!this.task.assignTo.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          assignTo = arrNew.join(';');
+          this.task.assignTo += ';' + assignTo;
+          this.getListUser(assignTo);
+        }
+      } else {
+        this.task.assignTo = assignTo;
+        this.getListUser(assignTo);
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -618,8 +635,6 @@ export class PopupAddComponent implements OnInit {
         this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
-
-  extendShow() { }
 
   valueChangeTags(e) {
     this.task.tags = e.data;

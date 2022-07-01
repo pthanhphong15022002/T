@@ -6,6 +6,7 @@ import {
   AuthStore,
   CallFuncService,
   DialogData,
+  DialogRef,
   ImageViewerComponent,
 } from 'codx-core';
 import {
@@ -44,7 +45,7 @@ export class AddNoteComponent implements OnInit {
   predicate = 'CreatedBy=@0';
   dataValue = '';
   user: any;
-  dialog: Dialog;
+  dialog: any;
   formAdd: FormGroup;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
@@ -57,14 +58,14 @@ export class AddNoteComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private modalService: NgbModal,
     private callfc: CallFuncService,
-    @Optional() data?: DialogData,
-    @Optional() dialog?: Dialog
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef,
   ) {
     this.dialog = dialog;
-    this.lstview = data.data?.lstview;
-    this.typeList_ = data.data?.typeLst;
-    this.ngForLstview_ = data.data?.ngForLstview;
-    this.lstviewNotePin = data.data?.lstviewNotePin;
+    this.lstview = dt.data?.lstview;
+    this.typeList_ = dt.data?.typeLst;
+    this.ngForLstview_ = dt.data?.ngForLstview;
+    this.lstviewNotePin = dt.data?.lstviewNotePin;
   }
   ngAfterViewInit() {
     console.log(this.imageUpload);

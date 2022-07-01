@@ -49,8 +49,8 @@ const T_Pipe: Type<any>[] = [
 
 
 @NgModule({
-  declarations:[ T_Component,T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule ],
+  declarations: [T_Component, T_Pipe],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }

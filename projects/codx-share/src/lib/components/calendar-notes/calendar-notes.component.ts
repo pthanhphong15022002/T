@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -8,17 +8,21 @@ import {
   ViewChild,
   ChangeDetectorRef,
   AfterViewInit,
+  Injector,
 } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { Notes } from '@shared/models/notes.model';
 import { StatusNote } from '@shared/models/enum/enum';
+import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
+import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
+import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
   styleUrls: ['./calendar-notes.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CalendarNotesComponent implements OnInit, AfterViewInit {
+export class CalendarNotesComponent extends UIComponent implements OnInit, AfterViewInit {
   @Input() dataAdd = new Notes();
   @Input() dataUpdate = new Notes();
   message: any;
@@ -46,8 +50,8 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
   WP_Notes: any = [];
   TM_TasksParam: any;
   WP_NotesParam: any;
-  checkTM_TasksParam: boolean;
-  checkWP_NotesParam: boolean;
+  checkTM_TasksParam = true;
+  checkWP_NotesParam = true;
   events: any;
   dataObj: any;
   param: any;
@@ -57,22 +61,22 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
   checkMonth = false;
   checkWeek = true;
   typeList = 'notes-home';
+  views = [];
+  dialog!: DialogRef;
 
   @ViewChild('listview') lstView;
   @ViewChild('calendar') calendar: any;
-  constructor(
-    private api: ApiHttpService,
+  constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
-    private cache: CacheService,
     private modalService: NgbModal
   ) {
+    super(injector);
     this.setEventWeek();
     this.messageParam = this.cache.message('WP003');
   }
   ngAfterViewInit() { }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.getEvents();
     this.getMaxPinNote();
   }
@@ -107,7 +111,6 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
             var daq = new Date(Date.parse(date));
             var d = daq.toLocaleDateString();
           }
-          console.log('WP_NotesParam: ', this.WP_NotesParam);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -320,11 +323,11 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
   }
 
   openFormUpdateNote(recID, data = null) {
-    // var obj = {
-    //   lstview: this.WP_Notes,
-    //   recID: recID,
-    //   data: data,
-    // };
+    var obj = {
+      lstview: this.WP_Notes,
+      recID: recID,
+      data: data,
+    };
     // this.callfc.openForm(
     //   UpdateNoteComponent,
     //   'Cập nhật ghi chú',
@@ -362,13 +365,13 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
     if (this.checkUpdateNotePin == true) {
       this.modalService.open(content, { centered: true });
     } else return;
-    // if (this.checkUpdateNotePin == true) {
-    //   var obj = {
-    //     lstview: this.lstView,
-    //     data: data,
-    //   }
-    //   this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 0, 0, "", obj);
-    // }
+    if (this.checkUpdateNotePin == true) {
+      var obj = {
+        lstview: this.lstView,
+        data: data,
+      }
+      this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 0, 0, "", obj);
+    }
   }
 
   openFormAddNote() {
@@ -385,7 +388,19 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
     //       dt.close = function (e) { };
     //     }
     //   });
-    // this.changeDetectorRef.detectChanges();
+    debugger;
+    this.view.dataService.addNew().subscribe((res: any) => {
+      debugger;
+      let option = new DialogModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      this.dialog = this.callfc.openForm(AddNoteComponent,
+        'Thêm mới ghi chú', 500, 500, '', [this.view.dataService.data, 'add'], '', option
+      );
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
+    });
   }
 
   valueChange(e, recID = null, item = null) {
@@ -413,7 +428,8 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
         this.noteTypeOld = item.noteType;
         this.onEditIsPin();
       } else if (field == 'WP_Notes_ShowEvent') {
-        if (e.data.checked == false) {
+        debugger;
+        if (e.data == false) {
           this.checkWP_NotesParam = false;
         } else {
           this.checkWP_NotesParam = true;
@@ -427,7 +443,8 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
         }
         this.setEventWeek();
       } else if (field == 'TM_Tasks_ShowEvent') {
-        if (e.data.checked == false) {
+        debugger;
+        if (e.data == false) {
           this.checkTM_TasksParam = false;
         } else {
           this.checkTM_TasksParam = true;
@@ -451,7 +468,7 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
     if (e) {
       var field = e.field;
       if (field == 'onTypeCalendarByWeek') {
-        if (e.data.checked == true) {
+        if (e.data == true) {
           this.checkMonth = false;
           this.checkWeek = true;
           this.typeCalendar = 'week';
@@ -462,7 +479,7 @@ export class CalendarNotesComponent implements OnInit, AfterViewInit {
         }
         this.changeDetectorRef.detectChanges();
       } else {
-        if (e.data.checked == true) {
+        if (e.data == true) {
           this.checkWeek = false;
           this.checkMonth = true;
           this.typeCalendar = 'month';

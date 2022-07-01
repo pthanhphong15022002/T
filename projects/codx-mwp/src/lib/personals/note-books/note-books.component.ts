@@ -157,9 +157,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.Width = '550px';
       this.view.dataService.data.pop();
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
+      this.dialog.closed.subscribe(x => {
+        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      });
     });
   }
 

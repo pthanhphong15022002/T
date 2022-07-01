@@ -5,7 +5,7 @@
 
 <ng-template #panelLeftRef>
     <ng-container *ngIf="isShowCreate">
-        <div class="card card-custom gutter-b mb-5">
+        <div class="card card-custom post-new">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="me-3">
@@ -14,17 +14,19 @@
                         </codx-img>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 share">
-                        <span class="text-gray-800 fs-6 feed-box box-new share-input" (click)="openModal()">
-                            <codx-label formName="Comments" name="lblThinks" default="Chọn vào đây để chia sẻ suy nghĩ của bạn"></codx-label>
+                        <span class="text-gray-500 feed-box box-new share-input" (click)="openModal()">
+                            <codx-label class="fw-normal" formName="Comments" name="lblThinks"
+                                default="Chọn vào đây để chia sẻ suy nghĩ của bạn"></codx-label>
                         </span>
                     </div>
                 </div>
             </div>
         </div>
     </ng-container>
-    <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue" [itemTemplate]="tmpPortal" #listview [funcId]="'WP'" service="WP"
-        assemblyName="ERM.Business.WP" class="h-100"  className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
-        [itemTemplateLoading]="templateloading" [formModel]="codxViews.formModel">
+    <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue" [itemTemplate]="tmpPortal"
+        #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP" class="h-100" className="CommentBusiness"
+        method="GetListPostAsync" entityName="WP_Comments" [itemTemplateLoading]="templateloading"
+        [formModel]="codxViews.formModel">
     </codx-listview>
 </ng-template>
 
@@ -39,11 +41,9 @@
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-1">
                     <span class="text-gray-800 fs-6 fw-bold">{{item.createdName}}</span>
-                    <span *ngIf="item.tag > 0"
-                    class="label label-inline label-light-primary ms-2" 
-                    type="button" class="btn me-2" placement="bottom"
-                    [autoClose]='"outside"' [popoverTitle]="popTitle" [ngbPopover]="popContent"
-                    (click)="getTagUser(item.recID)">
+                    <span *ngIf="item.tag > 0" class="label label-inline label-light-primary ms-2" type="button"
+                        class="btn me-2" placement="bottom" [autoClose]='"outside"' [popoverTitle]="popTitle"
+                        [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
                         <span class="tag">
                             <img class="tag-img" src="../../../../assets/img/fed/user-tag.png" />
                         </span>
@@ -53,7 +53,7 @@
                 <div class="text-info-date">
                     <span class="text-muted font-size-sm mr-2" data-toggle="tooltip"
                         title="{{item.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{item.createdOn | timefrom}}</span>
-    
+
                     <ng-container *ngFor="let dtVll of dataVll">
                         <span class="label label-xxs label-inline label-light-primary ms-2"
                             *ngIf="dtVll.value == item.shareControl">
@@ -66,14 +66,15 @@
                         item.shareControl == 'U'; else other_option" class="ml-1 cursor-pointer" placement="bottom"
                         [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
                         (click)="getShareUser(item.shareControl, item.id)">
-                        <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 " href="javascript:void(0)">
+                        <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 "
+                            href="javascript:void(0)">
                             <span *ngIf="item.shareControl == 'U'">
                                 <ng-container *ngIf="item.shared -1 > 0; else elseDisplay">
                                     <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
                                     {{item.shareName.replace(item.shareControl |
                                     sharedControl:'wp' | async,'')}}
                                     <codx-label formName="" name="lblAnd" default="và"></codx-label>
-                                    {{item.shared -1}} 
+                                    {{item.shared -1}}
                                     <codx-label formName="" name="lblPer" default="người khác"></codx-label>
                                 </ng-container>
                                 <ng-template #elseDisplay>
@@ -88,13 +89,14 @@
                                 <ng-container *ngIf="item.shared -1 > 0; else elseDisplay2">
                                     <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
                                     {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}} 
+                                    sharedControl:'wp' | async,'')}}
                                     <codx-label formName="" name="lblAnd" default="và"></codx-label>
                                     {{item.shared -1}}
                                     <codx-label formName="" name="lblDeparment" default="phòng ban khác"></codx-label>
                                 </ng-container>
                                 <ng-template #elseDisplay2>
-                                    <codx-label formName="" name="lblWithDeparment" default="cùng với phòng "></codx-label>
+                                    <codx-label formName="" name="lblWithDeparment" default="cùng với phòng ">
+                                    </codx-label>
                                     {{item.shareName.replace(item.shareControl |
                                     sharedControl:'wp' | async,'')}}
                                 </ng-template>
@@ -106,15 +108,16 @@
             </div>
             <div class="more">
                 <div ngbDropdown class="dropdown">
-                    <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle id="dropdownMenuButton1"
-                        aria-expanded="false">
+                    <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                        ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
                         <i class="fas fa-ellipsis-h"></i>
                     </a>
                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                         <li *ngIf="user.userID == item.createdBy || user.userID =='ADMIN' ">
                             <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
                                 <span class="icon-edit icon-16 me-2"></span>
-                                <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa"></codx-label>
+                                <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
+                                </codx-label>
                             </a>
                         </li>
                         <li *ngIf="user.userID == item.createdBy || user.userID =='ADMIN'">
@@ -132,13 +135,13 @@
                     </ul>
                 </div>
             </div>
-            
+
         </div>
         <!--begin::Bottom-->
-        <div class="pt-4">
+        <div class="pt-5">
             <ng-container *ngIf="item.category == '4'; else shareTemplate">
                 <ng-container *ngIf="item.shortContent;else noMore2">
-                    <read-more-v2 #readmore  [content]="item.content" [shortContent]="item.shortContent">
+                    <read-more-v2 #readmore [content]="item.content" [shortContent]="item.shortContent">
                     </read-more-v2>
                 </ng-container>
                 <ng-template #noMore2>
@@ -147,7 +150,8 @@
                 <!-- start share -->
                 <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
                     <div class="post" (click)="naviagte(item.shares)">
-                    <codx-img [width]="200" [objectId]="item.refID" objectType="WP_News" imageType="square"></codx-img>
+                        <codx-img [width]="200" [objectId]="item.refID" objectType="WP_News" imageType="square">
+                        </codx-img>
                     </div>
                 </ng-container>
                 <ng-template #templateShare>
@@ -164,7 +168,8 @@
                                         <span class="text-gray-800 fs-6 fw-bold">{{item.shares.createdName}}</span>
                                     </div>
                                     <div class="text-info-date">
-                                        <span class="text-gray-400 fs-7 me-2">{{item.shares.createdOn | timefrom}}</span>
+                                        <span class="text-gray-400 fs-7 me-2">{{item.shares.createdOn |
+                                            timefrom}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +178,7 @@
                         </div>
                     </div>
                 </ng-template>
-                
+
                 <!-- end share -->
             </ng-container>
             <ng-template #shareTemplate>
@@ -213,10 +218,10 @@
                 <read-more [content]="item?.content" [maxmimun]="1003" [limit]="1000" [completeWords]="true">
                 </read-more>
             </div>
-            <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-4">
+            <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5">
                 <div class="card-img w-300px h-450px"
-                [style.background]="item.card?.background| backgroundImage:item.card?.backgroundColor"
-                style="background-size: 100% auto;">
+                    [style.background]="item.card?.background| backgroundImage:item.card?.backgroundColor"
+                    style="background-size: 100% auto;">
                     <div class="card-body text-center">
                         <div color="bg-transparent" class="text-center">
                             <h2 class="fw-bolderer mb-6 mt-3" [ngStyle]="{'color':item?.card?.pattern?.headerColor}">
@@ -230,7 +235,8 @@
                                 </codx-img>
                             </div>
                             <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
-                                <img src="/assets/themes/fd/default/img/img_SendCard.svg" class="icon-mail ion-margin-top-8" />
+                                <img src="/assets/themes/fd/default/img/img_SendCard.svg"
+                                    class="icon-mail ion-margin-top-8" />
                             </div>
                             <div class="symbol symbol-40 symbol-circle " *ngIf="item?.card?.receiverID">
                                 <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
@@ -248,7 +254,8 @@
                             <div class="d-flex align-items-center ion-wrap mr-2"
                                 *ngIf="item?.card?.cardType=='2' || item?.card?.cardType =='3'">
                                 <div class=" symbol symbol-30 mr-2">
-                                    <img class="w-100" src="/assets/themes/fd/default/img/{{ item?.card?.rating | vll:item?.card?.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
+                                    <img class="w-100"
+                                        src="/assets/themes/fd/default/img/{{ item?.card?.rating | vll:item?.card?.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
                                 </div>
                             </div>
                             <div class="d-flex align-items-center ion-wrap mar-auto"
@@ -288,7 +295,9 @@
     </div>
 </ng-template>
 <ng-template #popTitle>
-    <div class="text-dark mb-2 fs-6"><codx-label formName="Comments" name="lblTag" default="Danh sách người được tag"></codx-label></div>
+    <div class="text-dark mb-2 fs-6">
+        <codx-label formName="Comments" name="lblTag" default="Danh sách người được tag"></codx-label>
+    </div>
     <div>
         <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
     </div>
@@ -319,7 +328,9 @@
 
 </ng-template>
 <ng-template #popTitleOfShare>
-    <div class="text-dark mb-2" style="font-size: 14px;"><codx-label formName="Comments" name="lblShare" default="Danh sách người được chia sẻ"></codx-label></div>
+    <div class="text-dark mb-2" style="font-size: 14px;">
+        <codx-label formName="Comments" name="lblShare" default="Danh sách người được chia sẻ"></codx-label>
+    </div>
     <div>
         <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
     </div>
