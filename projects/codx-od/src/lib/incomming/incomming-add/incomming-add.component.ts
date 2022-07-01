@@ -47,34 +47,27 @@ export class IncommingAddComponent implements OnInit {
   }
   public disEdit: any;
   ngOnInit(): void {
-    //////////////Form Group///////////////////
    
-    
     this.headerText = this.data.headerText;
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
     this.dispatch.status = '1';
-    //this.dialog.dataService.apiSave = (t, data) = this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'TestApiBool', this.data);
-   /*  this.dialog.dataService.apiUpdate = this.api.execSv<any>(
-      'TM',
-      'TM',
-      'TaskBusiness',
-      'TestApiBool',
-      this.data
-    ); */
     this.gridViewSetup = this.data["gridViewSetup"];
     this.headerText = this.data["headerText"];
     this.type = this.data["type"];
     this.formModel = this.data["formModel"];
-    if(this.type == "edit")
+    if(this.type == "add")
+    {
+      this.dispatch.refDate = new Date();
+      this.dispatch.dispatchOn = new Date();
+    }
+    else if(this.type == "edit")
     {
       this.odService.getDetailDispatch(this.data.data.recID).subscribe(item=>{
         this.files = item.files;
       })
     }
   }
-
- 
   fileAdded(event:any) { 
     if(event?.data) this.hideThumb = true  
   }
@@ -117,47 +110,7 @@ export class IncommingAddComponent implements OnInit {
   changeValueDept(event: any) {
     //this.dispatch.agencyID = event[0];
   }
-    //Lưu văn bản
-  changeValueAgencyText(event: any) {
-    this.dispatch.agencyName = event.data
-  }
-  changeValueCategory(event: any) {
-    this.dispatch.category = event
-  }
-  changeValueSource(event: any) {
-    this.dispatch.source = event
-  }
-  // Số văn bản
-  changeValueRefNo(event: any) {
-    this.dispatch.refNo = event.data;
-  }
-   //Ngày văn bản
-   changeValueRefDate(event: any) {
-    this.dispatch.refDate = event?.data?.fromDate
-  }
-  //Số trang
-  changeValuePage(event: any) {
-    this.dispatch.rages = event.data.value;
-  }
-  changeValueCopies(event: any) {
-   this.dispatch.copies = event.data.value
-  }
   
-  changeValueTags(event: any) {
-    if(event.data.value)
-      this.dispatch.title = event.data.value
-    else this.dispatch.title = event.data
-  }
-  changeValueUrgency(event: any) {
-    this.dispatch.urgency = event
-  }
-  changeValueSecurity(event: any) {
-    this.dispatch.security = event
-  }
-  //Hình thức nhận
-  changeValueSendMode(event: any) {
-    this.dispatch.sendMode = event
-  }
   //Ngày nhận
   changeValueDispatchOn(event: any) {
     this.dispatch.dispatchOn = event?.data?.fromDate
@@ -232,6 +185,11 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     if(this.type == "add" || this.type == "copy")
     {
+      if(this.type == "copy")
+      {
+        this.dispatch.relations= null;
+        this.dispatch.permissions = null;
+      }
       if(this.fileCount > 0)
       {
         this.dispatch.RecID = this.dialog.dataService.dataSelected.recID;
@@ -244,12 +202,27 @@ export class IncommingAddComponent implements OnInit {
             this.data = item;
             this.attachment.objectId = item.data.recID;
             this.attachment.saveFiles();
+
             this.dialog.close(item.data);
           }
           this.notifySvr.notify(item.message); 
         });
       }
       else this.notifySvr.notifyCode("DM001");
+    }
+    else if(this.type=="edit")
+    {
+      
+      let dltDis = true;
+      if(this.fileCount == 0) dltDis = false;
+      this.odService.updateDispatch( this.dispatch , dltDis).subscribe((item) => {
+        if (item.status == 0) {
+          this.attachment.objectId = item.data.recID;
+          if(dltDis) this.attachment.saveFiles();
+          this.dialog.close(item.data);
+        }
+        this.notifySvr.notify(item.message); 
+      }) 
     }
   }
   getfileCount(e:any)

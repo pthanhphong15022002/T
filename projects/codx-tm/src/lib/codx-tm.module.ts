@@ -13,13 +13,21 @@ import { ViewDetailComponent } from './tasks/view-detail/view-detail.component';
 import { PopupAddComponent } from './tasks/popup-add/popup-add.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
@@ -49,18 +57,19 @@ import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.co
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { MwpViewDetailComponent } from './mwp/mwp-view-detail/mwp-view-detail.component';
 import { MwpPopupAddComponent } from './mwp/mwp-popup-add/mwp-popup-add.component';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path: 'mytasks/:funcID',
-        component: TasksComponent,
+        path: ':funcID',
+        component: DashboardComponent
       },
       {
         path: 'mwp/:funcID',
-        component: MwpComponent
+        component: MwpComponent,
       },
       {
         path: 'assigntasks/:funcID',
@@ -77,7 +86,8 @@ export const routes: Routes = [
           {
             path: ':id',
             component: SprintsTasksComponent,
-          }]
+          },
+        ],
       },
       {
         path: 'setting',
@@ -85,29 +95,29 @@ export const routes: Routes = [
         children: [
           {
             path: ':funcID',
-            component: HomeSettingComponent
+            component: HomeSettingComponent,
           },
           {
             path: 'taskgroups/:funcID',
-            component: TaskGroupComponent
+            component: TaskGroupComponent,
           },
           {
             path: 'rangeskanban/:funcID',
-            component: RangesKanbanComponent
+            component: RangesKanbanComponent,
           },
           {
             path: 'project/:funcID',
-            component: ProjectComponent
+            component: ProjectComponent,
           },
           {
             path: 'projectgroups/:funcID',
-            component: ProjectgroupsComponent
+            component: ProjectgroupsComponent,
           },
           {
             path: 'calendar/:funcID',
-            component: CalendarComponent
+            component: CalendarComponent,
           },
-        ]
+        ],
       },
       {
         path: 'reports',
@@ -115,36 +125,41 @@ export const routes: Routes = [
         children: [
           {
             path: ':funcID',
-            component: HomeReportComponent
+            component: HomeReportComponent,
           },
           {
             path: 'mydashboard/:funcID',
-            component: MyDashboardComponent
+            component: MyDashboardComponent,
           },
           {
             path: 'teamdashboard/:funcID',
-            component: TeamDashboardComponent
+            component: TeamDashboardComponent,
           },
           {
             path: 'taskdaily/:funcID',
-            component: TaskDailyComponent
+            component: TaskDailyComponent,
           },
           {
             path: 'taskbyprojects/:funcID',
-            component: TaskByProjectsComponent
+            component: TaskByProjectsComponent,
           },
-        ]
+        ],
       },
       {
+<<<<<<< HEAD
+        path: '',
+        redirectTo: 'null',
+=======
         path: 'home/:funcID',
-        component: DashboardComponent
+        component: DashboardComponent,
+>>>>>>> 5c9a423939879596eb568424f84397bea6a911c7
       },
       {
         path: '**',
         redirectTo: 'error/404',
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -183,8 +198,8 @@ const T_Component: Type<any>[] = [
   TeamDashboardComponent,
   MwpComponent,
   MwpViewDetailComponent,
-  MwpPopupAddComponent
-]
+  MwpPopupAddComponent,
+];
 @NgModule({
   imports: [
     CommonModule,
@@ -198,15 +213,14 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
+    CircularGaugeModule,
     TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
-    NgbModule
+    NgbModule,
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

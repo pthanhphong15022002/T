@@ -4,6 +4,8 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  [formControl]="addEditForm"
+  *ngIf="isAfterRender"
 >
   <ng-template popup adde #body>
     <div class="tab-content">
@@ -18,7 +20,7 @@
         <e-tabitems>
           <e-tabitem [header]="headerText[0]">
             <ng-template #content>
-              <div id="rome" class="tabpanel">
+              <div id="rome" class="tabpanel p-5">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
                     <!--begin::Label-->
@@ -44,15 +46,14 @@
                       ></span>
                     </div>
                     <!--end::Label-->
-                    <!-- <codx-input
+                    <codx-input
                       type="combobox"
                       field="resourceID"
-                      [crrValue]="resource"
+                      [crrValue]="addEditForm.value.resourceID"
                       [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
-                      [multiple]="false"
                       (valueChange)="valueChange($event)"
-                    ></codx-input> -->
+                    ></codx-input>
                   </div>
 
                   <div
@@ -261,15 +262,12 @@
                         <codx-input
                           #checkbox
                           field="online"
-                          [Group]="addEditForm"
                           type="switch"
-                          id="switchOnl"
-                          [checked]="this.addEditForm.value.online"
+                          [checked]="addEditForm.value.online"
                           labelPosition="After"
-                          label=""
                           [disabled]="false"
                           class="test-switch"
-                          (valueChange)="checkedOnlineChange($event)"
+                          (valueChange)="valueChange($event)"
                         >
                         </codx-input>
                         <span class="fw-bold ms-2"
@@ -286,9 +284,8 @@
                         <button
                           type="button"
                           class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                          data-dismiss="modal"
                           (click)="openPopupLink()"
-                          *ngIf="this.addEditForm.value.online"
+                          *ngIf="addEditForm.value.online"
                         >
                           <i
                             class="icon-insert_link text-primary text-hover-primary-dark icon-24"
@@ -300,7 +297,7 @@
                     <!--end::Label-->
                     <!--begin::Input-->
                     <div class="d-flex align-items-center fw-bold">
-                      <a href="" *ngIf="this.addEditForm.value.online">{{
+                      <a href="" *ngIf="addEditForm.value.online">{{
                         addEditForm.value.onlineUrl
                       }}</a>
                     </div>
@@ -451,7 +448,7 @@
           </e-tabitem>
           <e-tabitem [header]="headerText[1]">
             <ng-template #content>
-              <div id="rome" class="tabpanel">
+              <div id="rome" class="tabpanel p-5">
                 <div class="tab-content">
                   <!--begin::Title-->
                   <div
@@ -624,7 +621,7 @@
           </e-tabitem>
           <e-tabitem [header]="headerText[2]">
             <ng-template #content>
-              <div id="rome" class="tabpanel">
+              <div id="rome" class="tabpanel p-5">
                 <div class="tab-content">
                   <!--begin::Title-->
                   <div
@@ -736,7 +733,7 @@
           </e-tabitem>
           <e-tabitem [header]="headerText[3]">
             <ng-template #content>
-              <div id="rome" class="tabpanel">
+              <div id="rome" class="tabpanel p-5">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
                     <h4 class="fw-bolder text-gray-800 d-block mb-2">
@@ -749,7 +746,6 @@
                   </div>
                   <div class="d-flex flex-column mb-4">
                     <div class="col-6">
-                      <!--begin::Label-->
                       <codx-label
                         class="fw-bold"
                         default="Số người tham dự"
@@ -757,7 +753,6 @@
                         [formModel]="dialog.formModel"
                       >
                       </codx-label>
-                      <!--end::Label-->
                       <codx-input
                         type="number"
                         field="attendees"
@@ -765,14 +760,13 @@
                         value="0"
                         [min]="0"
                         max="50"
-                        [crrValue]="this.addEditForm.value.attendees"
+                        [crrValue]="addEditForm.value.attendees"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
                     </div>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
                     <codx-label
                       class="fw-bold"
                       default="Phân loại"
@@ -780,13 +774,12 @@
                       [formModel]="dialog.formModel"
                     >
                     </codx-label>
-                    <!--end::Label-->
 
                     <codx-input
                       type="valuelist"
                       name="valuelist"
                       ngDefaultControl
-                      [crrValue]="this.addEditForm.value.category"
+                      [crrValue]="addEditForm.value.category"
                       [refValue]="CbxName['Category']"
                       field="category"
                       (valueChange)="valueChange($event)"
@@ -794,7 +787,6 @@
                     </codx-input>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
                     <codx-label
                       class="fw-bold"
                       default="Ghi chú"
@@ -802,30 +794,23 @@
                       [formModel]="dialog.formModel"
                     >
                     </codx-label>
-                    <!--end::Label-->
                     <codx-input
                       type="textarea"
                       class="test-textarea"
-                      field="note"
                       placeholder="textarea"
-                      ControlName="note"
+                      format="ed2"
                       (valueChange)="valueChange($event)"
-                      ngDefaultControl
-                      [crrValue]="addEditForm.value.note"
                     >
                     </codx-input>
                   </div>
                   <div class="d-flex flex-column mb-4">
                     <div class="col-8">
                       <div class="d-flex flex-stack mb-4">
-                        <!--begin::Switch-->
                         <div class="form-switch1">
                           <codx-input
                             #checkbox
                             type="switch"
-                            id="switch"
-                            [checked]="this.addEditForm.value.repeat"
-                            labelPosition="After"
+                            [checked]="addEditForm.value.repeat"
                             field="repeat"
                             [disabled]="false"
                             class="test-switch"
@@ -840,25 +825,16 @@
                               ></codx-label></label
                           ></span>
                         </div>
-                        <!--end::Switch-->
-                        <!--begin::Label-->
                         <div class="me-5">
-                          <!-- <codx-combobox service="SYS" name="combobox" placeholder="Default combobox" ngDefaultControl
-                            refValue="Users" field="taskGroupID" [pageSize]="5" popupHeight="200px"
-                            [allowFilter]=true>
-                          </codx-combobox> -->
                           <codx-input
                             type="valuelist"
-                            field=""
                             [refValue]="CbxName['Interval']"
-                            ngDefaultControl
-                            [crrValue]="this.addEditForm.value.interval"
+                            [crrValue]="addEditForm.value.interval"
                             field="interval"
                             (valueChange)="valueChange($event)"
-                            [disabled]="true"
+                            [disabled]="!addEditForm.value.repeat"
                           ></codx-input>
                         </div>
-                        <!--end::Label-->
                       </div>
                     </div>
                   </div>
@@ -936,7 +912,7 @@
 
 <ng-template #popupDevice let-dialog>
   <!--begin::Card body-->
-  <div class="modal-header">
+  <div class="card-header">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
@@ -964,7 +940,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="card-body">
     <div class="py-2" *ngFor="let item of tmplstDevice">
       <!--begin::Item-->
       <div class="d-flex flex-stack">
@@ -983,7 +959,7 @@
               type="switch"
               id="googleswitch"
               [checked]="item.isSelected"
-              (change)="checkedChange($event, item)"
+              (valueChange)="checkedChange($event, item)"
             ></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
@@ -994,7 +970,7 @@
     </div>
     <!--end::Card body-->
   </div>
-  <div class="modal-footer" (click)="dialog.close()">
+  <div class="card-footer d-flex justify-content-end" (click)="dialog.close()">
     <button type="button" class="btn btn-primary">
       <codx-label
         name="lblSave"

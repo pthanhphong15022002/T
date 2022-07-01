@@ -105,17 +105,31 @@ export class PopupAddComponent implements OnInit {
   }
 
   getParam(callback = null) {
+    // this.api
+    //   .execSv<any>(
+    //     APICONSTANT.SERVICES.SYS,
+    //     APICONSTANT.ASSEMBLY.CM,
+    //     APICONSTANT.BUSINESS.CM.Parameters,
+    //     'GetDictionaryByPredicatedAsync',
+    //     'TM_Parameters'
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.param = res;
+    //       return callback && callback(true);
+    //     }
+    //   });
     this.api
       .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetDictionaryByPredicatedAsync',
+        "SYS",
+        "ERM.Business.SYS",
+        "SettingValuesBusiness",
+        'GetByModuleAsync',
         'TM_Parameters'
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.param = JSON.parse(res.dataValue);
           return callback && callback(true);
         }
       });
@@ -198,7 +212,7 @@ export class PopupAddComponent implements OnInit {
     this.task = new TM_Tasks();
     this.listTodo = [];
     this.task.status = '1';
-    this.task.priority = '1';
+    // this.task.priority = '1';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -324,14 +338,12 @@ export class PopupAddComponent implements OnInit {
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
-      this.notiService
-        .alertCode('TM002', { type: 'YesNo' })
-        .subscribe((dialog: any) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.closeConfirm(e, that, id);
-          };
-        });
+      this.notiService.alertCode('TM002').subscribe((res) => {
+        if (res?.event && res?.event?.status == 'Y') {
+          this.actionSave(id);
+        }
+      });
+  
     } else {
       this.actionSave(id);
     }
@@ -681,12 +693,6 @@ export class PopupAddComponent implements OnInit {
     } else this.task.assignTo = '';
   }
 
-  closeConfirm(e: any, t: PopupAddComponent, id: string) {
-    if (e?.status == 'Y') {
-      t.actionSave(id);
-    }
-  }
-
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
     this.listMemo2OfUser.forEach((obj) => {
@@ -703,7 +709,6 @@ export class PopupAddComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
   }
   changeMemo2(e, id) {

@@ -154,12 +154,12 @@
       </div>
       <div class="symbol-group">
         <div *ngIf="itemSelected.category == '3'" class="symbol symbol-30px symbol-circle me-3">
-          <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.assignTo"  objectType="AD_Users" [numberImages]="4">
           </codx-imgs>
         </div>
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
           class="symbol symbol-30px symbol-circle me-3">
-          <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4" >
+          <codx-imgs [objectId]="itemSelected?.owner"  objectType="AD_Users" [numberImages]="4" >
           </codx-imgs>
         </div>
       </div>
