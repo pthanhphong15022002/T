@@ -11,7 +11,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CallFuncService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CallFuncService, DataRequest, DialogData, DialogRef } from 'codx-core';
 import { CodxExportAddComponent } from './codx-export-add/codx-export-add.component';
 
 @Component({
@@ -21,7 +21,7 @@ import { CodxExportAddComponent } from './codx-export-add/codx-export-add.compon
 })
 export class CodxExportComponent implements OnInit, OnChanges
 {
-  @Input() data?: any = {};
+  dataEx: any;
   @Input() openMore: boolean = false;
   dialog: any;
   formGroup?: FormGroup;
@@ -29,6 +29,7 @@ export class CodxExportComponent implements OnInit, OnChanges
   @Output() setDefaultValue = new EventEmitter();
   constructor(
     private callfunc: CallFuncService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -36,10 +37,28 @@ export class CodxExportComponent implements OnInit, OnChanges
     this.dialog = dialog;
   }
   ngOnInit(): void {
+    this.load();
   }
   ngOnChanges(changes: SimpleChanges) {}
+  load()
+  {
+    var option = new DataRequest();
+    option.page=0;
+    option.pageSize=10;
+    option.entityName = 'AD_ExcelTemplates';
+    option.funcID = "ODT3";
+    this.api.execSv<any>('SYS','AD', 'ExcelTemplatesBusiness', 'GetByEntityAsync', option).subscribe(item=>
+    {
+      if(item[0])
+        this.dataEx = item[0]
+      })
+  }
   openForm()
   {
     this.callfunc.openForm(CodxExportAddComponent,null,null,800,null,{headerText: "Thêm Excel Template"})
+    .closed.subscribe(item=>
+    {
+      if(item.event) this.load
+    })
   }
 }
