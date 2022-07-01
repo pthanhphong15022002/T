@@ -1,6 +1,7 @@
-<codx-views #view [funcID]="'WPT03941'" entityName="WP_Notes" gridViewName="'grvNotes'" service="WP"
-    [showToolBar]="false" [views]="views" predicate="" dataValue="" [autoLoad]="false" idField="recID">
-</codx-views>
+<!-- <codx-views #view service="SYS" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [showToolBar]="false" [views]="views"
+    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
+</codx-views> -->
+
 
 <div class="cal-notes">
     <div class="more-btn">
@@ -39,10 +40,10 @@
                 </div>
             </div>
         </div>
-        <div aria-disabled="true" class="display-none">
-            <codx-listview #listview [dataService]="view.dataService">
+        <!-- <div aria-disabled="true" class="display-none">
+            <codx-listview #listview service="SYS" entityName="WP_Notes" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [predicate]="predicate" [dataValue]="dataValue" >
             </codx-listview>
-        </div>
+        </div> -->
         <div *ngIf="checkWP_NotesParam == true" class="p-3">
             <div class="fw-bold fs-6 text-primary mt-3">
                 <codx-label name="lblPinNote" formName="Notes" default="Ghi chú"></codx-label>
@@ -64,7 +65,7 @@
                                     <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
                                     <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item.recID, item)">
+                                        (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
@@ -78,7 +79,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item.recID, item)">
+                                        (click)="openFormUpdateNote(item)">
                                         <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
@@ -117,7 +118,7 @@
                                     <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
                                     <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item.recID, item)">
+                                        (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
@@ -131,7 +132,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item.recID, item)">
+                                        (click)="openFormUpdateNote(item)">
                                         <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
@@ -291,7 +292,7 @@
                                         </div>
                                         <br>
                                         <div class="d-flex flex-column note-option"
-                                            (click)="openFormUpdateNote(item.recID, item)">
+                                            (click)="openFormUpdateNote(item)">
                                             <span [innerHTML]="item.memo"></span>
                                         </div>
                                     </div>
@@ -328,7 +329,7 @@
                                         </div>
                                         <br>
                                         <div class="d-flex flex-column note-option"
-                                            (click)="openFormUpdateNote(item.recID, item)">
+                                            (click)="openFormUpdateNote(item)">
                                             <div *ngFor="let itemList of item.checkList">
                                                 <div *ngIf="itemList.status == null">
                                                     <div class="my-1">

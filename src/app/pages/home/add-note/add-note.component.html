@@ -18,7 +18,7 @@
                 <a (click)="onType('check')" class="icon-check_box icon-24"></a>
             </div>
             <div class="icon-image icon-24" style="position: relative;">
-                <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]="objectID"
+                <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]=""
                     [funcId]="'WP1234'" [isAllowEdit]="true" width="100"></codx-img>
             </div>
             <div class="pw-menu pin">
@@ -35,8 +35,8 @@
         <br>
         <div *ngIf="type == 'text'">
             <div class="row">
-                <codx-input type="textarea" field="textarea" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)" [crrValue]="formAdd.controls['memo'].value">
+                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
                 </codx-input>
             </div>
         </div>
@@ -74,11 +74,11 @@
                 </div>
                 <div class="" style="margin-left: 6px;">
                     <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label" class="test-check"
-                        (valueChange)="valueChange($event)">
+                        (valueChange)="valueChange($event)" [crrValue]="note?.showCalendar" [checked]="note?.showCalendar">
                     </codx-input>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary ms-1" (click)="onCreateNote()" *ngIf="!readOnly">
+            <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
                 <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
             </button>
         </div>
