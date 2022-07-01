@@ -1,9 +1,84 @@
 <codx-views #view entityName="TM_Projects" service="TM" assemblyName="ERM.Business.TM" className="ProjectsBusiness"
   method="GetListProjectsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="click($event)" (requestEnded)="requestEnded($event)"
-  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="projectID" [pageSize]="100"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="ProjectID" [pageSize]="100"
   [selectedFirst]="true">
 </codx-views>
+<ng-template #grid let-data>
+  <tr>
+    <td>
+      {{data.projectID}}
+    </td>
+    <td>
+      {{data.projectName}}
+    </td>
+    <td>
+      {{data.projectName2}}
+    </td>
+
+    <td>
+      <div class="label label-xxs label-inline label-pill"
+        [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
+        [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
+        {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
+    </td>
+    <td>
+      <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
+        [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
+        {{data?.status|vll:"L0614":"text"|async}}</div>
+    </td>
+    <td>
+      <codx-temp-full [imageId]="data.projectManeger" imageObjType="AD_Users" imageWidth="25"
+        [desc]="data.projectManegerName">
+      </codx-temp-full>
+    </td>
+    <td>
+      {{data.projectGroupName}}
+    </td>
+    <td>
+      {{data.customerName}}
+    </td>
+    <td>
+      {{data.location}}
+    </td>
+    <td>
+      <div [innerHTML]="data.memo">
+
+      </div>
+    </td>
+
+    <td>
+      <div *ngIf="data.startDate==null">
+        {{data?.startDate }}
+      </div>
+      <div *ngIf="data.startDate!=null">
+        {{data?.startDate | date:'dd/MM/yyyy'}}
+      </div>
+    </td>
+    <td>
+      <div *ngIf="data.finishDate==null">
+        {{data?.finishDate }}
+      </div>
+      <div *ngIf="data.finishDate!=null">
+        {{data?.finishDate | date:'dd/MM/yyyy'}}
+      </div>
+    </td>
+    <td>
+      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
+      </codx-temp-full>
+
+    </td>
+    <td>
+      {{data.createdOn | date:'dd/MM/yyyy'}}
+
+    </td>
+    <td>
+      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+        (clickMF)="clickMF($event,data)">
+      </codx-mfunc>
+    </td>
+  </tr>
+</ng-template>
 
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
@@ -48,4 +123,9 @@
   <div class="label label-xxs label-inline label-pill" [style.color]="data?.status|vll:'L0614':'color'|async"
     [style.background-color]="(data?.status|vll:'L0614':'color'|async)+'30'">
     {{data?.status|vll:"L0614":"text"|async}}</div>
+</ng-template>
+<ng-template #moreFunction let-data>
+  <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+    (clickMF)="clickMF($event,data)">
+  </codx-mfunc>
 </ng-template>

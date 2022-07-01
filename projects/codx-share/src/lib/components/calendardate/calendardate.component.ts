@@ -1,6 +1,15 @@
 import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Optional, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { DialogData, NotificationsService, ViewsComponent } from 'codx-core';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { objectPara } from '../viewFileDialog/alertRule.model';
+import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
+import { FileService } from '@shared/services/file.service';
+import { DateRangePickerComponent, CalendarView } from '@syncfusion/ej2-angular-calendars';
 import moment from 'moment';
-import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { elementAt } from 'rxjs';
+import { NumberFormattingEventArgs } from '@syncfusion/ej2-pivotview';
 // import moment from 'moment';
 
 @Component({
@@ -25,9 +34,12 @@ export class CalendarDateComponent implements OnInit, OnChanges {
   monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November", "December"];
  
   public headerText: Object = [{ text: 'Ngày hết hạn' },{ text: 'Ngày' }, { text: 'Tuần' }, { text: 'Tháng' }, { text: 'Năm' }, { text: 'Khoảng thời gian' }];
-  constructor(
+  constructor(   
     private changeDetectorRef: ChangeDetectorRef, 
-
+    private formBuilder: FormBuilder,
+    private notifySvr: NotificationsService,
+    private systemDialogService: SystemDialogService,
+    private fileService: FileService
   ) 
   { 
       

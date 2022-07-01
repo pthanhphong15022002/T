@@ -23,6 +23,7 @@ export class AddUpdateStorageComponent implements OnInit {
   data: any = [];
   funcID = '';
   dataEdit: Storages = new Storages();
+  header = 'Thêm mới kho lưu trữ'
 
   storage: Storages = new Storages();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -39,6 +40,7 @@ export class AddUpdateStorageComponent implements OnInit {
     this.dialog = dialog;
     this.formType = dt?.data[1];
     if (this.formType == 'edit') {
+      this.header = 'Cập nhật kho lưu trữ';
       this.storage = dialog.dataService.dataSelected;
       this.data = dialog.dataService.dataSelected;
     }

@@ -24,7 +24,8 @@ export class ProjectgroupsComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   itemSelected: any;
   dialog!: DialogRef
-  constructor(private changeDetectorRef: ChangeDetectorRef, private callfunc: CallFuncService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private callfunc: CallFuncService, 
+    private dt: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.columnsGrid = [

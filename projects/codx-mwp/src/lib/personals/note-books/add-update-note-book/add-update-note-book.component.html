@@ -1,11 +1,4 @@
-<codx-form [header]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template #header>
-        <codx-label name="lblHeaderText" formName="Storages" default="Thêm mới sổ tay" *ngIf="formType == 'add'">
-        </codx-label>
-        <codx-label name="lblHeaderText" formName="Storages" default="Cập nhật sổ tay" *ngIf="formType == 'edit'">
-        </codx-label>
-    </ng-template>
-
+<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
 
     <ng-template popup add #body>
         <div class="card-body">
