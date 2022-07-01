@@ -33,12 +33,12 @@ export class RangesKanbanComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRangeID  },
-      { field: 'rangeName', width: 250, headerTemplate: this.itemRangeName },
-      { field: 'note', width: 200 , headerTemplate: this.itemNote},
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRange },
-      { field: 'createdBy', width: 200, headerTemplate: this.itemCreatedBy },
-      { field: 'createdOn', width: 150, headerTemplate: this.itemCreatedOn },
+      {  width: 200, headerTemplate: this.itemRangeID  },
+      {  width: 250, headerTemplate: this.itemRangeName },
+      {  width: 200 , headerTemplate: this.itemNote},
+      {  width: 200, headerTemplate: this.itemRange },
+      {  width: 200, headerTemplate: this.itemCreatedBy },
+      { width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
 
     ];
