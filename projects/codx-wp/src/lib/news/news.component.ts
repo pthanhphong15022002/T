@@ -167,22 +167,11 @@ export class NewsComponent implements OnInit {
       .subscribe();
   }
   clickShowPopupCreate() {
-    this.codxView.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '750px';
-      option.DataService = this.codxView?.currentView?.dataService;
-      this.dialogRef = this.callfc.openSide(
-        PopupAddComponent,
-        this.codxView.dataService.dataSelected,
-        option
-      );
-    });
-   // this.viewbase.currentView.openSidebarRight();
-  //  let option = new SidebarModel();
-  //  option.DataService = this.codxView?.currentView?.dataService;
-  //  option.FormModel = this.codxView?.currentView?.formModel;
-  //  option.Width = '550px';
-  //  this.dialogRef =  this.callfc.openSide(PopupAddComponent,this.codxView.dataService.dataSelected,option);
+    let option = new SidebarModel();
+    option.DataService = this.codxView?.currentView?.dataService;
+    option.FormModel = this.codxView?.currentView?.formModel;
+    option.Width = '550px';
+    this.dialogRef =  this.callfc.openSide(PopupAddComponent,this.codxView.dataService.dataSelected,option);
   }
 
   clickShowPopupSearch() {

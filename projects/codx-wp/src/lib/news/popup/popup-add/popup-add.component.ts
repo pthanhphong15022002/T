@@ -49,7 +49,7 @@ export class PopupAddComponent implements OnInit {
     @Optional() dialog?: DialogRef
 
   ) {
-    this.objNews = dd?.data;
+    this.objNews = dd?.data
     this.dialogRef = dialog;
   }
   ngAfterViewInit(): void {
@@ -63,12 +63,6 @@ export class PopupAddComponent implements OnInit {
     this.user = this.auth.userValue;
   }
 
-  beforeSave(option: any) {
-    let itemData = this.objNews;
-    option.method = 'InsertNewsAsync';
-    option.data = [itemData];
-    return true;
-  }
 
   clickInsertNews() {
     if(this.lstRecevier.length <= 0){
@@ -91,14 +85,14 @@ export class PopupAddComponent implements OnInit {
     this.objNews.createdBy = this.user.userID;
     this.objNews.shareControl = this.shareControl;
     this.objNews.tags = this.tagName;
-    this.objNews.category = this.formGroup.controls['fCategory'].value;
-    this.objNews.startDate = this.formGroup.controls['fDateStart'].value;
-    this.objNews.endDate = this.formGroup.controls['fDateEnd'].value;
-    this.objNews.subject = this.formGroup.controls['fSubject'].value;
-    this.objNews.subContent = this.formGroup.controls['fSubContent'].value;
-    this.objNews.contents = this.formGroup.controls['fContents'].value;
-    this.objNews.allowShare = this.formGroup.controls['fIsShare'].value;
-    this.objNews.createPost = this.formGroup.controls['fIsCreated'].value;
+    this.objNews.category = this.formGroup.controls['Category'].value;
+    this.objNews.startDate = this.formGroup.controls['DateStart'].value;
+    this.objNews.endDate = this.formGroup.controls['DateEnd'].value;
+    this.objNews.subject = this.formGroup.controls['Subject'].value;
+    this.objNews.subContent = this.formGroup.controls['SubContent'].value;
+    this.objNews.contents = this.formGroup.controls['Contents'].value;
+    this.objNews.allowShare = this.formGroup.controls['IsShare'].value;
+    this.objNews.createPost = this.formGroup.controls['IsCreated'].value;
     this.objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     // Owner
@@ -134,10 +128,17 @@ export class PopupAddComponent implements OnInit {
       lstPermissions.push(per);
     })
     this.objNews.permissions = lstPermissions;
-   
-   this.dialogRef.dataService.save((opt: any) => this.beforeSave(opt)).subscribe((res: any) => {
-    if (res) {
-      let data = res;
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'InsertNewsAsync',
+        this.objNews
+      )
+      .subscribe((res1: any) => {
+        if (res1) {
+          let data = res1;
           this.objectID = data.recID;
           this.imageUpload
             .updateFileDirectReload(data.recID)
@@ -151,37 +152,8 @@ export class PopupAddComponent implements OnInit {
                 this.insertWPComment(data);
               }
             });
-    }
-  });
-   
-   
-   
-    // this.api
-    //   .execSv(
-    //     'WP',
-    //     'ERM.Business.WP',
-    //     'NewsBusiness',
-    //     'InsertNewsAsync',
-    //     this.objNews
-    //   )
-    //   .subscribe((res1: any) => {
-    //     if (res1) {
-    //       let data = res1;
-    //       this.objectID = data.recID;
-    //       this.imageUpload
-    //         .updateFileDirectReload(data.recID)
-    //         .subscribe((res2) => {
-    //           if (res2) {
-    //             this.initForm();
-    //             this.objectID = '';
-    //             this.objectType = '';
-    //             this.lstRecevier = [];
-    //             this.notifSV.notifyCode('E0026');
-    //             this.insertWPComment(data);
-    //           }
-    //         });
-    //     }
-    //   });
+        }
+      });
   }
   
 
@@ -216,11 +188,11 @@ export class PopupAddComponent implements OnInit {
     var obj = {};
     switch(field)
     {
-      case 'fStartDate':
+      case 'StartDate':
         this.startDate = value.fromDate;
         obj[field] = this.startDate;
         break;
-      case 'fDateEnd':
+      case 'DateEnd':
         this.endDate = value.fromDate;
         if(this.endDate < this.startDate){
           this.notifSV.notifyCode("WP011");
@@ -228,25 +200,25 @@ export class PopupAddComponent implements OnInit {
           obj[field] = null;
         }
         break;
-      case 'fCategory':
+      case 'Category':
         obj[field] = value;
         break;
-      case 'fSubject':
+      case 'Subject':
         obj[field] = value;
         break;
-      case 'fSubContent':
+      case 'SubContent':
         obj[field] = value;
         break;
-      case 'fContents':
+      case 'Contents':
         obj[field] = value.value;
         break;
-      case 'fIsShare':
+      case 'IsShare':
         obj[field] = value;
         break;
-      case 'fIsCreated':
+      case 'IsCreated':
         obj[field] = value;
         break;
-      case 'fTags':
+      case 'Tags':
         this.tagName = value;
         obj[field] = value;
         break; 
@@ -288,15 +260,15 @@ export class PopupAddComponent implements OnInit {
     this.changedt.detectChanges();
   }
   clearValueForm() {
-    this.formGroup.controls['fTags'].setValue("");
-    this.formGroup.controls['fCategory'].setValue(null);
-    this.formGroup.controls['fDateStart'].setValue(null);
-    this.formGroup.controls['fDateEnd'].setValue(null);
-    this.formGroup.controls['fSubject'].setValue('');
-    this.formGroup.controls['fSubContent'].setValue('');
-    this.formGroup.controls['fImage'].setValue('');
-    this.formGroup.controls['fIsShare'].setValue(false);
-    this.formGroup.controls['fIsCreated'].setValue(false);
+    this.formGroup.controls['Tags'].setValue("");
+    this.formGroup.controls['Category'].setValue(null);
+    this.formGroup.controls['DateStart'].setValue(null);
+    this.formGroup.controls['DateEnd'].setValue(null);
+    this.formGroup.controls['Subject'].setValue('');
+    this.formGroup.controls['SubContent'].setValue('');
+    this.formGroup.controls['Image'].setValue('');
+    this.formGroup.controls['IsShare'].setValue(false);
+    this.formGroup.controls['IsCreated'].setValue(false);
     this.changedt.detectChanges();
   }
   clickShowPopup() {

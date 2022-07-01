@@ -31,7 +31,7 @@ export const routes: Routes = [
         component: CompanyInforComponent
       },
       {
-        path:'approve/:option/:funcID',
+        path:'approvals/:funcID',
         component: ApproveComponent
       },
       {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CacheService, LayoutBaseComponent } from 'codx-core';
+import { CacheService, CodxService, LayoutBaseComponent } from 'codx-core';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
@@ -11,15 +11,20 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
   valueList: [];
 
-  constructor(private route: ActivatedRoute, private changedt: ChangeDetectorRef,private cache:CacheService,inject: Injector) {
+  constructor(
+    private route: ActivatedRoute,
+     private changedt: ChangeDetectorRef,
+     private cache:CacheService,
+     inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
+    this.codxService.init(this.module, false,false,false);
+    
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas; });
   }
 
   onInit(): void {
-    this.funcs$.subscribe();
+    this.codxService.fun$.subscribe();
   }
 
   onAfterViewInit(): void {}
