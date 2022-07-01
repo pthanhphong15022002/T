@@ -51,6 +51,7 @@ export class AddNoteComponent implements OnInit {
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild("form", { static: true }) form: any;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
 
@@ -207,6 +208,9 @@ export class AddNoteComponent implements OnInit {
   }
 
   onUpdateNote(item: NoteGoal) {
+    debugger;
+    var a = this.note
+    var b = this.form;
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
