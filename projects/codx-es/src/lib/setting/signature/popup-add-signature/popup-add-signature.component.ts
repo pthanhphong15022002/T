@@ -176,7 +176,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   onSavePopup() {
     if (this.content) {
-      this.attachment.onMultiFileSave(null);
+      this.attachment.onMultiFileSave();
     }
   }
 

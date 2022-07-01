@@ -17,10 +17,12 @@ import { CalendarDateComponent } from './components/calendardate/calendardate.co
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxExportComponent } from './components/codx-export/codx-export.component';
+import { OpenFolderComponent } from './components/openFolder/openFolder.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
+  OpenFolderComponent,
   ThumbnailComponent,
   BreadcumbComponent,
   SelectweekComponent,
