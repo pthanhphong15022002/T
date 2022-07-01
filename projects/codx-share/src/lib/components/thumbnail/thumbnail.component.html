@@ -1,8 +1,8 @@
 <ng-container *ngIf="files != null && files.length > 0">
   <div *ngFor="let item of files" class="d-flex align-items-center mt-2 mb-2">
-    <img (click)="openFile(item)" class="w-20px me-3 cursor-pointer" src="{{getExtension(item.extension)}}" />
+    <img (click)="openFile(item.data)" class="w-20px me-3 cursor-pointer" src="{{getExtension(item.data.extension)}}" />
     <div class="d-flex flex-column flex-grow-1">
-      <span class="text-dark fs-6">{{item?.fileName}} ({{formatBytes(item?.fileSize)}})</span>
+      <span class="text-dark fs-6">{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})</span>
     </div>
   </div>
 </ng-container>

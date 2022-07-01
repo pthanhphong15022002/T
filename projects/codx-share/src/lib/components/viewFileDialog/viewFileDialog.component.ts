@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AuthService, CallFuncService, NotificationsService } from 'codx-core';
+import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { AttachmentService } from '../attachment/attachment.service';
 import { SystemDialogService } from './systemDialog.service';
@@ -27,9 +27,11 @@ export class ViewFileDialogComponent implements OnInit {
   fullName: string;
   data: any;
   user: any;
+  titleDialog = "";
   @Input() iD: string;
   @Input() ext: string;
-
+  @Input('viewBase') viewBase: ViewsComponent;
+  dialog: any;
   constructor(private router: Router,
     private readonly auth: AuthService,
     private dmSV: AttachmentService,
@@ -38,10 +40,16 @@ export class ViewFileDialogComponent implements OnInit {
     private systemDialogService: SystemDialogService,
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
+    private elementRef: ElementRef,
     //private modalService: NgbModal,
-    private elementRef: ElementRef) {
-    var data: any = this.auth.user$;
-    this.user = data.source.value;
+    @Optional() data?: DialogData,
+    @Optional() dialog?: DialogRef
+    ) {
+      this.data = data.data;
+      this.iD = this.data.recID;
+      this.dialog = dialog;
+  //  var data: any = this.auth.user$;
+   // this.user = data.source.value;
   }
 
 
@@ -238,37 +246,39 @@ export class ViewFileDialogComponent implements OnInit {
 
   ngOnInit(): void {
     //if (this.systemDialogService.onOpenViewFileDialog.observers.length == 0) {
-    this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
-      if (o == null) return;
-      this.iD = o.fileID;
-      this.ext = (o.extension || "").toLocaleLowerCase();
-      this.fullName = o.fileName;
-      this.fMoreAction = o.moreAction;
-      if (o.data != null) {
-        this.data = o.data;
-        this.getBookmark();
-      }
-      this.isVideo = false;
-      this.srcVideo = "";
-      this.linkViewImage = "";
-      this.changeDetectorRef.detectChanges();
-      if (this.ext == ".mp4") {
-        this.isVideo = true;
-        this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.iD}?access_token=${this.auth.userValue.token}`;
-      } else if (this.ext == ".png"
-        || this.ext == ".jpeg"
-        || this.ext == ".jpg"
-        || this.ext == ".bmp"
-      ) {
-        this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.iD}&access_token=${this.auth.userValue.token}`;
-      }
+    var o = this.data;  
+    //this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
+   //   if (o == null) return;
+    this.iD = o.recID;
+    this.ext = (o.extension || "").toLocaleLowerCase();
+    this.fullName = o.fileName;
+    this.fMoreAction = o.moreAction;
+    if (o.data != null) {
+      this.data = o.data;
+      this.getBookmark();
+    }
+    this.isVideo = false;
+    this.srcVideo = "";
+    this.linkViewImage = "";
+    this.changeDetectorRef.detectChanges();
+    if (this.ext == ".mp4") {
+      this.isVideo = true;
+      this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.iD}?access_token=${this.auth.userValue.token}`;
+    } else if (this.ext == ".png"
+      || this.ext == ".jpeg"
+      || this.ext == ".jpg"
+      || this.ext == ".bmp"
+    ) {
+      this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.iD}&access_token=${this.auth.userValue.token}`;
+    }
 
-      let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
-      diaglog.close(res => {
-        this.viewFile(this.iD);
-        return this.closeOpenForm(res);
-      });
-    })
+    this.viewFile(this.iD);
+    // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
+    // diaglog.close(res => {
+    //   this.viewFile(this.iD);
+    //   return this.closeOpenForm(res);
+    // });
+  //  })
     // }
     if (!window["librOfficeMessage"]) {
       window.removeEventListener("message", window["librOfficeMessage"], false);

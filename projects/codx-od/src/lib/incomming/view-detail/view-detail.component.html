@@ -60,7 +60,7 @@
         <div class="d-flex mt-1">
           <ng-container *ngIf="data && data?.files">
             <thumbnail
-              [data]="getJSONString(data?.files)"
+              [files]="data?.files"
             ></thumbnail>
           </ng-container>
         </div>
