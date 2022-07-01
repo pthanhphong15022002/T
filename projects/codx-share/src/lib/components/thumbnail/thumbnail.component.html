@@ -1,8 +1,33 @@
 <ng-container *ngIf="files != null && files.length > 0">
-  <div *ngFor="let item of files" class="d-flex align-items-center mt-2 mb-2">
-    <img (click)="openFile(item)" class="w-20px me-3 cursor-pointer" src="{{getExtension(item.extension)}}" />
-    <div class="d-flex flex-column flex-grow-1">
-      <span class="text-dark fs-6">{{item?.fileName}} ({{formatBytes(item?.fileSize)}})</span>
-    </div>
+  <div *ngFor="let item of files" class="d-flex align-items-center mt-2 mb-2 has-action-menu">
+    <div *ngIf="(item.data != null) then data else nodata"></div>
+    <ng-template #data>
+      <img (click)="openFile(item.data)" class="w-20px me-3 cursor-pointer" src="{{getExtension(item.data.extension)}}" />
+      <div class="d-flex flex-column flex-grow-1">
+        <span class="text-dark fs-6">{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})</span>
+      </div>
+      <div class="action-menu d-flex align-items-center cursor-pointer"><!--  --> 
+        <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.data)">
+          <i class="icon-preview text-primary icon-18"></i> 
+        </div> 
+        <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item.data)">
+          <i class="icon-cloud_download text-primary icon-18"></i> 
+        </div> 
+      </div>
+    </ng-template>
+    <ng-template #nodata>
+      <img (click)="openFile(item)" class="w-20px me-3 cursor-pointer" src="{{getExtension(item.extension)}}" />
+      <div class="d-flex flex-column flex-grow-1">
+        <span class="text-dark fs-6">{{item?.fileName}} ({{formatBytes(item?.fileSize)}})</span>
+      </div>
+      <div class="action-menu d-flex align-items-center cursor-pointer"><!--  --> 
+        <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item)">
+          <i class="icon-preview text-primary icon-18"></i> 
+        </div> 
+        <div class="btn btn-sm btn-icon btn-white cursor-pointer"  (click)="download(item)">
+          <i class="icon-cloud_download text-primary icon-18"></i> 
+        </div> 
+      </div>
+    </ng-template>    
   </div>
 </ng-container>
