@@ -71,6 +71,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   ];
 
   isAdd = false;
+  range:any;
   data: any = {};
   dialog: any;
   isSaveSuccess = false;
@@ -89,6 +90,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
+    this.range = dialog.dataService!.dataSelected;
   }
   ngAfterViewInit(): void {
     if (this.dialog) {
