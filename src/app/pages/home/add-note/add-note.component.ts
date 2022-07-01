@@ -29,6 +29,7 @@ import { NoteGoal, Notes } from '@shared/models/notes.model';
 export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
+  note:  Notes = new Notes();
   message: any;
   listNote: any = [];
   type = 'text';
@@ -47,6 +48,7 @@ export class AddNoteComponent implements OnInit {
   user: any;
   dialog: any;
   formAdd: FormGroup;
+  readOnly = false;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -96,42 +98,45 @@ export class AddNoteComponent implements OnInit {
   valueChange(e, item = null) {
     if (e) {
       var field = e.field;
-      if (field == 'textarea') {
-        this.message = e.data.value;
-      } else if (field == 'showCalendar') {
-        this.showCalendar = e.data.checked;
-      } else if (field == 'status') {
-        item['status'] = e.data.checked;
-      } else if (field == 'listNote') {
-        this.listNote = item.checkList.listNote;
-      } else if (item) {
-        this.message = '';
-        this.checkCreate = '';
-        item[field] = e.data;
-      }
+      var dt = e.data;
+      this.note[field] = dt?.value ? dt?.value : dt;
+      // if (field == 'textarea') {
+      //   this.message = e.data.value;
+      // } else if (field == 'showCalendar') {
+      //   this.showCalendar = e.data.checked;
+      // } else if (field == 'status') {
+      //   item['status'] = e.data.checked;
+      // } else if (field == 'listNote') {
+      //   this.listNote = item.checkList.listNote;
+      // } else if (item) {
+      //   this.message = '';
+      //   this.checkCreate = '';
+      //   item[field] = e.data;
+      // }
     }
   }
 
   onCreateNote() {
-    if (this.type == 'check' || this.type == 'list') {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNote;
-      this.dataAdd.checkList.shift();
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.message;
-    }
-    this.dataAdd.noteType = this.type;
-    this.dataAdd.isPin = this.pin;
-    this.dataAdd.showCalendar = this.showCalendar;
+    // if (this.type == 'check' || this.type == 'list') {
+    //   this.dataAdd.memo = null;
+    //   this.dataAdd.checkList = this.listNote;
+    //   this.dataAdd.checkList.shift();
+    // } else {
+    //   this.dataAdd.checkList = null;
+    //   this.dataAdd.memo = this.message;
+    // }
+    // this.dataAdd.showCalendar = this.showCalendar;
 
+    this.note.noteType = this.type;
+    this.note.isPin = this.pin;
+    this.note;
     if (this.checkCreate != null || this.message != null) {
       this.api
         .exec<any>(
           'ERM.Business.WP',
           'NotesBusiness',
           'CreateNoteAsync',
-          this.dataAdd
+          this.note
         )
         .subscribe((res) => {
           if (res) {

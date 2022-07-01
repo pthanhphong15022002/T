@@ -59,7 +59,7 @@ export class PopupAddSprintsComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.taskBoard.iterationID) {
-      // this.openTask();
+       this.taskBoard.viewMode='1';
     } else {
       if (this.action == 'copy')
          this.getSprintsCoppied(this.taskBoard.iterationID);

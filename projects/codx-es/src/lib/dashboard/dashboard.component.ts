@@ -19,28 +19,34 @@ export class DashboardComponent implements OnInit {
   ) {}
   @ViewChild('default_dashboard') public dashboard: DashboardLayoutComponent;
 
-  
   public cellSpacing: number[] = [10, 10];
   docsApproveStatus;
-  categoriesDocs
-  docsByDays
+  categoriesDocs;
+  docsByDays;
 
   ngOnInit(): void {
     this.esService.getTotalGByApproveStatus().subscribe((res) => {
       this.docsApproveStatus = res;
-      this.df.detectChanges()
+      this.df.detectChanges();
     });
 
     this.esService.getTotalGByCategory().subscribe((res) => {
       this.categoriesDocs = res;
-      this.df.detectChanges()
+      this.df.detectChanges();
     });
 
     this.esService.getDocsGByDays().subscribe((res) => {
       this.docsByDays = res;
-      this.df.detectChanges()
-    });
 
+      this.df.detectChanges();
+    });
+    if (!this.docsByDays) {
+      let result: Object[] = [];
+      for (let i = 1; i < 30; i++) {
+        result.push({ day: i, docs: 0 });
+      }
+      this.docsByDays = result;
+    }
   }
 
   public data: Object[] = [

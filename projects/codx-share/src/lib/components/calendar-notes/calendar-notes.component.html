@@ -1,5 +1,5 @@
 <codx-views #view [funcID]="'WPT03941'" entityName="WP_Notes" gridViewName="'grvNotes'" service="WP"
-    [showToolBar]="false" [views]="views" predicate="" dataValue="">
+    [showToolBar]="false" [views]="views" predicate="" dataValue="" [autoLoad]="false" idField="recID">
 </codx-views>
 
 <div class="cal-notes">
@@ -26,7 +26,7 @@
                 <codx-label name="lblPinNote" formName="Notes" default="Ghi chú của tôi"></codx-label>
             </div>
             <div class="ms-6 position-relative">
-                <button type="button" class="btn btn-none btn-sm dropdown-toggle ps-0" placement="start"
+                <button type="button" class="btn btn-icon dropdown-toggle" placement="start"
                     [ngbPopover]="popContentFilter" [autoClose]="'outside'" container="body">
                     <span class="icon-filter1 icon-18"></span>
                 </button>
@@ -39,10 +39,10 @@
                 </div>
             </div>
         </div>
-        <!-- <div aria-disabled="true" class="display-none">
+        <div aria-disabled="true" class="display-none">
             <codx-listview #listview [dataService]="view.dataService">
             </codx-listview>
-        </div> -->
+        </div>
         <div *ngIf="checkWP_NotesParam == true" class="p-3">
             <div class="fw-bold fs-6 text-primary mt-3">
                 <codx-label name="lblPinNote" formName="Notes" default="Ghi chú"></codx-label>
@@ -158,7 +158,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="checkTM_TasksParam == true" class="p-3">
+        <div *ngIf="checkTM_TasksParam == true" class="mt-3">
             <div class="fw-bold fs-6 text-primary mb-3">
                 <codx-label name="lblPinNote" formName="Notes" default="Công việc"></codx-label>
             </div>
