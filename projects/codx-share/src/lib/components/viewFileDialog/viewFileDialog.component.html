@@ -1,67 +1,80 @@
-<ng-template #contentViewFileDialog let-dialog>
-    <div id="dm_viewFile">
-        <div class="viewfile">
-            <div class="viewfile-toolbar d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <span class="icon-24 text-white"></span>
-                    <span class="ml-3 text-white font-size-h3">{{fullName}}</span>
-                </div>
-                <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center">
-                    <span class="icon-print icon-24 text-white" (click)="print()"></span>
-                    <span *ngIf="data.download" class="icon-download icon-24 ml-4 text-white" (click)="download()"></span>
-                    <div ngbDropdown class="view-more ml-2">
-                        <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="icon-more_vert icon-24 text-white"></span>
-                        </button>
-                        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a ngbDropdownItem [ngClass]="this.checkShareRight() ? 'dropdown-item':'dropdown-item disabled'"
-                                (click)="setShare()">
-                                <div class="d-flex align-items-center">
-                                    <span class="icon-share icon-18"></span>
-                                    <span class="ml-3">Chia sẻ</span>
-                                </div>
-                            </a>                           
-                            <a ngbDropdownItem class="dropdown-item" (click)="setBookmark()">
-                                <div class="d-flex align-items-center">
-                                    <span class="icon-star_border icon-18"></span>
-                                    <span class="ml-3">
-                                        <div *ngIf="!checkBookmark(); then thenBlockBM else elseBlockBM"></div>
-                                        <ng-template #thenBlockBM>Bookmark</ng-template>
-                                        <ng-template #elseBlockBM>UnBookmark</ng-template>
-                                    </span>
-                                </div>
-                            </a>                           
-                            <a ngbDropdownItem [ngClass]="this.checkReadRight() ? 'dropdown-item':'dropdown-item disabled'"
-                                (click)="properties()">
-                                <div class="d-flex align-items-center">
-                                    <span class="icon-list_alt icon-18"></span>
-                                    <span class="ml-3">Properties</span>
-                                </div>
-                            </a>
+<codx-form headerText="{{fullName}}" [body]="body" [dialog]="dialog">           
+    <ng-template #body>      
+        <div id="dm_viewFile">
+            <div class="viewfile">
+                <div class="viewfile-toolbar d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <span class="icon-24 text-white"></span>
+                        <span class="ml-3 text-white font-size-h3">{{fullName}}</span>
+                    </div>
+                    <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center">
+                        <span class="icon-print icon-24 text-white" (click)="print()"></span>
+                        <span *ngIf="data.download" class="icon-download icon-24 ml-4 text-white" (click)="download()"></span>
+                        <div ngbDropdown class="view-more ml-2">
+                            <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <span class="icon-more_vert icon-24 text-white"></span>
+                            </button>
+                            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a ngbDropdownItem [ngClass]="this.checkShareRight() ? 'dropdown-item':'dropdown-item disabled'"
+                                    (click)="setShare()">
+                                    <div class="d-flex align-items-center">
+                                        <span class="icon-share icon-18"></span>
+                                        <span class="ml-3">Chia sẻ</span>
+                                    </div>
+                                </a>                           
+                                <a ngbDropdownItem class="dropdown-item" (click)="setBookmark()">
+                                    <div class="d-flex align-items-center">
+                                        <span class="icon-star_border icon-18"></span>
+                                        <span class="ml-3">
+                                            <div *ngIf="!checkBookmark(); then thenBlockBM else elseBlockBM"></div>
+                                            <ng-template #thenBlockBM>Bookmark</ng-template>
+                                            <ng-template #elseBlockBM>UnBookmark</ng-template>
+                                        </span>
+                                    </div>
+                                </a>                           
+                                <a ngbDropdownItem [ngClass]="this.checkReadRight() ? 'dropdown-item': 'dropdown-item disabled'"
+                                    (click)="properties()">
+                                    <div class="d-flex align-items-center">
+                                        <span class="icon-list_alt icon-18"></span>
+                                        <span class="ml-3">Properties</span>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div (click)="activeDialog()" class="viewfile-content" id="viewfiledalog">
+                <form id="frmFile" *ngIf="!isVideo && !linkViewImage" #viewfileform target="my_frame"
+                    [action]="src | safe: 'resourceUrl'" enctype="multipart/form-data" method="post">
+                    <input name="access_token" id="access_token" value="{{access_token}}" type="hidden" />
+                    <input name="tenant" id="tenant" value="{{tenant}}" type="hidden" />
+                    <input name="ui_defaults"
+                        value="UIMode=classic;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false"
+                        type="hidden" />
+                </form>
+                <iframe *ngIf="!isVideo && !linkViewImage" #viewfileframe class="viewfileiframe" frameBorder="0"
+                    name="my_frame">
+                </iframe>
+                <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay style="width: 100%;">
+                    <source src="{{srcVideo}}" type="video/mp4" />
+                </video>
+                <img *ngIf="linkViewImage" src="{{linkViewImage}}" style="max-height: 100%;" />
+            </div>
+            
+        </div>     
+    </ng-template>    
+    <!-- <ng-template #footer>
+      <div class="card-footer pt-4">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
         </div>
-        <div (click)="activeDialog()" class="viewfile-content" id="viewfiledalog">
-            <form id="frmFile" *ngIf="!isVideo && !linkViewImage" #viewfileform target="my_frame"
-                [action]="src | safe: 'resourceUrl'" enctype="multipart/form-data" method="post">
-                <input name="access_token" id="access_token" value="{{access_token}}" type="hidden" />
-                <input name="tenant" id="tenant" value="{{tenant}}" type="hidden" />
-                <input name="ui_defaults"
-                    value="UIMode=classic;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false"
-                    type="hidden" />
-            </form>
-            <iframe *ngIf="!isVideo && !linkViewImage" #viewfileframe class="viewfileiframe" frameBorder="0"
-                name="my_frame">
-            </iframe>
-            <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay style="width: 100%;">
-                <source src="{{srcVideo}}" type="video/mp4" />
-            </video>
-            <img *ngIf="linkViewImage" src="{{linkViewImage}}" style="max-height: 100%;" />
-        </div>
-        
-    </div>
+      </div> 
+    </ng-template> -->
+</codx-form>
+<!-- 
+<ng-template #contentViewFileDialog let-dialog>
+  
 
-</ng-template>
+</ng-template> -->

@@ -47,6 +47,7 @@ export class AttachmentComponent implements OnInit {
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
+  data: any;
   @Input() formModel: any;
   @Input() objectType: string;
   @Input() objectId: string;
@@ -62,7 +63,7 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
-  @Input('viewBase') viewBase: ViewsComponent;
+  @Input('viewBase') viewBase: ViewsComponent;    
   @Output() fileCount = new EventEmitter<any>();
   // @Input('openFolder') openFolder: ViewsComponent;
 
@@ -124,12 +125,14 @@ export class AttachmentComponent implements OnInit {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    
+    this.data = this.atSV.fileListAdded;
+
     if (this.type == "popup") {      
       this.dialog.close();      
     }
 
     this.fileUploadList = [];
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {

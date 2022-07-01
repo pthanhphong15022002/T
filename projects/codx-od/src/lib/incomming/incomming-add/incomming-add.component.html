@@ -40,7 +40,7 @@
 <ng-container *ngIf="files && !hideThumb">
   <div class="mb-5">
     <thumbnail
-    [data]="getJSONString(files)"
+    [files]="files"
   ></thumbnail>
   </div>
 </ng-container>
@@ -189,7 +189,6 @@
         [formModel]="form.formModel" 
         [Group]="form.formGroup"
         field="refDate" 
-        ControlName="refDate"
        >
       </codx-input>
     </div>
