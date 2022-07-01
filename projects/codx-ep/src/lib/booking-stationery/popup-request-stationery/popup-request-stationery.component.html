@@ -21,8 +21,20 @@
       >
       </codx-temp-full>
       <div>
-        <span class="badge badge-secondary">Cá nhân</span>
-        <span class="badge badge-primary">Phòng</span>
+        <span class="badge badge-secondary"
+          ><codx-label
+            name="lblPerson"
+            default="Cá nhân"
+            [formModel]="dialog.formModel"
+          ></codx-label
+        ></span>
+        <span class="badge badge-primary"
+          ><codx-label
+            name="lblRoom"
+            default="Phòng"
+            [formModel]="dialog.formModel"
+          ></codx-label
+        ></span>
       </div>
     </div>
     <div
@@ -65,64 +77,94 @@
       <!--begin: btn-icon-->
       <codx-input
         type="number"
+        class="test-number min-w-50px"
         field="number"
-        placeholder="Input type number"
-        value="0"
-        min="0"
-        max="50"
-      >
-      </codx-input>
+        placeholder="number"
+        [crrValue]="1"
+        [cusButton]="true"
+        [min]="0"
+        [max]="50"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
       <!--end: btn-icon-->
     </div>
-    <div class="d-flex justify-content-between">
-      <div class="d-flex flex-row">
-        <div class="w-100px h-100px m-4">
-          <codx-img [objectId]="" imageType="square" width="100"></codx-img>
-        </div>
-        <div class="">
-          <div class="text-dark font-weight-bold font-size-h6">
-            {{ dialog.resourceName }}
+    <table class="table table-striped" *ngIf="listItem.length > 0">
+      <tbody>
+        <tr *ngFor="let item of listItem">
+          <div class="d-flex justify-content-between">
+            <td class="d-flex flex-row">
+              <div class="w-100px h-100px m-4">
+                <codx-img
+                  [objectId]=""
+                  imageType="square"
+                  width="100"
+                ></codx-img>
+              </div>
+              <div class="">
+                <div class="text-dark font-weight-bold font-size-h6">
+                  {{ item.resourceName }}
+                </div>
+                <codx-label name="lblUnit" default="Đơn vị tính: "></codx-label>
+                <div
+                  class="d-flex justify-content-between align-items-end mt-2"
+                >
+                  <div class="d-flex align-items-end me-2 codx-badge">
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-view_agenda icon-20 text-gray-400"
+                      ></span>
+                      <span>{{ item.currentQty }}</span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-shopping_cart icon-20 text-gray-400"
+                      ></span>
+                      <span>{{ item.reservedQty }}</span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-brightness_auto icon-20 text-gray-400"
+                      ></span>
+                      <span>{{ item.availableQty }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <codx-input
+                type="number"
+                class="test-number min-w-50px"
+                field="number"
+                placeholder="number"
+                [crrValue]="1"
+                [cusButton]="true"
+                [min]="0"
+                [max]="50"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </td>
           </div>
-          <div>Đơn vị tính: {{ dialog.costPrice }}</div>
-          <div class="d-flex justify-content-between align-items-end mt-2">
-            <div class="d-flex align-items-end me-2 codx-badge">
-              <div class="d-flex align-items-center position-relative me-4">
-                <span class="icon-view_agenda icon-20 text-gray-400"></span>
-                <span>{{ dialog.currentQty }}</span>
-              </div>
-              <div class="d-flex align-items-center position-relative me-4">
-                <span class="icon-shopping_cart icon-20 text-gray-400"></span>
-                <span>{{ dialog.reservedQty }}</span>
-              </div>
-              <div class="d-flex align-items-center position-relative me-4">
-                <span class="icon-brightness_auto icon-20 text-gray-400"></span>
-                <span>{{ dialog.availableQty }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="input-number">
-        <codx-input
-          type="number"
-          field="number"
-          placeholder="Input type number"
-          value="0"
-          min="0"
-          max="50"
-        >
-        </codx-input>
-      </div>
-    </div>
+        </tr>
+      </tbody>
+    </table>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <div class="">
+      <div class="d-flex justify-content-center">
         <codx-label
           name="lblItems"
-          default="Tổng số mặt hàng yêu cầu"
+          default="Tổng số mặt hàng yêu cầu:"
           [formModel]="dialog.formModel"
         ></codx-label>
+        <div class="numberCircle">{{ count }}</div>
       </div>
       <div class="d-flex">
         <codx-label
