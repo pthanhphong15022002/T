@@ -388,14 +388,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     //       dt.close = function (e) { };
     //     }
     //   });
-    debugger;
     this.view.dataService.addNew().subscribe((res: any) => {
-      debugger;
       let option = new DialogModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       this.dialog = this.callfc.openForm(AddNoteComponent,
-        'Thêm mới ghi chú', 500, 500, '', [this.view.dataService.data, 'add'], '', option
+        'Thêm mới ghi chú', 720, 600, '', [this.view.dataService.data, 'add'], '', option
       );
       // this.dialog.closed.subscribe(x => {
       //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
