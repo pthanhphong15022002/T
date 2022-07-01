@@ -28,7 +28,7 @@ export class ViewFileDialogComponent implements OnInit {
   data: any;
   user: any;
   titleDialog = "";
-  @Input() iD: string;
+  @Input() id: string;
   @Input() ext: string;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
@@ -49,8 +49,8 @@ export class ViewFileDialogComponent implements OnInit {
         this.data = data.data;
       else
         this.data = data;
-        
-      this.iD = this.data.recID;
+
+      this.id = this.data.recID;
       this.dialog = dialog;
   //  var data: any = this.auth.user$;
    // this.user = data.source.value;
@@ -64,7 +64,7 @@ export class ViewFileDialogComponent implements OnInit {
       // $('.my-dialog').css('z-index', '99999');;
       // $('app-customdialog').css('position', 'fixed');
       // $('app-customdialog').css('z-index', '9999');
-      data.recID = this.iD;
+      data.recID = this.id;
       data.type = 'file';
       data.fullName = this.fullName;
       data.copy = false;
@@ -81,7 +81,7 @@ export class ViewFileDialogComponent implements OnInit {
     var data = new DataItem();
     // $('.viewfile').css('z-index', '1000');
     // $('.my-dialog').css('z-index', '99992');
-    data.recID = this.iD;
+    data.recID = this.id;
     data.type = 'file';
     data.fullName = this.fullName;
     data.copy = false;
@@ -96,7 +96,7 @@ export class ViewFileDialogComponent implements OnInit {
   }
 
   async setBookmark(): Promise<void> {
-    var id = this.iD;
+    var id = this.id;
     this.fileService.bookmarkFile(id).subscribe(async res => {
       this.data = res;
       // let list = this.dmSV.listFiles.getValue();
@@ -143,7 +143,7 @@ export class ViewFileDialogComponent implements OnInit {
       // $('app-customdialog').css('z-index', '9999');
       var data = new DataItem();
       // $('.viewfile').css('z-index', '1000');
-      data.recID = this.iD;
+      data.recID = this.id;
       data.type = 'file';
       data.fullName = this.fullName;
       data.copy = false;
@@ -179,7 +179,7 @@ export class ViewFileDialogComponent implements OnInit {
   }
 
   async download(): Promise<void> {
-    var id = this.iD;
+    var id = this.id;
     var that = this;
     if (this.checkDownloadRight()) {
       this.fileService.downloadFile(id).subscribe(async res => {
@@ -253,7 +253,7 @@ export class ViewFileDialogComponent implements OnInit {
     var o = this.data;  
     //this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
    //   if (o == null) return;
-    this.iD = o.recID;
+    this.id = o.recID;
     this.ext = (o.extension || "").toLocaleLowerCase();
     this.fullName = o.fileName;
     this.fMoreAction = o.moreAction;
@@ -267,16 +267,16 @@ export class ViewFileDialogComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (this.ext == ".mp4") {
       this.isVideo = true;
-      this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.iD}?access_token=${this.auth.userValue.token}`;
+      this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
     } else if (this.ext == ".png"
       || this.ext == ".jpeg"
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.iD}&access_token=${this.auth.userValue.token}`;
+      this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
 
-    this.viewFile(this.iD);
+    this.viewFile(this.id);
     // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
     // diaglog.close(res => {
     //   this.viewFile(this.iD);
