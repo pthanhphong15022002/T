@@ -91,27 +91,22 @@
           <!-- <span class="menu-title">{{f.customName}}</span> -->
         </a>
       </div>
-    </ng-container> -->
+    </ng-container>
   </ng-template>
 </ng-container>
 
 <ng-template #asideSecond>
   <div class="menu-sub menu-sub-accordion">
-    <div class="menu-item">
-      <a class="menu-link" href="/">
-        <span class="menu-bullet">
-          <span class="bullet bullet-dot"></span>
-        </span>
-        <span class="menu-title">Ưu tiên cao</span>
-      </a>
-    </div>
-    <div class="menu-item">
-      <a class="menu-link" href="/">
-        <span class="menu-bullet">
-          <span class="bullet bullet-dot"></span>
-        </span>
-        <span class="menu-title">Chưa thực hiện</span>
-      </a>
-    </div>
+    <ng-container *ngFor="let f of codxService.func$ | async">
+      <div class="menu-item">
+        <a class="menu-link" href="javascript:;" (click)="codxService.navigate(f.functionID)" routerLinkActive="active"
+          [ngbTooltip]="f.customName" placement="end" container="body">
+          <span class=" menu-icon">
+            <img class="w-25px" src="../../../{{f.smallIcon}}" />
+            <span>{{f.customName}}</span>
+          </span>
+        </a>
+      </div>
+    </ng-container>
   </div>
 </ng-template>

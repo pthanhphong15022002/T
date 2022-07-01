@@ -15,7 +15,7 @@ export class ProjectgroupsComponent implements OnInit {
   @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
   @ViewChild('itemApprovalControlVll', { static: true }) itemApprovalControlVll: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
-
+  @ViewChild('form') form: any;
   @ViewChild('view') view!: ViewsComponent;
 
   columnsGrid = [];
@@ -103,6 +103,6 @@ export class ProjectgroupsComponent implements OnInit {
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
-    this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 }

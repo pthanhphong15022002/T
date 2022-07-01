@@ -1,6 +1,6 @@
 <codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesKanbanBusiness"
   method="GetListRangesKanbanAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (buttonClick)="click($event)" (requestEnded)="requestEnded($event)"
+  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (requestEnded)="requestEnded($event)"
   (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="rangeID" [pageSize]="100"
   [selectedFirst]="true">
 </codx-views>
@@ -41,7 +41,7 @@
     </td>
     <td>
       <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-        (clickMF)="clickMF($event,data)">
+        (clickMF)="moreFuncClick($event,data)">
       </codx-mfunc>
     </td>
   </tr>
@@ -77,7 +77,7 @@
 <ng-template #moreFun let-data>
   <div>
     <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-      (clickMF)="clickMF($event,data)">
+      (clickMF)="moreFuncClick($event,data)">
     </codx-mfunc>
   </div>
 </ng-template>
