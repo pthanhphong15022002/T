@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
@@ -19,7 +19,6 @@ import { UpdateExtendComponent } from '../update/update.component';
 })
 export class ViewDetailComponent  implements OnInit , OnChanges {
   active = 1;
-  desc: string = "";
   checkUserPer: any;
   userID:any;
   @Input() data : any;
@@ -53,13 +52,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.active = 1;
-    this.desc = '';
     if(changes.data != null && changes.data != undefined) {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
-        this.htmlAgency();
         this.getDataValuelist();
         this.getPermission(this.data.recID);
 
@@ -68,20 +65,19 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   ngOnInit(): void {
     this.active = 1;
-    this.desc = '';
     this.formModel = this.view.formModel;
         //this.data = this.view.dataService.dataSelected;
-        this.userID = this.authStore.get().userID;
-        this.htmlAgency();
-        this.getDataValuelist();
+    this.userID = this.authStore.get().userID;
+    this.getDataValuelist();
   }
-  htmlAgency()
+  convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
-    this.desc = '<div class="d-flex">';
-    if(this.data?.agencyName != undefined &&  this.data?.agencyName!= "")
-      this.desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
-    if(this.data?.txtLstAgency != undefined && this.data?.txtLstAgency!= "")
-      this.desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
+    var desc = '<div class="d-flex">';
+    if(agencyName)
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+    if(txtLstAgency)
+      desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div></div>';
+    return desc;
   }
    ///////////////Các function format valuelist///////////////////////
    fmTextValuelist(val: any, type: any) {
@@ -301,7 +297,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                       //this.view.dataService.setDataSelected(x.event);
                       this.data = item;
                       this.data.lstUserID = getListImg(item.relations);
-                      this.htmlAgency();
                     });
                 //});
               }
@@ -326,7 +321,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 this.data = formatDtDis(item);
                 this.view.dataService.setDataSelected(this.data);
                 this.data.lstUserID = getListImg(this.data.relations)
-                this.htmlAgency()
               });
             }
             if(item?.message)
@@ -541,7 +535,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       //Export file
       case "SYS002":
         {
-          this.callfunc.openForm(CodxExportComponent,null,null,600);
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc.openForm(CodxExportComponent,null,null,600,"",null,"",option);
           break;
         }
     }
