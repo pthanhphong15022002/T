@@ -17,6 +17,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   formType = '';
   formModel: any;
   data: any;
+  header = 'Thêm mới sổ tay';
 
   noteBooks: NoteBooks = new NoteBooks();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -32,6 +33,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.formType = dt?.data[1];
     this.formModel = dialog?.formModel;
     if (this.formType == 'edit') {
+      this.header = 'Cập nhật sổ tay';
       this.noteBooks = this.dialog.dataService?.dataSelected;
       this.data = this.dialog.dataService?.dataSelected;
     }

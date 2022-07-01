@@ -1,39 +1,38 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { CallFuncService } from 'codx-core';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
+import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 @Component({
   selector: 'thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss']
 })
 export class ThumbnailComponent implements OnInit, OnChanges {
-  @Input() data: any;
-  files: any;
-  //formatBytes = formatBytes
-  constructor(
-    //private odService: DispatchService,
+  @Input() files: any;
+ // files: any;  
+  constructor(    
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
+    private callfc: CallFuncService,
   ) {
 
   }
-  ngOnInit(): void {
-    //this.formdata = new FormGroup({});
-    //alert(this.recID);
-    // console.log(this.data);
-    this.files = JSON.parse(this.data);
+  ngOnInit(): void {    
+   // this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
   }
 
-  openFile(data) {
+  openFile(file) {
+    this.callfc.openForm(ViewFileDialogComponent, file.fileName, 1000, 800, "", file, "");
     //if (this.checkReadRight() ) {
-    var obj = new objectPara();
-    obj.fileID = data.recID;
-    obj.fileName = data.fileName;
-    obj.extension = data.extension;
-    obj.data = JSON.parse(this.data);
-    this.changeDetectorRef.detectChanges();
-    this.systemDialogService.onOpenViewFileDialog.next(obj);
+    // var obj = new objectPara();
+    // obj.fileID = data.recID;
+    // obj.fileName = data.fileName;
+    // obj.extension = data.extension;
+    // obj.data = JSON.parse(this.data);
+    // this.changeDetectorRef.detectChanges();
+    // this.systemDialogService.onOpenViewFileDialog.next(obj);
     // this.fileService.getFile(obj.fileID, true).subscribe(item => {
     //   if (item) {
     //     this.changeDetectorRef.detectChanges();
@@ -44,7 +43,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
-    this.files = JSON.parse(this.data);
+ //   this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
   }
 

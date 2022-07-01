@@ -40,7 +40,7 @@
 <ng-container *ngIf="files && !hideThumb">
   <div class="mb-5">
     <thumbnail
-    [data]="getJSONString(files)"
+    [files]="files"
   ></thumbnail>
   </div>
 </ng-container>

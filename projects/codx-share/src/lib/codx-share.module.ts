@@ -20,7 +20,8 @@ import { Readmorev2Component } from './components/readmorev2/readmorev2.componen
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { TruncatePipe } from './pipe/truncate.pipe';
 import { CalendarNotesComponent } from './components/calendar-notes/calendar-notes.component';
-import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
+import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -40,6 +41,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
+  CalendarDateComponent
 ];
 
 
@@ -49,8 +51,38 @@ const T_Pipe: Type<any>[] = [
 
 
 @NgModule({
-  declarations:[ T_Component,T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule , ReactiveFormsModule , CodxCoreModule],
+  declarations: [T_Component, T_Pipe],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }
+/*
+
+const T_Moudule: Type<any>[] = [
+  CoreModule,
+  CommonModule,
+  MomentModule,
+  NgxSkeletonLoaderModule,
+  CodxCoreModule,
+  NgbModule,
+  ERMModule,
+  RouterModule,
+  InlineSVGModule,
+  NgxSkeletonLoaderModule,
+  FormsModule,
+  TabModule,
+  DateRangePickerModule 
+]
+@NgModule({
+  imports: [
+    T_Moudule
+  ],
+  declarations: [
+    T_Component
+  ],
+  exports: [
+    T_Moudule,
+    T_Component
+  ],
+})
+export class SharedModule { } */

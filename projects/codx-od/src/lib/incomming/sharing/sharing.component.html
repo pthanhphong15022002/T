@@ -33,7 +33,7 @@
             </div>
             <ng-container *ngIf="data.files">
                 <thumbnail
-                  [data]="getJSONString(data.files)"
+                  [files]="data.files"
                 ></thumbnail>
               </ng-container>
             <!-- <div class="d-flex align-items-center justify-content-between mt-8 mb-8">
