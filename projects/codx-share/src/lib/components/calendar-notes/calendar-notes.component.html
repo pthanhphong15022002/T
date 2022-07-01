@@ -7,7 +7,7 @@
         <span class="icon-more_vert icon-20" placement="start" [ngbPopover]="popContentTypeCalendar"
             [autoClose]="'outside'"></span>
     </div>
-    <div class="calendar-box position-relative mt-6">
+    <div class="calendar-box position-relative">
         <div class="form-calendar">
             <div *ngIf="typeCalendar == 'week'">
                 <selectweek (onChangeWeek)="setEventWeek()" (onChangeValue)="onChangeValueSelectedWeek($event)">
