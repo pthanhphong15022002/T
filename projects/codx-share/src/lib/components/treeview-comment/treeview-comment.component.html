@@ -1,0 +1,557 @@
+<div class="d-flex align-items-center justify-content-between mt-3 mb-3">
+    <div class="d-flex align-items-center">
+        <ng-container *ngIf="rootData.totalVote == 0">
+            <span class="icon-circle-primary">
+                <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
+                    style="width: 20px; height: 20px;">
+            </span>
+            <span class="ms-2">{{rootData.totalVote}}</span>
+        </ng-container>
+        <ng-container *ngIf="rootData.totalVote > 0">
+            <span class="icon-circle-primary">
+                <ng-container *ngIf="this.pennant == 0;else pennat1">
+                    <div class="flex">
+                        <div *ngFor="let votedType of rootData.listVoteType">
+                            <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                                <img src="/assets/themes/wp/default/img/{{(votedType|vll:'L1480':'icon'|async)}}"
+                                    alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                            </a>
+                        </div>
+                        <span class="ms-2">{{rootData.totalVote}}
+                        </span>
+                    </div>
+                </ng-container>
+                <ng-template #pennat1>
+                    <div class="flex">
+                        <div *ngFor="let votedType of rootData.listVoteType">
+                            <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                                <img src="/assets/themes/wp/default/img/{{(votedType|vll:'L1480':'icon'|async)}}"
+                                    alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                            </a>
+                        </div>
+                        <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                            <img src="/assets/themes/wp/default/img/{{(votedTypeUpdated | vll:'L1480':'icon' | async)}}"
+                                alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                        </a>
+                        <span class=""
+                            style="margin-left: 5px;font-size: 18px;margin-top: -2px;">{{rootData.totalVote}}</span>
+                    </div>
+                </ng-template>
+                <!-- <span class="ms-2 mt-1">{{rootData.totalVote}}</span> -->
+            </span>
+        </ng-container>
+    </div>
+    <div class="d-flex align-items-center text-hover-underline" (click)="showComments(rootData)">
+        <span>{{rootData.totalComment}}</span>
+        <span class="text-dark-75 ms-2">
+            <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+        </span>
+    </div>
+</div>
+<div class="row m-0 btn-comment p-2 border-top border-bottom">
+    <div class="col-6 p-0">
+        <div class="btn-like {{rootData.myVoted ? 'liked' : ''}} delay-500">
+            <div *ngIf="rootData.myVotedType == null && checkVoted == false" (click)="votePost(rootData)">
+                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
+                        style="width: 20px; height: 20px;">
+                    <span class="font-weight-bold ms-2" style="color: gray;">
+                        <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex mod icon-like">
+                <ng-container *ngFor="let item of lstData">
+                    <a class="mod-icon" (click)="votePost(rootData, item.value)">
+                        <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
+                </ng-container>
+            </div>
+            <div *ngIf="rootData.myVotedType != null" (click)="votePost(rootData, rootData.myVotedType)">
+                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                    <img src="/assets/themes/wp/default/img/{{(rootData.myVotedType | vll:'L1480':'icon' | async)}}"
+                        alt="Kiwi standing on oval" style="width: 22px; height: 22px">
+
+                    <!-- <img id="test" src="../../../assets/themes/sys/default/light/img/{{iconVote}}"
+                    alt="Kiwi standing on oval" style="width: 22px; height: 22px"> -->
+                    <div *ngIf="rootData.myVotedType == '1'">
+                        <span class="font-weight-bold ms-2" style="color: #0057FF;">
+                            <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        </span>
+                    </div>
+                    <div *ngIf="rootData.myVotedType == '2'">
+                        <span class="font-weight-bold ms-2" style="color: #FFA800;">
+                            <codx-label formName="WP_Comments" name="lblPerfect" default="Tuyệt vời"></codx-label>
+
+                        </span>
+                    </div>
+                    <div *ngIf="rootData.myVotedType == '3'">
+                        <span class="font-weight-bold ms-2" style="color: #FFA800;">
+                            <codx-label formName="WP_Comments" name="lblHaha" default="Haha"></codx-label>
+                        </span>
+                    </div>
+                    <div *ngIf="rootData.myVotedType == '4'">
+                        <span class="font-weight-bold ms-2" style="color: #FFA800;">
+                            <codx-label formName="WP_Comments" name="lblSad" default="Buồn"></codx-label>
+                        </span>
+                    </div>
+                    <div *ngIf="rootData.myVotedType == '5'">
+                        <span class="font-weight-bold ms-2" style="color: #E96200;">
+                            <codx-label formName="WP_Comments" name="lblAmgry" default="Tức giận"></codx-label>
+
+                        </span>
+                    </div>
+                    <!-- <div>
+                        <span  class="font-weight-bold ms-2" [style.color]=""></span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-6 p-0">
+        <div class="btn-com" (click)="showComments(rootData)">
+            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                <span class="icon-chat_bubble_outline icon-18"></span>
+                <span class="text-dark font-weight-bold ms-2">
+                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="isHiden" [class.isShow]="rootData.isShowComment">
+    <div class="position-relative cmt c1 feed-box mt-4" (keyup.enter)="sendComment(rootData,comments)">
+        <codx-input type="text" placeholder="Bình luận" [crrValue]="comments"
+            (valueChange)="valueChange($event,'comments')">
+        </codx-input>
+        <div class="feed-icon btn-send">
+            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                (click)="sendComment(rootData,comments)">
+                <span class="icon-send icon-18"></span>
+            </span>
+        </div>
+    </div>
+
+    <br>
+    <ng-container *ngFor="let cm of rootData.listComment">
+        <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: cm }">
+
+        </ng-container>
+    </ng-container>
+
+    <ng-template #parentComment let-data>
+        <div class="d-flex pt-2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
+            <div class="me-3">
+                <codx-img [width]="35" objectType="AD_Users" [objectId]="data?.createdBy">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column w-100  ms-4">
+                <div class="d-flex comments">
+                    <div class="comment-content level-1">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex">
+                                <a href="#" class="text-dark-75 text-hover-primary font-weight-bold">
+                                    {{data.createdName}}</a>
+                            </div>
+                            <div class="d-flex ms-4">
+                                <!-- <span class="text-muted font-weight-normal flex-grow-1 font-size-sm"
+                                    data-toggle="tooltip"
+                                    title="{{data.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{data.createdOn |
+                                    timefrom}}</span> -->
+                            </div>
+                        </div>
+                        <div class="text-dark text-comment" [innerHTML]="data?.content"></div>
+                        <div class="d-flex align-items-center comment-thumb {{data.myVoted ? 'liked' : ''}}"
+                            *ngIf="data.totalVote > 0">
+                            <span class="icon-thumb_up icon-14 text-hover-primary"></span>
+                            <span class="ms-2">{{data.totalVote}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-grow-1">
+                        <span class="text-muted font-size-sm text-hover-primary " [class.liked]="data.myVoted"
+                            (click)="voteComment(data)">
+                            <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        </span>
+                        <span class="text-muted font-size-sm text-hover-primary ms-2" (click)="replyTo(data)">
+                            <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
+                        </span>
+                    </div>
+
+                </div>
+                <ng-container *ngFor="let item of data.listComment">
+                    <!-- <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: item }">
+                </ng-container> -->
+                    <ng-container *ngTemplateOutlet="childComment context: { $implicit: item }">
+
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="data.showReply">
+                    <div class="position-relative cmt feed-box cmt-cmt mt-4 c3"
+                        (keyup.enter)="replyComment(data,repComment)">
+                        <codx-input type="text" placeholder="Trả lời" [crrValue]="repComment"
+                            (valueChange)="valueChange($event,'repComment')">
+                        </codx-input>
+                        <div class="feed-icon btn-send">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="replyComment(data,repComment)">
+                                <span class="icon-send icon-18"></span>
+                            </span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-template>
+    <!-- hover -->
+    <!-- <ng-template #popContent>
+        <div class="d-flex mod">
+            <ng-container *ngFor="let item of lstData">
+                <a class="mod-icon" (click)="votePost(rootData, item.value)">
+                    <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
+            </ng-container>
+        </div>
+
+    </ng-template> -->
+    <!-- hover -->
+
+    <!-- hover myVoted list icon -->
+    <ng-template #popContentListVoted let-modal>
+        <div class="modal-header" ar>
+            <h4 class="modal-title">
+                <codx-label formName="Comments" name="lblList" default="Danh sách"></codx-label>
+            </h4>
+            <button _ngcontent-enr-c968="" type="button" aria-label="Close" class="close"
+                (click)="modal.dismiss('Cross click')"><i _ngcontent-enr-c968=""
+                    class="icon-close icon-20 text-dark text-hover-primary"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="tab-horizone mt-2">
+                <ul class="nav nav-tabs nav-tabs-line">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tab_1">
+                            <div class="flex">
+                                <div class="">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblAll" default="Tất cả"></codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px;">
+                                    <span class="nav-text d-block h-20px">{{rootData.totalVote}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab_2">
+                            <div class="flex">
+                                <div class="">
+                                    <img class="h-20px w-20px"
+                                        src="../../../assets/themes/sys/default/light/img/WP_Vote_Like.svg">
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblLike" default="Thích"></codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">{{countVote_Like}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab_3">
+                            <div class="flex">
+                                <div class="">
+                                    <img class="h-20px w-20px"
+                                        src="../../../assets/themes/sys/default/light/img/WP_Vote_Amazing.svg">
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblGreat" default="Tuyệt vời">
+                                        </codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">{{countVote_Amazing}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab_4">
+                            <div class="flex">
+                                <div class="">
+                                    <img class="h-20px w-20px"
+                                        src="../../../assets/themes/sys/default/light/img/WP_Vote_Happy.svg">
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblSmile" default="Ha ha"></codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">{{countVote_Happy}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab_5">
+                            <div class="flex">
+                                <div class="">
+                                    <img class="h-20px w-20px"
+                                        src="../../../assets/themes/sys/default/light/img/WP_Vote_Sad.svg">
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblSad" default="Buồn"></codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">{{countVote_Sad}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab_6">
+                            <div class="flex">
+                                <div class="">
+                                    <img class="h-20px w-20px"
+                                        src="../../../assets/themes/sys/default/light/img/WP_Vote_Angry.svg">
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">
+                                        <codx-label formName="Comments" name="lblAngry" default="Tức giận"></codx-label>
+                                    </span>
+                                </div>
+                                <div class="" style="margin-left: 5px">
+                                    <span class="nav-text d-block h-20px">{{countVote_Angry}}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-2">
+                    <div class="tab-pane fade show active" id="tab_1" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div class="d-flex align-items-center user-card py-4">
+                                <div class="me-4">
+                                    <codx-img [width]="40" [objectId]="userVoted.createdName" objectType="HR_Employees">
+                                    </codx-img>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                    <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                    <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
+                                </div>
+                                <div class="ms-6" style="margin-right: 45px">
+                                    <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                        alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_2" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div *ngIf="userVoted.voteType == 1">
+                                <div class="d-flex align-items-center user-card py-4">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                        <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                        <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                    <div class="ms-6" style="margin-right: 45px">
+                                        <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                            alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_3" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div *ngIf="userVoted.voteType == 2">
+                                <div class="d-flex align-items-center user-card py-4">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                        <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                        <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                    <div class="ms-6" style="margin-right: 45px">
+                                        <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                            alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_4" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div *ngIf="userVoted.voteType == 3">
+                                <div class="d-flex align-items-center user-card py-4">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                        <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                        <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                    <div class="ms-6" style="margin-right: 45px">
+                                        <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                            alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_5" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div *ngIf="userVoted.voteType == 4">
+                                <div class="d-flex align-items-center user-card py-4">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                        <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                        <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                    <div class="ms-6" style="margin-right: 45px">
+                                        <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                            alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_6" role="tabpanel">
+                        <div *ngFor="let userVoted of lstUserVoted">
+                            <div *ngIf="userVoted.voteType == 5">
+                                <div class="d-flex align-items-center user-card py-4">
+                                    <div class="me-4">
+                                        <codx-img [width]="40" [objectId]="userVoted.createdName"
+                                            objectType="HR_Employees">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark font-weight-bold">{{userVoted.createdName}}</div>
+                                        <div class="text-dark-75 font-weight-bold">{{userVoted.positionName}}</div>
+                                        <div class="text-muted">{{userVoted.createdOn | date:'dd-MM-yyy HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                    <div class="ms-6" style="margin-right: 45px">
+                                        <img src="/assets/themes/wp/default/img/{{(userVoted.voteType|vll:'L1480':'icon'|async)}}"
+                                            alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">
+                <codx-label formName="Comments" name="lblClose" default="Đóng"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+    <!-- hover myVoted list icon -->
+
+
+    <!-- comments lv2  -->
+    <ng-template #childComment let-childData>
+        <div class="d-flex mt-2" [attr.dt]="setDicData(childData)">
+            <div class="me-3">
+                <codx-img [width]="40" objectType="AD_Users" [objectId]="childData?.createdBy">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column w-100  ms-4">
+                <div class="d-flex comments">
+                    <div class="comment-content level-1">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex">
+                                <a href="#" class="text-dark-75 text-hover-primary font-weight-bold">
+                                    {{childData.createdName}}</a>
+                            </div>
+                            <div class="d-flex ms-4">
+                                <!-- <span class="text-muted font-weight-normal flex-grow-1 font-size-sm"
+                                    childData-toggle="tooltip"
+                                    title="{{childData.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{childData.createdOn |
+                                    timefrom}}</span> -->
+                            </div>
+                        </div>
+                        <div class="text-dark text-comment" [innerHTML]="childData?.content"></div>
+                        <div class="d-flex align-items-center comment-thumb {{childData.myVoted ? 'liked' : ''}}"
+                            *ngIf="childData.totalVote > 0">
+                            <span class="icon-thumb_up icon-14 text-hover-primary"></span>
+                            <span class="ms-2">{{childData.totalVote}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-grow-1">
+                        <span class="text-muted font-size-sm text-hover-primary " [class.liked]="childData.myVoted"
+                            (click)="voteComment(childData)">
+                            <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        </span>
+                        <span class="text-muted font-size-sm text-hover-primary ms-2" (click)="replyTo(childData)">
+                            <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
+                        </span>
+                    </div>
+                </div>
+                <ng-container *ngIf="childData.totalRecord > 0">
+                    <div class="align-items-center" [class]="childData.isShowComment?'isHiden':'isShow'">
+                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon rotate-180">
+                            <span class="icon-reply icon-18"></span>
+                        </span>
+                        <span class="text-dark-75" (click)="loadSubComment(childData)">
+                            {{childData.totalRecord}}
+                            <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
+                        </span>
+                    </div>
+                </ng-container>
+                <ng-container *ngFor="let item of childData.listComment">
+                    <ng-container *ngTemplateOutlet="parentComment context: { $implicit: item }">
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="childData.showReply">
+                    <div class="position-relative cmt feed-box cmt-cmt mt-4 c3"
+                        (keyup.enter)="replyComment(childData,repComment)">
+                        <codx-input type="text" placeholder="Trả lời" [crrValue]="repComment"
+                            (valueChange)="valueChange($event,'repComment')">
+                        </codx-input>
+                        <div class="feed-icon btn-send">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="replyComment(childData,repComment)">
+                                <span class="icon-send icon-18"></span>
+                            </span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-template>

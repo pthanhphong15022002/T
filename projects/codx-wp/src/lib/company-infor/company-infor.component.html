@@ -1,0 +1,18 @@
+<codx-views #codxViews [views]="views" [showToolBar]="false">
+</codx-views>
+<ng-template #panelLeftRef>
+  <div class="p-9">
+    <ng-container *ngIf="dataEdit">
+      <div class="row" [innerHTML]="dataEdit.contents">
+
+      </div>
+    </ng-container>
+    <ng-container *ngIf="codxViews.userPermission.create">
+      <div class="more-function">
+        <div class="d-flex flex-column">
+          <a (click)="clickShowPopupEdit()" class="btn btn-icon btn-primary"><i class=" icon-edit fs-1"></i></a>
+        </div>
+    </div>
+    </ng-container>
+</div>
+</ng-template>

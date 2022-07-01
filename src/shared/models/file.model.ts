@@ -1,5 +1,17 @@
 import { AppRoutingModule } from "src/app/app-routing.module";
 
+export class DialogAttachmentType {
+    objectType: any;
+    objectId: any;
+    folderType: any;
+    functionID: any;
+    type: any;
+    popup: any;
+    hideBtnSave: any;
+    hideUploadBtn: any;
+    hideFolder: any;
+}
+
 export class DataReturn {
     status: any;
     message: any;
@@ -202,6 +214,7 @@ export class View {
 export class Permission {
     recID: string;
     id: string;
+    memberType:string;
     objectName: string;
     objectID: string;
     objectType: string;
@@ -232,6 +245,7 @@ export class Permission {
     form: string;
     createdOn: Date;
     approvalStatus: string;
+    createdBy: string;
 }
 
 export class FileDownload {

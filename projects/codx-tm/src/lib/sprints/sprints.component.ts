@@ -148,6 +148,10 @@ export class SprintsComponent extends UIComponent {
         [this.view.dataService.dataSelected, 'add'],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
+      
       //dialog.close();
     });
   }
@@ -210,7 +214,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) {}
+  sendemail(data) { }
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -243,12 +247,12 @@ export class SprintsComponent extends UIComponent {
         '',
         obj
       )
-      // .subscribe((dt: any) => {
-      //   var that = this;
-      //   dt.close = function (e) {
-      //     return that.closePopup(e, that);
-      //   };
-      // });
+    // .subscribe((dt: any) => {
+    //   var that = this;
+    //   dt.close = function (e) {
+    //     return that.closePopup(e, that);
+    //   };
+    // });
   }
 
   // closePopup(e,t:SprintsComponent){
@@ -259,7 +263,7 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigate('', this.urlView);
+    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
   }
 
   changeView(evt: any) {

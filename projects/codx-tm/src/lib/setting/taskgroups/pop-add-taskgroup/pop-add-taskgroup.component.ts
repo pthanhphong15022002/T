@@ -252,16 +252,12 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   addRow() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save()
       .subscribe((res) => {
         if (res.save) {
-         // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
           this.changDetec.detectChanges();
-          // this.dialog.dataService.setDataSelected(res[0]);
-      //    this.dialog.close();
-          //   this.notiService.notifyCode('E0528');
         }
       });
     this.closePanel();
@@ -274,7 +270,6 @@ export class PopAddTaskgroupComponent implements OnInit {
         if (res.update) {
           this.dialog.dataService.setDataSelected(res.update[0]);
           this.dialog.close();
-          //   this.notiService.notifyCode('E0528');
         }
       });
   }

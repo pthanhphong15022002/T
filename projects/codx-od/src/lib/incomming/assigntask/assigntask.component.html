@@ -184,8 +184,8 @@
             </div> -->
         </div>
         <div class="p-2">
-            <attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1" popup="0" hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment>
-            <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>        
+            <codx-attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1" popup="0" hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></codx-attachment>
+            <codx-thumbnail [files]="data.files"></codx-thumbnail>        
         </div>
         <div class="form-group mt-3 p-2">
             <div class="d-flex align-items-center justify-content-between">
@@ -254,5 +254,5 @@
     </div>
 </div>
 
-<attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment>
+<codx-attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></codx-attachment>
 

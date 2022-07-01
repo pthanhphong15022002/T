@@ -18,7 +18,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
   columnsGrid;
   funcID = '';
   predicate = 'TransID=@0';
-  dataValue = '628b54be8549d257de3f4fa9';
+  dataValue = '';
   button?: ButtonModel;
   formModel: any = '';
   itemSelected: any;
@@ -43,10 +43,11 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.funcID = params['funcID'];
     })
+
   }
 
   onInit(): void {
-    // this.getQueryParams();
+    this.getQueryParams();
 
     this.button = {
       id: 'btnAdd',
@@ -114,6 +115,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params) {
         this.recID = params.recID;
+        this.dataValue = this.recID;
       }
     });
   }
@@ -156,7 +158,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
   }
 
   edit(data) {
-    if(data) {
+    if (data) {
       this.view.dataService.dataSelected = data;
     }
 
@@ -167,9 +169,9 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openForm(PopupAddUpdate,
         'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.dataSelected, 'edit'], '', option
       );
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 

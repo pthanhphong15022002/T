@@ -12,6 +12,12 @@ import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component
 })
 export class RangesKanbanComponent implements OnInit {
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
+  @ViewChild("itemRangeID", { static: true }) itemRangeID: TemplateRef<any>;
+  @ViewChild("itemRangeName", { static: true }) itemRangeName: TemplateRef<any>;
+  @ViewChild("itemNote", { static: true }) itemNote: TemplateRef<any>;
+  @ViewChild("itemRange", { static: true }) itemRange: TemplateRef<any>;
+  @ViewChild("itemCreatedBy", { static: true }) itemCreatedBy: TemplateRef<any>;
+  @ViewChild("itemCreatedOn", { static: true }) itemCreatedOn: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
@@ -23,16 +29,16 @@ export class RangesKanbanComponent implements OnInit {
   itemSelected: any;
   constructor(private dt: ChangeDetectorRef,
     private callfunc: CallFuncService, private notiService: NotificationsService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'rangeID', headerText: 'Mã', width: 200 },
-      { field: 'rangeName', headerText: 'Mô tả', width: 250 },
-      { field: 'note', headerText: 'Ghi chú', width: 200 },
-      { field: 'rangeID', headerText: 'Khoảng thời gian', width: 200 },
-      { field: 'createdBy', headerText: 'Người tạo', width: 180 },
-      { field: 'createdOn', headerText: 'ngày tạo', width: 150 },
+      { field: 'rangeID', width: 200, headerTemplate: this.itemRangeID  },
+      { field: 'rangeName', width: 250, headerTemplate: this.itemRangeName },
+      { field: 'note', width: 200 , headerTemplate: this.itemNote},
+      { field: 'rangeID', width: 200, headerTemplate: this.itemRange },
+      { field: 'createdBy', width: 200, headerTemplate: this.itemCreatedBy },
+      { field: 'createdOn', width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
 
     ];
@@ -82,7 +88,6 @@ export class RangesKanbanComponent implements OnInit {
       model: {
         resources: this.columnsGrid,
         template: this.grid,
-
       }
     }];
     // this.view.dataService.methodSave = 'AddRangeKanbanAsync';
@@ -98,7 +103,7 @@ export class RangesKanbanComponent implements OnInit {
       option.Width = '750px'; // s k thấy gửi từ ben đây,
 
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, [this.view.dataService.dataSelected, 'add'], option);
-      
+
     });
   }
 
@@ -123,17 +128,17 @@ export class RangesKanbanComponent implements OnInit {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0][0];
     opt.methodName = 'DeleteRangesKanbanAsync';
-    
+
     opt.data = itemSelected.rangeID;
     return true;
   }
-  
+
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;
   }
   requestEnded(evt: any) {
-   this.dialog && this.dialog.close();
+    this.dialog && this.dialog.close();
   }
   aaa(val: any) {
     console.log(val);

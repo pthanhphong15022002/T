@@ -17,6 +17,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   formType = '';
   formModel: any;
   data: any;
+  header = 'Thêm mới sổ tay';
 
   noteBooks: NoteBooks = new NoteBooks();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -32,6 +33,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.formType = dt?.data[1];
     this.formModel = dialog?.formModel;
     if (this.formType == 'edit') {
+      this.header = 'Cập nhật sổ tay';
       this.noteBooks = this.dialog.dataService?.dataSelected;
       this.data = this.dialog.dataService?.dataSelected;
     }
@@ -94,25 +96,30 @@ export class AddUpdateNoteBookComponent implements OnInit {
   }
 
   updateNoteBook() {
-    this.api.exec<any>(
-      'ERM.Business.WP',
-      'NoteBooksBusiness',
-      'UpdateNoteBookAsync',
-      [this.data?.recID, this.noteBooks]
-    ).subscribe((res) => {
-      if (res) {
-        this.imageUpload
-          .updateFileDirectReload(this.data?.recID)
-          .subscribe((result) => {
-            if (result) {
-              this.loadData.emit();
-              this.dialog.close();
-              this.changeDetectorRef.detectChanges();
-            }
-          });
-        this.dialog.close();
-        this.changeDetectorRef.detectChanges();
-      }
+    this.dialog.dataService.save().subscribe(res => {
+      this.dialog.dataService.setDataSelected(res);
+      this.loadData.emit();
+      this.dialog.close();
     })
+    // this.api.exec<any>(
+    //   'ERM.Business.WP',
+    //   'NoteBooksBusiness',
+    //   'UpdateNoteBookAsync',
+    //   [this.data?.recID, this.noteBooks]
+    // ).subscribe((res) => {
+    //   if (res) {
+    //     this.imageUpload
+    //       .updateFileDirectReload(this.data?.recID)
+    //       .subscribe((result) => {
+    //         if (result) {
+    //           this.loadData.emit();
+    //           this.dialog.close();
+    //           this.changeDetectorRef.detectChanges();
+    //         }
+    //       });
+    //     this.dialog.close();
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
   }
 }

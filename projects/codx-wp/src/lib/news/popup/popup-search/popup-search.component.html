@@ -1,0 +1,67 @@
+
+    <div class="row mt-6">
+        <div class="col-4">
+            <div class="search-box d-flex justify-content-between">
+                <input type="text" class="form-control" #search />
+                <button class="btn btn-icon btn-white" (click)="clickSearchElectic(search.value)">
+                    <i class="icon-search fs-1 text-dark"></i>
+                </button>
+            </div>
+            <div class="form-group d-flex align-items-center mt-3">
+                <codx-input #checkbox type="switch" id="switch" [checked]="false" labelPosition="Before" [disabled]="false"
+                    class="test-switch"></codx-input>
+                <div class="ms-3 text-dark" for="switch">
+                    <codx-label name="lblMyPost" default="Bài viết của tôi"></codx-label>
+                </div>
+            </div>
+            <div class="fs-6 text-dark mt-6 fw-bold">
+                <codx-label name="lblCategory" default="Phân loại"></codx-label>
+            </div>
+            <div class="form-group mt-3">
+                <div class="control mt-3">
+                    <codx-input type="radio" name="radio" label="Tất cả" [checked]="true" labelPosition="After"
+                        [disabled]="false" class="ml-6" [ControlName]="'All'"></codx-input>
+                </div>
+                <div class="control mt-1" *ngFor="let vll of listValueList">
+                    <codx-input type="radio" name="radio" [label]="vll.text" [checked]="false" labelPosition="After"
+                        [disabled]="false" class="ml-6" [ControlName]="vll.value"></codx-input>
+                </div>
+            </div>
+            <div class="fs-6 text-dark mt-6 fw-bold">
+                <codx-label name="lblDateNews" default="Ngày tin tức"></codx-label>
+            </div>
+            <div class="form-group row mt-2">
+                <div class="col-6">
+                    <codx-input label="Từ ngày" type="datetime" field="datetime" placeholder="datetime" dataformat="d">
+                    </codx-input>
+                </div>
+                <div class="col-6">
+                    <codx-input label="Đến ngày" type="datetime" field="datetime" placeholder="datetime" dataformat="d">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="fs-6 text-dark mt-6 fw-bold">
+                <codx-label name="lblTag" default="Tag #"></codx-label>
+            </div>
+            <div class="mt-2">
+                <div class="badge-group">
+                    <span *ngFor="let item of listTag">
+                        <button class="tag-item align-items-center mb-1 me-1" (click)="clickTag(item)"
+                            [class.isActive]="item.isChecked">
+                            <span *ngIf="item.isChecked"><i class="icon icon-check icon-16"></i></span>
+                            <span>{{item.text}}</span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 h-500">
+            <p *ngIf="totalRowCount>0">
+                <span>{{totalRowCount}} </span>
+                <span>
+                    <codx-label name="lblResult" default="kết quả tìm được"></codx-label>
+                </span>
+            </p>
+            <app-electic-search #templateElectic></app-electic-search>
+        </div>
+    </div>
