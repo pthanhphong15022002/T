@@ -19,8 +19,8 @@ export class LayoutComponent extends LayoutBaseComponent {
 
     super(inject);
     //this.aside = true;
-    this.asideFixed = true;
-    this.toolbar = false;
+    // this.asideFixed = true;
+    // this.toolbar = false;
 
 
     //this.codxService.init(this.module);
