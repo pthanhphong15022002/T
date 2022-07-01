@@ -38,7 +38,6 @@ export class MyDashboardComponent implements OnInit {
     color: '#fcde0b',
   };
   // custom code start
-
   public load(args: ILoadedEventArgs): void {
     let selectedTheme: string = location.hash.split('/')[1];
     selectedTheme = selectedTheme ? selectedTheme : 'Material';

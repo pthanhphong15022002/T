@@ -57,7 +57,7 @@ import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.co
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { MwpViewDetailComponent } from './mwp/mwp-view-detail/mwp-view-detail.component';
 import { MwpPopupAddComponent } from './mwp/mwp-popup-add/mwp-popup-add.component';
-import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge'; 
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 export const routes: Routes = [
   {
     path: '',
@@ -216,6 +216,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+    CircularGaugeModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

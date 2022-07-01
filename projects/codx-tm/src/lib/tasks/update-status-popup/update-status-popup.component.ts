@@ -59,6 +59,19 @@ export class UpdateStatusPopupComponent implements OnInit {
     );
     this.changeDetectorRef.detectChanges();
   }
+  changeEstimated(data){
+    // var num = Number.parseInt(data.data)
+    // if (data.data && num) {
+    //   this.task[data.field] = data.data;
+    //   var estimated = num * 3600000;
+    //   var timeComplete = this.task.completedOn.getTime() + estimated;
+    //   this.task.completedOn = moment(new Date(timeComplete)).toDate();
+    // }else{
+    //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
+    //   this.notiService.notify("Giá trị nhập vào không phải là 1 số !")
+    // }
+    // this.changeDetectorRef.detectChanges();
+  }
 
   beforeSave(op: any) {
     var data = [];
