@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CallFuncService } from 'codx-core';
+import { FileService } from '@shared/services/file.service';
+import { CallFuncService, NotificationsService } from 'codx-core';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -15,12 +16,54 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
+    private fileService: FileService,
+    private notificationsService: NotificationsService,
   ) {
 
   }
   ngOnInit(): void {    
    // this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
+  }
+
+  checkDownloadRight(file) {
+    return file.download;;
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  async download(file): Promise<void> {
+    var id = file.recID;
+    var that = this;
+    if (this.checkDownloadRight(file)) {
+      this.fileService.downloadFile(id).subscribe(async res => {
+        if (res && res.content != null) {
+          let json = JSON.parse(res.content);
+          var bytes = that.base64ToArrayBuffer(json);
+          let blob = new Blob([bytes], { type: res.mimeType });
+          let url = window.URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", res.fileName);
+          link.style.display = "none";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+    }
+    else {
+      this.notificationsService.notify("Bạn không có quyền download file này");
+    }
   }
 
   openFile(file) {
