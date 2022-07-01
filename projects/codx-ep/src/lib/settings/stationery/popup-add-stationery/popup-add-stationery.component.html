@@ -132,7 +132,7 @@
                         [crrValue]="dialogStationery.value.owner"
                         ngDefaultControl
                         field="owner"
-                        refValue="CbxName['Owner']"
+                        refValue="CbxName['Users']"
                         (valueChange)="valueOwnerChange($event)"
                       >
                       </codx-input>
@@ -158,10 +158,9 @@
                       type="textarea"
                       class="test-textarea"
                       field="memo"
+                      ControlName="Memo"
+                      placeholder="textarea"
                       [crrValue]="dialogStationery.value.memo"
-                      placeholder=""
-                      rows="3"
-                      ControlName="memo"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -203,40 +202,31 @@
             </ng-template>
           </e-tabitem>
           <e-tabitem [header]="headerText[1]">
-            <ng-template #gridTemplate>
-              <h1>
-                <codx-label
-                  name="lblStationaries"
-                  default="Danh sách văn phòng phẩm"
-                  [formModel]="dialog.formModel"
-                ></codx-label>
-              </h1>
-              <codx-gridview
-                #gridView
-                [columnsGrid]="columnGrid"
-                [allowSorting]=""
-                [sortSettings]=""
-                [allowGrouping]=""
-                [groupSettings]=""
-                [editSettings]=""
-                [selectionOptions]=""
-                [rowHeight]="40"
-                [pageSize]="10"
-                funcId="EPS21"
-                assemblyName="EP"
-                entityName="EP_Resources"
-                className="ResourcesBusiness"
-                method="GetListAsync"
-                predicate="ResourceType=@0"
-                dataValue="6"
-                [pageSize]="15"
-                height="500px"
-                [showColumnMenu]="true"
-                [filterSettings]=""
-                [allowFiltering]=""
-                [allowResizing]=""
-              >
-              </codx-gridview>
+            <ng-template #content>
+              <div class="d-flex justify-content-end">
+                <span
+                  class="icon-add_circle text-primary icon-20"
+                  (click)="openPopupDevice(popupDevice)"
+                ></span>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Định mức</th>
+                    <th scope="col">Cấp bậc nhân viên</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1/Người/tháng</td>
+                    <td>Tất cả nhân viên</td>
+                  </tr>
+                  <tr>
+                    <td>2/Từng lần đăng ký</td>
+                    <td>Tất cả nhân viên</td>
+                  </tr>
+                </tbody>
+              </table>
             </ng-template>
           </e-tabitem>
           <e-tabitem [header]="headerText[2]">
@@ -438,16 +428,15 @@
     </button>
   </div>
 </ng-template>
-
-<ng-template #popupDevice let-modal>
+<ng-template #popupDevice let-dialog>
   <!--begin::Card body-->
   <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
           <codx-label
-            name="lblEquipments"
-            default="Thiết bị"
+            name="lblEquipment"
+            default="Thiết lập định mức VPP"
             [formModel]="dialog.formModel"
           ></codx-label>
         </h2>
@@ -455,7 +444,7 @@
           type="button"
           class="btn btn-xs btn-icon btn-light btn-hover-primary"
           aria-label="Close"
-          (click)="modal.dismiss()"
+          (click)="dialog.close()"
         >
           <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
@@ -463,50 +452,95 @@
       <div class="text-dark-50">
         <codx-label
           name="lblChooseEquipments"
-          default="Chọn thiết bị đã được tích hợp sẵn"
+          default="Cho phép thiết lập định mức cho theo cấp bậc nhân viên"
           [formModel]="dialog.formModel"
         ></codx-label>
       </div>
     </div>
   </div>
   <div class="modal-body">
-    <div class="py-2" *ngFor="let item of tmplstDevice">
-      <!--begin::Item-->
-      <div class="d-flex flex-stack">
-        <div class="d-flex">
-          <span class="text-dark icon-wifi me-2 p-1"></span>
-          <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
-              item.text
-            }}</a>
-          </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <div class="form-check form-check-solid form-switch">
-            <input
-              class="form-check-input w-35px h-20px"
-              type="checkbox"
-              id="googleswitch"
-              [checked]="item.isSelected"
-              (change)="checkedChange($event, item)"
-            />
-            <label class="form-check-label" for="googleswitch"></label>
-          </div>
-        </div>
+    <div class="d-flex row align-items-center mb-2">
+      <div class="col-8">
+        <codx-label
+          class="fw-bold"
+          default="Căn cứ"
+          fiedName="GroupID"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <!--begin::Input-->
+        <codx-input
+          type="combobox"
+          class="form-control"
+          [crrValue]=""
+          [refValue]=""
+        >
+        </codx-input>
+        <!--end::Input-->
       </div>
-      <!--end::Item-->
-      <!-- <div class="separator separator-dashed my-5"></div> -->
+      <div class="col-4">
+        <codx-label
+          class="fw-bold"
+          default="Số lượng"
+          fiedName="ResourceID"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <!--begin::Input-->
+        <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
+            dataformat="t" (valueChange)="valueStartTimeChange($event)">
+          </codx-input> -->
+        <codx-input
+          type="number"
+          field="number"
+          placeholder="Input type number"
+          value="0"
+          min="0"
+          max="50"
+        >
+        </codx-input>
+        <!--end::Input-->
+      </div>
+    </div>
+
+    <div class="d-flex flex-column mb-4">
+      <!--begin::Label-->
+      <codx-label
+        class="fw-bold"
+        default="Cấp bậc"
+        fiedName="Location"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <!--end::Label-->
+      <!-- <codx-combobox service="SYS" name="combobox" placeholder="" ngDefaultControl refValue="Users"
+          file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="dialogStationery">
+        </codx-combobox> -->
+      <codx-input type="combobox" name="combobox" ControlName="Location">
+      </codx-input>
     </div>
     <!--end::Card body-->
   </div>
-  <div class="modal-footer" (click)="modal.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
+  <div
+    class="modal-footer d-flex justify-content-end align-items-end"
+    (click)="dialog.close()"
+  >
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-primary">
+        <codx-label
+          name="lblSaveAdd"
+          default="Lưu&Thêm"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div>
   </div>
 </ng-template>
 <ng-template #popupColor let-modal>

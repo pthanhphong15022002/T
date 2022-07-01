@@ -167,9 +167,9 @@
             </div>
 
             <div class="d-flex align-items-center file-item mt-5">
-              <attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
                 hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
-                (fileAdded)="fileAdded($event)"></attachment>
+                (fileAdded)="fileAdded($event)"></codx-attachment>
             </div>
           </ng-template>
         </e-tabitem>

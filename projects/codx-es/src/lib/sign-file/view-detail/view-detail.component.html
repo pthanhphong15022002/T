@@ -3,15 +3,17 @@
   [header]="header"
   [body]="body"
   [footer]="footer"
-  
 >
   <ng-template #header>
     <div class="vmd-detail">
-      <div class="d-flex justify-content-end flex-grow-1 position-relative">
+      <div class="d-flex justify-content-end flex-grow-1">
         <div>
-          <div class="send-request position-relative">
-            <button class="d-flex justify-content-between" *ngIf="canRequest">
-              <div class="icon-forward icon"></div>
+          <div class="position-relative">
+            <button
+              class="d-flex send-request justify-content-between"
+              *ngIf="canRequest"
+            >
+              <div class="icon-reply_all icon"></div>
               <codx-label
                 name="lblSendToApprove"
                 [formModel]="itemDetailTemplate.formModel"
@@ -19,7 +21,7 @@
               ></codx-label>
             </button>
           </div>
-          <div class="w-100">
+          <div class="">
             <span
               class="badge badge-square badge-md rounded"
               [style.background-color]="
@@ -51,30 +53,6 @@
           >
             <span class="icon-more_horiz icon-18"></span>
           </button>
-          <!-- <div
-            class="dropdown-menu position-absolute test"
-            [class.show]="openNav"
-            aria-labelledby="dropdownMenuButton"
-          >
-            <a class="dropdown-item">
-              <div class="d-flex align-items-center">
-                <span class="icon-edit text-warning icon-18"></span>
-                <span class="ms-3">Edit</span>
-              </div>
-            </a>
-            <a class="dropdown-item">
-              <div class="d-flex align-items-center">
-                <span class="icon-list_alt text-primary icon-18"></span>
-                <span class="ms-3">Watch Detail</span>
-              </div>
-            </a>
-            <a class="dropdown-item">
-              <div class="d-flex align-items-center">
-                <span class="icon-clear text-danger icon-18"></span>
-                <span class="ms-3">Remove</span>
-              </div>
-            </a>
-          </div> -->
         </div>
       </div>
     </div>
@@ -115,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex mt-1">
+    <div class="d-flex mt-1 flex-grow-1">
       <div class="d-flex me-6">
         <codx-label
           name="lblDateRequest"
@@ -213,7 +191,7 @@
           [class.active]="itemDetailStt === '1'"
           (click)="clickChangeItemViewStatus('1', itemDetail?.recID)"
         >
-          <i class="icon-description icon-16"></i>
+          <i class="icon-info icon-16"></i>
           <codx-label
             name="lblAbstract"
             [formModel]="itemDetailTemplate.formModel"
@@ -252,7 +230,7 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="container" style="height: 800px">
+    <div class="container">
       <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
         {{ itemDetail?.abstract }}
       </div>
@@ -271,155 +249,142 @@
           </codx-treeview>
         </ng-container>
       </div>
-      <div class="cdx-timeline-vertical mt-2" *ngIf="itemDetailStt == '3'">
-        <div class="timeline timeline-3">
-          <div class="timeline-items">
-            <div
-              class="timeline-item"
-              *ngFor="let part of processes; let index = index"
-            >
-              <div class="timeline-media d-flex flex-column flex-grow-1">
-                <div class="stepper-label">
-                  <h3 class="stepper-title">
-                    {{ index + 1 }}
-                  </h3>
-                </div>
-              </div>
-              <div class="title-space d-flex flex-row flex-grow-1 mr-2">
-                <div class="title">
-                  {{
-                    (part.stepType | vll: "ES002":"text" | async)?.toUpperCase()
-                  }}
-                </div>
+      <div *ngIf="itemDetailStt == '3'">
+        <div class="row w-100" *ngFor="let part of process; let index = index">
+          <div class="col-12">
+            <div class="codx-approval">
+              <div class="codx-approval-step step-test pb-3">
                 <div
-                  class="icon-check_circle"
-                  *ngIf="part.isActived.length != 0"
-                ></div>
-              </div>
-              <div class="approvers_Info w-100">
-                <div
-                  *ngFor="let approver of part.approvers"
-                  class="approver_Info d-flex justify-content-around flex-grow-1 w-100"
+                  class="codx-approval-header d-flex align-items-center mb-4"
                 >
-                  <div class="d-flex flex-grow-1">
-                    <div class="me-4">
-                      <codx-img
-                        #image
-                        objectId="{{ approver.approver }}"
-                        objectType="AD_Users"
-                      >
-                      </codx-img>
-                    </div>
-                    <div class="approver-info">
-                      <span>
-                        {{ approver.approverName }}
-                      </span>
-                      <div class="align-items-center me-1">
-                        {{ approver.approverPosition }}
-                      </div>
-                      <div class="align-items-center me-1">
-                        {{ approver.comment }}
-                      </div>
-                    </div>
+                  <div
+                    class="step-number"
+                    [class.active]="part.isActived.lenght > 0 ? true : false"
+                  >
+                    {{ index + 1 }}
                   </div>
-                  <div class="d-flex show-time justify-content-end text-top">
-                    <div class="time-duration">
-                      <span
-                        *ngIf="approver.status < 3; else time_activated"
-                        class="badge badge-secondary step-status"
-                        style.color="white"
-                      >
-                        {{ approver.duration }}h
-                      </span>
-
-                      <ng-template #time_activated>
-                        <span
-                          class="badge badge-md step-status"
-                          [class.badge-primary]="
-                            approver.leadtime > approver.duration
-                          "
-                          [class.badge-danger]="
-                            approver.leadtime <= approver.duration
+                  <div class="step-title text-gray-800 fw-bold fs-4">
+                    {{ part.stepType | vll: "ES002":"text" | async }}
+                  </div>
+                  <div
+                    class="badge badge-success badge-sm badge-circle ms-3"
+                    [class.active]="part.isActived.lenght > 0 ? true : false"
+                  >
+                    <span class="icon-check icon-16"></span>
+                  </div>
+                </div>
+                <div
+                  class="codx-approval-content ms-17"
+                  *ngFor="let approve of part.approvers"
+                >
+                  <div
+                    class="d-flex align-items-top justify-content-between mb-3"
+                  >
+                    <codx-temp-full
+                      [imageId]="'ADMIN'"
+                      imageObjType="AD_Users"
+                      [imageWidth]="35"
+                      [title]="approve.approverName"
+                      [desc]="approve.approverPosition"
+                      [desc2]="approve.comment"
+                    >
+                    </codx-temp-full>
+                    <div class="d-flex align-items-center text-center">
+                      <div class="d-flex flex-column">
+                        <div class="text-dark fw-bold">
+                          {{ approve.status | vll: "ES003":"text" | async }}
+                        </div>
+                        <div
+                          class="badge my-1 badge-primary"
+                          *ngIf="
+                            approve.duration <= approve.leadtime;
+                            else inQueue
                           "
                         >
-                          {{ "2022-06-09T03:40:14.605+00:00" | date: "HH:mm" }}
-                          -
-                          {{
-                            setDate(
-                              "2022-06-09T03:40:14.605+00:00",
-                              approver.leadtime
-                            ) | date: "HH:mm"
-                          }}
-                        </span>
-                      </ng-template>
-
-                      <div *ngIf="approver.approvedOn ? true : false">
-                        {{ approver.approvedOn | date: "short" }}
+                          {{ getHour("2022-07-06T00:00:00Z", 0) }}
+                          -cc
+                          {{ getHour(approve.activedOn, approve.leadtime) }}
+                        </div>
+                        <ng-template #inQueue>
+                          <div class="badge badge-danger">
+                            {{ approve.leadtime }}
+                          </div>
+                        </ng-template>
+                        <div
+                          class="text-gray-600 fs-7"
+                          *ngIf="approve.approvedOn ? true : false"
+                        >
+                          {{ approve.approvedOn | date: "medium" }}
+                        </div>
+                      </div>
+                      <div class="ms-6 d-flex">
+                        <span class="icon-attach_file icon-18 me-1"></span>
+                        <span class="text-dark">
+                          {{ approve.attachments }}</span
+                        >
                       </div>
                     </div>
-                    <div class="icon icon-attach">1</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="col-1"></div>
       </div>
     </div>
   </ng-template>
 
   <ng-template #footer class="task-info">
-    <div class="tab-horizone mt-6">
-      <div class="codx_e-header">
-        <div class="d-flex align-items-center btn-tabs">
-          <button
-            class="btn btn-white text-dark me-1"
-            [class.active]="itemDetailDataStt === '1'"
-            (click)="clickChangeItemDetailDataStatus('1')"
-          >
-            <i class="icon-history icon-16"></i>
-            <span class="ms-2 fw-bold">Lịch sử</span>
-          </button>
-          <button
-            class="btn btn-white text-dark me-1"
-            [class.active]="itemDetailDataStt === '2'"
-            (click)="clickChangeItemDetailDataStatus('2')"
-          >
-            <i class="icon-message icon-16"></i>
-            <codx-label
-              name="lblDiscussion"
-              [formModel]="itemDetailTemplate.formModel"
-              default="Thảo luận"
-              class="ms-2 fw-bold"
-            ></codx-label>
-          </button>
-          <button
-            class="btn btn-white text-dark me-1"
-            [class.active]="itemDetailDataStt === '3'"
-            (click)="clickChangeItemDetailDataStatus('3')"
-          >
-            <i class="icon-attach icon-16"></i>
-            <codx-label
-              name="lblAttachment"
-              [formModel]="itemDetailTemplate.formModel"
-              default="Đính kèm"
-              class="ms-2 fw-bold"
-            ></codx-label>
-          </button>
-          <button
-            class="btn btn-white text-dark me-1"
-            [class.active]="itemDetailDataStt === '4'"
-            (click)="clickChangeItemDetailDataStatus('4')"
-          >
-            <i class="icon-insert_link icon-16"></i>
-            <codx-label
-              name="lblLink"
-              [formModel]="itemDetailTemplate.formModel"
-              default="Liên kết"
-              class="ms-2 fw-bold"
-            ></codx-label>
-          </button>
-        </div>
+    <div class="codx_e-header">
+      <div class="d-flex align-items-center btn-tabs">
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt === '1'"
+          (click)="clickChangeItemDetailDataStatus('1')"
+        >
+          <i class="icon-history icon-16"></i>
+          <span class="ms-2 fw-bold">Lịch sử</span>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt === '2'"
+          (click)="clickChangeItemDetailDataStatus('2')"
+        >
+          <i class="icon-message icon-16"></i>
+          <codx-label
+            name="lblDiscussion"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Thảo luận"
+            class="ms-2 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt === '3'"
+          (click)="clickChangeItemDetailDataStatus('3')"
+        >
+          <i class="icon-attach icon-16"></i>
+          <codx-label
+            name="lblAttachment"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Đính kèm"
+            class="ms-2 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt === '4'"
+          (click)="clickChangeItemDetailDataStatus('4')"
+        >
+          <i class="icon-insert_link icon-16"></i>
+          <codx-label
+            name="lblLink"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Liên kết"
+            class="ms-2 fw-bold"
+          ></codx-label>
+        </button>
       </div>
     </div>
   </ng-template>

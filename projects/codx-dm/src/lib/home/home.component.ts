@@ -121,9 +121,14 @@ export class HomeComponent extends UIComponent {
   }
 
   fileAdded($event) {
-
+   // this.data = event.stopImmediatePropagation;
   }
-  
+
+
+  saveFile() {
+    this.attachment.saveFiles();
+  }
+
   openFile() {
     this.attachment.uploadFile();
   }

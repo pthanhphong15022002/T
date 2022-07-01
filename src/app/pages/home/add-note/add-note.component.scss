@@ -1,20 +1,9 @@
-.body {
-    height: 430px;
+.pw-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
-.pw-menu .active a,
-.pw-menu :hover a {
-    color: #0078ff;
-    cursor: pointer
-}
-
-.pw-menu .active span,
-.pw-menu :hover span {
-    color: #0078ff;
-    cursor: pointer
-}
-
-.pin {
-    margin-left: 517px;
-    cursor: pointer
+[ngbPopover] {
+    white-space: nowrap;
 }
