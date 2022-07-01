@@ -1,4 +1,4 @@
-<codx-form [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="'Thêm Lễ/Tết/Sự kiện'" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <div class="form-group row">
       <label class="col-2 col-form-label">
@@ -32,7 +32,7 @@
           type="text"
           field="month"
           placeholder=""
-          [crrValue]="evtData.month"
+          [crrValue]="evtData?.month"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -48,7 +48,7 @@
           type="text"
           field="day"
           placeholder=""
-          [crrValue]="evtData.day"
+          [crrValue]="evtData?.day"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -65,7 +65,7 @@
           class="form-control text-white color-large"
           field="color"
           dataformat="hex"
-          [crrValue]="evtData.color"
+          [crrValue]="evtData?.color"
           (valueChange)="valueChange($event)"
         >
         </codx-colorpicker>
@@ -78,10 +78,10 @@
       </label>
       <div class="col-2 input-symbol">
         <codx-input
-          type="valuelist"
+          type="vllicon"
           refValue="L1470"
           field="symbolDayOff"
-          [crrValue]="evtData.symbol"
+          [crrValue]="evtData?.symbol"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -97,7 +97,7 @@
           type="textarea"
           field="note1"
           dataformat="ed2"
-          [crrValue]="evtData.note ? evtData.note : ''"
+          [crrValue]="evtData?.note ? evtData.note : ''"
           (valueChange)="valueChange($event)"
           placeholder="Diễn giải"
         >
@@ -111,7 +111,7 @@
           name="checkbox"
           class="text-dark"
           label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
-          [disabled]="evtData.recID ? true : false"
+          [disabled]="evtData?.recID ? true : false"
           field="set"
           [checked]="set"
           (valueChange)="valueChange($event)"

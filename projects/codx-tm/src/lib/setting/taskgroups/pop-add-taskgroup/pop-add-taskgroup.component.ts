@@ -41,7 +41,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
-      
+
     this.taskGroups = {
       ...this.taskGroups,
       ...dt?.data[0],
@@ -58,9 +58,9 @@ export class PopAddTaskgroupComponent implements OnInit {
       if (res)
         this.gridViewSetup = res
     })
-    // if (this.action === 'edit') {
-    //   this.openForm(this.taskGroups, false);
-    // }
+    if (this.action === 'edit') {
+      this.openForm(this.taskGroups, false);
+    }
   }
 
   initForm() {
@@ -227,43 +227,56 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   //save
+
+
+  beforeSave(op: any) {
+    var data = [];
+    if (this.isAddMode) {
+      op.method = 'AddTaskGroupsAsync';
+      data = [
+        this.taskGroups,
+        this.isAddMode
+      ];
+    } else {
+      op.method = 'UpdateTaskGroupsAsync';
+      data = [
+        this.taskGroups,
+        this.isAddMode
+      ];
+    }
+
+
+    op.data = data;
+    return true;
+  }
+
   addRow() {
-    var t = this;
-    this.dialog.dataService.save((opt: any) => {
-      opt.data = [this.taskGroups];
-      return true;
-    })
+    this.dialog.dataService
+      .save()
       .subscribe((res) => {
         if (res.save) {
-          this.dialog.close();
-          this.notiService.notify('Thêm mới công việc thành công'); ///sau này có mess thì gán vào giờ chưa có
+          this.dialog.dataService.setDataSelected(res.save);
+          this.dialog.dataService.afterSave.next(res);
+          this.changDetec.detectChanges();
         }
       });
-    // this.tmSv.addTaskGroup(this.taskGroups)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify(res[0].message);
-    //       t.data = res[1];
-    //     }
-    //   })
     this.closePanel();
   }
 
   updateRow() {
-    var t = this;
-    this.tmSv.updateTaskGroup(this.taskGroups)
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res) {
-          this.notiService.notify(res[0].message);
-          t.data = res[1];
+        if (res.update) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
+          this.dialog.close();
         }
-      })
-    this.closePanel();
+      });
   }
 
   lstSavecheckList: any = [];
 
-  OnSaveForm() {
+  onSave() {
     this.lstSavecheckList = [];
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {

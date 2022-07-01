@@ -1,16 +1,15 @@
-import { UpdateDetailNoteBookComponent } from './../update-detail-note-book/update-detail-note-book.component';
 import { ActivatedRoute } from '@angular/router';
-import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel } from 'codx-core';
-import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { AddDetailNoteBooksComponent } from '../add-detail-note-books/add-detail-note-books.component';
+import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
+import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
   styleUrls: ['./detail-note-books.component.scss']
 })
-export class DetailNoteBooksComponent implements OnInit, OnDestroy {
+export class DetailNoteBooksComponent extends UIComponent implements OnInit {
 
   views = [];
   recID: any;
@@ -18,35 +17,41 @@ export class DetailNoteBooksComponent implements OnInit, OnDestroy {
   item: any;
   columnsGrid;
   funcID = '';
+  predicate = 'TransID=@0';
+  dataValue = '';
+  button?: ButtonModel;
+  formModel: any = '';
+  itemSelected: any;
+  dialog!: DialogRef;
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('lstGrid') lstGrid;
-  @ViewChild('iconMoreFunc', {static : true}) iconMoreFunc;
-  @ViewChild('memo', {static : true}) memo;
-  @ViewChild('tag', {static : true}) tag;
-  @ViewChild('createdOn', {static : true}) createdOn;
-  @ViewChild('modifiedOn', {static : true}) modifiedOn;
-  constructor(private changedt: ChangeDetectorRef,
+  @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
+  @ViewChild('iconMoreFunc', { static: true }) iconMoreFunc;
+  @ViewChild('memo', { static: true }) memo;
+  @ViewChild('tag', { static: true }) tag;
+  @ViewChild('createdOn', { static: true }) createdOn;
+  @ViewChild('modifiedOn', { static: true }) modifiedOn;
+
+  constructor(private injector: Injector,
+    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
-    private callfc: CallFuncService,
-    private api: ApiHttpService,
   ) {
-      this.route.params.subscribe(params => {
-        this.funcID = params['funcID'];
-      })
-   }
+    super(injector);
+    this.route.params.subscribe(params => {
+      this.funcID = params['funcID'];
+    })
 
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
-  ngOnDestroy(): void {
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.getQueryParams();
+
+    this.button = {
+      id: 'btnAdd',
+    };
 
     this.columnsGrid = [{
       field: 'title',
@@ -64,7 +69,7 @@ export class DetailNoteBooksComponent implements OnInit, OnDestroy {
       field: 'memo',
       headerText: 'Chi tiết',
       template: this.memo,
-      innerWidth: 300
+      innerWidth: 200
     },
     {
       field: 'Đính kèm',
@@ -86,85 +91,107 @@ export class DetailNoteBooksComponent implements OnInit, OnDestroy {
     },
     {
       field: '',
-      headerText: 'Chức năng tạm',
+      headerText: 'Chức năng',
       template: this.iconMoreFunc,
-      width: 50
+      width: 150
     },
-  ];
+    ];
+  }
+
+  ngAfterViewInit(): void {
+    this.formModel = this.view?.formModel;
+
+    this.views = [{
+      type: ViewType.grid,
+      sameData: true,
+      active: true,
+      model: {
+        resources: this.columnsGrid,
+      }
+    }];
   }
 
   getQueryParams() {
     this.route.queryParams.subscribe(params => {
       if (params) {
         this.recID = params.recID;
+        this.dataValue = this.recID;
       }
     });
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: 'content',
-        active: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-          // sideBarRightRef:this.panelRightRef,
-          // widthAsideRight:'800px'
-        },
-      }
-    ];
-    // this.userPermission = this.viewbase.userPermission;
-    // console.log(this.userPermission);
-    this.changedt.detectChanges();
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
   }
 
   openFormCreateDetail(e) {
-    var obj = {
-      recID: this.recID,
-      lstNote: this.lstGrid
-    };
-    this.callfc.openForm(AddDetailNoteBooksComponent, 'Thêm mới ghi chú', 1440, 780, '', obj);
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new DialogModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      this.view.dataService.data.pop();
+      this.dialog = this.callfc.openForm(PopupAddUpdate,
+        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.data, 'add'], '', option
+      );
+      this.dialog.closed.subscribe(x => {
+        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      });
+    });
   }
+
 
   onSelected(e) {
     this.data = e.datas;
   }
 
   openFormMoreFunc(e) {
-    if(e) {
+    if (e) {
       this.item = e;
     }
   }
 
-  formUpdate(item) {
-    if(item) {
-      var obj = {
-        item: item,
-        lstNote: this.lstGrid
-      };
-      this.callfc.openForm(UpdateDetailNoteBookComponent, 'Cập nhập ghi chú', 1440, 780, '', obj);
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
     }
-  }
 
-  onDelete(recID) {
-    this.api
-    .exec<any>(
-      'ERM.Business.WP',
-      'NotesBusiness',
-      'DeleteNoteAsync',
-      recID
-    )
-    .subscribe((res) => {
-      if (res) {
-        var dt = res;
-        this.lstGrid.removeHandler(dt, "recID");
-        this.changedt.detectChanges();
-      }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new DialogModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      this.dialog = this.callfc.openForm(PopupAddUpdate,
+        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.dataSelected, 'edit'], '', option
+      );
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
-  
+  delete(data) {
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'NotesBusiness',
+        'DeleteNoteAsync',
+        data.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID)
+          this.changedt.detectChanges();
+        }
+      });
+  }
+
+
   onSearch(e) {
     this.lstGrid.onSearch(e);
     this.changedt.detectChanges();

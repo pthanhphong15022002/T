@@ -2,11 +2,11 @@
     <!-- <app-add-storage #lstStorage></app-add-storage>
     <app-update-storage #lstUpdateStorage #dataUpdateStorage></app-update-storage> -->
     <div class="pw-container mt-6">
-        <div class="d-flex align-items-center justify-content-between pw-header w-1160px">
+        <div class="d-flex align-items-center justify-content-between pw-header">
             <div class="pw-search">
                 <codx-searchbar [width]="300"></codx-searchbar>
             </div>
-            <div class="d-flex justify-content-end align-items-center pw-toolbar">
+            <div class="d-flex justify-content-end align-items-center pw-toolbar right-20">
                 <div class="text-dark me-1">
                     <codx-label name="lblSortStorage" formName="Storage" default="Sắp xếp"></codx-label>
                 </div>
@@ -17,7 +17,7 @@
                 <div class="btn btn-icon btn-white">
                     <i class="icon-sort_A-Z icon-20" (click)="sortStorage()"></i>
                 </div>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center left-20">
                     <!-- begin::Menu wrapper -->
                     <div class="btn btn-icon btn-active-light-primary position-relative"
                         id="kt_drawer_addStorage_toggle" (click)="formAddNoteBook()">
@@ -37,22 +37,17 @@
                 </div>
             </div>
         </div>
-
         <div class="pw-listcard mt-6">
             <div *ngFor="let item of view.dataService.data">
                 <div class="pw-card delay-500">
-                    <codx-card-img cardCss="border mw-300px h-100" [imageObjType]="'WP_Storages'" imgCss="" [imageId]="item.recID" [footer]="footer_card" typeMF="hover"
-                        (clickMF)="clickMF($event,data)" [formModel]="formModel">
+                    <codx-card-img cardCss="border h-100 w-250px rounded-4 " [imageId]="item.recID"
+                        imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
+                        [desc2]="item.memo" [imageObjType]="'WP_Storages'" [formModel]="formModel"
+                        (clickMF)="clickMF($event,item)">
                     </codx-card-img>
-                    <ng-template #footer_card>
-                        <div class="d-flex align-items-center py-2 px-3">
-                            <img src="../assets/themes/mwp/default/light/img/mwp_storage.svg" class="icon">
-                            <div class="d-flex flex-column title-menu">
-                                <div class="text-dark fs-6 fw-bold">{{item.title}}</div>
-                                <div class="text-gray-500 text-italic" [innerHTML]="item.memo"></div>
-                            </div>
-                        </div>
-                    </ng-template>
+
+
+                    <!-- (click)="codxService.navigate('MWP00941')" -->
                 </div>
             </div>
         </div>
@@ -86,7 +81,7 @@
         <br>
         <div class="d-flex font-1-3">
             <li></li>
-            <div (click)="onDelete(data)">
+            <div (click)="delete(data)">
                 <codx-label name="lblDeleteNote" formName="Notes" default="Xóa"></codx-label>
             </div>
         </div>

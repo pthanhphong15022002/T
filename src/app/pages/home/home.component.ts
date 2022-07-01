@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+
+import { AfterViewInit, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { LayoutService } from 'codx-core';
+import { LayoutService, ViewModel } from 'codx-core';
 @Component({
   selector: 'codx-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
-  constructor(router: Router) { }
+
+  constructor() { }
+
 
   ngOnInit(): void {
   }

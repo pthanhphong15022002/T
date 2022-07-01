@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { FolderComponent } from '../folder/folder.component';
@@ -25,9 +27,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Output() uploaded = new EventEmitter<string>();
-  @ViewChild("tmpupdate") tmpupdate : any; 
   @ViewChild("tmpdeadline") tmpdeadline : any; 
   @ViewChild("tmpFolderCopy") tmpFolderCopy : any; 
+  @ViewChild('tmpexport') tmpexport!: any;
   extractContent = extractContent;
   dvlSecurity:any;
   dvlUrgency:any;
@@ -72,15 +74,14 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         this.userID = this.authStore.get().userID;
         this.htmlAgency();
         this.getDataValuelist();
-        this.getPermission(this.data.recID);
   }
   htmlAgency()
   {
     this.desc = '<div class="d-flex">';
     if(this.data?.agencyName != undefined &&  this.data?.agencyName!= "")
-      this.desc += '<div class="d-flex align-items-center me-6"><span class="icon-business icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
+      this.desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
     if(this.data?.txtLstAgency != undefined && this.data?.txtLstAgency!= "")
-      this.desc +='<div class="d-flex align-items-center me-6""><span class="me-3">Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
+      this.desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
   }
    ///////////////Các function format valuelist///////////////////////
    fmTextValuelist(val: any, type: any) {
@@ -265,9 +266,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     var funcID = val?.functionID;
     if(!datas)
       datas = this.data;
+    else 
+    {
+      var index = this.view.dataService.data.findIndex(object => {
+        return object.recID === datas.recID;
+      });
+      datas = this.view.dataService.data[index];
+    }
     switch (funcID) {
       case "edit":
         {
+
           this.view.dataService.edit(datas).subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view?.currentView?.dataService;
@@ -285,6 +294,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
                 //this.view.dataService.update(x.event).subscribe();
                 //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
+                
+                  this.view.dataService.update(x.event).subscribe();
                   if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                       //this.view.dataService.setDataSelected(x.event);
@@ -325,14 +336,15 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         }
       case "copy":
       {
-        this.view.dataService.setDataSelected(datas);
+        this.view.dataService.dataSelected = datas ;
         this.view.dataService.copy(0).subscribe((res: any) => {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(IncommingAddComponent, {
             gridViewSetup: this.gridViewSetup,
             headerText:"Sao chép công văn đến",
-            type: "copy"
+            type: "copy",
+            formModel: this.formModel
           }, option);
           this.dialog.closed.subscribe(x=>{
             if(x.event == null) 
@@ -362,7 +374,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               files : this.data?.files
             }, option);
           this.dialog.closed.subscribe(x=>{
-            if(x.event != null) 
+            if(x.event) 
             {
               this.data.owner = x.event[0].owner
               this.data.lstUserID = getListImg(x.event[0].relations);
@@ -386,9 +398,13 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT202":
         {
           if(this.checkOpenForm(funcID))
-          {
-            this.callfunc.openForm(this.tmpupdate, null, 600, 400);
-          }
+            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data}).closed.subscribe(x=>{
+              if(x.event) 
+              {
+                this.data.updates = x.event.updates;
+                this.data.percentage = x.event.percentage;
+              }
+            });
           break;
         }
       //Chia sẻ
@@ -425,7 +441,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             config.type = "YesNo";
             this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn thu hồi?", config).closed.subscribe(x=>{
               if(x.event.status == "Y")
-                this.recall(this.view.dataService.dataSelected.recID);
+                this.recall(datas.recID);
             })
           break;
         }
@@ -474,7 +490,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT110":
       case "ODT209":
         {
-          this.odService.bookMark(this.view.dataService.dataSelected.recID).subscribe((item) => {
+          this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
             {
               this.view.dataService.update(item.data).subscribe();
@@ -503,25 +519,31 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           });
           break;
         }
-        case "recallUser":
-          {
-            var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?", config).closed.subscribe(x=>{
-              if(x.event.status == "Y")
-              {
-                this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
-                  if (item.status == 0) {
-                    this.data = item.data[0];
-                    this.data.lstUserID = getListImg(item.data[0].relations);
-                    this.data.listInformationRel = item.data[1]
-                  }
-                  this.notifySvr.notify(item.message);
-                })
-              }
-            })
-            break;
-          }
+      case "recallUser":
+        {
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?", config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            {
+              this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
+                if (item.status == 0) {
+                  this.data = item.data[0];
+                  this.data.lstUserID = getListImg(item.data[0].relations);
+                  this.data.listInformationRel = item.data[1]
+                }
+                this.notifySvr.notify(item.message);
+              })
+            }
+          })
+          break;
+        }
+      //Export file
+      case "SYS002":
+        {
+          this.callfunc.openForm(CodxExportComponent,null,null,600);
+          break;
+        }
     }
   } 
   checkOpenForm(val:any)
@@ -531,9 +553,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     else if(this.checkUserPer?.created || this.checkUserPer?.owner) return true;
     else this.notifySvr.notify("Bạn không có quyền thực hiện chức năng này.")
     return false;
-  }
-  openpopup(template: any) {
-    this.callfunc.openForm(template);
   }
    //Thu hồi quyền
    recall(id:any) {
@@ -549,8 +568,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   getJSONString(data) {
     return JSON.stringify(data);    
   }
-  getSubTitle(relationType:any , agencyName:any)
+  getSubTitle(relationType:any , agencyName:any , shareBy: any , createdBy :any)
   {
-    return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
+    if(relationType == "1")
+      return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
+    return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
   }
 }

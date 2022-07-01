@@ -1,6 +1,6 @@
 <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [formModel]="formModel">
-  <ng-template popup add #body>
+  <ng-template #body>
     <!-- <ng-container *ngIf="data == 0;then dataEmpty;else content">
     </ng-container> -->
     <div *ngIf="data == 0">

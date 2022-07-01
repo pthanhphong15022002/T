@@ -25,7 +25,7 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #panelLeft>
-  <div class="codx_e-main codx_left">
+  <div class="codx_e-main codx_left my-2">
     <div class="codx_e-header">
       <div class="d-flex align-items-center btn-tabs ">
         <div class="d-flex align-items-center text-dark me-1 cursor-pointer" (click)="clickChangeStatus('1')">
@@ -54,9 +54,6 @@
   >
   </app-view-detail>
 </ng-template>
-<!-- 
-<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
-<app-viewfiledialog></app-viewfiledialog> -->
 <codx-views #view 
   [views]="views" 
   (buttonClick)="click($event)" 
@@ -71,6 +68,3 @@
   (requestEnded)="requestEnded($event)"
 >
 </codx-views>
-<!-- 
-<attachment #attachment [objectType]="objectType" type="center" [objectId]="objectIDFile" [functionID]="funcID" (fileAdded)="fileAdded($event)"></attachment>
-<app-viewfiledialog></app-viewfiledialog> -->

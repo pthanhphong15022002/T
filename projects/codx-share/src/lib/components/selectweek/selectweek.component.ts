@@ -63,11 +63,11 @@ export class SelectweekComponent implements OnInit {
   }
 
   LoadFinished(i) {
-    if (this.isChangeWeek == true && this.isFinished == false) {
+    // if (this.isChangeWeek == true && this.isFinished == false) {
       this.isFinished = true;
       this.onChangeWeek.emit();
-    }
-    this.isChangeWeek == false;
+    // }
+    // this.isChangeWeek == false;
 
   }
 

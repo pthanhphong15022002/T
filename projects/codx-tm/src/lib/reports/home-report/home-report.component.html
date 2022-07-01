@@ -1,46 +1,33 @@
 <codx-views #view funcID="TMR" [views]="views" [showToolBar]="false" [autoLoad]="false"> </codx-views>
 
 <ng-template #main>
-    <div class="d-flex flex-row flex-column-fluid page page-detail">
-      <div class="d-flex w-100 mb-3 mt-2">
-        <div class="aside-detail flex-row-auto w-300px">
-          <div class="aside-menu mr-6">
-            <ul class="menu-nav">
-              <li class="menu-item">
-                <a class="menu-link d-flex align-items-center">
-                  <i class="icon-format_list_bulleted icon-20 mr-2"></i>
-                  Báo cáo
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
-          <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
-            <h3 class="list-header">
-              Báo cáo
-            </h3>
-            <div class="list-content">
-              <div class="d-flex align-items-top list-item" style="cursor: pointer;">
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="font-weight-bold text-dark mb-2" (click)="codxService.navigate('TMR01')"> Thống kê công việc chi tiết
+  <div class="d-flex flex-row flex-column-fluid page page-detail">
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+      <div id="erm_content" class="d-flex flex-column-fluid" >
+        <div class="container">
+          <div class="d-flex mb-3 mt-2">
+            <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
+              <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
+                <h3 class="list-header">
+                  <codx-label name="lblCategory" default="Báo cáo"></codx-label>
+                </h3>
+                <div class="list-content" *ngFor="let item of func['TMR']">
+                  <div class="d-flex align-items-top list-item" style="cursor: pointer;"
+                    (click)="codxService.navigate(item.functionID)" routerLinkActive="active">
+                    <span class="icon-settings icon-20 mr-3"></span>
+                    <div class="d-flex flex-column flex-grow-1">
+                      <div class="font-weight-bold text-dark mb-2">
+                        {{item.customName}}</div>
+                    </div>
+                    <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
                   </div>
                 </div>
-                <span class="icon-settings icon-20 mr-3"></span>
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="font-weight-bold text-dark mb-2" (click)="codxService.navigate('TMR02')">Thống kê công việc theo dự án
-                  </div>
-                </div>
-                <span class="icon-settings icon-20 mr-3"></span>
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="font-weight-bold text-dark mb-2" (click)="codxService.navigate('TMR03')">Báo cáo đánh giá hiệu quả công việc
-                  </div>
-                </div>               
               </div>
             </div>
-            <hr />
           </div>
         </div>
       </div>
     </div>
-  </ng-template>
+  </div>
+
+</ng-template>

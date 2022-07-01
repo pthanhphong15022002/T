@@ -169,10 +169,10 @@ export class BookingStationeryComponent implements OnInit {
       dataItem = evt;
     }
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(
         PopupListStationeryComponent,
         dataItem,
@@ -186,10 +186,10 @@ export class BookingStationeryComponent implements OnInit {
       dataItem = evt;
     }
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(
         PopupRequestStationeryComponent,
         dataItem,
@@ -229,7 +229,7 @@ export class BookingStationeryComponent implements OnInit {
   }
 
   addCart(evt, data) {
-    console.log(data);
+    console.log('Data: ', data);
   }
 
   clickMF(evt, data) {}

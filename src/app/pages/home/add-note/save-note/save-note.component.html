@@ -1,0 +1,20 @@
+<codx-card-img #lstCardNoteBooks funcId="" entityName="WP_NoteBooks" gridViewName="'grvNoteBooks'"
+service="WP">
+</codx-card-img>
+<div class="pw-listcard mt-6">
+<ng-template #template let-item>
+    <div class="pw-card delay-500" (click)="saveNote(item.recID)">
+        <div class="wp-card_img h-150px">
+            <codx-img class="w-100" [width]="200" [objectType]="'WP_NoteBooks'" [objectId]="item.recID">
+            </codx-img>
+        </div>
+        <div class="d-flex align-items-center py-2 px-3">
+            <i class="icon-book icon-20 me-3"></i>
+            <div class="d-flex flex-column">
+                <div class="text-dark fs-6 fw-bold">{{item.title}}</div>
+                <div class="text-gray-500 text-italic" [innerHTML]="item.memo"></div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+</div>

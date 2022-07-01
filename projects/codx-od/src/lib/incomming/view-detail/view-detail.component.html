@@ -31,7 +31,7 @@
             </ng-container>
           </div>
         </div>
-        <div class="d-flex mt-3">
+        <div class="d-flex mt-2">
           <div class="d-flex me-6">
             <span class="text-dark me-2">Ngày gửi:</span>
             <span class="text-gray-600">{{data?.createdOn | date:"dd/MM/yyyy"}}</span>
@@ -46,7 +46,7 @@
             <span class="text-gray-600">{{data?.deadline | date:"dd/MM/yyyy"}}</span>
           </div>
         </div>
-        <div class="d-flex mt-3">
+        <div class="d-flex mt-2">
           <div class="d-flex me-6">
             <span class="text-dark me-2">Số văn bản:</span>
             <span class="text-gray-600">{{data?.refNo}}</span>
@@ -95,9 +95,9 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>Công việc</a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.tasks[0].length>0">
+           <!--  <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container>
+            </ng-container> -->
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
@@ -127,7 +127,7 @@
                     <codx-temp-full
                       [imageId]="item.employeeID"
                       [title]="item.employeeName"
-                      [desc]="getSubTitle(item.relationType,data?.agencyName)"
+                      [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy , item?.createdBy)"
                       [descLine]="1"
                     >
 
@@ -137,12 +137,15 @@
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
+                  <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.employeeID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
+                    <div class="action-menu d-flex align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
+                      <div class="btn btn-sm btn-icon btn-white" ><!-- (click)="openFormRecallSharing(data?.recID,item.recID)" -->
+                        <i class="icon-redo text-primary icon-18"></i>
+                      </div>
+                    </div>
+                  </ng-container>
                 </div>
-                <div class="action-menu d-flex align-items-center cursor-pointer" *ngIf="item.relationType != '1' && !item.reCall && item.employeeID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)"><!--  -->
-                  <div class="btn btn-sm btn-icon btn-white" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!-- (click)="openFormRecallSharing(data?.recID,item.recID)" -->
-                    <i class="icon-redo text-primary icon-18"></i>
-                  </div>
-                </div>
+               
               </div>
             </ng-container>
           </ng-template>
@@ -194,12 +197,10 @@
     </div>
   </ng-template>
 </codx-detail-tmp>
-<ng-template #tmpupdate let-dialog>
-  <app-od-update [dialog]="dialog" [view]="view"></app-od-update>
-</ng-template>
 <ng-template #tmpdeadline let-dialog>
   <app-od-deadline [dialog]="dialog" [data]="data" [formModel]="formModel"></app-od-deadline>
 </ng-template>
 <ng-template #tmpFolderCopy let-dialog>
   <app-od-folder [dialog]="dialog" [data]="data"></app-od-folder>
 </ng-template>
+<app-viewfiledialog></app-viewfiledialog>

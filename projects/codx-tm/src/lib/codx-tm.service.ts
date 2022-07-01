@@ -245,12 +245,12 @@ export class CodxTMService {
     );
   }
 
-  getUserByDepartment(depID){
+  getUserByListDepartmentID(listDepID){
     return this.api.execSv<any>('HR',
     'HR',
     'OrganizationUnitsBusiness',
-    'GetUserByDepartmentAsync',
-    depID)
+    'GetUserByListDepartmentIDAsync',
+    listDepID)
   }
 
   getChartData(

@@ -7,6 +7,8 @@ idField="recID"
 [views]="views"
 (selectedChange)="onSelectionChanged($event)"
 [button]="button"
+(buttonClick)="addFile($event)"
+(viewChanged)="changeView($event)"
 ></codx-views>
 
 <ng-template #templateMain let-data>
@@ -24,7 +26,49 @@ idField="recID"
   </ng-template>
 </ng-template>
 
-<ng-template #templateRight>
-  <!-- file and folder here -->
-   
+<ng-template #templateRight>  
+  <ng-container *ngTemplateOutlet="currView"></ng-container>
 </ng-template>
+
+<ng-template #templateCard> 
+  <!-- <button id="text" (click)="">text</button> -->
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+    <i class="icon-add"></i>
+    <span class="font-size-lg">Open File</span>
+  </button>
+  <attachment  
+      #attachment  
+      [objectType]="'OD_Dispatches'"       
+      hideFolder="1"  
+      hideUploadBtn="1"   
+      hideDes="1" 
+      type="inline"
+      [functionID]="'ODT3'" 
+      (fileAdded)="fileAdded($event)" 
+      (fileCount)="getfileCount($event)" 
+    > 
+    </attachment>
+
+  <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+<ng-template #templateSmallCard>
+  <card type="smallcard" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+<ng-template #templateList>
+  <card type="list" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+</ng-template>
+
+<!-- <ng-template #templateRight>  
+  <container-element [ngSwitch]="this.viewIcon">
+    <some-element *ngSwitchCase="'icon-appstore'">   
+        <card [dataFolders]="listFolder"></card>
+    </some-element>
+    <some-element *ngSwitchCase="'icon-apps'">
+      small card
+    </some-element>
+    <some-element *ngSwitchCase="'icon-format_list_bulleted'">
+      list
+    </some-element>
+  </container-element>
+</ng-template> -->
+
