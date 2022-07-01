@@ -1,7 +1,9 @@
 import {
   ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -11,12 +13,14 @@ import {
   CallFuncService,
   DataRequest,
   DialogRef,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { EventEmitter } from 'stream';
 import { isBuffer } from 'util';
 import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
@@ -33,7 +37,6 @@ export class BookingStationeryComponent implements OnInit {
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
   @ViewChild('usageRateCol') usageRateCol: TemplateRef<any>;
-
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
@@ -57,6 +60,7 @@ export class BookingStationeryComponent implements OnInit {
   constructor(
     private callfunc: CallFuncService,
     private cf: ChangeDetectorRef,
+    private notification: NotificationsService,
     private activedRouter: ActivatedRoute
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -192,7 +196,7 @@ export class BookingStationeryComponent implements OnInit {
       option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(
         PopupRequestStationeryComponent,
-        dataItem,
+        [dataItem, this.listData,this.count],
         option
       );
     });
@@ -227,9 +231,26 @@ export class BookingStationeryComponent implements OnInit {
       this.dialog && this.dialog.close();
     }
   }
-
+  listData = [];
+  count = 0;
   addCart(evt, data) {
-    console.log('Data: ', data);
+    let dataItem = data;
+    if (this.listData.length == 0) {
+      this.count = 1;
+      this.listData.push(dataItem);
+      this.notification.notify('Thêm vỏ hàng thành công', 'success');
+    } else {
+      let check = this.listData.indexOf(dataItem);
+      if (check > -1) {
+        this.notification.notify('Bạn đã nhập vào giỏ hàng', 'error');
+      } else {
+        this.listData.push(dataItem);
+        this.count += 1;
+        this.notification.notify('Thêm giỏ hàng thành công', 'success');
+      }
+    }
+    console.log('ListData:', this.listData);
+    console.log('COunt: ', this.count);
   }
 
   clickMF(evt, data) {}

@@ -5,13 +5,13 @@
 <ng-template #popup>
     <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
         <ng-template #body>      
-                <div class="card-body">
+                <div class="card-body p-0">
                     <form name="frm_file1"> 
                         <div class="offcanvas-wrapper">
                             <div class="modal-subheader">
                                 <div for="fileName" class="d-flex justify-content-between mb-1">
                                     <div class="d-flex align-items-center col-form-label pb-0">
-                                        <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                        <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                                     </div>
                                     <div *ngIf="disableFolderSelect()">
                                         <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -34,7 +34,7 @@
                                     <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                                 </div>
                             </div>
-                            <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
+                            <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
                                 <div class="d-flex flex-grow-1">
                                     <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                                     <!-- <codx-img class="h-35px me-3"></codx-img> -->
@@ -94,13 +94,13 @@
 </ng-template>
 <ng-template #inline>
     <div class="card w-100 rounded-0 border-0">
-        <div class="card-body">
+        <div class="card-body p-0">
             <form name="frm_file1"> 
                 <div class="offcanvas-wrapper">
                     <div *ngIf="hideFolder != '1'" class="modal-subheader">
                         <div for="fileName" class="d-flex justify-content-between mb-1">
                             <div class="d-flex align-items-center col-form-label pb-0">
-                                <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                             </div>
                             <div *ngIf="disableFolderSelect()">
                                 <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -123,7 +123,7 @@
                             <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
                         </div>
                     </div> 
-                    <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-top file-item p-3">
+                    <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
                         <div class="d-flex flex-grow-1">
                             <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
                             <!-- <codx-img class="h-35px me-3"></codx-img> -->
@@ -170,7 +170,7 @@
             </form>
         </div>
     </div>   
-    <thumbnail [files]="data"></thumbnail>     
+    <codx-thumbnail [files]="data"></codx-thumbnail>     
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

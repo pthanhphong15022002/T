@@ -21,7 +21,7 @@ import { AttachmentService } from './attachment.service';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
-  selector: 'attachment',
+  selector: 'codx-attachment',
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.scss'],
 })

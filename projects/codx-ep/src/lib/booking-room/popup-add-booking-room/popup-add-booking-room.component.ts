@@ -71,6 +71,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   ];
 
   isAdd = false;
+  range:any;
   data: any = {};
   dialog: any;
   isSaveSuccess = false;
@@ -89,6 +90,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
+    this.range = dialog.dataService!.dataSelected;
   }
   ngAfterViewInit(): void {
     if (this.dialog) {
@@ -115,6 +117,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
           this.lstDeviceRoom.push(device);
         });
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+        console.log('Device: ', this.lstDeviceRoom);
       });
 
       this.bookingService
@@ -141,6 +144,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
           this.addEditForm && this.addEditForm.patchValue(this.data);
           console.log(this.addEditForm.value);
         }
+        console.log(this.addEditForm);
       });
     this.link = null;
     this.selectDate = null;
@@ -240,12 +244,12 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.target.checked;
+      this.tmplstDevice[index].isSelected = event.data;
     }
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 300, 430);
+    var dialog = this.callFuncService.openForm(template, '', 550, 370);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -331,15 +335,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 300, 500);
-    // this.modalService
-    //   .open(this.addLink, { centered: true, size: 'md' })
-    //   .result.then(
-    //     (result) => {
-    //       this.addEditForm.patchValue({ onlineUrl: this.link });
-    //     },
-    //     (reason) => {}
-    //   );
+    this.callFuncService.openForm(this.addLink, '', 500, 300);
   }
 
   public setdata(data: any) {

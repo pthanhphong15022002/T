@@ -96,10 +96,10 @@ export class PopupAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParam();
-    if (this.action=='add') {
+    if (this.action == 'add') {
       this.openTask();
     } else {
-      if (this.action == 'copy')  this.getTaskCoppied(this.task.taskID);
+      if (this.action == 'copy') this.getTaskCoppied(this.task.taskID);
       else this.openInfo(this.task.taskID, this.action);
     }
   }
@@ -121,9 +121,9 @@ export class PopupAddComponent implements OnInit {
     //   });
     this.api
       .execSv<any>(
-        "SYS",
-        "ERM.Business.SYS",
-        "SettingValuesBusiness",
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
         'GetByModuleAsync',
         'TM_Parameters'
       )
@@ -343,7 +343,6 @@ export class PopupAddComponent implements OnInit {
           this.actionSave(id);
         }
       });
-  
     } else {
       this.actionSave(id);
     }
@@ -520,6 +519,29 @@ export class PopupAddComponent implements OnInit {
       this.task[data.field] = data.data;
     }
   }
+  valueChangeEstimated(data) {
+    var num = Number.parseInt(data.data)
+    if (data.data && num) {
+      this.task[data.field] = data.data;
+      var estimated = num * 3600000;
+      if (!this.task.startDate) {
+        var crrDay = new Date();
+        this.task.startDate = moment(crrDay).toDate();
+        var time = crrDay.getTime();
+        var timeEndDate = time + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      } else {
+        var timeEndDate = this.task.startDate.getTime() + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      }
+   
+    }else{
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify("Giá trị nhập vào không phải là 1 số !")
+      this.task.estimated = 0
+    }
+    this.changeDetectorRef.detectChanges();
+  }
 
   changeVLL(data) {
     this.task.priority = data.data;
@@ -530,9 +552,13 @@ export class PopupAddComponent implements OnInit {
     this.task[data.field] = data.data.fromDate;
     if (data.field == 'startDate') {
       if (!this.task.endDate)
-        this.task.endDate = moment(new Date(data.data.fromDate))
-          .add(1, 'hours')
-          .toDate();
+        if (this.task.estimated) {
+          var timeEndDay = this.task.startDate.getTime() + this.task.estimated *3600000
+          this.task.endDate = moment(new Date(timeEndDay)).toDate();
+        } else
+          this.task.endDate = moment(new Date(data.data.fromDate))
+            .add(1, 'hours')
+            .toDate();
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate)

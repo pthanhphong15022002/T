@@ -114,8 +114,8 @@
 
         <div class="d-flex align-items-center file-item mt-3">
             <div class="d-flex flex-column flex-grow-1">
-                <attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1" hideFolder="1"
-                    hideUploadBtn="1" functionID="MWP00941" (fileAdded)="fileAdded($event)"></attachment>
+                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1" hideFolder="1"
+                    hideUploadBtn="1" functionID="MWP00941" (fileAdded)="fileAdded($event)"></codx-attachment>
             </div>
         </div>
     </ng-template>

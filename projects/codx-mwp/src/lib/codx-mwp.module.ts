@@ -23,6 +23,10 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
 import { PostsComponent } from './personals/posts/posts.component';
 import { PopupAddUpdate } from './personals/note-books/detail/popup-add-update/popup-add-update.component';
+import { AccumulationChartModule, ChartAllModule, ChartModule } from '@syncfusion/ej2-angular-charts';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
 export const routes: Routes = [
   {
     path: '',
@@ -38,10 +42,10 @@ export const routes: Routes = [
         component: DetailNoteBooksComponent,
 
       },
-      // {
-      //   path: 'employeeinfo/:funcID',
-      //   component: EmployeeInfomationComponent,
-      // },
+      {
+        path: 'employeeinfo/:funcID',
+        component: EmployeeInfomationComponent,
+      },
     ],
   },
 ];
@@ -74,6 +78,12 @@ const Component: Type<any>[] = [
     CodxCoreModule,
     RouterModule.forChild(routes),
     CodxShareModule,
+    ChartModule,
+    ButtonModule,
+    ChartAllModule,
+    SidebarModule,
+    AccumulationChartModule,
+    TabModule,
   ],
   exports: [
     RouterModule,
