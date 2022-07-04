@@ -53,3 +53,7 @@
 body {
     line-height: 1.4;
 }
+
+.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+    padding: 0;
+}
