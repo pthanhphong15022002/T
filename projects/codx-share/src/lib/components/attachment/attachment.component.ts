@@ -3,7 +3,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   Output,
-  EventEmitter,
+  EventEmitter, 
   ViewChild,
   Input,
   ElementRef,
@@ -18,6 +18,11 @@ import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, Dial
 import * as moment from 'moment';
 import { OpenFolderComponent } from '../openFolder/openFolder.component';
 import { AttachmentService } from './attachment.service';
+
+import { ViewEncapsulation, Inject } from '@angular/core';
+import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
+import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
+import { createSpinner, showSpinner, hideSpinner  } from '@syncfusion/ej2-popups';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -65,7 +70,16 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() fileCount = new EventEmitter<any>();
+  @ViewChild('templateupload') public uploadObj: UploaderComponent;  
   // @Input('openFolder') openFolder: ViewsComponent;
+  public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
+  public parentElement : HTMLElement; 
+  public proxy : any;
+  public progressbarContainer : HTMLElement;
+  public filesDetails : FileInfo[] = [];
+  public filesList: HTMLElement[] = [];
+  public dropElement: HTMLElement = document.getElementsByClassName('control-fluid')[0] as HTMLElement;
+
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
@@ -88,8 +102,8 @@ export class AttachmentComponent implements OnInit {
       this.functionID = data?.data.functionID;
       this.type = data?.data.type;
       this.popup = data?.data.popup;
-      this.hideBtnSave = data?.data.hideBtnSave;
-    }
+      this.hideBtnSave = data?.data.hideBtnSave;     
+    }       
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -105,6 +119,133 @@ export class AttachmentComponent implements OnInit {
       this.hideBtnSave = "0";
   }
 
+
+  ngAfterViewInit(): void {
+    if (this.objectId != "" && this.objectId != undefined) {
+      this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
+        if (res) {
+          this.data = res;
+          this.changeDetectorRef.detectChanges();
+        }
+      })
+    };
+
+    if (document.getElementById('browse') != null) {
+      document.getElementById('browse').onclick = () => {
+        document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
+        return false;
+      };
+  
+      this.dropElement = document.querySelector('#dropArea') as HTMLElement;
+        document.getElementById('browse').onclick = function() { 
+        document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
+        return false;
+      }
+    }    
+    // https://ej2.syncfusion.com/angular/documentation/uploader/template/#custom-template
+    // https://ej2.syncfusion.com/angular/demos/#/bootstrap5/uploader/custom-file-list
+    // document.getElementById('clearbtn').onclick = () => {
+    //     if (!document.getElementsByClassName('upload-list-root')[0]) { return; }
+    //     this.uploadObj.element.value = '';
+    //     detach(document.getElementById('dropArea').querySelector('.upload-list-root'));
+    //     this.filesList = [];
+    //     this.filesDetails = [];
+    // };
+  }
+
+  // upload file tai day
+  public onFileSelect(args : SelectedEventArgs) : void  {
+    if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
+        this.parentElement = createElement('div', { className: 'upload-list-root' });
+        this.parentElement.appendChild(createElement('ul', {className: 'ul-element' }));
+        document.getElementById('dropArea').appendChild(this.parentElement);
+    }
+    for (let i : number = 0; i < args.filesData.length; i++) {
+        this.formSelectedData(args.filesData[i], this);  // create the LI element for each file Data
+    }
+    this.filesDetails = this.filesDetails.concat(args.filesData);
+    this.uploadObj.upload(args.filesData, true);
+    args.cancel = true;
+}
+
+  public formSelectedData (selectedFiles : FileInfo, proxy: any ) : void {
+    let liEle : HTMLElement = createElement('li',  { className: 'file-lists', attrs: {'data-file-name' : selectedFiles.name} });
+    liEle.appendChild(createElement('span', {className: 'file-name ', innerHTML: selectedFiles.name }));
+    liEle.appendChild(createElement('span', {className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
+    if (selectedFiles.status === 'Ready to upload') {
+        this.progressbarContainer = createElement('span', {className: 'progress-bar-container'});
+        this.progressbarContainer.appendChild(createElement('progress', {className: 'progress', attrs: {value : '0', max : '100'}} ));
+        liEle.appendChild(this.progressbarContainer);
+    } else { liEle.querySelector('.file-name').classList.add('upload-fails'); }
+    let closeIconContainer : HTMLElement = createElement('span', {className: 'e-icons close-icon-container'});
+    EventHandler.add(closeIconContainer, 'click', this.removeFiles, proxy);
+    liEle.appendChild(closeIconContainer);
+    document.querySelector('.ul-element').appendChild(liEle);
+    this.filesList.push(liEle);
+  }
+
+  public removeFiles(args : any) : void {
+    let status : string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
+    if (status === 'File uploaded successfully') {
+        this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
+    } else {
+        detach(args.currentTarget.parentElement);
+    }
+    this.uploadObj.element.value = '';
+  }
+
+  public onUploadSuccess:  EmitType<Object> = (args: any) => {
+    let spinnerElement: HTMLElement = document.getElementById('dropArea');
+    let li: HTMLElement =  document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
+    if (args.operation === 'upload') {
+        let progressBar: HTMLElement = li.getElementsByTagName('progress')[0];
+        li.querySelector('.close-icon-container').classList.add('delete-icon');
+        detach(li.getElementsByTagName('progress')[0]);
+        (li.querySelector('.file-size') as HTMLElement).style.display = 'inline-block';
+        (li.querySelector('.file-name') as HTMLElement).style.color = 'green';
+        (li.querySelector('.e-icons') as HTMLElement).onclick = () => {
+            createSpinner({ target: spinnerElement, width: '25px' });
+            showSpinner(spinnerElement);
+        };
+        (li.querySelector('.close-icon-container') as HTMLElement).onkeydown = (e: any) => {
+            if (e.keyCode === 13) { 
+                createSpinner({ target: spinnerElement, width: '25px' });
+                showSpinner(spinnerElement);
+            }
+        };
+    } else {
+        this.filesDetails.splice(this.filesList.indexOf(li), 1);
+        this.filesList.splice(this.filesList.indexOf(li), 1);
+        if (!isNullOrUndefined(li)) { detach(li); }
+        if (!isNullOrUndefined(spinnerElement)) {
+            hideSpinner(spinnerElement);
+            detach(spinnerElement.querySelector('.e-spinner-pane'));
+        }
+    }
+    EventHandler.add(li.querySelector('.close-icon-container'), 'click', this.removeFiles, this);
+}
+
+public onFileUpload(args : any) : void {
+  let li : Element = document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
+  EventHandler.remove(li.querySelector('.close-icon-container'), 'click', this.removeFiles);
+  let progressValue : number = Math.round((args.e.loaded / args.e.total) * 100);
+  if (!isNaN(progressValue)) {
+      li.getElementsByTagName('progress')[0].value = progressValue;   // Updating the progress bar value
+  }
+}
+
+public onUploadFailed(args : any) : void {
+  let li : Element = document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
+  EventHandler.add(li.querySelector('.close-icon-container'), 'click', this.removeFiles, this);
+  li.querySelector('.file-name ').classList.add('upload-fails');
+  if (args.operation === 'upload') {
+      detach(li.querySelector('.progress-bar-container'));
+  }
+}
+
+  public onFileRemove(args: RemovingEventArgs): void {
+      args.postRawFile = false;
+  }
 
   openPopup() {
     this.fileUploadList = [];
@@ -125,7 +266,12 @@ export class AttachmentComponent implements OnInit {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    this.data = this.atSV.fileListAdded;
+    if (this.data == undefined)
+      this.data = [];
+
+    for(var i=0; i<this.atSV.fileListAdded.length; i++) {
+      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));     
+    }    
 
     if (this.type == "popup") {      
       this.dialog.close();      
@@ -225,9 +371,7 @@ export class AttachmentComponent implements OnInit {
         if (res != null) {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);
-          this.objectId = this.objectId;
-          this.objectType = this.objectType;
+          this.atSV.folderId.next(res[0].folderId);       
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];

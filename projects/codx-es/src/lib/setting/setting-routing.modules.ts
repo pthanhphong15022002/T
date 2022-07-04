@@ -11,11 +11,9 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MarkSignatureComponent } from '../sign-file/mark-signature/mark-signature.component';
 import { PopupAddSignFileComponent } from '../sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { SignFileComponent } from '../sign-file/sign-file.component';
-import { ViewDetailComponent } from '../sign-file/view-detail/view-detail.component';
 import { ApprovalStepComponent } from './approval-step/approval-step.component';
 import { PopupAddApprovalStepComponent } from './approval-step/popup-add-approval-step/popup-add-approval-step.component';
 import { DocCategoryComponent } from './category/category.component';
@@ -63,12 +61,10 @@ const routes: Routes = [
     ProcessStepComponent,
     PopupAddApprovalStepComponent,
     ApprovalStepComponent,
-    SignFileComponent,
     PopupAddSignFileComponent,
     PopupAddCategoryComponent,
     PopupAddSignatureComponent,
     MarkSignatureComponent,
-    ViewDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -76,6 +76,10 @@ export class FileService implements OnDestroy {
         return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory]);
     }
 
+    getFileNyObjectID(objectID: string): Observable<any> {
+        return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByObjectIDAsync", [objectID]);
+    }
+
     downloadFile(id: string): Observable<any> {
         return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
     }
@@ -89,6 +93,7 @@ export class FileService implements OnDestroy {
         }
         return window.btoa(binary);
     }
+
     deleteFileByObjectIDType(objectID: string,  objectType: string,  forever: boolean): Observable<any> {
         return this.api.exec<any>("DM", "FileBussiness", "DeleteByObjectIDAsync", [objectID, objectType, forever]);
     }
