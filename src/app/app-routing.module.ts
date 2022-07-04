@@ -72,7 +72,7 @@ export const routes: Routes = [
       },
       {
         path: 'mwp',
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('projects/codx-mwp/src/lib/codx-mwp.module').then((m) => m.CodxMwpModule),
       },
@@ -81,7 +81,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () =>
           import('projects/codx-od/src/lib/codx-od.module').then((m) => m.CodxODModule),
-      }, 
+      },
+      {
+        path: 'ad',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.CodxAdModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },
