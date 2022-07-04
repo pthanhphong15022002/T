@@ -517,7 +517,7 @@ export class TasksComponent extends UIComponent {
       UpdateStatusPopupComponent,
       'Cập nhật tình trạng',
       500,
-      450,
+      350,
       '',
       obj
     );
