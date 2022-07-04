@@ -210,13 +210,11 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    CircularGaugeModule,
     TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
     NgbModule,
-    CircularGaugeModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

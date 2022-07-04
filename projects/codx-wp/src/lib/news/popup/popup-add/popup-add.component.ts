@@ -34,13 +34,12 @@ export class PopupAddComponent implements OnInit {
   recevierID = "";
   recevierName = "";
   lstRecevier = [];
-  headerText = "Soạn thảo văn bản"
+  headerText = "Soạn thảo văn bản";
+  dataEdit:any;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @Output() closePopup = new EventEmitter();
-  @Output() loadData = new EventEmitter();
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
@@ -50,6 +49,7 @@ export class PopupAddComponent implements OnInit {
     @Optional() dialog?: DialogRef
 
   ) {
+    this.dataEdit = dd.data;
     this.dialogRef = dialog;
     this.user = auth.userValue;
   }
@@ -87,14 +87,7 @@ export class PopupAddComponent implements OnInit {
     objNews.createdBy = this.user.userID;
     objNews.shareControl = this.shareControl;
     objNews.tags = this.tagName;
-    objNews.category = this.formGroup.controls['Category'].value;
-    objNews.startDate = this.formGroup.controls['DateStart'].value;
-    objNews.endDate = this.formGroup.controls['DateEnd'].value;
-    objNews.subject = this.formGroup.controls['Subject'].value;
-    objNews.subContent = this.formGroup.controls['SubContent'].value;
-    objNews.contents = this.formGroup.controls['Contents'].value;
-    objNews.allowShare = this.formGroup.controls['IsShare'].value;
-    objNews.createPost = this.formGroup.controls['IsCreated'].value;
+    objNews = this.formGroup.value;
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     // Owner
@@ -115,10 +108,11 @@ export class PopupAddComponent implements OnInit {
     per1.createdBy = this.user.userID;
     per1.createdOn = new Date();
     lstPermissions.push(per1);
+    // tags user
     if(isNaN(Number(this.shareControl))){
       this.lstRecevier.map(item => {
         var per = new Permission();
-        per.memberType = "3";
+        per.memberType = "2";
         per.objectType = this.objectType;
         per.objectID = item.UserID;
         per.objectName = item.UserName;
@@ -132,32 +126,32 @@ export class PopupAddComponent implements OnInit {
       })
     }
     objNews.permissions = lstPermissions;
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'InsertNewsAsync',
-        objNews
-      )
-      .subscribe((res1: any) => {
-        if (res1) {
-          let data = res1;
-          this.objectID = data.recID;
-          this.imageUpload
-            .updateFileDirectReload(data.recID)
-            .subscribe((res2) => {
-              if (res2) {
-                this.initForm();
-                this.objectID = '';
-                this.objectType = '';
-                this.lstRecevier = [];
-                this.notifSV.notifyCode('E0026');
-                this.insertWPComment(data);
-              }
-            });
-        }
-      });
+    // this.api
+    //   .execSv(
+    //     'WP',
+    //     'ERM.Business.WP',
+    //     'NewsBusiness',
+    //     'InsertNewsAsync',
+    //     objNews
+    //   )
+    //   .subscribe((res1: any) => {
+    //     if (res1) {
+    //       let data = res1;
+    //       this.objectID = data.recID;
+    //       this.imageUpload
+    //         .updateFileDirectReload(data.recID)
+    //         .subscribe((res2) => {
+    //           if (res2) {
+    //             this.initForm();
+    //             this.objectID = '';
+    //             this.objectType = '';
+    //             this.lstRecevier = [];
+    //             this.notifSV.notifyCode('E0026');
+    //             this.insertWPComment(data);
+    //           }
+    //         });
+    //     }
+    //   });
   }
   
 
@@ -192,14 +186,24 @@ export class PopupAddComponent implements OnInit {
     {
       case 'StartDate':
         this.startDate = value.fromDate;
-        obj[field] = this.startDate;
+        if(this.endDate < this.startDate){
+          this.notifSV.notifyCode("WP011");
+          this.endDate = null;
+          obj[field] = null;
+        }
+        else {
+          obj[field] = this.startDate;
+        }
         break;
-      case 'DateEnd':
+      case 'EndDate':
         this.endDate = value.fromDate;
         if(this.endDate < this.startDate){
           this.notifSV.notifyCode("WP011");
           this.endDate = null;
           obj[field] = null;
+        }
+        else  {
+          obj[field] = this.endDate;
         }
         break;
       case 'Category':
@@ -214,10 +218,10 @@ export class PopupAddComponent implements OnInit {
       case 'Contents':
         obj[field] = value.value;
         break;
-      case 'IsShare':
+      case 'AllowShare':
         obj[field] = value;
         break;
-      case 'IsCreated':
+      case 'CreatePost':
         obj[field] = value;
         break;
       case 'Tags':
@@ -272,28 +276,28 @@ export class PopupAddComponent implements OnInit {
     this.formGroup = new FormGroup({
       Tags: new FormControl(''),
       Category: new FormControl(null),
-      DateStart: new FormControl(new Date()),
-      DateEnd: new FormControl(),
+      StartDate: new FormControl(new Date()),
+      EndDate: new FormControl(),
       Subject: new FormControl(''),
       SubContent: new FormControl(''),
       Contents: new FormControl(''),
       Image: new FormControl(''),
-      IsShare: new FormControl(false),
-      IsCreated: new FormControl(false),
+      AllowShare: new FormControl(false),
+      CreatePost: new FormControl(false),
     });
     this.changedt.detectChanges();
   }
   clearValueForm() {
     this.formGroup.controls['Tags'].setValue("");
     this.formGroup.controls['Category'].setValue(null);
-    this.formGroup.controls['DateStart'].setValue(null);
-    this.formGroup.controls['DateEnd'].setValue(null);
+    this.formGroup.controls['StartDate'].setValue(null);
+    this.formGroup.controls['EndDate'].setValue(null);
     this.formGroup.controls['Subject'].setValue('');
     this.formGroup.controls['Contents'].setValue('');
     this.formGroup.controls['SubContent'].setValue('');
     this.formGroup.controls['Image'].setValue('');
-    this.formGroup.controls['IsShare'].setValue(false);
-    this.formGroup.controls['IsCreated'].setValue(false);
+    this.formGroup.controls['AllowShare'].setValue(false);
+    this.formGroup.controls['CreatePost'].setValue(false);
     this.changedt.detectChanges();
   }
   clickShowPopup() {

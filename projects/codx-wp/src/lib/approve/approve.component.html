@@ -15,7 +15,7 @@ idField="recID"
 [autoLoad]="true">
 </codx-views>
 
-<ng-tempalte #panelLeftRef>
+<ng-template #panelLeftRef>
     <div class="row">
             <ul class="nav ">
                 <li class="nav-item" *ngFor="let item of navAsside">
@@ -26,37 +26,35 @@ idField="recID"
                 </li>
         </ul>
     </div>
-    
-</ng-tempalte>
+</ng-template>
 <ng-template #panelRightRef>
-    <lib-approve-detail
+    <app-view-detail
+        #viewdetail
         [data]="dataSelected"
         [option]="option"
         [formModel]="codxViews.formModel"
-    ></lib-approve-detail>
+    ></app-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-    <div class="row link h-50" (click)="clickViewDetail(data.recID,data.entityName)">
-        <div class="col-2">
-            <i [class]="data.category | vll:'L1494':'icon' | async" [style.background]="data.category | vll:'L1494':'color' | async" [style.color]="data.category | vll:'L1494':'textColor' | async"></i>
-        </div>
-        <div class="col-10">
-            <div class=" row fw-bolder">{{data.category | vll:"L1494":"text" | async}}</div>
-            <div class="row" [innerHTML]="data.content | maxlenght:50"></div>
-            <div class="d-flex justify-content-between">
-                <span class="text-muted">{{data.createdOn | fmDT}}</span>
-                <span class="me-3">
-                    <codx-img slot="start" class="symbol symbol-30px symbol-circle"
-                        [objectId]="data.createdBy" objectType="AD_Users" [width]="30">
-                    </codx-img>
-                </span>
-            </div>        
-        </div>
-    </div>
-    <codx-mfunc [formModel]="codxViews.formModel" [isBookMark]="false" (clickMF)="clickMF($event,data)" >
-
-    </codx-mfunc>
+    <codx-temp-full 
+        [typeMF]="'hover'" 
+        (clickMF)="clickMF($event,data)"
+        (click)="clickViewDetail(data.recID,entityName)"
+        [formModel]="codxViews.formModel"
+        [resourceObjType]="entityName"
+        [imageId]="data.recID"
+        imgCss="me-2"
+        [imageObjType]="entityName"
+        imageType="circle"
+        cardCss="card-template border-bottom px-2 py-3" 
+        [title]="data.category"
+        [desc]="data.content"
+        [date]="data.createdOn"
+        [status]="data.approveStatus"
+        [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+        [bookmark]="false">
+    </codx-temp-full>
 </ng-template>
 
 

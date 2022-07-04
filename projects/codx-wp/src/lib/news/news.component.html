@@ -83,28 +83,15 @@ idField="recID"
     
     <ng-container *ngIf="isHome; else catagory">
       <ng-container *ngIf="predicate">
-        <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray">
+        <!-- <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray">
           <codx-label formName="News" name="lblInternal" default="Tin nội bộ"></codx-label>
-        </div>
+        </div> -->
         <div class="row news-catagory">
-          <codx-listview [emptyTemplate]="empty" #listView [itemTemplate]="listGroup" title="" [funcId]="functionID" [entityName]="entityName"
+          <codx-listview [emptyTemplate]="empty" #listView [itemTemplate]="listGroup" title="Tin nội bộ" [funcId]="functionID" [entityName]="entityName"
             [gridViewName]="gridViewName" type="listView" [predicate]="predicate" [dataValue]="dataValue" predicates="NewsType = @0"
-            dataValues="1" [groupBy]="'vllText'" [loadFull]="true" method="GetListNewsAsync" service="WP"
+            dataValues="1" [groupBy]="'vllText'"  [loadFull]="true" method="GetListNewsAsync" service="WP"
             assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
-          <ng-template #listGroup let-item>
-            <div (click)="clickViewDeital(item)" class="row">
-              <div class="col-2">
-                <codx-img width="100" class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
-              </div>
-              <div class="col-10">
-                <div class="fs-5 mt-2 news-title fw-bolder">{{item.subject}}</div>
-                <div class="text-gray-700 mt-1">
-                  {{item.subContent | maxlenght:200}}
-                </div>
-                <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
-              </div>
-            </div>
-          </ng-template>
+          
         </div>
       </ng-container>
     </ng-container>
@@ -120,20 +107,6 @@ idField="recID"
             assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
         </div>
       </ng-container>
-      <ng-template #listOld let-item>
-        <div (click)="clickViewDeital(item)" class="row mb-6">
-          <div class="col-2">
-            <codx-img class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News" width="100"></codx-img>
-          </div>
-          <div class="col-10">
-            <div class="fs-5 news-title fw-bolder" >{{item.subject}}</div>
-            <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
-            <div class="text-gray-700 mt-1">
-              {{item.subContent | maxlenght:200}}
-            </div>
-          </div>
-        </div>
-      </ng-template>
     </ng-template>
   </div>
   <div class="more-function">
@@ -151,13 +124,44 @@ idField="recID"
     </div>
   </div>
 </ng-template>
-
+<!-- popup -->
 <ng-template #panelRightRef>
   <app-popup-create (loadData)="loadData()"></app-popup-create>
 </ng-template>
-
+<!-- empty -->
 <ng-template #empty>
   <!-- <div class="text-center">
       <img style="max-width:700px" src="../assets/media/img/EmptyData.svg" />
   </div> -->
+</ng-template>
+<!-- lisst group -->
+<ng-template #listGroup let-item>
+  <div (click)="clickViewDeital(item)" class="row">
+    <div class="col-2">
+      <codx-img width="100" class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
+    </div>
+    <div class="col-10">
+      <div class="fs-5 mt-2 news-title fw-bolder">{{item.subject}}</div>
+      <div class="text-gray-700 mt-1">
+        {{item.subContent | maxlenght:200}}
+      </div>
+      <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- list news old -->
+<ng-template #listOld let-item>
+  <div (click)="clickViewDeital(item)" class="row mb-6">
+    <div class="col-2">
+      <codx-img class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News" width="100"></codx-img>
+    </div>
+    <div class="col-10">
+      <div class="fs-5 news-title fw-bolder" >{{item.subject}}</div>
+      <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
+      <div class="text-gray-700 mt-1">
+        {{item.subContent | maxlenght:200}}
+      </div>
+    </div>
+  </div>
 </ng-template>

@@ -2,7 +2,10 @@ import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService } from 'codx-core';
+import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel } from 'codx-core';
+import { extractContent } from '../function/default.function';
+import { PopupAddComponent } from '../news/popup/popup-add/popup-add.component';
+import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
 @Component({
   selector: 'lib-approve',
@@ -33,11 +36,12 @@ export class ApproveComponent implements OnInit {
   gridViewSetUp: any;
   formModel: any;
   dataSelected: any;
+  extractContent = extractContent;
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
   @ViewChild('codxViews') codxViews : ViewsComponent;
-  @ViewChild('listView') listView : CodxListviewComponent;
+  @ViewChild('viewdetail') viewdetail : ApproveDetailComponent;
 
 
   navAsside = [
@@ -81,53 +85,44 @@ export class ApproveComponent implements OnInit {
     private auth:AuthService,
     private cache: CacheService,
     private api : ApiHttpService,
+    private callFuc: CallFuncService,
     private route: ActivatedRoute
   ) 
   {
-    this.dataValue = this.auth.userValue.userID;
+    this.user = this.auth.userValue;
+    this.dataValue = this.user.userID;
   }
   ngOnInit(): void {
     this.route.params.subscribe((param) =>{
-      var option = param["option"];
       this.funcID = param["funcID"];
-      this.option = option;
+      this.dataSelected = null;
       this.entityName = "WP_News";     
-      this.predicate = "Approver=@0 ";
-      this.dataValue =  this.auth.userValue.userID;
-      this.model.predicate= this.predicate;
+      this.dataValue =  this.user.userID;
       this.model.dataValue = this.dataValue;
-      switch (option){
-        case "webpost":
+      switch (this.funcID){
+        case "WPT0211":
+          this.predicate = "CreatedBy=@0 ";
+          this.option = "mypost";
           break;
-        case "post":
-          this.entityName = "WP_Comments";
+        case "WPT0212":
+          this.predicate = "Approver = @0";
+          this.option = "webpost";
           break;
         default:
-          this.predicate = "CreatedBy=@0 ";
-          this.model.predicate = "CreatedBy=@0";
-          this.model.dataValue = this.auth.userValue.userID;
+          this.entityName = 'WP_Comments'
+          this.predicate = "Approver = @0"
+          this.option = "post";
           break;
+          
       }
-      this.dataDetail = null;
+      this.model.predicate = this.predicate;
       this.model.entityName = this.entityName;
-
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetTotalAdminPostAsync",this.model).subscribe(
-        (res) => {
-          if(res){
-            this.navAsside[0].value = res[0];
-            this.navAsside[1].value = res[1];
-            this.navAsside[2].value = res[2];
-            this.navAsside[3].value = res[3];
-            
-            this.navAsside[0].active = true;
-            this.navAsside[1].active = false;
-            this.navAsside[2].active = false;
-            this.navAsside[3].active = false;
-            this.dt.detectChanges();
-          }
-        }
-      )
+      
     });
+    this.getGridViewSetUp();
+    this.loadTabAsside();
+    this.dt.detectChanges();
+
   }
   ngAfterViewInit(): void {
     this.views  = [{
@@ -144,13 +139,31 @@ export class ApproveComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-
   getGridViewSetUp(){
-    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) => {
+    this.cache.functionList(this.funcID).subscribe((func) => {
+      console.log('functuonID: ',func);
       this.cache.gridViewSetup(func?.formName, func?.gridViewName).subscribe((grd) => {
         this.gridViewSetUp = grd;
+        console.log('gridViewSetUp: ',this.gridViewSetUp);
       })
     })
+  }
+  loadTabAsside(){
+    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetTotalAdminPostAsync",this.model).subscribe(
+      (res) => {
+        if(res){
+          this.navAsside[0].value = res[0];
+          this.navAsside[1].value = res[1];
+          this.navAsside[2].value = res[2];
+          this.navAsside[3].value = res[3];
+          
+          this.navAsside[0].active = true;
+          this.navAsside[1].active = false;
+          this.navAsside[2].active = false;
+          this.navAsside[3].active = false;
+        }
+      }
+    )
   }
   loadData(predicate:string,dataValue:string){
     this.codxViews.entityName = this.entityName;
@@ -160,7 +173,6 @@ export class ApproveComponent implements OnInit {
     this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetNewsInforByADMinAsync",[recID,entityName])
     .subscribe((res) => {
       if(res){
-        this.option == "mypost";
         this.dataSelected = res;
         this.dataDetail = res;
         this.dt.detectChanges();
@@ -270,8 +282,8 @@ export class ApproveComponent implements OnInit {
 
 
   itemSelected : any;
-  selectedChange(val: any) {
-    this.itemSelected = val.data;
+  selectedChange(data: any) {
+    this.itemSelected = data;
     this.dt.detectChanges();
   }
 
@@ -297,6 +309,10 @@ export class ApproveComponent implements OnInit {
         }
         break;
       case 'edit':
+        let option = new SidebarModel();
+        option.DataService = this.codxViews.dataService;
+        option.FormModel = this.codxViews.formModel;
+        this.callFuc.openSide(PopupAddComponent,data,option);
         break;
       default:
         break;

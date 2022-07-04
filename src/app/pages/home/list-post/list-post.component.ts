@@ -108,25 +108,25 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   //   return true;
   // }
   removePost(data:any) {
-    this.codxViews.dataService.delete([data]).subscribe();
-    // this.notifySvr.alertCode('E0327').subscribe((e:any)=>{
-    //   if(e.event.status == "Y"){
-    //     this.api
-    //       .exec<any>(
-    //         'ERM.Business.WP',
-    //         'CommentBusiness',
-    //         'DeletePostAsync',
-    //         data.recID
-    //       )
-    //       .subscribe((res) => {
-    //         if(res)
-    //         {
-    //           this.notifySvr.notifyCode('E0026');
-    //           this.dt.detectChanges();
-    //         }
-    //       });
-    //   }
-    // })
+    // this.codxViews.dataService.delete([data]).subscribe();
+    this.notifySvr.alertCode('E0327').subscribe((e:any)=>{
+      if(e.event.status == "Y"){
+        this.api
+          .exec<any>(
+            'ERM.Business.WP',
+            'CommentBusiness',
+            'DeletePostAsync',
+            data.recID
+          )
+          .subscribe((res) => {
+            if(res)
+            {
+              this.notifySvr.notifyCode('E0026');
+              this.dt.detectChanges();
+            }
+          });
+      }
+    })
   
     }
 
@@ -184,34 +184,37 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     var data = new Post();
     var obj = {
       post: data,
-      status: "create"
+      status: "create",
+      title:"Tạo bài viết"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "Tạo bài viết", 600, 0, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
     var obj = {
       post: data,
-      status: "edit"
+      status: "edit",
+      title:"Chỉnh sửa bài viết"
     }
-    this.modal = this.callfc.openForm(AddPostComponent, "Chỉnh sửa bài viết", 600, 0, "", obj);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj);
 
   }
 
   openModalShare(data: any) {
     var obj = {
       post: data,
-      status: "share"
+      status: "share",
+      title:"Chia sẻ bài viết"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "Chia sẽ bài viết", 600, 0, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
     this.modal.closed.subscribe();
   }
 

@@ -34,10 +34,11 @@ export class LayoutComponent extends LayoutBaseComponent {
 
 
   category = "news";
-  navigate(category = 'news') {
+  navigate(category = 'news',funcID = null) {
     this.category = category;
-    var funcID = this.route.firstChild.snapshot.params["funcID"];
-    this.changedt.detectChanges();
-    this.codxService.navigate('', "wp/" + category + "/" + funcID);
+    if(!funcID){
+      funcID = this.route.firstChild.snapshot.params["funcID"];
+    }
+    this.codxService.navigate('', "wp/" + category + "/" + funcID)
   }
 }

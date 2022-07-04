@@ -54,7 +54,7 @@ export class NewsComponent implements OnInit {
         id: '1',
         active: true,
         sameData: true,
-        type: ViewType.list,
+        type: ViewType.content,
         model: {
           panelLeftRef: this.panelLeftRef,
         }
@@ -67,6 +67,7 @@ export class NewsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       var category = params["category"];
+      this.funcID = this.route.snapshot.params["funcID"];
       switch (category) {
         case "news":
           this.dataValue ="0;1;5;2;comanyinfo";
@@ -78,7 +79,6 @@ export class NewsComponent implements OnInit {
           this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus = @2)) && Status =@3 && Category =@4";
           break
       }
-      this.funcID = this.route.snapshot.params["funcID"];
       this.loadData();
     })
   }

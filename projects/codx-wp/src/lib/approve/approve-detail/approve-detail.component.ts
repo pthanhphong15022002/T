@@ -6,7 +6,7 @@ import { WP_News } from '../../models/WP_News.model';
 import { ApproveComponent } from '../approve.component';
 
 @Component({
-  selector: 'lib-approve-detail',
+  selector: 'app-view-detail',
   templateUrl: './approve-detail.component.html',
   styleUrls: ['./approve-detail.component.css']
 })
@@ -59,6 +59,7 @@ export class ApproveDetailComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
   }
 
 
