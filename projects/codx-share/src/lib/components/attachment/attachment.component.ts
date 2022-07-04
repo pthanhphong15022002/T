@@ -103,7 +103,7 @@ export class AttachmentComponent implements OnInit {
       this.type = data?.data.type;
       this.popup = data?.data.popup;
       this.hideBtnSave = data?.data.hideBtnSave;     
-    }
+    }       
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -121,6 +121,15 @@ export class AttachmentComponent implements OnInit {
 
 
   ngAfterViewInit(): void {
+    if (this.objectId != "" && this.objectId != undefined) {
+      this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
+        if (res) {
+          this.data = res;
+          this.changeDetectorRef.detectChanges();
+        }
+      })
+    };
+
     if (document.getElementById('browse') != null) {
       document.getElementById('browse').onclick = () => {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
@@ -257,7 +266,12 @@ public onUploadFailed(args : any) : void {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    this.data = this.atSV.fileListAdded;
+    if (this.data == undefined)
+      this.data = [];
+
+    for(var i=0; i<this.atSV.fileListAdded.length; i++) {
+      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));     
+    }    
 
     if (this.type == "popup") {      
       this.dialog.close();      
@@ -357,9 +371,7 @@ public onUploadFailed(args : any) : void {
         if (res != null) {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);
-          this.objectId = this.objectId;
-          this.objectType = this.objectType;
+          this.atSV.folderId.next(res[0].folderId);       
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];
