@@ -45,8 +45,9 @@
             </codx-listview>
         </div> -->
         <div *ngIf="checkWP_NotesParam == true" class="p-3">
-            <div class="fw-bold fs-6 text-primary mt-3">
-                <codx-label name="lblPinNote" formName="Notes" default="Ghi chú"></codx-label>
+            <div class="my-2">
+                <codx-label class="fw-bold fs-6 text-primary" name="lblPinNote" formName="Notes" default="Ghi chú">
+                </codx-label>
             </div>
             <div *ngFor="let item of WP_Notes">
                 <div *ngIf="item.showCalendar == true">
