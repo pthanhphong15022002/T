@@ -9,8 +9,8 @@
   <ng-template popup adde #body>
     <div class="d-flex flex-column mb-3">
       <codx-label default="Chọn file template"></codx-label>
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex justify-content-start w-100">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-start w-100 border-bottom">
             <attachment 
             #attachment 
             objectType="AD_ExcelTemplates"
@@ -19,6 +19,7 @@
             hideUploadBtn="1"  
             hideDes="1"
             [functionID]="dialog?.formModel?.funcID"
+            (fileCount)="getfileCount($event)"
           >
           </attachment>
         <!--   (fileAdded)="fileAdded($event)"
@@ -27,7 +28,7 @@
           <div class="d-flex justify-content-end ms-2">
             <button 
               type="button"
-              class="btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap "
+              class="btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
               (click)="openFormUploadFile()"
             >
               Chọn file
@@ -111,36 +112,65 @@
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Dòng chi tiết"></codx-label>
-        <codx-input type="text" [class]="'me-3'"  style="width:100%" class="test-textbox"  
+        <codx-input type="text" 
+        [class]="'me-3'"  
+        style="width:100%" 
+        [Group]="exportAddForm"
+        ControlName="headerRow" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Cột sau cùng"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="headerColumn" 
         ></codx-input>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Trường chia trang"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="splitPagesOn" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Kiểu chia trang"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="splitPagesMode" 
         ></codx-input>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Cột đánh STT"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="rowNoIndex" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Đánh lại STT"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="rowNoReset" 
         ></codx-input>
       </div>
     </div>
@@ -148,36 +178,66 @@
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Vị trí nhóm 1"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupName1" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Dòng tổng nhóm 1"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupTotal1" 
         ></codx-input>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Vị trí nhóm 2"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupName2" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Dòng tổng nhóm 2"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupTotal2" 
         ></codx-input>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col">
         <codx-label default="Vị trí nhóm 3"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupName3" 
         ></codx-input>
       </div>
       <div class="col">
         <codx-label default="Dòng tổng nhóm 3"></codx-label>
-        <codx-input type="text" [class]="'me-3'" style="width:100%" class="test-textbox"  
+        <codx-input 
+          type="text" 
+          [class]="'me-3'" 
+          style="width:100%" 
+          [Group]="exportAddForm"
+          ControlName="groupTotal3" 
         ></codx-input>
       </div>
     </div>

@@ -12,11 +12,12 @@
 }
 
 //////////////tbchung custom css///////////////////
-.is-invalid-a, .is-invalid .e-date-wrapper , .is-invalid .ng-invalid
+.is-invalid-a, .is-invalid .e-date-wrapper , .is-invalid .ng-invalid , .is-invalid label::before
 {
     border: solid 1px red !important;
     border-radius: 5px;
 }
+
 .div-active
 {
     background-color: #3699ff;
