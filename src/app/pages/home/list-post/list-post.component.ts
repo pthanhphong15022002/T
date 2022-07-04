@@ -47,7 +47,7 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   searchField = '';
   checkFormAddPost = false;
   predicate = "ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)";
-  dataValue = "0;1;5";
+  dataValue: any = "0;1;5";
   modal: DialogRef;
   views:Array<ViewModel> | any = [];
   @Input() predicates = "";

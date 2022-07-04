@@ -38,6 +38,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -77,7 +78,7 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID=='TMT03') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
+    if(this.funcID=='TMT0203') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
   }
 
   clickMF(e: any, data?: any) {
@@ -164,7 +165,7 @@ export class TasksComponent extends UIComponent {
         active: false,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.itemViewList,
         },
       },
       {

@@ -38,11 +38,12 @@ export class ViewDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.itemDetail && this.itemDetail !== null) {
+      console.log('detail', this.itemDetail);
+
       this.esService
         .getApprovalTrans(this.itemDetail?.recID)
         .subscribe((res) => {
           this.process = res;
-          console.log(res);
 
           this.df.detectChanges();
         });
@@ -71,5 +72,10 @@ export class ViewDetailComponent implements OnInit {
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
+  }
+  
+  clickMF(e){
+    console.log(e);
+    
   }
 }

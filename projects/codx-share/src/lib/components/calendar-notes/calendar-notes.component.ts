@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -63,6 +63,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   typeList = 'notes-home';
   views = [];
   dialog!: DialogRef;
+  dataValue = ['WP_Calendars', '', 'SettingShow'];
+  predicate = '';
 
   @ViewChild('listview') lstView;
   @ViewChild('calendar') calendar: any;
@@ -322,32 +324,25 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     }
   }
 
-  openFormUpdateNote(recID, data = null) {
+  openFormUpdateNote(data) {
     var obj = {
-      lstview: this.WP_Notes,
-      recID: recID,
-      data: data,
+      data: this.WP_Notes,
+      dataUpdate: data,
+      formType: 'edit'
     };
-    // this.callfc.openForm(
-    //   UpdateNoteComponent,
-    //   'Cập nhật ghi chú',
-    //   0,
-    //   0,
-    //   '',
-    //   obj
-    // ).subscribe((dt: any) => {
-    //   if (dt) {
-    //     var that = this;
-    //     dt.close = function (e) {
-    //     };
-    //   }
-
-    // });;
+    this.callfc.openForm(
+      AddNoteComponent,
+      'Cập nhật ghi chú',
+      747,
+      570,
+      '',
+      obj
+    )
 
     this.itemUpdate = data;
     this.listNote = this.itemUpdate.checkList;
     this.type = data.noteType;
-    this.recID = recID;
+    this.recID = data?.recID;
   }
 
   openFormPinNote(recID, data = null) {
@@ -375,30 +370,21 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   openFormAddNote() {
-    // var obj = {
-    //   lstview: this.lstView,
-    //   ngForLstview: this.WP_Notes,
-    //   typeLst: this.typeList,
-    // };
-    // this.callfc
-    //   .openForm(AddNoteComponent, 'Thêm mới ghi chú', 747, 570, '', obj)
-    //   .subscribe((dt: any) => {
-    //     if (dt) {
-    //       var that = this;
-    //       dt.close = function (e) { };
-    //     }
-    //   });
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new DialogModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      this.dialog = this.callfc.openForm(AddNoteComponent,
-        'Thêm mới ghi chú', 720, 600, '', [this.view.dataService.data, 'add'], '', option
-      );
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
-    });
+    var obj = {
+      data: this.WP_Notes,
+      typeLst: this.typeList,
+      formType: 'add',
+    };
+    this.callfc
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj)
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new DialogModel();
+    //   option.DataService = this.view?.dataService;
+    //   option.FormModel = this.view?.formModel;
+    //   this.dialog = this.callfc.openForm(AddNoteComponent,
+    //     'Thêm mới ghi chú', 720, 600, '', [this.WP_Notes, 'add'], '', option
+    //   );
+    // });
   }
 
   valueChange(e, recID = null, item = null) {

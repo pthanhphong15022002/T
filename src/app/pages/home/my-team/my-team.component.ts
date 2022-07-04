@@ -1,3 +1,4 @@
+import { CodxMwpService } from './../../../../../projects/codx-mwp/src/lib/codx-mwp.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { Observable, map, of } from 'rxjs';
 import { LayoutService, AuthService, ApiHttpService, CacheService } from 'codx-core';
@@ -47,7 +48,7 @@ export class MyTeamComponent implements OnInit {
     private dt: ChangeDetectorRef,
     protected cache: CacheService,
     //private cbxsv: ComboboxpopupService,
-    //private profileOverviewService: ProfileOverviewService,
+    private codx_mwp_service: CodxMwpService,
     ) {
       this.cache.valueList('L1490').subscribe(res => {
         if (res) {
@@ -99,30 +100,28 @@ export class MyTeamComponent implements OnInit {
           ) {
             let id = res.msgBodyData[0].employeeID;
             this.employeeMyTeam = null;
-            // this.profileOverviewService
-            //   .LoadData(id, "3")
-            //   .subscribe((response: any) => {
-            //     if (response) {
-            //       this.employeeMyTeam = [];
-            //       this.listEmpInfo = []
-            //       if (response.MyTeam) {
-            //         // Team
-            //         this.employeeMyTeam = response.MyTeam;
-            //         this.lstEmpID = this.employeeMyTeam[0].employeeID;
-            //         this.employeeMyTeam.forEach(element => {
-            //           this.lstEmpID += ";" + element.employeeID;
-            //           this.loadEmployInfo(element.employeeID)
-            //             .pipe()
-            //             .subscribe((response) => {
-            //               if (response != null) {
-            //                 this.listEmpInfo.push(response.InfoPersonal)
-            //               }
-            //             });
-  
-            //         });  
-            //       }
-            //     }
-            //   });
+            this.codx_mwp_service
+              .LoadData(id, "3")
+              .subscribe((response: any) => {
+                if (response) {
+                  this.employeeMyTeam = [];
+                  this.listEmpInfo = []
+                  if (response.MyTeam) {
+                    this.employeeMyTeam = response.MyTeam;
+                    this.lstEmpID = this.employeeMyTeam[0].employeeID;
+                    this.employeeMyTeam.forEach(element => {
+                      this.lstEmpID += ";" + element.employeeID;
+                      this.loadEmployInfo(element.employeeID)
+                        .pipe()
+                        .subscribe((response) => {
+                          if (response != null) {
+                            this.listEmpInfo.push(response.InfoPersonal)
+                          }
+                        });
+                    });
+                  }
+                }
+              });
           }
         });
     }

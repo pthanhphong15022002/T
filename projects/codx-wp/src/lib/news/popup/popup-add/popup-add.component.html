@@ -168,16 +168,16 @@
             </div>
         </div>
     </div>
-</ng-template>
-<ng-template #footer>
-    <div class="card-footer pt-4">
-        <div class="d-flex justify-content-between">
-            <div class="d-flex">
-                <button (click)="clickInsertNews()" type="button" class="btn btn-light-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
-                </button>
+    </ng-template>
+    <ng-template #footer>
+        <div class="card-footer pt-4">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <button (click)="clickInsertNews()" type="button" class="btn btn-light-primary">
+                        <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</ng-template>
+    </ng-template>
 </codx-form>

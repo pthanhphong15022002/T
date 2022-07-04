@@ -5,8 +5,8 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, Temp
 import { PersonalsComponent } from '../personals.component';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
-import { DetailStorageComponent } from './detail-storage/detail-storage.component';
 import { sort } from '@syncfusion/ej2-angular-charts';
+import { ListPostComponent } from '@pages/home/list-post/list-post.component';
 
 @Component({
   selector: 'app-storage',
@@ -148,10 +148,11 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     for (let i = 0; i < e?.details.length; i++) {
       arr.push(e?.details[i].refID);
     }
-
-    var a = this.detail.createComponent(DetailStorageComponent);
+    var a = this.detail.createComponent(ListPostComponent);
     a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-    a.instance.dataValue = `${arr}`;
+    a.instance.dataValue = `[${arr.join(';')}]`;
+    a.instance.isShowCreate = false;
+    debugger;
   }
 
   onUpdateBackground(e) {

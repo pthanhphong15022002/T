@@ -147,7 +147,7 @@ idField="recID">
 
         </div>
         <!--begin::Bottom-->
-        <div class="pt-5">
+        <div class="pt-3">
             <ng-container *ngIf="item.category == '4'; else shareTemplate">
                 <ng-container *ngIf="item.shortContent;else noMore2">
                     <read-more-v2 #readmore [content]="item.content" [shortContent]="item.shortContent">
@@ -158,7 +158,7 @@ idField="recID">
                 </ng-template>
                 <!-- start share -->
                 <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
-                    <div class="post" (click)="naviagte(item.shares)">
+                    <div class="post mt-3" (click)="naviagte(item.shares)">
                         <codx-img [width]="200" [objectId]="item.refID" objectType="WP_News" imageType="square">
                         </codx-img>
                     </div>

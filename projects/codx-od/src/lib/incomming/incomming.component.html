@@ -4,7 +4,6 @@
     (clickMF)="openFormFuncID($event,data)" 
     (click)="click(data)"
     [typeMF]="'hover'" 
-    [iconCss]=""
     [title]="extractContent(data.title)" 
     [desc]="data.agencyName"
     [status]="data.status" 
@@ -54,7 +53,8 @@
   >
   </app-view-detail>
 </ng-template>
-<codx-views #view 
+<codx-views 
+  #view 
   [views]="views" 
   (buttonClick)="click($event)" 
   [button]="button"

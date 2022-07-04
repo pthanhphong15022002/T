@@ -119,4 +119,7 @@ export class CertificatesComponent implements OnInit {
   requestEnded(evt: any) {
   }
   
+  valueChangeShared(e){
+    console.log(e)
+  }
 }

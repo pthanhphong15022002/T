@@ -3,9 +3,10 @@
   [subHeaderText]="subHeaderTitle"
   [body]="body"
   [footer]="footer"
+  [data]="range"
+  #form
+  [formModel]="dialog.formModel"
   [dialog]="dialog"
-  [formControl]="addEditForm"
-  *ngIf="isAfterRender"
 >
   <ng-template popup adde #body>
     <div class="tab-content">
@@ -20,7 +21,7 @@
         <e-tabitems>
           <e-tabitem [header]="headerText[0]">
             <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
+              <div class="tabpanel p-5">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
                     <!--begin::Label-->
@@ -28,19 +29,16 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       <codx-label
-                        class="fw-bold"
                         default="Phòng"
                         fiedName="ResourceID"
-                        formName="Users"
-                        gridViewName="grvUsers"
-                        [formModel]="dialog.formModel"
+                        [formModel]="form.formModel"
                       >
                       </codx-label>
                       <span class="label-status text-primary"
                         ><codx-label
                           name="lblReady"
                           default="Sẵn sàng"
-                          [formModel]="dialog.formModel"
+                          [formModel]="form.formModel"
                         >
                         </codx-label
                       ></span>
@@ -49,17 +47,16 @@
                     <codx-input
                       type="combobox"
                       field="resourceID"
+                      [formModel]="form.formModel"
                       [crrValue]="addEditForm.value.resourceID"
-                      [Group]="addEditForm"
                       [refValue]="CbxName['ResourceID']"
-                      (valueChange)="valueChange($event)"
                     ></codx-input>
                   </div>
 
                   <div
                     class="d-flex flex-wrap align-items-center justify-content-between fw-bold fs-7 mb-2"
                   >
-                    <div class="d-flex" *ngFor="let item of lstDeviceRoom">
+                    <div class="d-flex" *ngFor="let item of tmplstDevice">
                       <span
                         class="d-flex align-items-center me-2 mb-2"
                         [ngClass]="
@@ -104,10 +101,9 @@
                   <div class="d-flex row align-items-center mb-4">
                     <div class="col-4">
                       <codx-label
-                        class="fw-bold"
                         default="Ngày"
                         fiedName="ResourceID"
-                        [formModel]="dialog.formModel"
+                        [formModel]="form.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
@@ -126,7 +122,6 @@
                     </div>
                     <div class="col-3">
                       <codx-label
-                        class="fw-bold"
                         default="Từ giờ"
                         fiedName="StartDate"
                         aria-disabled="false"
@@ -148,7 +143,6 @@
                     <div class="col-3">
                       <!--begin::Label-->
                       <codx-label
-                        class="fw-bold"
                         default="Đến giờ"
                         fiedName="EndDate"
                         [formModel]="dialog.formModel"
@@ -192,7 +186,7 @@
                       class="fw-bold"
                       default="Mục đích sử dụng"
                       fiedName="ReasonID"
-                      [formModel]="dialog.formModel"
+                      [formModel]="form.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -201,7 +195,6 @@
                     </codx-combobox> -->
                     <codx-input
                       type="combobox"
-                      ngDefaultControl
                       [refValue]="CbxName['ReasonID']"
                       (valueChange)="valueChange($event)"
                       [multiple]="false"
@@ -212,10 +205,9 @@
                   <div class="d-flex flex-column mb-4">
                     <!--begin::Label-->
                     <codx-label
-                      class="fw-bold"
                       default="Tiêu đề"
                       fiedName="Title"
-                      [formModel]="dialog.formModel"
+                      [formModel]="form.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
@@ -226,7 +218,6 @@
                       [Group]="addEditForm"
                       crrValue="title"
                       placeholder=""
-                      ngDefaultControl
                       class="form-control"
                     ></codx-input>
                   </div>
@@ -234,21 +225,20 @@
                   <div class="d-flex flex-column mb-4">
                     <!--begin::Label-->
                     <codx-label
-                      class="fw-bold"
                       default="Nội dung buổi họp"
                       fiedName="Memo"
-                      [formModel]="dialog.formModel"
+                      [formModel]="form.formModel"
                     >
                     </codx-label>
                     <!--end::Label-->
                     <codx-input
                       type="textarea"
-                      class="test-textarea"
                       field="memo"
-                      ControlName="memo"
+                      [formModel]="form.formModel"
+                      [Group]="form.formGroup"
                       placeholder="textarea"
+                      format="ed2"
                       [crrValue]="addEditForm.value.memo"
-                      (valueChange)="valueChange($event)"
                     >
                     </codx-input>
                   </div>
@@ -275,7 +265,7 @@
                             ><codx-label
                               fiedName="Online"
                               default="Họp online"
-                              [formModel]="dialog.formModel"
+                              [formModel]="form.formModel"
                             ></codx-label></label
                         ></span>
                       </div>
@@ -740,7 +730,7 @@
                       <codx-label
                         name="lblInformation"
                         default="Thông tin khác"
-                        [formModel]="dialog.formModel"
+                        [formModel]="form.formModel"
                       ></codx-label>
                     </h4>
                   </div>
