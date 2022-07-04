@@ -5,95 +5,64 @@
   [footer]="footer"
 >
   <ng-template #header>
+    <codx-mfunc
+      [formModel]="itemDetailTemplate.formModel"
+      [isBookMark]="true"
+      (clickMF)="clickMF($event)"
+    >
+    </codx-mfunc>
     <div class="vmd-detail">
       <div class="d-flex justify-content-end flex-grow-1">
         <div>
-          <div class="position-relative">
-            <button
-              class="d-flex send-request justify-content-between"
-              *ngIf="canRequest"
-            >
-              <div class="icon-reply_all icon"></div>
-              <codx-label
-                name="lblSendToApprove"
-                [formModel]="itemDetailTemplate.formModel"
-                default="Gửi duyệt"
-              ></codx-label>
-            </button>
-          </div>
           <div class="">
             <span
               class="badge badge-square badge-md rounded"
               [style.background-color]="
                 itemDetail
-                  ? (itemDetail.priority | vll: 'VL003':'color' | async)
+                  ? (itemDetail.approveStatus | vll: 'ES003':'color' | async)
                   : ''
               "
             >
               {{
                 itemDetail
-                  ? (itemDetail.priority | vll: "VL003":"text" | async)
+                  ? (itemDetail.approveStatus | vll: "ES003":"text" | async)
                   : ""
               }}
             </span>
           </div>
         </div>
-        <div
-          class="dropdown"
-          (mouseover)="changeNavState(true)"
-          (mouseout)="changeNavState(false)"
-        >
-          <button
-            class="btn btn-icon btn-xs h-20px"
-            type="button"
-            id="dropdownMenuButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span class="icon-more_horiz icon-18"></span>
-          </button>
-        </div>
+        
       </div>
     </div>
-    <div class="mb-1">
-      <div class="d-flex flex-grow-1 mb-2">
-        <div class="d-flex flex-column flex-grow-1">
-          <h1 class="text-dark fw-bold fs-66">
-            {{ itemDetail ? itemDetail.title : "" }}
-          </h1>
-        </div>
-      </div>
+    <div class="mb-2">
+      <!-- [imageId]="itemDetail?.categoryID" -->
+      <codx-temp-full
+        [title]="itemDetail?.title"
+        imageObjType="AD_Users"
+        [imageWidth]="35"
+      >
+      </codx-temp-full>
     </div>
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="d-flex symbol-50px mb-2">
-        <codx-img
-          #image
-          objectId="{{ itemDetail ? itemDetail.employeeID : '' }}"
-          objectType="AD_Users"
-        >
-        </codx-img>
-        <div class="text-dark fw-bold fs-36 ml-4">
-          {{ itemDetail?.owner ? itemDetail?.owner : "" }}
-          <div class="fw-bold me-6">
-            {{ itemDetail ? itemDetail.bUID : "" }}
-          </div>
-        </div>
-      </div>
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <!-- [title]="itemDetail.employeeID" -->
+      <!-- [desc]="itemDetail.orgUnitID" -->
+      <codx-temp-full
+        [imageId]="'ADMIN'"
+        imageObjType="AD_Users"
+        [imageWidth]="50"
+      >
+      </codx-temp-full>
     </div>
     <div class="d-flex flex-grow-1 mb-2">
       <div class="symbol symbol-20px me-4 icon-apartment"></div>
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6">
-          {{
-            itemDetail?.deptID
-              ? (itemDetail?.deptID | vll: "Depts":"text" | async)
-              : ""
-          }}
+          {{ itemDetail?.deptID }}
         </div>
       </div>
     </div>
-    <div class="d-flex mt-1 flex-grow-1">
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <codx-label
           name="lblDateRequest"
@@ -124,7 +93,7 @@
           }}
         </span>
       </div>
-      <div class="d-flex align-items-center text-dark me-6">
+      <div class="d-flex text-dark me-6">
         <codx-label
           name="lblPriority"
           [formModel]="itemDetailTemplate.formModel"
@@ -132,7 +101,7 @@
           class="me-1"
         ></codx-label>
         <span
-          class="icon-flag icon-16 me-2"
+          class="icon-flag icon-16"
           [style.color]="
             itemDetail
               ? (itemDetail?.priority | vll: 'L0186':'color' | async)
@@ -148,8 +117,8 @@
         </span>
       </div>
     </div>
-    <div class="d-flex mt-1">
-      <div class="d-flex align-items-center text-dark me-6">
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
         <codx-label
           name="lblRefNumber"
           [formModel]="itemDetailTemplate.formModel"
@@ -176,19 +145,14 @@
         </span>
       </div>
     </div>
-    <div>
-      <div
-        class="symbol symbol-20px icon-file-pdf me-4"
-        *ngFor="let file of itemDetail?.files"
-      >
-        {{ file?.fileName }}
-      </div>
+    <div class="mb-2">
+      <!-- <thumbnail [files]="itemDetail.files"></thumbnail> -->
     </div>
-    <div class="codx_e-header" [class.active]="true">
+    <div class="codx_e-header mb-2" [class.active]="true">
       <div class="d-flex align-items-center btn-tabs">
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailStt === '1'"
+          [class.active]="itemDetailStt == '1'"
           (click)="clickChangeItemViewStatus('1', itemDetail?.recID)"
         >
           <i class="icon-info icon-16"></i>
@@ -201,7 +165,7 @@
         </button>
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailStt === '2'"
+          [class.active]="itemDetailStt == '2'"
           (click)="clickChangeItemViewStatus('2', itemDetail?.recID)"
         >
           <i class="icon-format_list_numbered icon-16"></i>
@@ -214,7 +178,7 @@
         </button>
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailStt === '3'"
+          [class.active]="itemDetailStt == '3'"
           (click)="clickChangeItemViewStatus('3', itemDetail?.recID)"
         >
           <i class="icon-people_alt icon-16"></i>
@@ -230,11 +194,11 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="container">
+    <div class="container mb-2">
       <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
         {{ itemDetail?.abstract }}
       </div>
-      <div class="list_Of_Jobs mt-2" *ngIf="itemDetailStt == '2'">
+      <div class="list_Of_Jobs mb-2" *ngIf="itemDetailStt == '2'">
         <ng-container>
           <codx-treeview
             #treeAdd
@@ -249,7 +213,7 @@
           </codx-treeview>
         </ng-container>
       </div>
-      <div *ngIf="itemDetailStt == '3'">
+      <div *ngIf="itemDetailStt == '3'" class="mb-2">
         <div class="row w-100" *ngFor="let part of process; let index = index">
           <div class="col-12">
             <div class="codx-approval">
@@ -268,7 +232,7 @@
                   </div>
                   <div
                     class="badge badge-success badge-sm badge-circle ms-3"
-                    [class.active]="part.isActived.lenght > 0 ? true : false"
+                    *ngIf="part.isActived.lenght > 0 ? true : false"
                   >
                     <span class="icon-check icon-16"></span>
                   </div>
@@ -320,7 +284,9 @@
                       <div class="ms-6 d-flex">
                         <span class="icon-attach_file icon-18 me-1"></span>
                         <span class="text-dark">
-                          {{ approve.attachments }}</span
+                          {{
+                            approve.attachments ? approve.attachments : 0
+                          }}</span
                         >
                       </div>
                     </div>
@@ -330,7 +296,6 @@
             </div>
           </div>
         </div>
-        <div class="col-1"></div>
       </div>
     </div>
   </ng-template>
@@ -340,7 +305,7 @@
       <div class="d-flex align-items-center btn-tabs">
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt === '1'"
+          [class.active]="itemDetailDataStt == '1'"
           (click)="clickChangeItemDetailDataStatus('1')"
         >
           <i class="icon-history icon-16"></i>
@@ -348,7 +313,7 @@
         </button>
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt === '2'"
+          [class.active]="itemDetailDataStt == '2'"
           (click)="clickChangeItemDetailDataStatus('2')"
         >
           <i class="icon-message icon-16"></i>
@@ -361,7 +326,7 @@
         </button>
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt === '3'"
+          [class.active]="itemDetailDataStt == '3'"
           (click)="clickChangeItemDetailDataStatus('3')"
         >
           <i class="icon-attach icon-16"></i>
@@ -374,7 +339,7 @@
         </button>
         <button
           class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt === '4'"
+          [class.active]="itemDetailDataStt == '4'"
           (click)="clickChangeItemDetailDataStatus('4')"
         >
           <i class="icon-insert_link icon-16"></i>

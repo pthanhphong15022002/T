@@ -40,18 +40,3 @@
   background-color: rgba(245, 248, 250, 0.8);
   color: #005dc7 !important;
 }
-
-
-@media (min-width: 992px) {
-  .not-aside .wrapper {
-    padding-left: 0 !important;
-  }
-
-  .not-aside .header {
-    left: 0 !important;
-  }
-
-  .not-aside .toolbar {
-    left: 0 !important;
-  }
-}

@@ -22,7 +22,9 @@ import { Observable, Subject } from 'rxjs';
 export class PopAddProjectComponent implements OnInit {
   @Input() projects = new TM_Projects();
 
-  title = 'Thêm mới dự án';
+  titleAdd = 'Thêm mới dự án';
+  titleUpdate = 'Chỉnh sửa dự án';
+  title = '';
   dialog: any;
   user: any;
   functionID: string;
@@ -110,7 +112,6 @@ export class PopAddProjectComponent implements OnInit {
 
       // BaoLV 1.TM - Danh mục dự án - Lấy giá trị trong mảng của dự án
       this.projects.projectManeger = data.data.join(';');
-      console.log(this.projects.projectManeger)
     }
   }
   changeTime(data) {
@@ -141,11 +142,17 @@ export class PopAddProjectComponent implements OnInit {
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber('TMS031', 'TM_Projects', 'ProjectID').subscribe(
-        (key) => {
-          this.projects.projectID = key;
-        }
-      );
+      if(this.projects.projectID == undefined) {
+        this.title = this.titleAdd;
+        this.getAutonumber('TMS031', 'TM_Projects', 'ProjectID').subscribe(
+          (key) => {
+                this.projects.projectID = key;
+            }
+        );
+      }
+      else {
+        this.title = this.titleUpdate;
+      }
     });
   }
 
@@ -216,24 +223,24 @@ export class PopAddProjectComponent implements OnInit {
     return subject.asObservable();
   }
 
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm thông tin dự án
-  onSave() {
-    this.addData();
+  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
+  onSaveOrEdit() {
+    this.addOrUpdateData();
   }
 
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm thông tin dự án
-  beforeSave(op: any) {
+  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
+  beforeSaveOrEdit(op: any) {
     var data = [];
     op.method = 'AddEditProjectsAsync';
-    data = [this.projects, true];
+    data = [this.projects];
     op.data = data;
     return true;
   }
 
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm thông tin dự án
-  addData() {
+  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
+  addOrUpdateData() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save((option: any) => this.beforeSaveOrEdit(option))
       .subscribe((res) => {
         // if (res.save) {
         //   this.notiService.notify('Thêm mới công việc thành công');
@@ -248,7 +255,4 @@ export class PopAddProjectComponent implements OnInit {
       });
     this.dialog.close();
   }
-
-  // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
-  updateData(data?: any) { }
 }

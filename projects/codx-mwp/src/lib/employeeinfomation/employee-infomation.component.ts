@@ -59,6 +59,7 @@ export class EmployeeInfomationComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
+  @ViewChild('header') header: TemplateRef<any>;
 
   //currentSection = 'InfoPersonal';
   constructor(
@@ -275,7 +276,8 @@ export class EmployeeInfomationComponent implements OnInit {
         model: {
           panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef,
-          widthLeft: '200px'
+          template: this.header,
+          widthLeft: '300px'
         }
       },
     ];
