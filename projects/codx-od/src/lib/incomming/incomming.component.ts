@@ -116,11 +116,7 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
-    if(this.view)
-    {
-      this.view.dataService.predicates = "Status=@0"
-      this.view.dataService.dataValues = "1"
-    }
+    
   }
   
   ngAfterViewInit(): void {
@@ -139,6 +135,11 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
+    if(this.view)
+    {
+      this.view.dataService.predicates = "Status=@0"
+      this.view.dataService.dataValues = "1"
+    }
     this.getGridViewSetup();
     this.button = {
       id: 'btnAdd',
@@ -177,7 +178,7 @@ export class IncommingComponent
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
           this.view.dataService
-            .remove(this.view.dataService.dataSelected)
+            .remove(this.view.dataService.data[0])
             .subscribe();
         else {
           this.view.dataService.update(x.event).subscribe();
@@ -214,7 +215,6 @@ export class IncommingComponent
   getGridViewSetup() {
     //this.funcID
     this.cache.functionList(this.view.formModel.funcID).subscribe((fuc) => {
-      console.log(fuc);
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -295,50 +295,7 @@ export class IncommingComponent
     var dt = e.event;
     console.log(dt);
   }
-  closeUpload(e: any, that: IncommingComponent) {
-    that.reloadFile();
-  }
-  reloadFile() {
-    this.atSV.isFileList.subscribe((item) => {
-      if (item != null) {
-        console.log(item);
-      }
-    });
-  }
-  closeAgency(e) {
-    var dt = e.event;
-    if (dt == true) this.notifySvr.alert('Thêm mới đơn vị', 'Thành công');
-    else this.notifySvr.alert('Thêm mới đơn vị', 'Thất bại');
-  }
-  //đóng form cập nhật tiến độ công việc
-  closeUpdateExtend(e: any, that: IncommingComponent) {
-    if (e.event == true) that.notifySvr.notify('Thành công');
-    else if (e.event == false) that.notifySvr.notify('Thất bại');
-  }
-
-  closeSaveToFolder(e: any, that: IncommingComponent) {}
-
-  //đóng form gia hạn deadline
-  closeExtendDeadline(e: any, that: IncommingComponent) {
-    if (e.event[0] == true) {
-      that.notifySvr.notify('Gia hạn thành công');
-      //that.listview.addHandler(e.event[1], false, "recID")
-    } else if (e.event[0] == false) that.notifySvr.notify('Gia hạn thất bại');
-  }
-  //////////////////////////////////////////////////////////////
-  loadData() {
-    /* this.odService.GetListDispatchByStatus(this.options).subscribe(item => {
-      if (item == null || item[0].length == 0) return;
-      this.totalPage = item[1];
-      if (this.options.page == 0) {
-        //this.groupDispatchData(item[0]);
-        this.getDtDis(item[0][0].recID)
-        this.lstUserID = this.getListImg(this.lstDtDis.relations)
-      }
-      else if (this.options.page < item[0]) this.lstDispatch = this.loadMoreData(item[0]);
-      this.ref.detectChanges();
-    }) */
-  }
+ 
   groupDispatchData(data: any) {
     /*   var date = new Date();
     var firstweek = date.getDate() - date.getDay(); // First day is the day of the month - the day of the week
@@ -369,9 +326,6 @@ export class IncommingComponent
       else if (fdayoflastmonth <= new Date(createdOn) && new Date(createdOn) <= ldayoflastmonth) this.lstDispatch[5].data.push(item);
       else this.lstDispatch[6].data.push(item);
     }); */
-  }
-  loadMoreData(datas: any) {
-    //return [...this.lstDispatch, ...datas];
   }
 
   //Hàm lấy thông tin chi tiết của công văn

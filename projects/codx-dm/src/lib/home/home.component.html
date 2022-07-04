@@ -42,7 +42,8 @@ idField="recID"
   </button>
   <codx-attachment  
       #attachment  
-      [objectType]="'OD_Dispatches'"       
+      [objectType]="'OD_Dispatches'" 
+      [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
       hideFolder="1"  
       hideUploadBtn="1"   
       hideDes="1" 
@@ -51,7 +52,7 @@ idField="recID"
       (fileAdded)="fileAdded($event)" 
       (fileCount)="getfileCount($event)" 
     > 
-    </codx-attachment>
+  </codx-attachment>
 
   <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
 </ng-template>

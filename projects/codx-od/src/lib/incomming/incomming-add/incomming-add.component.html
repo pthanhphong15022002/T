@@ -67,7 +67,6 @@
               field="agencyName"
               style="width:100%"
               (valueChange)="changeValueAgency($event)"
-              [ngClass]="{ 'is-invalid-a': submitted && checkAgenciesErrors }"
             >
             </codx-input>
            <!--  (valueChange)="changeValueAgency($event)" -->
@@ -311,8 +310,9 @@
         [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
         refType="P"
         field="popup"
-        (valueChange)="changeValueBUID($event)"
+       
       >
+     <!--  (valueChange)="changeValueBUID($event)" -->
       </codx-input>
     </div>
   </div>
@@ -330,4 +330,3 @@
 <ng-template #tmpdept let-dialog>
   <app-od-department></app-od-department>
 </ng-template>
-<codx-viewfiledialog></codx-viewfiledialog>
