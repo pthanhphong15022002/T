@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -331,7 +331,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'edit'
     };
     this.callfc.openForm(
-      AddNoteComponent,
+      UpdateNoteComponent,
       'Cập nhật ghi chú',
       747,
       570,

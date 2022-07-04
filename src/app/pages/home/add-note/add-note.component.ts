@@ -208,9 +208,9 @@ export class AddNoteComponent implements OnInit {
   }
 
   onUpdateNote(item: NoteGoal) {
-    debugger;
     var a = this.note
     var b = this.form;
+    debugger;
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
