@@ -108,7 +108,7 @@ export class IncommingAddComponent implements OnInit {
   }
 
   changeValueDept(event: any) {
-    //this.dispatch.agencyID = event[0];
+    this.dispatch.agencyID = event[0];
   }
   
   //Ngày nhận
@@ -122,7 +122,6 @@ export class IncommingAddComponent implements OnInit {
   
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
-    debugger;
     this.dispatch.owner = event.data[0]
   }
   //Nơi nhận
