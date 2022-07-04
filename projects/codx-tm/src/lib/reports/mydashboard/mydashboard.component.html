@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
-              {{ taskRemind.taskOutOfDate }}
+              {{ dbData?.overDueTasks }}
             </div>
           </div>
         </div>
@@ -47,14 +47,14 @@
                 <div class="fw-bold text-black">
                   <codx-label
                     name="lblOverdueTask"
-                    default="Đã quá hạn"
+                    default="Chưa thực hiên"
                     [formModel]="formModel"
                   ></codx-label>
                 </div>
               </div>
             </div>
             <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
-              {{ taskRemind.taskOutOfDate }}
+              {{ dbData?.newTasks }}
             </div>
           </div>
         </div>
@@ -75,20 +75,20 @@
                 <div class="fw-bold text-black">
                   <codx-label
                     name="lblOverdueTask"
-                    default="Đã quá hạn"
+                    default="Hoãn lại"
                     [formModel]="formModel"
                   ></codx-label>
                 </div>
               </div>
             </div>
             <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">
-              {{ taskRemind.taskOutOfDate }}
+              {{ dbData?.postponeTasks }}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-around bg-body mb-2 ">
+    <div class="d-flex justify-content-around bg-body mb-2">
       <div class="w-25">
         <ejs-circulargauge
           (load)="load($event)"
@@ -103,7 +103,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -124,7 +124,7 @@
                   type="Marker"
                   [value]="value"
                   markerShape="Image"
-                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
                   [markerWidth]="markerWidth"
                   [markerHeight]="markerHeight"
@@ -150,7 +150,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -171,7 +171,7 @@
                   type="Marker"
                   [value]="value"
                   markerShape="Image"
-                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
                   [markerWidth]="markerWidth"
                   [markerHeight]="markerHeight"
@@ -197,7 +197,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -218,7 +218,7 @@
                   type="Marker"
                   [value]="value"
                   markerShape="Image"
-                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
                   [markerWidth]="markerWidth"
                   [markerHeight]="markerHeight"
@@ -244,7 +244,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -265,7 +265,7 @@
                   type="Marker"
                   [value]="value"
                   markerShape="Image"
-                  imageUrl="https://png.pngtree.com/png-clipart/20210704/original/pngtree-american-football-sports-leather-png-image_6489806.jpg"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
                   [markerWidth]="markerWidth"
                   [markerHeight]="markerHeight"
@@ -286,9 +286,9 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="piedata1"
-              xName="x"
-              yName="y"
+              [dataSource]="dbData?.tasksByGroup"
+              xName="taskGroupName"
+              yName="qty"
               innerRadius="70%"
             ></e-accumulation-series>
           </e-accumulation-series-collection>
@@ -314,7 +314,7 @@
       <ejs-chart
         style="display: block"
         background="transparent"
-        [chartArea]="chartArea"
+        [chartArea]=""
         width="100%"
         [align]="'center'"
         id="chartbar"
@@ -338,7 +338,7 @@
         <e-series-collection>
           <e-series
             fill="#005DC7"
-            [dataSource]="dataColumn"
+            [dataSource]="dbData?.dataBarChart?.barChart"
             type="Column"
             name="Tasks"
             xName="label"
@@ -348,7 +348,7 @@
           </e-series>
           <e-series
             fill="#F9D923"
-            [dataSource]="dataLine"
+            [dataSource]="dbData?.dataBarChart?.lineChart"
             type="Line"
             name="WorkHours"
             yName="value"
@@ -369,37 +369,37 @@
       <div class="taskbox-list">
         <div
           class="d-flex p-3 flex-grow-1 task-item"
-          *ngFor="let item of remiderOnDay"
+          *ngFor="let task of taskOfDay"
         >
           <codx-img
             class="symbol symbol-40px symbol-circle me-3"
             objectType="AD_Users"
-            [objectId]="item.createdBy"
-            [objectName]="item.userName"
+            [objectId]="task?.createdBy"
+            [objectName]="task?.userName"
           ></codx-img>
           <div class="d-flex flex-column flex-grow-1">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="text-dark fw-bold">
-                {{ item.userName }}
-              </div>
-              <span
-                class="icon-flag icon-18"
-                [style.color]="item.priority | vll: 'L0186':'color' | async"
-              ></span>
+            <div class="text-dark fw-bold">
+              {{ task?.userName }}
             </div>
+            <div class="text-gray-600 fs-7">{{ task?.positionName }}</div>
             <div class="task-name text-gray-600 fs-7">
-              {{ item.taskName }}
+              {{ task?.taskName }}
             </div>
-            <div
-              class="bagde bagde-light-primary me-2"
-              [style.border-color]="item.status | vll: 'L0614':'color' | async"
-              [style.background-color]="
-                (item.status | vll: 'L0614':'color' | async) + '30'
-              "
-              [style.color]="item.status | vll: 'L0614':'color' | async"
-              style="border: none"
-            >
-              {{ item.status | vll: "L0614":"text" | async }}
+            <div class="d-flex justify-content-start">
+              <div
+                class="bagde bagde-light-primary me-2"
+                [style.border-color]="
+                  task.status | vll: 'L0614':'color' | async
+                "
+                [style.background-color]="
+                  (task.status | vll: 'L0614':'color' | async) + '30'
+                "
+                [style.color]="task.status | vll: 'L0614':'color' | async"
+                style="border: none"
+              >
+                {{ task.status | vll: "L0614":"text" | async }}
+              </div>
+              <div>{{ task.endDate | date }}</div>
             </div>
           </div>
         </div>

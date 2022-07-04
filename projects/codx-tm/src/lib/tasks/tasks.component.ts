@@ -38,6 +38,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -164,7 +165,7 @@ export class TasksComponent extends UIComponent {
         active: false,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.itemViewList,
         },
       },
       {

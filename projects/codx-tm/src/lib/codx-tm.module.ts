@@ -55,6 +55,7 @@ import { MyDashboardComponent } from './reports/mydashboard/mydashboard.componen
 import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { ViewListComponent } from './tasks/view-list/view-list.component';
 export const routes: Routes = [
   {
     path: '',
@@ -186,6 +187,10 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
+  // MwpComponent,
+  // MwpViewDetailComponent,
+  // MwpPopupAddComponent,
+  ViewListComponent
 ];
 @NgModule({
   imports: [
@@ -200,7 +205,6 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    CircularGaugeModule,
     TreeMapModule,
     DatePickerModule,
     TabModule,
