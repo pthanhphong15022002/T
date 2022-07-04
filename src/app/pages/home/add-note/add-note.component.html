@@ -11,10 +11,13 @@
             <div class="">
                 <a (click)="onType('check')" class="icon-check_box icon-24"></a>
             </div>
-            <div class="icon-image icon-24" style="position: relative;">
-                <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]="" [funcId]="'WP1234'"
-                    [isAllowEdit]="true" width="100"></codx-img>
+            <div class="icon-image icon-24" style="position: relative;" (click)="popupFile()">
+                <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]="" [funcId]="'WP1234'"
+                    [isAllowEdit]="true" width="100"></codx-img> -->
             </div>
+            <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1" hideFolder="1"
+                hideUploadBtn="1" functionID="WPT03941" (fileAdded)="fileAdded()" type="inline">
+            </codx-attachment>
 
             <div class="d-flex align-items-center pw-menu">
                 <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
