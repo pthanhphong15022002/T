@@ -29,19 +29,18 @@ import { NoteGoal, Notes } from '@shared/models/notes.model';
 export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
-  note:  Notes = new Notes();
+  note: Notes = new Notes();
   message: any;
   listNote: any = [];
   type = 'text';
   label = 'Hiển thị trên lịch';
   showCalendar = false;
   pin = false;
-  lstview: any = [];
-  lstviewNotePin: any;
-  typeList_: any;
-  ngForLstview_: any;
-  objectID: any;
-  checkCreate = null;
+  // lstview: any = [];
+  // lstviewNotePin: any;
+  // typeList_: any;
+  // ngForLstview_: any;
+  formType = '';
   data: any;
   predicate = 'CreatedBy=@0';
   dataValue = '';
@@ -52,6 +51,7 @@ export class AddNoteComponent implements OnInit {
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild("form", { static: true }) form: any;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
 
@@ -64,10 +64,14 @@ export class AddNoteComponent implements OnInit {
     @Optional() dialog?: DialogRef,
   ) {
     this.dialog = dialog;
-    this.lstview = dt.data?.lstview;
-    this.typeList_ = dt.data?.typeLst;
-    this.ngForLstview_ = dt.data?.ngForLstview;
-    this.lstviewNotePin = dt.data?.lstviewNotePin;
+    this.data = dt.data?.data;
+    this.formType = dt.data?.formType;
+    if(this.formType == 'edit') {
+      this.note = dt.data?.dataUpdate;
+    }
+    // this.typeList_ = dt.data?.typeLst;
+    // this.ngForLstview_ = dt.data?.ngForLstview;
+    // this.lstviewNotePin = dt.data?.lstviewNotePin;
   }
   ngAfterViewInit() {
     console.log(this.imageUpload);
@@ -77,7 +81,10 @@ export class AddNoteComponent implements OnInit {
     this.initForm();
   }
 
-  valueProperty(e) {}
+  saveNote() {
+    if(this.formType == 'add') this.onCreateNote();
+    else this.onEditNote();
+  }
 
   initForm() {
     this.formAdd = new FormGroup({
@@ -130,49 +137,63 @@ export class AddNoteComponent implements OnInit {
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
     this.note;
-    if (this.checkCreate != null || this.message != null) {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'NotesBusiness',
-          'CreateNoteAsync',
-          this.note
-        )
-        .subscribe((res) => {
-          if (res) {
-            var obj: any = { result: res };
-            this.dialog.hide(obj);
-
-            this.data = res;
-            var dt = res;
-            this.objectID = dt.recID;
-            this.imageUpload
-              .updateFileDirectReload(dt.recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.loadData.emit();
-                  this.changeDetectorRef.detectChanges();
-                }
-              });
-
-            this.lstview.addHandler(dt, true, 'recID');
-            this.changeDetectorRef.detectChanges();
-
-            if (this.showCalendar == true) {
-              this.ngForLstview_.push(res);
-              this.changeDetectorRef.detectChanges();
-
-              var today: any = document.querySelector(
-                ".e-footer-container button[aria-label='Today']"
-              );
-              if (today) {
-                today.click();
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'NotesBusiness',
+        'CreateNoteAsync',
+        this.note
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.imageUpload
+            .updateFileDirectReload(res?.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
               }
+            });
+          this.data.push(res);
+          if (this.note?.showCalendar == true) {
+            debugger;
+            this.changeDetectorRef.detectChanges();
+            var today: any = document.querySelector(
+              ".e-footer-container button[aria-label='Today']"
+            );
+            if (today) {
+              today.click();
             }
           }
-          this.closePopup.emit();
-        });
-    }
+        }
+      });
+  }
+
+  onEditNote() {
+    // if (this.itemUpdate.noteType == "check" || this.itemUpdate.noteType == "list") {
+    //   this.dataAdd.memo = null;
+    //   this.dataAdd.checkList = this.listNote;
+
+    // } else {
+    //   this.dataAdd.checkList = null;
+    //   this.dataAdd.memo = this.message;
+    // }
+    // this.dataAdd.noteType = this.itemUpdate.noteType;
+    // this.dataAdd.isPin = this.itemUpdate.isPin;
+    // this.dataAdd.showCalendar = this.itemUpdate.showCalendar;
+    this.note;
+    this.api
+      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
+      .subscribe((res) => {
+        if (res) {
+          for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i].recID == this.note?.recID) {
+              // this.data[i].checkList = res.checkList;
+              this.data[i].memo = res.memo;
+            }
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   onType(type) {
@@ -187,6 +208,9 @@ export class AddNoteComponent implements OnInit {
   }
 
   onUpdateNote(item: NoteGoal) {
+    var a = this.note
+    var b = this.form;
+    debugger;
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
@@ -206,29 +230,29 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  onEditNote(recID) {
-    if (this.type == 'check' || this.type == 'list') {
-      this.dataUpdate.memo = null;
-      this.dataUpdate.checkList = this.listNote;
-    } else {
-      this.dataUpdate.checkList = null;
-      this.dataUpdate.memo = this.message;
-    }
-    this.dataUpdate.noteType = this.type;
-    this.dataUpdate.isPin = false;
-    this.dataUpdate.showCalendar = false;
-    this.dataUpdate.transID = recID;
-    this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.data.recID,
-        this.dataUpdate,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.changeDetectorRef.detectChanges();
-        }
-      });
-  }
+  // onEditNote(recID) {
+  //   if (this.type == 'check' || this.type == 'list') {
+  //     this.dataUpdate.memo = null;
+  //     this.dataUpdate.checkList = this.listNote;
+  //   } else {
+  //     this.dataUpdate.checkList = null;
+  //     this.dataUpdate.memo = this.message;
+  //   }
+  //   this.dataUpdate.noteType = this.type;
+  //   this.dataUpdate.isPin = false;
+  //   this.dataUpdate.showCalendar = false;
+  //   this.dataUpdate.transID = recID;
+  //   this.api
+  //     .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+  //       this.data.recID,
+  //       this.dataUpdate,
+  //     ])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.changeDetectorRef.detectChanges();
+  //       }
+  //     });
+  // }
 
   openFormNoteBooks() {
     var obj = {

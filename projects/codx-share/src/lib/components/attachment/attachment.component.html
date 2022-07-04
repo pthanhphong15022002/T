@@ -11,7 +11,7 @@
                             <div class="modal-subheader">
                                 <div for="fileName" class="d-flex justify-content-between mb-1">
                                     <div class="d-flex align-items-center col-form-label pb-0">
-                                        <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                        <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                                     </div>
                                     <div *ngIf="disableFolderSelect()">
                                         <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -20,6 +20,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="control-section">
+                                <div class="col-lg-9">
+                                    <div class="control_wrapper">
+                                        <div class="uploadtemplate">
+                                            <div id='dropArea'>
+                                                <span id='drop' class="droparea">Drop files here or <a href="" id='browse'><u>Browse</u></a> </span>
+                                                <ejs-uploader #templateupload id='templatefileupload' [asyncSettings]='path' [dropArea]='dropElement' (progress)='onFileUpload($event)' (selected)='onFileSelect($event)' (failure)='onUploadFailed($event)' (success)='onUploadSuccess($event)' (removing)='onFileRemove($event)'></ejs-uploader>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-lg-3 property-section">
+                                    <div class="property-panel-section">
+                                        <div class="property-panel-header">Properties</div>
+                                        <div class="property-panel-content">
+                                            <button class="e-btn e-css" id="clearbtn" title="Clear All">Clear All</button>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                            
                             <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">
                                 <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
                                     class="drop-zoon h-100px p-3 cancelEvent">
@@ -100,7 +121,7 @@
                     <div *ngIf="hideFolder != '1'" class="modal-subheader">
                         <div for="fileName" class="d-flex justify-content-between mb-1">
                             <div class="d-flex align-items-center col-form-label pb-0">
-                                <app-breadcumb link="false" end="2" start="0" max="4"></app-breadcumb>                            
+                                <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
                             </div>
                             <div *ngIf="disableFolderSelect()">
                                 <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
@@ -170,7 +191,7 @@
             </form>
         </div>
     </div>   
-    <thumbnail [files]="data"></thumbnail>     
+    <codx-thumbnail [files]="data"></codx-thumbnail>     
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

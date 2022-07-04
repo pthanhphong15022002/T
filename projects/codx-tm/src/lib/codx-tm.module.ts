@@ -64,8 +64,8 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'mytasks/:funcID',
-        component: TasksComponent,
+        path: ':funcID',
+        component: DashboardComponent
       },
       {
         path: 'mwp/:funcID',
@@ -146,8 +146,10 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'home/:funcID',
-        component: DashboardComponent,
+        path: '',
+        redirectTo: 'null',
+        // path: 'home/:funcID',
+        // component: DashboardComponent,
       },
       {
         path: '**',

@@ -11,7 +11,7 @@
       <codx-label default="Chọn file template"></codx-label>
         <div class="d-flex justify-content-between">
           <div class="d-flex justify-content-start w-100 border-bottom">
-            <attachment 
+            <codx-attachment 
             #attachment 
             objectType="AD_ExcelTemplates"
             hideBtnSave="1"  
@@ -21,7 +21,7 @@
             [functionID]="dialog?.formModel?.funcID"
             (fileCount)="getfileCount($event)"
           >
-          </attachment>
+          </codx-attachment>
         <!--   (fileAdded)="fileAdded($event)"
               (fileCount)="getfileCount($event)" -->
           </div>

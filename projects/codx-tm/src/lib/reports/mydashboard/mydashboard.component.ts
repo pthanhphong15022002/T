@@ -8,7 +8,6 @@ import {
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-circulargauge';
 
-
 @Component({
   selector: 'my-dashboard',
   templateUrl: './mydashboard.component.html',
@@ -65,6 +64,41 @@ export class MyDashboardComponent implements OnInit {
   public piedata2: Object[];
   public legendSettings: Object;
 
+  //#region chartcolumn
+  dataColumn: Object[] = [];
+  dataLine: Object[] = [];
+  columnXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    rangePadding: 'None',
+    majorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    lineStyle: { width: 0 },
+    labelStyle: {
+      color: 'dark',
+    },
+  };
+
+  columnYAxis: Object = {
+    minimum: 0,
+    interval: 10,
+    labelStyle: {
+      color: 'gray',
+    },
+  };
+
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+
+  radius: Object = {
+    topLeft: 10,
+    topRight: 10,
+  };
+  //#endregion chartcolumn
+
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
@@ -95,24 +129,30 @@ export class MyDashboardComponent implements OnInit {
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.piedata1 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata1 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
 
-    this.piedata2 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata2 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
     this.legendSettings = {
-       visible: true
-   };
+      visible: true,
+    };
   }
 
   private getInitData() {}

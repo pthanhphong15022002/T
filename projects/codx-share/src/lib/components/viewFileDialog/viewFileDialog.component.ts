@@ -9,7 +9,7 @@ import { AttachmentService } from '../attachment/attachment.service';
 import { SystemDialogService } from './systemDialog.service';
 
 @Component({
-  selector: 'app-viewfiledialog',
+  selector: 'codx-viewfiledialog',
   templateUrl: './viewFileDialog.component.html',
   styleUrls: ['./viewFileDialog.component.scss'],
 
@@ -214,7 +214,6 @@ export class ViewFileDialogComponent implements OnInit {
       (document.getElementById("frmFile") as HTMLFormElement).submit();
       //$("#viewfiledalog").find("form")[0]["submit"]();
     }, 100);
-
   }
 
   _animalOpen(name, num, callback?) {

@@ -23,7 +23,7 @@
 </ng-template>
 <ng-template popup adde #body>
   <div>
-    <attachment 
+    <codx-attachment 
       #attachment 
       [objectType]="formModel?.entityName"
       hideBtnSave="1"  
@@ -34,14 +34,14 @@
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
     >
-    </attachment>
+    </codx-attachment>
   </div>
 
 <ng-container *ngIf="files && !hideThumb">
   <div class="mb-5">
-    <thumbnail
+    <codx-thumbnail
     [files]="files"
-  ></thumbnail>
+  ></codx-thumbnail>
   </div>
 </ng-container>
   <!--  -->
@@ -330,3 +330,7 @@
 <ng-template #tmpdept let-dialog>
   <app-od-department></app-od-department>
 </ng-template>
+<<<<<<< HEAD
+=======
+<codx-viewfiledialog></codx-viewfiledialog>
+>>>>>>> c2e5e5c3607f0d2003be1e2bdb11af782d2ca0ef

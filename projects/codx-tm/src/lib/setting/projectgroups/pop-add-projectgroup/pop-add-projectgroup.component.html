@@ -1,4 +1,4 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template popup adde #body>
     <div class="card-body">
       <div class="row">
@@ -17,9 +17,9 @@
             <div class="col-4">
               <codx-label fiedName="ProjectCategory" default="Phân loại" formName="ProjectGroups"
                 gridViewName="grvProjectGroups"></codx-label>
-              <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder=""
+              <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder="" refValue="L0607"
                 [crrValue]="projectGroups.projectCategory" (valueChange)="valueApp($event)"
-                [refValue]="gridViewSetup.ProjectCategory.referedValue">
+               >
               </codx-input>
             </div>
           </div>
@@ -44,7 +44,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+      <button type="button" class="btn btn-primary" (click)="onSaveOrEdit()">Lưu</button>
     </div>
   </ng-template>
 </codx-form>
