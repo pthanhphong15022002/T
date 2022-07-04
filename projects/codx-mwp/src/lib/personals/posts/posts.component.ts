@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { Post } from '@shared/models/post';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { ApiHttpService, UploadFile, AuthStore, TenantStore, CacheService, CallFuncService } from 'codx-core';
+import { ListPostComponent } from '@pages/home/list-post/list-post.component';
 
 @Component({
   selector: 'app-posts',
@@ -33,9 +34,9 @@ export class PostsComponent implements OnInit {
   }
 
   private loadListPostComponent() { 
-    // var a = this.lstComment.createComponent(ListPostComponent);
-    // a.instance.predicate = `(CreatedBy="${this.user?.userID}")`;
-    // a.instance.isShowCreate = false;
+    var a = this.lstComment.createComponent(ListPostComponent);
+    a.instance.predicate = `(CreatedBy="${this.user?.userID}")`;
+    a.instance.isShowCreate = false;
   }
 
 }

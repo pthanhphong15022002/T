@@ -21,6 +21,7 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NoteGoal, Notes } from '@shared/models/notes.model';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -48,9 +49,12 @@ export class AddNoteComponent implements OnInit {
   dialog: any;
   formAdd: FormGroup;
   readOnly = false;
+  header = 'Thêm mới sổ tay';
+  dataListView = [];
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild("form", { static: true }) form: any;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -66,7 +70,9 @@ export class AddNoteComponent implements OnInit {
     this.dialog = dialog;
     this.data = dt.data?.data;
     this.formType = dt.data?.formType;
+    this.dataListView = dt.data?.ngForLstview;
     if(this.formType == 'edit') {
+      this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
     }
     // this.typeList_ = dt.data?.typeLst;
@@ -262,5 +268,13 @@ export class AddNoteComponent implements OnInit {
       recID: this.data.recID,
     };
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 0, 0, '', obj);
+  }
+
+  popupFile() {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded() {
+    this.attachment.saveFiles();
   }
 }

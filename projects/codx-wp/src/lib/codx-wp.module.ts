@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@an
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
@@ -31,7 +32,7 @@ export const routes: Routes = [
         component: CompanyInforComponent
       },
       {
-        path:'approve/:option/:funcID',
+        path:'approvals/:funcID',
         component: ApproveComponent
       },
       {
@@ -76,6 +77,7 @@ const Component: Type<any>[] =
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,
+    NgbModule,
     CoreModule,
     RouterModule.forChild(routes),
     

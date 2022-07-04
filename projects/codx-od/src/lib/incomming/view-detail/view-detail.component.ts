@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
@@ -392,7 +392,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT202":
         {
           if(this.checkOpenForm(funcID))
-            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data}).closed.subscribe(x=>{
+            var option = new DialogModel();
+            option.FormModel = this.formModel;
+            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
               if(x.event) 
               {
                 this.data.updates = x.event.updates;
@@ -535,9 +537,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       //Export file
       case "SYS002":
         {
-          var option = new DialogModel();
-          option.FormModel = this.formModel;
-          this.callfunc.openForm(CodxExportComponent,null,null,600,"",null,"",option);
+          var gridModel = new DataRequest();
+          gridModel.formName = this.formModel.formName;
+          gridModel.entityName = this.formModel.entityName;
+          gridModel.funcID = this.formModel.funcID;
+          gridModel.gridViewName = this.formModel.gridViewName;
+          gridModel.page = this.view.dataService.request.page;
+          gridModel.pageSize = this.view.dataService.request.pageSize;
+          gridModel.predicate = this.view.dataService.request.predicates;
+          gridModel.dataValue = this.view.dataService.request.dataValues;
+          gridModel.entityPermission = this.formModel.entityPer;
+          this.callfunc.openForm(CodxExportComponent,null,null,600,"",[gridModel,datas.recID],null);
           break;
         }
     }

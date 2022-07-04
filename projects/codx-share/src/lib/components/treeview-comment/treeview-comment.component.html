@@ -48,7 +48,7 @@
         </span>
     </div>
 </div>
-<div class="row m-0 btn-comment p-2 border-top border-bottom">
+<div class="row m-0 btn-comment pt-2 border-top">
     <div class="col-6 p-0">
         <div class="btn-like {{rootData.myVoted ? 'liked' : ''}} delay-500">
             <div *ngIf="rootData.myVotedType == null && checkVoted == false" (click)="votePost(rootData)">
@@ -119,7 +119,7 @@
         </div>
     </div>
 </div>
-<div class="isHiden" [class.isShow]="rootData.isShowComment">
+<div class="isHiden border-top" [class.isShow]="rootData.isShowComment">
     <div class="position-relative cmt c1 feed-box mt-4" (keyup.enter)="sendComment(rootData,comments)">
         <codx-input type="text" placeholder="Bình luận" [crrValue]="comments"
             (valueChange)="valueChange($event,'comments')">
@@ -132,7 +132,6 @@
         </div>
     </div>
 
-    <br>
     <ng-container *ngFor="let cm of rootData.listComment">
         <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: cm }">
 
