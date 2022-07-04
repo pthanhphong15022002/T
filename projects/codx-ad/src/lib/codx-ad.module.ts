@@ -1,4 +1,4 @@
-import { UserComponent } from './user/user.component';
+import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,14 +18,15 @@ import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { ViewUsersComponent } from './users/view-users/view-users.component';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path:'user/:funcID',
-        component: UserComponent
+        path:'users/:funcID',
+        component: UserComponent,
       }
       
 
@@ -35,7 +36,8 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-
+  UserComponent,
+  ViewUsersComponent
 ];
 @NgModule({
   imports: [
