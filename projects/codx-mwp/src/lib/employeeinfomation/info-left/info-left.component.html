@@ -88,7 +88,7 @@
             <codx-label fiedName="joinedOn" formName="Employees" gridViewName="grvEmployees" default="Ngày vào làm: ">
             </codx-label>
           </span>
-          <span class="navi-text font-size-lg">{{dataEmployee.employeeInfo.joinedOn}}</span>
+          <span class="navi-text font-size-lg">{{dataEmployee.employeeInfo.joinedOn | date: "dd/mm/yyyy"}}</span>
         </div>
   
         <span class="navi-icon mr-2">
@@ -162,15 +162,16 @@
                 <codx-label fiedName="birthday" formName="Employees" gridViewName="grvEmployees" default="Ngày sinh ">
                 </codx-label>
               </span>
-              <span>{{dataEmployee.employeeInfo.birthday}}, </span>
+              <span>{{dataEmployee.employeeInfo.birthday | date: "dd/mm/yyyy"}}, </span>
   
-              <span>
+              <span class="text-dark font-weight-bold mr-1">
                 <codx-label fiedName="birthPlaceName" formName="Employees" gridViewName="grvEmployees" default="tại ">
                 </codx-label>
+                <span>{{dataEmployee.employeeInfo.birthPlaceName}}, </span>
               </span>
-              <span>{{dataEmployee.employeeInfo.birthPlaceName}}, </span>
+              
   
-              <span>
+              <span class="text-dark font-weight-bold mr-1">
                 <codx-label fiedName="gender" formName="Employees" gridViewName="grvEmployees" default="Giới tính ">
                 </codx-label>
               </span>
