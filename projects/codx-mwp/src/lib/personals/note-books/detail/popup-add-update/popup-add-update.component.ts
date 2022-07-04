@@ -94,7 +94,7 @@ export class PopupAddUpdate implements OnInit {
     })
   }
 
-  popup(evt: any) {
+  popup() {
     this.attachment.uploadFile();
   }
 
