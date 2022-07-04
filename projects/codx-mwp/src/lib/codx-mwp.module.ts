@@ -16,7 +16,6 @@ import { VideoComponent } from './personals/video/video.component';
 import { StorageComponent } from './personals/storage/storage.component';
 import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
-import { DetailStorageComponent } from './personals/storage/detail-storage/detail-storage.component';
 import { NoteBooksComponent } from './personals/note-books/note-books.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books/detail-note-books.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -58,7 +57,6 @@ const Component: Type<any>[] = [
   ImgComponent,
   VideoComponent,
   StorageComponent,
-  DetailStorageComponent,
   AddUpdateStorageComponent,
   InfoLeftComponent,
   NoteBooksComponent,

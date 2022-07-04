@@ -1,12 +1,5 @@
-<codx-form #form subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog" [data]="note"
+<codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [data]="note"
     [formModel]="dialog.formModel">
-    <!-- <ng-template #header>
-        <codx-label name="lblHeaderText" formName="Storages" default="Thêm mới sổ tay" *ngIf="formType == 'add'">
-        </codx-label>
-        <codx-label name="lblHeaderText" formName="Storages" default="Cập nhật sổ tay" *ngIf="formType == 'edit'">
-        </codx-label>
-    </ng-template> -->
-
     <ng-template popup add #body>
         <div class="flex">
             <div class="">
@@ -58,8 +51,7 @@
                     <div class="w-100" #txtNoteEdit name="txtTodoEdit" (keydown.enter)="onUpdateNote(item)">
                         <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
                             [crrValue]="item?.listNote" field="listNote" (valueChange)="valueChange($event, item)"
-                            [formModel]="form.formModel"
-                            [Group]="form.formGroup">
+                            [formModel]="form.formModel" [Group]="form.formGroup">
                         </codx-input>
                     </div>
                 </div>

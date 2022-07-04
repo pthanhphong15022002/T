@@ -118,7 +118,7 @@ export class MyTeamComponent implements OnInit {
                             this.listEmpInfo.push(response.InfoPersonal)
                           }
                         });
-                    });  
+                    });
                   }
                 }
               });

@@ -48,6 +48,8 @@ export class AddNoteComponent implements OnInit {
   dialog: any;
   formAdd: FormGroup;
   readOnly = false;
+  header = 'Thêm mới sổ tay';
+  dataListView = [];
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -66,7 +68,10 @@ export class AddNoteComponent implements OnInit {
     this.dialog = dialog;
     this.data = dt.data?.data;
     this.formType = dt.data?.formType;
+    this.dataListView = dt.data?.ngForLstview;
+    debugger;
     if(this.formType == 'edit') {
+      this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
     }
     // this.typeList_ = dt.data?.typeLst;

@@ -331,7 +331,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'edit'
     };
     this.callfc.openForm(
-      UpdateNoteComponent,
+      AddNoteComponent,
       'Cập nhật ghi chú',
       747,
       570,
