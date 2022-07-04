@@ -7,9 +7,9 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
     [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read"
-    [iconCss2]="data.priority | vll:'L0186':'icon'|async"
-    [iconColorCss2]="data.priority | vll:'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
-    [title]="data.userName" icoStatusVll="L0186" 
+    [iconCss2]="data.priority | vll:'L0186':'icon'|async" 
+    [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
+    [title]="data.userName"  
     [desc2]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo"
     resourceObjType="AD_Users" [formModel]="view.formModel">
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
