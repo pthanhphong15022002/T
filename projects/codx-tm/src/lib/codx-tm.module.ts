@@ -205,7 +205,6 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
-    CircularGaugeModule,
     TreeMapModule,
     DatePickerModule,
     TabModule,

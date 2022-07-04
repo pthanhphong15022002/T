@@ -86,7 +86,7 @@ export const routes: Routes = [
         path: 'ad',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.CodxAdModule),
+          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
       },
       { path: '**', redirectTo: 'error/404' }
     ]
