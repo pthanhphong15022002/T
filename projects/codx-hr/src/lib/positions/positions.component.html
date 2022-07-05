@@ -1,12 +1,12 @@
 <!-- <codx-views #view funcID="HRT02" entityName="HR_Positions" [views]="views" [button]="button" 
     (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="PositionsBusiness"
-    method="GetModelFormPositionsAsync" [showToolBar]="true" [pageSize]="100"
+    method="GetModelFormPositionsAsync"  [pageSize]="100"
     [selectedFirst]="true">
 </codx-views> -->
 
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
     assemblyName="ERM.Business.HR" className="PositionsBusiness" method="GetModelFormPositionsAsync"
-    [showToolBar]="true" [views]="views" [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
+   [views]="views" [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
     (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
     [selectedFirst]="true">
 </codx-views>

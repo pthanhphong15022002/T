@@ -99,7 +99,7 @@ export class TasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT025': // cái này xem lại , nên có biến gì đó để xét
+      case 'TMT02015': // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
       case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
@@ -189,7 +189,7 @@ export class TasksComponent extends UIComponent {
       {
         type: ViewType.schedule,
         active: false,
-        sameData: true,  
+        sameData: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -346,21 +346,20 @@ export class TasksComponent extends UIComponent {
         this.dialog.closed.subscribe((e) => {
           this.itemSelected=this.view.dataService.dataSelected
         });
-       
+
       });
 
   }
 
   copy(data) {
-    this.view.dataService.copy().subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '750px';
-      this.view.dataService.dataSelected = data;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
+        [this.view.dataService.dataSelected, 'copy',this.isAssignTask,data],
         option
       );
       this.dialog.closed.subscribe((e) => {

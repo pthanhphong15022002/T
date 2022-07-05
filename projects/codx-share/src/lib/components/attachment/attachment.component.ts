@@ -70,6 +70,7 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() fileCount = new EventEmitter<any>();
+  @Output() fileGet = new EventEmitter<any>();
   @ViewChild('templateupload') public uploadObj: UploaderComponent;  
   // @Input('openFolder') openFolder: ViewsComponent;
   public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
@@ -125,6 +126,7 @@ export class AttachmentComponent implements OnInit {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
         if (res) {
           this.data = res;
+          this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
       })

@@ -1,6 +1,7 @@
   <codx-form
     #form 
     [headerText]="headerText" 
+    [subHeaderText]="subHeaderText"
     [subHeader]="subHeader" 
     [body]="body" 
     [footer]="footer" 
@@ -11,11 +12,8 @@
   </codx-form>
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
-    <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()"> <!--  -->
+    <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
       <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
-    </span>
-    <span class="btn btn-sm btn-warning btn-pill ms-2">
-      <i class="icon-scanner icon-16 me-2"></i>Scan
     </span>
   </div>
   <div>
@@ -33,79 +31,57 @@
       [functionID]="formModel?.funcID"
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
+      [objectId]="dispatch?.recID"
     >
     </codx-attachment>
   </div>
-
-<ng-container *ngIf="files && !hideThumb">
-  <div class="mb-5">
-    <codx-thumbnail
-    [files]="files"
-  ></codx-thumbnail>
-  </div>
-</ng-container>
-  <!--  -->
-<!--  <ng-container *ngIf="dfDis.File">
-    <thumbnail  [data]="getJSONString(dfDis['File'])"></thumbnail>
-    <div class="d-flex align-items-center  mt-8 mb-8" *ngFor="let item of dfDis.File">
-      <img class="w-20px me-3" src="{{getExtension(item.extension)}}" />
-      <div class="d-flex flex-column flex-grow-1">
-        <span class="text-dark fs-6">{{item?.fileName}} ({{formatBytes(item?.fileSize)}})</span>
-      </div>
-    </div> 
-  </ng-container> -->
-  <div class="fw-bold fs-6 text-primary">THÔNG TIN VĂN BẢN</div>
-  <div class="tab-horizone mt-6">
-    <ul ngbNav #nav1="ngbNav" [(activeId)]="activeAngecy" class="nav-tabs">
-      <li [ngbNavItem]="1">
-        <a ngbNavLink (click)="hideDept()">Đơn vị</a>
-        <ng-template ngbNavContent>
-          <div class="d-flex align-items-center">
-            <codx-input
-              [formModel]="form.formModel" 
-              [Group]="form.formGroup"
-              field="agencyName"
-              style="width:100%"
-              (valueChange)="changeValueAgency($event)"
-            >
-            </codx-input>
-           <!--  (valueChange)="changeValueAgency($event)" -->
-          <!--   <codx-input
-            placeholder="Nhập đơn vị"
-            style="width:100%"
-            type="text"
-            [crrValue]="this.dispatch?.agencyName"
-            (valueChange)="changeValueAgencyText($event)"
-          >
-          </codx-input> -->
-            <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')">Add</span>
-          </div>
-          <!-- <p>Chi tiết</p> -->
-          <!-- <attachment  objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001" ></attachment> -->
-        </ng-template>
-      </li>
-      <li *ngIf="showAgency" [ngbNavItem]="2">
-        <a ngbNavLink>Phòng ban</a>
-        <ng-template ngbNavContent>
-          <div class="d-flex align-items-center">
-            <codx-combobox
-              refValue="AgencyDepts"
-              type="combobox"  
-              placeholder="Phòng ban"
-              style="width:100%"
-              (valueChange)="changeValueDept($event)"
-              [pageSize]="'20'"
-              
-            > 
-          <!--  [predicate]="'parentID@0'"
-            [dataValue]="idAgency" -->
-            </codx-combobox>
-            <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')">Add</span>
-          </div>
-        </ng-template>
-      </li>
-    </ul>
-    <div [ngbNavOutlet]="nav1"></div>
+  <div class="tab-horizone">
+    <div class="d-flex align-items-center mb-1">
+      <codx-label 
+        class="me-2 cursor-pointer" 
+        [class.text-primary]="!showAgency" 
+        default="Đơn vị" (click)="hideDept()">
+      </codx-label>
+      <ng-container *ngIf="showAgency">
+        <codx-label class="me-2 " default="|"></codx-label>
+        <codx-label class="cursor-pointer text-primary" default="Phòng ban" ></codx-label>
+      </ng-container>
+    </div>
+    <div class="align-items-center" style="display:flex" [hidden]="showAgency">
+      <codx-input
+        [formModel]="form.formModel" 
+        [Group]="form.formGroup"
+        field="agencyName"
+        style="width:100%"
+        (valueChange)="changeValueAgency($event)"
+      >
+      </codx-input>
+      <!--  (valueChange)="changeValueAgency($event)" -->
+      <!--   <codx-input
+        placeholder="Nhập đơn vị"
+        style="width:100%"
+        type="text"
+        [crrValue]="this.dispatch?.agencyName"
+        (valueChange)="changeValueAgencyText($event)"
+      >
+      </codx-input> -->
+      <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')">Add</span>
+    </div>
+    <div class="align-items-center" style="display:flex" [hidden]="!showAgency">
+      <codx-combobox
+        refValue="AgencyDepts"
+        type="combobox"  
+        placeholder="Phòng ban"
+        style="width:100%"
+        (valueChange)="changeValueDept($event)"
+        [pageSize]="'20'"
+      > 
+    <!--  [predicate]="'parentID@0'"
+      [dataValue]="idAgency" -->
+      </codx-combobox>
+      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')">Add</span>
+    </div>
+   
   </div>
 
   <!-- <div class="mt-2">
@@ -157,7 +133,6 @@
         [formModel]="form.formModel" 
         [Group]="form.formGroup"
         field="category"
-        ControlName="category"
       >
       </codx-input>
     </div>
@@ -167,7 +142,6 @@
         [formModel]="form.formModel" 
         [Group]="form.formGroup"
         field="source"
-        ControlName="source" 
         >
       </codx-input>
     </div>
@@ -261,7 +235,6 @@
         [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
         refType="P"
         field="DeptID"
-        (valueChange)="aaaa($event)"
       >
       </codx-input>
     </div>

@@ -54,7 +54,7 @@
                                     <div class="btn btn-light-primary justify-content-center">
                                         <codx-label default='Chọn file'></codx-label>    
                                     </div>
-                                    <input type="file" multiple id="file" #file (change)="handleFileInput($event.target.files)">
+                                    <input type="file" id="file" #file (change)="handleFileInput($event.target.files)">
                                 </div>
                             </div> -->
                             <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
