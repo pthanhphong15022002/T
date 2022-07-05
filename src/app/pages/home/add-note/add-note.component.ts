@@ -118,11 +118,11 @@ export class AddNoteComponent implements OnInit {
         if (item?.lisNote != '') {
           this.listNote.forEach((data) => {
             if (item?.listNote == data.listNote) {
-              data.listNote = dt;
+              if (field == 'status') data.status = dt
+              else data.listNote = dt;
             }
           })
         }
-        debugger;
       }
       // if (field == 'textarea') {
       //   this.message = e.data.value;
@@ -151,40 +151,33 @@ export class AddNoteComponent implements OnInit {
     // }
     // this.dataAdd.showCalendar = this.showCalendar;
 
-    // this.note.noteType = this.type;
-    // this.note.isPin = this.pin;
-    // this.note;
-    // this.api
-    //   .exec<any>(
-    //     'ERM.Business.WP',
-    //     'NotesBusiness',
-    //     'CreateNoteAsync',
-    //     this.note
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.imageUpload
-    //         .updateFileDirectReload(res?.recID)
-    //         .subscribe((result) => {
-    //           if (result) {
-    //             this.loadData.emit();
-    //           }
-    //         });
-    //       this.data.push(res);
-    //       if (this.note?.showCalendar == true) {
-    //         debugger;
-    //         this.changeDetectorRef.detectChanges();
-    //         var today: any = document.querySelector(
-    //           ".e-footer-container button[aria-label='Today']"
-    //         );
-    //         if (today) {
-    //           today.click();
-    //         }
-    //       }
-    //     }
-    //   });
-    this.listNote;
-    debugger;
+    this.note.noteType = this.type;
+    this.note.isPin = this.pin;
+    if (this.type == 'check' || this.type == 'list') {
+      this.note.checkList = this.listNote;
+      this.note.memo = null;
+    } else {
+      this.note.checkList == null;
+    }
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'NotesBusiness',
+        'CreateNoteAsync',
+        this.note
+      )
+      .subscribe((res) => {
+        this.data.push(res);
+        if (this.note?.showCalendar == true) {
+          this.changeDetectorRef.detectChanges();
+          var today: any = document.querySelector(
+            ".e-footer-container button[aria-label='Today']"
+          );
+          if (today) {
+            today.click();
+          }
+        }
+      });
   }
 
   onEditNote() {
@@ -225,8 +218,10 @@ export class AddNoteComponent implements OnInit {
             this.tempNote['listNote'] = dt;
             this.tempNote['status'] = 0;
           }
-        } else this.tempNote[field] = dt;
-        debugger;
+        } else {
+          this.tempNote['listNote'] = dt;
+          this.tempNote['status'] = null;
+        }
       }
     }
   }
@@ -251,7 +246,6 @@ export class AddNoteComponent implements OnInit {
 
     var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
     this.listNote.push(Object.assign({}, dt));
-    debugger;
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');
     if (ele) {
