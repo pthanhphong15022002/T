@@ -6,94 +6,214 @@
 </codx-views>
 
 <ng-template #grid let-data>
-  <tr >
+  <tr>
     <td class="rowphoto">
-      {{data.taskGroupID}}
+      <div class="padding">
+        {{data.taskGroupID}}
+      </div>
     </td>
-    <td class="rowphoto">
-      {{data.taskGroupName}}
-    </td>
-    <td class="rowphoto">
-      {{data.taskGroupName2}}
-    </td>
-    <td class="rowphoto">
-      <div [innerHTML]="data.note">
+    <td class="rowphoto" placement="left" [ngbTooltip]="data.taskGroupName">
+      <div class="padding">
+        {{data.taskGroupName}}
+
       </div>
     </td>
     <td class="rowphoto">
-      <div class="badge badge-danger me-2" [style.border-color]="
-    (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-  " [style.background-color]="
-    (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-  " [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
-        {{data?.approvalControl|vll:"L1433":"text"|async}}
+      <div class="padding">
+        {{data.taskGroupName2}}
+
       </div>
     </td>
     <td class="rowphoto">
-      <div class="badge badge-danger me-2" [style.border-color]="
-    (data?.projectControl | vll: 'L1462':'color' | async) + '30'
-  " [style.background-color]="
-    (data?.projectControl | vll: 'L1462':'color' | async) + '30'
-  " [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
-        {{data?.projectControl|vll:"L1462":"text"|async}}
+      <div class="padding">
+        <div [innerHTML]="data.note">
+        </div>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="badge badge-danger me-2" [style.border-color]="
+      <div class="padding">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+      " [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
+          {{data?.approvalControl|vll:"L1433":"text"|async}}
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+      " [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
+          {{data?.projectControl|vll:"L1462":"text"|async}}
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="badge badge-danger me-2" [style.border-color]="
         (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
       " [style.background-color]="
         (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
       " [style.color]="data?.attachmentControl | vll: 'L1462':'color' | async" style="border: none">
-        {{data?.attachmentControl|vll:"L1462":"text"|async}}
-      </div>
-    </td>
-    <td class="rowphoto">
-      <div class="badge badge-danger me-2" [style.border-color]="
-    (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-  " [style.background-color]="
-    (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-  " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
-        {{data?.checkListControl|vll:"L1463":"text"|async}}
-      </div>
-    </td>
-    <td class="rowphoto">
-      <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
-        <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
-          *ngIf=" (i<3 || data.disableReadmore) ">
-          <label class="checkbox checkbox-square checkbox-sm mb-0">
-            <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
-            </codx-input>
-          </label>
+          {{data?.attachmentControl|vll:"L1462":"text"|async}}
         </div>
-      </ng-container>
-      <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
-          (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+      </div>
+
     </td>
-    <td class="rowphoto"> 
-      <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
-      </codx-temp-full>
-      <!-- <div class="d-flex align-items-center" #itemCreateBy>
-          <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="data.createdBy" objectType="AD_Users">
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+      " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+            {{data?.checkListControl|vll:"L1463":"text"|async}}
+          </div>
+      </div>
+      
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
+          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
+            *ngIf=" (i<3 || data.disableReadmore) ">
+            <label class="checkbox checkbox-square checkbox-sm mb-0">
+              <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
+              </codx-input>
+            </label>
+          </div>
+        </ng-container>
+        <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
+          (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+      </div>
+      
+      
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="d-flex align-items-center" #itemCreateBy>
+          <codx-img class="symbol symbol-24 symbol-circle mr-3" width="25" [objectId]="data.createdBy"
+            objectType="AD_Users">
           </codx-img>
-          <div class="text-dark font-size-lg" placement="bottom">
+          <div class="text-dark font-size-lg" placement="left" [ngbTooltip]="data.createName">
             {{data.createName}}
           </div>
-        </div> -->
+        </div>
+      </div>
+      <!-- <codx-temp-full [imageId]="data.createdBy" imageObjType="AD_Users" imageWidth="25" [desc]="data.createName">
+      </codx-temp-full> -->
     </td>
     <td class="rowphoto">
-      {{data.createdOn | date: 'dd/MM/yyyy'}}
+      <div class="padding">
+        {{data.createdOn | date: 'dd/MM/yyyy'}}
+      </div>
     </td>
     <td class="rowphoto">
-      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+      <div class="padding">
+        <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
         (clickMF)="clickMF($event,data)">
-
       </codx-mfunc>
+      </div>
     </td>
   </tr>
 </ng-template>
 
 
-<ng-template #itemCreateBy let-dataItem>
+
+<ng-template #itemTaskGroupID let-data>
+  <div class="padding">
+    <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemTaskGroupName let-data>
+  <div class="padding">
+
+    <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemTaskGroupName2 let-data>
+  <div class="padding">
+
+    <codx-label fiedName="TaskGroupName2" formName="TaskGroups" gridViewName="grvTaskGroups" default="Tên khác">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemNote let-data>
+  <div class="padding">
+
+    <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemApprovalControl let-data>
+  <div class="padding">
+
+    <codx-label fiedName="ApprovalControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Xét duyệt?">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemProjectControl let-data>
+  <div class="padding">
+
+    <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Chọn dự án">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemAttachmentControl let-data>
+  <div class="padding">
+
+    <codx-label fiedName="AttachmentControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Đính kèm file">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemCheckListControl let-data>
+  <div class="padding">
+
+    <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Nhập việc cần làm">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemCheckList let-data>
+  <div class="padding">
+
+    <codx-label fiedName="CheckList" formName="TaskGroups" gridViewName="grvTaskGroups" default="Loại Checklist">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemCreatedBy let-data>
+  <div class="padding">
+
+    <codx-label fiedName="CreatedBy" formName="TaskGroups" gridViewName="grvTaskGroups" default="Người tạo">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemCreatedOn let-data>
+  <div class="padding">
+
+    <codx-label fiedName="CreatedOn" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ngày tạo">
+    </codx-label>
+  </div>
+</ng-template>
+
+
+<!-- <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
     <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
     </codx-img>
@@ -154,11 +274,10 @@
       *ngIf=" (i<3 || data.disableReadmore) ">
       <label class="checkbox checkbox-square checkbox-sm mb-0">
         <input type="checkbox" checked="checked" disabled>
-        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
         <span></span> {{item}}
       </label>
     </div>
   </ng-container>
   <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
       (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
-</ng-template>
+</ng-template> -->

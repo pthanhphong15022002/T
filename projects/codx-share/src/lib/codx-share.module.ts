@@ -22,6 +22,7 @@ import { TruncatePipe } from './pipe/truncate.pipe';
 import { CalendarNotesComponent } from './components/calendar-notes/calendar-notes.component';
 import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { UploaderComponent, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -41,7 +42,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
-  CalendarDateComponent
+  CalendarDateComponent  
 ];
 
 
@@ -52,7 +53,7 @@ const T_Pipe: Type<any>[] = [
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule],
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule, UploaderModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }

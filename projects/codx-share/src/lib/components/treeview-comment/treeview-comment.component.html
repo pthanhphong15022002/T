@@ -1,40 +1,40 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
     <div class="d-flex align-items-center">
         <ng-container *ngIf="rootData.totalVote == 0">
-            <span class="icon-circle-primary">
-                <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                    style="width: 20px; height: 20px;">
-            </span>
-            <span class="ms-2">{{rootData.totalVote}}</span>
+            <div class="flex align-items-center">
+                <span class="me-2">
+                    <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
+                        style="width: 20px; height: 20px;">
+                </span>
+                <span class="ms-2">{{rootData.totalVote}}</span>
+            </div>
         </ng-container>
         <ng-container *ngIf="rootData.totalVote > 0">
-            <span class="icon-circle-primary">
+            <span>
                 <ng-container *ngIf="this.pennant == 0;else pennat1">
-                    <div class="flex">
+                    <div class="flex align-items-center">
                         <div *ngFor="let votedType of rootData.listVoteType">
-                            <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                            <a class="me-2" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
                                 <img src="/assets/themes/wp/default/img/{{(votedType|vll:'L1480':'icon'|async)}}"
                                     alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                             </a>
                         </div>
-                        <span class="ms-2">{{rootData.totalVote}}
-                        </span>
+                        <span class="ms-2">{{rootData.totalVote}}</span>
                     </div>
                 </ng-container>
                 <ng-template #pennat1>
                     <div class="flex">
                         <div *ngFor="let votedType of rootData.listVoteType">
-                            <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                            <a class="me-2" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
                                 <img src="/assets/themes/wp/default/img/{{(votedType|vll:'L1480':'icon'|async)}}"
                                     alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                             </a>
                         </div>
-                        <a class="" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
+                        <a class="me-2" (click)="openFormListIconVoted(popContentListVoted, rootData.recID)">
                             <img src="/assets/themes/wp/default/img/{{(votedTypeUpdated | vll:'L1480':'icon' | async)}}"
                                 alt="Kiwi standing on oval" style="width: 20px; height: 20px;">
                         </a>
-                        <span class=""
-                            style="margin-left: 5px;font-size: 18px;margin-top: -2px;">{{rootData.totalVote}}</span>
+                        <span class="ms-2">{{rootData.totalVote}}</span>
                     </div>
                 </ng-template>
                 <!-- <span class="ms-2 mt-1">{{rootData.totalVote}}</span> -->
@@ -48,7 +48,7 @@
         </span>
     </div>
 </div>
-<div class="row m-0 btn-comment p-2 border-top border-bottom">
+<div class="row m-0 btn-comment pt-2 border-top">
     <div class="col-6 p-0">
         <div class="btn-like {{rootData.myVoted ? 'liked' : ''}} delay-500">
             <div *ngIf="rootData.myVotedType == null && checkVoted == false" (click)="votePost(rootData)">
@@ -119,9 +119,9 @@
         </div>
     </div>
 </div>
-<div class="isHiden" [class.isShow]="rootData.isShowComment">
-    <div class="position-relative cmt c1 feed-box mt-4" (keyup.enter)="sendComment(rootData,comments)">
-        <codx-input type="text" placeholder="Bình luận" [crrValue]="comments"
+<div class="isHiden border-top" [class.isShow]="rootData.isShowComment">
+    <div class="position-relative cmt c1 feed-box my-3" (keyup.enter)="sendComment(rootData,comments)">
+        <codx-input class="border-0" type="text" placeholder="Bình luận" [crrValue]="comments"
             (valueChange)="valueChange($event,'comments')">
         </codx-input>
         <div class="feed-icon btn-send">
@@ -132,7 +132,6 @@
         </div>
     </div>
 
-    <br>
     <ng-container *ngFor="let cm of rootData.listComment">
         <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: cm }">
 
@@ -141,11 +140,11 @@
 
     <ng-template #parentComment let-data>
         <div class="d-flex pt-2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-            <div class="me-3">
+            <div class="me-4">
                 <codx-img [width]="35" objectType="AD_Users" [objectId]="data?.createdBy">
                 </codx-img>
             </div>
-            <div class="d-flex flex-column w-100  ms-4">
+            <div class="d-flex flex-column w-100">
                 <div class="d-flex comments">
                     <div class="comment-content level-1">
                         <div class="d-flex align-items-center flex-wrap">

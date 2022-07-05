@@ -8,7 +8,8 @@ export const environment = {
     // apiUrl: 'https://codx.com.vn',
     // shopping: 'https://register.codx.com.vn/shopping',
     // librOfficeUrl: 'https://office.codx.com.vn/loleaflet/2afbc52/loleaflet.html',
-    apiUrl: 'http://172.16.7.34:8011',
+    //apiUrl: 'http://172.16.7.34:8011',
+    apiUrl: 'http://localhost:8011',
     shopping: 'http://172.16.7.34:8111/Shopping',
     librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
     StoreNames: {

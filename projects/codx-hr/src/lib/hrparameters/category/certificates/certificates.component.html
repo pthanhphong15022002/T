@@ -16,5 +16,7 @@
     {{data.createdOn | date: "dd/mm/yyyy"}}
 </ng-template>
 <ng-template #itemStopCheck let-data>
-    <codx-input type="checkbox" name="checkbox" class="" [checked]="data.stop"></codx-input>
+    <!-- <codx-input type="checkbox" name="checkbox" class="" [checked]="data.stop"></codx-input> -->
+    <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After" checked="true">
+    </codx-input>
 </ng-template>

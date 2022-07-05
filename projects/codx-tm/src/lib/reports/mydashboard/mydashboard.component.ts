@@ -1,13 +1,11 @@
 import { ActivatedRoute } from '@angular/router';
-import { CodxTMService } from './../../codx-tm.service';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
-import { Component, OnInit } from '@angular/core';
-import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   GaugeTheme,
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-circulargauge';
-
+import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 
 @Component({
   selector: 'my-dashboard',
@@ -15,16 +13,20 @@ import {
   styleUrls: ['./mydashboard.component.scss'],
 })
 export class MyDashboardComponent implements OnInit {
+  @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
   formModel: string;
   funcID: string;
   model: DataRequest;
-  taskRemind: TaskRemind = new TaskRemind();
+  daySelected: Date;
   fromDate: Date;
   toDate: Date;
-  daySelected: Date;
   daySelectedFrom: Date;
   daySelectedTo: Date;
-  remiderOnDay: RemiderOnDay[] = [];
+  week: number;
+  month: number;
+  beginMonth: Date;
+  endMonth: Date;
+  taskOfDay: any;
 
   //#region gauge
   public font1: Object = {
@@ -65,57 +67,110 @@ export class MyDashboardComponent implements OnInit {
   public piedata2: Object[];
   public legendSettings: Object;
 
+  //#region chartcolumn
+  dataColumn: Object[] = [];
+  dataLine: Object[] = [];
+  columnXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    rangePadding: 'None',
+    majorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    lineStyle: { width: 0 },
+    labelStyle: {
+      color: 'dark',
+    },
+  };
+
+  columnYAxis: Object = {
+    minimum: 0,
+    interval: 10,
+    labelStyle: {
+      color: 'gray',
+    },
+  };
+
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+
+  radius: Object = {
+    topLeft: 10,
+    topRight: 10,
+  };
+  //#endregion chartcolumn
+
+  dbData: any;
+
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
-    private tmService: CodxTMService,
     private activedRouter: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.model = new DataRequest();
-    this.model.formName = 'Tasks';
+    this.model.formName = 'TMDashBoard';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.predicate = 'Owner=@0';
     this.model.dataValue = this.auth.get().userID;
     this.model.pageLoading = false;
 
-    this.api
-      .execSv(
-        'TM',
-        'TM',
-        'ReportBusiness',
-        'GetDataMyDashboardAsync',
-        this.model
-      )
-      .subscribe((res) => {
-        console.log('MyDashboard', res);
-      });
-
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.piedata1 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata1 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
 
-    this.piedata2 = [{
-      x: 'Group 1',
-      y: 2
-    },{
-      x: 'Group 2',
-      y: 5
-    }];
+    this.piedata2 = [
+      {
+        x: 'Group 1',
+        y: 2,
+      },
+      {
+        x: 'Group 2',
+        y: 5,
+      },
+    ];
     this.legendSettings = {
-       visible: true
-   };
+      visible: true,
+    };
+    this.getGeneralData();
   }
 
-  private getInitData() {}
+  private getGeneralData() {
+    this.api
+      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataMyDashboardAsync', [
+        this.model,
+        this.beginMonth,
+        this.endMonth,
+      ])
+      .subscribe((res) => {
+        this.dbData = res;
+        console.log(this.dbData);
+      });
+
+    this.api
+      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
+        this.model,
+        this.fromDate,
+        this.toDate,
+      ])
+      .subscribe((res: any) => {
+        this.taskOfDay = res;
+        console.log(this.taskOfDay);
+      });
+  }
 
   onChangeValueSelectedWeek(data) {
     this.fromDate = data.fromDate;
@@ -123,5 +178,18 @@ export class MyDashboardComponent implements OnInit {
     this.daySelected = data.daySelected;
     this.daySelectedFrom = data.daySelectedFrom;
     this.daySelectedTo = data.daySelectedTo;
+    this.week = data.week;
+    this.month = data.month + 1;
+    this.beginMonth = data.beginMonth;
+    this.endMonth = data.endMonth;
+    this.getGeneralData();
+    if (this.week != data.week) {
+      this.week = data.week;
+      this.getGeneralData();
+    }
+    if (this.month != data.month + 1) {
+      this.month = data.month + 1;
+      this.getGeneralData();
+    }
   }
 }

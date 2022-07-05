@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, CacheService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
@@ -6,11 +6,13 @@ import { CodxMwpService } from '../codx-mwp.service';
 @Component({
   selector: 'lib-employee-infomation',
   templateUrl: './employee-infomation.component.html',
-  styleUrls: ['./employee-infomation.component.css']
+  styleUrls: ['./employee-infomation.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class EmployeeInfomationComponent implements OnInit {
   views: Array<ViewModel> = [];
-  
+
   employeeInfo: any = null;
   employeeHobbie: any = null;
   employeeContracts: any = null;
@@ -50,7 +52,7 @@ export class EmployeeInfomationComponent implements OnInit {
   primaryXAxis: Object;
   primaryYAxis: Object;
 
-  parentID: string = "WPT0321";
+  // parentID: string = "WPT0321";
   formName: string = "";
   gridViewName: string = "";
   user: any;
@@ -59,13 +61,14 @@ export class EmployeeInfomationComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
+  @ViewChild('header') header: TemplateRef<any>;
 
   //currentSection = 'InfoPersonal';
   constructor(
     private codxMwpService: CodxMwpService,
-    private dt: ChangeDetectorRef, 
-    private routeActive: ActivatedRoute, 
-    private api: ApiHttpService, 
+    private dt: ChangeDetectorRef,
+    private routeActive: ActivatedRoute,
+    private api: ApiHttpService,
     private auth: AuthStore,
     private cachesv: CacheService,
   ) {
@@ -107,7 +110,7 @@ export class EmployeeInfomationComponent implements OnInit {
         this.LoadData(res);
       }
     });
-    this.cachesv.functionList("WPT032").subscribe((res: any) => {
+    this.cachesv.functionList("MWP002").subscribe((res: any) => {
       if (res) {
         this.formName = res.formName;
         this.gridViewName = res.gridViewName;
@@ -275,7 +278,7 @@ export class EmployeeInfomationComponent implements OnInit {
         model: {
           panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef,
-          widthLeft: '200px'
+          widthLeft: '320px'
         }
       },
     ];
@@ -291,33 +294,16 @@ export class EmployeeInfomationComponent implements OnInit {
     this.codxMwpService.currentSection = data.current;
     this.dt.detectChanges();
   }
+  isCheck(data) {
+    if (this.skillEmployee) {
+      for (let index = 0; index < this.skillEmployee.length; index++) {
+        const element = this.skillEmployee[index];
+        if (data.competenceID == element.competenceID) {
+          return true;
+        }
 
-  editInfo(data) {
-    this.allowinfo = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.editInfo(data);
-    this.dt.detectChanges();
-  }
-  editExperences(data?) {
-    this.allowexp = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.experienceEdit.next(data || { employeeID: this.employeeInfo.employeeID });
-  }
-  editDataEdu(data) {
-    this.allowedu = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
-  }
-  editRelation(data) {
-    this.allowrela = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.relationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
-  }
-  editHobby(data) {
-    this.allowhobby = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    data = data || { employeeID: this.employeeInfo.employeeID };
-    data.list = this.employeeHobbie;
-    this.codxMwpService.hobbyEdit.next(data);
+      }
+    }
+    return false;
   }
 }

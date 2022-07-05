@@ -1,33 +1,31 @@
-@media (min-width: 992px) {
-    .header-fixed.toolbar-fixed .wrapper {
-        padding-top: 50px;
-        //padding-top: get($header-config, fixed, height, desktop);
-    }
-
-    .aside-fixed .aside {
-        //top: get($header-config, fixed, height, desktop);
-        top: 52px;
-    }
-
-    .aside-enabled.aside-fixed.header-fixed .header {
-        left: 0;
-    }
+.ut-item .symbol {
+    border: 2px solid #e5e5e5;
 }
 
-.aside {
-    background-color: transparent;
-    box-shadow: none;
+.user-online .symbol {
+    border-color: #1bc5bd;
+}
 
-    .menu-title,
-    .brand-text {
-        color: #202020 !important;
-    }
-
-    .btn-minimize {
-        visibility: hidden;
-    }
+.e-calendar .e-content.e-month td.e-today span.e-day {
+    line-height: 32px;
 }
 
 .form-myTeam {
     margin-bottom: 15px;
+}
+
+.home-left codx-view-content {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+.home-left ejs-listview {
+    background-color: transparent;
+}
+
+.home-left ejs-listview .e-ul>li {
+    margin-bottom: 15px;
+    background-color: #fff !important;
+    border-radius: 0.475rem;
 }
