@@ -61,6 +61,11 @@ export const routes: Routes = [
         path: 'employeeinfo/:funcID',
         component: EmployeeInfomationComponent,
       },
+      // {
+      //   path:'',
+      //   redirectTo:'personals/:funcID',
+      //   component: PersonalsComponent,
+      // },
     ],
   },
 ];
