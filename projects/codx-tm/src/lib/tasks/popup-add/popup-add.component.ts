@@ -228,7 +228,6 @@ export class PopupAddComponent implements OnInit {
   }
 
   openInfo(id, action) {
-    this.task = new TM_Tasks();
     this.readOnly = action === 'edit' ? false : true;
     this.title =
       action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
@@ -236,7 +235,7 @@ export class PopupAddComponent implements OnInit {
 
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        this.task = res[0];
+        this.task = res[0] as TM_Tasks;
         this.tags = this.task.tags;
         this.listUserDetail = res[1] || [];
         this.listTodo = res[2];
