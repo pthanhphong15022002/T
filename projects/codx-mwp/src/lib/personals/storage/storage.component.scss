@@ -112,10 +112,10 @@
 }
 
 .details {
-    width: 777.23px;
-    height: 500px;
-    margin-left: 185px;
-    margin-top: 20px;
+    position: relative;
+    margin: 0 auto;
+    z-index: 99;
+    width: 68%;
 }
 
 .margin-font {
@@ -123,7 +123,7 @@
     font-weight: bold;
 }
 
-.btn-back{
+.btn-back {
     height: 28px;
     padding-top: 0px;
     padding-right: 0px;

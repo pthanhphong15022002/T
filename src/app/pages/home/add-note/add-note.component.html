@@ -43,10 +43,10 @@
                             <li></li>
                         </ng-template>
                     </div>
-                    <div class="w-100" #txtNoteEdit name="txtTodoEdit" (keydown.enter)="onUpdateNote(item)">
+                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
                         <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
-                            [crrValue]="item?.listNote" field="listNote" (valueChange)="valueChange($event, item)"
-                            [formModel]="form.formModel" [Group]="form.formGroup">
+                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
+                            (valueChange)="valueChange($event, item)">
                         </codx-input>
                     </div>
                 </div>
