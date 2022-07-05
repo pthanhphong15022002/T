@@ -87,27 +87,27 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   }
   onSave()
   {
-    this.submitted = true;
-    if(this.exportAddForm.invalid) return;
-    if(this.fileCount>0)
-    {
-      this.api
-      .execActionData<any>(
-        'AD_ExcelTemplates',
-        [this.exportAddForm.value],
-        'SaveAsync'
-      ).subscribe(item=>{
-        if(item[0] == true)
-        {
-          this.notifySvr.notifyCode("RS002");
-          this.attachment.objectId = item[1][0].recID;
-          this.attachment.saveFiles();
-          this.dialog.close(item[0]);
-        }
-        else this.notifySvr.notify("Thêm không thành công");
-      })
-    }
-    else this.notifySvr.notifyCode("DM001");
+    // this.submitted = true;
+    // if(this.exportAddForm.invalid) return;
+    // if(this.fileCount>0)
+    // {
+    //   this.api
+    //   .execActionData<any>(
+    //     'AD_ExcelTemplates',
+    //     [this.exportAddForm.value],
+    //     'SaveAsync'
+    //   ).subscribe(item=>{
+    //     if(item[0] == true)
+    //     {
+    //       this.notifySvr.notifyCode("RS002");
+    //       this.attachment.objectId = item[1][0].recID;
+    //       this.attachment.saveFiles();
+    //       this.dialog.close(item[0]);
+    //     }
+    //     else this.notifySvr.notify("Thêm không thành công");
+    //   })
+    // }
+    // else this.notifySvr.notifyCode("DM001");
     
   }
   getfileCount(e:any)

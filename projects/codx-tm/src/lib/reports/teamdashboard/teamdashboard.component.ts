@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   GaugeTheme,
@@ -18,11 +18,15 @@ export class TeamDashboardComponent implements OnInit {
   funcID: string;
   model: DataRequest;
   taskRemind: TaskRemind = new TaskRemind();
+  daySelected: Date;
   fromDate: Date;
   toDate: Date;
-  daySelected: Date;
   daySelectedFrom: Date;
   daySelectedTo: Date;
+  week: number;
+  month: number;
+  beginMonth: Date;
+  endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
 
   //#region gauge
@@ -104,31 +108,11 @@ export class TeamDashboardComponent implements OnInit {
     { text: 'Thời gian thực hiện' },
   ];
 
-  public data: object[] = [
-    {
-      taskGroupName: 'Công việc kiểm thử States',
-      tasks: 20,
-      percentage: 20,
-      rank: 1,
-    },
-    {
-      taskGroupName: 'Chuyển codx sang control',
-      tasks: 50,
-      percentage: 50,
-      rank: 2,
-    },
-    { taskGroupName: 'Phân tích', tasks: 10, percentage: 10, rank: 3 },
-    {
-      taskGroupName: 'Quá trình thực hiện chuyển đổi',
-      tasks: 20,
-      percentage: 20,
-      rank: 4,
-    },
-  ];
+  public data: object[] = [];
   public leafItemSettings: object = {
     labelPath: 'taskGroupName',
     labelPosition: 'Center',
-    labelFormat: '${taskGroupName}<br>${percentage} %)',
+    labelFormat: '${taskGroupName}<br>${percentage} %',
     colorMapping: [
       {
         from: 50,
@@ -177,9 +161,9 @@ export class TeamDashboardComponent implements OnInit {
         'GetDataTeamDashboardAsync',
         this.model
       )
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         console.log('Team Dashboard', res);
-        this.dbData = res
+        this.dbData = res;
         this.piedata1 = [
           {
             x: 'Chưa thực hiện',
@@ -201,7 +185,10 @@ export class TeamDashboardComponent implements OnInit {
             x: 'Bị huỷ',
             y: res.canceledTasks,
           },
-        ]
+        ];
+        this.data = res.tasksByGroup;
+        this.dataColumn = res.dataBarChart.barChart;
+        this.dataLine = res.dataBarChart.lineChart;
       });
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -232,13 +219,24 @@ export class TeamDashboardComponent implements OnInit {
     };
   }
 
-  private getInitData() {}
+  private getGeneralData() {
+    this.api
+      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataMyDashboardAsync', [
+        this.model,
+      ])
+      .subscribe((res: any) => {
+        this.dbData = res;
+        this.data = res.tasksByGroup;
+      });
 
-  onChangeValueSelectedWeek(data) {
-    this.fromDate = data.fromDate;
-    this.toDate = data.toDate;
-    this.daySelected = data.daySelected;
-    this.daySelectedFrom = data.daySelectedFrom;
-    this.daySelectedTo = data.daySelectedTo;
+    this.api
+      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
+        this.model,
+        this.fromDate,
+        this.toDate,
+      ])
+      .subscribe((res: any) => {
+        console.log(res);
+      });
   }
 }
