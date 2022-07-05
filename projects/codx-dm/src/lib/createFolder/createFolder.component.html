@@ -1,0 +1,267 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
+    <ng-template #body>      
+        <div class="offcanvas-content">
+            <form name="frm_folder">
+                <div class="offcanvas-wrapper">
+                    <div class="form-group">
+                        <label for="foldername">
+                            <app-custombreadcumb end="2" start="0" max="4"></app-custombreadcumb>
+                        </label>
+                        <div class="d-flex">
+    
+                            <div class="w-100">
+                                <input [disabled]="noeditName ? 'disabled' : null" type="text"
+                                    (input)="validate('folderName')" class="form-control" matInput id="folderName"
+                                    name="folderName" placeholder="Tên thư mục" [(ngModel)]='folderName' #folderNameCtrl>
+                            </div>
+                            <div class="ml-2 icon-document">
+                                <select-icon (valueChange)="valueChange($event, 'icon')" field="icon" [itemSelected]="icon">
+                                </select-icon>
+                            </div>
+                        </div>
+                        <div id="folderError" autofocus *ngIf="errorshow || folderNameCtrl.value === ''"
+                            class="invalid-feedback">
+                            <div
+                                *ngIf="folderNameCtrl.value === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
+                            </div>
+                            <ng-template #thenBlockErrorFolder>Tên thư mục bắt buộc..</ng-template>
+                            <ng-template #thenBlockErrorElseFolder>{{message}}</ng-template>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-outline-primary">
+                            Mở rộng<i class="icon-keyboard_arrow_right icon-16 ml-2"></i></button>
+                    </div>
+    
+                    <div *ngIf="this.showAll != null && isShowAll(false)" class="permission-group">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <ul class="nav nav-tabs nav-tabs-line">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" (click)="onSetPermision(false)">
+                                        <span class="nav-text">Chia sẻ</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <button type="button" (click)="openRight()" class="btn btn-pill btn-xs btn-outline-primary">Chọn
+                                đối
+                                tượng</button>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane pt-1 fade show active" id="tab_role" role="tabpanel">
+                                <div class="user-mini-group">
+                                    <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
+                                        <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
+                                            <ng-container
+                                                *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
+                                                <!-- <ng-container *ngIf="perm.isActive != false"> -->
+                                                <div class="user-mini-item">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="symbol symbol-30 symbol-circle mr-2">
+                                                            <div
+                                                                *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar2 else elsethenAvatar2">
+                                                            </div>
+                                                            <ng-template #thenAvatar2>
+                                                                <img class="symbol symbol-30 symbol-circle"
+                                                                    src="../../../assets/demos/user/user-admin.svg">
+                                                            </ng-template>
+                                                            <ng-template #elsethenAvatar2>
+                                                                <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                                    [objectId]="perm.objectID" objectType="AD_Users">
+                                                                </lv-image-viewer>
+                                                            </ng-template>
+                                                        </div>
+                                                        <div class="text-dark-75">{{perm.objectName}}</div>
+                                                        <span *ngIf="perm.isSystem == false && this.assignRight"
+                                                            (click)="removeUserRight(i)" (click)="removeUserRight(i)"
+                                                            class="icon-close icon-16 ml-2 text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                                <div class="share-groups mt-4">
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Xét duyệt tài liệu</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm switch-icon mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="checkApproval" #checkApproval
+                                                        [checked]="approval" id="checkApproval"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkApproval.checked, 'approval')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+                                                <button type="button" [disabled]="disableRight('approval')"
+                                                    (click)="openApproval()"
+                                                    class="btn btn-pill btn-xs btn-outline-primary">Thiết
+                                                    lập</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Kiểm soát phiên bản</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm switch-icon mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="checkRevision" #checkRevision
+                                                        [checked]="revision" id="checkRevision"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkRevision.checked, 'revision')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Kiểm soát vị trí kho</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm switch-icon mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="checkPhysical" #checkPhysical
+                                                        [checked]="physical" id="checkPhysical"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkPhysical.checked, 'physical')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+                                                <button type="button" [disabled]="disableRight('physical')"
+                                                    (click)="openPhysical()"
+                                                    class="btn btn-pill btn-xs btn-outline-primary">Thiết
+                                                    lập</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Quản lý bản quyền</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm switch-icon mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="checkCopyrights" #checkCopyrights
+                                                        [checked]="copyrightsControl" id="checkCopyrights"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkCopyrights.checked, 'copyrightsControl')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Bảo mật</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm switch-icon mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="checkSecurity" #checkSecurity
+                                                        [checked]="security" id="checkSecurity"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkSecurity.checked, 'checkSecurity')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                                        <div class="text-dark-75">Tạo thư mục cấp con tự động</div>
+                                        <div class="d-flex">
+                                            <span class="switch switch-sm mr-2">
+                                                <label>
+                                                    <input type="checkbox" name="select" #checkFolder
+                                                        [checked]="createSubFolder" id="checkFolder"
+                                                        [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                        (change)="onSaveRightChanged(checkFolder.checked, 'checkFolder')" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                            <div class="w-80px">
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="this.createSubFolder" class="mt-6">
+                                        <table class="table w-100">
+                                            <thead>
+                                                <tr class="py-2 border-bottom">
+                                                    <th class="w-120px">Cấp thư mục</th>
+                                                    <th class="w-150px">Thiết lập</th>
+                                                    <th>Diễn giải</th>
+                                                    <th class="w-50px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let sub of listSubFolder; index as i;" class="border-bottom">
+                                                    <td>{{SubLevel(sub)}}</td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <div class="text-dark font-weight-bold">{{SubType(sub)}}</div>
+                                                            <div class="text-50">{{SubFormat(sub)}}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{sub.description}}</td>
+                                                    <td>
+                                                        <div class="dropdown dropdown-left ml-2">
+                                                            <button class="btn btn-icon btn-md" type="button"
+                                                                id="dropdownMenuButton" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">
+                                                                <span class="icon-more_vert icon-20"></span>
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item" (click)="onEditSub(i)">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="icon-edit icon-18 text-warning"></span>
+                                                                        <span class="ml-3">Edit</span>
+                                                                    </div>
+                                                                </a>
+                                                                <a class="dropdown-item" (click)="onDeleteSub(i)">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="icon-close icon-18 text-danger"></span>
+                                                                        <span class="ml-3">Xóa</span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                                <tr>
+                                                    <td (click)="openSubFolder()" colspan="4">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-add icon-18 mr-1"></span>
+                                                            <span class="text-dark">Thêm mới cấp thư mục</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-footer">
+                    <button type="button" class="btn btn-primary" id="btnCreateFolder"
+                        [disabled]="this.updateRight == false || this.propertiesFolder" (click)="onFolderSave()">Ok</button>
+                </div>
+            </form>
+        </div>
+    </ng-template>    
+    <ng-template #footer>
+        <div class="card-footer pt-4">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                Upload
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>

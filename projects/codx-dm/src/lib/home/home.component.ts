@@ -165,8 +165,8 @@ export class HomeComponent extends UIComponent {
 
   onSelectionChanged($data) {
  //   console.log($data);
-    let id = $data.dataItem.recID;
-    let item = $data.dataItem;    
+    let id = $data.recID;
+    let item = $data;    
     if (item.read) {      
       // var breadcumb = [];
       // var breadcumbLink = [];
