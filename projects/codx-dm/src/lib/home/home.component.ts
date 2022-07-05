@@ -29,9 +29,9 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-}) 
+})
 export class HomeComponent extends UIComponent {
-  @ViewChild('templateMain') templateMain: TemplateRef<any>;    
+  @ViewChild('templateMain') templateMain: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
@@ -50,7 +50,7 @@ export class HomeComponent extends UIComponent {
   //loadedFolder: boolean;
   user: any;
   dialog!: DialogRef;
- // @ViewChild('attachment') attachment: AttachmentComponent 
+  // @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -59,7 +59,7 @@ export class HomeComponent extends UIComponent {
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-  ) { 
+  ) {
     super(inject);
   }
 
@@ -69,46 +69,46 @@ export class HomeComponent extends UIComponent {
   //   }
   // }
 
-  onInit(): void {  
+  onInit(): void {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-                      id: "btnAdd"
-                  };    
-    
+      id: "btnAdd"
+    };
+
   }
 
   addFile($event) {
-  //  console.log($event);
-  //  alert(1);
-    //this.attachment.uploadFile(); 
+    //  console.log($event);
+    //  alert(1);
+    //this.attachment.uploadFile();
     /*
-    <attachment  
-      #attachment  
-      [objectType]="formModel?.entityName" 
-      hideBtnSave="1"   
-      hideFolder="1"  
-      hideUploadBtn="1"   
-      hideDes="1" 
-      [functionID]="formModel?.funcID" 
-      (fileAdded)="fileAdded($event)" 
-      (fileCount)="getfileCount($event)" 
-    > 
-    </attachment> 
+    <attachment
+      #attachment
+      [objectType]="formModel?.entityName"
+      hideBtnSave="1"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      [functionID]="formModel?.funcID"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+    >
+    </attachment>
 
     */
-    var data = new DialogAttachmentType;    
+    var data = new DialogAttachmentType;
     data.objectType = "WP_Notes";
-    data.objectId = "628c326c590addf224627f42"; 
-    data.functionID = "ODT3";  
-    data.type = 'popup';  
+    data.objectId = "628c326c590addf224627f42";
+    data.functionID = "ODT3";
+    data.type = 'popup';
     // this.callfc.openForm(AttachmentComponent, "Upload tài liệu", 500, 700, null, data).subscribe((dialog: any) => {
-    
-    // });  
+
+    // });
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
-    option.Width = '750px';
+    option.Width = '800px';
 
     this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
     this.dialog.closed.subscribe(e => {
@@ -121,7 +121,7 @@ export class HomeComponent extends UIComponent {
   }
 
   fileAdded($event) {
-   // this.data = event.stopImmediatePropagation;
+    // this.data = event.stopImmediatePropagation;
   }
 
 
@@ -156,7 +156,7 @@ export class HomeComponent extends UIComponent {
     if (!folder.read)
       item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
     var fullText = `${item1}
-                    ${item2} 
+                    ${item2}
                     <span class="mytree_node"></span>
                     ${text}`;
 
@@ -164,10 +164,10 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
- //   console.log($data);
+    //   console.log($data);
     let id = $data.recID;
-    let item = $data;    
-    if (item.read) {      
+    let item = $data;
+    if (item.read) {
       // var breadcumb = [];
       // var breadcumbLink = [];
       // var list = this.tree.getBreadCumb(id);
@@ -194,27 +194,27 @@ export class HomeComponent extends UIComponent {
       // this.dmSV.currentNode = id;
       // this.dmSV.currentNode = id;
       // this.dmSV.folderId.next(id);
-     //this.view.dataService.addDatas(id, )
+      //this.view.dataService.addDatas(id, )
       if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
-   //     this.folderService.options.funcID = 
+        //     this.folderService.options.funcID =
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async res => {
-        //  this.dmSV.isTree = true;
+          //  this.dmSV.isTree = true;
           if (res != null) {
-            var datas = new Map<string, any>();    
-            datas.set(id, res[0]);         
+            var datas = new Map<string, any>();
+            datas.set(id, res[0]);
             this.view.dataService.addDatas = datas;
-            //  this.dmSV.listFolder.next(res);          
+            //  this.dmSV.listFolder.next(res);
             // $data.dataItem.items = [];
             //  this.tree.addChildNodes($data.dataItem, res);
             this.changeDetectorRef.detectChanges();
-           // this.dmSV.isTree = false;
-          }          
+            // this.dmSV.isTree = false;
+          }
         });
       }
       else {
         //this.dmSV.isTree = true;
-     //   this.dmSV.listFolder.next($data.dataItem.items);
+        //   this.dmSV.listFolder.next($data.dataItem.items);
         this.changeDetectorRef.detectChanges();
         //this.dmSV.isTree = false;
       }
@@ -232,12 +232,12 @@ export class HomeComponent extends UIComponent {
 
   checkUserForder(data) {
     return false;
-  } 
+  }
 
-  ngAfterViewInit(): void {     
+  ngAfterViewInit(): void {
     // this.button.nativeElement.disabled = true;
-    // this.view.button.disabled = true;   
-    
+    // this.view.button.disabled = true;
+
     this.views = [
       {
         id: "1",
@@ -260,7 +260,7 @@ export class HomeComponent extends UIComponent {
         type: ViewType.treedetail,
         sameData: true,
         model: {
-          template: this.templateMain,    
+          template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
           resizable: true
@@ -273,39 +273,39 @@ export class HomeComponent extends UIComponent {
         type: ViewType.treedetail,
         sameData: true,
         model: {
-          template: this.templateMain,      
+          template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
           resizable: true
         },
       },
-    ]       
-    
+    ]
+
     this.changeDetectorRef.detectChanges();
     console.log(this.button);
   }
 
   changeView(event) {
-    this.currView  = null;
+    this.currView = null;
     this.currView = event.view.model.template2;
     this.folderService.options.funcID = this.view.funcID;
     this.dmSV.loadedFile = false;
     this.dmSV.loadedFolder = false;
-    this.folderService.getFolders("").subscribe(async res => {    
+    this.folderService.getFolders("").subscribe(async res => {
       if (res != null) {
         this.listFolders = res[0];
         this.dmSV.loadedFolder = true;
         this.changeDetectorRef.detectChanges();
-      }          
+      }
     });
 
     this.fileService.options.funcID = this.view.funcID;
-    this.fileService.getListActiveFiles("", "").subscribe(async res => {    
+    this.fileService.getListActiveFiles("", "").subscribe(async res => {
       if (res != null) {
         this.listFiles = res[0];
         this.dmSV.loadedFile = true;
         this.changeDetectorRef.detectChanges();
-      }          
+      }
     });
   }
 }

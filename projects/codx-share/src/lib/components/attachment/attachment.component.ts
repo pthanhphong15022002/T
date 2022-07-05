@@ -3,7 +3,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   Output,
-  EventEmitter, 
+  EventEmitter,
   ViewChild,
   Input,
   ElementRef,
@@ -22,7 +22,7 @@ import { AttachmentService } from './attachment.service';
 import { ViewEncapsulation, Inject } from '@angular/core';
 import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
-import { createSpinner, showSpinner, hideSpinner  } from '@syncfusion/ej2-popups';
+import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -52,7 +52,7 @@ export class AttachmentComponent implements OnInit {
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
-  data: any;  
+  data: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = "1";
   @Input() formModel: any;
@@ -70,16 +70,16 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
-  @ViewChild('templateupload') public uploadObj: UploaderComponent;  
+  @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
   //public allowExtensions: string;// = '.png, .jpg, .jpeg';
   public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
-  public parentElement : HTMLElement; 
-  public proxy : any;
-  public progressbarContainer : HTMLElement;
-  public filesDetails : FileInfo[] = [];
+  public parentElement: HTMLElement;
+  public proxy: any;
+  public progressbarContainer: HTMLElement;
+  public filesDetails: FileInfo[] = [];
   public filesList: HTMLElement[] = [];
   public dropElement: HTMLElement = document.getElementsByClassName('control-fluid')[0] as HTMLElement;
 
@@ -98,7 +98,7 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-   // this.multiple = false;
+    // this.multiple = false;
     if (data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
@@ -106,9 +106,9 @@ export class AttachmentComponent implements OnInit {
       this.functionID = data?.data.functionID;
       this.type = data?.data.type;
       this.popup = data?.data.popup;
-    //  this.multiple = data?.data.multiple;
-      this.hideBtnSave = data?.data.hideBtnSave;     
-    }       
+      //  this.multiple = data?.data.multiple;
+      this.hideBtnSave = data?.data.hideBtnSave;
+    }
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -141,13 +141,13 @@ export class AttachmentComponent implements OnInit {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       };
-  
+
       this.dropElement = document.querySelector('#dropArea') as HTMLElement;
-        document.getElementById('browse').onclick = function() { 
+      document.getElementById('browse').onclick = function () {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       }
-    }    
+    }
     // https://ej2.syncfusion.com/angular/documentation/uploader/template/#custom-template
     // https://ej2.syncfusion.com/angular/demos/#/bootstrap5/uploader/custom-file-list
     // document.getElementById('clearbtn').onclick = () => {
@@ -158,51 +158,51 @@ export class AttachmentComponent implements OnInit {
     //     this.filesDetails = [];
     // };
   }
-  
+
   allowMultiple() {
     return this.allowMultiFile == "1" ? true : false;
   }
   // upload file tai day
-  public onFileSelect(args : SelectedEventArgs) : void  {
+  public onFileSelect(args: SelectedEventArgs): void {
     if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
-        this.parentElement = createElement('div', { className: 'upload-list-root' });
-        this.parentElement.appendChild(createElement('ul', {className: 'ul-element' }));
-        document.getElementById('dropArea').appendChild(this.parentElement);
-    }        
-    this.handleFileInput(args.filesData);   
+      this.parentElement = createElement('div', { className: 'upload-list-root' });
+      this.parentElement.appendChild(createElement('ul', { className: 'ul-element' }));
+      document.getElementById('dropArea').appendChild(this.parentElement);
+    }
+    this.handleFileInput(args.filesData);
     args.cancel = true;
-}
+  }
 
-  public formSelectedData (selectedFiles : FileInfo, proxy: any ) : void {
+  public formSelectedData(selectedFiles: FileInfo, proxy: any): void {
     console.log(selectedFiles);
-    let liEle : HTMLElement = createElement('li',  { className: 'file-lists', attrs: {'data-file-name' : selectedFiles.name} });
-    liEle.appendChild(createElement('span', {className: 'file-name ', innerHTML: selectedFiles.name }));
-    liEle.appendChild(createElement('span', {className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
+    let liEle: HTMLElement = createElement('li', { className: 'file-lists', attrs: { 'data-file-name': selectedFiles.name } });
+    liEle.appendChild(createElement('span', { className: 'file-name ', innerHTML: selectedFiles.name }));
+    liEle.appendChild(createElement('span', { className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
     if (selectedFiles.status === 'Ready to upload') {
-        this.progressbarContainer = createElement('span', {className: 'progress-bar-container'});
-        this.progressbarContainer.appendChild(createElement('progress', {className: 'progress', attrs: {value : '0', max : '100'}} ));
-        liEle.appendChild(this.progressbarContainer);
+      this.progressbarContainer = createElement('span', { className: 'progress-bar-container' });
+      this.progressbarContainer.appendChild(createElement('progress', { className: 'progress', attrs: { value: '0', max: '100' } }));
+      liEle.appendChild(this.progressbarContainer);
     } else { liEle.querySelector('.file-name').classList.add('upload-fails'); }
-    let closeIconContainer : HTMLElement = createElement('span', {className: 'e-icons close-icon-container'});
+    let closeIconContainer: HTMLElement = createElement('span', { className: 'e-icons close-icon-container' });
     EventHandler.add(closeIconContainer, 'click', this.removeFiles, proxy);
     liEle.appendChild(closeIconContainer);
     document.querySelector('.ul-element').appendChild(liEle);
     this.filesList.push(liEle);
   }
 
-  public removeFiles(args : any) : void {
-    let status : string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
+  public removeFiles(args: any): void {
+    let status: string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
     if (status === 'File uploaded successfully') {
-        this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
+      this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
     } else {
-        detach(args.currentTarget.parentElement);
+      detach(args.currentTarget.parentElement);
     }
     this.uploadObj.element.value = '';
   }
 
   openPopup() {
     this.fileUploadList = [];
-    // if (this.type == "center") {   
+    // if (this.type == "center") {
     // }
     // else {
     //   //this.viewBase.currentView.openSidebarRight();
@@ -216,12 +216,12 @@ export class AttachmentComponent implements OnInit {
     if (this.data == undefined)
       this.data = [];
 
-    for(var i=0; i<this.atSV.fileListAdded.length; i++) {
-      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));     
-    }    
+    for (var i = 0; i < this.atSV.fileListAdded.length; i++) {
+      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));
+    }
 
-    if (this.type == "popup") {      
-      this.dialog.close();      
+    if (this.type == "popup") {
+      this.dialog.close();
     }
 
     this.fileUploadList = [];
@@ -318,7 +318,7 @@ export class AttachmentComponent implements OnInit {
         if (res != null) {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);       
+          this.atSV.folderId.next(res[0].folderId);
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];
@@ -379,9 +379,9 @@ export class AttachmentComponent implements OnInit {
     // let option = new SidebarModel();
     // option.DataService = this.view?.currentView?.dataService;
     // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '750px';
-    
-    
+    // option.Width = '800px';
+
+
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
@@ -821,7 +821,7 @@ export class AttachmentComponent implements OnInit {
 
   uploadFile() {
     document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
-   // document.getElementById('browse').click();
+    // document.getElementById('browse').click();
     //this.file.nativeElement.click();
   }
 
@@ -874,7 +874,7 @@ export class AttachmentComponent implements OnInit {
   convertBlobToBase64 = async (blob) => {
     return await this.blobToBase64(blob);
   }
-  
+
   blobToBase64 = blob => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -891,9 +891,9 @@ export class AttachmentComponent implements OnInit {
     //     imgPreview.src = reader.result as string;
     // }, false);
     if (imageFile) {
-        reader.readAsDataURL(imageFile);
+      reader.readAsDataURL(imageFile);
     }
-  //  return reader.result as string;
+    //  return reader.result as string;
   }
 
   getBase64(file) {
@@ -916,9 +916,9 @@ export class AttachmentComponent implements OnInit {
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
-      if (index == -1) {        
-        var data = await this.convertBlobToBase64(files[i].rawFile);       
-        var fileUpload = new FileUpload();      
+      if (index == -1) {
+        var data = await this.convertBlobToBase64(files[i].rawFile);
+        var fileUpload = new FileUpload();
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
