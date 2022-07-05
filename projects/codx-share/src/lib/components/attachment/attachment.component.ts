@@ -52,9 +52,7 @@ export class AttachmentComponent implements OnInit {
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
-  data: any;  
-  @Input() allowExtensions: string;
-  @Input() allowMultiFile = "1";
+  data: any;
   @Input() formModel: any;
   @Input() objectType: string;
   @Input() objectId: string;
@@ -72,9 +70,9 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() fileCount = new EventEmitter<any>();
+  @Output() fileGet = new EventEmitter<any>();
   @ViewChild('templateupload') public uploadObj: UploaderComponent;  
   // @Input('openFolder') openFolder: ViewsComponent;
-  //public allowExtensions: string;// = '.png, .jpg, .jpeg';
   public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
   public parentElement : HTMLElement; 
   public proxy : any;
@@ -98,7 +96,6 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-   // this.multiple = false;
     if (data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
@@ -106,7 +103,6 @@ export class AttachmentComponent implements OnInit {
       this.functionID = data?.data.functionID;
       this.type = data?.data.type;
       this.popup = data?.data.popup;
-    //  this.multiple = data?.data.multiple;
       this.hideBtnSave = data?.data.hideBtnSave;     
     }       
 
@@ -122,7 +118,6 @@ export class AttachmentComponent implements OnInit {
 
     if (this.hideBtnSave == null || this.hideBtnSave == "")
       this.hideBtnSave = "0";
-    //this.changeDetectorRef.detectChanges();
   }
 
 
@@ -131,6 +126,7 @@ export class AttachmentComponent implements OnInit {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
         if (res) {
           this.data = res;
+          this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
       })
@@ -158,10 +154,7 @@ export class AttachmentComponent implements OnInit {
     //     this.filesDetails = [];
     // };
   }
-  
-  allowMultiple() {
-    return this.allowMultiFile == "1" ? true : false;
-  }
+
   // upload file tai day
   public onFileSelect(args : SelectedEventArgs) : void  {
     if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
