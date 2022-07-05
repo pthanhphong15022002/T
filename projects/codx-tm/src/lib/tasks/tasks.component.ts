@@ -189,7 +189,7 @@ export class TasksComponent extends UIComponent {
       {
         type: ViewType.schedule,
         active: false,
-        sameData: true,  
+        sameData: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -346,7 +346,7 @@ export class TasksComponent extends UIComponent {
         this.dialog.closed.subscribe((e) => {
           this.itemSelected=this.view.dataService.dataSelected
         });
-       
+
       });
 
   }
