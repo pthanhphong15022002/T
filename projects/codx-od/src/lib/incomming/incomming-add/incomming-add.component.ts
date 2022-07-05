@@ -27,6 +27,7 @@ export class IncommingAddComponent implements OnInit {
   idAgency          : any ;
   dispatch : any;
   headerText : any;
+  subHeaderText: any;
   gridViewSetup :any;
   type: any;
   formModel : any;
@@ -46,29 +47,32 @@ export class IncommingAddComponent implements OnInit {
     this.dialog = dialog;
   }
   public disEdit: any;
-  ngOnInit(): void {
-   
-    this.headerText = this.data.headerText;
+  ngOnInit(): void 
+  {
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
     this.dispatch.status = '1';
     this.gridViewSetup = this.data["gridViewSetup"];
     this.headerText = this.data["headerText"];
+    this.subHeaderText = this.data["subHeaderText"];
     this.type = this.data["type"];
     this.formModel = this.data["formModel"];
     if(this.type == "add")
     {
+      this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
+      this.dispatch.owner = null;
     }
-    else if(this.type == "edit")
+   /*  else if(this.type == "edit")
     {
       this.odService.getDetailDispatch(this.data.data.recID).subscribe(item=>{
         this.files = item.files;
       })
-    }
+    } */
   }
   fileAdded(event:any) { 
+    debugger;
     if(event?.data) this.hideThumb = true  
   }
 
@@ -154,6 +158,7 @@ export class IncommingAddComponent implements OnInit {
    //Các hàm value change 
    changeValueAgency(event: any) 
    {
+    debugger;
     if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
     {
       if(event.component.itemsSelected[0].AgencyID!= undefined)
@@ -186,6 +191,7 @@ export class IncommingAddComponent implements OnInit {
     {
       if(this.type == "copy")
       {
+        delete this.dispatch.id;
         this.dispatch.relations= null;
         this.dispatch.permissions = null;
       }
@@ -228,9 +234,10 @@ export class IncommingAddComponent implements OnInit {
   {
     this.fileCount = e;
   }
-  aaaa(a:any)
+  changeFormAgency(val:any)
   {
-    //array
-    //console.log(data?.dataSelected?.dataSelected)
+    this.showAgency = true;
+    if(val == "dv")
+      this.showAgency = false;
   }
 }
