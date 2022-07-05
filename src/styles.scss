@@ -57,3 +57,14 @@ body {
 .e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
     padding: 0;
 }
+
+.btn.btn-outline-primary {
+    color: #3699ff;
+    background-color: transparent;
+    border-color: #3699ff;
+    border-width: 1px !important;
+}
+
+.error {
+    border: 1px solid red !important;
+}

@@ -1,9 +1,9 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DataRequest, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
@@ -17,6 +17,8 @@ import { FolderInfo } from '@shared/models/folder.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateFolderComponent implements OnInit {
+  @Input() formModel: any;
+  @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
   titleDialog: any;
   historyFile: HistoryFile;
@@ -206,17 +208,180 @@ export class CreateFolderComponent implements OnInit {
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
+    @Optional() data?: DialogData,
+    @Optional() dialog?: DialogRef
     ) {
+      this.user = this.auth.get();
+      this.dialog = dialog;
+      this.titleDialog = data.data.title;
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
   ngOnInit(): void {   
-   
+    this.openForm();
+  }
+  
+  changeValue($event, type) {
+    console.log($event);
+    switch(type) {
+      case "folderName":
+        this.folderName = $event.data;
+        alert(this.folderName);
+        break;
+    }
   }
 
-  
+  openForm() {
+    var that =this;
+    this.showAll = false;
+    if (that.id != "" && this.id != null) {
+      this.noeditName = false;
+      this.folderService.getFolder(this.id).subscribe(async res => {
+        this.checkPermission();
+        this.fileEditing = res;
+        this.assignRight = res.assign;
+        this.folderName = res.folderName;
+        this.id = res.recID;
+        this.icon = res.icon;
+        this.listSubFolder = this.fileEditing.subFolder;
+        //  this.checkSecurity = this.fileEditing.checkSecurity;
+        if (this.fileEditing.hasSubFolder == true) {
+          this.createSubFolder = true;
+        }
+        else {
+          this.createSubFolder = false;
+        }
+        this.revision = this.fileEditing.revision;
+        this.physical = this.fileEditing.physical;
+        this.copyrightsControl = res.copyrights;
+        this.approval = this.fileEditing.approval;
+        this.security = this.fileEditing.checkSecurity;
+        this.location = this.fileEditing.location;
+        this.approvers = this.fileEditing.approvers;
+        this.revisionNote = this.fileEditing.revisionNote;
+        if (this.fileEditing.location != null && this.fileEditing.location != "") {
+          let list = this.fileEditing.location.split("|");
+          this.floor = list[0];
+          this.range = list[1];
+          this.shelf = list[2];
+          this.compartment = list[3];
+        }
+        else {
+          this.location = "";
+          // this.approvers = "";
+          // this.revisionNote = "";
+          this.floor = "";
+          this.range = "";
+          this.shelf = "";
+          this.compartment = "";
+        }
+        //  that.icon = "";
+    //    this.openFileDialog('dms_folder');
+        //this.validate('folderName');
+        this.changeDetectorRef.detectChanges();
+
+      });
+    }
+    else {
+      this.noeditName = false;
+      //this.folderName = "";
+      this.security = false;
+      this.revision = this.dmSV.parentRevision;
+      this.physical = this.dmSV.parentPhysical;
+      this.copyrightsControl = this.dmSV.parentCopyrights;
+      this.approval = this.dmSV.parentApproval;
+      this.location = this.dmSV.parentLocation;
+      this.approvers = this.dmSV.parentApprovers;
+      this.revisionNote = this.dmSV.parentRevisionNote;
+      this.floor = "";
+      this.range = "";
+      this.shelf = "";
+      this.compartment = "";
+      this.fileEditing = new FileUpload();
+      //alert(1);
+      this.startDate = null;
+      this.endDate = null;
+      if (this.parentFolder != null) {
+        this.fileEditing.permissions = [];
+        this.fileEditing.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));
+      }
+      this.checkPermission();
+      this.fileEditing.permissions = this.addPermissionForRoot(this.fileEditing.permissions);
+      //  this.listPerm = this.fileEditing.permissions.filter(x => x.isSharing == this.modeSharing || x.isSharing == null);
+      //  this.addEveryOnePermission(null);
+      //alert(1);
+      //this.openDialogFolder(this.contentFolder, "lg");
+      this.icon = "";
+     // this.openFileDialog('dms_folder');
+      // this.validate('folderName');
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  addPermissionForRoot(list: Permission[]) {
+    var id = this.dmSV.folderId.getValue();
+    var permissions = [];
+    if (list != null && list.length > 0)
+      permissions = list;
+
+   // if (id == "3" || id == "4") {
+      //this.fileEditing.permissions = [];
+      list = [];
+      permissions = list;
+      let perm = new Permission;
+      perm.objectType = "7";
+      perm.objectName = "Administrator";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.read = true;
+      perm.download = true;
+      perm.isSharing = false;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      //perm.delete = false;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+
+      perm = new Permission;
+      perm.objectType = "1";
+      perm.objectID = this.user.userID;
+      perm.objectName = "Owner (" + this.user.userName + ")";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.isSharing = false;
+      perm.read = true;
+      perm.download = true;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+  //  }
+    return permissions;
+  }
+
+  checkPermission() {
+    //this.isSystem = false;
+    this.readRight = this.dmSV.parentRead;
+    this.createRight = this.dmSV.parentCreate;
+    this.updateRight = this.dmSV.parentUpdate;
+    this.shareRight = this.dmSV.parentShare;
+    this.deleteRight = this.dmSV.parentDelete;
+    this.downloadRight = this.dmSV.parentDownload;
+    this.uploadRight = this.dmSV.parentUpload;
+    this.assignRight = this.dmSV.parentAssign;
+  }
+
   onFolderSave() {   
+    this.dialog.close();
   }
   
   openSubFolder() {
@@ -234,7 +399,10 @@ export class CreateFolderComponent implements OnInit {
   onSaveRightChanged(ctrl, type) {    
   }
 
-  isShowAll(status) {
+  isShowAll(action = false) {
+    if (action)
+      this.showAll = !this.showAll;
+    return this.showAll;
   }
 
   SubFormat(sub) {
@@ -263,8 +431,9 @@ export class CreateFolderComponent implements OnInit {
   }
 
   validate(type) {
-
+    return "form-control is-invalid error";
   }
+
 
   valueChange($event, type) {
   }
