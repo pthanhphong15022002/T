@@ -333,8 +333,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
-      747,
-      570,
+      600,
+      450,
       '',
       obj
     )
