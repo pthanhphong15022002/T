@@ -14,7 +14,7 @@ export class Notes {
     createdBy: string;   
 }
 
-export class NoteGoal {
+export class TempNote {
     status: StatusNote;
     listNote: any;
 }

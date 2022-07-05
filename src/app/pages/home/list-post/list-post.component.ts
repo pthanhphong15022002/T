@@ -10,7 +10,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
   templateUrl: './list-post.component.html',
   styleUrls: ['./list-post.component.scss'],
 })
-export class ListPostComponent implements OnInit,AfterViewInit {
+export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
   assemblyName = "ERM.Business.WP"
   className = "CommentBusiness"
@@ -49,12 +49,12 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   predicate = "ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)";
   dataValue: any = "0;1;5";
   modal: DialogRef;
-  views:Array<ViewModel> | any = [];
+  views: Array<ViewModel> | any = [];
   @Input() predicates = "";
   @Input() dataValues = "";
-  @ViewChild('codxViews') codxViews : ViewsComponent;
-  @ViewChild('listview') listview : CodxListviewComponent;
-  @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
+  @ViewChild('codxViews') codxViews: ViewsComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('player') player;
   @ViewChild('modalpost') modalpost: AddPostComponent;
   @ViewChild('modalShare') modalShare;
@@ -66,10 +66,10 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     private tenantStore: TenantStore,
     private cache: CacheService,
     private api: ApiHttpService,
-    private dt:ChangeDetectorRef,
-    private callfc:CallFuncService,
+    private dt: ChangeDetectorRef,
+    private callfc: CallFuncService,
     private notifySvr: NotificationsService,
-    private codxService:CodxService
+    private codxService: CodxService
   ) {
     this.tenant = this.tenantStore.getName();
     this.user = this.authStore.get();
@@ -107,10 +107,10 @@ export class ListPostComponent implements OnInit,AfterViewInit {
   //   opt.methodName = 'DeletePostAsync';
   //   return true;
   // }
-  removePost(data:any) {
+  removePost(data: any) {
     // this.codxViews.dataService.delete([data]).subscribe();
-    this.notifySvr.alertCode('E0327').subscribe((e:any)=>{
-      if(e.event.status == "Y"){
+    this.notifySvr.alertCode('E0327').subscribe((e: any) => {
+      if (e.event.status == "Y") {
         this.api
           .exec<any>(
             'ERM.Business.WP',
@@ -119,16 +119,15 @@ export class ListPostComponent implements OnInit,AfterViewInit {
             data.recID
           )
           .subscribe((res) => {
-            if(res)
-            {
+            if (res) {
               this.notifySvr.notifyCode('E0026');
               this.dt.detectChanges();
             }
           });
       }
     })
-  
-    }
+
+  }
 
   // closeAlert(e, data, t: ListPostComponent){
   //     if(e.status == "Y"){
@@ -185,22 +184,22 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     var obj = {
       post: data,
       status: "create",
-      title:"Tạo bài viết"
+      title: "Tạo bài viết"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 400, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
     var obj = {
       post: data,
       status: "edit",
-      title:"Chỉnh sửa bài viết"
+      title: "Chỉnh sửa bài viết"
     }
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 500, "", obj);
 
   }
 
@@ -208,13 +207,13 @@ export class ListPostComponent implements OnInit,AfterViewInit {
     var obj = {
       post: data,
       status: "share",
-      title:"Chia sẻ bài viết"
+      title: "Chia sẻ bài viết"
     }
     this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 600, "", obj, '', option);
     this.modal.closed.subscribe();
   }
 
@@ -298,10 +297,10 @@ export class ListPostComponent implements OnInit,AfterViewInit {
         data.recID
       )
       .subscribe(res => {
-        if(res){
-          this.codxService.navigate('', "wp/"+data.category+"/view-detail/"+data.recID + "/"+funcID);
+        if (res) {
+          this.codxService.navigate('', "wp/" + data.category + "/view-detail/" + data.recID + "/" + funcID);
         }
       });
-   
+
   }
 }

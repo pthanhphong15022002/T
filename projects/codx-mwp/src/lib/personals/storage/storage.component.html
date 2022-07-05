@@ -115,7 +115,7 @@
 <div *ngIf="checkFormComment == true">
     <div class="details">
         <button (click)="back()" class="btn-back">
-            <div class="d-flex">
+            <div class="d-flex top-10">
                 <div class="">
                     <span class="icon-keyboard_backspace icon-28"></span>
                 </div>
@@ -129,6 +129,6 @@
     </div>
 </div>
 
-<codx-views #view [funcID]="funcID" service="WP" entityName="WP_Storages" [showToolBar]="false" [views]="views"
+<codx-views #view [funcID]="funcID" service="WP" entityName="WP_Storages" [views]="views"
     [predicate]="predicate" [dataValue]="dataValue" idField="recID">
 </codx-views>

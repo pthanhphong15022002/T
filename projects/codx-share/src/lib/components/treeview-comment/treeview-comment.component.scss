@@ -71,3 +71,17 @@
 .btn-like:hover .icon-like {
     visibility: visible;
 }
+
+.feed-box .e-float-input {
+    background-color: transparent;
+    padding-left: 0;
+}
+
+.feed-box {
+    border: 0;
+    height: 36px;
+    line-height: 36px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 2px 20px;
+}

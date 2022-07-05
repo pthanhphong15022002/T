@@ -71,7 +71,7 @@
 </ng-template>
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [moreFuncs]="moreFuncs"
+  className="TaskBusiness" method="GetListDetailTasksAsync"  [views]="views" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" [predicate]="" [dataValue]=""
   [gridViewName]="'grvTasks'" autoLoad="false" (requestEnded)="requestEnded($event)"
   (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">

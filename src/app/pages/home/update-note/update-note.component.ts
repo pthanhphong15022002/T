@@ -3,7 +3,7 @@ import { SaveNoteComponent } from './../add-note/save-note/save-note.component';
 import { ApiHttpService, CallFuncService, DialogData } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, Input, Optional } from '@angular/core';
 import { StatusNote } from '@shared/models/enum/enum';
-import { Notes, NoteGoal } from '@shared/models/notes.model';
+import { Notes, TempNote } from '@shared/models/notes.model';
 
 @Component({
   selector: 'app-update-note',
@@ -88,7 +88,7 @@ export class UpdateNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  onUpdateNote(item: NoteGoal) {
+  onUpdateNote(item: TempNote) {
     this.dataEnter[0] = { status: 0, listNote: '' };
     var dt = { status: item.status, listNote: item.listNote };
     this.listNote.push(Object.assign({}, dt));

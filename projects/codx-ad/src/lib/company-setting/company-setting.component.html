@@ -1,1 +1,65 @@
-helo bao
+<div class="page-home page-master">
+  <div class="d-flex flex-row">
+    <div id="codx_master" class="min-w-375px w-375px">
+      <div class="codx_master_container">
+        <ng-container [ngTemplateOutlet]="leftMenu"></ng-container>
+      </div>
+    </div>
+    <div class="page-home page-master">
+      <div class="d-flex flex-row">
+        <div id="codx_master" class="min-w-375px w-375px">
+          <div class="codx_master_container">
+            <ng-container [ngTemplateOutlet]="itemView"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #leftMenu>
+  <ng-container *ngFor="let items of moreFunc">
+    <div class="menu-item">
+      <a class="dropdown-toggle" href="javascript:void(0);">
+        <span class="icon-holder">
+          <i class="{{ items.largeIcon }}"></i>
+        </span>
+        <span class="title">{{ items.defaultName }}</span>
+      </a>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #itemView>
+  <!-- <lib-company-setting-details [formModel]="view.formModel"  >
+  </lib-company-setting-details> -->
+
+  <codx-detail-tmp [header]="header"></codx-detail-tmp>
+  <ng-template #header>
+    <div class="header_detail">
+      <div class="header_title">
+        <codx-label fiedName="" formName="" gridViewName="" default="Thông tin tài khoản"></codx-label>
+      </div>
+      <div class="header_content">
+        <div class="accountinfo">
+          <codx-label fiedName="" formName="" gridViewName="" default="Tên công ty"></codx-label>
+          <codx-input type="text" field="" [crrValue]="data.legalName"></codx-input>
+        </div>
+        <div class="accountinfo">
+          <codx-label fiedName="" formName="" gridViewName="" default="Web Address"></codx-label>
+          <codx-input type="text" field="" [crrValue]="data.street" disabled="true"></codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="container_detail"></div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="container_detail"></div>
+  </ng-template>
+</ng-template>
+
+<codx-views #view [views]="views"></codx-views>
