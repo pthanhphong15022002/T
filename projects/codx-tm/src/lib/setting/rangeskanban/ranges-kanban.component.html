@@ -1,7 +1,6 @@
-<codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesKanbanBusiness"
+<codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesBusiness"
   method="GetListRangesKanbanAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (requestEnded)="requestEnded($event)"
-  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="rangeID" [pageSize]="100"
+  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" idField="rangeID" [pageSize]="100"
   [selectedFirst]="true">
 </codx-views>
 
@@ -21,7 +20,8 @@
       <div *ngFor="let h of data?.rangeLines; let i = index">
         <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
       </div>
-      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
+      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue"
+          (click)="readMore(data)">{{
           !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
     </td>
     <td class="rowphoto">
@@ -48,7 +48,7 @@
 
 <ng-template #itemRangeID let-data>
   <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban" default="Mã">
-    
+
   </codx-label>
 
 </ng-template>

@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [showToolBar]="false" [views]="views"
-  [autoLoad]="false">
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -65,7 +64,8 @@
             <div class="mt-6">
               <div class="box-wallets">
                 <div class="text-dark font-size-h4">
-                  <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận" class="font-weight-bold"></codx-label>
+                  <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận"
+                    class="font-weight-bold"></codx-label>
                 </div>
 
                 <!-- <span class="icon-open_in_new icon-20 ml-2"></span> -->
@@ -206,10 +206,9 @@
                 </div>
               </div>
               <div class="list-performance">
-                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD"
-                  className="KudosTransBusiness" method="GetDataAchievementAsync" [predicate]="options.predicate"
-                  [dataValue]="options.dataValue" entityName="FD_KudosTrans" [itemTemplate]="TemplateList"
-                  [height]="heightList">
+                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD" className="KudosTransBusiness"
+                  method="GetDataAchievementAsync" [predicate]="options.predicate" [dataValue]="options.dataValue"
+                  entityName="FD_KudosTrans" [itemTemplate]="TemplateList" [height]="heightList">
                 </codx-listview>
               </div>
             </div>

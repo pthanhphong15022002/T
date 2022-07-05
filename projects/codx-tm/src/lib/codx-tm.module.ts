@@ -1,3 +1,4 @@
+
 import { MwpComponent } from './mwp/mwp.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
@@ -40,7 +41,7 @@ import { UpdateStatusPopupComponent } from './tasks/update-status-popup/update-s
 import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
 import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
-import { PopAddRangesComponent } from './setting/rangeskanban/pop-add-ranges/pop-add-ranges.component';
+import { PopAddRangesComponent } from './setting/rangeskanban/ranges-add/ranges-add.component';
 import { ProjectComponent } from './setting/project/project.component';
 import { PopAddProjectComponent } from './setting/project/pop-add-project/pop-add-project.component';
 import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.component';
@@ -146,13 +147,8 @@ export const routes: Routes = [
         ],
       },
       {
-<<<<<<< HEAD
         path: '',
         redirectTo: 'null',
-=======
-        path: 'home/:funcID',
-        component: DashboardComponent,
->>>>>>> 5c9a423939879596eb568424f84397bea6a911c7
       },
       {
         path: '**',
@@ -160,6 +156,10 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'setting',
+
+  }
 ];
 
 const T_Component: Type<any>[] = [

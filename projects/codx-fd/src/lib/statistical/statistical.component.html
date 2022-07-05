@@ -1,4 +1,4 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FED_Gifts'" [showToolBar]="false"></codx-views>
+<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FED_Gifts'"></codx-views>
 
 <div #panelLeft>
     <div class="page-home page-master">
@@ -88,10 +88,12 @@
                                                     [primaryXAxis]='primaryXAxis' [tooltip]='tooltip' [height]="height"
                                                     [primaryYAxis]='primaryYAxis' [title]='' [width]="width">
                                                     <e-series-collection>
-                                                        <e-series *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'" [dataSource]='dataReceived' fill="#0C51CB"
-                                                            type='Column' xName='cardTypeName' yName='receiveQuanlity'
+                                                        <e-series *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'"
+                                                            [dataSource]='dataReceived' fill="#0C51CB" type='Column'
+                                                            xName='cardTypeName' yName='receiveQuanlity'
                                                             name='Phiếu nhận' width=1> </e-series>
-                                                        <e-series *ngIf="typeBallot == 'sender' || typeBallot == '0'" [dataSource]='dataSended' fill="#00DCB5" type='Column'
+                                                        <e-series *ngIf="typeBallot == 'sender' || typeBallot == '0'"
+                                                            [dataSource]='dataSended' fill="#00DCB5" type='Column'
                                                             xName='cardTypeName' yName='sendQuanlity' name='Phiếu cho'
                                                             width=1> </e-series>
                                                     </e-series-collection>

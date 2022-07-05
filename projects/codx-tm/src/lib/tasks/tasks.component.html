@@ -9,9 +9,8 @@
     [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read"
     [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll:'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
-    [title]="data.userName" icoStatusVll="L0186" 
-    [desc2]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn" [resources]="data.assignTo"
-    resourceObjType="AD_Users" [formModel]="view.formModel">
+    [title]="data.userName" icoStatusVll="L0186" [desc2]="data.memo" [status]="data.status" statusVll="L0614"
+    [date]="data.createdOn" [resources]="data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel">
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" -->
   </codx-temp-full>
 </ng-template>
@@ -77,8 +76,8 @@
 
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [showToolBar]="true" [views]="views" [button]="button"
-  [predicate]="predicate" [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)"
-  (onDragDrop)="onDragDrop($event)" [selectedFirst]="true" [autoLoad]="true">
+  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button" [predicate]="predicate"
+  [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+  [selectedFirst]="true" [autoLoad]="true">
 </codx-views>

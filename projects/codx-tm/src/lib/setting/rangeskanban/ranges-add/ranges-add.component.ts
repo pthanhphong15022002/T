@@ -1,45 +1,30 @@
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthStore, CacheService, ApiHttpService, DialogRef, DialogData, NotificationsService } from 'codx-core';
-import { Observable, Subject } from 'rxjs';
-import { BS_Ranges } from '../../../models/BS_Ranges.model';
-import { rangeLine, RangeLine, RangeLineFormGroup } from '../../../models/task.model';
+import { Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { DialogRef, FormModel, CallFuncService, DialogModel, Util } from 'codx-core';
+import { RangeLine } from '../../../models/task.model';
 
 @Component({
-  selector: 'lib-pop-add-ranges',
-  templateUrl: './pop-add-ranges.component.html',
-  styleUrls: ['./pop-add-ranges.component.css']
+  selector: 'ranges-add',
+  templateUrl: './ranges-add.component.html',
+  styleUrls: ['./ranges-add.component.css']
 })
 export class PopAddRangesComponent implements OnInit {
-  @ViewChild("add", { static: true }) add: TemplateRef<any>;
-  @ViewChild("form", { static: true }) form: any;
-  // @Input() ranges = new BS_Ranges();
-  // @Input() rangeLines = new RangeLine();
-  // @Input() data: [];
+  rangeLines = new RangeLine();
   lstRangeLine: RangeLine[];
-  lstSaveRangeLine: any;
-
-
   title = 'Thêm khoảng thời gian';
   range: any;
   dialog: DialogRef;
-  isAfterRender = false;
-  gridViewSetup: any;
-  // isAddMode = true;
-  isAddLine: boolean = true;
-  formName = "";
-  gridViewName = "";
-  user: any;
-  functionID: string;
-  action = '';
 
+  formModelRangeLine: FormModel = {
+    formName: 'RangeLines',
+    gridViewName: 'grvRangeLines',
+  };
 
   constructor(
     // private cache: CacheService, private fb: FormBuilder, private auth: AuthStore,
     // private dt: ChangeDetectorRef, private modalService: NgbModal, private api: ApiHttpService,
     // private authStore: AuthStore,
     // private notiService: NotificationsService,
+    private callfc: CallFuncService,
     @Optional() dialog?: DialogRef) {
     // this.ranges = {
     //   ...this.ranges,
@@ -50,6 +35,7 @@ export class PopAddRangesComponent implements OnInit {
     this.lstRangeLine = [];
     this.dialog = dialog;
     this.range = dialog.dataService!.dataSelected;
+    this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
     // this.user = this.authStore.get();
     // this.functionID = this.dialog.formModel.funcID;
   }
@@ -162,114 +148,36 @@ export class PopAddRangesComponent implements OnInit {
   //   return subject.asObservable();
   // }
 
-  openPopup(itemdata, isAddLine, index) {
-    // this.isAddLine = isAddLine;
+  openPopup(template: any, data = null) {
+    this.dialog.dataService.save().subscribe(res => {
+      if (res.save != null) {
+        if (data) {
+          let rl = this.lstRangeLine.find(function (x) { return x => x.recID == data.recID });
+          this.rangeLines = data;
+          if (!rl)
+            this.lstRangeLine.push(data);
+        }
+        else {
+          this.rangeLines.recID = Util.uid();
+          this.lstRangeLine.push(this.rangeLines);
+        }
 
-    // if (!itemdata) {
-    //   this.initPopup();
-    // }
-    // else if (!itemdata.recID) {
-    //   var item = this.lstRangeLine.find(x => x.id == itemdata.id);
-    //   this.initPopup(item);
-    // } else {
-    //   if (itemdata.recID) {
-    //     this.initPopup(itemdata);
-    //   }
-    // }
-    // this.modalService
-    //   .open(this.add, { centered: true })
-    //   .result.then(
-    //     (result) => {
-    //       if (isAddLine) {
-    //         this.lstRangeLine.push(this.rangeLines);
-    //         console.log(this.lstRangeLine);
-    //         this.rangeLines = new RangeLine();
-    //       } else {
-    //         this.lstRangeLine[index].breakName = this.rangeLines.breakName;
-    //         this.lstRangeLine[index].breakValue = this.rangeLines.breakValue;
-    //         this.dt.detectChanges()
-    //       };
-    //     },
-    //     (reason) => {
-    //       console.log("reason", this.getDismissReason(reason));
-    //     }
-    //   );
+        let dialog = this.callfc.openForm(template, '', 500, 400);
+        dialog.closed.subscribe(res => {
+          this.rangeLines = new RangeLine();
+        })
+      }
+    });
   }
-
-  // private getDismissReason(reason: any): string {
-  //   if (reason === ModalDismissReasons.ESC) {
-  //     return "by pressing ESC";
-  //   } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-  //     return "by clicking on a backdrop";
-  //   } else {
-  //     return `with: ${reason}`;
-  //   }
-  // }
-
-  // openForm(data, isAddMode) {
-  //   if (isAddMode == false) {
-  //     this.isAddMode = false;
-  //     this.rangeLines = new RangeLine();
-  //     this.ranges = new BS_Ranges();
-
-  //     this.title = 'Chỉnh sửa khoảng thời gian công việc';
-  //     this.api.execSv<any>("BS", "BS", "RangesKanbanBusiness", "GetRangesKanbanAndLinesByIdAsync", data.rangeID).subscribe((res) => {
-  //       if (res) {
-  //         data = res;
-  //         this.ranges = data[0];
-  //         this.lstRangeLine = data[1];
-  //         if (this.lstRangeLine == null) {
-  //           this.lstRangeLine = [];
-  //         }
-  //         this.dt.detectChanges();
-  //       }
-
-  //     })
-  //   }
-  //   // this.renderer.addClass(popup, 'drawer-on');
-  // }
-
-  // beforeSave(op: any) {
-  //   var data = [];
-  //   op.method = 'AddEditRangeAsync';
-  //   data = [
-  //     this.ranges,
-  //     this.lstRangeLine,
-  //     this.isAddMode
-  //   ];
-
-  //   op.data = data;
-  //   return true;
-  // }
 
 
   onSave() {
-    // this.dialog.dataService.data = this.ranges;
-    this.dialog.dataService.dataSelected = this.form.formGroup.value;
     this.dialog.dataService
       .save()
-      .subscribe((res) => {
-        if (res) {
-          this.lstSaveRangeLine = [];
-          if (this.lstRangeLine != null) {
-            for (let item1 of this.lstRangeLine) {
-              var rangeline = new rangeLine(
-                item1.recID,
-                item1.rangeID,
-                item1.breakName,
-                item1.breakValue
-              );
-              this.lstSaveRangeLine.push(rangeline);
-            }
-          }
-          // this.dialog.dataService.setDataSelected(res)
-          // if(this.isAddMode==true)
-          //   this.notiService.notify('Thêm mới khoảng thời gian thành công');
-          //   else
-          //   this.notiService.notify('Chỉnh sửa khoảng thời gian thành công');
-
+      .subscribe(res => {
+        if (res && !res.error) {
+          this.dialog.close();
         }
-
       });
   }
 
@@ -277,24 +185,9 @@ export class PopAddRangesComponent implements OnInit {
     this.lstRangeLine.splice(index, 1);
   }
 
-  // valueValue(data) {
-  //   this.rangeLines.breakValue = data.data;
-  // }
-  // valueName(data) {
-  //   this.rangeLines.breakName = data.data;
-  // }
-
-  // valueChange(data) {
-  //   if (data.data) {
-  //     this.ranges.rangeName = data.data;
-  //   }
-  // }
-
-  // changeMemo(event) {
-  //   var field = event.field;
-  //   var dt = event.data;
-  //   this.ranges.note = dt?.value ? dt.value : dt;
-  // }
+  valueChange(data) {
+    this.rangeLines[data.field] = data.data;
+  }
 }
 
 

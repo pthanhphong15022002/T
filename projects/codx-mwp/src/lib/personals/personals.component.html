@@ -1,11 +1,11 @@
-<codx-views #view [funcID]="funcID" entityName="MWP_Personals" [showToolBar]="false" [views]="views"
-    [autoLoad]="false">
+<codx-views #view [funcID]="funcID" entityName="MWP_Personals" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelLeft>
     <div class="page-pw">
         <div class="pw-profile">
-            <img class="background" src="../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG" class="background">
+            <img class="background" src="../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG"
+                class="background">
             <div class="d-flex align-items-center avatar">
                 <codx-img class="symbol symbol-100px symbol-circle me-4" [objectType]="'AD_Users'" [objectId]="'Admin'"
                     [objectName]="'Admin'" [width]="60">
@@ -23,16 +23,14 @@
                     <a (click)="getMenu(item.functionID, item.smallIcon)">
                         <div *ngIf="funcID == 'MWP009'">
                             <div *ngIf="item.functionID == 'MWP0091'">
-                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg"
-                                    alt="">
+                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg" alt="">
                                 <span style="color:  #0078ff;">
                                     <codx-label name="lblDescription" formName="personals"
                                         default="{{item.description}}"></codx-label>
                                 </span>
                             </div>
                             <div *ngIf="item.functionID != 'MWP0091'">
-                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg"
-                                    alt="">
+                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg" alt="">
                                 <span>
                                     <codx-label name="lblDescription" formName="personals"
                                         default="{{item.description}}"></codx-label>
@@ -41,16 +39,14 @@
                         </div>
                         <div *ngIf="funcID != 'MWP009'">
                             <div *ngIf="active == false">
-                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg"
-                                    alt="">
+                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg" alt="">
                                 <span>
                                     <codx-label name="lblDescription" formName="personals"
                                         default="{{item.description}}"></codx-label>
                                 </span>
                             </div>
                             <div *ngIf="item.functionID == menuUrl || item.functionID == funcID">
-                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg"
-                                    alt="">
+                                <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg" alt="">
                                 <span style="color:  #0078ff;">
                                     <codx-label name="lblDescription" formName="personals"
                                         default="{{item.description}}"></codx-label>
@@ -86,6 +82,6 @@
         </div>
         <div *ngIf="funcID == 'MWP0095'">
             <app-storage [formModel]="view.formModel"></app-storage>
-        </div>        
+        </div>
     </div>
 </ng-template>

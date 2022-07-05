@@ -1,4 +1,4 @@
-<codx-views #view funcID="TMS" [views]="views" [showToolBar]="false" [autoLoad]="false"> </codx-views>
+<codx-views #view funcID="TMS" [views]="views" [autoLoad]="false"> </codx-views>
 
 <ng-template #main>
   <!-- <div class="d-flex flex-row flex-column-fluid page page-detail">
@@ -55,16 +55,16 @@
   </div> -->
   <div class="d-flex flex-row flex-column-fluid page page-detail">
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-      <div id="erm_content" class="d-flex flex-column-fluid" >
+      <div id="erm_content" class="d-flex flex-column-fluid">
         <div class="container">
-          <div class="d-flex mb-3 mt-2 row" >
+          <div class="d-flex mb-3 mt-2 row">
             <h3 class="list-header">
               <codx-label name="lblCategory" default="Danh mục"></codx-label>
             </h3>
             <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
               <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
                 <div class="list-content" *ngFor="let item of func['TMS03']">
-                  
+
                   <div class="d-flex align-items-top list-item" style="cursor: pointer;"
                     (click)="codxService.navigate(item.functionID)" routerLinkActive="active">
                     <span class="icon-settings icon-20 mr-3"></span>
@@ -84,11 +84,11 @@
                 <codx-label name="lblCategory" default="Thiết lập"></codx-label>
               </h3>
             </div>
-            
+
             <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
               <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
                 <div class="list-content" *ngFor="let item of func['TMS02']">
-                  
+
                   <div class="d-flex align-items-top list-item" style="cursor: pointer;"
                     (click)="codxService.navigate(item.functionID)" routerLinkActive="active">
                     <span class="icon-settings icon-20 mr-3"></span>

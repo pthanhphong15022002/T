@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [showToolBar]="true" [views]="views"
-    [autoLoad]="false">
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -14,8 +13,7 @@
 <!-- <app-systemdialog></app-systemdialog> -->
 <ng-template #itemSenderOrReceiver let-dataItem>
     <div class="d-flex align-items-center">
-        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.userID" objectType="AD_Users"
-           >
+        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.userID" objectType="AD_Users">
         </codx-img>
         <div class="d-flex flex-column">
             <div class="text-dark font-size-lg">{{dataItem.userName}}</div>
