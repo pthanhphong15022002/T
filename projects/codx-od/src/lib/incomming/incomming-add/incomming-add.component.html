@@ -40,7 +40,7 @@
       <codx-label 
         class="me-2 cursor-pointer" 
         [class.text-primary]="!showAgency" 
-        default="Đơn vị" >
+        default="Đơn vị" (click)="hideDept()">
       </codx-label>
       <ng-container *ngIf="showAgency">
         <codx-label class="me-2 " default="|"></codx-label>

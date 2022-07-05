@@ -1,10 +1,7 @@
 ﻿<ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <!-- <codx-aside id="kt_aside" [asideSecond]="asideSecond" [asideMenu]="asideMenu">
-      </codx-aside> -->
-      <!--  -->
-      <codx-aside id="kt_aside" [asideSecond]="asideSecond" [asideMenu]="asideMenu">
+      <codx-aside *ngIf="asideDisplay">
       </codx-aside>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
@@ -55,7 +52,7 @@
         <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
-      <erm-quick-links-inner></erm-quick-links-inner>
+      <!-- <erm-quick-links-inner></erm-quick-links-inner> -->
     </div>
 
     <!-- begin::User -->
@@ -79,34 +76,4 @@
       </div>
     </ng-container>
   </ng-template>
-  <!-- end::TOPBAR -->
-  <ng-template #asideMenu>
-    <ng-container *ngFor="let f of codxService.modulesOb$ | async">
-      <div class="menu-item">
-        <a class="menu-link" href="javascript:;" (click)="codxService.navigate(f.functionID)" routerLinkActive="active"
-          [ngbTooltip]="f.customName" placement="end" container="body">
-          <span class=" menu-icon">
-            <img class="w-25px" src="../../../{{f.smallIcon}}" />
-          </span>
-          <!-- <span class="menu-title">{{f.customName}}</span> -->
-        </a>
-      </div>
-    </ng-container>
-  </ng-template>
 </ng-container>
-
-<ng-template #asideSecond>
-  <div class="menu-sub menu-sub-accordion">
-    <ng-container *ngFor="let f of codxService.modulesOb$ | async">
-      <div class="menu-item">
-        <a class="menu-link" href="javascript:;" (click)="codxService.navigate(f.functionID)" routerLinkActive="active"
-          [ngbTooltip]="f.customName" placement="end" container="body">
-          <span class=" menu-icon">
-            <img class="w-25px" src="../../../{{f.smallIcon}}" />
-            <span>{{f.customName}}</span>
-          </span>
-        </a>
-      </div>
-    </ng-container>
-  </div>
-</ng-template>

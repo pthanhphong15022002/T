@@ -158,7 +158,6 @@ export class IncommingAddComponent implements OnInit {
    //Các hàm value change 
    changeValueAgency(event: any) 
    {
-    debugger;
     if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
     {
       if(event.component.itemsSelected[0].AgencyID!= undefined)
