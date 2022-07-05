@@ -82,12 +82,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-od/src/lib/codx-od.module').then((m) => m.CodxODModule),
       },
-      // {
-      //   path: 'ad',
-      //   canActivate: [AuthGuard],
-      //   loadChildren: () =>
-      //     import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
-      // },
+      {
+        path: 'ad',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

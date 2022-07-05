@@ -1,6 +1,6 @@
 <codx-views #view funcID="HRS0201" service="BS" entityName="BS_Certificates" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="CertificatesBusiness"
-    method="GetListAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
+    method="GetListAsync"  (viewChanged)="changeView($event)" [pageSize]="100"
     (requestEnded)="requestEnded($event)" [selectedFirst]="true" [itemSelected]="itemSelected">
 </codx-views>
 

@@ -159,6 +159,9 @@ export class AddNoteComponent implements OnInit {
             }
           })
         }
+        this.tempNote;
+        debugger;
+        this.onUpdateNote(this.tempNote);
       }
     }
   }
@@ -211,23 +214,22 @@ export class AddNoteComponent implements OnInit {
       });
   }
 
-  keyUpEnter(e: any) {
-    if (e) {
-      var field = e.field;
-      var dt = e.data;
-      if (dt) {
-        if (this.type == 'check') {
-          if (field == 'listNote') {
-            this.tempNote['listNote'] = dt;
-            this.tempNote['status'] = 0;
-          }
-        } else {
-          this.tempNote['listNote'] = dt;
-          this.tempNote['status'] = null;
-        }
-      }
-    }
-  }
+  // keyUpEnter(e: any) {
+  //   if (e) {
+  //     var field = e.field;
+  //     var dt = e.data;
+  //     if (dt) {
+  //       if (this.type == 'check') {
+  //         if(field == 'listNote') {
+  //           this.tempNote['listNote'] = dt;
+  //           this.tempNote['status'] = 0;
+  //         } 
+  //       } else this.tempNote[field] = dt;
+  //       debugger;
+  //       this.onUpdateNote(this.tempNote)
+  //     }
+  //   }
+  // }
 
   onType(type) {
     if (this.formType == 'add') {
@@ -242,14 +244,13 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  onUpdateNote(e: any) {
+  onUpdateNote(item: TempNote) {
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
     };
-    this.keyUpEnter(e);
-
-    var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
+    this.tempNote;
+    var dt = { status: item.status, listNote: item.listNote };
     this.listNote.push(Object.assign({}, dt));
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');

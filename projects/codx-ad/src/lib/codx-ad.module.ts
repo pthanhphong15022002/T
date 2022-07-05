@@ -36,27 +36,27 @@ export const routes: Routes = [
     //   }
 
     // ]
-      children: [
-        {
-          path:'users/:funcID',
-          component: UserComponent,
-        }
-        ,{
-          path:'accountinfo/:funcID',
-          component: CompanySettingComponent,
-          children:
+    children: [
+      {
+        path: 'users/:funcID',
+        component: UserComponent,
+      }
+      , {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+        children:
           [
             {
-              path:':funcID',
+              path: ':funcID',
               component: CompanySettingDetailsComponent
             }
 
           ]
 
-        }
+      }
 
 
-      ]
+    ]
   }
 ];
 
