@@ -17,7 +17,6 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
 import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, UploadFile } from 'codx-core';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 @Component({
@@ -90,6 +89,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   ) {
     this.dialogRef = dialog;
     this.dataPost = dd.data;
+    this.title = dd.data.title;
     this.user = authStore.get();
     this.cache.valueList('L1901').subscribe((res) => {
       if (res) {
@@ -291,21 +291,54 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       });
   }
 
+  isEdit = false;
   editPost() {
-    if (!this.message) {
+    if (!this.message || this.shareControl || this.isEdit){
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    var id = this.data.recID;
-    var content = this.message;
-    var shareControl = "9";
-    var isSetShareControl = false;
-    var isDelete = false;
-    var tagsEdit = null;
-    var isSetTags = false;
-    var files = null;
-    var shareWith = null;
-
+    
+    var recID = this.data.recID;
+    var comment = "";
+    var isComment = false;
+    var isShare = false;
+    var lstPermission = [];
+    if(this.message != this.data.content){
+      isComment = true;
+      comment = this.message;
+    }
+    if(this.shareControl){
+      isShare = true;
+      var per1 = new Permission();
+      per1.objectType = '1';
+      per1.memberType = "1";
+      per1.objectID = this.user.userID;
+      per1.objectName = this.user.userName;
+      per1.create = true;
+      per1.update = true;
+      per1.delete = true;
+      per1.upload = true;
+      per1.download = true;
+      per1.assign = true;
+      per1.share = true;
+      per1.read = true;
+      per1.isActive = true;
+      per1.createdBy = this.user.userID;
+      per1.createdOn = new Date();
+      lstPermission.push(per1);
+      this.lstRecevier.map((item) => {
+        var per = new Permission();
+        per.memberType = "3";
+        per.objectType = this.objectType;
+        per.objectID = item.UserID;
+        per.objectName = item.UserName;
+        per.read = true;
+        per.isActive = true;
+        per.createdBy = this.user.userID;
+        per.createdOn = new Date();
+        lstPermission.push(per);
+      })
+    }
     this.api
       .execSv<any>(
         'WP',
@@ -313,21 +346,16 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
         'CommentBusiness',
         'EditPostAsync',
         [
-          id,
-          content,
-          shareControl,
-          isSetShareControl,
-          files,
-          isDelete,
-          shareWith,
-          tagsEdit,
-          isSetTags,
+          recID,
+          isComment,
+          comment,
+          isShare,
+          this.shareControl,
+          lstPermission
         ]
       )
       .subscribe((res) => {
         if (res) {
-          var obj: any = {result: res};
-          // this.dialog.hide(obj);
           this.clearForm();
           this.notifySvr.notifyCode('E0026');
         }
@@ -338,7 +366,15 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   shareControl:string = "";
   objectType:string = "";
   userRecevier:any;
+  recevierID:string;
+  recevierName:string;
   eventApply(event:any){
+    if (this.dataPost.status == "edit"){
+      this.isEdit = true;
+    }
+    else{
+      this.isEdit = false;
+    }
     var data = event[0];
     var objectType = data.objectType;
     if(objectType && !isNaN(Number(objectType))){
@@ -350,9 +386,30 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.objectType = data.objectType;
       this.lstRecevier = data.dataSelected;
       this.shareControl = objectType;
-      if(objectType == "U" && this.lstRecevier.length == 1){
-          this.userRecevier = this.lstRecevier[0];
+      this.userRecevier = this.lstRecevier[0];
+      switch(objectType){
+        case 'U':
+          this.recevierID = this.userRecevier.UserID;
+          this.recevierName = this.userRecevier.UserName;
+          break;
+        case 'D':
+          this.recevierID = this.userRecevier.OrgUnitID;
+          this.recevierName = this.userRecevier.OrgUnitName;
+          break;
+        case 'P':
+          this.recevierID = this.userRecevier.PositionID;
+          this.recevierName = this.userRecevier.PositionName;
+          break;
+        case 'G':
+          this.recevierID = this.userRecevier.UserID;
+          this.recevierName = this.userRecevier.UserName;
+          break;
+        case 'R':
+          this.recevierID = this.userRecevier.RoleID;
+          this.recevierName = this.userRecevier.RoleName;
+          break;
       }
+      
     }
     this.dt.detectChanges();
   }

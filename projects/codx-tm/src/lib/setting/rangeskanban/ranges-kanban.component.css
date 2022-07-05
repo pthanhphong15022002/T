@@ -6,6 +6,12 @@
 
 .rowphoto {
   border-width: 1px 0px 0px 0px;
+  padding-left: 15px;
+}
+
+.padding{
+  padding-left: 15px;
+
 }
 
 td {

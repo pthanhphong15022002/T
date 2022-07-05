@@ -1,4 +1,3 @@
-import { MwpComponent } from './mwp/mwp.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupEditCalendarComponent } from './setting/calendar/popup-edit-calendar/popup-edit-calendar.component';
@@ -55,9 +54,8 @@ import { FormsModule } from '@angular/forms';
 import { MyDashboardComponent } from './reports/mydashboard/mydashboard.component';
 import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
-import { MwpViewDetailComponent } from './mwp/mwp-view-detail/mwp-view-detail.component';
-import { MwpPopupAddComponent } from './mwp/mwp-popup-add/mwp-popup-add.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { ViewListComponent } from './tasks/view-list/view-list.component';
 export const routes: Routes = [
   {
     path: '',
@@ -68,11 +66,7 @@ export const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'mwp/:funcID',
-        component: MwpComponent,
-      },
-      {
-        path: 'assigntasks/:funcID',
+        path: 'tasks/:funcID',
         component: TasksComponent,
       },
       {
@@ -193,9 +187,10 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  MwpComponent,
-  MwpViewDetailComponent,
-  MwpPopupAddComponent,
+  // MwpComponent,
+  // MwpViewDetailComponent,
+  // MwpPopupAddComponent,
+  ViewListComponent
 ];
 @NgModule({
   imports: [

@@ -39,15 +39,12 @@
         </div>
         <div class="pw-listcard mt-6">
             <div *ngFor="let item of view.dataService.data">
-                <div class="pw-card delay-500">
+                <div class="pw-card delay-500" (click)="openStorageDetail(item)">
                     <codx-card-img cardCss="border h-100 w-250px rounded-4 " [imageId]="item.recID"
                         imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
                         [desc2]="item.memo" [imageObjType]="'WP_Storages'" [formModel]="formModel"
                         (clickMF)="clickMF($event,item)">
                     </codx-card-img>
-
-
-                    <!-- (click)="codxService.navigate('MWP00941')" -->
                 </div>
             </div>
         </div>
@@ -118,7 +115,7 @@
 <div *ngIf="checkFormComment == true">
     <div class="details">
         <button (click)="back()" class="btn-back">
-            <div class="d-flex">
+            <div class="d-flex top-10">
                 <div class="">
                     <span class="icon-keyboard_backspace icon-28"></span>
                 </div>
@@ -127,6 +124,7 @@
                 </div>
             </div>
         </button>
+        <!-- <ng-template #detail></ng-template> -->
         <ng-template #detail></ng-template>
     </div>
 </div>

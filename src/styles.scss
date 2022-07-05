@@ -1,24 +1,53 @@
+// Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
+:root {
+    --primary: #3699ff;
+    --primary-dark: #0078ff;
+    --primary-darker: #005dc7;
+    --primary-darkest: #063163;
+    --primary-light: #D3E8FF;
+    --primary-lighter: #EAF0FF;
+    --primary-lightest: #F4F7FF;
+
+    ///
+    --primary-active: #187DE4;
+    --primary-inverse: #FFFFFF;
+}
+
+//// 
+
+
 .max-h-18px {
-    width: 16px!important;
-    height: 16px!important;
+    width: 16px !important;
+    height: 16px !important;
 }
 
 
 
 //////////////tbchung custom css///////////////////
-.is-invalid-a, .is-invalid .e-date-wrapper , .is-invalid .ng-invalid , .is-invalid label::before
-{
+.is-invalid-a,
+.is-invalid .e-date-wrapper,
+.is-invalid .ng-invalid {
     border: solid 1px red !important;
     border-radius: 5px;
 }
 
-.div-active
-{
+.div-active {
     background-color: #3699ff;
     border-radius: 5px;
 }
-.div-active i
-{
+
+.div-active i {
     color: white;
 }
+
 /////////////////////////////////////////////
+/// 
+/// 
+/// chỉnh tam ///
+body {
+    line-height: 1.4;
+}
+
+.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+    padding: 0;
+}

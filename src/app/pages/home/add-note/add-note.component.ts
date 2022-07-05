@@ -20,7 +20,8 @@ import {
   Output,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NoteGoal, Notes } from '@shared/models/notes.model';
+import { TempNote, Notes } from '@shared/models/notes.model';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -30,6 +31,7 @@ export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
   note: Notes = new Notes();
+  tempNote: TempNote = new TempNote();
   message: any;
   listNote: any = [];
   type = 'text';
@@ -48,9 +50,12 @@ export class AddNoteComponent implements OnInit {
   dialog: any;
   formAdd: FormGroup;
   readOnly = false;
+  header = 'Thêm mới sổ tay';
+  dataListView = [];
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild("form", { static: true }) form: any;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -66,7 +71,9 @@ export class AddNoteComponent implements OnInit {
     this.dialog = dialog;
     this.data = dt.data?.data;
     this.formType = dt.data?.formType;
-    if(this.formType == 'edit') {
+    this.dataListView = dt.data?.ngForLstview;
+    if (this.formType == 'edit') {
+      this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
     }
     // this.typeList_ = dt.data?.typeLst;
@@ -82,7 +89,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   saveNote() {
-    if(this.formType == 'add') this.onCreateNote();
+    if (this.formType == 'add') this.onCreateNote();
     else this.onEditNote();
   }
 
@@ -107,6 +114,17 @@ export class AddNoteComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (this.type == 'check' || this.type == 'list') {
+        if (this.type == 'check') {
+          if (field == 'listNote') {
+            this.tempNote['listNote'] = dt;
+            this.tempNote['status'] = 0;
+          } else this.tempNote[field] = dt;
+        }
+        this.tempNote;
+        debugger;
+        this.onUpdateNote(this.tempNote);
+      }
       // if (field == 'textarea') {
       //   this.message = e.data.value;
       // } else if (field == 'showCalendar') {
@@ -134,38 +152,40 @@ export class AddNoteComponent implements OnInit {
     // }
     // this.dataAdd.showCalendar = this.showCalendar;
 
-    this.note.noteType = this.type;
-    this.note.isPin = this.pin;
-    this.note;
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'CreateNoteAsync',
-        this.note
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.imageUpload
-            .updateFileDirectReload(res?.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-              }
-            });
-          this.data.push(res);
-          if (this.note?.showCalendar == true) {
-            debugger;
-            this.changeDetectorRef.detectChanges();
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
-            }
-          }
-        }
-      });
+    // this.note.noteType = this.type;
+    // this.note.isPin = this.pin;
+    // this.note;
+    // this.api
+    //   .exec<any>(
+    //     'ERM.Business.WP',
+    //     'NotesBusiness',
+    //     'CreateNoteAsync',
+    //     this.note
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.imageUpload
+    //         .updateFileDirectReload(res?.recID)
+    //         .subscribe((result) => {
+    //           if (result) {
+    //             this.loadData.emit();
+    //           }
+    //         });
+    //       this.data.push(res);
+    //       if (this.note?.showCalendar == true) {
+    //         debugger;
+    //         this.changeDetectorRef.detectChanges();
+    //         var today: any = document.querySelector(
+    //           ".e-footer-container button[aria-label='Today']"
+    //         );
+    //         if (today) {
+    //           today.click();
+    //         }
+    //       }
+    //     }
+    //   });
+    this.listNote;
+    debugger;
   }
 
   onEditNote() {
@@ -196,6 +216,23 @@ export class AddNoteComponent implements OnInit {
       });
   }
 
+  // keyUpEnter(e: any) {
+  //   if (e) {
+  //     var field = e.field;
+  //     var dt = e.data;
+  //     if (dt) {
+  //       if (this.type == 'check') {
+  //         if(field == 'listNote') {
+  //           this.tempNote['listNote'] = dt;
+  //           this.tempNote['status'] = 0;
+  //         } 
+  //       } else this.tempNote[field] = dt;
+  //       debugger;
+  //       this.onUpdateNote(this.tempNote)
+  //     }
+  //   }
+  // }
+
   onType(type) {
     this.type = type;
     this.listNote = [];
@@ -207,14 +244,12 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  onUpdateNote(item: NoteGoal) {
-    var a = this.note
-    var b = this.form;
-    debugger;
+  onUpdateNote(item: TempNote) {
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
     };
+    this.tempNote;
     var dt = { status: item.status, listNote: item.listNote };
     this.listNote.push(Object.assign({}, dt));
     this.changeDetectorRef.detectChanges();
@@ -262,5 +297,13 @@ export class AddNoteComponent implements OnInit {
       recID: this.data.recID,
     };
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 0, 0, '', obj);
+  }
+
+  popupFile() {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded() {
+    this.attachment.saveFiles();
   }
 }

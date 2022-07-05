@@ -161,16 +161,13 @@ export class AttachmentComponent implements OnInit {
         this.parentElement = createElement('div', { className: 'upload-list-root' });
         this.parentElement.appendChild(createElement('ul', {className: 'ul-element' }));
         document.getElementById('dropArea').appendChild(this.parentElement);
-    }
-    for (let i : number = 0; i < args.filesData.length; i++) {
-        this.formSelectedData(args.filesData[i], this);  // create the LI element for each file Data
-    }
-    this.filesDetails = this.filesDetails.concat(args.filesData);
-    this.uploadObj.upload(args.filesData, true);
+    }        
+    this.handleFileInput(args.filesData);   
     args.cancel = true;
 }
 
   public formSelectedData (selectedFiles : FileInfo, proxy: any ) : void {
+    console.log(selectedFiles);
     let liEle : HTMLElement = createElement('li',  { className: 'file-lists', attrs: {'data-file-name' : selectedFiles.name} });
     liEle.appendChild(createElement('span', {className: 'file-name ', innerHTML: selectedFiles.name }));
     liEle.appendChild(createElement('span', {className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
@@ -196,72 +193,13 @@ export class AttachmentComponent implements OnInit {
     this.uploadObj.element.value = '';
   }
 
-  public onUploadSuccess:  EmitType<Object> = (args: any) => {
-    let spinnerElement: HTMLElement = document.getElementById('dropArea');
-    let li: HTMLElement =  document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
-    if (args.operation === 'upload') {
-        let progressBar: HTMLElement = li.getElementsByTagName('progress')[0];
-        li.querySelector('.close-icon-container').classList.add('delete-icon');
-        detach(li.getElementsByTagName('progress')[0]);
-        (li.querySelector('.file-size') as HTMLElement).style.display = 'inline-block';
-        (li.querySelector('.file-name') as HTMLElement).style.color = 'green';
-        (li.querySelector('.e-icons') as HTMLElement).onclick = () => {
-            createSpinner({ target: spinnerElement, width: '25px' });
-            showSpinner(spinnerElement);
-        };
-        (li.querySelector('.close-icon-container') as HTMLElement).onkeydown = (e: any) => {
-            if (e.keyCode === 13) { 
-                createSpinner({ target: spinnerElement, width: '25px' });
-                showSpinner(spinnerElement);
-            }
-        };
-    } else {
-        this.filesDetails.splice(this.filesList.indexOf(li), 1);
-        this.filesList.splice(this.filesList.indexOf(li), 1);
-        if (!isNullOrUndefined(li)) { detach(li); }
-        if (!isNullOrUndefined(spinnerElement)) {
-            hideSpinner(spinnerElement);
-            detach(spinnerElement.querySelector('.e-spinner-pane'));
-        }
-    }
-    EventHandler.add(li.querySelector('.close-icon-container'), 'click', this.removeFiles, this);
-}
-
-public onFileUpload(args : any) : void {
-  let li : Element = document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
-  EventHandler.remove(li.querySelector('.close-icon-container'), 'click', this.removeFiles);
-  let progressValue : number = Math.round((args.e.loaded / args.e.total) * 100);
-  if (!isNaN(progressValue)) {
-      li.getElementsByTagName('progress')[0].value = progressValue;   // Updating the progress bar value
-  }
-}
-
-public onUploadFailed(args : any) : void {
-  let li : Element = document.getElementById('dropArea').querySelector('[data-file-name="' + args.file.name + '"]');
-  EventHandler.add(li.querySelector('.close-icon-container'), 'click', this.removeFiles, this);
-  li.querySelector('.file-name ').classList.add('upload-fails');
-  if (args.operation === 'upload') {
-      detach(li.querySelector('.progress-bar-container'));
-  }
-}
-
-  public onFileRemove(args: RemovingEventArgs): void {
-      args.postRawFile = false;
-  }
-
   openPopup() {
     this.fileUploadList = [];
-    if (this.type == "center") {
-      /* this.callfc.openForm(this.openFile, "Upload tài liệu", 700, null, null, "").subscribe((dialog: Dialog)=>{
-        let that = this;
-        dialog.close = function(e) {
-          return that.closeOpenForm(e);
-        }
-      });   */
-    }
-    else {
-      //this.viewBase.currentView.openSidebarRight();
-    }
+    // if (this.type == "center") {   
+    // }
+    // else {
+    //   //this.viewBase.currentView.openSidebarRight();
+    // }
   }
 
   closePopup() {
@@ -413,22 +351,23 @@ public onUploadFailed(args : any) : void {
   }
 
   openFormFolder() {
-    this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-      if (res != null) {
-        this.listRemoteFolder = res;
-        this.listNodeAdd = res;
-        if (res[0].history != null) {
-          var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-          if (listFolder[0] != null && listFolder[0].folderPath != "") {
-            var list = listFolder[0].folderPath.split(";");
-            this.loadChildNode(res[0], 0, list);
-          }
-        }
-        this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
-        this.changeDetectorRef.detectChanges();
-        this.remotePermission = res[0].permissions;
-      }
-    });
+    this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", [this.functionID], "");
+    // this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
+    //   if (res != null) {
+    //     this.listRemoteFolder = res;
+    //     this.listNodeAdd = res;
+    //     if (res[0].history != null) {
+    //       var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
+    //       if (listFolder[0] != null && listFolder[0].folderPath != "") {
+    //         var list = listFolder[0].folderPath.split(";");
+    //         this.loadChildNode(res[0], 0, list);
+    //       }
+    //     }
+    //     this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
+    //     this.changeDetectorRef.detectChanges();
+    //     this.remotePermission = res[0].permissions;
+    //   }
+    // });
 
     // let option = new SidebarModel();
     // option.DataService = this.view?.currentView?.dataService;
@@ -457,7 +396,7 @@ public onUploadFailed(args : any) : void {
   }
 
   fileUploadDropped($event) {
-    this.handleFileInput($event);
+    this.handleFileInput1($event);
   }
 
   changeValueAgencyText(event: any) {
@@ -874,10 +813,12 @@ public onUploadFailed(args : any) : void {
   }
 
   uploadFile() {
-    this.file.nativeElement.click();
+    document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
+   // document.getElementById('browse').click();
+    //this.file.nativeElement.click();
   }
 
-  async handleFileInput(files: FileList) {
+  async handleFileInput1(files: FileList) {
 
     var count = this.fileUploadList.length;
     this.getFolderPath();
@@ -905,6 +846,87 @@ public onUploadFailed(args : any) : void {
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
         fileUpload.data = item;
+        fileUpload.item = files[i];
+        fileUpload.folderId = this.folderId;
+        fileUpload.permissions = this.remotePermission;
+        this.fileUploadList.push(Object.assign({}, fileUpload));
+
+      }
+    }
+    this.fileCount.emit(files.length);
+    files = null;
+    if (this.file)
+      this.file.nativeElement.value = "";
+    //  this.dmSV.fileUploadList.next(this.fileUploadList);
+    this.fileAdded.emit({ data: this.fileUploadList });
+    this.changeDetectorRef.detectChanges();
+
+    return false;
+  }
+
+  convertBlobToBase64 = async (blob) => {
+    return await this.blobToBase64(blob);
+  }
+  
+  blobToBase64 = blob => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+
+  public readURL(liImage: HTMLElement, file: any) {
+    let imgPreview: HTMLImageElement = liImage as HTMLImageElement;
+    let imageFile: File = file.rawFile;
+    let reader: FileReader = new FileReader();
+    // reader.addEventListener( 'load', () => {
+    //     imgPreview.src = reader.result as string;
+    // }, false);
+    if (imageFile) {
+        reader.readAsDataURL(imageFile);
+    }
+  //  return reader.result as string;
+  }
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // const convertBlobToBase64 = async (blob) => {
+  //   return await blobToBase64(blob);
+  // }
+
+  async handleFileInput(files: FileInfo[]) {
+
+    var count = this.fileUploadList.length;
+    this.getFolderPath();
+    //console.log(files);
+    for (var i = 0; i < files.length; i++) {
+      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      if (index == -1) {        
+        var data = await this.convertBlobToBase64(files[i].rawFile);       
+        var fileUpload = new FileUpload();      
+        fileUpload.order = i;
+        fileUpload.fileName = files[i].name;
+        fileUpload.avatar = this.getAvatar(fileUpload.fileName);
+        fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
+        fileUpload.createdBy = this.user.userName;
+        fileUpload.createdOn = this.getNow();
+        fileUpload.type = files[i].type;
+        fileUpload.objectType = this.objectType;
+        fileUpload.objectId = this.objectId;
+        fileUpload.fileSize = files[i].size;
+        fileUpload.fileName = files[i].name;
+        fileUpload.funcId = this.functionID;
+        fileUpload.folderType = this.folderType;
+        fileUpload.reWrite = false;
+        fileUpload.data = data.toString();
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
         fileUpload.permissions = this.remotePermission;

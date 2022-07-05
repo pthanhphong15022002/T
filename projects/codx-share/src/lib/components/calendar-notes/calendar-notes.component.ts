@@ -230,7 +230,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
-          `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 5px;margin-top: 6px;`
+          `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         span.setAttribute(
@@ -245,7 +245,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span2.setAttribute(
           'style',
-          'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 6px;'
+          'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
       } else {
         span2.setAttribute(
@@ -264,7 +264,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         );
         span2.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 6px;'
+          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
       } else {
         span.setAttribute(
@@ -331,7 +331,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'edit'
     };
     this.callfc.openForm(
-      UpdateNoteComponent,
+      AddNoteComponent,
       'Cập nhật ghi chú',
       747,
       570,
@@ -376,7 +376,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'add',
     };
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 747, 570, '', obj)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj)
     // this.view.dataService.addNew().subscribe((res: any) => {
     //   let option = new DialogModel();
     //   option.DataService = this.view?.dataService;

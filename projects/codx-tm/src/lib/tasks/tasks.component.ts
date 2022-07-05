@@ -38,6 +38,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -164,7 +165,7 @@ export class TasksComponent extends UIComponent {
         active: false,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.itemViewList,
         },
       },
       {
@@ -516,7 +517,7 @@ export class TasksComponent extends UIComponent {
       UpdateStatusPopupComponent,
       'Cập nhật tình trạng',
       500,
-      450,
+      350,
       '',
       obj
     );
