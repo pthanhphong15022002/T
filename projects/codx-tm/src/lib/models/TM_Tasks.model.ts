@@ -1,4 +1,5 @@
 export class TM_Tasks {
+  recID:string;
   taskID: string;
   taskName: string;
   tags: string;
