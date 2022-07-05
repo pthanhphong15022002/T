@@ -6,7 +6,7 @@
     max-width: 200px;
     width: 100%!important;
     z-index: 1;
-    margin-right: 30px;
+    margin-right: 20px;
  
 }
 .e-tab.e-vertical-tab .e-content {
@@ -23,11 +23,12 @@
     border:0;   
 }
 .e-tab .e-tab-header.e-vertical:before {
-//border-width: 0px;     
+//border-width: 0px;    
+border-right: 1px solid #3333330f; 
 }
 
 .e-tab .e-tab-header:before {  
-  //  border: 0;
+    //border: 0;
 }
 .e-tab .e-tab-header .e-toolbar-item{
     border: 0;
@@ -54,4 +55,7 @@
     margin: 0 0px 0 0;
     min-height: 32px;
     min-width: auto; 
+}
+.e-tab .e-tab-header .e-toolbar-item .e-tab-text{
+    text-transform:inherit;
 }
