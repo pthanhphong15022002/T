@@ -3,7 +3,7 @@
         <div class="card-body">
             <form name="frm_move">
               <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd" entityName="DM_FolderInfo"
-                service="DM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false idField="recID"
+                service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false idField="recID"
                 parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
                 [isOutput]="true" [isLoadChild]="false">
               </codx-treeview>

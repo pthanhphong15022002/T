@@ -349,22 +349,23 @@ export class AttachmentComponent implements OnInit {
   }
 
   openFormFolder() {
-    this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-      if (res != null) {
-        this.listRemoteFolder = res;
-        this.listNodeAdd = res;
-        if (res[0].history != null) {
-          var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-          if (listFolder[0] != null && listFolder[0].folderPath != "") {
-            var list = listFolder[0].folderPath.split(";");
-            this.loadChildNode(res[0], 0, list);
-          }
-        }
-        this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
-        this.changeDetectorRef.detectChanges();
-        this.remotePermission = res[0].permissions;
-      }
-    });
+    this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", [this.functionID], "");
+    // this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
+    //   if (res != null) {
+    //     this.listRemoteFolder = res;
+    //     this.listNodeAdd = res;
+    //     if (res[0].history != null) {
+    //       var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
+    //       if (listFolder[0] != null && listFolder[0].folderPath != "") {
+    //         var list = listFolder[0].folderPath.split(";");
+    //         this.loadChildNode(res[0], 0, list);
+    //       }
+    //     }
+    //     this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
+    //     this.changeDetectorRef.detectChanges();
+    //     this.remotePermission = res[0].permissions;
+    //   }
+    // });
 
     // let option = new SidebarModel();
     // option.DataService = this.view?.currentView?.dataService;
@@ -902,19 +903,13 @@ export class AttachmentComponent implements OnInit {
   async handleFileInput(files: FileInfo[]) {
 
     var count = this.fileUploadList.length;
-   // this.getFolderPath();
+    this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
-      if (index == -1) {
-        let no = count + i;
-        //let data: ArrayBuffer;
-      //  let liImage = createElement('img',  { className: 'image'});
-        var data = await this.convertBlobToBase64(files[i].rawFile);
-       // await this.getBase64(files[i]).then(item => console.log(item) );
-      //  data =  this.arrayBufferToBase64(data);
-        var fileUpload = new FileUpload();
-      //  var item = this.arrayBufferToBase64(data);
+      if (index == -1) {        
+        var data = await this.convertBlobToBase64(files[i].rawFile);       
+        var fileUpload = new FileUpload();      
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
