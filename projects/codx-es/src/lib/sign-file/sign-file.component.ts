@@ -29,9 +29,6 @@ import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-
   styleUrls: ['./sign-file.component.scss'],
 })
 export class SignFileComponent implements OnInit {
-  @ViewChild('popup', { static: true }) popup;
-  @ViewChild('content', { static: true }) content;
-
   constructor(
     private esService: CodxEsService,
     private callFunc: CallFuncService,
@@ -43,6 +40,15 @@ export class SignFileComponent implements OnInit {
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
+  @ViewChild('popup', { static: true }) popup;
+  @ViewChild('content', { static: true }) content;
+  @ViewChild('listview') listview: CodxListviewComponent;
+  @ViewChild('editSFile') editSFile: PopupAddSignFileComponent;
+  @ViewChild('viewdetail') viewdetail: PopupAddSignFileComponent;
+  @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
+  @ViewChild('paneRight') panelRight: TemplateRef<any>;
+  @ViewChild('itemTemplate') template: TemplateRef<any>;
+  @ViewChild('codxViews') codxViews: ViewsComponent;
 
   autoLoad = true;
   taskViewStt;
@@ -66,13 +72,6 @@ export class SignFileComponent implements OnInit {
   moreFunc: Array<ButtonModel> = [];
 
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
-  @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('editSFile') editSFile: PopupAddSignFileComponent;
-  @ViewChild('viewdetail') viewdetail: PopupAddSignFileComponent;
-  @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
-  @ViewChild('paneRight') panelRight: TemplateRef<any>;
-  @ViewChild('itemTemplate') template: TemplateRef<any>;
-  @ViewChild('codxViews') codxViews: ViewsComponent;
 
   ngOnInit(): void {
     this.taskViewStt = '1';
@@ -111,14 +110,6 @@ export class SignFileComponent implements OnInit {
   changeItemDetail(event) {
     this.itemDetail = event.data;
   }
-
-  // clickChangeOpenState(e) {
-  //   this.showTaskList = !this.showTaskList;
-  // }
-
-  // clickChangeNextTab() {
-  //   this.curTab += 1;
-  // }
 
   editSignFile(e) {
     console.log(this.itemDetail);

@@ -60,8 +60,6 @@ const routes: Routes = [
     DocCategoryComponent,
     ProcessStepComponent,
     PopupAddApprovalStepComponent,
-    ApprovalStepComponent,
-    PopupAddSignFileComponent,
     PopupAddCategoryComponent,
     PopupAddSignatureComponent,
     MarkSignatureComponent,
