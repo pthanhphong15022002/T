@@ -2,12 +2,6 @@
     overflow: hidden;
 }
 
-.pw-listcard>div {
-    float: left;
-    width: 220px;
-    max-width: 220px;
-}
-
 .pw-listcard {
     justify-content: space-around;
 }
@@ -45,7 +39,17 @@
     align-items: stretch;
 }
 
-app-note-books {
-    background-color: aqua;
+.pw-container {
     padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pw-card {
+    width: 220px;
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
 }

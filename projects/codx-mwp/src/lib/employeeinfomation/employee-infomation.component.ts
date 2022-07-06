@@ -46,8 +46,8 @@ export class EmployeeInfomationComponent implements OnInit {
   dataSelcected = [];
   service = "BS";
 
-  minValue: number = 30;
-  minType: string = "MinRange";
+  // minValue: number = 100;
+  minType= "MinRange";
   data: Object[];
   primaryXAxis: Object;
   primaryYAxis: Object;
@@ -305,5 +305,13 @@ export class EmployeeInfomationComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  setMyStyles(data) {
+
+    // let styles = {
+    //   'width': (data.valueX / 10 * 100) + "%",
+    // };
+    // return styles;
   }
 }
