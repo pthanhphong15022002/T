@@ -28,7 +28,7 @@ import {
 import { DataRequest } from '@shared/models/data.request';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 import { ActivatedRoute } from '@angular/router';
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
@@ -245,7 +245,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '750px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         PopupAddBookingCarComponent,
@@ -261,7 +261,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.dataSelected = this.viewBase.dataService.dataSelected;
         let option = new SidebarModel();
-        option.Width = '750px';
+        option.Width = '800px';
         option.DataService = this.viewBase?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
           PopupAddBookingCarComponent,
@@ -295,8 +295,8 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     if (device) return device.text;
   }
 
-  viewChange(event) {}
-  
+  viewChange(event) { }
+
   deleteBooking(event) {
     if (confirm('Are you sure to delete booking')) {
       this.api

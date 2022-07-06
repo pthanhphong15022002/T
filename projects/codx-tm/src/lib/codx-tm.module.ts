@@ -187,6 +187,9 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
+  // MwpComponent,
+  // MwpViewDetailComponent,
+  // MwpPopupAddComponent,
   ViewListComponent
 ];
 @NgModule({

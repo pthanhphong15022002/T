@@ -1,23 +1,14 @@
-.pw-menu .active a,
-.pw-menu :hover a {
-    color: #0078ff;
+.pw-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
-.pw-menu .active span,
-.pw-menu :hover span {
-    color: #0078ff;
+[ngbPopover] {
+    white-space: nowrap;
 }
 
-.btn-text {
-    width: 500px;
-    background-color: white;
-    border-color: white;
-    margin-left: 40px;
-    border: none;
-    color: gray;
-}
 
-.pin {
-    margin-left: 490px;
-    cursor: pointer
+.active [class*="icon-"] {
+    color: var(--primary-dark);
 }

@@ -1,7 +1,3 @@
-<!-- <codx-views #view service="SYS" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [showToolBar]="false" [views]="views"
-    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
-</codx-views> -->
-
 
 <div class="cal-notes">
     <div class="more-btn">
@@ -55,8 +51,7 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -70,8 +65,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -106,8 +100,7 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -121,8 +114,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -164,8 +156,7 @@
                 <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                     <div class="note-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center">
-                                <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                 <div class="dropdown ms-2">
                                     <span class="icon-more_vert icon-18" placement="start" container="body"
                                         [ngbPopover]="" [autoClose]="'outside'"></span>
@@ -178,8 +169,7 @@
                 <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
                     <div class="note-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center">
-                                <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                 <div class="dropdown ms-2">
                                     <span class="icon-more_vert icon-18" placement="start" container="body"
                                         [ngbPopover]="" [autoClose]="'outside'"></span>

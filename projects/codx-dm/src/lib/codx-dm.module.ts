@@ -16,7 +16,6 @@ import { BreadcrumbComponent, TabModule } from '@syncfusion/ej2-angular-navigati
 import { HomeComponent } from './home/home.component';
 import { CardComponent } from './views/card/card.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CreateFolderComponent } from './createFolder/createFolder.component';
 
 export const routes: Routes = [
   {
@@ -47,8 +46,7 @@ export const routes: Routes = [
 const T_Component: Type<any>[] = [
   LayoutComponent,
   HomeComponent,
-  CardComponent,
-  CreateFolderComponent  
+  CardComponent  
 ]
 @NgModule({
   imports: [

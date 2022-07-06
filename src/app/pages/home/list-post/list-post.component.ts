@@ -119,7 +119,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             data.recID
           )
           .subscribe((res) => {
-            if (res) {
+            if(res)
+            {
+              this.api.execSv("DM",
+              "ERM.Business.DM",
+              "FileBussiness",
+              "DeleteByObjectIDAsync",
+              [data.recID,'WP_Comments',true]
+              ).subscribe();
               this.notifySvr.notifyCode('E0026');
               this.dt.detectChanges();
             }
@@ -199,7 +206,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: "edit",
       title: "Chỉnh sửa bài viết"
     }
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 500, "", obj);
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj,'',option);
 
   }
 

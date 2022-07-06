@@ -150,18 +150,11 @@ export class IncommingComponent
       case 'btnAdd':
         this.show();
         break;
-      case 'edit':
-        this.edit();
-        break;
-      case 'delete':
-        this.delete();
-        break;
     }
   }
 
   show() {
     this.view.dataService.addNew(0).subscribe((res: any) => {
-      //this.view.
       //this.detectorRef.detectChanges();
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -170,6 +163,7 @@ export class IncommingComponent
         {
           gridViewSetup: this.gridViewSetup,
           headerText: 'Thêm mới công văn đến',
+          subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
         },
@@ -181,28 +175,15 @@ export class IncommingComponent
             .remove(this.view.dataService.data[0])
             .subscribe();
         else {
+          delete x.event._uuid;
           this.view.dataService.update(x.event).subscribe();
+          this.view.dataService.data[0]=x.event;
           this.view.dataService.setDataSelected(x.event);
         }
       });
     });
   }
 
-  edit() {
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-      });
-  }
-
-  delete() {
-    this.view.dataService.dataSelected = this.lstDtDis;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], this.beforeDel)
-      .subscribe();
-  }
 
   beforeDel(opt: RequestOption) {
     opt.service = 'TM';
@@ -389,8 +370,11 @@ export class IncommingComponent
     //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
   }
-  exportFile()
+  convertHtmlAgency(agencyName:any)
   {
-    
+    var desc = '<div class="d-flex">';
+    if(agencyName)
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+    return desc + '</div>';
   }
 }

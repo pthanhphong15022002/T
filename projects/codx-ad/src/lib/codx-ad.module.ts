@@ -18,7 +18,6 @@ import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { ViewUsersComponent } from './users/view-users/view-users.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { CompanySettingDetailsComponent } from './company-setting/company-setting-details/company-setting-details.component';
 export const routes: Routes = [
@@ -36,34 +35,33 @@ export const routes: Routes = [
     //   }
 
     // ]
-      children: [
-        {
-          path:'users/:funcID',
-          component: UserComponent,
-        }
-        ,{
-          path:'accountinfo/:funcID',
-          component: CompanySettingComponent,
-          children:
+    children: [
+      {
+        path: 'users/:funcID',
+        component: UserComponent,
+      }
+      , {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+        children:
           [
             {
-              path:':funcID',
+              path: ':funcID',
               component: CompanySettingDetailsComponent
             }
 
           ]
 
-        }
+      }
 
 
-      ]
+    ]
   }
 ];
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
   UserComponent,
-  ViewUsersComponent,
   CompanySettingComponent,
   CompanySettingDetailsComponent
 ];
