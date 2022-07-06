@@ -151,7 +151,7 @@ export class SprintsComponent extends UIComponent {
       this.dialog.closed.subscribe((e) => {
         console.log(e);
       });
-      
+
       //dialog.close();
     });
   }

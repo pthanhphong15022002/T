@@ -9,18 +9,18 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
-  // aside=true;  
+  // aside=true;
   // asideFixed = true;
   // toolbar = false;
   valueList: [];
 
   constructor(
     private route: ActivatedRoute,
-     private changedt: ChangeDetectorRef,
-     private cache:CacheService,
-     inject: Injector) {
+    private changedt: ChangeDetectorRef,
+    private cache: CacheService,
+    inject: Injector) {
     super(inject);
-   this.codxService.init(this.module, false,false,"light",false);
+    this.codxService.init(this.module, false,false, 'light',false);
     
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
@@ -34,9 +34,9 @@ export class LayoutComponent extends LayoutBaseComponent {
 
 
   category = "news";
-  navigate(category = 'news',funcID = null) {
+  navigate(category = 'news', funcID = null) {
     this.category = category;
-    if(!funcID){
+    if (!funcID) {
       funcID = this.route.firstChild.snapshot.params["funcID"];
     }
     this.codxService.navigate('', "wp/" + category + "/" + funcID)
