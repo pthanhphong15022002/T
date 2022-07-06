@@ -41,11 +41,11 @@
             <codx-listview #listview service="SYS" entityName="WP_Notes" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [predicate]="predicate" [dataValue]="dataValue" >
             </codx-listview>
         </div> -->
-        <div *ngIf="checkWP_NotesParam == true" class="p-3">
-            <div class="my-2">
+        <div *ngIf="checkWP_NotesParam == true">
+            <!-- <div class="my-2">
                 <codx-label class="fw-bold fs-6 text-primary" name="lblPinNote" formName="Notes" default="Ghi chú">
                 </codx-label>
-            </div>
+            </div> -->
             <div *ngFor="let item of WP_Notes">
                 <div *ngIf="item.showCalendar == true">
                     <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
