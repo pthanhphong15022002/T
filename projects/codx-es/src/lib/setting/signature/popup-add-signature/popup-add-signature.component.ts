@@ -99,8 +99,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             new FormControl(this.data.recID)
           );
         }
-        console.log(this.dialogSignature.value);
-
         this.isAfterRender = true;
         this.Signature1 = null;
         this.Signature2 = null;
@@ -112,8 +110,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.esService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
-        console.log(res);
-
         this.cbxName = res;
       });
 
@@ -134,7 +130,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     if (this.dialog) {
       if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
-          console.log('Close without saving or save failed', res);
           this.dialog.dataService.saveFailed.next(null);
         });
       }
@@ -186,13 +181,17 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   openPopup(content) {
+    let data = {
+      dialog: this.dialog,
+      model: this.dialogSignature,
+    };
     this.cfService.openForm(
       PopupSignatureComponent,
       'Thêm mới ghi chú',
       800,
       600,
       '',
-      this.dialogSignature
+      data
     );
 
     this.cr.detectChanges();
@@ -250,6 +249,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   getLinkImg(data) {
-    return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
+    // return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
   }
 }
