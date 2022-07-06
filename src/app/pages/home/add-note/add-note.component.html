@@ -19,7 +19,8 @@
                     <span class="icon-push_pin1 icon-20" type="button"></span>
                 </div>
                 <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
-                    triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
+                    triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'"
+                    >
                     <span class="icon-download icon-20" type="button"></span>
                 </div>
             </div>
@@ -49,9 +50,9 @@
                             </ng-template>
                         </div>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
+                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0"
                                 (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
-                                (valueChange)="valueChange($event, item)">
+                                (valueChange)="valueChange($event, item)" placeholder="Nhập ghi chú...">
                             </codx-input>
                         </div>
                     </div>
