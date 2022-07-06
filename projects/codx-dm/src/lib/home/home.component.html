@@ -45,15 +45,16 @@ idField="recID"
       [objectType]="'OD_Dispatches'" 
       [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
       hideFolder="1"  
-      hideUploadBtn="1"   
+      hideUploadBtn="0"   
       hideDes="1" 
       type="inline"
+      [formModel]="view.formModel"
       [functionID]="'ODT3'" 
       (fileAdded)="fileAdded($event)" 
       (fileCount)="getfileCount($event)" 
+      displayThumb="full"
     > 
   </codx-attachment>
-
   <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
 </ng-template>
 <ng-template #templateSmallCard>
