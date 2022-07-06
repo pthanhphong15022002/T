@@ -142,6 +142,7 @@ export class HomeComponent extends UIComponent {
   getfileCount($event) {}
 
   fileAdded($event) {
+    console.log($event);
     // this.data = event.stopImmediatePropagation;
   }
 

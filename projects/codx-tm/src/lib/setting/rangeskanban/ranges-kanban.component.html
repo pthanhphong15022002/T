@@ -9,13 +9,13 @@
     <td class="rowphoto">
       {{data.rangeID}}
     </td>
-    <td class="rowphoto" placement="left">
+    <td class="rowphoto" placement="left" [ngbTooltip]="data.rangeName">
       {{data.rangeName}}
     </td>
     <td class="rowphoto">
       <!-- <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">
       </div> -->
-      <div [innerHTML]="data.note" placement="left">
+      <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">
       </div>
     </td>
     <td class="rowphoto">
