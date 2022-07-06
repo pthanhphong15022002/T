@@ -29,6 +29,7 @@ import { MarkSignatureComponent } from './sign-file/mark-signature/mark-signatur
 import { SignFileComponent } from './sign-file/sign-file.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { PopupAddAutoNumberComponent } from './setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 
 const routes: Routes = [
   {
@@ -51,7 +52,7 @@ const routes: Routes = [
         path: 'home/:funcID',
         component: DashboardComponent,
       },
-      
+
       {
         path: 'mark',
         component: MarkSignatureComponent,
@@ -78,7 +79,12 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [LayoutComponent, DashboardComponent, CodxEsComponent, PopupAddAutoNumberComponent],
+  declarations: [
+    LayoutComponent,
+    DashboardComponent,
+    CodxEsComponent,
+    PopupAddAutoNumberComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),

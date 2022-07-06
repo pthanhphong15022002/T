@@ -19,6 +19,7 @@ import {
   of,
 } from 'rxjs';
 import { debug } from 'util';
+import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 
 export class AddGridData {
   dataItem: any = null;
@@ -89,6 +90,8 @@ export class CodxEsService {
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
 
+  private autoNoCode = new BehaviorSubject<any>(null);
+
   constructor(
     private cache: CacheService,
     private auth: AuthStore,
@@ -96,6 +99,10 @@ export class CodxEsService {
     private api: ApiHttpService,
     private notificationsService: NotificationsService
   ) {}
+
+  getAutoNoCode(autoNo) {
+    this.autoNoCode.next(autoNo);
+  }
 
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
@@ -269,16 +276,6 @@ export class CodxEsService {
     );
   }
 
-  getApprovalSteps(recID) {
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'CategoriesBusiness',
-      'GetListApprovalStepAsync',
-      recID
-    );
-  }
-
   addSignFile(data, isAdd) {
     this.api.execSv(
       'ES',
@@ -306,32 +303,238 @@ export class CodxEsService {
     );
   }
 
+  //#region  AutoNumbers
+  public setupAutoNumber = new BehaviorSubject<any>(null);
+  isSetupAutoNumber = this.setupAutoNumber.asObservable();
+
+  getAutoNumber(autoNoCode): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GetAutoNumberAsync',
+      [autoNoCode]
+    );
+  }
+
   addEditAutoNumbers(data: FormGroup, isAdd: boolean): Observable<any> {
-    return this.api.exec<any>(
+    return this.api.execSv(
+      'SYS',
       'AD',
       'AutoNumbersBusiness',
       'SettingAutoNumberAsync',
       [data.value, isAdd]
     );
-
-    // return this.api
-    //   .call(
-    //     'ERM.Business.AD',
-    //     'AutoNumbersBusiness',
-    //     'SettingAutoNumberAsync',
-    //     [data.value, isAdd]
-    //   )
-    //   .pipe(
-    //     map((data) => {
-    //       if (data.error) return;
-    //       return data.msgBodyData[0];
-    //     }),
-    //     catchError((err) => {
-    //       return of(undefined);
-    //     }),
-    //     finalize(() => null)
-    //   );
   }
+
+  deleteAutoNumber(autoNoCode: string): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'DeleteAutoNumberAsync',
+      [autoNoCode]
+    );
+  }
+
+  updateAutoNoCode(newNo: string): Observable<any> {
+    let oldNo = null;
+    this.autoNoCode.subscribe((res) => {
+      oldNo = res;
+    });
+
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'UpdateAutoNoCodeAsync',
+      [oldNo, newNo]
+    );
+  }
+
+  setViewAutoNumber(modelAutoNumber) {
+    let vllDateFormat;
+    let vllStringFormat;
+    this.cache.valueList('L0088').subscribe((vllDFormat) => {
+      vllDateFormat = vllDFormat.datas;
+      this.cache.valueList('L0089').subscribe((vllSFormat) => {
+        vllStringFormat = vllSFormat.datas;
+        let indexStrF = vllStringFormat.findIndex(
+          (p) => p.value == modelAutoNumber.stringFormat.toString()
+        );
+        let indexDF = vllDateFormat.findIndex(
+          (p) => p.value == modelAutoNumber.dateFormat?.toString()
+        );
+        let stringFormat = '';
+        let dateFormat = '';
+        if (indexStrF >= -1) {
+          stringFormat = vllStringFormat[indexStrF].text;
+          console.log('1', stringFormat.length);
+
+          stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
+          console.log('2', stringFormat.length);
+        }
+
+        // replace chuỗi và dấu phân cách
+        stringFormat = stringFormat
+          .replace(
+            'Chuỗi',
+            modelAutoNumber.fixedString == null
+              ? ''
+              : modelAutoNumber.fixedString
+          )
+          .replace(
+            /-/g,
+            modelAutoNumber.separator == null ? '' : modelAutoNumber.separator
+          );
+
+        //replace ngày
+        if (indexDF >= 0) {
+          dateFormat =
+            vllDateFormat[indexDF].text == 'None'
+              ? ''
+              : vllDateFormat[indexDF].text;
+        }
+        stringFormat = stringFormat.replace('Ngày', dateFormat);
+
+        //replace số và set chiều dài
+        let lengthNumber = modelAutoNumber.maxLength - stringFormat.length + 2;
+        if (lengthNumber < 0) {
+          stringFormat = stringFormat.replace('Số', '');
+          stringFormat = stringFormat.substring(0, modelAutoNumber.maxLength);
+        } else if (lengthNumber == 0) {
+          stringFormat = stringFormat.replace('Số', '');
+        } else {
+          let strNumber = '#'.repeat(lengthNumber);
+          stringFormat = stringFormat.replace('Số', strNumber);
+        }
+        return stringFormat;
+      });
+    });
+  }
+
+  //#endregion
+
+  //#region Category
+  addNewCategory(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
+      data,
+      '',
+      null,
+    ]);
+  }
+
+  updateCategory(category: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'EditCategoryAsync',
+      [category]
+    );
+  }
+
+  deleteCategory(categoryID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'DeleteCategoryAsync',
+      [categoryID, '', null]
+    );
+  }
+  //#endregion
+
+  //#region ApprovalSteps
+  private approvalStep = new BehaviorSubject<any>(null);
+  isSetupApprovalStep = this.approvalStep.asObservable();
+
+  private lstDelete = new BehaviorSubject<any>(null);
+  private transID = new BehaviorSubject<any>(null);
+  getTransID(transID) {
+    this.transID.next(transID);
+  }
+
+  setApprovalStep(lstStep) {
+    this.approvalStep.next(lstStep);
+  }
+
+  setLstDeleteStep(lstStep) {
+    this.lstDelete.next(lstStep);
+  }
+
+  getApprovalStep() {
+    this.approvalStep.subscribe((res) => {
+      return res;
+    });
+  }
+
+  getApprovalSteps(recID): Observable<any> {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetListApprovalStepAsync',
+      recID
+    );
+  }
+
+  addNewApprovalStep(lstApprovalStep: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'AddNewApprovalStepsAsync',
+      [lstApprovalStep]
+    );
+  }
+
+  editApprovalStep(lstApprovalStep: any): Observable<any> {
+    let lstDataEdit = null;
+    this.approvalStep.subscribe((res) => {
+      lstDataEdit = res;
+    });
+    if (lstDataEdit != null)
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'UpdateApprovalStepsAsync',
+        [lstDataEdit]
+      );
+    else return null;
+  }
+
+  updateTransID(newTransID): Observable<any> {
+    let oldTransID = '00000000-0000-0000-0000-000000000000';
+    this.transID.subscribe((res) => {
+      oldTransID = res;
+    });
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'UpdateCategoryIDAsync',
+      [oldTransID, newTransID]
+    );
+  }
+
+  deleteApprovalStep(lstApprovalStep: any): Observable<any> {
+    let lstData = null;
+    this.lstDelete.subscribe((res) => {
+      lstData = res;
+    });
+    if (lstData != null) {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'DeleteListApprovalStepAsync',
+        [lstData]
+      );
+    } else return null;
+  }
+  //#endregion
 }
 export class LayoutModel {
   isChange: boolean = false;

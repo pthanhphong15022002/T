@@ -18,6 +18,7 @@ import { SignFileComponent } from '../sign-file/sign-file.component';
 import { ViewDetailComponent } from '../sign-file/view-detail/view-detail.component';
 import { ApprovalStepComponent } from './approval-step/approval-step.component';
 import { PopupAddApprovalStepComponent } from './approval-step/popup-add-approval-step/popup-add-approval-step.component';
+import { PopupAddEmailTemplateComponent } from './approval-step/popup-add-email-template/popup-add-email-template.component';
 import { DocCategoryComponent } from './category/category.component';
 import { PopupAddCategoryComponent } from './category/popup-add-category/popup-add-category.component';
 import { ProcessStepComponent } from './category/process-step/process-step.component';
@@ -57,16 +58,16 @@ const routes: Routes = [
   declarations: [
     LayoutComponent,
     SignatureComponent,
-    PopupSignatureComponent,
-    PopupSignatureComponent,
     DocCategoryComponent,
     ProcessStepComponent,
     PopupAddApprovalStepComponent,
     ApprovalStepComponent,
     SignFileComponent,
+    PopupSignatureComponent,
     PopupAddSignFileComponent,
     PopupAddCategoryComponent,
     PopupAddSignatureComponent,
+    PopupAddEmailTemplateComponent,
     MarkSignatureComponent,
     ViewDetailComponent,
   ],

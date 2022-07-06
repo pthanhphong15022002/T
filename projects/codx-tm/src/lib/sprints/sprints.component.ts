@@ -210,7 +210,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) { }
+  sendemail(data) {}
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -234,15 +234,14 @@ export class SprintsComponent extends UIComponent {
     }
   }
   openPopupShare(obj) {
-    this.callfc
-      .openForm(
-        PopupShareSprintsComponent,
-        'Chia sẻ view board',
-        350,
-        510,
-        '',
-        obj
-      )
+    this.callfc.openForm(
+      PopupShareSprintsComponent,
+      'Chia sẻ view board',
+      350,
+      510,
+      '',
+      obj
+    );
     // .subscribe((dt: any) => {
     //   var that = this;
     //   dt.close = function (e) {
@@ -259,7 +258,7 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
   }
 
   changeView(evt: any) {

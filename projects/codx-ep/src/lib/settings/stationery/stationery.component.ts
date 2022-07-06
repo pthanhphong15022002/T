@@ -187,7 +187,7 @@ export class StationeryComponent implements OnInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '750px';
+      option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
@@ -206,7 +206,7 @@ export class StationeryComponent implements OnInit {
     this.viewBase.dataService.edit(editItem).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '750px';
+      option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
