@@ -70,7 +70,8 @@
                     <div class="flex align-items-center mt-6">
                         <div class="me-2">
                             <ng-container *ngIf="note?.noteType == 'check'; else list">
-                                <codx-input #noteAddText type="checkbox" [checked]="item?.status == '1' || item?.status == 'true'" field="status"
+                                <codx-input #noteAddText type="checkbox"
+                                    [checked]="item?.status == '1' || item?.status == 'true'" field="status"
                                     labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
                                 </codx-input>
                             </ng-container>

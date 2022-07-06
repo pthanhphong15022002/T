@@ -21,7 +21,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     // this.funcs$.subscribe((res) => {
     // });
     this.codxService.modulesOb$.subscribe((res) => {
-      console.log("checkskdhjfjsdkhfd",res);
+      console.log("checkskdhjfjsdkhfd", res);
     });
   }
 
