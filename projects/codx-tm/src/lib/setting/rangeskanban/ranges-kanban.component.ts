@@ -35,11 +35,11 @@ export class RangesKanbanComponent implements OnInit {
   //#region Init
   ngOnInit(): void {
     this.columnsGrid = [
-      {  width: 200, headerTemplate: this.itemRangeID  },
-      {  width: 250, headerTemplate: this.itemRangeName },
-      {  width: 200 , headerTemplate: this.itemNote},
-      {  width: 200, headerTemplate: this.itemRange },
-      {  width: 200, headerTemplate: this.itemCreatedBy },
+      { width: 200, headerTemplate: this.itemRangeID },
+      { width: 250, headerTemplate: this.itemRangeName },
+      { width: 200, headerTemplate: this.itemNote },
+      { width: 200, headerTemplate: this.itemRange },
+      { width: 200, headerTemplate: this.itemCreatedBy },
       { width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
 
@@ -84,7 +84,7 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px'; // s k thấy gửi từ ben đây,
+      option.Width = '800px'; // s k thấy gửi từ ben đây,
 
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
 
@@ -112,7 +112,7 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
     });
   }

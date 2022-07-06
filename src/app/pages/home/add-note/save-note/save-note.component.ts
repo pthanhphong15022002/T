@@ -1,5 +1,5 @@
-import { DialogData, AuthStore, ApiHttpService } from 'codx-core';
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { DialogData, AuthStore, ApiHttpService, DialogRef, UIComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional, Injector } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 
 @Component({
@@ -7,7 +7,7 @@ import { Notes } from '@shared/models/notes.model';
   templateUrl: './save-note.component.html',
   styleUrls: ['./save-note.component.scss']
 })
-export class SaveNoteComponent implements OnInit {
+export class SaveNoteComponent extends UIComponent implements OnInit {
 
   user: any;
   predicate = "CreatedBy=@0";
@@ -19,22 +19,26 @@ export class SaveNoteComponent implements OnInit {
   dataUpdate = new Notes();
   objectID: any;
   recID: any;
+  header = 'Sổ tay cá nhân';
+  dialog: any;
 
-  constructor(
+  constructor(private injector: Injector,
     private authStore: AuthStore,
-    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() data?: DialogData,
+    @Optional() dt?: DialogRef,
   ) {
+    super(injector);
+    this.dialog = dt;
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
     this.memo = data.data?.memo;
     this.checkList = data.data?.checkList;
     this.noteType = data.data?.noteType;
     this.recID = data.data?.recID;
-   }
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
   }
 
   onEditNote(recID) {
