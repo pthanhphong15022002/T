@@ -1,13 +1,5 @@
-<codx-views #codxViews 
-
-funcID="WP" 
-[service]="service" 
-[assemblyName]="assemblyName" 
-[className]="className"
-[method]="method" 
-[views]="views" 
-entityName="WP_Comments" 
-idField="recID">
+<codx-views #codxViews funcID="WP" [service]="service" [assemblyName]="assemblyName" [className]="className"
+    [method]="method" [views]="views" entityName="WP_Comments" idField="recID">
 
 </codx-views>
 
@@ -32,11 +24,13 @@ idField="recID">
             </div>
         </div>
     </ng-container>
-    <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue" [itemTemplate]="tmpPortal"
-        #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP" class="h-100" className="CommentBusiness"
-        method="GetListPostAsync" entityName="WP_Comments" [itemTemplateLoading]="templateloading"
-        [formModel]="codxViews.formModel">
-    </codx-listview>
+    <div class="newfeed">
+        <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue"
+            [itemTemplate]="tmpPortal" #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP"
+            class="h-100" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
+            [itemTemplateLoading]="templateloading" [formModel]="codxViews.formModel">
+        </codx-listview>
+    </div>
 </ng-template>
 
 <ng-template #tmpPortal let-item>
@@ -116,7 +110,7 @@ idField="recID">
                                     {{item.shareName.replace(item.shareControl |
                                     sharedControl:'wp' | async,'')}}
                                 </ng-template> -->
-                                    {{item.shareName}}
+                                {{item.shareName}}
                             </ng-template>
                         </span>
                     </span>
@@ -201,12 +195,13 @@ idField="recID">
                             <div class="card-body p-5">
                                 <div class="d-flex">
                                     <div class="me-3">
-                                        <codx-img slot="start" class="symbol symbol-30px symbol-circle"
-                                            objectId="" objectType="AD_Users" [width]="30">
+                                        <codx-img slot="start" class="symbol symbol-30px symbol-circle" objectId=""
+                                            objectType="AD_Users" [width]="30">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <codx-label formModel="" name="lblPostDeleted" default="Bài viết không còn tồn tại"   ></codx-label>
+                                        <codx-label formModel="" name="lblPostDeleted"
+                                            default="Bài viết không còn tồn tại"></codx-label>
                                     </div>
                                 </div>
                             </div>
@@ -237,15 +232,8 @@ idField="recID">
         </div>
         <div class="pic-feed">
             <div class="pic-feed">
-                <codx-attachment
-                    [objectId]="item.recID"  
-                    objectType="WP_Comments"   
-                    hideFolder="1"  
-                    hideUploadBtn="1"   
-                    hideDes="1" 
-                    type="inline"
-                    [functionID]="codxViews.formModel.funcID" 
-                    > 
+                <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
+                    hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
                 </codx-attachment>
             </div>
         </div>
