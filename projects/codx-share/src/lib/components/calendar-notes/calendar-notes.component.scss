@@ -89,3 +89,11 @@ app-notes-home {
 .icon-add {
     color: darkgray;
 }
+
+.active [class*="icon-"] {
+    color: var(--primary-dark);
+}
+
+.note-option {
+    margin-top: 5px;
+}
