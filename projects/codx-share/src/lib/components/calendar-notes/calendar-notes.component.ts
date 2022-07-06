@@ -538,12 +538,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       )
       .subscribe((res) => {
         if (res) {
-          // this.lstView.removeHandler(dt, "recID");
-          for (let i = 0; i < this.WP_Notes.length; i++) {
-            if (this.WP_Notes[i].recID == this.recID) {
-              this.WP_Notes.splice(i, 1);
-            }
-          }
+          this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID)
           this.changeDetectorRef.detectChanges();
           this.setEventWeek();
           var today: any = document.querySelector(
