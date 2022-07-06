@@ -1,4 +1,4 @@
-import { UserComponent } from './user/user.component';
+import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,16 +18,42 @@ import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { CompanySettingComponent } from './company-setting/company-setting.component';
+import { CompanySettingDetailsComponent } from './company-setting/company-setting-details/company-setting-details.component';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    // children: [
+    //   {
+    //     path:'users/:funcID',
+    //     component: UserComponent,
+    //   }
+    //   ,{
+    //     path:'users/companysetting/:funcID',
+    //     component: CompanySettingComponent
+    //   }
+
+    // ]
     children: [
       {
-        path:'user/:funcID',
-        component: UserComponent
+        path: 'users/:funcID',
+        component: UserComponent,
       }
-      
+      , {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+        children:
+          [
+            {
+              path: ':funcID',
+              component: CompanySettingDetailsComponent
+            }
+
+          ]
+
+      }
+
 
     ]
   }
@@ -35,7 +61,9 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-
+  UserComponent,
+  CompanySettingComponent,
+  CompanySettingDetailsComponent
 ];
 @NgModule({
   imports: [

@@ -26,6 +26,22 @@ import { AccumulationChartModule, ChartAllModule, ChartModule } from '@syncfusio
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
+import {
+  AreaSeriesService,
+  LineSeriesService,
+  ExportService,
+  ColumnSeriesService,
+  StackingColumnSeriesService,
+  StackingAreaSeriesService,
+  RangeColumnSeriesService,
+  ScatterSeriesService,
+  PolarSeriesService,
+  CategoryService,
+  RadarSeriesService,
+  ILoadedEventArgs,
+  SplineSeriesService,
+} from '@syncfusion/ej2-angular-charts';
+
 export const routes: Routes = [
   {
     path: '',
@@ -45,6 +61,11 @@ export const routes: Routes = [
         path: 'employeeinfo/:funcID',
         component: EmployeeInfomationComponent,
       },
+      // {
+      //   path:'',
+      //   redirectTo:'personals/:funcID',
+      //   component: PersonalsComponent,
+      // },
     ],
   },
 ];
@@ -76,6 +97,7 @@ const Component: Type<any>[] = [
     CodxCoreModule,
     RouterModule.forChild(routes),
     CodxShareModule,
+    SliderModule,
     ChartModule,
     ButtonModule,
     ChartAllModule,
@@ -88,6 +110,20 @@ const Component: Type<any>[] = [
   ],
   declarations: [Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    AreaSeriesService,
+    LineSeriesService,
+    ExportService,
+    ColumnSeriesService,
+    StackingColumnSeriesService,
+    StackingAreaSeriesService,
+    RangeColumnSeriesService,
+    ScatterSeriesService,
+    PolarSeriesService,
+    CategoryService,
+    RadarSeriesService,
+    SplineSeriesService,
+  ],
 })
 export class CodxMwpModule {
   public static forRoot(

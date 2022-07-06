@@ -9,10 +9,12 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
+import { AttachmentComponent } from '../attachment/attachment.component';
 import { CodxExportAddComponent } from './codx-export-add/codx-export-add.component';
 
 @Component({
@@ -27,15 +29,18 @@ export class CodxExportComponent implements OnInit, OnChanges
   recID :any
   data = {}
   dataEx: any;
+  dataWord: any;
   dialog: any;
   formModel : any;
   exportGroup : FormGroup;
   lblExtend: string = '';
   request = new DataRequest();
+  @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
+    private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -83,9 +88,9 @@ export class CodxExportComponent implements OnInit, OnChanges
     {
       if(item[0])
         this.dataEx = item[0]
-      })
+    })
   }
-  openForm(val:any,data:any)
+  openForm(val:any,data:any,type:any)
   {
     switch(val)
     {
@@ -95,20 +100,44 @@ export class CodxExportComponent implements OnInit, OnChanges
           option.FormModel = this.formModel;
           option.DataService = data;
           
-          this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {type:val}, "", option)
+          this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
           .closed.subscribe(item=>
           {
-            if(item.event == true) this.load();
+            if(item.event.length>0) 
+            {
+              if(val == "add") this.load();
+              else if(val == "edit")
+              {
+                var index = this.dataEx.findIndex((x => x.recID == item.event[0]?.recID));
+                if(index>=0) {this.dataEx[index] = item.event[0]}
+              }
+            }
           })
-          break;
-        }
-      case "edit":
-        {
-          console.log(data);
           break;
         }
       case "delete":
         {
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          //SYS003
+          this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa ?", config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            {
+              this.api
+                .execActionData<any>(
+                  'AD_ExcelTemplates',
+                  [data],
+                  'DeleteAsync'
+                ).subscribe(item=>{
+                  if(item[0] == true)
+                  {
+                    this.notifySvr.notifyCode("RS002");
+                    this.dataEx = this.dataEx.filter(x=>x.recID != item[1][0].recID);
+                  }
+                  else this.notifySvr.notify("Xóa không thành công");
+                })
+            }
+          })
           break;
         }
     }
@@ -124,8 +153,8 @@ export class CodxExportComponent implements OnInit, OnChanges
         {
           if(dt.dataExport == "all")
           {
-            this.gridModel.page=0;
-            this.gridModel.pageSize=10000;
+            this.gridModel.page=1;
+            this.gridModel.pageSize=-1;
           }
           else if(dt.dataExport == "selected")
           {
@@ -150,5 +179,9 @@ export class CodxExportComponent implements OnInit, OnChanges
     const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url= window.URL.createObjectURL(blob);
     window.open(url);
+  }
+  openFormUploadFile()
+  {
+    this.attachment.uploadFile();
   }
 }

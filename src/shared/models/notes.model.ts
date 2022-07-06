@@ -14,7 +14,13 @@ export class Notes {
     createdBy: string;   
 }
 
-export class NoteGoal {
+export class TempNote {
     status: StatusNote;
     listNote: any;
+}
+
+export class NoteType {
+    text: boolean;
+    check: boolean;
+    list: boolean;
 }

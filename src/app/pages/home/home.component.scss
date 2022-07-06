@@ -13,3 +13,23 @@
 .form-myTeam {
     margin-bottom: 15px;
 }
+
+.home-left codx-view-content {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+.home-left ejs-listview {
+    background-color: transparent;
+}
+
+.home-left ejs-listview .e-ul>li {
+    margin-bottom: 15px;
+    background-color: #fff !important;
+    border-radius: 0.475rem;
+}
+
+.pd-top-0 {
+    padding-top: 0px !important;
+}

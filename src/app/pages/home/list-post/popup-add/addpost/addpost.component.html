@@ -1,5 +1,4 @@
-
-<codx-form [headerText]="title"  [body]="body" [footer]="footer"  [dialog]="dialogRef">
+<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
      <div class="body">
         <div class="my-3 d-flex">
@@ -22,18 +21,69 @@
                             <span class="ms-2 me-2">{{lstRecevier.length}}</span>
                             <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default=" người khác "></codx-label>
                         </div>
-                    </ng-template>
-                </ng-container>
-                <div class="d-flex align-items-center justify-content-start user-square">
-                    <div class="symbol symbol-20px symbol-circle me-2">
-                        <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
+                        <i class="icon-arrow_drop_down icon-16 text-dark"></i>
                     </div>
-                    <div class="text-dark fs-7">
+                </div>
+
+            </div>
+            <div class="my-3 h-50">
+                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
+                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)"
+                    ngDefaultControl></codx-input>
+            </div>
+            <ng-container *ngIf="dataEdit?.recID">
+                <div class="border ndchiase p-4 mt-3">
+                    <div class="d-flex mb-3 card-border">
+                        <codx-img [width]="30" [objectId]="dataEdit?.createdBy" bjectType="AD_Users">
+                        </codx-img>
+                        <div class="d-flex flex-column flex-grow-1 ms-2">
+                            <div class="d-flex align-items-center">
+                                <span class="text-gray-800 fw-bold">{{dataEdit?.createdName}}</span>
+                            </div>
+                            <div class="text-info-date">
+                                <span class="text-gray-400 me-2">{{dataEdit?.createdOn | timefrom}}</span>
+                            </div>
+                        </div>
                     </div>
-                    <i class="icon-arrow_drop_down icon-16 text-dark"></i>
+                    <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataEdit }">
+                    </ng-container>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="dataShare?.recID">
+                <div class="border ndchiase p-4 mt-3">
+                    <div class="d-flex mb-3 card-border">
+                        <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
+                        </codx-img>
+                        <div class="d-flex flex-column flex-grow-1 ms-2">
+                            <div class="d-flex align-items-center">
+                                <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                            </div>
+                            <div class="text-info-date">
+                                <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataShare }">
+                    </ng-container>
+                </div>
+            </ng-container>
+            <div class="my-3 d-flex justify-content-between align-items-center body-function">
+                <div class="text-dark-50 fw-bold">
+                    <codx-label formName="" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
+                </div>
+                <div>
+                    <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
+                        class="btn btn-icon btn-md ml-2 btn-emoji">
+                        <i class="icon-tag_faces icon-30 text-warning"></i>
+                    </button>
+                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
+                        <i class="icon-local_offer icon-30 text-primary"></i>
+                    </button>
+                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
+                        <i class="icon-photo icon-30 text-success"></i>
+                    </button>
                 </div>
             </div>
-            
         </div>
         <div class="my-3 h-50">
             <codx-input  format="ed2" 
@@ -77,38 +127,12 @@
                                     [objectId]="dataEdit?.createdBy" bjectType="AD_Users">
                                 </codx-img>
                             </div>
-                            <div class="d-flex flex-column flex-grow-1 ms-2">
-                                <div class="d-flex align-items-center">
-                                    <span class="text-dark-75 font-size-h6 font-weight-bold">{{dataEdit?.createdName}}</span>
-                                </div>
-                                <div class="text-info-date">
-                                    <span class="text-muted mr-2">{{dataEdit?.createdOn | timefrom}}</span>
-                                </div>
+                            <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
+                                <img src="../../../../assets/img/mail.png" class="icon-mail ion-margin-top-8" />
                             </div>
-                        </div>
-                        <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataEdit }">
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="dataShare?.recID">
-            <div class="d-block mt-3">
-                <div class="card card-custom card-border ndchiase">
-                    <div class="card-body p-4">
-                        <div class="d-flex mb-3 card-border">
-                            <div class="symbol symbol-40 symbol-circle">
-                                <codx-img  class="symbol symbol-30 symbol-circle"
-                                    [objectId]="dataShare?.createdBy" bjectType="AD_Users">
+                            <div *ngIf="item?.card?.receiverID">
+                                <codx-img [width]="40" [objectId]="item?.card?.receiverID" objectType="AD_Users">
                                 </codx-img>
-                            </div>
-                            <div class="d-flex flex-column flex-grow-1 ms-2">
-                                <div class="d-flex align-items-center">
-                                    <span class="text-dark-75 font-size-h6 font-weight-bold">{{dataShare?.createdName}}</span>
-                                </div>
-                                <div class="text-info-date">
-                                    <span class="text-muted mr-2">{{dataShare?.createdOn | timefrom}}</span>
-                                </div>
                             </div>
                         </div>
                         <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataShare }">
@@ -166,48 +190,35 @@
                                 [objectId]=" item?.card?.senderID" objectType="AD_Users">
                             </codx-img>
                         </div>
-                        <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
-                            <img src="../../../../assets/img/mail.png" class="icon-mail ion-margin-top-8" />
-                        </div>
-                        <div class="symbol symbol-40 symbol-circle " *ngIf="item?.card?.receiverID">
-                            <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                [objectId]="item?.card?.receiverID" objectType="AD_Users">
-                            </codx-img>
-                        </div>
-                    </div>
-                    <div class="text-dark text-feed mt-6">
-                        <read-more #readmore2 [content]="item?.card?.situation" [limit]="800" [completeWords]="true">
-                        </read-more>
-                    </div>
 
 
-                    <div class="d-flex align-items-center group-hasGift mt-6">
+                        <div class="d-flex align-items-center group-hasGift mt-6">
 
-                        <div class="d-flex align-items-center ion-wrap mr-2"
-                            *ngIf="item?.card?.cardType=='2' || item?.card?.cardType =='3'">
-                            <div class=" symbol symbol-30 mr-2">
-                                <img class="w-30px h-30px" src="../../../../assets/demos/card/rating/{{ item?.card?.rating | vll:item?.card?.cardType=='2' ?'L1419':'L1424':'icon'
+                            <div class="d-flex align-items-center ion-wrap me-2"
+                                *ngIf="item?.card?.cardType=='2' || item?.card?.cardType =='3'">
+                                <div class="me-2">
+                                    <img class="w-30px h-30px" src="../../../../assets/demos/card/rating/{{ item?.card?.rating | vll:item?.card?.cardType=='2' ?'L1419':'L1424':'icon'
                 |async}}" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-center ion-wrap mar-auto"
-                            *ngIf="item?.card?.hasGift || item?.card?.hasPoint">
-                            <img src="../../../../assets/img/feedback/gift 1.png" *ngIf="item?.card?.hasGift"
-                                class="symbol-image icon-surface1 h-30px mr-1" />
-                            <img src="../../../../assets/img/feedback/money-1.png" *ngIf="item?.card?.hasPoint"
-                                class="symbol-image icon-money-1 h-30px" />
+                            <div class="d-flex align-items-center ion-wrap mar-auto"
+                                *ngIf="item?.card?.hasGift || item?.card?.hasPoint">
+                                <img src="../../../../assets/img/feedback/gift 1.png" *ngIf="item?.card?.hasGift"
+                                    class="symbol-image icon-surface1 h-30px me-1" />
+                                <img src="../../../../assets/img/feedback/money-1.png" *ngIf="item?.card?.hasPoint"
+                                    class="symbol-image icon-money-1 h-30px" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ng-template>
         </ng-template>
-    </ng-template>
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-primary btn-post" (click)="Submit()">
                 <codx-label formName="WP_Comments" name="lblSubmit" default="Đăng"></codx-label>
             </button>
-          </div>
+        </div>
     </ng-template>
 </codx-form>

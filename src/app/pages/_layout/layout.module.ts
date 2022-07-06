@@ -32,7 +32,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
     PagesRoutingModule,
     SharedModule,
     CodxShareModule,
-    PickerModule
+    PickerModule  
   ],
   exports: [RouterModule],
 })

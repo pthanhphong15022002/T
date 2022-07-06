@@ -10,7 +10,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators , FormBuilder, AbstractControl } from '@angular/forms';
+import { FileService } from '@shared/services/file.service';
 import { ApiHttpService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { type } from 'os';
 import { map } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 
@@ -21,7 +23,9 @@ import { AttachmentComponent } from '../../attachment/attachment.component';
 })
 export class CodxExportAddComponent implements OnInit, OnChanges
 {
-  @ViewChild('attachment') attachment: AttachmentComponent
+  idCrrFile: any;
+  type:any;
+  action:any;
   data: any;
   dialog: any;
   lblExtend: string = '';
@@ -29,22 +33,26 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   exportAddForm : FormGroup;
   submitted = false;
   fileCount = 0;
+  @ViewChild('attachment') attachment: AttachmentComponent
   @Output() setDefaultValue = new EventEmitter();
   constructor(
     private formBuilder: FormBuilder,
     private api: ApiHttpService,
     private notifySvr: NotificationsService,
+    private file : FileService,
     private codxService: CodxService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
   {
-    if(dt.data?.type == "add")
+    this.action = dt.data?.action;
+    this.type = dt.data?.type;
+    if(this.action == "add")
     {
       this.headerText = "Thêm Excel Template";
     }
 
-    else if(dt.data?.type == "edit")
+    else if(this.action == "edit")
     {
       this.headerText = "Chỉnh sửa Excel Template";
     }
@@ -61,7 +69,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
         pWDefault: this.data?.pWDefault,
         isDefault: this.data?.isDefault != null ? this.data?.isDefault : false,
         covertPDF: this.data?.covertPDF != null ? this.data?.covertPDF : false,
-        sheetIndex: this.data?.sheetIndex,
+        sheetIndex: this.data?.sheetIndex != null ? this.data?.sheetIndex : 0,
         headerRow: this.data?.headerRow,
         headerColumn: this.data?.headerColumn,
         splitPagesOn: this.data?.splitPagesOn,
@@ -89,29 +97,67 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   {
     this.submitted = true;
     if(this.exportAddForm.invalid) return;
-    if(this.fileCount>0)
+    this.exportAddForm.value.owner = "a";
+    this.exportAddForm.value.buid = "a";
+    //Thêm mới
+    if(this.action == "add")
     {
-      this.api
-      .execActionData<any>(
-        'AD_ExcelTemplates',
-        [this.exportAddForm.value],
-        'SaveAsync'
-      ).subscribe(item=>{
-        if(item[0] == true)
-        {
-          this.notifySvr.notifyCode("RS002");
-          this.attachment.objectId = item[1][0].recID;
-          this.attachment.saveFiles();
-          this.dialog.close(item[0]);
-        }
-        else this.notifySvr.notify("Thêm không thành công");
-      })
+      
+      if(this.fileCount>0)
+      {
+        this.api
+        .execActionData<any>(
+          'AD_ExcelTemplates',
+          [this.exportAddForm.value],
+          'SaveAsync'
+        ).subscribe(item=>{
+          if(item[0] == true)
+          {
+            this.notifySvr.notifyCode("RS002");
+            this.attachment.objectId = item[1][0].recID;
+            this.attachment.saveFiles();
+            this.dialog.close(item[1]);
+          }
+          else this.notifySvr.notify("Thêm không thành công");
+        })
+      }
+      else this.notifySvr.notifyCode("DM001");
     }
-    else this.notifySvr.notifyCode("DM001");
-    
+    //Chỉnh sửa
+    else if(this.action == "edit")
+    {
+      this.exportAddForm.value.recID = this.data.recID
+      this.api
+        .execActionData<any>(
+          'AD_ExcelTemplates',
+          [this.exportAddForm.value],
+          'UpdateAsync'
+        ).subscribe(item=>{
+          if(item[0] == true)
+          {
+            this.notifySvr.notifyCode("RS002");
+            this.attachment.objectId = item[1][0].recID;
+            if(this.fileCount >= 0)
+            {
+              /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
+                console.log(item);
+              }); */
+              this.file.deleteFileToTrash(this.idCrrFile,"",true).subscribe();
+              this.attachment.objectId = item[1][0].recID;
+              this.attachment.saveFiles();
+            }
+            this.dialog.close(item[1]);
+          }
+          else this.notifySvr.notify("Chỉnh sửa không thành công");
+        })
+    }
   }
   getfileCount(e:any)
   {
     this.fileCount = e;
+  }
+  getFile(e:any)
+  {
+    this.idCrrFile = e[0].recID
   }
 }

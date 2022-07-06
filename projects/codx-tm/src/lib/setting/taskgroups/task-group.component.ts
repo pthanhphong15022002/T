@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
@@ -29,7 +29,9 @@ export class TaskGroupComponent implements OnInit {
 
   constructor(private cache: CacheService, private auth: AuthStore,
     private dt: ChangeDetectorRef, private callfunc: CallFuncService,
-  ) { }
+  ) {
+   
+   }
 
   views: Array<ViewModel> = [];
   formName = "";

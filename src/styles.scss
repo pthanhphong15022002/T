@@ -21,13 +21,7 @@
     height: 16px !important;
 }
 
-.aside-primary {
-    .menu-item {
-        .menu-title {
-            display: none;
-        }
-    }
-}
+
 
 //////////////tbchung custom css///////////////////
 .is-invalid-a,
@@ -52,4 +46,8 @@
 /// chỉnh tam ///
 body {
     line-height: 1.4;
+}
+
+.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+    padding: 0;
 }

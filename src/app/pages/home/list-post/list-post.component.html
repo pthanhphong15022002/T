@@ -1,5 +1,5 @@
 <codx-views #codxViews 
-[showToolBar]="false" 
+
 funcID="WP" 
 [service]="service" 
 [assemblyName]="assemblyName" 
@@ -64,7 +64,7 @@ idField="recID">
                         title="{{item.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{item.createdOn | timefrom}}</span>
 
                     <ng-container *ngFor="let dtVll of dataVll">
-                        <span class="label label-xxs label-inline label-light-primary ms-2"
+                        <span class="label label-xxs label-inline label-light-primary mx-2"
                             *ngIf="dtVll.value == item.shareControl">
                             <span class="{{dtVll.icon}}"></span>&nbsp;{{item.shareControl |
                             sharedControl:'wp' | async}}

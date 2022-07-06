@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxAdComponent } from './codx-ad.component';
+import { CreateFolderComponent } from './createFolder.component';
 
-describe('CodxAdComponent', () => {
-  let component: CodxAdComponent;
-  let fixture: ComponentFixture<CodxAdComponent>;
+describe('CardComponent', () => {
+  let component: CreateFolderComponent;
+  let fixture: ComponentFixture<CreateFolderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxAdComponent ]
+      declarations: [ CreateFolderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxAdComponent);
+    fixture = TestBed.createComponent(CreateFolderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

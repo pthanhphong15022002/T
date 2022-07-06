@@ -74,19 +74,14 @@ export class OpenFolderComponent implements OnInit {
     private callfc: CallFuncService,
     private notificationsService: NotificationsService,
     @Optional() data?: DialogData,
-    @Optional() dialog?: DialogRef) {
-    var d = data;
+    @Optional() dialog?: DialogRef) {    
     this.user = this.auth.get();
     this.dialog = dialog;
-    // if (data != null) {
-    //   this.objectType = data?.data.objectType;
-    //   this.objectId = data?.data.objectId;
-    //   this.folderType = data?.data.folderType;
-    //   this.functionID = data?.data.functionID;
-    //   this.type = data?.data.type;
-    //   this.popup = data?.data.popup;
-    //   this.hideBtnSave = data?.data.hideBtnSave;
-    // }
+    if (data != undefined)
+      this.functionID = data?.data[0];    
+
+    this.openFormFolder();
+    this.getFolderPath();
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -130,8 +125,7 @@ export class OpenFolderComponent implements OnInit {
     this.fileUploadList = [];
   }
 
-  ngOnInit(): void {
-    this.getFolderPath();
+  ngOnInit(): void {    
     this.atSV.isSetDisableSave.subscribe(res => {
       this.disableSave = res;
       this.changeDetectorRef.detectChanges();
@@ -201,7 +195,7 @@ export class OpenFolderComponent implements OnInit {
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async res => {
-        tree.addChildNodes($data.dataItem, res);
+        tree.addChildNodes($data.dataItem, res[0]);
         that.changeDetectorRef.detectChanges();
       });
     }
@@ -220,9 +214,7 @@ export class OpenFolderComponent implements OnInit {
         if (res != null) {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);
-          this.objectId = this.objectId;
-          this.objectType = this.objectType;
+          this.atSV.folderId.next(res[0].folderId);          
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];
@@ -261,9 +253,7 @@ export class OpenFolderComponent implements OnInit {
     }
   }
 
-  openFormFolder() {
-    this.dialog.close();
-    return;
+  openFormFolder() {   
     this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
       if (res != null) {
         this.listRemoteFolder = res;
@@ -520,7 +510,7 @@ export class OpenFolderComponent implements OnInit {
     var item2 = '';
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="max-h-18px" src="../../../assets/demos/dms/folder.svg">';
+      item1 = '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf(".") == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
