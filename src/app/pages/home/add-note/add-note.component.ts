@@ -290,12 +290,9 @@ export class AddNoteComponent implements OnInit {
 
   openFormNoteBooks() {
     var obj = {
-      noteType: this.data.noteType,
-      memo: this.data.memo,
-      checkList: this.data.checkList,
-      recID: this.data.recID,
+      data: this.note,
     };
-    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 0, 0, '', obj);
+    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
   popupFile() {
