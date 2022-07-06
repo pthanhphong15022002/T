@@ -3,7 +3,7 @@ import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
 import { BS_Ranges } from '../../models/BS_Ranges.model';
-import { PopAddRangesComponent } from './ranges-add/ranges-add.component';
+import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component';
 
 @Component({
   selector: 'lib-ranges-kanban',
@@ -35,12 +35,12 @@ export class RangesKanbanComponent implements OnInit {
   //#region Init
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRangeID },
-      { field: 'rangeName', width: 250, headerTemplate: this.itemRangeName },
-      { field: 'note', width: 200, headerTemplate: this.itemNote },
-      { field: 'rangeID', width: 200, headerTemplate: this.itemRange },
-      { field: 'createdBy', width: 200, headerTemplate: this.itemCreatedBy },
-      { field: 'createdOn', width: 150, headerTemplate: this.itemCreatedOn },
+      {  width: 200, headerTemplate: this.itemRangeID  },
+      {  width: 250, headerTemplate: this.itemRangeName },
+      {  width: 200 , headerTemplate: this.itemNote},
+      {  width: 200, headerTemplate: this.itemRange },
+      {  width: 200, headerTemplate: this.itemCreatedBy },
+      { width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
 
     ];
@@ -74,7 +74,6 @@ export class RangesKanbanComponent implements OnInit {
     }];
     this.view.dataService.methodSave = '';
     this.view.dataService.methodDelete = '';
-    this.view.dataService.methodUpdate = '';
 
   }
   //#endregion
@@ -85,21 +84,23 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px'; // s k thấy gửi từ ben đây,
+      option.Width = '750px'; // s k thấy gửi từ ben đây,
 
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
-      this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-          this.view.dataService
-            .remove(this.view.dataService.dataSelected)
-            .subscribe(x => {
-              this.dt.detectChanges();
-            });
-        else {
-          this.view.dataService.update(x.event).subscribe();
-          this.view.dataService.setDataSelected(x.event);
-        }
-      });
+
+    });
+
+    this.dialog.closed.subscribe((x) => {
+      if (x.event == null)
+        this.view.dataService
+          .remove(this.view.dataService.dataSelected)
+          .subscribe(x => {
+            this.dt.detectChanges();
+          });
+      else {
+        this.view.dataService.update(x.event).subscribe();
+        this.view.dataService.setDataSelected(x.event);
+      }
     });
   }
 
@@ -111,14 +112,14 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+    this.view.dataService.delete([this.view.dataService.dataSelected], this.beforeDel).subscribe();
   };
 
   beforeDel(opt: RequestOption) {
@@ -135,7 +136,17 @@ export class RangesKanbanComponent implements OnInit {
     console.log('evt: ', evt);
     var t = this;
   }
-
+  requestEnded(evt: any) {
+    this.dialog && this.dialog.close();
+  }
+  aaa(val: any) {
+    console.log(val);
+  }
+  selectedChange(val: any) {
+    console.log(val);
+    this.itemSelected = val.data;
+    this.dt.detectChanges();
+  }
 
   readMore(dataItem) {
     dataItem.disableReadmore = !dataItem.disableReadmore;

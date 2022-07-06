@@ -1,4 +1,4 @@
-<codx-views #view funcID="MWP002" entityName="HR_Employees" [views]="views">
+<codx-views #view funcID="MWP002" entityName="HR_Employees" [views]="views" >
 </codx-views>
 
 <!-- <ng-template #header let-dataEmployee>
@@ -228,7 +228,6 @@
               <span class="text-dark">{{employeeInfo.certificateName}}</span>
             </div>
           </div>
-
         </div>
         <div class="text-dark fw-bold text-uppercase mt-6 mb-1">Pháp lý</div>
         <div class="row">
@@ -311,16 +310,6 @@
                 </div>
               </div>
             </div>
-            <div class="col-6" *ngIf="skillChartEmployee && skillChartEmployee.length>0">
-
-              <ejs-chart id='chartcontainer' [title]="" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis'>
-                <e-series-collection>
-                  <e-series *ngIf="skillEmployee" [dataSource]='skillEmployee' name="Employee" type='Radar'
-                    xName='competenceName' yName='valueX'></e-series>
-                  <!-- <e-series *ngIf="skillRequest" [dataSource]='skillRequest' type='Radar' xName='competenceName' yName='valueX'></e-series> -->
-                </e-series-collection>
-              </ejs-chart>
-            </div>
           </div>
         </div>
       </div>
@@ -350,12 +339,12 @@
                     </div>
                     <div *ngIf="editSkillMode">
                       <div class="d-flex align-items-center">
-
+   
                         <div class="wrap">
                           <ejs-slider id='minrange' [(ngModel)]="data.valueX" (valueChange)="sliderChange($event,data)">
                           </ejs-slider>
                         </div>
-
+                        
                       </div>
                     </div>
                   </div>
@@ -364,8 +353,8 @@
             </div>
             <!-- *ngIf="skillChartEmployee && skillChartEmployee.length>0" -->
             <div class="col-6">
-
-              <ejs-chart id='chartcontainer' [title]="" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis'>
+              
+             <ejs-chart id='chartcontainer' [title]="" [primaryXAxis]='primaryXAxis' [primaryYAxis]='primaryYAxis'>
                 <e-series-collection>
                   <e-series *ngIf="skillEmployee" [dataSource]='skillEmployee' name="Employee" type='Radar'
                     xName='competenceName' yName='valueX'></e-series>
@@ -373,7 +362,6 @@
               </ejs-chart>
             </div>
           </div>
-
         </div>
       </div>
     </div>

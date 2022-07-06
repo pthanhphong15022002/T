@@ -22,7 +22,7 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
-
+  
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
   @ViewChild('view') view!: ViewsComponent;
@@ -30,8 +30,8 @@ export class TaskGroupComponent implements OnInit {
   constructor(private cache: CacheService, private auth: AuthStore,
     private dt: ChangeDetectorRef, private callfunc: CallFuncService,
   ) {
-
-  }
+   
+   }
 
   views: Array<ViewModel> = [];
   formName = "";
@@ -58,17 +58,17 @@ export class TaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { headerTemplate: this.itemTaskGroupID, width: 150 },
-      { headerTemplate: this.itemTaskGroupName, width: 200 },
-      { headerTemplate: this.itemTaskGroupName2, width: 200 },
-      { headerTemplate: this.itemNote, width: 200 },
-      { headerTemplate: this.itemApprovalControl, width: 140 },
-      { headerTemplate: this.itemProjectControl, width: 140 },
-      { headerTemplate: this.itemAttachmentControl, width: 140 },
-      { headerTemplate: this.itemCheckListControl, width: 180 },
-      { headerTemplate: this.itemCheckList, width: 200 },
-      { headerTemplate: this.itemCreatedBy, width: 200 },
-      { headerTemplate: this.itemCreatedOn, width: 100 },
+      { headerTemplate: this.itemTaskGroupID , width: 150 },
+      { headerTemplate: this.itemTaskGroupName , width: 200 },
+      { headerTemplate: this.itemTaskGroupName2 , width: 200 },
+      { headerTemplate: this.itemNote , width: 200 },
+      { headerTemplate: this.itemApprovalControl , width: 140 },
+      { headerTemplate: this.itemProjectControl , width: 140 },
+      { headerTemplate: this.itemAttachmentControl , width: 140 },
+      { headerTemplate: this.itemCheckListControl , width: 180 },
+      { headerTemplate: this.itemCheckList , width: 200 },
+      { headerTemplate: this.itemCreatedBy , width: 200 },
+      { headerTemplate: this.itemCreatedOn , width: 100 },
       { field: '', headerText: '#', width: 30 },
 
     ];
@@ -147,7 +147,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
@@ -163,7 +163,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }
@@ -171,18 +171,18 @@ export class TaskGroupComponent implements OnInit {
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-
-      });
+              .delete([this.view.dataService.dataSelected], (opt) =>
+                this.beforeDel(opt)
+              )
+              .subscribe((res) => {
+              
+              });
   }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0][0];
     opt.methodName = 'DeleteTaskGroupAsync';
-
+    
     opt.data = itemSelected.taskGroupID;
     return true;
   }

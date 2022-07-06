@@ -1,7 +1,22 @@
-<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)" (onDragDrop)="onDragDrop($event)">
+<codx-views
+  #base
+  [funcID]="funcID"
+
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeEditForm($event)"
+  (onDragDrop)="onDragDrop($event)"
+>
 </codx-views>
 <ng-template #cardTemplate let-data let-setting="setting">
   <div>
@@ -14,11 +29,31 @@
   <room-dashboard></room-dashboard>
 </ng-template>
 <ng-template #gridTemplate>
-  <codx-gridview #gridView [columnsGrid]="columnsGrid" [allowSorting]="" [sortSettings]="" [allowGrouping]=""
-    [groupSettings]="" [editSettings]="" [selectionOptions]="" [rowHeight]="40" [pageSize]="10" [funcId]="funcID"
-    [assemblyName]="assemblyName" [entityName]="entityName" [className]="className" [method]="method"
-    [predicate]="predicate" [dataValue]="dataValue" [pageSize]="15" [height]="Height" [showColumnMenu]="showToolBar"
-    [filterSettings]="" [allowFiltering]="" [allowResizing]=""></codx-gridview>
+  <codx-gridview
+    #gridView
+    [columnsGrid]="columnsGrid"
+    [allowSorting]=""
+    [sortSettings]=""
+    [allowGrouping]=""
+    [groupSettings]=""
+    [editSettings]=""
+    [selectionOptions]=""
+    [rowHeight]="40"
+    [pageSize]="10"
+    [funcId]="funcID"
+    [assemblyName]="assemblyName"
+    [entityName]="entityName"
+    [className]="className"
+    [method]="method"
+    [predicate]="predicate"
+    [dataValue]="dataValue"
+    [pageSize]="15"
+    [height]="Height"
+    [showColumnMenu]="showToolBar"
+    [filterSettings]=""
+    [allowFiltering]=""
+    [allowResizing]=""
+  ></codx-gridview>
 </ng-template>
 
 <ng-template #itemCreate let-data>
@@ -28,9 +63,11 @@
 <ng-template #Devices let-dataItem>
   <div class="d-flex align-items-center fw-bold">
     <ng-container *ngFor="let item of getlstDevice(dataItem.equipments)">
-      <span class="text-dark fs-5 icon-wifi me-3"><span class="fs-6 ms-1">{{
+      <span class="text-dark fs-5 icon-wifi me-3"
+        ><span class="fs-6 ms-1">{{
           item | vll: "EP012":"text" | async
-          }}</span></span>
+        }}</span></span
+      >
     </ng-container>
   </div>
 </ng-template>
@@ -40,17 +77,28 @@
     <a class="action-item d-flex align-items-center" (click)="edit(dataItem)">
       <div class="d-flex align-items-center btn-tooltip">
         <span class="icon-edit icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">
-          <codx-label name="lblEdit" default="Edit" [formModel]="dialog.formModel"></codx-label>
-        </span>
+        <span class="tooltiptext"
+          ><codx-label
+            name="lblEdit"
+            default="Edit"
+            [formModel]="dialog.formModel"
+          ></codx-label
+        ></span>
       </div>
     </a>
-    <a class="action-item d-flex align-items-center" (click)="deleteTask(dataItem)">
+    <a
+      class="action-item d-flex align-items-center"
+      (click)="deleteTask(dataItem)"
+    >
       <div class="d-flex align-items-center btn-tooltip">
         <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">
-          <codx-label name="lblDelete" default="Xóa" [formModel]="dialog.formModel"></codx-label>
-        </span>
+        <span class="tooltiptext"
+          ><codx-label
+            name="lblDelete"
+            default="Xóa"
+            [formModel]="dialog.formModel"
+          ></codx-label
+        ></span>
       </div>
     </a>
   </div>
@@ -77,18 +125,38 @@
 </ng-template>
 
 <ng-template #editRoomBooking>
-  <popup-add-booking-room #editRoomBookingForm (closeEdit)="closeEditForm()" (onDone)="onDone($event)">
+  <popup-add-booking-room
+    #editRoomBookingForm
+    (closeEdit)="closeEditForm()"
+    (onDone)="onDone($event)"
+  >
   </popup-add-booking-room>
 </ng-template>
 
 <ng-template #scheduleTemplate let-data>
-  <codx-schedule height="100%" #schedule [service]="service" [assemblyName]="assemblyName"
-    [templateResourceHeader]="resourceHeader" [className]="className" [method]="method"
-    [methodResource]="methodResource" [cellFooterTemplate]="cellFooter" [fields]="fields"
-    [entityName]="modelPage.entity" (onViewChange)="viewChange($event)" eventStyle="eventStyle"
-    [resourceTooltipTemplate]="resourceTootip" (onAddNew)="addNew($event)" (onEdit)="edit($event)"
-    (onDrag)="edit($event)" (onDelete)="deleteTask($event)" [resourceField]="resourceField" [options]="model"
-    [optionsResource]="model">
+  <codx-schedule
+    height="100%"
+    #schedule
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [templateResourceHeader]="resourceHeader"
+    [className]="className"
+    [method]="method"
+    [methodResource]="methodResource"
+    [cellFooterTemplate]="cellFooter"
+    [fields]="fields"
+    [entityName]="modelPage.entity"
+    (onViewChange)="viewChange($event)"
+    eventStyle="eventStyle"
+    [resourceTooltipTemplate]="resourceTootip"
+    (onAddNew)="addNew($event)"
+    (onEdit)="edit($event)"
+    (onDrag)="edit($event)"
+    (onDelete)="deleteTask($event)"
+    [resourceField]="resourceField"
+    [options]="model"
+    [optionsResource]="model"
+  >
   </codx-schedule>
 </ng-template>
 
@@ -101,12 +169,20 @@
 <ng-template #resourceTootip let-data>
   <div class="template-wrap">
     <div class="res-text">
-      <codx-label name="lblName" default="Tên: " [formModel]="dialog.formModel"></codx-label>{{
-      data.resourceData.resourceName }}
+      <codx-label
+        name="lblName"
+        default="Tên: "
+        [formModel]="dialog.formModel"
+      ></codx-label
+      >{{ data.resourceData.resourceName }}
     </div>
     <div class="res-text">
-      <codx-label name="lblLocation" default="Vị trí: " [formModel]="dialog.formModel"></codx-label>{{
-      data.resourceData.location }}
+      <codx-label
+        name="lblLocation"
+        default="Vị trí: "
+        [formModel]="dialog.formModel"
+      ></codx-label
+      >{{ data.resourceData.location }}
     </div>
   </div>
 </ng-template>
@@ -119,10 +195,18 @@
 <ng-template #cellFooter let-data>
   <div class="row border">
     <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
-      <codx-label name="lblEdit" default="Sửa" [formModel]="dialog.formModel"></codx-label>
+      <codx-label
+        name="lblEdit"
+        default="Sửa"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
     <button ejs-button id="delete" cssClass="e-flat" (click)="deleteTask(data)">
-      <codx-label name="lblDelete" default="Xóa" [formModel]="dialog.formModel"></codx-label>
+      <codx-label
+        name="lblDelete"
+        default="Xóa"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
   </div>
 </ng-template>

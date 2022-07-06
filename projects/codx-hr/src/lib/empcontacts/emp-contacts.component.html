@@ -1,6 +1,7 @@
 <codx-views #view funcID="WPT05" service="HR" entityName="HR_Employees" [views]="views" [buttons]="buttons"
   idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness" method="GetModelFormEmployAsync"
-  (viewChanged)="changeView($event)" [pageSize]="100" (requestEnded)="requestEnded($event)" [selectedFirst]="true">
+ (viewChanged)="changeView($event)" [pageSize]="100" (requestEnded)="requestEnded($event)"
+  [selectedFirst]="true">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -29,9 +30,9 @@
 </ng-template>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border h-100" [imageId]="data.employeeID" [title]="data.employeeName"
-    [content]="data.positionName || 'Bộ phận'" [date]="data.birthday || 'dd/MM/yyyy'"
-    [desc]="data.phone || 'Số điện thoại'" [desc2]="data.email || 'Email'">
+  <codx-card-center cardCss="border h-100" [imageId]="data.employeeID" [title]="data.employeeName" 
+    [content]="data.positionName || 'Bộ phận'" [date]="data.birthday || 'dd/MM/yyyy'" [desc]="data.phone || 'Số điện thoại'"
+    [desc2]="data.email || 'Email'">
   </codx-card-center>
 </ng-template>
 

@@ -39,7 +39,7 @@ import { UpdateStatusPopupComponent } from './tasks/update-status-popup/update-s
 import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
 import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
-import { PopAddRangesComponent } from './setting/rangeskanban/ranges-add/ranges-add.component';
+import { PopAddRangesComponent } from './setting/rangeskanban/pop-add-ranges/pop-add-ranges.component';
 import { ProjectComponent } from './setting/project/project.component';
 import { PopAddProjectComponent } from './setting/project/pop-add-project/pop-add-project.component';
 import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.component';
@@ -142,6 +142,8 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'null',
+        // path: 'home/:funcID',
+        // component: DashboardComponent,
       },
       {
         path: '**',
@@ -149,10 +151,6 @@ export const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'setting',
-
-  }
 ];
 
 const T_Component: Type<any>[] = [
@@ -189,6 +187,9 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
+  // MwpComponent,
+  // MwpViewDetailComponent,
+  // MwpPopupAddComponent,
   ViewListComponent
 ];
 @NgModule({

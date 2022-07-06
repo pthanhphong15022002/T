@@ -1,6 +1,6 @@
 <codx-views #view funcID="HRT04" service="HR" entityName="HR_Employees" [views]="views" idField="employeeID"
     (selectedChange)="selectedChange($event)" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-    method="GetModelFormEmployAsync" (requestEnded)="requestEnded($event)" [selectedFirst]="true"
+    method="GetModelFormEmployAsync"  (requestEnded)="requestEnded($event)" [selectedFirst]="true"
     [predicate]="predicate" [dataValue]="dataValue" [itemSelected]="itemSelected">
 </codx-views>
 
@@ -16,10 +16,10 @@
     <tr>
         <td>
             <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" (clickMF)="clickMF($event,data)">
-            </codx-mfunc>
+            </codx-mfunc>       
         </td>
         <td>
-            <div class="d-flex align-items-top">
+            <div class="d-flex align-items-top">       
                 <div class="d-flex align-items-start">
                     <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.employeeID"
                         objectType="HR_Employees" [objectName]="data.employeeName">

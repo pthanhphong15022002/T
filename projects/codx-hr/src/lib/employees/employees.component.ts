@@ -18,9 +18,9 @@ export class EmployeesComponent implements OnInit {
   dataValue = "90";
   predicate = "Status<@0";
   functionID: string;
-  employee: HR_Employees = new HR_Employees();
+  employee:HR_Employees  = new HR_Employees();
   itemSelected: any;
-
+  
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
@@ -35,7 +35,7 @@ export class EmployeesComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
   ) {
-  }
+   }
 
   ngOnInit(): void {
     this.button = {
@@ -57,7 +57,7 @@ export class EmployeesComponent implements OnInit {
         id: '1',
         type: ViewType.grid,
         active: true,
-        sameData: true,
+        sameData:true,
         model: {
           resources: this.columnsGrid,
           // template: this.grid,
@@ -67,12 +67,12 @@ export class EmployeesComponent implements OnInit {
         id: '2',
         type: ViewType.card,
         active: true,
-        sameData: true,
+        sameData:true,
         model: {
           template: this.cardTemp,
         }
       },
-
+     
     ];
     this.changedt.detectChanges();
   }
@@ -90,7 +90,7 @@ export class EmployeesComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
@@ -113,7 +113,7 @@ export class EmployeesComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
+        option.Width = '750px';
         this.dialog = this.callfunc.openSide(
           PopupAddEmployeesComponent,
           [this.view.dataService.dataSelected, 'edit'],
@@ -127,7 +127,7 @@ export class EmployeesComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '750px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfunc.openSide(
         PopupAddEmployeesComponent,
@@ -139,14 +139,14 @@ export class EmployeesComponent implements OnInit {
 
   delete(data: any) {
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.notiService.notifyCode('TM004');
-        }
-      });
+    .delete([this.view.dataService.dataSelected], (opt) =>
+      this.beforeDel(opt)
+    )
+    .subscribe((res) => {
+      if (res[0]) {
+        this.notiService.notifyCode('TM004');
+      }
+    });
   }
 
   beforeDel(opt: RequestOption) {
@@ -165,7 +165,7 @@ export class EmployeesComponent implements OnInit {
       case 'add':
         this.add();
         break;
-      case 'edit':
+        case 'edit':
         this.copy(data);
         break;
       case 'edit':

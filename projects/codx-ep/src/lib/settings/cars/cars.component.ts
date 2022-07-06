@@ -129,12 +129,12 @@ export class CarsComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, true],
+        [this.dataSelected,true],
         option
       );
     });
@@ -145,12 +145,12 @@ export class CarsComponent implements OnInit, AfterViewInit {
     if (evt) this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, false],
+        [this.dataSelected,false],
         option
       );
     });

@@ -2,12 +2,16 @@
     [formModel]="dialog.formModel">
     <ng-template popup add #body>
         <div class="flex position-relative">
-            <span (click)="onType('text')" class="icon-font_download icon-22 me-1"></span>
-            <span (click)="onType('list')" class="icon-list_alt icon-24 me-1"></span>
-            <span (click)="onType('check')" class="icon-check_box icon-24 me-1"></span>
+            <div [class.active]="noteType.text">
+                <span (click)="onType('text')" class="icon-font_download icon-22 me-1"></span>
+            </div>
+            <div [class.active]="noteType.list">
+                <span (click)="onType('list')" class="icon-list_alt icon-24 me-1"></span>
+            </div>
+            <div [class.active]="noteType.check">
+                <span (click)="onType('check')" class="icon-check_box icon-24 me-1"></span>
+            </div>
             <span class="icon-image icon-24" (click)="popupFile()">
-                <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true" [objectId]="" [funcId]="'WP1234'"
-                    [isAllowEdit]="true" width="100"></codx-img> -->
             </span>
             <div class="d-flex align-items-center pw-menu">
                 <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
@@ -25,32 +29,63 @@
                 hideUploadBtn="1" functionID="WPT03941" (fileAdded)="fileAdded()" type="inline">
             </codx-attachment>
         </div>
-        <div *ngIf="type == 'text'">
-            <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
-                (valueChange)="valueChange($event)" [crrValue]="note?.memo">
-            </codx-input>
-        </div>
-        <div *ngIf="type == 'check' || type =='list'">
-            <ng-container *ngFor="let item of listNote; index as i">
-                <div class="flex align-items-center mt-6">
-                    <div class="me-2">
-                        <ng-container *ngIf="type == 'check'; else list">
-                            <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
-                                labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
+        <div *ngIf="formType == 'add'">
+            <div *ngIf="type == 'text'">
+                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+            <div *ngIf="type == 'check' || type =='list'">
+                <ng-container *ngFor="let item of listNote; index as i">
+                    <div class="flex align-items-center mt-6">
+                        <div class="me-2">
+                            <ng-container *ngIf="type == 'check'; else list">
+                                <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
+                                    labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
+                                </codx-input>
+                            </ng-container>
+                            <ng-template #list>
+                                <li></li>
+                            </ng-template>
+                        </div>
+                        <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
+                                (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
+                                (valueChange)="valueChange($event, item)">
                             </codx-input>
-                        </ng-container>
-                        <ng-template #list>
-                            <li></li>
-                        </ng-template>
+                        </div>
                     </div>
-                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
-                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
-                            (valueChange)="valueChange($event, item)">
-                        </codx-input>
+                </ng-container>
+            </div>
+        </div>
+        <div *ngIf="formType == 'edit'">
+            <div *ngIf="note?.noteType == 'text'">
+                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
+                </codx-input>
+            </div>
+            <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
+                <ng-container *ngFor="let item of note?.checkList; index as i">
+                    <div class="flex align-items-center mt-6">
+                        <div class="me-2">
+                            <ng-container *ngIf="note?.noteType == 'check'; else list">
+                                <codx-input #noteAddText type="checkbox" [checked]="item?.status == '1' || item?.status == 'true'" field="status"
+                                    labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
+                                </codx-input>
+                            </ng-container>
+                            <ng-template #list>
+                                <li></li>
+                            </ng-template>
+                        </div>
+                        <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
+                                (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
+                                (valueChange)="valueChange($event, item)">
+                            </codx-input>
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
         </div>
     </ng-template>
 

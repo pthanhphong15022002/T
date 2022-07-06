@@ -1,19 +1,57 @@
-<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="buttons" (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method">
+<codx-views
+  #base
+  [funcID]="funcID"
+
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+>
 </codx-views>
 <ng-template #panelLeftRef> </ng-template>
 
 <ng-template #carBookingDialog>
-  <popup-add-booking-car #editor (closeEdit)="closeEditForm()" (onDone)="onDone($event)"></popup-add-booking-car>
+  <popup-add-booking-car
+    #editor
+    (closeEdit)="closeEditForm()"
+    (onDone)="onDone($event)"
+  ></popup-add-booking-car>
 </ng-template>
 
 <ng-template #gridTemplateCar>
-  <codx-gridview #gridView [columnsGrid]="columnsGrid" [allowSorting]="" [sortSettings]="" [allowGrouping]=""
-    [groupSettings]="" [editSettings]="" [selectionOptions]="" [rowHeight]="40" [pageSize]="10" funcId="EPT11.1"
-    assemblyName="EP" entityName="EP_Bookings" className="BookingsBusiness" method="GetEventsAsync"
-    predicate="ResourceType=@0" dataValue="2" [pageSize]="15" height="500px" [showColumnMenu]="true" [filterSettings]=""
-    [allowFiltering]="" [allowResizing]=""></codx-gridview>
+  <codx-gridview
+    #gridView
+    [columnsGrid]="columnsGrid"
+    [allowSorting]=""
+    [sortSettings]=""
+    [allowGrouping]=""
+    [groupSettings]=""
+    [editSettings]=""
+    [selectionOptions]=""
+    [rowHeight]="40"
+    [pageSize]="10"
+    funcId="EPT11.1"
+    assemblyName="EP"
+    entityName="EP_Bookings"
+    className="BookingsBusiness"
+    method="GetEventsAsync"
+    predicate="ResourceType=@0"
+    dataValue="2"
+    [pageSize]="15"
+    height="500px"
+    [showColumnMenu]="true"
+    [filterSettings]=""
+    [allowFiltering]=""
+    [allowResizing]=""
+  ></codx-gridview>
 </ng-template>
 
 <ng-template #itemCreate let-data>
@@ -21,12 +59,29 @@
 </ng-template>
 
 <ng-template #scheduleTemplate let-data>
-  <codx-schedule height="100%" #schedule service="EP" assemblyName="EP" [templateResourceHeader]="resourceHeader"
-    className="BookingsBusiness" method="GetEventsAsync" methodResource="GetResourceAsync"
-    [cellFooterTemplate]="cellFooter" [fields]="fields" [entityName]="modelPage.entity"
-    (onViewChange)="viewChange($event)" eventStyle="colored" [resourceTooltipTemplate]="resourceTootip"
-    (onAddNew)="addNew($event)" (onEdit)="edit($event)" (onDrag)="edit($event)" (onDelete)="delete($event)"
-    [resourceField]="resourceField" [options]="model" [optionsResource]="model">
+  <codx-schedule
+    height="100%"
+    #schedule
+    service="EP"
+    assemblyName="EP"
+    [templateResourceHeader]="resourceHeader"
+    className="BookingsBusiness"
+    method="GetEventsAsync"
+    methodResource="GetResourceAsync"
+    [cellFooterTemplate]="cellFooter"
+    [fields]="fields"
+    [entityName]="modelPage.entity"
+    (onViewChange)="viewChange($event)"
+    eventStyle="colored"
+    [resourceTooltipTemplate]="resourceTootip"
+    (onAddNew)="addNew($event)"
+    (onEdit)="edit($event)"
+    (onDrag)="edit($event)"
+    (onDelete)="delete($event)"
+    [resourceField]="resourceField"
+    [options]="model"
+    [optionsResource]="model"
+  >
   </codx-schedule>
 </ng-template>
 
@@ -49,10 +104,24 @@
 <ng-template #cellFooter let-data>
   <div class="row border">
     <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
-      <codx-label name="lblEdit" default="Sửa" [formModel]="dialog.formModel"></codx-label>
+      <codx-label
+        name="lblEdit"
+        default="Sửa"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
-    <button ejs-button id="delete" cssClass="e-flat" [isPrimary]="true" (click)="deleteBooking(data)">
-      <codx-label name="lblDelete" default="Xoá" [formModel]="dialog.formModel"></codx-label>
+    <button
+      ejs-button
+      id="delete"
+      cssClass="e-flat"
+      [isPrimary]="true"
+      (click)="deleteBooking(data)"
+    >
+      <codx-label
+        name="lblDelete"
+        default="Xoá"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
   </div>
 </ng-template>

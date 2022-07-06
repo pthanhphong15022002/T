@@ -167,7 +167,7 @@ export class SignFileComponent implements OnInit {
     this.codxViews.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.codxViews.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '750px';
       option.DataService = this.codxViews?.currentView?.dataService;
       option.FormModel = this.codxViews?.currentView?.formModel;
       this.dialog = this.callfunc.openForm(
@@ -195,7 +195,7 @@ export class SignFileComponent implements OnInit {
     this.codxViews.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.codxViews.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '750px';
       option.DataService = this.codxViews?.currentView?.dataService;
       option.FormModel = this.codxViews?.currentView?.formModel;
 

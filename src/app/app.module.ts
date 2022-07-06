@@ -26,6 +26,7 @@ import { TMModule } from 'projects/codx-tm/src/public-api';
 import { CodxEpModule } from 'projects/codx-ep/src/public-api';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 
+
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
@@ -71,7 +72,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
