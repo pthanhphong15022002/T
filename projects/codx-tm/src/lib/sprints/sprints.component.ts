@@ -101,10 +101,10 @@ export class SprintsComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT041': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+      case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
         this.shareBoard(e, data);
         break;
-      case 'TMT042': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+      case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
         this.viewBoard(e, data);
         break;
       default:
