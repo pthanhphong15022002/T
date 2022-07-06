@@ -1,5 +1,58 @@
-<ng-template #itemTemplate>
-    <app-view-users [formModel]="view.formModel">
+<codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
+  method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true">
+</codx-views>
+<ng-template #itemTemplate let-data>
+ 
+  <table style="width: 100%;">
+    <tr class="rowphoto">
+      <td class="w-300 mw-700px " style="width: 60%;">
+        <div class="d-flex align-items-top">
+          <div class="d-flex align-items-start">
+            <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.userID" objectType="AD_Users"
+              [objectName]="data.userName">
+            </codx-img>
+            <div class="d-flex flex-column flex-grow-1 ">
+              <div class="d-flex align-items-center">
+                <div class="text-dark-75 font-weight-bold">
+                  {{data.userName}}
+                </div>
+                <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap margin  icon-account_box"
+                  *ngIf="data.employeeID">
+                  {{data.employeeID}}</div>
+                <div class="text-dark-75 font-weight-bold text-muted icon-account_box margin" *ngIf="!data.employeeID">
+                  <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
+                  </codx-label>
+                </div>
+                <div class="text-dark-75 font-weight-bold margin icon-group" *ngIf="data.userGroup">
+                  {{data.userGroup}}
+                </div>
+              </div>
+              <div class="text-dark-75 font-weight-bold icon-apartment1" *ngIf="data.buName">
+                {{data.buName}}
+              </div>
 
-    </app-view-users>
+              <div>
+                <span class="font-size-sm icon-email" *ngIf="data.email">{{data.email}}
+                </span>
+                <span class="font-size-sm icon-phone_android" *ngIf="data.mobile">{{data.mobile}}</span>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td class="w-200 col-lg-6" style="width: 30%;">
+        <div>
+          aaa
+        </div>
+      </td>
+      <td style="width: 10%">
+        <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+        (clickMF)="clickMF($event,data)">
+      </codx-mfunc>
+      </td>
+    </tr>
+
+  </table>
+
 </ng-template>

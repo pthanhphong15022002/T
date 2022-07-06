@@ -1,7 +1,16 @@
 <ng-container *ngIf="user">
-  <div class="d-flex flex-column flex-root">
+  <div class="d-flex flex-column flex-root">    
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside id="kt_aside" [asideMenu]="asideMenu"></codx-aside>
+      <codx-aside *ngIf="asideDisplay" [hasSecond]="true">        
+      </codx-aside>      
+      <div class="menu-item">
+        <a class="menu-link without-sub" href="javascript:;">
+          <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" data-toggle="tooltip">
+            <i class="icon-add"></i>
+            <span class="font-size-lg">{{titleAddFolder}}</span>
+          </button>
+        </a>
+      </div>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
           [headerRightBar]="headerRightBar" #codxHeader>
@@ -36,8 +45,8 @@
         [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
         <span [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-        <span
-          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+        <!-- <span
+          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span> -->
       </div>
       <!-- end::Menu wrapper -->
     </div>
@@ -50,21 +59,88 @@
         <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
-      <erm-quick-links-inner></erm-quick-links-inner>
+      <!-- <erm-quick-links-inner></erm-quick-links-inner> -->
     </div>
 
     <!-- begin::User -->
     <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <!-- begin::Toggle -->
+      <codx-img #imageViewer *ngIf="user" [ngClass]="codxService.toolbarUserAvatarHeightClass" funcId="AD006"
+        [objectId]="user.userID" [objectName]="user.userName" objectType="AD_Users" data-kt-menu-trigger="click"
+        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+      </codx-img>
+      <!-- end::Toggle  -->
+      <!-- <codx-user-inner (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner> -->
+    </div>
+    <!-- end::User -->
+    
+    <ng-container *ngIf="headerLeft === 'menu'">      
+      <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+        <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          id="kt_header_menu_mobile_toggle">
+          <span [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'" class="svg-icon svg-icon-1"></span>
+        </div>
+      </div>
+    </ng-container>
+
+    
+  </ng-template>
+</ng-container>
+
+
+<!-- <ng-container *ngIf="user">
+  <div class="d-flex flex-column flex-root">
+    <div class="page d-flex flex-row flex-column-fluid">
+      <codx-aside id="kt_aside" [asideMenu]="asideMenu" [hasSecond]="false"></codx-aside>
+      <div class="wrapper d-flex flex-column flex-row-fluid">
+        <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
+          [headerRightBar]="headerRightBar" #codxHeader>
+        </codx-header>
+        <codx-wrapper class="d-flex flex-column flex-column-fluid">
+        </codx-wrapper>
+      </div>
+    </div>
+  </div>
+
+  <codx-scripts-init></codx-scripts-init>
+  <codx-scroll-top></codx-scroll-top>
+
+  <codx-messenger-drawer></codx-messenger-drawer>
+  <codx-notify-drawer></codx-notify-drawer>
+
+  <ng-template #headerRightBar>
+
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+    </div>
+
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
+        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'" class="svg-icon"
+          [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+        <span
+          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+      <div class="btn btn-icon btn-active-light-primary" [ngClass]="codxService.toolbarButtonHeightClass"
+        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
+        data-kt-menu-flip="bottom">
+        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon"
+          [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+      <erm-quick-links-inner></erm-quick-links-inner>
+    </div>
+
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <codx-img #imageViewer *ngIf="user" [ngClass]="codxService.toolbarUserAvatarHeightClass"
         class="cursor-pointer symbol" funcId="AD006" [objectId]="user.userID" [objectName]="user.userName"
         objectType="AD_Users" [width]="35" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
         data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
       </codx-img>
-      <!-- end::Toggle  -->
       <codx-user-inner (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner>
     </div>
-    <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">
       <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
@@ -74,47 +150,4 @@
         </div>
       </div>
     </ng-container>
-  </ng-template>
-  <!-- end::TOPBAR -->
-
-  <ng-template #asideMenu>
-    <div class="menu-item">
-      <a class="menu-link without-sub" href="javascript:;">
-        <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" data-toggle="tooltip">
-          <i class="icon-add"></i>
-          <span class="font-size-lg">{{titleAddFolder}}</span>
-        </button>
-      </a>
-    </div>
-
-    <ng-container *ngFor="let f of codxService.modulesOb$  | async">
-      <div class="menu-item">
-        <a class="menu-link without-sub" href="javascript:;" (click)="codxService.navigate(f.functionID)"
-          routerLinkActive="active">
-          <span class="menu-icon">
-            <img class="w-25px" src="../../../{{f.smallIcon}}" />
-          </span>
-          <span class="menu-title">{{f.customName}}</span>
-        </a>
-      </div>
-    </ng-container>
-
-    <div class="menu-item">
-      <div class="menu-link without-sub">
-        <span class="menu-icon">
-          <span class="icon-wb_cloudy icon-20"></span>
-        </span>
-        <span class="menu-title">{{titleStorage}}</span>
-      </div>
-    </div>
-
-    <div class="menu-item">
-      <div class="progress mx-6 mt-2" style="height: 1px;">
-        <div role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar"
-          style="width: 0.4%;">
-        </div>
-      </div>
-      <div class="mt-2 mx-5 mr-10 text-light">{{titleHddUsed}}</div>
-    </div>
-  </ng-template>
-</ng-container>
+  </ng-template> -->

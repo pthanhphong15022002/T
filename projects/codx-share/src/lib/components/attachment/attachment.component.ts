@@ -3,7 +3,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   Output,
-  EventEmitter, 
+  EventEmitter,
   ViewChild,
   Input,
   ElementRef,
@@ -22,7 +22,8 @@ import { AttachmentService } from './attachment.service';
 import { ViewEncapsulation, Inject } from '@angular/core';
 import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
-import { createSpinner, showSpinner, hideSpinner  } from '@syncfusion/ej2-popups';
+import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -64,20 +65,21 @@ export class AttachmentComponent implements OnInit {
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
   @Input() hideDes = "0";
+  @Input() displayThumb: string;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileGet = new EventEmitter<any>();
-  @ViewChild('templateupload') public uploadObj: UploaderComponent;  
+  @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
   public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
-  public parentElement : HTMLElement; 
-  public proxy : any;
-  public progressbarContainer : HTMLElement;
-  public filesDetails : FileInfo[] = [];
+  public parentElement: HTMLElement;
+  public proxy: any;
+  public progressbarContainer: HTMLElement;
+  public filesDetails: FileInfo[] = [];
   public filesList: HTMLElement[] = [];
   public dropElement: HTMLElement = document.getElementsByClassName('control-fluid')[0] as HTMLElement;
 
@@ -103,8 +105,8 @@ export class AttachmentComponent implements OnInit {
       this.functionID = data?.data.functionID;
       this.type = data?.data.type;
       this.popup = data?.data.popup;
-      this.hideBtnSave = data?.data.hideBtnSave;     
-    }       
+      this.hideBtnSave = data?.data.hideBtnSave;
+    }
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -124,8 +126,8 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != "" && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
-        if (res) {
-          this.data = res;
+        if (res?.result) {
+          this.data = res.result;
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
@@ -137,13 +139,13 @@ export class AttachmentComponent implements OnInit {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       };
-  
+
       this.dropElement = document.querySelector('#dropArea') as HTMLElement;
-        document.getElementById('browse').onclick = function() { 
+      document.getElementById('browse').onclick = function () {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       }
-    }    
+    }
     // https://ej2.syncfusion.com/angular/documentation/uploader/template/#custom-template
     // https://ej2.syncfusion.com/angular/demos/#/bootstrap5/uploader/custom-file-list
     // document.getElementById('clearbtn').onclick = () => {
@@ -156,46 +158,46 @@ export class AttachmentComponent implements OnInit {
   }
 
   // upload file tai day
-  public onFileSelect(args : SelectedEventArgs) : void  {
+  public onFileSelect(args: SelectedEventArgs): void {
     if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
-        this.parentElement = createElement('div', { className: 'upload-list-root' });
-        this.parentElement.appendChild(createElement('ul', {className: 'ul-element' }));
-        document.getElementById('dropArea').appendChild(this.parentElement);
-    }        
-    this.handleFileInput(args.filesData);   
+      this.parentElement = createElement('div', { className: 'upload-list-root' });
+      this.parentElement.appendChild(createElement('ul', { className: 'ul-element' }));
+      document.getElementById('dropArea').appendChild(this.parentElement);
+    }
+    this.handleFileInput(args.filesData);
     args.cancel = true;
-}
+  }
 
-  public formSelectedData (selectedFiles : FileInfo, proxy: any ) : void {
+  public formSelectedData(selectedFiles: FileInfo, proxy: any): void {
     console.log(selectedFiles);
-    let liEle : HTMLElement = createElement('li',  { className: 'file-lists', attrs: {'data-file-name' : selectedFiles.name} });
-    liEle.appendChild(createElement('span', {className: 'file-name ', innerHTML: selectedFiles.name }));
-    liEle.appendChild(createElement('span', {className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
+    let liEle: HTMLElement = createElement('li', { className: 'file-lists', attrs: { 'data-file-name': selectedFiles.name } });
+    liEle.appendChild(createElement('span', { className: 'file-name ', innerHTML: selectedFiles.name }));
+    liEle.appendChild(createElement('span', { className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
     if (selectedFiles.status === 'Ready to upload') {
-        this.progressbarContainer = createElement('span', {className: 'progress-bar-container'});
-        this.progressbarContainer.appendChild(createElement('progress', {className: 'progress', attrs: {value : '0', max : '100'}} ));
-        liEle.appendChild(this.progressbarContainer);
+      this.progressbarContainer = createElement('span', { className: 'progress-bar-container' });
+      this.progressbarContainer.appendChild(createElement('progress', { className: 'progress', attrs: { value: '0', max: '100' } }));
+      liEle.appendChild(this.progressbarContainer);
     } else { liEle.querySelector('.file-name').classList.add('upload-fails'); }
-    let closeIconContainer : HTMLElement = createElement('span', {className: 'e-icons close-icon-container'});
+    let closeIconContainer: HTMLElement = createElement('span', { className: 'e-icons close-icon-container' });
     EventHandler.add(closeIconContainer, 'click', this.removeFiles, proxy);
     liEle.appendChild(closeIconContainer);
     document.querySelector('.ul-element').appendChild(liEle);
     this.filesList.push(liEle);
   }
 
-  public removeFiles(args : any) : void {
-    let status : string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
+  public removeFiles(args: any): void {
+    let status: string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
     if (status === 'File uploaded successfully') {
-        this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
+      this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
     } else {
-        detach(args.currentTarget.parentElement);
+      detach(args.currentTarget.parentElement);
     }
     this.uploadObj.element.value = '';
   }
 
   openPopup() {
     this.fileUploadList = [];
-    // if (this.type == "center") {   
+    // if (this.type == "center") {
     // }
     // else {
     //   //this.viewBase.currentView.openSidebarRight();
@@ -205,19 +207,21 @@ export class AttachmentComponent implements OnInit {
   closePopup() {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
-    this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    if (this.data == undefined)
-      this.data = [];
+  
+    // if (this.data == undefined)
+    //   this.data = [];
 
-    for(var i=0; i<this.atSV.fileListAdded.length; i++) {
-      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));     
-    }    
+    // for (var i = 0; i < this.atSV.fileListAdded.length; i++) {
+    //   this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));
+    // }
 
-    if (this.type == "popup") {      
-      this.dialog.close();      
+    this.fileAdded.emit({ data: this.data });
+
+    if (this.type == "popup") {
+      this.dialog.close();
     }
 
-    this.fileUploadList = [];
+    this.fileUploadList = [];   
     this.changeDetectorRef.detectChanges();
   }
 
@@ -311,7 +315,7 @@ export class AttachmentComponent implements OnInit {
         if (res != null) {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
-          this.atSV.folderId.next(res[0].folderId);       
+          this.atSV.folderId.next(res[0].folderId);
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];
@@ -372,9 +376,9 @@ export class AttachmentComponent implements OnInit {
     // let option = new SidebarModel();
     // option.DataService = this.view?.currentView?.dataService;
     // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '750px';
-    
-    
+    // option.Width = '800px';
+
+
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
@@ -408,8 +412,25 @@ export class AttachmentComponent implements OnInit {
   }
 
   onMultiFileSave() {
+    // var config = new AlertConfirmInputConfig();
+    //           config.type = "checkBox";
+              
+    //           this.notificationsService.alert(this.titlemessage, "item.message", config).closed.subscribe(x=>{
+    //              console.log(x);
+    //              if(x.event.status == "Y")
+    //              { 
+    //               //if (x.event.data)
+    //              }
+    //              else if (x.event.status == "N") {
+
+    //              }
+    //           });
+    //           return;
     // this.dialog.close();
     // return;
+    if (this.data == undefined)
+      this.data = [];
+
     let total = this.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
@@ -422,6 +443,10 @@ export class AttachmentComponent implements OnInit {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
           var addList = res.filter(x => x.status == 0 || x.status == 9);
+
+          for(var i=0; i<addList.length; i++) {
+            this.data.push(Object.assign({}, addList[i]));
+          }            
 
           if (addList.length == this.fileUploadList.length) {
             this.atSV.fileList.next(this.fileUploadList);
@@ -444,12 +469,57 @@ export class AttachmentComponent implements OnInit {
               }
             }
             if (newlistNot.length > 0) {
-              this.notificationsService.notify(newlistNot[0].message);
-              //this.closeFileDialog('dms_file');
+              this.notificationsService.notify(newlistNot[0].message);             
               this.closePopup();
             }
             else {
               this.fileUploadList = newUploadList;
+              var config = new AlertConfirmInputConfig();
+              config.type = "checkBox";
+              
+              this.notificationsService.alert(this.titlemessage, item.message, config).closed.subscribe(x=>{
+                if(x.event.status == "Y")
+                 { 
+                  // save all
+                  if (x.event.data) {
+                    for (var i = 0; i < this.fileUploadList.length; i++) {
+                      this.fileUploadList[i].reWrite = true;
+                    }
+                    this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
+                      var mess = '';
+                      for (var i = 0; i < result.length; i++) {
+                        var f = result[i];
+                        mess = mess + (mess != "" ? "<br/>" : "") + f.message;
+
+                      }
+                      this.notificationsService.notify(mess);
+                      this.fileUploadList = [];
+                      this.closePopup();
+                    });
+                  }
+                  else {
+                    // save 1
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList[index].reWrite = true;
+                    this.onMultiFileSave();
+                  }
+                 }
+                 else if (x.event.status == "N") {
+                  // cancel all
+                  if (x.event.data) { 
+                     this.fileUploadList = [];
+                     this.closePopup();              
+                  }
+                  else {
+                    // cancel 1
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList.splice(index, 1);//remove element from array
+                    if (this.fileUploadList.length > 0)
+                      this.onMultiFileSave();
+                  }
+                 }
+              })
+
               // this.confirmationDialogService.confirmAll(this.titlemessage, item.message, this.fileUploadList.length > 1 ? true : false).then((confirmed) => {
               //     if (confirmed == "save_all") {
               //       for (var i = 0; i < this.fileUploadList.length; i++) {
@@ -529,51 +599,30 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  rewriteFile(title: any, message: any, item: FileUpload) {
-    var that = this;
+  rewriteFile(title: any, message: any, item: FileUpload) { 
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
-
-    /*  this.notificationsService.alert(title, message, config).subscribe((res: Dialog)=>{
-       let that = this;
-       res.close = function(e) {
-         item.reWrite = true;
+    this.notificationsService.alert(title, message, config).closed.subscribe(x=>{
+      if(x.event.status == "Y")
+      { 
+        item.reWrite = true;
          var done = this.fileService.updateVersionFile(item).toPromise();
          if (done) {
            done.then(async res => {
              this.fileUploadList[0].recID = res.data.recID;
              this.atSV.fileListAdded.push(Object.assign({}, item));
              this.notificationsService.notify(res.message);
-             this.closePopup(modal);
+             this.closePopup();
              this.fileUploadList = [];
            }).catch((error) => {
              console.log("Promise rejected with " + JSON.stringify(error));
            });
          }
-       }
-     }) */
-
-    // this.confirmationDialogService.confirm(title, message).then((confirmed) => {
-    //   if (confirmed) {
-    //     item.reWrite = true;
-    //     var done = this.fileService.updateVersionFile(item).toPromise();
-    //     if (done) {
-    //       done.then(async res => {
-    //         this.fileUploadList = [];
-    //         this.notificationsService.notify(res.message);
-    //         this.modalService.dismissAll();
-    //       }).catch((error) => {
-    //         console.log("Promise rejected with " + JSON.stringify(error));
-    //       });
-    //     }
-    //   }
-    // });
+      }
+    })
   }
 
-  closeFileDialog(form): void {
-    //$('#dms_properties').removeClass('offcanvas-on');
-    // $('#' + form).css('z-index', '1000');
-    // $('#' + form).removeClass('offcanvas-on');
+  closeFileDialog(form): void {  
   }
 
   arrayBufferToBase64(buffer) {
@@ -737,13 +786,7 @@ export class AttachmentComponent implements OnInit {
             var list = listFolder[0].folderPath.split(";");
             this.loadChildNode(res[0], 0, list);
           }
-        }
-        // FolderPath
-        //for (var i = 0; i < res.length; i++) {
-        // this.loadChildNode();
-        // }
-        // this.refreshSelect(res);
-        //   this.loadSelectEventTreeSelect();
+        }      
         this.changeDetectorRef.detectChanges();
         this.remotePermission = res[0].permissions;
       }
@@ -752,69 +795,12 @@ export class AttachmentComponent implements OnInit {
     // DM058: Vui lòng chọn file tải lên
     // DM059: Đã thêm file thành công
     //  this.openDialogFolder(this.openFolder, "sm", "folder");
-  }
-
-  // openDialogFolder(content, size: string = "", name: string = '') {
-
-  //     if (this.dmSV.listDialog.indexOf(name) > -1)
-  //       return;
-
-  //     if (this.dmSV.listDialog == null)
-  //       this.dmSV.listDialog = [];
-
-  //     if (this.isFileList) {
-  //       this.fileUploadList = [];
-  //       this.dmSV.fileUploadList.next(this.fileUploadList);
-  //     }
-
-  //     if (name != "") {
-  //       this.dmSV.listDialog.push(name);
-  //     }
-
-  //     // const modalRef = this.modalService.open(NgbdModalContent, {windowClass: 'modal-holder', centered: true});
-  //     //this.modalServic
-  //     // console.log(content.toString());
-  //     //  content.dismiss();
-  //     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: size, windowClass: 'custom-class my-dialog' }).result.then((result) => {
-  //       //  alert(1);
-  //       this.closeResult = `Closed with: ${result}`;
-  //     }, (reason) => {
-  //       // alert(2);
-  //       if (name != '') {
-  //         var index = this.dmSV.listDialog.indexOf(name);
-  //         if (index > -1)
-  //           this.dmSV.listDialog.splice(index, 1);
-  //       }
-  //       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-  //     });
-
-  //     // this.dialogRef.afterClosed().pipe(
-  //     //   finalize(() => this.dialogRef = undefined)
-  //     // );
-
-  //     //  $('.my-dialog').css("z-index", '9999');
-  //   }
-
-  private getDismissReason(reason: any): string {
-    // if (!this.onRole) {
-    //   $('#dms_share').css('z-index', '9999');
-    //   $('#dms_properties').css('z-index', '9999');
-    //   $('#dms_request-permission').css('z-index', '9999');
-    // }
-
-    // if (reason === ModalDismissReasons.ESC) {
-    //   return 'by pressing ESC';
-    // } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    //   return 'by clicking on a backdrop';
-    // } else {
-    //   return `with: ${reason}`;
-    // }
-    return "";
-  }
+  } 
+ 
 
   uploadFile() {
     document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
-   // document.getElementById('browse').click();
+    // document.getElementById('browse').click();
     //this.file.nativeElement.click();
   }
 
@@ -867,7 +853,7 @@ export class AttachmentComponent implements OnInit {
   convertBlobToBase64 = async (blob) => {
     return await this.blobToBase64(blob);
   }
-  
+
   blobToBase64 = blob => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -879,14 +865,10 @@ export class AttachmentComponent implements OnInit {
   public readURL(liImage: HTMLElement, file: any) {
     let imgPreview: HTMLImageElement = liImage as HTMLImageElement;
     let imageFile: File = file.rawFile;
-    let reader: FileReader = new FileReader();
-    // reader.addEventListener( 'load', () => {
-    //     imgPreview.src = reader.result as string;
-    // }, false);
+    let reader: FileReader = new FileReader();    
     if (imageFile) {
-        reader.readAsDataURL(imageFile);
-    }
-  //  return reader.result as string;
+      reader.readAsDataURL(imageFile);
+    }    
   }
 
   getBase64(file) {
@@ -909,9 +891,9 @@ export class AttachmentComponent implements OnInit {
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
-      if (index == -1) {        
-        var data = await this.convertBlobToBase64(files[i].rawFile);       
-        var fileUpload = new FileUpload();      
+      if (index == -1) {
+        var data = await this.convertBlobToBase64(files[i].rawFile);
+        var fileUpload = new FileUpload();
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
@@ -939,7 +921,7 @@ export class AttachmentComponent implements OnInit {
     if (this.file)
       this.file.nativeElement.value = "";
     //  this.dmSV.fileUploadList.next(this.fileUploadList);
-    this.fileAdded.emit({ data: this.fileUploadList });
+   // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
 
     return false;

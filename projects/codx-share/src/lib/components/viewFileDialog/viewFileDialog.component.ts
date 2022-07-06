@@ -59,11 +59,7 @@ export class ViewFileDialogComponent implements OnInit {
 
   setShare() {
     if (this.checkShareRight()) {
-      var data = new DataItem();
-      //  $('.my-dialog').addClass("zIndex");
-      // $('.my-dialog').css('z-index', '99999');;
-      // $('app-customdialog').css('position', 'fixed');
-      // $('app-customdialog').css('z-index', '9999');
+      var data = new DataItem();     
       data.recID = this.id;
       data.type = 'file';
       data.fullName = this.fullName;

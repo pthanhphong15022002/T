@@ -8,6 +8,10 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'MWP';
+  override aside = true;
+  override asideFixed = false;
+  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
+  override toolbar = false;
   constructor(inject: Injector) {
     super(inject);
     this.codxService.init(this.module);
@@ -17,6 +21,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     // this.funcs$.subscribe((res) => {
     // });
     this.codxService.modulesOb$.subscribe((res) => {
+      console.log("checkskdhjfjsdkhfd", res);
     });
   }
 

@@ -198,7 +198,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '750px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
@@ -217,7 +217,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '750px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
 
@@ -249,29 +249,6 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-
-  // deleteSignature(dataItem) {
-  //   if (confirm('Are you sure to delete')) {
-  //     this.api
-  //       .execSv('ES', 'ES', 'SignaturesBusiness', 'DeleteSignatureAsync', [
-  //         dataItem.recID,
-  //       ])
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           this.gridView.removeHandler(dataItem, 'recID');
-  //         }
-  //       });
-  //   }
-  // }
-
-  // closeSidebar(event) {
-  //   if (event?.dataItem) {
-  //     this.gridView.addHandler(event.dataItem, event.isAdd, event.key);
-  //   }
-  //   this.cr.detectChanges();
-
-  //   //this.gridView.addHandler(e)
-  // }
 
   getLinkImg(data) {
     return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
