@@ -28,7 +28,7 @@ import {
 import { DataRequest } from '@shared/models/data.request';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 import { ActivatedRoute } from '@angular/router';
-export class defaultRecource { }
+export class defaultRecource {}
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
@@ -295,7 +295,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     if (device) return device.text;
   }
 
-  viewChange(event) { }
+  viewChange(event) {}
 
   deleteBooking(event) {
     if (confirm('Are you sure to delete booking')) {
