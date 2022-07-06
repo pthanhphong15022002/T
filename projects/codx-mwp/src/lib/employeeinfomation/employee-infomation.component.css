@@ -1,0 +1,77 @@
+@media (min-width: 992px) {
+    .aside-enabled .header.header-fixed {
+        left: 0;
+        height: 52px;
+    }
+}
+@media (min-width: 992px) {
+    .header-fixed.subheader-fixed.subheader-enabled .wrapper {
+        padding-top: 52px !important;
+    }
+}
+
+@import "~swiper/css";
+@import "~swiper/css/navigation";
+
+.progress,
+.full {
+    opacity: 1 !important;
+    width: 100%;
+}
+.cardExp {
+    width: 500px;
+}
+ngx-skeleton-loader {
+    width: 100%;
+}
+
+.swiper-slide {
+    width: initial;
+}
+
+.line {
+    position: absolute;
+    display: block;
+    height: 1px;
+    left: 20px;
+    right: -60px;
+    top: 16px;
+    background-color: #eee;
+    content: "";
+    z-index: 1;
+}
+
+.tagitem {
+    padding: 2px;
+    border-radius: 15px;
+    width: fit-content;
+    height: 30px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.swiper-button-next {
+    top: 22px;
+    position: absolute;
+    right: 0;
+    background-color: #f2fcfb;
+    border-radius: 4px;
+}
+.swiper-button-prev {
+    top: 22px;
+    position: absolute;
+    left: 0;
+    background-color: #f2fcfb;
+    border-radius: 4px;
+}
+.yeartoyear {
+    min-width: 76px;
+}
+#Training .yeartoyear {
+    margin-left: 40px;
+}
+.user-item.tagitem {
+    float: left;
+    margin-bottom: 4px;
+    margin-right: 4px;
+}

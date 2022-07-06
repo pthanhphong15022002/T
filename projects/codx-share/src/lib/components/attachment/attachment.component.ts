@@ -19,6 +19,11 @@ import * as moment from 'moment';
 import { OpenFolderComponent } from '../openFolder/openFolder.component';
 import { AttachmentService } from './attachment.service';
 
+import { ViewEncapsulation, Inject } from '@angular/core';
+import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
+import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
+import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
+
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
   selector: 'codx-attachment',
@@ -63,9 +68,19 @@ export class AttachmentComponent implements OnInit {
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
   @ViewChild('file') file: ElementRef;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
+  @Output() fileGet = new EventEmitter<any>();
+  @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
+  public uploadWrapper: HTMLElement = document.getElementsByClassName('e-upload')[0] as HTMLElement;
+  public parentElement: HTMLElement;
+  public proxy: any;
+  public progressbarContainer: HTMLElement;
+  public filesDetails: FileInfo[] = [];
+  public filesList: HTMLElement[] = [];
+  public dropElement: HTMLElement = document.getElementsByClassName('control-fluid')[0] as HTMLElement;
+
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
@@ -106,29 +121,100 @@ export class AttachmentComponent implements OnInit {
   }
 
 
+  ngAfterViewInit(): void {
+    if (this.objectId != "" && this.objectId != undefined) {
+      this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
+        if (res) {
+          this.data = res;
+          this.fileGet.emit(this.data);
+          this.changeDetectorRef.detectChanges();
+        }
+      })
+    };
+
+    if (document.getElementById('browse') != null) {
+      document.getElementById('browse').onclick = () => {
+        document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
+        return false;
+      };
+
+      this.dropElement = document.querySelector('#dropArea') as HTMLElement;
+      document.getElementById('browse').onclick = function () {
+        document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
+        return false;
+      }
+    }
+    // https://ej2.syncfusion.com/angular/documentation/uploader/template/#custom-template
+    // https://ej2.syncfusion.com/angular/demos/#/bootstrap5/uploader/custom-file-list
+    // document.getElementById('clearbtn').onclick = () => {
+    //     if (!document.getElementsByClassName('upload-list-root')[0]) { return; }
+    //     this.uploadObj.element.value = '';
+    //     detach(document.getElementById('dropArea').querySelector('.upload-list-root'));
+    //     this.filesList = [];
+    //     this.filesDetails = [];
+    // };
+  }
+
+  // upload file tai day
+  public onFileSelect(args: SelectedEventArgs): void {
+    if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
+      this.parentElement = createElement('div', { className: 'upload-list-root' });
+      this.parentElement.appendChild(createElement('ul', { className: 'ul-element' }));
+      document.getElementById('dropArea').appendChild(this.parentElement);
+    }
+    this.handleFileInput(args.filesData);
+    args.cancel = true;
+  }
+
+  public formSelectedData(selectedFiles: FileInfo, proxy: any): void {
+    console.log(selectedFiles);
+    let liEle: HTMLElement = createElement('li', { className: 'file-lists', attrs: { 'data-file-name': selectedFiles.name } });
+    liEle.appendChild(createElement('span', { className: 'file-name ', innerHTML: selectedFiles.name }));
+    liEle.appendChild(createElement('span', { className: 'file-size ', innerHTML: this.uploadObj.bytesToSize(selectedFiles.size) }));
+    if (selectedFiles.status === 'Ready to upload') {
+      this.progressbarContainer = createElement('span', { className: 'progress-bar-container' });
+      this.progressbarContainer.appendChild(createElement('progress', { className: 'progress', attrs: { value: '0', max: '100' } }));
+      liEle.appendChild(this.progressbarContainer);
+    } else { liEle.querySelector('.file-name').classList.add('upload-fails'); }
+    let closeIconContainer: HTMLElement = createElement('span', { className: 'e-icons close-icon-container' });
+    EventHandler.add(closeIconContainer, 'click', this.removeFiles, proxy);
+    liEle.appendChild(closeIconContainer);
+    document.querySelector('.ul-element').appendChild(liEle);
+    this.filesList.push(liEle);
+  }
+
+  public removeFiles(args: any): void {
+    let status: string = this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)].status;
+    if (status === 'File uploaded successfully') {
+      this.uploadObj.remove(this.filesDetails[this.filesList.indexOf(args.currentTarget.parentElement)]);
+    } else {
+      detach(args.currentTarget.parentElement);
+    }
+    this.uploadObj.element.value = '';
+  }
+
   openPopup() {
     this.fileUploadList = [];
-    if (this.type == "center") {
-      /* this.callfc.openForm(this.openFile, "Upload tài liệu", 700, null, null, "").subscribe((dialog: Dialog)=>{
-        let that = this;
-        dialog.close = function(e) {
-          return that.closeOpenForm(e);
-        }
-      });   */
-    }
-    else {
-      //this.viewBase.currentView.openSidebarRight();
-    }
+    // if (this.type == "center") {
+    // }
+    // else {
+    //   //this.viewBase.currentView.openSidebarRight();
+    // }
   }
 
   closePopup() {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
     this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    this.data = this.atSV.fileListAdded;
+    if (this.data == undefined)
+      this.data = [];
 
-    if (this.type == "popup") {      
-      this.dialog.close();      
+    for (var i = 0; i < this.atSV.fileListAdded.length; i++) {
+      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));
+    }
+
+    if (this.type == "popup") {
+      this.dialog.close();
     }
 
     this.fileUploadList = [];
@@ -226,8 +312,6 @@ export class AttachmentComponent implements OnInit {
           this.listRemoteFolder = res;
           this.atSV.currentNode = '';
           this.atSV.folderId.next(res[0].folderId);
-          this.objectId = this.objectId;
-          this.objectType = this.objectType;
           // update breadcum
           var breadcumb = [];
           var breadcumbLink = [];
@@ -267,29 +351,30 @@ export class AttachmentComponent implements OnInit {
   }
 
   openFormFolder() {
-    this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-      if (res != null) {
-        this.listRemoteFolder = res;
-        this.listNodeAdd = res;
-        if (res[0].history != null) {
-          var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-          if (listFolder[0] != null && listFolder[0].folderPath != "") {
-            var list = listFolder[0].folderPath.split(";");
-            this.loadChildNode(res[0], 0, list);
-          }
-        }
-        this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
-        this.changeDetectorRef.detectChanges();
-        this.remotePermission = res[0].permissions;
-      }
-    });
+    this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", [this.functionID], "");
+    // this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
+    //   if (res != null) {
+    //     this.listRemoteFolder = res;
+    //     this.listNodeAdd = res;
+    //     if (res[0].history != null) {
+    //       var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
+    //       if (listFolder[0] != null && listFolder[0].folderPath != "") {
+    //         var list = listFolder[0].folderPath.split(";");
+    //         this.loadChildNode(res[0], 0, list);
+    //       }
+    //     }
+    //     this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
+    //     this.changeDetectorRef.detectChanges();
+    //     this.remotePermission = res[0].permissions;
+    //   }
+    // });
 
     // let option = new SidebarModel();
     // option.DataService = this.view?.currentView?.dataService;
     // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '750px';
-    
-    
+    // option.Width = '800px';
+
+
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
@@ -311,7 +396,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   fileUploadDropped($event) {
-    this.handleFileInput($event);
+    this.handleFileInput1($event);
   }
 
   changeValueAgencyText(event: any) {
@@ -728,10 +813,12 @@ export class AttachmentComponent implements OnInit {
   }
 
   uploadFile() {
-    this.file.nativeElement.click();
+    document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
+    // document.getElementById('browse').click();
+    //this.file.nativeElement.click();
   }
 
-  async handleFileInput(files: FileList) {
+  async handleFileInput1(files: FileList) {
 
     var count = this.fileUploadList.length;
     this.getFolderPath();
@@ -759,6 +846,87 @@ export class AttachmentComponent implements OnInit {
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
         fileUpload.data = item;
+        fileUpload.item = files[i];
+        fileUpload.folderId = this.folderId;
+        fileUpload.permissions = this.remotePermission;
+        this.fileUploadList.push(Object.assign({}, fileUpload));
+
+      }
+    }
+    this.fileCount.emit(files.length);
+    files = null;
+    if (this.file)
+      this.file.nativeElement.value = "";
+    //  this.dmSV.fileUploadList.next(this.fileUploadList);
+    this.fileAdded.emit({ data: this.fileUploadList });
+    this.changeDetectorRef.detectChanges();
+
+    return false;
+  }
+
+  convertBlobToBase64 = async (blob) => {
+    return await this.blobToBase64(blob);
+  }
+
+  blobToBase64 = blob => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+
+  public readURL(liImage: HTMLElement, file: any) {
+    let imgPreview: HTMLImageElement = liImage as HTMLImageElement;
+    let imageFile: File = file.rawFile;
+    let reader: FileReader = new FileReader();
+    // reader.addEventListener( 'load', () => {
+    //     imgPreview.src = reader.result as string;
+    // }, false);
+    if (imageFile) {
+      reader.readAsDataURL(imageFile);
+    }
+    //  return reader.result as string;
+  }
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // const convertBlobToBase64 = async (blob) => {
+  //   return await blobToBase64(blob);
+  // }
+
+  async handleFileInput(files: FileInfo[]) {
+
+    var count = this.fileUploadList.length;
+    this.getFolderPath();
+    //console.log(files);
+    for (var i = 0; i < files.length; i++) {
+      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      if (index == -1) {
+        var data = await this.convertBlobToBase64(files[i].rawFile);
+        var fileUpload = new FileUpload();
+        fileUpload.order = i;
+        fileUpload.fileName = files[i].name;
+        fileUpload.avatar = this.getAvatar(fileUpload.fileName);
+        fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
+        fileUpload.createdBy = this.user.userName;
+        fileUpload.createdOn = this.getNow();
+        fileUpload.type = files[i].type;
+        fileUpload.objectType = this.objectType;
+        fileUpload.objectId = this.objectId;
+        fileUpload.fileSize = files[i].size;
+        fileUpload.fileName = files[i].name;
+        fileUpload.funcId = this.functionID;
+        fileUpload.folderType = this.folderType;
+        fileUpload.reWrite = false;
+        fileUpload.data = data.toString();
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
         fileUpload.permissions = this.remotePermission;

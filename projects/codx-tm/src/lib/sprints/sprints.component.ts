@@ -142,7 +142,7 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'add'],
@@ -151,7 +151,7 @@ export class SprintsComponent extends UIComponent {
       this.dialog.closed.subscribe((e) => {
         console.log(e);
       });
-      
+
       //dialog.close();
     });
   }
@@ -166,7 +166,7 @@ export class SprintsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '750px';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
           [this.view.dataService.dataSelected, 'edit'],
@@ -179,7 +179,7 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      option.Width = '800px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
@@ -214,7 +214,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) { }
+  sendemail(data) {}
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -238,15 +238,14 @@ export class SprintsComponent extends UIComponent {
     }
   }
   openPopupShare(obj) {
-    this.callfc
-      .openForm(
-        PopupShareSprintsComponent,
-        'Chia sẻ view board',
-        350,
-        510,
-        '',
-        obj
-      )
+    this.callfc.openForm(
+      PopupShareSprintsComponent,
+      'Chia sẻ view board',
+      350,
+      510,
+      '',
+      obj
+    );
     // .subscribe((dt: any) => {
     //   var that = this;
     //   dt.close = function (e) {
@@ -263,7 +262,7 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
   }
 
   changeView(evt: any) {

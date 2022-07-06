@@ -1,18 +1,21 @@
-<codx-views #base [funcID]="funcID" [showToolBar]="true" [service]="service" [assemblyName]="assemblyName"
-  [entityName]="entityName" [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button"
-  (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
   (requestEnded)="closeEditForm($event)">
 </codx-views>
 
 <ng-template #process let-data>
   <div class="has-action-menu">
-    <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 0">
+    <div id="progress" class="cdx-progress mt-3 mb-3" *ngIf="data?.countStep > 1">
       <div id="progress-bar"></div>
       <ul id="progress-num">
         <ng-container *ngFor="let item of getCount(data?.countStep)">
           <li class="step">{{item}}</li>
         </ng-container>
       </ul>
+    </div>
+    <div class="cdx-progress progress-num mt-3 mb-3" *ngIf="data?.countStep == 1">
+      <div class="step1">1</div>
     </div>
     <div class="center w-400 mt-5 mb-3" *ngIf="data?.countStep == 0">
       <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel">
@@ -21,6 +24,12 @@
     <div class="action-menu">
       <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover"></codx-mfunc>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #icon let-data>
+  <div class="">
+    <i [ngClass]="data.icon" class="icon-24"></i>
   </div>
 </ng-template>
 
@@ -46,13 +55,16 @@
           </div>
         </td>
         <td class="w-150px">
-          <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 0">
+          <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 1">
             <div id="progress-bar"></div>
             <ul id="progress-num">
               <ng-container *ngFor="let item of getCount(data?.countStep)">
                 <li class="step">{{item}}</li>
               </ng-container>
             </ul>
+          </div>
+          <div *ngIf="data?.countStep == 1">
+            <li class="step">1</li>
           </div>
           <div class="center" *ngIf="data?.countStep == 0">
             Chưa thiết lập
@@ -64,44 +76,3 @@
   <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" (click)="click(data)">
   </codx-temp-full>
 </ng-template>
-
-<!-- <codx-views #view funcID="TM001" entityName="AD_Users" [views]="views" [buttons]="buttons"
-  (buttonClick)="addNew($event)" [moreFuncs]="moreFunc"> </codx-views>
-
-<ng-template #asideAttachment>
-
-  <attachment [viewBase]="" objectType="TM_Tasks" objectId="TSK2205-0506" functionID="TM001"></attachment>
-
-</ng-template>
-<ng-template #gridTemplate>
-
-  <h1>Category</h1>
-  <codx-gridview #gridView [columnsGrid]="columnsGrid" [rowHeight]='40' [pageSize]="10" funcId="EPT11.1"
-    assemblyName="ES" entityName="ES_Categories" className="CategoriesBusiness" method="GetListAsync" predicate=""
-    dataValue="" [pageSize]="15" height="500px" [showColumnMenu]='true' [allowResizing]=""></codx-gridview>
-</ng-template>
-
-<ng-template #sideBarRightRef>
-  <app-edit-category #editCategory (closeForm)="closeSidebar($event)" (openAsideForm)="addNew($event)">
-  </app-edit-category>
-
-</ng-template>
-
-
-
-<ng-template #noName let-dataItem>
-  <div class="d-flex align-items-center">
-    <a class="action-item d-flex align-items-center">
-      <div class="d-flex align-items-center btn-tooltip" (click)="edit(dataItem)">
-        <span class=" icon-edit-one icon-18 ml-2 mr-2"></span>
-        <span class="tooltiptext">Edit</span>
-      </div>
-    </a>
-    <a class="action-item d-flex align-items-center">
-      <div class="d-flex align-items-center btn-tooltip" (click)="deleteCategory(dataItem)">
-        <span class="icon-close icon-18 text-danger mx-2"></span>
-        <span class="tooltiptext">Xóa</span>
-      </div>
-    </a>
-  </div>
-</ng-template> -->

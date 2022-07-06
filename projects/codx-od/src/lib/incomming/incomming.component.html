@@ -4,9 +4,8 @@
     (clickMF)="openFormFuncID($event,data)" 
     (click)="click(data)"
     [typeMF]="'hover'" 
-    [iconCss]=""
-    [title]="extractContent(data.title)" 
-    [desc]="data.agencyName"
+    [content]="extractContent(data.title)" 
+    [desc]="convertHtmlAgency(data.agencyName)"
     [status]="data.status" 
     [statusVll]="gridViewSetup['Status']['referedValue']" 
     [date]="data.createdOn" 
@@ -54,13 +53,15 @@
   >
   </app-view-detail>
 </ng-template>
-<codx-views #view 
+<codx-views 
+  #view 
   [views]="views" 
   (buttonClick)="click($event)" 
   [button]="button"
   [entityName]="'OD_Dispatches'"
   [method]="'GetListByStatusAsync'" 
-  [assemblyName]="'OD'" 
+  [assemblyName]="'OD'"
+  [service]="'OD'" 
   [className]="'DispatchesBusiness'"
   (selectedChange)="selectFirst($event)"
   [selectedFirst]="true"  

@@ -17,9 +17,9 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
 import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, UploadFile } from 'codx-core';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -49,6 +49,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   title ="";
   dialogRef: DialogRef;
   @ViewChild('template') template: ElementRef;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   modalPost: NgbModalRef;
   //Variable for control share
   entityName = '';
@@ -90,6 +91,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   ) {
     this.dialogRef = dialog;
     this.dataPost = dd.data;
+    this.title = dd.data.title;
     this.user = authStore.get();
     this.cache.valueList('L1901').subscribe((res) => {
       if (res) {
@@ -146,68 +148,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.lstRecevier = [];
     this.shareControl = "";
     this.objectType = "";
-  }
-
-  getFile(files) {
-    if (files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        let reader = new FileReader();
-        reader.readAsDataURL(files[i]);
-        reader.onload = (event: any) => {
-          var category = event.target.result.includes('video') ? '10' : '9';
-          this.previewFiles.push({
-            fileName:
-              category == '9'
-                ? `url(${event.target.result})`
-                : event.target.result,
-            category: category,
-            id: i,
-          });
-          if (this.previewFiles.length == files.length) {
-            this.isFileReady = true;
-            this.changed++;
-            this.isDB = false;
-          }
-        };
-
-        var f = new UploadFile();
-        f['id'] = i;
-        f.fileName = files[i].name;
-        f.category = files[i].type;
-        f.fileSize = files[i].size;
-        // f.fileBytes = this.aescry.arrayBufferToBase64(arrayFile);
-        this.fileUpload.push(f);
-      }
-    }
-  }
-
-  checkFile(files) {
-    if (files.length == 0 || this.previewFiles.length + 1 > files.length)
-      this.previewFiles = [];
-
-    if (files.length > 0) {
-      let form = new FormData();
-      for (let i = 0; i < files.length; i++) {
-        form.append('file', files[i]);
-      }
-
-      this.signalRAPI.checkfile(form).subscribe((res) => {
-        if (res.error == false) {
-          this.getFile(files);
-        } else {
-          let erroFiles = res.lstError;
-          for (let i = 0; i < erroFiles.length; i++) {
-            alert(erroFiles[i].key + '. ' + erroFiles[i].mssg);
-          }
-        }
-      });
-    }
-  }
-
-  remove() {
-    this.previewFiles = [];
-    this.fileUpload = [];
-    this.isFileReady = false;
   }
 
   Submit() {
@@ -285,27 +225,64 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     .subscribe((res: any) => {
         this.dialogRef.dataService.add(res,0).subscribe();
         this.clearForm();
+        if(this.isUploadFile){
+          this.attachment.objectId = res.recID;
+          this.saveFile();
+        }
         this.notifySvr.notifyCode('E0026');
         this.dialogRef.close();
         this.dt.detectChanges();
       });
   }
 
+  isEdit = false;
   editPost() {
-    if (!this.message) {
+    if (!this.message || this.shareControl || this.isEdit){
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    var id = this.data.recID;
-    var content = this.message;
-    var shareControl = "9";
-    var isSetShareControl = false;
-    var isDelete = false;
-    var tagsEdit = null;
-    var isSetTags = false;
-    var files = null;
-    var shareWith = null;
-
+    
+    var recID = this.data.recID;
+    var comment = "";
+    var isComment = false;
+    var isShare = false;
+    var lstPermission = [];
+    if(this.message != this.data.content){
+      isComment = true;
+      comment = this.message;
+    }
+    if(this.shareControl){
+      isShare = true;
+      var per1 = new Permission();
+      per1.objectType = '1';
+      per1.memberType = "1";
+      per1.objectID = this.user.userID;
+      per1.objectName = this.user.userName;
+      per1.create = true;
+      per1.update = true;
+      per1.delete = true;
+      per1.upload = true;
+      per1.download = true;
+      per1.assign = true;
+      per1.share = true;
+      per1.read = true;
+      per1.isActive = true;
+      per1.createdBy = this.user.userID;
+      per1.createdOn = new Date();
+      lstPermission.push(per1);
+      this.lstRecevier.map((item) => {
+        var per = new Permission();
+        per.memberType = "3";
+        per.objectType = this.objectType;
+        per.objectID = item.UserID;
+        per.objectName = item.UserName;
+        per.read = true;
+        per.isActive = true;
+        per.createdBy = this.user.userID;
+        per.createdOn = new Date();
+        lstPermission.push(per);
+      })
+    }
     this.api
       .execSv<any>(
         'WP',
@@ -313,21 +290,16 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
         'CommentBusiness',
         'EditPostAsync',
         [
-          id,
-          content,
-          shareControl,
-          isSetShareControl,
-          files,
-          isDelete,
-          shareWith,
-          tagsEdit,
-          isSetTags,
+          recID,
+          isComment,
+          comment,
+          isShare,
+          this.shareControl,
+          lstPermission
         ]
       )
       .subscribe((res) => {
         if (res) {
-          var obj: any = {result: res};
-          // this.dialog.hide(obj);
           this.clearForm();
           this.notifySvr.notifyCode('E0026');
         }
@@ -338,7 +310,15 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   shareControl:string = "";
   objectType:string = "";
   userRecevier:any;
+  recevierID:string;
+  recevierName:string;
   eventApply(event:any){
+    if (this.dataPost.status == "edit"){
+      this.isEdit = true;
+    }
+    else{
+      this.isEdit = false;
+    }
     var data = event[0];
     var objectType = data.objectType;
     if(objectType && !isNaN(Number(objectType))){
@@ -350,9 +330,30 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.objectType = data.objectType;
       this.lstRecevier = data.dataSelected;
       this.shareControl = objectType;
-      if(objectType == "U" && this.lstRecevier.length == 1){
-          this.userRecevier = this.lstRecevier[0];
+      this.userRecevier = this.lstRecevier[0];
+      switch(objectType){
+        case 'U':
+          this.recevierID = this.userRecevier.UserID;
+          this.recevierName = this.userRecevier.UserName;
+          break;
+        case 'D':
+          this.recevierID = this.userRecevier.OrgUnitID;
+          this.recevierName = this.userRecevier.OrgUnitName;
+          break;
+        case 'P':
+          this.recevierID = this.userRecevier.PositionID;
+          this.recevierName = this.userRecevier.PositionName;
+          break;
+        case 'G':
+          this.recevierID = this.userRecevier.UserID;
+          this.recevierName = this.userRecevier.UserName;
+          break;
+        case 'R':
+          this.recevierID = this.userRecevier.RoleID;
+          this.recevierName = this.userRecevier.RoleName;
+          break;
       }
+      
     }
     this.dt.detectChanges();
   }
@@ -435,36 +436,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     }
   }
 
-  showModal() {
-    this.modalPost = this.modalService.open(this.template, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-    this.iconShare();
-    this.modalPost.result.then(
-      (result) => {
-        if (result) console.log('result: ', result);
-      },
-      () => {
-        this.clearForm();
-      }
-    );
-    this.cdr.detectChanges();
-  }
-
-  openShareControl(content) {
-    // this.cbxsv.dataSelcected = this.shareWith;
-    this.modalService
-      .open(content, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        () => {
-          this.closeResult = `Dismissed`;
-        }
-      );
-  }
-
   getDisplayName() {
     const type = this.shareType;
     const t = this;
@@ -478,138 +449,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       t.displayShare = t.shareWith[0].name;
     }
   }
-
-  applyClick(event, modal) {
-    this.handleDataControlShare(event);
-    modal.dismiss();
-  }
-
-  onSaveAddUser(event) {
-    var modal = event.modal;
-    this.handleDataControlShare(event);
-    modal.dismiss();
-  }
-
-  handleDataControlShare(event = null) {
-    const t = this;
-    const ext = ['O', 'D', 'P', 'R', 'G', 'U'];
-    // this.shareType = this.cbxsv.arrType[0];
-    // this.shareType = event[0].objectType;
-    // this.displayShare = this.cbxsv.arrName[0];
-    if (this.displayShare == 'Owner') {
-      this.displayShare = event[0].objectName;
-    }
-
-    if (ext.includes(this.shareType)) this.handleDataCbx();
-    else this.shareWith = [{ id: this.shareType, name: t.displayShare }];
-    console.log(this.shareWith);
-    this.checkValueShare = true;
-
-    for (let i = 0; i <= this.dataVll.length; i++) {
-      if (this.dataVll[i].value === this.shareType) {
-        this.icon = this.dataVll[i].icon;
-        break;
-      }
-    }
-   
-  }
-
-  handleDataCbx() {
-    
-  }
-
-  getIdx() {
-    
-  }
-
-  handleSelection(event) {
-    let message = this.message || '';
-    message += event.char;
-    this.message = message;
-  }
-
-  convertListToTmpData(list: Array<object>, id: string, value: string) {
-    let result = [];
-    if (list.length == 0) return result;
-    list.forEach((item) => result.push({ id: item[id], name: item[value] }));
-    return result;
-  }
-
-  openTags(content) {
-    this.checkOpenTags = true;
-    
-    this.cdr.detectChanges();
-    this.modalService
-      .open(content, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        () => {
-          this.closeResult = `Dismissed`;
-        }
-      );
-  }
-
-  selectTags(event) {
-    var modal = event.modal;
-    let data = [];
-    
-    if (this.checkOpenTags) {
-      this.tags = data;
-    }
-
-    this.tag = data.length;
-    modal.dismiss();
-    this.checkValueTag = true;
-  }
-
-  checkValueStatus() {
-    if (this.data.id) {
-      if (this.message != this.data.content) {
-        this.checkValueMessage = true;
-      }
-      if (this.previewFiles != this.data.listImage) {
-        this.checkValueInput = true;
-      }
-    } else {
-      if (this.message != undefined && this.message != '') {
-        this.checkValueMessage = true;
-      }
-      if (this.previewFiles.length != 0) {
-        this.checkValueFile = true;
-      }
-    }
-    if (
-      this.checkValueFile ||
-      this.checkValueTag ||
-      this.checkValueShare ||
-      this.checkValueMessage
-    ) {
-      this.checkValueInput = true;
-    }
-  }
-
-  private deleteString(str: string, strDelete: string): string {
-    while (str.indexOf(strDelete) != -1) {
-      str = str.replace(strDelete, '');
-    }
-    return str;
-  }
-
-  iconShare() {
-    if (this.data.id) {
-      for (let i = 0; i <= this.dataVll.length; i++) {
-        if (this.dataVll[i].value === this.data.shareControl) {
-          this.icon = this.dataVll[i].icon;
-          break;
-        }
-      }
-    } else {
-      this.icon = 'fas fa-globe';
-    }
-  }
-
   getShareOfComment(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -664,5 +503,20 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.dt.detectChanges();
   }
 
+
+  saveFile() {
+    this.attachment.saveFiles();
+  }
+
+  isUploadFile = false;
+  openFile() {
+    this.isUploadFile = true;
+    this.attachment.uploadFile();
+  }
+
+  getfileCount(data:any){
+    console.log('getfileCount',data);
+
+  }
 
 }

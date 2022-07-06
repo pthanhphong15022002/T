@@ -1,7 +1,3 @@
-<!-- <codx-views #view service="SYS" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [showToolBar]="false" [views]="views"
-    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
-</codx-views> -->
-
 
 <div class="cal-notes">
     <div class="more-btn">
@@ -45,8 +41,9 @@
             </codx-listview>
         </div> -->
         <div *ngIf="checkWP_NotesParam == true" class="p-3">
-            <div class="fw-bold fs-6 text-primary mt-3">
-                <codx-label name="lblPinNote" formName="Notes" default="Ghi chú"></codx-label>
+            <div class="my-2">
+                <codx-label class="fw-bold fs-6 text-primary" name="lblPinNote" formName="Notes" default="Ghi chú">
+                </codx-label>
             </div>
             <div *ngFor="let item of WP_Notes">
                 <div *ngIf="item.showCalendar == true">
@@ -54,8 +51,7 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -64,22 +60,19 @@
                                     </div>
                                     <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
-                                    <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item)">
+                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
                                                 (click)="openFormPinNote(item.recID, item)"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item)">
+                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
@@ -107,8 +100,7 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
@@ -117,22 +109,19 @@
                                     </div>
                                     <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
-                                    <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item)">
+                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                         <div class="dropdown ms-2">
                                             <span class="icon-more_vert icon-18" placement="start" container="body"
                                                 [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
                                                 (click)="openFormPinNote(item.recID, item)"></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-column note-option"
-                                        (click)="openFormUpdateNote(item)">
+                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
                                         [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
@@ -160,15 +149,14 @@
             </div>
         </div>
         <div *ngIf="checkTM_TasksParam == true" class="mt-3">
-            <div class="fw-bold fs-6 text-primary mb-3">
+            <div class="fw-bold fs-6 text-primary mb-3 pd-left-10">
                 <codx-label name="lblPinNote" formName="Notes" default="Công việc"></codx-label>
             </div>
             <div *ngFor="let item of TM_Tasks">
                 <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                     <div class="note-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center">
-                                <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                 <div class="dropdown ms-2">
                                     <span class="icon-more_vert icon-18" placement="start" container="body"
                                         [ngbPopover]="" [autoClose]="'outside'"></span>
@@ -181,8 +169,7 @@
                 <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
                     <div class="note-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center">
-                                <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
                                 <div class="dropdown ms-2">
                                     <span class="icon-more_vert icon-18" placement="start" container="body"
                                         [ngbPopover]="" [autoClose]="'outside'"></span>
@@ -231,7 +218,7 @@
     <div class="separator my-3"></div>
     <div class="d-flex justify-content-center">
         <button class="btn btn-primary" (click)="openFormAddNote()">
-            <i class="icon-add icon-18 me-1"></i>
+            <i class="icon-add icon-16"></i>
             <codx-label name="lblDeleteNote" formName="Notes" default="Tạo ghi chú"></codx-label>
         </button>
     </div>
@@ -288,8 +275,7 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="d-flex flex-column note-option"
-                                            (click)="openFormUpdateNote(item)">
+                                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                             <span [innerHTML]="item.memo"></span>
                                         </div>
                                     </div>
@@ -325,8 +311,7 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="d-flex flex-column note-option"
-                                            (click)="openFormUpdateNote(item)">
+                                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                             <div *ngFor="let itemList of item.checkList">
                                                 <div *ngIf="itemList.status == null">
                                                     <div class="my-1">

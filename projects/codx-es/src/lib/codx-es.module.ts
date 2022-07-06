@@ -33,6 +33,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ViewDetailComponent } from './sign-file/view-detail/view-detail.component';
 import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
+import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
 
 const routes: Routes = [
   {
@@ -91,6 +92,7 @@ const routes: Routes = [
     ApprovalStepComponent,
     ViewDetailComponent,
     SignFileComponent,
+    PopupSignatureComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -17,6 +17,7 @@ export class UpdateExtendComponent implements OnInit {
   submitted = false
   dialog      : any
   data : any
+  formModel: any
   @ViewChild('attachment') attachment: AttachmentComponent
   @Input() view : any
   @Output() save = new EventEmitter<any>();
@@ -33,12 +34,13 @@ export class UpdateExtendComponent implements OnInit {
   { 
     this.data = dt.data['data'];
     this.dialog = dialog;
+    this.formModel = dialog?.formModel
   }
   ngOnInit(): void {
     this.updateForm = this.formBuilder.group(
       {
         updateOn: [new Date() , Validators.required],
-        percentage: [this.data?.percentage  , Validators.required],
+        percentage: [this.data?.percentage  , Validators.min(1)],
         percentage100 : false,
         comment: '',
         reporting: false
@@ -57,9 +59,8 @@ export class UpdateExtendComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.updateForm.controls;
   }
-  onSaveUpdate()
+  onSave()
   {
-    
     this.submitted = true;
     if(this.updateForm.invalid) return;
     if(this.updateForm.get('percentage100').value) this.updateForm.value.percentage = 100;
@@ -79,8 +80,5 @@ export class UpdateExtendComponent implements OnInit {
   close()
   {
     this.dialog.close();
-  }
-  onFormSubmit(): void {
-    console.log('Name:' + this.updateForm.get('updateOn').value);
   }
 }

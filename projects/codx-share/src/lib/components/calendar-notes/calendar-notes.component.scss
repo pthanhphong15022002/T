@@ -55,8 +55,6 @@ ejs-calendar .note-point {
 app-notes-home {
     background-color: #fff;
     border-radius: 6px;
-
-
 }
 
 .note-title {
@@ -77,4 +75,13 @@ app-notes-home {
 .note-content {
     background-color: #fff7df;
     border-left: 3px #ffd075 solid;
+}
+
+.pd-left-10 {
+    padding-left: 10px;
+}
+
+.moreFunc {
+    width: 0px;
+    margin-left: 100%;
 }
