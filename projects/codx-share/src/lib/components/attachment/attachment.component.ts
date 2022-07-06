@@ -221,8 +221,7 @@ export class AttachmentComponent implements OnInit {
       this.dialog.close();
     }
 
-    this.fileUploadList = [];
-    this.data = [];
+    this.fileUploadList = [];   
     this.changeDetectorRef.detectChanges();
   }
 
@@ -431,7 +430,7 @@ export class AttachmentComponent implements OnInit {
     // return;
     if (this.data == undefined)
       this.data = [];
-      
+
     let total = this.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
