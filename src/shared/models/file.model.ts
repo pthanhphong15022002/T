@@ -82,6 +82,7 @@ export class ItemInterval {
 
 export class FileUpload {
     order: any;
+    isSystem: any;
     recID: string;
     title: string;
     relation: string;
@@ -97,6 +98,7 @@ export class FileUpload {
     fileSize: any;
     type: any;
     folderName: string;
+    hasSubFolder: any;
     tags: any;
     subject: any;
     objectId: any;
@@ -113,6 +115,7 @@ export class FileUpload {
     folderId: string;
     approval: any;
     revision: any;
+    checkSecurity: any;
     physical: any;
     copyrightsControl: any;
     location: any;
@@ -150,7 +153,9 @@ export class FileUpload {
     download: any;
     upload: any;
     assign: any;
+    write: any;
 }
+
 
 export class SubFolder {
     recID: string;

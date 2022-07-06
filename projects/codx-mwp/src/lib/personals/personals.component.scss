@@ -13,8 +13,9 @@
 }
 
 .personal-container>div {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
+    margin-top: 20px;
 }
 
 .pw-menu {
@@ -36,7 +37,7 @@
 
 .pw-content {
     border-radius: 6px !important;
-    background-color: var(--bs-body-bg);
+    //background-color: var(--bs-body-bg);
     margin-top: 20px;
 }
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Post } from '@shared/models/post';
 import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService } from 'codx-core';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
   selector: 'app-list-post',
   templateUrl: './list-post.component.html',
   styleUrls: ['./list-post.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
@@ -100,15 +101,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   ngOnDestroy() {
   }
 
-  // beforeDeleted(opt: RequestOption){
-  //   opt.service = 'WP';
-  //   opt.assemblyName = 'WP';
-  //   opt.className = 'CommentBusiness';
-  //   opt.methodName = 'DeletePostAsync';
-  //   return true;
-  // }
   removePost(data: any) {
-    // this.codxViews.dataService.delete([data]).subscribe();
+
     this.notifySvr.alertCode('E0327').subscribe((e: any) => {
       if (e.event.status == "Y") {
         this.api
@@ -119,13 +113,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             data.recID
           )
           .subscribe((res) => {
-            if(res)
-            {
+            if (res) {
               this.api.execSv("DM",
-              "ERM.Business.DM",
-              "FileBussiness",
-              "DeleteByObjectIDAsync",
-              [data.recID,'WP_Comments',true]
+                "ERM.Business.DM",
+                "FileBussiness",
+                "DeleteByObjectIDAsync",
+                [data.recID, 'WP_Comments', true]
               ).subscribe();
               this.notifySvr.notifyCode('E0026');
               this.dt.detectChanges();
@@ -136,25 +129,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   }
 
-  // closeAlert(e, data, t: ListPostComponent){
-  //     if(e.status == "Y"){
-  //       t.api
-  //         .exec<any>(
-  //           'ERM.Business.WP',
-  //           'CommentBusiness',
-  //           'DeletePostAsync',
-  //           data.recID
-  //         )
-  //         .subscribe((res) => {
-  //           if(res)
-  //           {
-  //            // this.listview.dataService
-  //             this.notifySvr.notifyCode('E0026');
-  //             this.dt.detectChanges();
-  //           }
-  //         });
-  //     }
-  // }
 
   show() {
     if (this.searchField == '' || this.searchField == null) return true;
@@ -172,18 +146,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  editPost(data) {
-    // this.listview.addHandler(data, false, 'recID');
-  }
-  createPost(data) {
-    // this.listview.dataService.add(data, true, 'recID');
-  }
-  createShare(data) {
-    // this.listview.addHandler(data, false, 'id');  
-  }
+
   gotoImageDetail(data) {
     this.player?.video?.nativeElement.pause();
-    // this.router.navigate([this.tenant + '/modules/wp/image'], { queryParams: { id: data.id } });
   }
 
   openModal() {
@@ -209,7 +174,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj,'',option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
 
   }
 
