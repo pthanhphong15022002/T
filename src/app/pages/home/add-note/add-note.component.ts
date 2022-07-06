@@ -1,3 +1,4 @@
+import { NoteType } from './../../../../shared/models/notes.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SaveNoteComponent } from './save-note/save-note.component';
@@ -20,7 +21,7 @@ import {
   Output,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NoteGoal, Notes } from '@shared/models/notes.model';
+import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'app-add-note',
@@ -31,6 +32,8 @@ export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
   note: Notes = new Notes();
+  noteType: NoteType = new NoteType();
+  tempNote: TempNote = new TempNote();
   message: any;
   listNote: any = [];
   type = 'text';
@@ -71,24 +74,56 @@ export class AddNoteComponent implements OnInit {
     this.data = dt.data?.data;
     this.formType = dt.data?.formType;
     this.dataListView = dt.data?.ngForLstview;
-    if(this.formType == 'edit') {
+    if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
     }
-    // this.typeList_ = dt.data?.typeLst;
-    // this.ngForLstview_ = dt.data?.ngForLstview;
-    // this.lstviewNotePin = dt.data?.lstviewNotePin;
+    this.noteType.text = true;
   }
   ngAfterViewInit() {
-    console.log(this.imageUpload);
+    if (this.formType == 'edit')
+      this.checkActiveFormEdit();
   }
 
   ngOnInit(): void {
     this.initForm();
   }
 
+  checkActiveFormEdit() {
+    if (this.note?.noteType == 'text') {
+      this.noteType.text = true;
+      this.noteType.check = false;
+      this.noteType.list = false;
+    } else if (this.note?.noteType == 'check') {
+      this.noteType.check = true;
+      this.noteType.text = false;
+      this.noteType.list = false;
+    } else {
+      this.noteType.list = true;
+      this.noteType.check = false;
+      this.noteType.text = false;
+    }
+    this.pin = this.note?.isPin;
+  }
+
+  checkActiveFormAdd() {
+    if (this.type == 'text') {
+      this.noteType.text = true;
+      this.noteType.check = false;
+      this.noteType.list = false;
+    } else if (this.type == 'check') {
+      this.noteType.check = true;
+      this.noteType.text = false;
+      this.noteType.list = false;
+    } else {
+      this.noteType.list = true;
+      this.noteType.check = false;
+      this.noteType.text = false;
+    }
+  }
+
   saveNote() {
-    if(this.formType == 'add') this.onCreateNote();
+    if (this.formType == 'add') this.onCreateNote();
     else this.onEditNote();
   }
 
@@ -113,36 +148,34 @@ export class AddNoteComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
-      // if (field == 'textarea') {
-      //   this.message = e.data.value;
-      // } else if (field == 'showCalendar') {
-      //   this.showCalendar = e.data.checked;
-      // } else if (field == 'status') {
-      //   item['status'] = e.data.checked;
-      // } else if (field == 'listNote') {
-      //   this.listNote = item.checkList.listNote;
-      // } else if (item) {
-      //   this.message = '';
-      //   this.checkCreate = '';
-      //   item[field] = e.data;
-      // }
+      if (this.type == 'check' || this.type == 'list'
+        || this.note?.noteType == 'check' || this.note?.noteType == 'list') {
+        if (item?.lisNote != '') {
+          if (this.formType == 'edit') this.listNote = this.note.checkList;
+          this.listNote.forEach((data) => {
+            if (item?.listNote == data.listNote) {
+              if (field == 'status') data.status = dt
+              else data.listNote = dt;
+            }
+          })
+        }
+        this.tempNote;
+        debugger;
+        this.onUpdateNote(this.tempNote);
+      }
     }
   }
 
   onCreateNote() {
-    // if (this.type == 'check' || this.type == 'list') {
-    //   this.dataAdd.memo = null;
-    //   this.dataAdd.checkList = this.listNote;
-    //   this.dataAdd.checkList.shift();
-    // } else {
-    //   this.dataAdd.checkList = null;
-    //   this.dataAdd.memo = this.message;
-    // }
-    // this.dataAdd.showCalendar = this.showCalendar;
-
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
-    this.note;
+    if (this.type == 'check' || this.type == 'list') {
+      this.listNote.shift();
+      this.note.checkList = this.listNote;
+      this.note.memo = null;
+    } else {
+      this.note.checkList == null;
+    }
     this.api
       .exec<any>(
         'ERM.Business.WP',
@@ -151,49 +184,28 @@ export class AddNoteComponent implements OnInit {
         this.note
       )
       .subscribe((res) => {
-        if (res) {
-          this.imageUpload
-            .updateFileDirectReload(res?.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-              }
-            });
-          this.data.push(res);
-          if (this.note?.showCalendar == true) {
-            debugger;
-            this.changeDetectorRef.detectChanges();
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
-            }
+        this.data.push(res);
+        if (this.note?.showCalendar == true) {
+          this.changeDetectorRef.detectChanges();
+          var today: any = document.querySelector(
+            ".e-footer-container button[aria-label='Today']"
+          );
+          if (today) {
+            today.click();
           }
         }
       });
   }
 
   onEditNote() {
-    // if (this.itemUpdate.noteType == "check" || this.itemUpdate.noteType == "list") {
-    //   this.dataAdd.memo = null;
-    //   this.dataAdd.checkList = this.listNote;
-
-    // } else {
-    //   this.dataAdd.checkList = null;
-    //   this.dataAdd.memo = this.message;
-    // }
-    // this.dataAdd.noteType = this.itemUpdate.noteType;
-    // this.dataAdd.isPin = this.itemUpdate.isPin;
-    // this.dataAdd.showCalendar = this.itemUpdate.showCalendar;
-    this.note;
+    this.note.checkList = this.listNote;
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
           for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].recID == this.note?.recID) {
-              // this.data[i].checkList = res.checkList;
+              this.data[i].checkList = res.checkList;
               this.data[i].memo = res.memo;
             }
           }
@@ -202,25 +214,42 @@ export class AddNoteComponent implements OnInit {
       });
   }
 
+  // keyUpEnter(e: any) {
+  //   if (e) {
+  //     var field = e.field;
+  //     var dt = e.data;
+  //     if (dt) {
+  //       if (this.type == 'check') {
+  //         if(field == 'listNote') {
+  //           this.tempNote['listNote'] = dt;
+  //           this.tempNote['status'] = 0;
+  //         } 
+  //       } else this.tempNote[field] = dt;
+  //       debugger;
+  //       this.onUpdateNote(this.tempNote)
+  //     }
+  //   }
+  // }
+
   onType(type) {
-    this.type = type;
-    this.listNote = [];
-    if (type == 'list' || type == 'check') {
-      var todoCheck = { status: type == 'check' ? 0 : null, listNote: '' };
-      this.listNote.push(todoCheck);
-      this.changeDetectorRef.detectChanges();
+    if (this.formType == 'add') {
+      this.type = type;
+      this.listNote = [];
+      if (type == 'list' || type == 'check') {
+        var todoCheck = { status: type == 'check' ? 0 : null, listNote: '' };
+        this.listNote.push(todoCheck);
+        this.changeDetectorRef.detectChanges();
+      }
+      this.checkActiveFormAdd();
     }
-    this.changeDetectorRef.detectChanges();
   }
 
-  onUpdateNote(item: NoteGoal) {
-    var a = this.note
-    var b = this.form;
-    debugger;
+  onUpdateNote(item: TempNote) {
     this.listNote[0] = {
       status: this.type == 'check' ? 0 : null,
       listNote: '',
     };
+    this.tempNote;
     var dt = { status: item.status, listNote: item.listNote };
     this.listNote.push(Object.assign({}, dt));
     this.changeDetectorRef.detectChanges();

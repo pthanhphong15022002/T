@@ -19,19 +19,41 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
+import { CompanySettingDetailsComponent } from './company-setting/company-setting-details/company-setting-details.component';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    // children: [
+    //   {
+    //     path:'users/:funcID',
+    //     component: UserComponent,
+    //   }
+    //   ,{
+    //     path:'users/companysetting/:funcID',
+    //     component: CompanySettingComponent
+    //   }
+
+    // ]
     children: [
       {
-        path:'users/:funcID',
+        path: 'users/:funcID',
         component: UserComponent,
       }
-      ,{
-        path:'users/companysetting/:funcID',
-        component: CompanySettingComponent
+      , {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+        children:
+          [
+            {
+              path: ':funcID',
+              component: CompanySettingDetailsComponent
+            }
+
+          ]
+
       }
+
 
     ]
   }
@@ -40,7 +62,8 @@ export const routes: Routes = [
 const T_Component: Type<any>[] = [
   LayoutComponent,
   UserComponent,
-  CompanySettingComponent
+  CompanySettingComponent,
+  CompanySettingDetailsComponent
 ];
 @NgModule({
   imports: [

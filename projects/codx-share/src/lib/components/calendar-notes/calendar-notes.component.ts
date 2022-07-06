@@ -230,7 +230,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
-          `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 5px;margin-top: 6px;`
+          `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         span.setAttribute(
@@ -245,7 +245,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span2.setAttribute(
           'style',
-          'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 6px;'
+          'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
       } else {
         span2.setAttribute(
@@ -264,7 +264,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         );
         span2.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 6px;'
+          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
       } else {
         span.setAttribute(
@@ -333,8 +333,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
-      747,
-      570,
+      600,
+      450,
       '',
       obj
     )

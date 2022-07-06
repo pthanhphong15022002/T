@@ -1,0 +1,28 @@
+<!-- <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" ></codx-form>
+    <ng-template  #body>
+     </ng-template>
+     <ng-template  #footer>
+    </ng-template> -->
+
+    <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"></codx-detail-tmp>
+
+    <ng-template #header>
+      <div class="header_detail">
+          <codx-label fiedName="" formName="" gridViewName="" default="Tên công ty" ></codx-label>
+          <codx-input type="text" field="" [crrValue]="data.legalName"></codx-input>
+      </div>
+    </ng-template>
+
+
+    <ng-template #body>
+      <div class="container_detail">
+
+      </div>
+    </ng-template>
+
+
+    <ng-template #footer>
+      <div class="container_detail">
+
+      </div>
+    </ng-template>

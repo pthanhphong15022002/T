@@ -12,7 +12,7 @@ import { SelectweekComponent } from 'projects/codx-share/src/lib/components/sele
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
 })
-export class MyDashboardComponent implements OnInit{
+export class MyDashboardComponent implements OnInit {
   @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
   formModel: string;
   funcID: string;
@@ -27,7 +27,6 @@ export class MyDashboardComponent implements OnInit{
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
-
 
   //#region gauge
   public font1: Object = {
@@ -146,6 +145,7 @@ export class MyDashboardComponent implements OnInit{
     this.legendSettings = {
       visible: true,
     };
+    this.getGeneralData();
   }
 
   private getGeneralData() {
@@ -157,7 +157,7 @@ export class MyDashboardComponent implements OnInit{
       ])
       .subscribe((res) => {
         this.dbData = res;
-        console.log(this.dbData)
+        console.log(this.dbData);
       });
 
     this.api
@@ -168,6 +168,7 @@ export class MyDashboardComponent implements OnInit{
       ])
       .subscribe((res: any) => {
         this.taskOfDay = res;
+        console.log(this.taskOfDay);
       });
   }
 
