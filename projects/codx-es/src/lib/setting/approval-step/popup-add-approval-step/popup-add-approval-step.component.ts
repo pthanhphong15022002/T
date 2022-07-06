@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -7,9 +8,11 @@ import {
   Optional,
   Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
+  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
@@ -17,16 +20,19 @@ import {
 } from 'codx-core';
 import { debug } from 'console';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
   selector: 'popup-add-approval-step',
   templateUrl: './popup-add-approval-step.component.html',
   styleUrls: ['./popup-add-approval-step.component.scss'],
 })
-export class PopupAddApprovalStepComponent implements OnInit {
+export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;
+  dataEdit: any;
+
   tmplstDevice;
   lstDeviceRoom;
   isAfterRender = false;
@@ -35,13 +41,12 @@ export class PopupAddApprovalStepComponent implements OnInit {
   formModel: FormModel;
   dialogApprovalStep: FormGroup;
   cbxName;
-  link;
-  showPlan = true;
-  showPlan1 = true;
   time: any;
 
   dialog: DialogRef;
   tmpData: any;
+  lstStep;
+  isSaved = false;
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
 
@@ -59,13 +64,25 @@ export class PopupAddApprovalStepComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
     private api: ApiHttpService,
+    private cfService: CallFuncService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.transId = data?.data.transID;
     this.stepNo = data?.data.stepNo;
-    console.log(this.transId, this.stepNo);
+    this.lstStep = data?.data.lstStep;
+    this.isAdd = data?.data.isAdd;
+    this.dataEdit = data?.data.dataEdit;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      this.dialog.closed.subscribe((res) => {
+        if (!this.isSaved) {
+        }
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -92,75 +109,101 @@ export class PopupAddApprovalStepComponent implements OnInit {
       .then((item) => {
         this.dialogApprovalStep = item;
         this.isAfterRender = true;
-        this.isAdd = true;
-        console.log(this.dialogApprovalStep.value);
-        this.dialogApprovalStep.patchValue({
-          leadTime: 0,
-          representative: false,
-          sequential: false,
-          transID: this.transId,
-          stepNo: this.stepNo,
-        });
+        if (this.isAdd) {
+          this.dialogApprovalStep.patchValue({
+            leadTime: 0,
+            representative: true,
+            sequential: false,
+            transID: this.transId,
+            stepNo: this.stepNo,
+          });
+        } else {
+          this.dialogApprovalStep.patchValue(this.dataEdit);
+          this.dialogApprovalStep.addControl(
+            'id',
+            new FormControl(this.dataEdit.id)
+          );
+        }
       });
   }
 
   lstApprover = [];
+
   onSaveForm() {
+    this.isSaved = true;
     console.log(this.dialogApprovalStep.value);
     if (this.dialogApprovalStep.invalid == true) {
       this.notify.notify('invalid');
     }
-    let approver1 = new Approvers();
-    this.lstApprover.push(approver1);
-    approver1.position = 'BA';
-    this.lstApprover.push(approver1);
+    if (this.isAdd) {
+      //#region default Approver cần chỉnh sửa
+      let approver1 = new Approvers();
+      approver1.approverName = 'Lê Phạm Hoài Thương';
+      approver1.positionName = 'Phân tích thiết kế';
+      approver1.createdOn = new Date();
 
-    this.dialogApprovalStep.patchValue({ approvers: this.lstApprover });
-    this.api
-      .callSv('ES', 'ES', 'CategoriesBusiness', 'AddEditStepAsync', [
-        this.dialogApprovalStep.value,
-        this.isAdd,
-      ])
-      .subscribe((res) => {
-        console.log(res);
-        if (res && res.msgBodyData.length > 0) {
-          //this.dialog.hide(res.msgBodyData);
-          this.close.emit(res.msgBodyData[0]);
-        }
-      });
+      this.lstApprover.push(approver1);
+      approver1.position = 'BA';
+      this.lstApprover.push(approver1);
+
+      this.dialogApprovalStep.patchValue({ approvers: this.lstApprover });
+      //#endregion
+
+      // this.api
+      //   .callSv('ES', 'ES', 'CategoriesBusiness', 'AddEditStepAsync', [
+      //     this.dialogApprovalStep.value,
+      //     this.isAdd,
+      //   ])
+      //   .subscribe((res) => {
+      //     console.log(res);
+      //     if (res && res.msgBodyData.length > 0) {
+      //       this.lstStep.push(res.msgBodyData[0]);
+      //       this.dialog && this.dialog.close();
+      //       this.cr.detectChanges();
+      //     }
+      //   });
+      this.lstStep.push(this.dialogApprovalStep.value);
+      this.dialog && this.dialog.close();
+    } else {
+      let i = this.lstStep.indexOf(this.dataEdit);
+      if (i != -1) {
+        this.lstStep[i] = this.dialogApprovalStep.value;
+        this.dialog && this.dialog.close();
+      }
+    }
   }
 
   popup(evt: any) {}
 
   checkedOnlineChange(event) {}
 
+  openSetupEmail() {
+    let data = {
+      dialog: this.dialog,
+      emailType: 1,
+    };
+    this.cfService.openForm(
+      PopupAddEmailTemplateComponent,
+      '',
+      750,
+      1500,
+      '',
+      data
+    );
+  }
+
   valueChange(event) {
     if (event?.field) {
       if (event.data === Object(event.data)) {
         this.dialogApprovalStep.patchValue({
-          [event['field']]: event.data.value ?? event.data.checked,
+          [event['field']]: event.data,
         });
-        if (
-          event.field == 'representative' &&
-          this.dialogApprovalStep.value.representative == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            sequential: false,
-          });
-        }
-        if (
-          event.field == 'sequential' &&
-          this.dialogApprovalStep.value.sequential == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            representative: false,
-          });
-        }
       } else {
         this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
         if (
           event.field == 'representative' &&
-          this.dialogApprovalStep.value.representative == true
+          this.dialogApprovalStep.value.representative == true &&
+          this.dialogApprovalStep.value.sequential == true
         ) {
           this.dialogApprovalStep.patchValue({
             sequential: false,
@@ -168,7 +211,8 @@ export class PopupAddApprovalStepComponent implements OnInit {
         }
         if (
           event.field == 'sequential' &&
-          this.dialogApprovalStep.value.sequential == true
+          this.dialogApprovalStep.value.sequential == true &&
+          this.dialogApprovalStep.value.representative == true
         ) {
           this.dialogApprovalStep.patchValue({
             representative: false,
@@ -176,42 +220,23 @@ export class PopupAddApprovalStepComponent implements OnInit {
         }
       }
     }
+    console.log('sequential', this.dialogApprovalStep.value.sequential);
+    console.log('representative', this.dialogApprovalStep.value.representative);
+
     this.cr.detectChanges();
-  }
-
-  valueStartTimeChange(event) {}
-  valueEndTimeChange(event) {}
-
-  openPopupLink() {}
-
-  fileAdded(event) {}
-
-  changeLink(event) {}
-
-  checkedChange(event, item) {}
-
-  openPopupDevice() {}
-
-  valueDateChange(event) {}
-
-  closeForm() {
-    this.close.emit();
-  }
-
-  extendShowPlan() {
-    this.showPlan = !this.showPlan;
-  }
-  extendShowPlan1() {
-    this.showPlan1 = !this.showPlan1;
   }
 }
 export class Approvers {
   recID: string;
   roleType: String = '11';
   approver: String = 'ADMIN';
+  approverName: String;
   position: String = 'KT';
+  positionName: String;
   leadTime: any;
   comment: String;
+
+  createdOn: any;
 }
 
 export class Files {

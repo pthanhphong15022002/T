@@ -160,7 +160,7 @@ label.btn.p-3{
      }
   .cdx-progress{
       position: relative;
-      margin-bottom: 30px;
+      // margin-bottom: 30px;
       clear: both;
       max-width: 400px;
       #progress-bar {
@@ -193,7 +193,7 @@ label.btn.p-3{
           border-radius: 100%;
           width: 30px;
           height: 30px;
-          line-height: 25px;
+          line-height: 30px;
           text-align: center;
           background-color: #fff;
           font-family: sans-serif;
@@ -208,6 +208,20 @@ label.btn.p-3{
           color: #FFA800;
         }
 
+  }
+  .step1{
+    border: 2px solid #1BC5BD;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #fff;
+    font-family: sans-serif;
+    font-size: 14px; font-weight: bold;
+    position: relative;
+    z-index: 1;
+    color: #1BC5BD;
   }
   .timeline{
      .timeline-media {

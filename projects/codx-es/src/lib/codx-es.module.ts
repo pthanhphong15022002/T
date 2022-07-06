@@ -31,6 +31,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { PopupAddAutoNumberComponent } from './setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ViewDetailComponent } from './sign-file/view-detail/view-detail.component';
+import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
 
 const routes: Routes = [
   {
@@ -87,6 +88,7 @@ const routes: Routes = [
     PopupAddAutoNumberComponent,
     ViewDetailComponent,
     SignFileComponent,
+    PopupSignatureComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -98,7 +100,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     SharedModule,
     TabModule,
-    CodxShareModule
+    CodxShareModule,
   ],
   exports: [CodxEsComponent],
   providers: [

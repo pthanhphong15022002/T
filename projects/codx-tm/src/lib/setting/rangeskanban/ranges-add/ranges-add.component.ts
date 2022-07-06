@@ -1,5 +1,5 @@
 import { Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { DialogRef, FormModel, CallFuncService, DialogModel, Util, ApiHttpService, NotificationsService } from 'codx-core';
+import { DialogRef, FormModel, CallFuncService, DialogModel, Util, ApiHttpService, NotificationsService, CodxService } from 'codx-core';
 import { RangeLine } from '../../../models/task.model';
 
 @Component({
@@ -22,12 +22,13 @@ export class PopAddRangesComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private codxService: CodxService,
     private callfc: CallFuncService,
     @Optional() dialog?: DialogRef
   ) {
-    this.lstRangeLine = [];
     this.dialog = dialog;
     this.range = dialog.dataService!.dataSelected;
+    this.lstRangeLine = this.range.rangeLines || [];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
 
@@ -35,24 +36,26 @@ export class PopAddRangesComponent implements OnInit {
 
   openPopup(template: any, data = null) {
     this.dialog.dataService.save().subscribe(res => {
-      if (res.save != null) {
+      if (!res?.save?.error || !res?.update?.error) {
         if (data)
           this.rangeLines = data;
         else {
           this.rangeLines.recID = Util.uid();
           this.rangeLines.rangeID = this.range.rangeID;
+          // this.codxService.setAddNew(this.rangeLines, 'recID')
         }
-
-        let dialog = this.callfc.openForm(template, '', 500, 400);
-        dialog.closed.subscribe(res => {
-          this.rangeLines = new RangeLine();
-        })
+        this.callfc.openForm(template, '', 500, 400);
       }
     });
   }
 
   saveLine(dialog) {
-    this.api.execAction<any>('BS_RangeLines', [this.rangeLines], 'SaveAsync').subscribe(res => {
+    let method = 'SaveAsync';
+
+    if (!this.rangeLines['isNew'])
+      method = 'UpdateAsync';
+
+    this.api.execAction<any>('BS_RangeLines', [this.rangeLines], method).subscribe(res => {
       if (res) {
         this.lstRangeLine.push(this.rangeLines)
         this.rangeLines = new RangeLine();

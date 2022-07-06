@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@a
 import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
-import { BS_Ranges } from '../../models/BS_Ranges.model';
-import { PopAddRangesComponent } from './pop-add-ranges/pop-add-ranges.component';
+import { PopAddRangesComponent } from './ranges-add/ranges-add.component';
+
 
 @Component({
   selector: 'lib-ranges-kanban',
@@ -18,7 +18,7 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild("itemRange", { static: true }) itemRange: TemplateRef<any>;
   @ViewChild("itemCreatedBy", { static: true }) itemCreatedBy: TemplateRef<any>;
   @ViewChild("itemCreatedOn", { static: true }) itemCreatedOn: TemplateRef<any>;
-
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
 
@@ -66,10 +66,18 @@ export class RangesKanbanComponent implements OnInit {
     this.views = [{
       type: ViewType.grid,
       sameData: true,
-      active: true,
+      active: false,
       model: {
         resources: this.columnsGrid,
         template: this.grid,
+      }
+    },
+    {
+      type: ViewType.list,
+      sameData: true,
+      active: true,
+      model: {
+        template: this.itemTemplate,
       }
     }];
     this.view.dataService.methodSave = '';
@@ -84,23 +92,9 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px'; // s k thấy gửi từ ben đây,
-
+      option.Width = '550px'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
 
-    });
-
-    this.dialog.closed.subscribe((x) => {
-      if (x.event == null)
-        this.view.dataService
-          .remove(this.view.dataService.dataSelected)
-          .subscribe(x => {
-            this.dt.detectChanges();
-          });
-      else {
-        this.view.dataService.update(x.event).subscribe();
-        this.view.dataService.setDataSelected(x.event);
-      }
     });
   }
 
@@ -112,14 +106,14 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], this.beforeDel).subscribe();
+    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
   };
 
   beforeDel(opt: RequestOption) {
@@ -136,12 +130,8 @@ export class RangesKanbanComponent implements OnInit {
     console.log('evt: ', evt);
     var t = this;
   }
-  requestEnded(evt: any) {
-    this.dialog && this.dialog.close();
-  }
-  aaa(val: any) {
-    console.log(val);
-  }
+
+
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
