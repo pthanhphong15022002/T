@@ -24,6 +24,7 @@ import { DialogAttachmentType, FileInfo } from '@shared/models/file.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CreateFolderComponent } from '../createFolder/createFolder.component';
 
 @Component({
   selector: 'home',
@@ -61,6 +62,17 @@ export class HomeComponent extends UIComponent {
     private notificationsService: NotificationsService,
   ) {
     super(inject);
+    // this.dmSV.isOpenCreateFolder.subscribe(item => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.dmSV.formModel;
+    //   option.Width = '750px';
+
+    //   this.dialog = this.callfc.openSide(CreateFolderComponent, null, option);
+    //   this.dialog.closed.subscribe(e => {
+    //     console.log(e);
+    //   })
+    // });    
   }
 
   // override ngOnInit() {
@@ -73,9 +85,10 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: "btnAdd"
-    };
+                      id: "btnAdd"
+                  };    
 
+    
   }
 
   addFile($event) {
@@ -108,7 +121,7 @@ export class HomeComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
 
     this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
     this.dialog.closed.subscribe(e => {
@@ -279,8 +292,9 @@ export class HomeComponent extends UIComponent {
           resizable: true
         },
       },
-    ]
-
+    ]       
+    this.dmSV.formModel = this.view.formModel;
+    this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
     console.log(this.button);
   }
