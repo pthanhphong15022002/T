@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
-import { CallFuncService, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, CallFuncService, NotificationsService } from 'codx-core';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -11,7 +11,11 @@ import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.compon
 })
 export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
+  @Input() formModel: any;
+  @Input() displayThumb: any;
  // files: any;  
+  title = 'Thông báo';
+  titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
   constructor(    
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -41,33 +45,69 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return bytes;
   }
 
-  async download(file): Promise<void> {
-    var id = file.recID;
-    var that = this;
-    if (this.checkDownloadRight(file)) {
-      this.fileService.downloadFile(id).subscribe(async res => {
-        if (res && res.content != null) {
-          let json = JSON.parse(res.content);
-          var bytes = that.base64ToArrayBuffer(json);
-          let blob = new Blob([bytes], { type: res.mimeType });
-          let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", res.fileName);
-          link.style.display = "none";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      });
-    }
-    else {
-      this.notificationsService.notify("Bạn không có quyền download file này");
-    }
+  deleteFile(id) {
+    var config = new AlertConfirmInputConfig();
+    config.type = "YesNo";
+    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x=>{
+      if(x.event.status == "Y")
+      {        
+        this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
+          if (item) {
+            let list = this.files;
+            var index = -1;
+            if (list.length > 0) {
+              if (list[0].data != null)
+              {
+                index = list.findIndex(d => d.data.recID.toString() === id); 
+              }
+              else {
+                index = list.findIndex(d => d.recID.toString() === id); 
+              }
+              if (index > -1) {
+                list.splice(index, 1);//remove element from array
+                this.files = list;
+                this.changeDetectorRef.detectChanges();
+              }
+            }            
+          }
+        })  
+      }
+    })
   }
 
-  openFile(file) {
-    this.callfc.openForm(ViewFileDialogComponent, file.fileName, 1000, 800, "", file, "");
+  async download(id): Promise<void> {
+    this.fileService.getFile(id).subscribe(file => {      
+      var id = file.recID;
+      var that = this;
+      if (this.checkDownloadRight(file)) {
+        this.fileService.downloadFile(id).subscribe(async res => {
+          if (res && res.content != null) {
+            let json = JSON.parse(res.content);
+            var bytes = that.base64ToArrayBuffer(json);
+            let blob = new Blob([bytes], { type: res.mimeType });
+            let url = window.URL.createObjectURL(blob);
+            var link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", res.fileName);
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        });
+      }
+      else {
+        this.notificationsService.notify("Bạn không có quyền download file này");
+      }
+    });
+  }
+
+  openFile(id) {
+    //var data = JSON.parse(file);
+    this.fileService.getFile(id).subscribe(data => {
+      this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+    });
+ 
     //if (this.checkReadRight() ) {
     // var obj = new objectPara();
     // obj.fileID = data.recID;
@@ -106,6 +146,19 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     ext = ext.substring(1);
     ext = ext.toLocaleLowerCase();
     return `../../../assets/demos/dms/${ext}.svg`;
+  }
+
+  getSubTitle(id)
+  {    
+     var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
+                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='openFile("${id}")'>
+                    <i class='icon-preview text-primary icon-18'></i> 
+                  </div> 
+                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='download("${id}")'>
+                    <i class='icon-cloud_download text-primary icon-18'></i> 
+                  </div> 
+                </div> `;
+     return html;   
   }
 
 }
