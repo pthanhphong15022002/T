@@ -146,7 +146,7 @@
                 </div>
                 <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
                 <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="task.assignTo" multiple="true" [showInput] = "false"
-                  (valueChange)="valueChangeUser($event)"></codx-input>
+                  (valueChange)="eventApply($event)"></codx-input>
               </div>
               <div class="symbol-group">
                 <ng-container *ngFor="let item of listUser">
@@ -228,7 +228,7 @@
               </div>
               <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
               <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="task.assignTo" multiple="true" [showInput] = "false"
-                (valueChange)="valueChangeUser($event)">
+                (valueChange)="eventApply($event)">
               </codx-input>
             </div>
             <div>

@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { TagsComponent } from '@shared/layout/tags/tags.component';
@@ -29,7 +30,7 @@ import * as moment from 'moment';
   templateUrl: './popup-add.component.html',
   styleUrls: ['./popup-add.component.scss'],
 })
-export class PopupAddComponent implements OnInit {
+export class PopupAddComponent implements OnInit,AfterViewInit {
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -86,6 +87,7 @@ export class PopupAddComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.getParam();
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -96,10 +98,10 @@ export class PopupAddComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+   
   }
 
   ngOnInit(): void {
-    this.getParam();
     if (this.action == 'add') {
       this.openTask();
     } else if (this.action == 'copy') {
@@ -110,6 +112,9 @@ export class PopupAddComponent implements OnInit {
       };
       this.getTaskCoppied(this.taskCopy.taskID);
     } else this.openInfo(this.task.taskID, this.action);
+  }
+  ngAfterViewInit(): void {
+    
   }
 
   getParam(callback = null) {
@@ -465,17 +470,17 @@ export class PopupAddComponent implements OnInit {
     var listDepartmentID = '';
     var listUserID = '';
 
-    e.forEach((obj) => {
-      if (obj?.data && obj?.data != '') {
+    e?.data.forEach((obj) => {
+     // if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
-            listUserID += obj.data;
+            listUserID += obj.id+';';
             break;
           case 'D':
-            listDepartmentID += obj.data;
+            listDepartmentID += obj.id+";";
             break;
         }
-      }
+    //  }
     });
     if (listUserID != '')
       listUserID = listUserID.substring(0, listUserID.length - 1);
