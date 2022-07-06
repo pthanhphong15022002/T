@@ -61,6 +61,7 @@ export class PopupAddComponent implements OnInit {
   showPlan = true;
   showAssignTo = false;
   isAdd = false;
+  crrEstimated :any;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -71,6 +72,8 @@ export class PopupAddComponent implements OnInit {
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
   tags: any;
+  taskCopy: any;
+  newID :string ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -89,6 +92,7 @@ export class PopupAddComponent implements OnInit {
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
+    this.taskCopy = dt?.data[3];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -96,26 +100,44 @@ export class PopupAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getParam();
-    if (!this.task.taskID) {
+    if (this.action == 'add') {
       this.openTask();
-    } else {
-      if (this.action == 'copy') return this.getTaskCoppied(this.task.taskID);
-      else this.openInfo(this.task.taskID, this.action);
-    }
+    } else if (this.action == 'copy') {
+      this.newID = this.task.taskID;
+      this.task = {
+        ...this.task,
+        ...this.taskCopy
+      };
+      this.getTaskCoppied(this.taskCopy.taskID);
+    } else this.openInfo(this.task.taskID, this.action);
   }
 
   getParam(callback = null) {
+    // this.api
+    //   .execSv<any>(
+    //     APICONSTANT.SERVICES.SYS,
+    //     APICONSTANT.ASSEMBLY.CM,
+    //     APICONSTANT.BUSINESS.CM.Parameters,
+    //     'GetDictionaryByPredicatedAsync',
+    //     'TM_Parameters'
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.param = res;
+    //       return callback && callback(true);
+    //     }
+    //   });
     this.api
       .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetDictionaryByPredicatedAsync',
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
         'TM_Parameters'
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.param = JSON.parse(res.dataValue);
           return callback && callback(true);
         }
       });
@@ -192,13 +214,12 @@ export class PopupAddComponent implements OnInit {
   }
 
   openTask(): void {
-    const t = this;
+    this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
-    this.task = new TM_Tasks();
     this.listTodo = [];
     this.task.status = '1';
-    this.task.priority = '1';
+    // this.task.priority = '1';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -214,7 +235,6 @@ export class PopupAddComponent implements OnInit {
   }
 
   openInfo(id, action) {
-    this.task = new TM_Tasks();
     this.readOnly = action === 'edit' ? false : true;
     this.title =
       action === 'edit' ? 'Chỉnh sửa công việc' : 'Xem chi tiết công việc';
@@ -222,7 +242,7 @@ export class PopupAddComponent implements OnInit {
 
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        this.task = res[0];
+        this.task = res[0] as TM_Tasks;
         this.tags = this.task.tags;
         this.listUserDetail = res[1] || [];
         this.listTodo = res[2];
@@ -259,8 +279,8 @@ export class PopupAddComponent implements OnInit {
     this.title = 'Copy công việc ';
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        t.copyListTodo(res[2]);
-        t.beforeCopy(res[0]);
+        this.beforeCopy(res[0]);
+        this.copyListTodo(res[2]);
       }
     });
   }
@@ -280,14 +300,13 @@ export class PopupAddComponent implements OnInit {
 
   beforeCopy(data) {
     const t = this;
-    t.task = new TM_Tasks();
-    t.task = data;
+    t.task = data as TM_Tasks;
+    t.task.taskID = this.newID ;
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
     if (data.endDate != null)
       t.task.endDate = moment(new Date(data.startDate)).toDate();
-    t.task.taskID = null;
     t.task.parentID = null;
     t.task.assignTo = null;
     t.task.completedOn = null;
@@ -324,14 +343,11 @@ export class PopupAddComponent implements OnInit {
       this.task.dueDate < this.task.startDate ||
       this.task.dueDate < this.task.endDate
     ) {
-      this.notiService
-        .alertCode('TM002', { type: 'YesNo' })
-        .subscribe((dialog: any) => {
-          var that = this;
-          dialog.close = function (e) {
-            return that.closeConfirm(e, that, id);
-          };
-        });
+      this.notiService.alertCode('TM002').subscribe((res) => {
+        if (res?.event && res?.event?.status == 'Y') {
+          this.actionSave(id);
+        }
+      });
     } else {
       this.actionSave(id);
     }
@@ -368,15 +384,14 @@ export class PopupAddComponent implements OnInit {
 
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-
-    if (id) this.updateTask();
-    else this.addTask();
     this.attachment.saveFiles();
+    if (this.action == 'edit') this.updateTask();
+    else this.addTask();
   }
 
   beforeSave(op: any) {
     var data = [];
-    if (this.task.taskID != null) {
+    if (this.action == 'edit') {
       op.method = 'UpdateTaskAsync';
       data = [
         this.task,
@@ -444,44 +459,61 @@ export class PopupAddComponent implements OnInit {
   openInputMemo2() {
     this.openMemo2 = !this.openMemo2;
   }
-  //caí này chạy tạm đã
+
   eventApply(e: any) {
     var assignTo = '';
-    var i = 0;
+    var listDepartmentID = '';
+    var listUserID = '';
+
     e.forEach((obj) => {
       if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
-            assignTo += obj?.data;
-            this.valueSelectUser(assignTo);
+            listUserID += obj.data;
             break;
           case 'D':
-            //chưa chạy xong câu lệnh này đã view ra...
-            const t = this;
-            var depID = obj?.data.substring(0, obj?.data.length - 1);
-            t.tmSv.getUserByDepartment(depID).subscribe((res) => {
-              if (res) {
-                assignTo += res + ';';
-                this.valueSelectUser(assignTo);
-              }
-            });
+            listDepartmentID += obj.data;
             break;
         }
       }
     });
-    // setTimeout(() => {
-    //   // this will make the execution after the above boolean has changed
-    //   this.valueSelectUser(assignTo);
-    // }, 500);
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          assignTo += res;
+          if (listUserID != '') assignTo += ';' + listUserID;
+          this.valueSelectUser(assignTo);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
   }
+
   valueSelectUser(assignTo) {
     if (assignTo != '') {
-      if (assignTo.split(';').length > 1)
-        assignTo = assignTo.substring(0, assignTo.length - 1);
-      if (this.task.assignTo && this.task.assignTo != '')
-        this.task.assignTo += ';' + assignTo;
-      else this.task.assignTo = assignTo;
-      this.getListUser(assignTo);
+      if (this.task.assignTo && this.task.assignTo != '') {
+        var arrAssign = assignTo.split(';');
+        var arrNew = [];
+        arrAssign.forEach((e) => {
+          if (!this.task.assignTo.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          assignTo = arrNew.join(';');
+          this.task.assignTo += ';' + assignTo;
+          this.getListUser(assignTo);
+        }
+      } else {
+        this.task.assignTo = assignTo;
+        this.getListUser(assignTo);
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -490,6 +522,33 @@ export class PopupAddComponent implements OnInit {
     if (data.data) {
       this.task[data.field] = data.data;
     }
+  }
+  valueChangeEstimated(data) {
+    var num = Number.parseInt(data.data);
+    if(num < 0){
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify('Giá trị nhập vào phải là số dương !');
+      this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
+    }
+    if (data.data && num) {
+      this.task[data.field] = data.data;
+      var estimated = num * 3600000;
+      if (!this.task.startDate) {
+        var crrDay = new Date();
+        this.task.startDate = moment(crrDay).toDate();
+        var time = crrDay.getTime();
+        var timeEndDate = time + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      } else if(!this.crrEstimated){
+        var timeEndDate = this.task.startDate.getTime() + estimated;
+        this.task.endDate = moment(new Date(timeEndDate)).toDate();
+      }
+    } else {
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
+      this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   changeVLL(data) {
@@ -501,9 +560,14 @@ export class PopupAddComponent implements OnInit {
     this.task[data.field] = data.data.fromDate;
     if (data.field == 'startDate') {
       if (!this.task.endDate)
-        this.task.endDate = moment(new Date(data.data.fromDate))
-          .add(1, 'hours')
-          .toDate();
+        if (this.task.estimated) {
+          var timeEndDay =
+            this.task.startDate.getTime() + this.task.estimated * 3600000;
+          this.task.endDate = moment(new Date(timeEndDay)).toDate();
+        } else
+          this.task.endDate = moment(new Date(data.data.fromDate))
+            .add(1, 'hours')
+            .toDate();
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate)
@@ -511,6 +575,7 @@ export class PopupAddComponent implements OnInit {
           moment(this.task.startDate),
           'hours'
         );
+        this.crrEstimated = this.task.estimated;
     }
   }
 
@@ -619,8 +684,6 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  extendShow() { }
-
   valueChangeTags(e) {
     this.task.tags = e.data;
   }
@@ -666,12 +729,6 @@ export class PopupAddComponent implements OnInit {
     } else this.task.assignTo = '';
   }
 
-  closeConfirm(e: any, t: PopupAddComponent, id: string) {
-    if (e?.status == 'Y') {
-      t.actionSave(id);
-    }
-  }
-
   convertToListTaskResources() {
     var listTaskResources: tmpTaskResource[] = [];
     this.listMemo2OfUser.forEach((obj) => {
@@ -688,7 +745,6 @@ export class PopupAddComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
   }
   changeMemo2(e, id) {
@@ -708,5 +764,9 @@ export class PopupAddComponent implements OnInit {
       };
       this.listMemo2OfUser.push(memo2OfUser);
     }
+  }
+
+  valueChangeUser(e){
+
   }
 }

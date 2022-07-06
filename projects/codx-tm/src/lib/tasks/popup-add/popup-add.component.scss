@@ -1,12 +1,15 @@
+.codx-dialog-container{
+    //width: 800px!important;
+}
 .e-tab{
     height: 100%!important;
     
 }
 .e-tab .e-tab-header.e-vertical {
-    max-width: 200px;
+    max-width: 220px;
     width: 100%!important;
     z-index: 1;
-    margin-right: 30px;
+    margin-right: 20px;
  
 }
 .e-tab.e-vertical-tab .e-content {
@@ -23,11 +26,12 @@
     border:0;   
 }
 .e-tab .e-tab-header.e-vertical:before {
-//border-width: 0px;     
+//border-width: 0px;    
+border-right: 1px solid #3333330f; 
 }
 
 .e-tab .e-tab-header:before {  
-  //  border: 0;
+    //border: 0;
 }
 .e-tab .e-tab-header .e-toolbar-item{
     border: 0;
@@ -46,12 +50,29 @@
 
 .e-tab .e-tab-header .e-toolbar-item .e-text-wrap{
     // padding: 7px 0;
-    height: 36px;
+    height: 44px;
     padding: 0;
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-    height: 36px;
+    height: 44px;
     margin: 0 0px 0 0;
-    min-height: 32px;
+    min-height: 44px;
     min-width: auto; 
+}
+.e-tab .e-tab-header .e-toolbar-item .e-tab-text{
+    text-transform:inherit;
+}
+.active {
+    color: #009EF7;
+    border-color: #F1FAFF;
+    background-color: #F1FAFF !important;
+}
+.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon{
+    color: #009EF7;
+    border-color: #F1FAFF;
+    background-color: #F1FAFF !important;
+}
+.navi-item .navi-link {
+    transition: all .15s ease;
+    color: #3f4254;
 }

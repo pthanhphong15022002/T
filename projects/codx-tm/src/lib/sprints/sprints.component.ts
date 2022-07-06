@@ -142,12 +142,16 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'add'],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
+
       //dialog.close();
     });
   }
@@ -162,7 +166,7 @@ export class SprintsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '750px';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
           [this.view.dataService.dataSelected, 'edit'],
@@ -175,7 +179,7 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      option.Width = '800px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,

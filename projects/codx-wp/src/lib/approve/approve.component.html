@@ -1,0 +1,61 @@
+
+
+<codx-views #codxViews 
+[funcID]="funcID" 
+[service]="service" 
+[entityName]="entityName" 
+idField="recID" 
+[assemblyName]="assemblyName"
+[className]="className" 
+[method]="method" 
+[predicate]="predicate" 
+[dataValue]="dataValue" 
+
+[views]="views"
+[autoLoad]="true">
+</codx-views>
+
+<ng-template #panelLeftRef>
+    <div class="row">
+            <ul class="nav ">
+                <li class="nav-item" *ngFor="let item of navAsside">
+                    <a  (click)="clickNavApprove(item,item.predicate,item.datavalue)"  [class.text-muted]="!item.active" class="nav-link text-primary fw-bolder" href="javascript:;" (click)="clickNavApprove(item,item.predicate,item.datavalue)">
+                        <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
+                        <span>({{item.value}})</span>
+                    </a>
+                </li>
+        </ul>
+    </div>
+</ng-template>
+<ng-template #panelRightRef>
+    <app-view-detail
+        #viewdetail
+        [data]="dataSelected"
+        [option]="option"
+        [formModel]="codxViews.formModel"
+    ></app-view-detail>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <codx-temp-full 
+        [typeMF]="'hover'" 
+        (clickMF)="clickMF($event,data)"
+        (click)="clickViewDetail(data.recID,entityName)"
+        [formModel]="codxViews.formModel"
+        [resourceObjType]="entityName"
+        [imageId]="data.recID"
+        imgCss="me-2"
+        [imageObjType]="entityName"
+        imageType="circle"
+        cardCss="card-template border-bottom px-2 py-3" 
+        [title]="data.category"
+        [desc]="data.content"
+        [date]="data.createdOn"
+        [status]="data.approveStatus"
+        [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+        [bookmark]="false">
+    </codx-temp-full>
+</ng-template>
+
+
+    

@@ -1,4 +1,4 @@
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef } from 'codx-core';
 import {
   Component,
   OnInit,
@@ -26,6 +26,7 @@ export class PopupAddUpdate implements OnInit {
   formType = '';
   readOnly = false;
   data: any;
+  header = 'Thêm mới chi tiết sổ tay';
 
   note: Notes = new Notes();
 
@@ -35,12 +36,14 @@ export class PopupAddUpdate implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     public atSV: AttachmentService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.formType = dt?.data[1];
     if (this.formType == 'edit') {
+      this.header = 'Cập nhật chi tiết sổ tay';
       this.note = dialog.dataService.dataSelected;
       this.data = dialog.dataService.dataSelected;
     }
@@ -101,7 +104,7 @@ export class PopupAddUpdate implements OnInit {
       });
   }
 
-  popup(evt: any) {
+  popup() {
     this.attachment.uploadFile();
   }
 

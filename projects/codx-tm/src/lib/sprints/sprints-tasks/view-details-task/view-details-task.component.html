@@ -1,6 +1,6 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [body]="body" [footer]="footer">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer">
     <ng-template #header>
       <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
@@ -104,16 +104,15 @@
             <div class="d-flex me-6">
               <span class="fw-bold me-1"><codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu:">
               </codx-label></span>
-              <span [ngClass]="
+             <span [ngClass]="
                   itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.startDate | date: "dd/MM/yyyy" }}</span>
+                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
             </div>
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold"><codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc:">
               </codx-label></span>
-              <span [ngClass]="
-                  itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.endDate | date: "dd/MM/yyyy" }}</span>
+              <span  [ngClass]="
+                  itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'"> {{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
             </div>
             <div class="d-flex">
               <span class="fw-bold me-1"><codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày hoàn tất:">
@@ -154,12 +153,12 @@
       </div>
       <div class="symbol-group">
         <div *ngIf="itemSelected.category == '3'" class="symbol symbol-30px symbol-circle me-3">
-          <codx-imgs [objectId]="itemSelected?.assignTo" [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.assignTo"  objectType="AD_Users" [numberImages]="4">
           </codx-imgs>
         </div>
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
           class="symbol symbol-30px symbol-circle me-3">
-          <codx-imgs [objectId]="itemSelected?.owner" [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.owner"  objectType="AD_Users" [numberImages]="4" >
           </codx-imgs>
         </div>
       </div>
@@ -176,11 +175,13 @@
         </div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
-             <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [checked]="item.status == '9'" [disabled]="true"></codx-input>  -->
-             <div>
+            <div>
+              <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After" [crrValue]="item.status == '9'" [disabled]="true"></codx-input> 
+            </div>
+             <!-- <div>
               <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
               <span>{{ " " + item.memo }}</span>
-             </div>
+             </div> -->
           </ng-container>
         </div>
       </div>

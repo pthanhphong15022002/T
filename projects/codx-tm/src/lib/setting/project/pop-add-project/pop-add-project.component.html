@@ -1,7 +1,7 @@
-<codx-form headerText="" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer" [dialog]="dialog">
-  <ng-template #subHeaderText>
+<codx-form [headerText]="title" [subHeaderText]="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <!-- <ng-template #subHeaderText>
     aaaaaaaa
-  </ng-template>
+  </ng-template> -->
 
   <ng-template popup adde #body>
     <div class="card-body">
@@ -12,16 +12,24 @@
               <codx-label fiedName="ProjectID" formName="Projects" gridViewName="grvProjects" default="Mã dự án">
               </codx-label>
               <div>
-                <codx-input field="projectID" type="text" [crrValue]="projects.projectID">
+                <!-- <codx-input field="projectID" type="text" [crrValue]="projects.projectID">
+                </codx-input> -->
+
+                <codx-input field="projectID" type="text" [attr.disabled]="!isAddMode ? '' : null"
+                  [crrValue]="projects.projectID">
                 </codx-input>
               </div>
             </div>
             <div class="col-4">
               <codx-label fiedName="ProjectCategory" default="Phân loại" formName="Projects" gridViewName="grvProjects">
               </codx-label>
-              <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder=""
+              <!-- <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder=""
                 [crrValue]="projects.projectCategory" (valueChange)="valueApp($event)"
                 [refValue]="gridViewSetup.ProjectCategory.referedValue">
+              </codx-input> -->
+
+              <codx-input type="valuelist" field="projectCategory" refValue="L0607"
+                [crrValue]="projects.projectCategory" (valueChange)="valueApp($event)">
               </codx-input>
             </div>
           </div>
@@ -35,9 +43,20 @@
           <div class="form-group mt-3">
             <codx-label fiedName="ProjectGroupID" formName="Projects" gridViewName="grvProjects" default="Nhóm dự án">
             </codx-label>
-            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
+            <!-- <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
               refValue="Projects" loadFull="true" field="projectGroupID" (valueChange)="cbxChange($event)"
               [multiple]="false" [crrValue]="projects.projectGroupID">
+            </codx-input> -->
+            <!--
+            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
+              refValue="Projects" loadFull="true" field="projectGroupID" (valueChange)="cbxChangeProjectGroup($event)"
+              [multiple]="false" [crrValue]="projects.projectGroupID">
+            </codx-input> -->
+
+            <!-- LVbao -->
+            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án" field="projectGroupID"
+              refValue="ProjectGroups" loadFull="true" (valueChange)="cbxChangeProjectGroup($event)" [multiple]="false"
+              [crrValue]="projects.projectGroupID">
             </codx-input>
           </div>
           <div class="form-group mt-3">
@@ -58,14 +77,15 @@
             <codx-label fiedName="ProjectManeger" formName="Projects" gridViewName="grvProjects"
               default="Quản lý dự án">
             </codx-label>
+
             <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Quản lý dự án"
-              refValue="Projects" loadFull="true" field="projectManeger" (valueChange)="cbxUser($event)"
-              [multiple]="false" [crrValue]="projects.projectManeger">
+              refValue="AD_Users" loadFull="true" (valueChange)="cbxChangeProjects($event)" [multiple]="false"
+              [crrValue]="projects.projectManeger">
             </codx-input>
 
             <!-- <codx-input name="projectManeger" type="valuelist" field="projectManeger" placeholder="Quản lý dự án"
-          [crrValue]="projects.projectManeger" (valueChange)="cbxUser($event)">
-        </codx-input> -->
+              [crrValue]="projects.projectManeger" (valueChange)="cbxUser($event)">
+            </codx-input> -->
           </div>
           <div class="form-group row mt-3">
             <div class="col-4">
@@ -82,15 +102,15 @@
                 <codx-label fiedName="EndDate" formName="Projects" gridViewName="grvProjects" default="Ngày kết thúc">
                 </codx-label>
               </label>
-              <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                placeholder="datetime" [crrValue]="projects.endDate" format="F" (valueChange)="changeTime($event)">
+              <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="finishDate"
+                placeholder="datetime" [crrValue]="projects.finishDate" format="F" (valueChange)="changeTime($event)">
               </codx-input>
             </div>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Note" formName="Projects" gridViewName="grvProjects" default="Ghi chú">
+            <codx-label fiedName="Memo" formName="Projects" gridViewName="grvProjects" default="Ghi chú">
             </codx-label>
-            <codx-input type="textarea" field="note" [crrValue]="projects.note" class="form-control"
+            <codx-input type="textarea" field="memo" [crrValue]="projects.memo" class="form-control"
               (valueChange)="changeMemo($event)"></codx-input>
           </div>
         </div>
@@ -99,7 +119,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+      <button type="button" class="btn btn-primary" (click)="onSaveOrEdit()">Lưu</button>
     </div>
   </ng-template>
 </codx-form>

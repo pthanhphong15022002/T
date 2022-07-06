@@ -126,7 +126,7 @@ export class StationeryComponent implements OnInit {
       },
       {
         field: 'costPrice',
-        width: '10%',
+        width: '15%',
         headerText: 'Giá mua gần nhất',
       },
       {
@@ -136,7 +136,7 @@ export class StationeryComponent implements OnInit {
       },
       {
         headerText: 'Quản lý kho',
-        width: '20%',
+        width: '15%',
         template: this.ownerCol,
       },
     ];
@@ -204,7 +204,6 @@ export class StationeryComponent implements OnInit {
       editItem = data;
     }
     this.viewBase.dataService.edit(editItem).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;

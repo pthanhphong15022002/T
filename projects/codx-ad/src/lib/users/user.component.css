@@ -1,0 +1,16 @@
+.grid-container{
+    display: grid;
+    grid-template-columns: auto auto auto;
+
+}
+
+.item1 {
+    grid-column: 1 / 2;
+  }
+.item2{
+    grid-column: 1;
+}
+
+.rowborder{
+    border-bottom: 10px;
+}

@@ -1,0 +1,145 @@
+<div class="card">
+    <div class="card-header border-0">
+        <div class="card-title">
+            <codx-label class="mt-2" name="lblTeam" formName="HR_Employees" default="Thành viên nhóm"></codx-label>
+        </div>
+    </div>
+    <div class="card-body pd-top-0">
+        <div class="team-group">
+            <ngx-skeleton-loader *ngIf="!employeeMyTeam" count="5" animation="progress"></ngx-skeleton-loader>
+            <div class="user-teams">
+                <div *ngIf="employeeMyTeam && employeeMyTeam.length <=10">
+                    <ng-container *ngFor="let myTeam of employeeMyTeam">
+                        <div *ngIf="myTeam.isOnline" class="ut-item user-online">
+                            <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
+                                #empPopover="ngbPopover" [width]="40" [style.border-color]="online?.color"
+                                [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, myTeam)"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees">
+                            </codx-img>
+                            <span class="value" [style.background-color]="online?.color"></span>
+                        </div>
+                        <div *ngIf="!myTeam.isOnline" class="ut-item user-offline">
+                            <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
+                                (mouseenter)="PopoverEmp(empPopover, myTeam)"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees"
+                                [style.border-color]="offline?.color">
+                                <span class="value" [style.background-color]="offline?.color"></span>
+                            </codx-img>
+                        </div>
+                    </ng-container>
+                </div>
+                <div *ngIf="employeeMyTeam && employeeMyTeam.length > 10" id=customViewUser>
+                    <ng-container *ngFor="let myTeam of employeeMyTeam; index as num">
+                        <div *ngIf="myTeam.isOnline && num < 9" class="ut-item user-online">
+                            <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
+                                (mouseenter)="PopoverEmp(empPopover, myTeam)"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees"
+                                [style.border-color]="online?.color">
+                            </codx-img>
+                            <span class="value" [style.background-color]="online?.color"></span>
+                        </div>
+                        <div *ngIf="!myTeam.isOnline && num < 9" class="ut-item user-offline">
+                            <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
+                                (mouseenter)="PopoverEmp(empPopover, myTeam)"
+                                (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
+                                [objectId]="myTeam.employeeID" objectType="HR_Employees"
+                                [style.border-color]="offline.color">
+                            </codx-img>
+                            <span class="value" [style.background-color]="offline?.color"></span>
+                        </div>
+                        <div *ngIf="num == 9" (mouseenter)="PopoverEmpList(empPopoverList,employeeMyTeam)"
+                            [ngbPopover]="popContent" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
+                            #empPopoverList="ngbPopover" placement="bottom" container="body" autoClose="outside"
+                            triggers="manual" class="symbol symbol-45px symbol-circle user-info ut-item ut-more"
+                            aria-describedby="ngb-popover-35">
+                            <span class="symbol-label fs-4">+{{employeeMyTeam.length-9}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #popContent>
+    <ng-container>
+        <div *ngFor="let emp of listEmpInfo | filter : searchField : 'employeeName': '' :''" class="p10 full">
+            <div class="d-flex justify-content-between align-items-top">
+                <div class="d-flex flex-column org-card flex-grow-1" [ngbPopover]="" placement="left"
+                    [popoverTitle]="popEmpTitle" #pemp="ngbPopover" container="body" triggers="manual"
+                    (click)="PopoverEmpOfList(pemp,emp)">
+                    <div class="d-flex align-items-start">
+                        <codx-img class="symbol symbol-40 symbol-circle me-4" [objectId]="emp.employeeID"
+                            [objectName]="emp.employeeName" objectType="HR_Employees" [width]="40">
+                        </codx-img>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark">{{emp.employeeName}}</div>
+                            <div class="text-dark-50">{{emp.positionName}}</div>
+                        </div>
+                    </div>
+                </div>
+                <a class="text-dark-50">
+                    <span class="icon-keyboard_arrow_right icon-22"></span>
+                </a>
+            </div>
+        </div>
+    </ng-container>
+
+</ng-template>
+
+<ng-template #popTitle>
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="flex">
+            <codx-label name="lblListEmployee" formName="HR_Employees" default="Danh sách nhân viên">
+            </codx-label>
+            <div class="left-5">({{employeeMyTeam.length}})</div>
+        </div>
+    </div>
+    <div>
+        <codx-input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm"></codx-input>
+    </div>
+</ng-template>
+
+<ng-template #popEmpTitle>
+    <div class="d-flex align-items-start user-card">
+        <div class="me-4">
+            <codx-img [width]="40" class="m-0" [objectId]="imployeeInfo.employeeID"
+                [objectName]="imployeeInfo.employeeName" objectType="HR_Employees">
+            </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="text-dark fw-bold">{{imployeeInfo.employeeName}}</div>
+            <div class="text-gray-700">{{imployeeInfo.positionName}}</div>
+            <div class="text-gray-500 fs-7">{{imployeeInfo.organizationName}}</div>
+        </div>
+    </div>
+    <div class="d-flex flex-column employee-add w-200px">
+        <div class="d-flex align-items-center mt-2">
+            <span class="icon-email icon-16 me-2"></span>
+            <div class="text-dark-50" *ngIf="imployeeInfo.email != '---'">{{imployeeInfo.email}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo.email == '---'">
+                <codx-label name="lblEmail" formName="HR_Employees" default="Email"></codx-label>
+            </div>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+            <span class="icon-phone_android icon-16 me-2"></span>
+            <div class="text-dark-50" *ngIf="imployeeInfo.phone != '---'">{{imployeeInfo.phone}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo.phone == '---'">
+                <codx-label name="lblPhone" formName="HR_Employees" default="Số điện thoại"></codx-label>
+            </div>
+        </div>
+        <div class="d-flex align-items-top mt-2">
+            <span class="icon-place icon-16 me-2"></span>
+            <div class="text-dark-50" *ngIf="imployeeInfo.street!='---'">{{imployeeInfo.street}}</div>
+            <div class="text-50 text-muted" *ngIf=" imployeeInfo.street=='---'">
+                <codx-label name="lblAddress" formName="HR_Employees" default="Đại chỉ thường trú"></codx-label>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -16,13 +16,32 @@ import { VideoComponent } from './personals/video/video.component';
 import { StorageComponent } from './personals/storage/storage.component';
 import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
-import { DetailStorageComponent } from './personals/storage/detail-storage/detail-storage.component';
 import { NoteBooksComponent } from './personals/note-books/note-books.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books/detail-note-books.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
 import { PostsComponent } from './personals/posts/posts.component';
 import { PopupAddUpdate } from './personals/note-books/detail/popup-add-update/popup-add-update.component';
+import { AccumulationChartModule, ChartAllModule, ChartModule } from '@syncfusion/ej2-angular-charts';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
+import {
+  AreaSeriesService,
+  LineSeriesService,
+  ExportService,
+  ColumnSeriesService,
+  StackingColumnSeriesService,
+  StackingAreaSeriesService,
+  RangeColumnSeriesService,
+  ScatterSeriesService,
+  PolarSeriesService,
+  CategoryService,
+  RadarSeriesService,
+  ILoadedEventArgs,
+  SplineSeriesService,
+} from '@syncfusion/ej2-angular-charts';
+
 export const routes: Routes = [
   {
     path: '',
@@ -38,9 +57,14 @@ export const routes: Routes = [
         component: DetailNoteBooksComponent,
 
       },
+      {
+        path: 'employeeinfo/:funcID',
+        component: EmployeeInfomationComponent,
+      },
       // {
-      //   path: 'employeeinfo/:funcID',
-      //   component: EmployeeInfomationComponent,
+      //   path:'',
+      //   redirectTo:'personals/:funcID',
+      //   component: PersonalsComponent,
       // },
     ],
   },
@@ -54,7 +78,6 @@ const Component: Type<any>[] = [
   ImgComponent,
   VideoComponent,
   StorageComponent,
-  DetailStorageComponent,
   AddUpdateStorageComponent,
   InfoLeftComponent,
   NoteBooksComponent,
@@ -74,12 +97,33 @@ const Component: Type<any>[] = [
     CodxCoreModule,
     RouterModule.forChild(routes),
     CodxShareModule,
+    SliderModule,
+    ChartModule,
+    ButtonModule,
+    ChartAllModule,
+    SidebarModule,
+    AccumulationChartModule,
+    TabModule,
   ],
   exports: [
     RouterModule,
   ],
   declarations: [Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    AreaSeriesService,
+    LineSeriesService,
+    ExportService,
+    ColumnSeriesService,
+    StackingColumnSeriesService,
+    StackingAreaSeriesService,
+    RangeColumnSeriesService,
+    ScatterSeriesService,
+    PolarSeriesService,
+    CategoryService,
+    RadarSeriesService,
+    SplineSeriesService,
+  ],
 })
 export class CodxMwpModule {
   public static forRoot(

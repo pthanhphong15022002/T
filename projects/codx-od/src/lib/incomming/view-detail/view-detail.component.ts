@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { FolderComponent } from '../folder/folder.component';
@@ -17,7 +19,6 @@ import { UpdateExtendComponent } from '../update/update.component';
 })
 export class ViewDetailComponent  implements OnInit , OnChanges {
   active = 1;
-  desc: string = "";
   checkUserPer: any;
   userID:any;
   @Input() data : any;
@@ -25,9 +26,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Output() uploaded = new EventEmitter<string>();
-  @ViewChild("tmpupdate") tmpupdate : any; 
   @ViewChild("tmpdeadline") tmpdeadline : any; 
   @ViewChild("tmpFolderCopy") tmpFolderCopy : any; 
+  @ViewChild('tmpexport') tmpexport!: any;
   extractContent = extractContent;
   dvlSecurity:any;
   dvlUrgency:any;
@@ -51,13 +52,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.active = 1;
-    this.desc = '';
     if(changes.data != null && changes.data != undefined) {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
-        this.htmlAgency();
         this.getDataValuelist();
         this.getPermission(this.data.recID);
 
@@ -66,20 +65,19 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   ngOnInit(): void {
     this.active = 1;
-    this.desc = '';
     this.formModel = this.view.formModel;
         //this.data = this.view.dataService.dataSelected;
-        this.userID = this.authStore.get().userID;
-        this.htmlAgency();
-        this.getDataValuelist();
+    this.userID = this.authStore.get().userID;
+    this.getDataValuelist();
   }
-  htmlAgency()
+  convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
-    this.desc = '<div class="d-flex">';
-    if(this.data?.agencyName != undefined &&  this.data?.agencyName!= "")
-      this.desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + this.data?.agencyName+'</span></div>';
-    if(this.data?.txtLstAgency != undefined && this.data?.txtLstAgency!= "")
-      this.desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+this.data?.txtLstAgency+'</span></div></div>';
+    var desc = '<div class="d-flex">';
+    if(agencyName)
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+    if(txtLstAgency)
+      desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
+    return desc + '</div>';
   }
    ///////////////Các function format valuelist///////////////////////
    fmTextValuelist(val: any, type: any) {
@@ -89,6 +87,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         //Security
         case "1":
           {
+            
             var data = this.dvlSecurity?.datas.filter(function (el: any) { return el.value == val });
             return data[0].text;
           }
@@ -104,7 +103,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             var data = this.dvlStatus?.datas.filter(function (el: any) { return el.value == val });
             return data[0].text;
           }
-        // Trạng thái
+        // Phân loại
         case "4":
           {
             var data = this.dvlCategory?.datas.filter(function (el: any) { return el.value == val });
@@ -271,6 +270,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
+    delete datas._uuid;
+    delete datas.__loading;
+    delete datas.isNew;
+    delete datas.hasChildren;
+    delete datas.includeTables;
     switch (funcID) {
       case "edit":
         {
@@ -299,7 +303,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                       //this.view.dataService.setDataSelected(x.event);
                       this.data = item;
                       this.data.lstUserID = getListImg(item.relations);
-                      this.htmlAgency();
                     });
                 //});
               }
@@ -317,6 +320,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               this.deleteDispatchByID(this.view.dataService.dataSelected.recID);
             }
           }); */
+         
           this.view.dataService.delete([datas]).subscribe((item:any)=>{
             if(item.status == 0)
             {
@@ -324,7 +328,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 this.data = formatDtDis(item);
                 this.view.dataService.setDataSelected(this.data);
                 this.data.lstUserID = getListImg(this.data.relations)
-                this.htmlAgency()
               });
             }
             if(item?.message)
@@ -362,7 +365,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           {
             /*  
           } */
-          debugger;
           var data = datas;
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
@@ -372,7 +374,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               files : this.data?.files
             }, option);
           this.dialog.closed.subscribe(x=>{
-            if(x.event != null) 
+            if(x.event) 
             {
               this.data.owner = x.event[0].owner
               this.data.lstUserID = getListImg(x.event[0].relations);
@@ -396,9 +398,15 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT202":
         {
           if(this.checkOpenForm(funcID))
-          {
-            this.callfunc.openForm(this.tmpupdate, null, 600, 400);
-          }
+            var option = new DialogModel();
+            option.FormModel = this.formModel;
+            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
+              if(x.event) 
+              {
+                this.data.updates = x.event.updates;
+                this.data.percentage = x.event.percentage;
+              }
+            });
           break;
         }
       //Chia sẻ
@@ -513,30 +521,41 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           });
           break;
         }
-        case "recallUser":
-          {
-            var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?", config).closed.subscribe(x=>{
-              if(x.event.status == "Y")
-              {
-                this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
-                  if (item.status == 0) {
-                    this.data = item.data[0];
-                    this.data.lstUserID = getListImg(item.data[0].relations);
-                    this.data.listInformationRel = item.data[1]
-                  }
-                  this.notifySvr.notify(item.message);
-                })
-              }
-            })
-            break;
-          }
-        case "SYS001":
-          {
-            
-            break;
-          }
+      case "recallUser":
+        {
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?", config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            {
+              this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
+                if (item.status == 0) {
+                  this.data = item.data[0];
+                  this.data.lstUserID = getListImg(item.data[0].relations);
+                  this.data.listInformationRel = item.data[1]
+                }
+                this.notifySvr.notify(item.message);
+              })
+            }
+          })
+          break;
+        }
+      //Export file
+      case "SYS002":
+        {
+          var gridModel = new DataRequest();
+          gridModel.formName = this.formModel.formName;
+          gridModel.entityName = this.formModel.entityName;
+          gridModel.funcID = this.formModel.funcID;
+          gridModel.gridViewName = this.formModel.gridViewName;
+          gridModel.page = this.view.dataService.request.page;
+          gridModel.pageSize = this.view.dataService.request.pageSize;
+          gridModel.predicate = this.view.dataService.request.predicates;
+          gridModel.dataValue = this.view.dataService.request.dataValues;
+          gridModel.entityPermission = this.formModel.entityPer;
+          this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
+          break;
+        }
     }
   } 
   checkOpenForm(val:any)
@@ -546,9 +565,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     else if(this.checkUserPer?.created || this.checkUserPer?.owner) return true;
     else this.notifySvr.notify("Bạn không có quyền thực hiện chức năng này.")
     return false;
-  }
-  openpopup(template: any) {
-    this.callfunc.openForm(template);
   }
    //Thu hồi quyền
    recall(id:any) {
@@ -569,16 +585,5 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     if(relationType == "1")
       return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
     return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
-  }
-  changeData(data:any)
-  {
-    this.data.updates = data.updates;
-    this.data.percentage = data.percentage;
-    
-   /*  let info = this.data.listInformationRel;
-   
-    this.view.dataService.update(data).subscribe(item=>{
-      this.data.listInformationRel = info;
-    }); */
   }
 }

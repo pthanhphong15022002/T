@@ -1,4 +1,5 @@
 export class TM_Tasks {
+  recID:string;
   taskID: string;
   taskName: string;
   tags: string;
@@ -69,6 +70,8 @@ export class TM_Tasks {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+  departmentID: string
+  companyID :string
   write: boolean;
   extended :boolean;
   isAssign:boolean;

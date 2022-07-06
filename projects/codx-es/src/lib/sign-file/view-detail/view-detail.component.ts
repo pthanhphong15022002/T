@@ -26,25 +26,31 @@ export class ViewDetailComponent implements OnInit {
   canRequest;
   itemDetailStt;
   taskViews;
-  processes;
+  process;
   itemDetailDataStt;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.itemDetailStt = 1;
+    this.taskViews = 1;
+    this.itemDetailDataStt = 1;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.itemDetail && this.itemDetail !== null) {
+      console.log('detail', this.itemDetail);
 
       this.esService
         .getApprovalTrans(this.itemDetail?.recID)
         .subscribe((res) => {
-          this.processes = res;
+          this.process = res;
+
           this.df.detectChanges();
         });
     }
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
-    } 
+    }
   }
 
   changeNavState(state) {
@@ -55,14 +61,21 @@ export class ViewDetailComponent implements OnInit {
     this.itemDetailStt = stt;
   }
 
-  setDate(date, leadtime) {
+  getHour(date, leadtime) {
     //
     var res = new Date(date);
+    console.log('time', res);
+
     res.setHours(res.getHours() + leadtime);
     return res;
   }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
+  }
+  
+  clickMF(e){
+    console.log(e);
+    
   }
 }

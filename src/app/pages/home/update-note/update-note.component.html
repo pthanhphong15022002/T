@@ -1,0 +1,93 @@
+<!-- <codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [data]="note"
+    [formModel]="dialog.formModel">
+    <ng-template popup add #body>
+        <div class="flex position-relative">
+            <div [class.active]="">
+                <span (click)="onType('text')" class="icon-font_download icon-22 me-1"></span>
+            </div>
+            <div [class.active]="">
+                <span (click)="onType('list')" class="icon-list_alt icon-24 me-1"></span>
+            </div>
+            <div [class.active]="">
+                <span (click)="onType('check')" class="icon-check_box icon-24 me-1"></span>
+            </div>
+            <span class="icon-image icon-24" (click)="popupFile()">
+            </span>
+        </div>
+        <div class="menu-pin">
+            <div class="pw-menu pin">
+                <a class="icon-push_pin1 icon-22" *ngIf="itemUpdate.isPin == false"></a>
+                <div class="active" *ngIf="itemUpdate.isPin == true">
+                    <a class="icon-push_pin1 icon-22"></a>
+                </div>
+            </div>
+            <div class="pw-menu" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
+                triggers="mouseenter:mouseleave" placement="bottom">
+                <a class="icon-download icon-22" type="button"></a>
+            </div>
+        </div>
+        <div class="mt-3" *ngIf="itemUpdate.noteType == 'text'">
+            <codx-input type="textarea" field="textarea2" placeholder="textarea" format="ed2"
+                [crrValue]="itemUpdate.memo" (valueChange)="valueChange($event)">
+            </codx-input>
+        </div>
+        <div class="mt-3" *ngIf="itemUpdate.noteType == 'check' || itemUpdate.noteType =='list'">
+            <ng-container *ngFor="let item of dataEnter; index as i">
+                <div class="flex">
+                    <div class="" style="margin-top: 20px;">
+                        <ng-container *ngIf="itemUpdate.noteType == 'check'; else list">
+                            <codx-input #noteAddText type="checkbox" labelPosition="Before" class="test-check">
+                            </codx-input>
+                        </ng-container>
+                        <ng-template #list>
+                            <li></li>
+                        </ng-template>
+                    </div>
+                    <div class="" style="width: 700px;margin-top: 10px; margin-left: 10px;" #txtNoteEdit
+                        name="txtTodoEdit" (keydown.enter)="onUpdateNote(itemFirst)">
+                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" field="inputFirst"
+                            (valueChange)="valueChange($event)" class="test-textbox">
+                        </codx-input>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngFor="let itemCL of itemUpdate.checkList; index as i">
+                <div class="flex">
+                    <div class="" style="margin-top: 20px;">
+                        <ng-container *ngIf="itemUpdate.noteType == 'check'; else list">
+                            <codx-input #noteAddText type="checkbox"
+                                [checked]="itemCL?.status == 'true' || itemCL?.status == '1'" field="status"
+                                labelPosition="Before" class="test-check" (valueChange)="valueChange($event, itemCL)">
+                            </codx-input>
+                        </ng-container>
+                        <ng-template #list>
+                            <li></li>
+                        </ng-template>
+                    </div>
+                    <div class="" style="width: 615px;margin-top: 10px;" #txtNoteEdit name="txtTodoEdit">
+                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" field=""
+                            style="margin-left: 10px;margin-top: 20px;width: 400px;" class="test-textbox"
+                            [crrValue]="itemCL?.listNote" field="listNote" (valueChange)="valueChange($event, itemCL)">
+                        </codx-input>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-template>
+</codx-form>
+
+
+<div class="modal-footer">
+    <div class="flex" style="margin-right: 510px;">
+        <div class="">
+            <label>Hiển thị trên lịch</label>
+        </div>
+        <div class="" style="margin-left: 6px;">
+            <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label" class="test-check"
+                [checked]="itemUpdate?.showCalendar == 'true' || itemUpdate?.showCalendar == '1'"
+                (valueChange)="valueChange($event)">
+            </codx-input>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" (click)="onEditNote()">Lưu</button>
+</div> -->

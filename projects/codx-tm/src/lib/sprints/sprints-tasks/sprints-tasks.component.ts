@@ -103,7 +103,7 @@ export class SprintsTasksComponent extends UIComponent {
       type: ViewType.kanban,
       sameData: true,
       active: false,
-      // request2: this.resourceKanban,
+     // request2: this.resourceKanban,
         model: {
           template: this.sprintsKanban,
         },
@@ -149,7 +149,9 @@ export class SprintsTasksComponent extends UIComponent {
     } else {
       this.tmSv.getSprints(this.iterationID).subscribe((res) => {
         if (res) {
-          var viewDefaultID = res.viewMode;
+          var viewDefaultID ='1'
+          if( res.viewMode)
+           viewDefaultID  = res.viewMode;
           this.viewsActive.forEach((obj) => {
             if (obj.id == viewDefaultID) {
               obj.active = true;

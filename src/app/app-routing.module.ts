@@ -29,6 +29,12 @@ export const routes: Routes = [
           import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
       },
       {
+        path: 'wp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
+      },
+      {
         path: 'dm',
         canActivate: [AuthGuard],
         loadChildren: () =>
@@ -66,7 +72,7 @@ export const routes: Routes = [
       },
       {
         path: 'mwp',
-        canActivate: [AuthGuard],  
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('projects/codx-mwp/src/lib/codx-mwp.module').then((m) => m.CodxMwpModule),
       },
@@ -75,7 +81,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () =>
           import('projects/codx-od/src/lib/codx-od.module').then((m) => m.CodxODModule),
-      }, 
+      },
+      {
+        path: 'ad',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
+      },
       { path: '**', redirectTo: 'error/404' }
     ]
   },

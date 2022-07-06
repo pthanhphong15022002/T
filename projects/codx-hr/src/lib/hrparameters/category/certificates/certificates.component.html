@@ -1,6 +1,6 @@
 <codx-views #view funcID="HRS0201" service="BS" entityName="BS_Certificates" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="CertificatesBusiness"
-    method="GetListAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
+    method="GetListAsync"  (viewChanged)="changeView($event)" [pageSize]="100"
     (requestEnded)="requestEnded($event)" [selectedFirst]="true" [itemSelected]="itemSelected">
 </codx-views>
 
@@ -16,5 +16,7 @@
     {{data.createdOn | date: "dd/mm/yyyy"}}
 </ng-template>
 <ng-template #itemStopCheck let-data>
-    <codx-input type="checkbox" name="checkbox" class="" [checked]="data.stop"></codx-input>
+    <!-- <codx-input type="checkbox" name="checkbox" class="" [checked]="data.stop"></codx-input> -->
+    <codx-input type="checkbox" (valueChange)="valueChangeShared($event)" labelPosition="After" checked="true">
+    </codx-input>
 </ng-template>

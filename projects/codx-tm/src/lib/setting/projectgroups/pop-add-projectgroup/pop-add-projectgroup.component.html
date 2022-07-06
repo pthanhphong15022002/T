@@ -1,4 +1,4 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template popup adde #body>
     <div class="card-body">
       <div class="row">
@@ -9,16 +9,17 @@
                 default="Mã nhóm dự án">
               </codx-label>
               <div>
-                <codx-input field="ProjectGroupID" type="text" [attr.disabled]="!isAddMode ? '' : null" [crrValue]="projectGroups.projectGroupID">
+                <codx-input field="ProjectGroupID" type="text" [attr.disabled]="!isAddMode ? '' : null"
+                  [crrValue]="projectGroups.projectGroupID">
                 </codx-input>
               </div>
             </div>
             <div class="col-4">
               <codx-label fiedName="ProjectCategory" default="Phân loại" formName="ProjectGroups"
                 gridViewName="grvProjectGroups"></codx-label>
-              <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder=""
+              <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder="" refValue="L0607"
                 [crrValue]="projectGroups.projectCategory" (valueChange)="valueApp($event)"
-                [refValue]="gridViewSetup.ProjectCategory.referedValue">
+               >
               </codx-input>
             </div>
           </div>
@@ -27,7 +28,7 @@
               default="Nhóm công việc">
             </codx-label>
             <codx-input placeholder="Nhóm dự án" field="projectGroupName" type="text"
-              [crrValue]="projectGroups.projectGroupName"  (valueChange)="valueChange($event)">
+              [crrValue]="projectGroups.projectGroupName" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group mt-3">
@@ -35,7 +36,7 @@
             </codx-label>
 
             <codx-input type="textarea" field="note" [crrValue]="projectGroups.note" class="form-control"
-            (valueChange)="changeMemo($event)"></codx-input>
+              (valueChange)="changeMemo($event)"></codx-input>
           </div>
         </div>
       </div>
@@ -43,7 +44,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
-      </div>
+      <button type="button" class="btn btn-primary" (click)="onSaveOrEdit()">Lưu</button>
+    </div>
   </ng-template>
 </codx-form>

@@ -1,6 +1,6 @@
 <codx-views #view funcID="HRS0202" service="BS" entityName="BS_Nationalities" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="NationalitiesBusiness"
-    method="GetListNationalityAsync" [showToolBar]="true" (viewChanged)="changeView($event)" [pageSize]="100"
+    method="GetListNationalityAsync"  (viewChanged)="changeView($event)" [pageSize]="100"
     (requestEnded)="requestEnded($event)" [selectedFirst]="true">
 </codx-views>
 

@@ -11,7 +11,7 @@ import {
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
-  constructor(inject: Injector) {
+  constructor(inject: Injector,) {
     super(inject);
   }
 

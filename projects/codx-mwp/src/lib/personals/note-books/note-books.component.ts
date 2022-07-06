@@ -1,6 +1,6 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel } from 'codx-core';
+import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input } from '@angular/core';
 import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
@@ -26,6 +26,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   views = [];
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
+  urlDetailNoteBook = '';
 
   @Input() formModel: FormModel;
 
@@ -45,6 +46,10 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     super(inject);
     this.route.params.subscribe(params => {
       this.funcID = params['funcID'];
+    })
+
+    this.cache.functionList('MWP00941').subscribe(res => {
+      this.urlDetailNoteBook = res?.url;
     })
 
     this.user = this.authStore.get();
@@ -68,7 +73,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
-    this.view.dataService.methodUpdate = 'UpdateNoteBookAsync';
   }
 
   clickMF(e: any, data?: any) {
@@ -82,9 +86,8 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     }
   }
 
-  openDetailPage(recID) {
-    //TM/Tasks/mF009?recid=[recid]&orderNo=[orderno]
-    this.codxService.navigate('MWP00941', '', { recID: recID });
+  openDetailPage(item) {
+    this.codxService.navigate('', this.urlDetailNoteBook, {recID: item.recID})
   }
 
   openFormMoreFunc(data: any) {
@@ -108,7 +111,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.api
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
-        if (res) {
+        if(res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
           this.changedt.detectChanges();
         }
@@ -125,9 +128,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
@@ -174,6 +177,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
+    this.view.onSearch(e);
     this.changedt.detectChanges();
   }
 

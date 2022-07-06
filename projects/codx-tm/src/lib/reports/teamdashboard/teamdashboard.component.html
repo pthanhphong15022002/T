@@ -1,0 +1,491 @@
+<div class="page-content d-flex flex-row pt-4">
+  <div class="w-75 m-2">
+    <div class="d-flex justify-content-around bg-body mb-2">
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+      <div class="w-25">
+        <ejs-circulargauge
+          (load)="load($event)"
+          style="display: block"
+          centerY="57%"
+          [titleStyle]="titleStyle"
+        >
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="80%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="18"
+              [labelStyle]="labelStyle"
+              [majorTicks]="majorTicks"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  color="#01aebe"
+                  [startWidth]="rangeWidth"
+                  [endWidth]="rangeWidth"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="value"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="108%"
+                  [markerWidth]="markerWidth"
+                  [markerHeight]="markerHeight"
+                  [animation]="animation1"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </div>
+    </div>
+    <div class="d-flex justify-content-around bg-body mb-2">
+      <div class="w-50 test">
+        <ejs-treemap
+          id="container"
+          style="display: block"
+          [dataSource]="data"
+          weightValuePath="percentage"
+          rangeColorValuePath="percentage"
+          [leafItemSettings]="leafItemSettings"
+        >
+        </ejs-treemap>
+      </div>
+      <div class="w-50 test">
+        <ejs-accumulationchart
+          id="chart-rate-done"
+          [legendSettings]="legendSettings"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="piedata1"
+              xName="x"
+              yName="y"
+              innerRadius="70%"
+            ></e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+    </div>
+    <div class="row bg-body mb-2">
+      <ejs-chart
+        style="display: block"
+        background="transparent"
+        [chartArea]="chartArea"
+        width="100%"
+        [align]="'center'"
+        id="chartbar"
+        [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis"
+        [legendSettings]="legendSettings"
+      >
+        <e-axes>
+          <e-axis
+            rowIndex="0"
+            name="WorkHours"
+            opposedPosition="true"
+            title=""
+            labelFormat=""
+            [minimum]="0"
+            [maximum]="100"
+            [interval]="4"
+          >
+          </e-axis>
+        </e-axes>
+        <e-series-collection>
+          <e-series
+            fill="#005DC7"
+            [dataSource]="dataColumn"
+            type="Column"
+            name="Tasks"
+            xName="label"
+            yName="value"
+            [cornerRadius]="radius"
+          >
+          </e-series>
+          <e-series
+            fill="#F9D923"
+            [dataSource]="dataLine"
+            type="Line"
+            name="WorkHours"
+            yName="value"
+            xName="label"
+            yAxisName="WorkHours"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+  <div class="w-25 border bg-body m-2">
+    <div class="h-25 bg-body mb-2">
+      <div class="d-flex justify-content-start">
+        <span class="icon-check-correct w-25"></span>
+        <div class="w-75">
+          <div>{{dbData?.doneTasks}}</div>
+          <div>Công việc đã hoàn tất</div>
+        </div>
+      </div>
+      <div class="p-4 d-flex">
+        <div class="w-50">
+          <div>Tỷ lệ hoàn thành đúng hạn</div>
+          <div>{{dbData?.rateDoneTaskOnTime.toFixed(2)}} %</div>
+        </div>
+        <div class="w-50">
+          <div>Công việc trễ hạn</div>
+          <div>{{dbData?.overdueTasks}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="h-75 m-4">
+      <div class="text-right icon-sort_Z-A"></div>
+      <div class="text-right icon-sort_A-Z"></div>
+      <ejs-tab id="element">
+        <e-tabitems>
+          <e-tabitem
+            [header]="headerText[0]"
+            [content]="volumeWork"
+          ></e-tabitem>
+          <e-tabitem [header]="headerText[1]" [content]="workHours"></e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</div>
+
+<!-- Khối lượng công việc -->
+<ng-template #volumeWork>
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row justify-content-end">
+      <span>Lê Phạm Hoài Thương</span>
+      <codx-img
+        [objectId]="'ADMIN'"
+        [objectName]="'Lê Phạm Hoài Thương'"
+        [objectType]="'AD_Users'"
+      ></codx-img>
+    </div>
+    <div class="d-flex justify-content-between">
+      <div class="">12</div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>Lê Phạm Hoài Thương</span>
+        <codx-img
+          [objectId]="'ADMIN'"
+          [objectName]="'Lê Phạm Hoài Thương'"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>Lê Phạm Hoài Thương</span>
+        <codx-img
+          [objectId]="'ADMIN'"
+          [objectName]="'Lê Phạm Hoài Thương'"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Thời gian thực hiện -->
+<ng-template #workHours>
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row justify-content-end">
+      <span>Lê Phạm Hoài Thương</span>
+      <codx-img
+        [objectId]="'ADMIN'"
+        [objectName]="'Lê Phạm Hoài Thương'"
+        [objectType]="'AD_Users'"
+      ></codx-img>
+    </div>
+    <div class="d-flex justify-content-between">
+      <div class="">12</div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>Lê Phạm Hoài Thương</span>
+        <codx-img
+          [objectId]="'ADMIN'"
+          [objectName]="'Lê Phạm Hoài Thương'"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>Lê Phạm Hoài Thương</span>
+        <codx-img
+          [objectId]="'ADMIN'"
+          [objectName]="'Lê Phạm Hoài Thương'"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+        <div
+          class="progress-bar bg-warning"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar bg-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>

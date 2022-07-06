@@ -264,7 +264,7 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.cfService.openForm(template, '', 200, 430);
+    var dialog = this.cfService.openForm(template, '', 600, 350);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -284,10 +284,10 @@ export class PopupAddStationeryComponent implements OnInit {
     }
   }
   popupTab() {
-    this.cfService.openForm(this.popupTemp, 'Chọn màu');
+    this.cfService.openForm(this.popupTemp, 'Chọn màu',200,200);
   }
   getlstDevice(items: string) {
-    //this.lstDevices = items.split(';');
+    this.lstDevices = items.split(';');
     return this.lstDevices;
   }
 

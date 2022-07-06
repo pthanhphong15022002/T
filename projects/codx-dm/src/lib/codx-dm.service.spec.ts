@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CodxDmService } from './codx-dm.service';
+import { CodxDMService } from './codx-dm.service';
 
 describe('CodxDmService', () => {
-  let service: CodxDmService;
+  let service: CodxDMService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CodxDmService);
+    service = TestBed.inject(CodxDMService);
   });
 
   it('should be created', () => {

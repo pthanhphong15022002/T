@@ -3,7 +3,7 @@ import { permissionDis, updateDis , dispatch, inforSentEMail, extendDeadline } f
 import { AgencyService } from '../../services/agency.service';
 import { DispatchService } from '../../services/dispatch.service';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { DataRequest, DialogData, NotificationsService } from 'codx-core';
+import { DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { extractContent } from '../../function/default.function';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -15,10 +15,11 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 })
 export class UpdateExtendComponent implements OnInit {
   submitted = false
+  dialog      : any
+  data : any
+  formModel: any
   @ViewChild('attachment') attachment: AttachmentComponent
-  @Input() dialog      : any
   @Input() view : any
-  @Input() data : any;
   @Output() save = new EventEmitter<any>();
   dtDisUpdate = new updateDis();
   currentDate = new Date();
@@ -26,15 +27,20 @@ export class UpdateExtendComponent implements OnInit {
   constructor(
     private odService: DispatchService,
     private notifySvr : NotificationsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) 
   { 
+    this.data = dt.data['data'];
+    this.dialog = dialog;
+    this.formModel = dialog?.formModel
   }
   ngOnInit(): void {
     this.updateForm = this.formBuilder.group(
       {
         updateOn: [new Date() , Validators.required],
-        percentage: [this.data?.percentage  , Validators.required],
+        percentage: [this.data?.percentage  , Validators.min(1)],
         percentage100 : false,
         comment: '',
         reporting: false
@@ -53,21 +59,15 @@ export class UpdateExtendComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.updateForm.controls;
   }
-  onSaveUpdate()
+  onSave()
   {
-    
     this.submitted = true;
     if(this.updateForm.invalid) return;
     if(this.updateForm.get('percentage100').value) this.updateForm.value.percentage = 100;
     delete this.updateForm.value.percentage100;
     this.updateForm.value.recID = this.data.recID;
     this.odService.updateResultDispatch(this.updateForm.value).subscribe((item)=>{
-      if(item.status == 0) 
-      {
-        this.close();
-        this.save.emit(item.data)
-        //this.view.dataService.setDataSelected(item.data);
-      }
+      if(item.status == 0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     }) 
   }
@@ -80,8 +80,5 @@ export class UpdateExtendComponent implements OnInit {
   close()
   {
     this.dialog.close();
-  }
-  onFormSubmit(): void {
-    console.log('Name:' + this.updateForm.get('updateOn').value);
   }
 }

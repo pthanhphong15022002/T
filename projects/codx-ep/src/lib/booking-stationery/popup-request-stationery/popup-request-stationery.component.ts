@@ -4,6 +4,8 @@ import {
   Input,
   OnInit,
   Optional,
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -12,7 +14,9 @@ import {
   DialogData,
   DialogRef,
 } from 'codx-core';
+import { EventEmitter } from 'stream';
 import { CodxEpService } from '../../codx-ep.service';
+import { BookingStationeryComponent } from '../booking-stationery.component';
 @Component({
   selector: 'lib-popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -21,6 +25,7 @@ import { CodxEpService } from '../../codx-ep.service';
 export class PopupRequestStationeryComponent implements OnInit {
   @Input() data = {};
   @Input() isAdd = true;
+  @ViewChild(BookingStationeryComponent) list: BookingStationeryComponent;
   dialog: any;
   selectDate = null;
   CbxName: any;
@@ -28,6 +33,8 @@ export class PopupRequestStationeryComponent implements OnInit {
   dialogRequest: FormGroup;
   headerText = 'Yêu cầu văn phòng phẩm';
   subHeaderText = 'Yêu cầu cho phòng';
+  count: any;
+  listItem: any;
   constructor(
     private bookingService: CodxEpService,
     private callFuncService: CallFuncService,
@@ -36,6 +43,8 @@ export class PopupRequestStationeryComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = dt?.data;
+    this.count = dt?.data[2];
+    this.listItem = dt?.data[1];
     this.dialog = dialog;
   }
 
@@ -50,7 +59,7 @@ export class PopupRequestStationeryComponent implements OnInit {
         console.log('Cbx', this.CbxName);
       });
     this.initForm();
-    console.log('Dialog: ', this.dialog);
+    console.log('LogData: ', this.data);
   }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);

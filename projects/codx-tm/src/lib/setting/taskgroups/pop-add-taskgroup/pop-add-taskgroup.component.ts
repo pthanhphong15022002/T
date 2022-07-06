@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, CodxGridviewComponent, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CodxGridviewComponent, DialogData, DialogRef, NotificationsService, ViewsComponent, FormModel } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { CodxTMService } from '../../../codx-tm.service';
 import { ToDo } from '../../../models/task.model';
@@ -26,6 +26,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   title = 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
+  entityName = "";
   readOnly = false;
   action = "";
   dialog: any;
@@ -50,6 +51,9 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    this.formName = this.dialog.formModel.formName;
+    this.entityName = this.dialog.formModel.entityName;
+    this.gridViewName = this.dialog.formModel.gridViewName;
   }
 
   ngOnInit(): void {
@@ -252,13 +256,12 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   addRow() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save((option: any)=>this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
           this.changDetec.detectChanges();
-     
         }
       });
     this.closePanel();

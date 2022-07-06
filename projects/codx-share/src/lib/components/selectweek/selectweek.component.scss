@@ -4,10 +4,11 @@
 
 .week-item {
   border-radius: 3px;
-  padding: 5px 5px;
+  padding: 5px 5px 2px;
   margin: 3px;
   text-align: center;
   width: 40px;
+  height: 56px;
   background-color: #f9f9f9 !important;
 }
 
@@ -30,14 +31,6 @@
   border-radius: 8px;
 }
 
-.font-weight-bold {
-  font-weight: 700 !important;
-}
-
-.text-dark {
-  color: #161719 !important;
-}
-
 .calender-day {
   font-size: 32px !important;
   line-height: normal;
@@ -45,6 +38,10 @@
 
 .border-0 {
   border: 0 !important;
+}
+
+.d-flex.note-point span {
+  margin-top: 0 !important;
 }
 
 /*** select week 19/5/2022 ***/

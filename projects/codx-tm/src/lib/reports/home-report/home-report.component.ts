@@ -66,9 +66,5 @@ export class HomeReportComponent implements OnInit {
     });
   }
 
-   onSectionChange(data: any) {
-    this.active = data.current;
-    this.currentActive = data.index;
-  }
 
 }
