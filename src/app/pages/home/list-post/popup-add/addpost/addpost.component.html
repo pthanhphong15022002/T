@@ -12,15 +12,15 @@
                 <ng-container *ngIf="lstRecevier.length > 0">
                     <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
                         <div  class="fw-bolder fs-5">
-                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
                             <span class="me-2 ">{{userRecevier.UserName}}</span>
                         </div>
                     </ng-container>
                     <ng-template #shareWith>
                         <div  class="fw-bolder fs-5">
-                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default="cùng với "></codx-label>
+                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
                             <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith" default=" người khác "></codx-label>
+                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default=" người khác "></codx-label>
                         </div>
                     </ng-template>
                 </ng-container>
@@ -36,7 +36,36 @@
             
         </div>
         <div class="my-3 h-50">
-            <codx-input  format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
+            <codx-input  format="ed2" 
+                [class]="'border-0'" 
+                type="textarea" 
+                class="test-textarea" 
+                [crrValue]="message" 
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                (valueChange)="valueChange($event)" 
+                ngDefaultControl>
+            </codx-input>
+            <codx-attachment  
+                #attachment  
+                objectType="WP_Comments"   
+                hideFolder="1"  
+                hideUploadBtn="1"   
+                hideDes="1" 
+                type="inline"
+                [functionID]="dialogRef.formModel.funcID" 
+                > 
+            </codx-attachment>
+            <ng-container *ngIf="dataEdit">
+                <codx-attachment  
+                    [objectId]="dataEdit.recID" 
+                    objectType="WP_Comments"   
+                    hideFolder="1"  
+                    hideUploadBtn="1"   
+                    hideDes="1" 
+                    type="inline"
+                    > 
+                </codx-attachment>
+            </ng-container>
         </div>
         <ng-container *ngIf="dataEdit?.recID">
             <div class="d-block mt-3">
@@ -99,8 +128,9 @@
                 <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
                     <i class="icon-local_offer icon-30 text-primary"></i>
                 </button>
-                <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
-                    <i class="icon-photo icon-30 text-success"></i>
+                <button (click)="openFile()" type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
+                    <i class="icon-photo icon-30 text-success">
+                    </i>
                 </button>
             </div>
         </div>  
@@ -111,14 +141,10 @@
         </div>
     </ng-container>
     <ng-template #containTemplate let-item>
-        <ng-container *ngIf="!item?.isPortal;else category2">
+        <ng-container *ngIf="!item.isPortal;else category2">
             <div class="text-dark text-feed">
                 <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
                 </read-more>
-            </div>
-            <div class="pic-feed">
-                <lv-image-grid #player [database]="true" [files]="item?.listImage">
-                </lv-image-grid>
             </div>
         </ng-container>
         <ng-template #category2>
