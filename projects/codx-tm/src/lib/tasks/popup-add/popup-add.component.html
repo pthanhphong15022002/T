@@ -238,13 +238,25 @@
         </e-tabitem>
 
         <e-tabitem *ngIf="showAssignTo">
-          <ng-template #headerText>
-            <div class="d-flex align-items-center">
+          <ng-template #headerText  class="">
+            <!-- <div class="d-flex align-items-center">
               <span class="icon-person_outline icon-24 me-2"></span>
               <div class="fw-bold">
                 <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
                 </codx-label>
               </div>
+            </div> -->
+            <div class="nav-item  mb-2">
+              <a class="nav-link  d-flex btn-active-light-primary px-0">
+                <span class="icon-person_outline icon-24 me-2"></span>
+                <span class="d-flex flex-column align-items-start">
+                  <span class="fw-bolder">
+                    <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
+                    </codx-label>
+                  </span>
+                  <span class="fs-7">Description</span>
+                </span>
+              </a>
             </div>
           </ng-template>
           <ng-template #content>
