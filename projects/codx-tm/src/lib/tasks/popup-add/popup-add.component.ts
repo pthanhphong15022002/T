@@ -230,13 +230,6 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
       .set({ hour: 23, minute: 59, second: 59 })
       .toDate();
     this.changeDetectorRef.detectChanges();
-    if (!this.param)
-      this.getParam(function (o) {
-        //if (o) t.showPanel();
-      });
-    else {
-      this.closePanel();
-    }
   }
 
   openInfo(id, action) {
