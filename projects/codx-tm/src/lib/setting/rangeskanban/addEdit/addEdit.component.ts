@@ -4,11 +4,11 @@ import { RangeLine } from '../../../models/task.model';
 
 @Component({
   selector: 'ranges-add',
-  templateUrl: './ranges-add.component.html',
-  styleUrls: ['./ranges-add.component.css']
+  templateUrl: './addEdit.component.html',
+  styleUrls: ['./addEdit.component.css']
 })
-export class PopAddRangesComponent implements OnInit {
-  rangeLines = new RangeLine();
+export class AddEditComponent implements OnInit {
+  rangeLines: RangeLine = new RangeLine();
   lstRangeLine: RangeLine[];
   title = 'Thêm khoảng thời gian';
   range: any;
@@ -55,10 +55,11 @@ export class PopAddRangesComponent implements OnInit {
     if (!this.rangeLines['isNew'])
       method = 'UpdateAsync';
 
-    this.api.execAction<any>('BS_RangeLines', [this.rangeLines], method).subscribe(res => {
+    this.api.exec<any>('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', this.rangeLines).subscribe(res => {
       if (res) {
-        this.lstRangeLine.push(this.rangeLines)
+        this.lstRangeLine.push(res)
         this.rangeLines = new RangeLine();
+        dialog.close();
       }
     })
   }

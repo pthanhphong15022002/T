@@ -1,8 +1,8 @@
+import { AddEditComponent } from './addEdit/addEdit.component';
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
-import { PopAddRangesComponent } from './ranges-add/ranges-add.component';
 
 
 @Component({
@@ -93,8 +93,8 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
-
+      this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
+      this.dialog.closed.subscribe();
     });
   }
 
@@ -107,7 +107,7 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
+      this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
     });
   }
 
