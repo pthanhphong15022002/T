@@ -77,39 +77,18 @@ idField="recID">
                         (click)="getShareUser(item.shareControl, item.id)">
                         <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 "
                             href="javascript:void(0)">
-                            <span *ngIf="item.shareControl == 'U'">
-                                <ng-container *ngIf="item.shared -1 > 0; else elseDisplay">
-                                    <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
-                                    {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}}
-                                    <codx-label formName="" name="lblAnd" default="và"></codx-label>
-                                    {{item.shared -1}}
-                                    <codx-label formName="" name="lblPer" default="người khác"></codx-label>
+                            <ng-container *ngIf="item.shareControl == 'U'; else notU">
+                                <ng-container *ngIf="item.shared == 1;else multipleShared">
+                                    <span class="ms-2">{{item.shareName}}</span>
                                 </ng-container>
-                                <ng-template #elseDisplay>
-                                    <ng-container *ngIf="item.shareName">
-                                        <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
-                                        {{item.shareName.replace(item.shareControl |
-                                        sharedControl:'wp' | async,'')}}
-                                    </ng-container>
+
+                                <ng-template #multipleShared>
+                                    <span class="ms-2 me-2">{{item.shareName}}</span>
                                 </ng-template>
-                            </span>
-                            <span *ngIf="item.shareControl != 'U'">
-                                <ng-container *ngIf="item.shared -1 > 0; else elseDisplay2">
-                                    <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
-                                    {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}}
-                                    <codx-label formName="" name="lblAnd" default="và"></codx-label>
-                                    {{item.shared -1}}
-                                    <codx-label formName="" name="lblDeparment" default="phòng ban khác"></codx-label>
-                                </ng-container>
-                                <ng-template #elseDisplay2>
-                                    <codx-label formName="" name="lblWithDeparment" default="cùng với phòng ">
-                                    </codx-label>
-                                    {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}}
-                                </ng-template>
-                            </span>
+                            </ng-container>
+                            <ng-template #notU>
+                                    {{item.shareName}}
+                            </ng-template>
                         </span>
                     </span>
                     <ng-template #other_option></ng-template>
@@ -228,8 +207,18 @@ idField="recID">
             </ng-template>
         </div>
         <div class="pic-feed">
-            <lv-image-grid #player [database]="true" [files]="item.listImage" (viewDetail)="openDetail($event,item.id)">
-            </lv-image-grid>
+            <div class="pic-feed">
+                <codx-attachment
+                    [objectId]="item.recID"  
+                    objectType="WP_Comments"   
+                    hideFolder="1"  
+                    hideUploadBtn="1"   
+                    hideDes="1" 
+                    type="inline"
+                    [functionID]="codxViews.formModel.funcID" 
+                    > 
+                </codx-attachment>
+            </div>
         </div>
     </ng-container>
     <ng-template #category2>

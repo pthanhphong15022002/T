@@ -121,7 +121,7 @@
 </div>
 <div class="isHiden border-top" [class.isShow]="rootData.isShowComment">
     <div class="position-relative cmt c1 feed-box my-3" (keyup.enter)="sendComment(rootData,comments)">
-        <codx-input class="border-0" type="text" placeholder="Bình luận" [crrValue]="comments"
+        <codx-input class="border-0 bg-transparent" type="text" placeholder="Bình luận" [crrValue]="comments"
             (valueChange)="valueChange($event,'comments')">
         </codx-input>
         <div class="feed-icon btn-send">

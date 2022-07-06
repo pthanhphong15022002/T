@@ -61,7 +61,7 @@ export class TasksComponent extends UIComponent {
   user: any;
   funcID: string;
   gridView: any;
-  isAssignTask =false ;
+  isAssignTask = false;
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -78,11 +78,11 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID=='TMT0203') this.isAssignTask=true ; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
+    if (this.funcID == 'TMT0203') this.isAssignTask = true; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
   }
 
   clickMF(e: any, data?: any) {
-    this.itemSelected =data;
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -99,13 +99,13 @@ export class TasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT025': // cái này xem lại , nên có biến gì đó để xét
+      case 'TMT02015': // cái này xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
       case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
         //Chung làm
-      break;
-        case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
+        break;
+      case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
         //Chung làm
         break;
       default:
@@ -189,7 +189,7 @@ export class TasksComponent extends UIComponent {
       {
         type: ViewType.schedule,
         active: false,
-        sameData: true,  
+        sameData: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -315,14 +315,14 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      //option.Width = '750px';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add',this.isAssignTask],
+        [this.view.dataService.dataSelected, 'add', this.isAssignTask],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected=this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0]
       });
     });
   }
@@ -337,34 +337,33 @@ export class TasksComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-       // option.Width = '750px';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit',this.isAssignTask],
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected=this.view.dataService.dataSelected
+          this.itemSelected = this.view.dataService.dataSelected
         });
-       
+
       });
 
   }
 
   copy(data) {
-    this.view.dataService.copy().subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-     // option.Width = '750px';
-      this.view.dataService.dataSelected = data;
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy',this.isAssignTask],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected=this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0]
       });
     });
   }
@@ -401,7 +400,7 @@ export class TasksComponent extends UIComponent {
               )
               .subscribe((res) => {
                 if (res[0]) {
-                  this.itemSelected = this.view.dataService.data[0] ;
+                  this.itemSelected = this.view.dataService.data[0];
                   this.notiService.notifyCode('TM004');
                 }
               });
@@ -422,7 +421,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
-  //  option.Width = '750px';
+    option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       this.view.dataService.dataSelected,
