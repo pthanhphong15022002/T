@@ -1,25 +1,34 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
-     <div class="body">
-        <div class="my-3 d-flex">
-            <div class="body-user-img symbol symbol-40 symbol-circle mr-3">
-                <codx-img [objectId]="user.userID" objectType="AD_Users" class="symbol symbol-40 symbol-circle">
-                </codx-img>
-            </div>
-            <div class="ms-2">
-                <p class="user-name">{{user?.userName}}</p>
-                <ng-container *ngIf="lstRecevier.length > 0">
-                    <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
-                        <div  class="fw-bolder fs-5">
-                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                            <span class="me-2 ">{{userRecevier.UserName}}</span>
-                        </div>
+        <div class="body">
+            <div class="my-3 d-flex">
+                <div class="body-user-img me-3">
+                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
+                    </codx-img>
+                </div>
+                <div class="ms-2">
+                    <div class="user-name fw-bold">{{user?.userName}}</div>
+                    <ng-container *ngIf="lstRecevier.length > 0">
+                        <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
+                            <div class="fw-bold fs-6">
+                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                    default="cùng với "></codx-label>
+                                <span class="me-2 ">{{userRecevier.UserName}}</span>
+                            </div>
+                        </ng-container>
+                        <ng-template #shareWith>
+                            <div class="fw-bold fs-6">
+                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                    default="cùng với "></codx-label>
+                                <span class="ms-2 me-2">{{lstRecevier.length}}</span>
+                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                    default=" người khác "></codx-label>
+                            </div>
+                        </ng-template>
                     </ng-container>
-                    <ng-template #shareWith>
-                        <div  class="fw-bolder fs-5">
-                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                            <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default=" người khác "></codx-label>
+                    <div class="d-flex align-items-center justify-content-start user-square">
+                        <div class="me-2">
+                            <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
                         </div>
                         <i class="icon-arrow_drop_down icon-16 text-dark"></i>
                     </div>
@@ -85,46 +94,39 @@
                 </div>
             </div>
         </div>
-        <div class="my-3 h-50">
-            <codx-input  format="ed2" 
-                [class]="'border-0'" 
-                type="textarea" 
-                class="test-textarea" 
-                [crrValue]="message" 
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
-                (valueChange)="valueChange($event)" 
-                ngDefaultControl>
-            </codx-input>
-            <codx-attachment  
-                #attachment  
-                objectType="WP_Comments"   
-                hideFolder="1"  
-                hideUploadBtn="1"   
-                hideDes="1" 
-                type="inline"
-                [functionID]="dialogRef.formModel.funcID" 
-                > 
-            </codx-attachment>
-            <ng-container *ngIf="dataEdit">
-                <codx-attachment  
-                    [objectId]="dataEdit.recID" 
-                    objectType="WP_Comments"   
-                    hideFolder="1"  
-                    hideUploadBtn="1"   
-                    hideDes="1" 
-                    type="inline"
-                    > 
-                </codx-attachment>
+        <ng-container *ngIf="showEmojiPicker">
+            <div class="emoji">
+                <emoji-mart class="emoji-mart" skin="6" [showPreview]="false" [set]="set"
+                    (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+            </div>
+        </ng-container>
+        <ng-template #containTemplate let-item>
+            <ng-container *ngIf="!item?.isPortal;else category2">
+                <div class="text-dark text-feed">
+                    <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
+                    </read-more>
+                </div>
+                <div class="pic-feed">
+                    <lv-image-grid #player [database]="true" [files]="item?.listImage">
+                    </lv-image-grid>
+                </div>
             </ng-container>
-        </div>
-        <ng-container *ngIf="dataEdit?.recID">
-            <div class="d-block mt-3">
-                <div class="card card-custom card-border ndchiase">
-                    <div class="card-body p-4">
-                        <div class="d-flex mb-3 card-border">
-                            <div class="symbol symbol-40 symbol-circle">
-                                <codx-img  class="symbol symbol-30 symbol-circle"
-                                    [objectId]="dataEdit?.createdBy" bjectType="AD_Users">
+            <ng-template #category2>
+                <div class="p-0 m-0">
+                    <span class="ion-text-wrap ion-text-justify" [innerHTML]="item?.content"></span>
+                </div>
+                <div class="card-custom-img bgi-no-repeat"
+                    [style.background]="item?.card?.background| backgroundImage:item?.card?.backgroundColor"
+                    style="background-size: 100% auto;">
+                    <div class="card-body card-custom-img-body ">
+                        <div color="bg-transparent" class="ion-margin-vertical padding-start-0">
+                            <h2 class="fw-bolder mb-6 mt-3" [ngStyle]="{'color':item?.card?.pattern?.headerColor}">
+                                {{item?.card?.cardType | vll:'L1422':'text' | async}}
+                            </h2>
+                        </div>
+                        <div class="d-flex align-items-center ion-wrap mar-auto">
+                            <div *ngIf="item?.card.senderID">
+                                <codx-img [width]="40" [objectId]=" item?.card?.senderID" objectType="AD_Users">
                                 </codx-img>
                             </div>
                             <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
@@ -135,60 +137,10 @@
                                 </codx-img>
                             </div>
                         </div>
-                        <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataShare }">
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-        <div class="my-3 d-flex justify-content-between align-items-center body-function">
-            <div class="text-dark-50 font-weight-bold">
-                <codx-label formName="" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
-            </div>
-            <div>
-                <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon" class="btn btn-icon btn-md ml-2 btn-emoji">
-                    <i class="icon-tag_faces icon-30 text-warning"></i>
-                </button>
-                <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
-                    <i class="icon-local_offer icon-30 text-primary"></i>
-                </button>
-                <button (click)="openFile()" type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
-                    <i class="icon-photo icon-30 text-success">
-                    </i>
-                </button>
-            </div>
-        </div>  
-    </div>
-    <ng-container  *ngIf="showEmojiPicker">
-        <div class="emoji">
-            <emoji-mart class="emoji-mart" skin="6" [showPreview]="false"  [set]="set"  (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
-        </div>
-    </ng-container>
-    <ng-template #containTemplate let-item>
-        <ng-container *ngIf="!item.isPortal;else category2">
-            <div class="text-dark text-feed">
-                <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
-                </read-more>
-            </div>
-        </ng-container>
-        <ng-template #category2>
-            <div class="p-0 m-0">
-                <span class="ion-text-wrap ion-text-justify" [innerHTML]="item?.content"></span>
-            </div>
-            <div class="card-custom-img bgi-no-repeat"
-                [style.background]="item?.card?.background| backgroundImage:item?.card?.backgroundColor"
-                style="background-size: 100% auto;">
-                <div class="card-body card-custom-img-body ">
-                    <div color="bg-transparent" class="ion-margin-vertical padding-start-0">
-                        <h2 class="font-weight-bolder mb-6 mt-3" [ngStyle]="{'color':item?.card?.pattern?.headerColor}">
-                            {{item?.card?.cardType | vll:'L1422':'text' | async}}
-                        </h2>
-                    </div>
-                    <div class="d-flex align-items-center ion-wrap mar-auto">
-                        <div class="symbol symbol-40 symbol-circle" *ngIf="item?.card.senderID">
-                            <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                [objectId]=" item?.card?.senderID" objectType="AD_Users">
-                            </codx-img>
+                        <div class="text-dark text-feed mt-6">
+                            <read-more #readmore2 [content]="item?.card?.situation" [limit]="800"
+                                [completeWords]="true">
+                            </read-more>
                         </div>
 
 
