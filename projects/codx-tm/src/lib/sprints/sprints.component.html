@@ -7,14 +7,14 @@
   <!-- <list-sprints [viewBase]="view" [formModel]="view.formModel" [dataService]="view.dataService"></list-sprints> -->
   <div class="page-home page-master border-top-erm">
     <div id="erm_content">
-      <div class="container-full p-6">
-        <div class="font-size-h2 font-weight-bold text-dark mt-6">
+      <div class="container-fluid">
+        <!-- <div class="font-size-h2 font-weight-bold text-dark mt-6">
           <codx-label name="ProjectBoard" formName="Sprints" default="My board"></codx-label>
-        </div>
-        <div class="text-muted mb-6">
+        </div> -->
+        <!-- <div class="text-muted mb-6">
           <codx-label name="ListMyBoard" formName="Sprints" default="Danh sách view board cá nhân được bạn chia sẻ">
           </codx-label>
-        </div>
+        </div> -->
         <div class="view-listbox card-with-dropdown p-6 row">
           <codx-listview type="cardView" #lstViewBoard service="TM" assemblyName="ERM.Business.TM"
             className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
@@ -28,13 +28,13 @@
             <span class="text-primary">Read more</span>
           </div> -->
         </div>
-        <div class="font-size-h2 font-weight-bold text-dark mt-6">
+        <!-- <div class="font-size-h2 font-weight-bold text-dark mt-6">
           <codx-label name="ProjectBoard" formName="Sprints" default="Project board"></codx-label>
-        </div>
-        <div class="text-muted mb-6">
+        </div> -->
+        <!-- <div class="text-muted mb-6">
           <codx-label name="ListProjectBoard" formName="Sprints"
             default="Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ"></codx-label>
-        </div>
+        </div> -->
         <div class="view-listbox p-6">
           <codx-listview type="cardView" #lstProjectBoard service="TM" assemblyName="ERM.Business.TM"
             className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
