@@ -147,7 +147,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      // option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
@@ -163,7 +163,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      // option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
   }

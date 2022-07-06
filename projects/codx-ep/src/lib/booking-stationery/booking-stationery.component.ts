@@ -174,7 +174,7 @@ export class BookingStationeryComponent implements OnInit {
     }
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '750px';
+      // option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(
@@ -191,7 +191,7 @@ export class BookingStationeryComponent implements OnInit {
     }
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '750px';
+      // option.Width = '750px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(

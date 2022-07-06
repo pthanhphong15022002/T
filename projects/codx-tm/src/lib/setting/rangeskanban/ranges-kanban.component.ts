@@ -84,7 +84,7 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px'; // s k thấy gửi từ ben đây,
+      // option.Width = '750px'; 
 
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
 
@@ -112,7 +112,7 @@ export class RangesKanbanComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '750px';
+      // option.Width = '750px';
       this.dialog = this.callfunc.openSide(PopAddRangesComponent, null, option);
     });
   }
