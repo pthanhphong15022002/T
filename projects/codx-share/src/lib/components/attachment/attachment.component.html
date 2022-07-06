@@ -137,7 +137,10 @@
                             <div class="control_wrapper">
                                 <div class="uploadtemplate">
                                     <div id='dropArea'>
-                                        <span id='drop' class="droparea">Drop files here or <a href="" id='browse'><u>Browse</u></a> </span>
+                                        <div class="d-none">
+                                            <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                        </div>
+                                        <!-- <span id='drop' class="droparea">Drop files here or <a href="" id='browse'><u>Browse</u></a> </span> -->
                                         <ejs-uploader #templateupload id='templatefileupload' [asyncSettings]='path' [dropArea]='dropElement' (selected)='onFileSelect($event)'></ejs-uploader>
                                     </div>
                                 </div>
@@ -206,7 +209,7 @@
             </form>
         </div>
     </div>   
-    <codx-thumbnail [files]="data"></codx-thumbnail>     
+    <codx-thumbnail [displayThumb]="displayThumb"  [formModel]="formModel" [files]="data"></codx-thumbnail>     
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

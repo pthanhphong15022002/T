@@ -63,6 +63,7 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   UserComponent,
   CompanySettingComponent,
+  CompanySettingComponent,
   CompanySettingDetailsComponent
 ];
 @NgModule({
