@@ -187,9 +187,6 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  // MwpComponent,
-  // MwpViewDetailComponent,
-  // MwpPopupAddComponent,
   ViewListComponent
 ];
 @NgModule({
@@ -205,6 +202,7 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     AccumulationChartAllModule,
     ProgressBarModule,
+    CircularGaugeModule,
     TreeMapModule,
     DatePickerModule,
     TabModule,

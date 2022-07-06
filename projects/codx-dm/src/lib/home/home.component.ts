@@ -100,7 +100,7 @@ export class HomeComponent extends UIComponent {
     var data = new DialogAttachmentType;    
     data.objectType = "WP_Notes";
     data.objectId = "628c326c590addf224627f42"; 
-    data.functionID = "WPT03941";  
+    data.functionID = "ODT3";  
     data.type = 'popup';  
     // this.callfc.openForm(AttachmentComponent, "Upload tài liệu", 500, 700, null, data).subscribe((dialog: any) => {
     
@@ -143,7 +143,7 @@ export class HomeComponent extends UIComponent {
     var item2 = '';
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="max-h-18px" src="../../../assets/demos/dms/folder.svg">';
+      item1 = '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf(".") == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
@@ -164,69 +164,70 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-  //   let id = $data.dataItem.recID;
-  //   let item = $data.dataItem;    
-  //   if (item.read) {      
-  //     // var breadcumb = [];
-  //     // var breadcumbLink = [];
-  //     // var list = this.tree.getBreadCumb(id);
-  //     // this.dmSV.folderName = item.folderName;
-  //     // this.dmSV.parentFolderId = item.parentId;
-  //     // this.dmSV.level = item.level;
-  //     // this.dmSV.disableInput.next(false);
-  //     // if (this.dmSV.currentDMIndex.getValue() == "3")
-  //     //   this.dmSV.changeTemplate("0");
-  //     // // this.dmSV.level = data.node.data;
-  //     // //this.dmSV.parentFolderId = data.node.parent;
-  //     // this.dmSV.parentFolder.next(item);
-  //     // this.dmSV.getRight(item);
-  //     // console.log(list);
+ //   console.log($data);
+    let id = $data.recID;
+    let item = $data;    
+    if (item.read) {      
+      // var breadcumb = [];
+      // var breadcumbLink = [];
+      // var list = this.tree.getBreadCumb(id);
+      // this.dmSV.folderName = item.folderName;
+      // this.dmSV.parentFolderId = item.parentId;
+      // this.dmSV.level = item.level;
+      // this.dmSV.disableInput.next(false);
+      // if (this.dmSV.currentDMIndex.getValue() == "3")
+      //   this.dmSV.changeTemplate("0");
+      // // this.dmSV.level = data.node.data;
+      // //this.dmSV.parentFolderId = data.node.parent;
+      // this.dmSV.parentFolder.next(item);
+      // this.dmSV.getRight(item);
+      // console.log(list);
 
-  //     // breadcumb.push(this.dmSV.menuActive.getValue());
-  //     // breadcumbLink.push(this.dmSV.idMenuActive);
-  //     // for (var i = list.length - 1; i >= 0; i--) {
-  //     //   breadcumb.push(list[i].text);
-  //     //   breadcumbLink.push(list[i].id);
-  //     // }
-  //     // this.dmSV.breadcumbLink = breadcumbLink;
-  //     // this.dmSV.breadcumb.next(breadcumb);
-  //     // this.dmSV.currentNode = id;
-  //     // this.dmSV.currentNode = id;
-  //     // this.dmSV.folderId.next(id);
-  //    //this.view.dataService.addDatas(id, )
-  //     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
-  //  //     this.folderService.options.funcID = 
-  //       this.folderService.options.funcID = this.view.funcID;
-  //       this.folderService.getFolders(id).subscribe(async res => {
-  //       //  this.dmSV.isTree = true;
-  //         if (res != null) {
-  //           var datas = new Map<string, any>();    
-  //           datas.set(id, res[0]);         
-  //           this.view.dataService.addDatas = datas;
-  //           //  this.dmSV.listFolder.next(res);          
-  //           // $data.dataItem.items = [];
-  //           //  this.tree.addChildNodes($data.dataItem, res);
-  //           this.changeDetectorRef.detectChanges();
-  //          // this.dmSV.isTree = false;
-  //         }          
-  //       });
-  //     }
-  //     else {
-  //       //this.dmSV.isTree = true;
-  //    //   this.dmSV.listFolder.next($data.dataItem.items);
-  //       this.changeDetectorRef.detectChanges();
-  //       //this.dmSV.isTree = false;
-  //     }
+      // breadcumb.push(this.dmSV.menuActive.getValue());
+      // breadcumbLink.push(this.dmSV.idMenuActive);
+      // for (var i = list.length - 1; i >= 0; i--) {
+      //   breadcumb.push(list[i].text);
+      //   breadcumbLink.push(list[i].id);
+      // }
+      // this.dmSV.breadcumbLink = breadcumbLink;
+      // this.dmSV.breadcumb.next(breadcumb);
+      // this.dmSV.currentNode = id;
+      // this.dmSV.currentNode = id;
+      // this.dmSV.folderId.next(id);
+     //this.view.dataService.addDatas(id, )
+      if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
+   //     this.folderService.options.funcID = 
+        this.folderService.options.funcID = this.view.funcID;
+        this.folderService.getFolders(id).subscribe(async res => {
+        //  this.dmSV.isTree = true;
+          if (res != null) {
+            var datas = new Map<string, any>();    
+            datas.set(id, res[0]);         
+            this.view.dataService.addDatas = datas;
+            //  this.dmSV.listFolder.next(res);          
+            // $data.dataItem.items = [];
+            //  this.tree.addChildNodes($data.dataItem, res);
+            this.changeDetectorRef.detectChanges();
+           // this.dmSV.isTree = false;
+          }          
+        });
+      }
+      else {
+        //this.dmSV.isTree = true;
+     //   this.dmSV.listFolder.next($data.dataItem.items);
+        this.changeDetectorRef.detectChanges();
+        //this.dmSV.isTree = false;
+      }
 
-  //     // this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
-  //     //   this.dmSV.listFiles.next(res);
-  //     //   this.changeDetectorRef.detectChanges();
-  //     // });
-  //   }
-  //   else {
-  //     this.dmSV.disableInput.next(true);
-  //     this.notificationsService.notify("Bạn không có quyền truy cập thư mục này");
-  //   }
+      // this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
+      //   this.dmSV.listFiles.next(res);
+      //   this.changeDetectorRef.detectChanges();
+      // });
+    }
+    else {
+      this.dmSV.disableInput.next(true);
+      this.notificationsService.notify("Bạn không có quyền truy cập thư mục này");
+    }
   }
 
   checkUserForder(data) {

@@ -31,7 +31,7 @@ idField="recID"
 </ng-template>
 
 <ng-template #templateCard> 
-  <!-- <button id="text" (click)="">text</button> -->
+  
   <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
@@ -39,7 +39,7 @@ idField="recID"
   <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">save Files</span>
-  </button>
+  </button> 
   <codx-attachment  
       #attachment  
       [objectType]="'OD_Dispatches'" 
@@ -48,6 +48,8 @@ idField="recID"
       hideUploadBtn="1"   
       hideDes="1" 
       type="inline"
+      allowExtensions=".jpg,.png"
+      allowMultiFile="0"
       [functionID]="'ODT3'" 
       (fileAdded)="fileAdded($event)" 
       (fileCount)="getfileCount($event)" 

@@ -1,9 +1,13 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import {
   CacheService,
-  LayoutBaseComponent
+  DialogRef,
+  LayoutBaseComponent,
+  SidebarModel,
+  ViewModel
 } from 'codx-core';
 import { Observable } from 'rxjs';
+import { CreateFolderComponent } from '../createFolder/createFolder.component';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -14,6 +18,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
+  dialog!: DialogRef;
+  views: Array<ViewModel> = [];
   constructor(
     inject: Injector,
     public cache: CacheService) {
@@ -41,6 +47,16 @@ export class LayoutComponent extends LayoutBaseComponent {
     });
   }
 
+  AddFolder() {
+    // let option = new SidebarModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    // option.FormModel = this.view?.currentView?.formModel;
+    // option.Width = '750px';
 
+    // this.dialog = this.callfc.openSide(CreateFolderComponent, data, option);
+    // this.dialog.closed.subscribe(e => {
+    //   console.log(e);
+    // })
+  }
 
 }

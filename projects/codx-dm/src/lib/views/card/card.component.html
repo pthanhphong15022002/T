@@ -23,7 +23,7 @@
                             <container-element [ngSwitch]="this.type">
                                 <some-element *ngSwitchCase="'card'">   
                                    <div class="card-item me-5 mb-5">
-                                        <codx-card-img cardCss="border h-100 w-225px" imageSrc="../../../assets/demos/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
+                                        <codx-card-img cardCss="border h-100 w-225px" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
                                             [bookmark]="'true'"  [formModel]="formModel"   (clickMF)="clickMF($event, folder, 'folder')" [content]="folder.folderName"
                                             [footer]="cardImgFooter">
                                         </codx-card-img>
@@ -61,7 +61,7 @@
                                                 </ng-template>
                                             </ng-template>
                                             <ng-template #noshowicon2>
-                                                <img alt="" class="mh-20px me-2" src="../../../assets/demos/dms/folder.svg">
+                                                <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
                                             </ng-template>
         
                                             <div class="d-flex flex-column flex-grow-1 dms-footer-r">
@@ -87,7 +87,7 @@
                                     </ng-template>
                                 </some-element>
                                 <some-element *ngSwitchCase="'smallcard'">
-                                    <codx-temp-full  imageSrc="../../../assets/demos/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
+                                    <codx-temp-full  imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
                                     [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"
                                     [subTitle]="folder.createdOn + ' | ' + folder.userName"
                                     cardCss="card-template w-225px px-2 py-3">
@@ -108,14 +108,14 @@
 
                         <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
                             <codx-card-img cardCss="d-flex flex-column align-items-center dms-card-img h-100" 
-                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/demos/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
+                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/codx/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
                             </codx-card-img>
                             <ng-template #cardImgFooter let-data let-setting="setting">
                                 <div title="{{file.fileName}}" class="dms-card-footer d-flex">
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="d-flex align-items-center">
                                             <img alt="" class="mh-20px me-2"
-                                                src="../../../assets/demos/dms/{{getAvatar(file.extension)}}">
+                                                src="../../../assets/codx/dms/{{getAvatar(file.extension)}}">
                                             <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}
                                             </div>
                                         </div>
@@ -151,14 +151,14 @@
                     <ng-template #elseBlockDesc>
                         <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
                             <codx-card-img cardCss="d-flex flex-column align-items-center dms-card-img h-100" 
-                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/demos/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
+                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/codx/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
                             </codx-card-img>
                             <ng-template #cardImgFooter let-data let-setting="setting">
                                 <div title="{{file.fileName}}" class="dms-card-footer d-flex">
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="d-flex align-items-center">
                                             <img alt="" class="mh-20px me-2"
-                                                src="../../../assets/demos/dms/{{getAvatar(file.extension)}}">
+                                                src="../../../assets/codx/dms/{{getAvatar(file.extension)}}">
                                             <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}
                                             </div>
                                         </div>
@@ -211,7 +211,7 @@
                                         </ng-template>
                                     </ng-template>
                                     <ng-template #noshowicon2>
-                                        <img alt="" class="mh-20px me-2" src="../../../assets/demos/dms/folder.svg">
+                                        <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
                                     </ng-template>
 
                                     <div class="d-flex flex-column flex-grow-1">
