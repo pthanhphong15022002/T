@@ -18,8 +18,7 @@
       </codx-label>
       <div class="d-flex">
         <div class="w-100 me-2">
-          <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="email"
-            [Group]="dialogSignature">
+          <codx-input type="text" name="text" cssClass="form-control" ControlName="email" [Group]="dialogSignature">
           </codx-input>
         </div>
         <button class="btn btn-primary">
@@ -30,22 +29,21 @@
     <div class="form-group mt-3">
       <codx-label fiedName="UserID" default="Tên" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input type="text" name="text" ngDefaultControl cssClass="form-control" ControlName="fullName"
-        [Group]="dialogSignature">
+      <codx-input type="text" name="text" cssClass="form-control" ControlName="fullName" [Group]="dialogSignature">
       </codx-input>
     </div>
     <div class="form-group row mt-3">
       <div class="col-6">
         <codx-label fiedName="SignatureType" [formModel]="dialog.formModel" default="Loại chữ kí">
         </codx-label>
-        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.signatureType"
+        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value.signatureType"
           [refValue]="cbxName['SignatureType']" field="signatureType" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6">
         <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.supplier"
+        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value.supplier"
           [refValue]="cbxName['Supplier']" field="supplier" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -68,8 +66,8 @@
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
               <div class="m-auto">
-                <codx-img *ngIf="dialogSignature.value.signature1 == null" #image objectId="ADMIN"></codx-img>
-                <img class="square" *ngIf="dialogSignature.value.signature1 != null" [src]="getLinkImg(Signature1)" />
+                <codx-img [objectId]="dialogSignature.value.signature1" [objectType]="dialog.formModel.entityName"
+                  [funcId]="dialog.formModel.funcID"></codx-img>
               </div>
             </div>
           </div>
@@ -78,8 +76,8 @@
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img *ngIf="dialogSignature.value.signature2 == null" #image objectId="ADMIN"></codx-img>
-              <img class="square" *ngIf="dialogSignature.value.signature2 != null" [src]="getLinkImg(Signature2)" />
+              <codx-img [objectId]="dialogSignature.value.signature2" [objectType]="dialog.formModel.entityName"
+                [funcId]="dialog.formModel.funcID"></codx-img>
             </div>
           </div>
           <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="dialog.formModel" class="">
@@ -88,8 +86,8 @@
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img *ngIf="dialogSignature.value.stamp == null" #image objectId="ADMIN"></codx-img>
-              <img class="square" *ngIf="dialogSignature.value.stamp!= null" [src]="getLinkImg(Stamp)" />
+              <codx-img [objectId]="dialogSignature.value.stamp" [objectType]="dialog.formModel.entityName"
+                [funcId]="dialog.formModel.funcID"></codx-img>
             </div>
           </div>
           <codx-label fiedName="Stamp" default="Con dấu" [formModel]="dialog.formModel" class="">
@@ -102,7 +100,7 @@
       <div class="col-6">
         <codx-label fiedName="OTPControl" default="OTP" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogSignature.value.oTPControl"
+        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value.oTPControl"
           [refValue]="cbxName['OTPControl']" field="oTPControl" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
