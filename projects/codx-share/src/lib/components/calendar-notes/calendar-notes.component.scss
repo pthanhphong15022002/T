@@ -32,7 +32,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    z-index: 999;
+    // z-index: 999;
 }
 
 .e-calendar {
@@ -84,4 +84,8 @@ app-notes-home {
 .moreFunc {
     width: 0px;
     margin-left: 100%;
+}
+
+.icon-add {
+    color: darkgray;
 }

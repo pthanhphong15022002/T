@@ -37,7 +37,7 @@
             </div>
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
-                    <div class="flex align-items-center mt-6">
+                    <div class="flex align-items-center mt-3">
                         <div class="me-2">
                             <ng-container *ngIf="type == 'check'; else list">
                                 <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
@@ -49,9 +49,10 @@
                             </ng-template>
                         </div>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
-                                (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
-                                (valueChange)="valueChange($event, item)">
+                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
+                                class="test-textbox border-0 input-note" (keyUpEnter)="onUpdateNote($event)"
+                                [crrValue]="item?.listNote" field="listNote" (valueChange)="valueChange($event, item)"
+                                placeholder="Nhập ghi chú...">
                             </codx-input>
                         </div>
                     </div>
@@ -69,7 +70,8 @@
                     <div class="flex align-items-center mt-6">
                         <div class="me-2">
                             <ng-container *ngIf="note?.noteType == 'check'; else list">
-                                <codx-input #noteAddText type="checkbox" [checked]="item?.status == '1' || item?.status == 'true'" field="status"
+                                <codx-input #noteAddText type="checkbox"
+                                    [checked]="item?.status == '1' || item?.status == 'true'" field="status"
                                     labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
                                 </codx-input>
                             </ng-container>
@@ -78,9 +80,9 @@
                             </ng-template>
                         </div>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox"
-                                (keyUpEnter)="onUpdateNote($event)" [crrValue]="item?.listNote" field="listNote"
-                                (valueChange)="valueChange($event, item)">
+                            <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
+                                class="test-textbox input-note border-0" (keyUpEnter)="onUpdateNote($event)"
+                                [crrValue]="item?.listNote" field="listNote" (valueChange)="valueChange($event, item)">
                             </codx-input>
                         </div>
                     </div>

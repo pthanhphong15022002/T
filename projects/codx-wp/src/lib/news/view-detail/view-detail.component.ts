@@ -101,4 +101,50 @@ export class ViewDetailComponent implements OnInit {
     // this.viewbase.currentView.closeSidebarRight();
   }
 
+  searchField:string ="";
+  tagUsers: any;
+  show() {
+    if (this.searchField == '' || this.searchField == null) return true;
+    for (let index = 0; index < this.tagUsers.length; index++) {
+      const element: any = this.tagUsers[index];
+      if (
+        element.objectName != null &&
+        element.objectName
+          .toLowerCase()
+          .includes(this.searchField.toLowerCase())
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  getShareUser(shareControl, commentID) {
+    if (shareControl == '1') {
+      this.api
+        .exec<any>(
+          'ERM.Business.WP',
+          'CommentBusiness',
+          'GetShareOwnerListAsync',
+          [commentID]
+        )
+        .subscribe((res) => {
+          if (res) this.tagUsers = res;
+        });
+    } else {
+      this.api
+        .exec<any>(
+          'ERM.Business.WP',
+          'CommentBusiness',
+          'GetShareUserListAsync',
+          [commentID]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.tagUsers = res;
+          }
+        });
+    }
+  }
 }

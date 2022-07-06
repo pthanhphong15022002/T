@@ -31,7 +31,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   formModelData: FormModel;
   autoNoCode;
-  lastNumber = '';
+  viewAutoNumber = '';
 
   cbxName: object;
   vllStringFormat;
@@ -41,36 +41,19 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   headerText = 'Thiết lập số tự động';
   subHeaderText = '';
-  parent: FormGroup;
   constructor(
-    private api: ApiHttpService,
-    private auth: AuthStore,
     private cache: CacheService,
     private cr: ChangeDetectorRef,
-    private fb: FormBuilder,
     private esService: CodxEsService,
-    private codxService: CodxService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
     this.formModelData = data?.data[0].formModel;
     this.autoNoCode = data?.data[0].autoNoCode;
-    this.isAdd = data?.data[0].isAdd;
-    this.parent = data.data[0].formGroup;
   }
 
-  ngAfterViewInit(): void {
-    this.cache.valueList('L0088').subscribe((vllDFormat) => {
-      this.vllDateFormat = vllDFormat.datas;
-      console.log(this.vllDateFormat);
-    });
-
-    this.cache.valueList('L0089').subscribe((vllSFormat) => {
-      this.vllStringFormat = vllSFormat.datas;
-      console.log(this.vllStringFormat);
-    });
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.initForm();
@@ -81,31 +64,32 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.formModel.entityName = 'AD_AutoNumbers';
     this.formModel.formName = 'AutoNumbers';
     this.formModel.gridViewName = 'grvAutoNumbers';
+
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogAutoNum = res;
           this.isAfterRender = true;
-          this.dialogAutoNum.patchValue({
-            lastNumber: this.parent.value.lastNumber,
-          });
-
-          if (this.isAdd) {
-            this.codxService
-              .getAutoNumber(
-                this.formModel.funcID,
-                this.formModel.entityName,
-                'AutoNoCode'
-              )
-              .subscribe((dt: any) => {
-                this.dialogAutoNum.patchValue({ autoNoCode: dt });
+          this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
+            if (res != null) {
+              if (res.autoNoCode != null) {
+                this.isAdd = false;
+                this.dialogAutoNum.patchValue(res);
+                this.setViewAutoNumber();
+              } else {
+                this.isAdd = true;
+                res.autoNoCode = this.autoNoCode;
+                this.dialogAutoNum.patchValue(res);
+              }
+              this.esService.isSetupAutoNumber.subscribe((res) => {
+                if (res != null) {
+                  this.dialogAutoNum.patchValue(res.value);
+                }
               });
-          } else {
-            if (this.autoNoCode) {
-              this.dialogAutoNum.patchValue({ autoNoCode: this.autoNoCode });
+              console.log(this.dialogAutoNum.value);
             }
-          }
+          });
         }
       });
 
@@ -114,16 +98,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.cbxName = res;
-          console.log(res['DateFormat']);
           console.log('cbxName', this.cbxName);
           this.cache.valueList('L0088').subscribe((vllDFormat) => {
             this.vllDateFormat = vllDFormat.datas;
-            console.log(this.vllDateFormat);
           });
 
           this.cache.valueList('L0089').subscribe((vllSFormat) => {
             this.vllStringFormat = vllSFormat.datas;
-            console.log(this.vllStringFormat);
           });
         }
       });
@@ -136,7 +117,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       else this.dialogAutoNum.patchValue({ [event['field']]: event.data });
     }
 
-    this.setLastNumber();
+    this.setViewAutoNumber();
     this.cr.detectChanges();
   }
 
@@ -144,38 +125,42 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     if (this.dialogAutoNum.invalid == true) {
       return;
     }
-    this.dialogAutoNum.value.description = this.dialogAutoNum.value.lastNumber;
-    this.dialogAutoNum.value.lastNumber = 0;
-    this.dialogAutoNum.value.step = 1;
-    // let res = this.esService.addEditAutoNumbers(this.dialogAutoNum, this.isAdd);
-    // this.esService
-    //   .addEditAutoNumbers(this.dialogAutoNum, this.isAdd)
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.AD',
-        'AutoNumbersBusiness',
-        'SettingAutoNumberAsync',
-        [this.dialogAutoNum.value, this.isAdd]
-      )
-      .subscribe((res) => {
-        console.log(res);
-      });
+
+    if (this.isAdd) {
+      this.dialogAutoNum.value.lastNumber = 0;
+      this.dialogAutoNum.value.step = 1;
+      this.dialogAutoNum.value.description = 'description';
+    }
+
+    if (this.isAdd) {
+      this.esService
+        .addEditAutoNumbers(this.dialogAutoNum, this.isAdd)
+        .subscribe((res) => {
+          if (res) {
+            this.esService.setupAutoNumber.next(this.dialogAutoNum);
+            if (this.isAdd) {
+              this.esService.getAutoNoCode(res.recID);
+            }
+            this.dialog && this.dialog.close();
+          }
+        });
+    } else {
+      this.esService.setupAutoNumber.next(this.dialogAutoNum);
+      this.dialog && this.dialog.close();
+      this.cr.detectChanges();
+    }
   }
 
-  setLastNumber() {
+  setViewAutoNumber() {
     let indexStrF = this.vllStringFormat.findIndex(
-      (p) => p.value == this.dialogAutoNum.value.stringFormat.toString()
+      (p) => p.value == this.dialogAutoNum.value.stringFormat
     );
     let indexDF = this.vllDateFormat.findIndex(
-      (p) => p.value == this.dialogAutoNum.value.dateFormat?.toString()
+      (p) => p.value == this.dialogAutoNum.value.dateFormat
     );
     let stringFormat = '';
     let dateFormat = '';
-    if (indexStrF >= -1) {
+    if (indexStrF >= 0) {
       stringFormat = this.vllStringFormat[indexStrF].text;
       stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
     }
@@ -197,8 +182,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
     //replace ngày
     if (indexDF >= 0) {
-      console.log(this.vllDateFormat[indexDF].text);
-
       dateFormat =
         this.vllDateFormat[indexDF].text == 'None'
           ? ''
@@ -208,7 +191,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
     //replace số và set chiều dài
     let lengthNumber =
-      this.dialogAutoNum.value.maxLength - stringFormat.length - 2;
+      this.dialogAutoNum.value.maxLength - stringFormat.length + 2;
     if (lengthNumber < 0) {
       stringFormat = stringFormat.replace('Số', '');
       stringFormat = stringFormat.substring(
@@ -221,9 +204,11 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       let strNumber = '#'.repeat(lengthNumber);
       stringFormat = stringFormat.replace('Số', strNumber);
     }
-    console.log(stringFormat);
-
-    this.dialogAutoNum.patchValue({ lastNumber: stringFormat });
+    this.viewAutoNumber = stringFormat;
     this.cr.detectChanges();
+  }
+
+  prarseInt(data) {
+    return parseInt(data);
   }
 }

@@ -17,7 +17,7 @@ export class PositionsComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
 
-  
+
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
 
@@ -31,10 +31,10 @@ export class PositionsComponent implements OnInit {
     private notiService: NotificationsService,
     private api: ApiHttpService,
   ) {
-    
+
     // this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   }
+  }
 
   ngOnInit(): void {
     this.button = {
@@ -100,7 +100,7 @@ export class PositionsComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      // option.Width = '750px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(
         PopupAddPositionsComponent,
         [this.view.dataService.dataSelected, 'add'],
@@ -122,7 +122,7 @@ export class PositionsComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        // option.Width = '750px';
+        option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopupAddPositionsComponent,
           [this.view.dataService.dataSelected, 'edit'],
@@ -136,7 +136,7 @@ export class PositionsComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      // option.Width = '750px';
+      option.Width = '800px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfunc.openSide(
         PopupAddPositionsComponent,

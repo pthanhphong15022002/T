@@ -6,9 +6,9 @@ import {
   OnInit,
   Optional,
   Output,
-  ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
   CallFuncService,
@@ -17,7 +17,6 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
@@ -28,8 +27,6 @@ export class Approver {}
   styleUrls: ['./approval-step.component.scss'],
 })
 export class ApprovalStepComponent implements OnInit {
-  @ViewChild('editApprovalStep') editApprovalStep;
-
   @Input() transId = '';
   @Output() addEditItem = new EventEmitter();
 
@@ -40,7 +37,10 @@ export class ApprovalStepComponent implements OnInit {
   dialog: DialogRef;
   formModel: FormModel;
   approvers = [];
-  data;
+  lstStep: any;
+  lstDeleteStep = [];
+
+  model: any;
 
   constructor(
     private cfService: CallFuncService,
@@ -48,10 +48,12 @@ export class ApprovalStepComponent implements OnInit {
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
+    private notifySvr: NotificationsService,
     @Optional() data: DialogData,
     @Optional() dialog: DialogRef
   ) {
-    this.transId = data?.data ?? '';
+    this.transId = data?.data.transID;
+    this.model = data?.data.model;
     this.dialog = dialog;
   }
 
@@ -68,43 +70,38 @@ export class ApprovalStepComponent implements OnInit {
   close() {}
 
   initForm() {
-    if (this.transId != '') {
-      this.api
-        .callSv('ES', 'ES', 'CategoriesBusiness', 'GetListApprovalStepAsync', [
-          this.transId,
-        ])
-        .subscribe((res) => {
-          if (res && res?.msgBodyData[0]) {
-            this.data = res.msgBodyData[0];
-            this.currentStepNo = this.data.length + 1;
-          } else {
-            this.notify.notify('Chưa có dữ liệu');
-          }
-        });
-    }
-  }
+    this.esService.isSetupApprovalStep.subscribe((res) => {
+      if (res != null) {
+        this.lstStep = res;
+      } else {
+        if (this.transId != '') {
+          this.api
+            .callSv(
+              'ES',
+              'ES',
+              'CategoriesBusiness',
+              'GetListApprovalStepAsync',
+              [this.transId]
+            )
+            .subscribe((res) => {
+              if (res && res?.msgBodyData[0]) {
+                this.lstStep = res.msgBodyData[0];
+                console.log(this.lstStep);
 
-  openAddEdit(content) {
-    let data = {
-      transID: this.transId,
-      stepNo: this.currentStepNo,
-    };
-
-    // this.addEditItem.emit(data);
-    this.cfService.openForm(
-      PopupAddApprovalStepComponent,
-      '',
-      750,
-      1000,
-      'EST04',
-      data
-    );
+                this.currentStepNo = this.lstStep.length + 1;
+              } else {
+                this.notify.notify('Chưa có dữ liệu');
+              }
+            });
+        }
+      }
+    });
   }
 
   addHandler(data, stepNo: number) {
     if (data[stepNo - 1]) {
-      this.data[stepNo - 1] = data;
-    } else this.data.push(data);
+      this.lstStep[stepNo - 1] = data;
+    } else this.lstStep.push(data);
     this.cr.detectChanges();
   }
 
@@ -114,22 +111,101 @@ export class ApprovalStepComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  onSaveForm() {}
-
-  openFormFuncID(val: any, data: any) {}
-  click(evt: ButtonModel) {
-    // switch (evt.id) {
-    //   case 'btnAdd':
-    //     this.show();
-    //     break;
-    //   case 'edit':
-    //     this.edit();
-    //     break;
-    //   case 'delete':
-    //     this.delete();
-    //     break;
-    // }
+  onSaveForm() {
+    this.esService.setApprovalStep(this.lstStep);
+    this.esService.setLstDeleteStep(this.lstDeleteStep);
+    this.model.patchValue({ countStep: this.lstStep.length });
+    this.dialog && this.dialog.close();
   }
 
-  clickMF(event: any, data) {}
+  openFormFuncID(val: any, data: any) {}
+
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
+  }
+
+  add() {
+    let data = {
+      transID: this.transId,
+      stepNo: this.lstStep.length + 1,
+      lstStep: this.lstStep,
+      isAdd: true,
+      dataEdit: null,
+    };
+
+    // this.addEditItem.emit(data);
+    this.cfService.openForm(
+      PopupAddApprovalStepComponent,
+      '',
+      750,
+      1500,
+      'EST04',
+      data
+    );
+  }
+
+  edit(approvalStep) {
+    let data = {
+      transID: this.transId,
+      stepNo: this.currentStepNo,
+      lstStep: this.lstStep,
+      isAdd: false,
+      dataEdit: approvalStep,
+    };
+
+    this.cfService.openForm(
+      PopupAddApprovalStepComponent,
+      '',
+      750,
+      1500,
+      'EST04',
+      data
+    );
+  }
+
+  delete(approvalStep) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifySvr
+      .alert(
+        'Thông báo',
+        'Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?',
+        config
+      )
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          let i = this.lstStep.indexOf(approvalStep);
+          console.log(i);
+
+          if (i != -1) {
+            this.lstStep.splice(i, 1);
+          }
+          if (approvalStep.recID && approvalStep.recID != null) {
+            this.lstDeleteStep.push(approvalStep);
+          }
+          for (let i = 0; i < this.lstStep.length; i++) {
+            this.lstStep[i].stepNo = i + 1;
+          }
+        }
+      });
+    // let i = this.lstStep.indexOf(approvalStep);
+    // console.log(i);
+
+    // if (i != -1) {
+    //   this.lstStep.splice(i, 1);
+    // }
+    // if (approvalStep.recID && approvalStep.recID != null) {
+    //   this.lstDeleteStep.push(approvalStep);
+    // }
+    // for (let i = 0; i < this.lstStep.length; i++) {
+    //   this.lstStep[i].stepNo = i + 1;
+    // }
+  }
 }

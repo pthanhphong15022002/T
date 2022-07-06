@@ -1,6 +1,6 @@
 import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
@@ -41,7 +41,7 @@ export class NoteDrawerComponent implements OnInit {
   countNotPin = 0;
   typeList = "note-drawer";
 
-  @ViewChild('listview') lstView: any;
+  @ViewChild('listview') lstView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
     private modalService: NgbModal,
@@ -153,8 +153,9 @@ export class NoteDrawerComponent implements OnInit {
       lstview: this.lstView,
       ngForLstview: this.WP_Notes,
       typeLst: this.typeList,
+      formType: 'add',
     }
-    this.callfc.openForm(AddNoteComponent, "Thêm mới ghi chú", 0, 0, "", obj);
+    this.callfc.openForm(AddNoteComponent, "Thêm mới ghi chú", 600, 450, "", obj);
   }
 
   openFormPinNote(content, recID, data = null) {
@@ -178,8 +179,7 @@ export class NoteDrawerComponent implements OnInit {
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "DeleteNoteAsync", recID)
       .subscribe((res) => {
-        var dt = res;
-        this.lstView.removeHandler(dt, "recID");
+        this.lstView.dataService.data = this.lstView.dataService.data.filter(x => x.recID != res.recID);
         this.changeDetectorRef.detectChanges();
 
         var today: any = document.querySelector(".e-footer-container button[aria-label='Today']");

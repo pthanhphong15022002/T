@@ -26,15 +26,15 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
 export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('statusCol') statusCol: TemplateRef<any>
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
-  columnGrids: any
+  columnGrids: any;
   dialog!: DialogRef;
   isAdd = true;
   columnsGrid;
@@ -84,8 +84,8 @@ export class CarsComponent implements OnInit, AfterViewInit {
       },
       {
         headerText: 'Xếp hạng',
-        template: this.rankingCol
-      }
+        template: this.rankingCol,
+      },
     ];
     this.views = [
       {
@@ -95,7 +95,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
         active: true,
         sameData: true,
         model: {
-          resources: this.columnGrids
+          resources: this.columnGrids,
         },
       },
     ];
@@ -108,9 +108,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   lstDevices = [];
   tmplstDevice = [];
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -129,12 +127,12 @@ export class CarsComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      // option.Width = '750px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected,true],
+        [this.dataSelected, true],
         option
       );
     });
@@ -145,12 +143,12 @@ export class CarsComponent implements OnInit, AfterViewInit {
     if (evt) this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
-      // option.Width = '750px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected,false],
+        [this.dataSelected, false],
         option
       );
     });
@@ -163,7 +161,6 @@ export class CarsComponent implements OnInit, AfterViewInit {
       this.dataSelected = res;
     });
   }
-
 
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {

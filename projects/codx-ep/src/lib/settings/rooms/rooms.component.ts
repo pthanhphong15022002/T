@@ -61,7 +61,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     private cacheSv: CacheService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
-  ) {}
+  ) { }
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.columnGrids = [
@@ -139,7 +139,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     }
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      // option.Width = '750px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
@@ -156,7 +156,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = item;
       let option = new SidebarModel();
-      // option.Width = '750px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(

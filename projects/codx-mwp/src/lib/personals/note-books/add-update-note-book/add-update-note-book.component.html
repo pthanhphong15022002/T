@@ -1,7 +1,7 @@
 <codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
 
     <ng-template popup add #body>
-        <div class="card-body">
+        <div class="add-notebook">
             <div class="form-group">
                 <codx-label name="lblNoteBookTitle" formName="NoteBooks" default="Sổ tay"></codx-label>
                 <codx-input type="text" field="title" (valueChange)="valueChange($event)" ngDefaultControl

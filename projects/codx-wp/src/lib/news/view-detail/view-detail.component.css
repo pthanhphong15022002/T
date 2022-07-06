@@ -153,4 +153,6 @@
     position: absolute;
     right: 0;
     bottom: 50px;
+    display: flex;
+    justify-content: end;
 }

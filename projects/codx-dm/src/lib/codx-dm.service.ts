@@ -4,7 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { DataItem, FolderInfo, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
-import { AuthService, NotificationsService } from "codx-core";
+import { AuthService, FormModel, NotificationsService } from "codx-core";
 import { FileInfo, FileUpload, Permission } from "@shared/models/file.model";
 
 @Injectable({
@@ -129,6 +129,9 @@ export class CodxDMService {
     public disableInput = new BehaviorSubject<boolean>(null);
     isDisableInput = this.disableInput.asObservable();
 
+    public openCreateFolder = new BehaviorSubject<boolean>(null);
+    isOpenCreateFolder = this.openCreateFolder.asObservable();
+
     public disableUpload = new BehaviorSubject<boolean>(null);
     isDisableUpload = this.disableUpload.asObservable();
 
@@ -202,7 +205,8 @@ export class CodxDMService {
     public titleEmptyAction = 'Dọn sạch thùng rác';
     public titleNodaTa = 'Không có tài liệu';
     public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-
+    public formModel: FormModel;
+    public dataService: any;
     constructor(
         private domSanitizer: DomSanitizer,
         private auth: AuthService,
