@@ -20,12 +20,8 @@ export class LayoutComponent extends LayoutBaseComponent {
     private cache: CacheService,
     inject: Injector) {
     super(inject);
-<<<<<<< HEAD
-    this.codxService.init(this.module)    
-=======
     this.codxService.init(this.module, false, false, 'light', false);
 
->>>>>>> d35769958cb44b1c893f45a187d3a1168c9633df
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
     });
