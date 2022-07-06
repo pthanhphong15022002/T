@@ -26,14 +26,14 @@
                                     (valueChange)="valueChange($event, 'icon')"></codx-valuelist>
                             </div>
                         </div>
-                        <!-- <div id="folderError" autofocus *ngIf="errorshow || folderNameCtrl.value === ''"
+                        <div id="folderError" autofocus *ngIf="errorshow || folderName === ''"
                             class="invalid-feedback">
                             <div
-                                *ngIf="folderNameCtrl.value === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
+                                *ngIf="folderName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
                             </div>
                             <ng-template #thenBlockErrorFolder>Tên thư mục bắt buộc..</ng-template>
                             <ng-template #thenBlockErrorElseFolder>{{message}}</ng-template>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="mt-2">
                         <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-outline-primary">
@@ -72,9 +72,9 @@
                                                                     src="../../../assets/codx/user/user-admin.svg">
                                                             </ng-template>
                                                             <ng-template #elsethenAvatar2>
-                                                                <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                                <!-- <lv-image-viewer class="symbol symbol-30 symbol-circle"
                                                                     [objectId]="perm.objectID" objectType="AD_Users">
-                                                                </lv-image-viewer>
+                                                                </lv-image-viewer> -->
                                                             </ng-template>
                                                         </div>
                                                         <div class="text-dark-75">{{perm.objectName}}</div>

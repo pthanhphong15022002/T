@@ -21,8 +21,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
-  dialog!: DialogRef;
-  views: Array<ViewModel> = [];
   constructor(
     inject: Injector,
     public cache: CacheService,
@@ -61,11 +59,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     option.Width = '550px';
     let data = {} as any;
     data.title = this.titleAddFolder;
-    this.dialog = this.callfc.openSide(CreateFolderComponent, data, option);
-    this.dialog.closed.subscribe(e => {
-      console.log(e);
-    })
-
+    this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
 }

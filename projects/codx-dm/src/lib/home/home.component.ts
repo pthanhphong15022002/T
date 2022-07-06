@@ -121,7 +121,7 @@ export class HomeComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
-    option.Width = '750px';
+    option.Width = '550px';
 
     this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
     this.dialog.closed.subscribe(e => {
@@ -178,8 +178,8 @@ export class HomeComponent extends UIComponent {
 
   onSelectionChanged($data) {
  //   console.log($data);
-    let id = $data.recID;
-    let item = $data;    
+    let id = $data.dataItem.recID;
+    let item = $data.dataItem;    
     if (item.read) {      
       // var breadcumb = [];
       // var breadcumbLink = [];
