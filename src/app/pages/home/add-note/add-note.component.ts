@@ -81,7 +81,8 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
-      this.addFirstObjectInArray();
+      if (this.note.noteType != 'text')
+        this.addFirstObjectInArray();
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
@@ -306,7 +307,7 @@ export class AddNoteComponent implements OnInit {
 
 
   openFormNoteBooks() {
-    if(this.formType == 'edit') {
+    if (this.formType == 'edit') {
       var obj = {
         itemUpdate: this.note,
       };
