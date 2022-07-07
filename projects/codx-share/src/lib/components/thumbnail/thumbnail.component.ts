@@ -28,6 +28,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   ngOnInit(): void {    
    // this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
+
   }
 
   checkDownloadRight(file) {
@@ -48,6 +49,13 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   deleteFile(id) {
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
+
+    // this.notificationsService.alertCode('TM005', config).subscribe((res) => { 
+    //   if (res?.event && res?.event?.status == 'Y') { 
+    //     console.log(res); 
+    //   }      
+    // }); 
+
     this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x=>{
       if(x.event.status == "Y")
       {        

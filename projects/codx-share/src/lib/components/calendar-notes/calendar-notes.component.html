@@ -1,3 +1,6 @@
+<codx-views #view [funcID]="'WPT08'">
+</codx-views>
+
 <div class="cal-notes">
     <div class="more-btn">
         <span class="icon-edit-one icon-22 icon-add btn btn-icon btn-active-light-primary position-relative"
@@ -18,64 +21,38 @@
             </div>
         </div>
     </div>
-    <div class="d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-between note-title">
-            <div class="text-dark fw-bold">
-                <codx-label name="lblPinNote" formName="Notes" default="Ghi chú của tôi"></codx-label>
-            </div>
-            <div class="ms-6 position-relative">
-                <button type="button" class="btn btn-icon dropdown-toggle" placement="start"
-                    [ngbPopover]="popContentFilter" [autoClose]="'outside'" container="body">
-                    <span class="icon-filter1 icon-18"></span>
-                </button>
-                <div class="modal modal-sticky modal-sticky-top-right dropdown_modal" id="filter_modal" role="dialog"
-                    data-backdrop="false">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div aria-disabled="true" class="display-none">
-            <codx-listview #listview service="SYS" entityName="WP_Notes" assemblyName="CM" className="ParametersBusiness" method="GetDataByRecIDAsync" [predicate]="predicate" [dataValue]="dataValue" >
-            </codx-listview>
-        </div> -->
-        <div *ngIf="checkWP_NotesParam == true">
-            <!-- <div class="my-2">
-                <codx-label class="fw-bold fs-6 text-primary" name="lblPinNote" formName="Notes" default="Ghi chú">
-                </codx-label>
-            </div> -->
+    <!-- <codx-listview service="SYS" assemblyName="ERM.Business.CM" className="ParametersBusiness"
+        method="GetDataByRecIDAsync" [predicate]="predicate" [dataValue]="dataValue"></codx-listview> -->
+    <div class="d-flex flex-column top-5">
+        <div *ngIf="checkWP_NotesParam == true" class="pd-note">
             <div *ngFor="let item of WP_Notes">
                 <div *ngIf="item.showCalendar == true">
                     <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(item.recID, item)"></span>
-                                        </div>
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
                                     </div>
-                                    <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
-                                        [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(item.recID, item)"></span>
-                                        </div>
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                        <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
-                                        [objectId]="item.recID" [updateDirect]="false" [isAllowEdit]="true"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
                                             <div *ngIf="itemList.status == null">
                                                 <div class="my-1">
@@ -101,30 +78,28 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(item.recID, item)"></span>
-                                        </div>
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
                                     </div>
-                                    <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
-                                        [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(item.recID, item)"></span>
-                                        </div>
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                        <!-- <codx-img #imageUpLoad [objectType]="'WP_Notes'" aria-disabled="true"
-                                        [objectId]="item.recID" [updateDirect]="false"></codx-img> -->
                                         <div *ngFor="let itemList of item.checkList">
                                             <div *ngIf="itemList.status == null">
                                                 <div class="my-1">
@@ -149,212 +124,49 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="checkTM_TasksParam == true" class="mt-3">
-            <div class="fw-bold fs-6 text-primary mb-3 pd-left-10">
-                <codx-label name="lblPinNote" formName="Notes" default="Công việc"></codx-label>
-            </div>
+        <div *ngIf="checkTM_TasksParam == true" class="pd-note">
             <div *ngFor="let item of TM_Tasks">
                 <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
-                    <div class="note-content mb-3">
+                    <div class="task-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                <div class="dropdown ms-2">
-                                    <span class="icon-more_vert icon-18" placement="start" container="body"
-                                        [ngbPopover]="" [autoClose]="'outside'"></span>
-                                </div>
+                            <div class="d-flex flex-column note-option">
+                                <span [innerHTML]="item.memo"></span>
                             </div>
-                            <span [innerHTML]="item.memo"></span>
                         </div>
                     </div>
                 </div>
                 <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
-                    <div class="note-content mb-3">
+                    <div class="task-content mb-3">
                         <div class="checkbox-list">
-                            <div class="note-date d-flex justify-content-end align-items-center moreFunc">
-                                <div class="dropdown ms-2">
-                                    <span class="icon-more_vert icon-18" placement="start" container="body"
-                                        [ngbPopover]="" [autoClose]="'outside'"></span>
-                                </div>
+                            <div class="d-flex flex-column note-option">
+                                <span [innerHTML]="item.memo"></span>
                             </div>
-                            <span [innerHTML]="item.memo"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- </ng-template> -->
     </div>
 </div>
-<ng-template #popContentPinNote let-modal>
-    <div class="flex justify-content-between align-items-center" style="width: 150px;">
-        <codx-label name="lblPinNote" formName="Notes" default="Ghim ghi chú"></codx-label>
-        <codx-input type="switch" [checked]="itemUpdate?.isPin == 'true' || itemUpdate?.isPin == '1'" field="pinNote"
-            labelPosition="After" [disabled]="false" class="test-check"
-            (valueChange)="valueChange($event, recID, itemUpdate.data)"
-            (click)="openFormUpdateIsPin(popContentUpdateIsPin, itemUpdate?.data)">
-        </codx-input>
-    </div>
-    <hr />
-    <div class="flex">
-        <span class="icon-delete icon-16 text-danger me-1"></span>
-        <div class="text-danger" (click)="onDeleteNote()">
-            <codx-label name="lblDeleteNote" formName="Notes" default="Xóa ghi chú"></codx-label>
-        </div>
-    </div>
-</ng-template>
 
 <ng-template #popContentTypeCalendar let-modal>
     <div class="flex align-items-center">
-        <codx-label style="width: 120px;" name="lblDeleteNote" formName="Notes" default="Theo tuần"></codx-label>
+        <codx-label class="w-136px" name="lblDeleteNote" formName="Notes" default="Theo tuần"></codx-label>
         <codx-input type="switch" field="onTypeCalendarByWeek" labelPosition="Before" class="test-check"
             [checked]="checkWeek" (valueChange)="valueChangeTyCalendar($event)" [crrValue]="checkWeek">
         </codx-input>
     </div>
-    <div class="flex align-items-center">
-        <codx-label style="width: 120px;" name="lblDeleteNote" formName="Notes" default="Theo tháng"></codx-label>
-        <codx-input type="switch" field="onTypeCalendarByMonth" labelPosition="Before" class="test-check"
-            [checked]="checkMonth" (valueChange)="valueChangeTyCalendar($event)" [crrValue]="checkMonth">
-        </codx-input>
-    </div>
     <div class="separator my-3"></div>
-</ng-template>
-
-<ng-template #popContentUpdateIsPin let-modal>
-    <div class="modal-body">
-        <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-between note-title">
-                <div class="text-dark fw-bold">
-                    <codx-label name="lblDeleteNote" formName="Notes" default="Cập nhật danh sách ghim"></codx-label>
-                </div>
-                <span>{{messageParam}}</span>
-            </div>
-            <codx-listview [itemTemplate]="template" #listview1 [funcId]="''" entityName="WP_Notes"
-                gridViewName="'grvNotes'" service="WP" (valueProperty)="valueProperty($event)">
-            </codx-listview>
-            <ng-template #template let-item>
-                <div *ngIf="item.isPin == true">
-                    <div class="flex">
-                        <div class="" style="width: 400px;">
-                            <div class="note-content mb-3">
-                                <div class="checkbox-list">
-                                    <div *ngIf="item.memo != null">
-                                        <div class="note-date d-flex justify-content-end align-items-center">
-                                            <span class=" text-primary">{{item.createdOn |
-                                                date:'dd-MM-yyy'}}</span>
-                                            <div class="dropdown ms-2">
-                                                <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                    <span class="icon-more_vert icon-18"></span>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-edit text-warning icon-18"></span>
-                                                            <span class="ms-3">Nav 1</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-list_alt text-primary icon-18"></span>
-                                                            <span class="ms-3">Nav 2</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-clear text-danger icon-18"></span>
-                                                            <span class="ms-3">Nav 3</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                            <span [innerHTML]="item.memo"></span>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="item.memo == null">
-                                        <div class="note-date d-flex justify-content-end align-items-center">
-                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                            <div class="dropdown ms-2">
-                                                <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                    <span class="icon-more_vert icon-18"></span>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-edit text-warning icon-18"></span>
-                                                            <span class="ms-3">Nav 1</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-list_alt text-primary icon-18"></span>
-                                                            <span class="ms-3">Nav 2</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-clear text-danger icon-18"></span>
-                                                            <span class="ms-3">Nav 3</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                            <div *ngFor="let itemList of item.checkList">
-                                                <div *ngIf="itemList.status == null">
-                                                    <div class="my-1">
-                                                        <div>.{{itemList.listNote}}</div>
-                                                    </div>
-                                                </div>
-                                                <div *ngIf="itemList.status != null">
-                                                    <div class="my-1">
-                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                            label="{{itemList.listNote}}"
-                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                            labelPosition="After" [disabled]="false" class="test-check"
-                                                            (valueChange)="valueChange($event)"></codx-input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="" style="margin-left: 20px;">
-                            <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" field="checkboxUpdateNotePin"
-                                labelPosition="After" [disabled]="false" class="test-check"
-                                (valueChange)="valueChange($event, item.recID, item)"></codx-input>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" (click)="onEditNote()">Cập nhật</button>
-    </div>
-</ng-template>
-
-<ng-template #popContentFilter let-modal>
     <div *ngIf="this.WP_NotesParam != null">
         <div *ngFor="let item of WP_NotesParam">
             <div class="flex">
-                <div *ngIf="item.fieldName == 'ShowColor'" class="" style="width: 5px;">
+                <div *ngIf="item.fieldName == 'ShowColor'" class="w-5px">
                     <li [style.background-color]="item.fieldValue" [style.color]="item.fieldValue"></li>
                 </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class=""
-                    style="margin-left: 10px; margin-top: -20px;;width: 130px;">
+                <div *ngIf="item.fieldName == 'ShowEvent'" class="show-event">
                     {{item.description}}
                 </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class="" style="margin-left: 10px; margin-top: -20px;">
+                <div *ngIf="item.fieldName == 'ShowEvent'" class="show-event-check">
                     <codx-input type="checkbox" field="WP_Notes_ShowEvent"
                         [checked]="item?.fieldValue == 'true' || item?.fieldValue == '1'" labelPosition="Before"
                         [disabled]="false" class="test-check" (valueChange)="valueChange($event)"></codx-input>

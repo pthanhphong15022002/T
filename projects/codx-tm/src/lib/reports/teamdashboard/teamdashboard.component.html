@@ -1,7 +1,7 @@
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-75 m-2">
     <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -47,8 +47,11 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>{{dbData?.availability}}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -94,8 +97,11 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>{{dbData?.performance}}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -141,8 +147,11 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>{{dbData?.quality}}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -188,6 +197,9 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>{{dbData?.kpi}}</div>
+        </div>
       </div>
     </div>
     <div class="d-flex justify-content-around bg-body mb-2">
@@ -202,7 +214,7 @@
         >
         </ejs-treemap>
       </div>
-      <div class="w-50 test">
+      <div class="w-50 test" style="position: relative">
         <ejs-accumulationchart
           id="chart-rate-done"
           [legendSettings]="legendSettings"
@@ -273,18 +285,18 @@
       <div class="d-flex justify-content-start">
         <span class="icon-check-correct w-25"></span>
         <div class="w-75">
-          <div>{{dbData?.doneTasks}}</div>
+          <div>{{ dbData?.doneTasks }}</div>
           <div>Công việc đã hoàn tất</div>
         </div>
       </div>
       <div class="p-4 d-flex">
         <div class="w-50">
           <div>Tỷ lệ hoàn thành đúng hạn</div>
-          <div>{{dbData?.rateDoneTaskOnTime.toFixed(2)}} %</div>
+          <div>{{ dbData?.rateDoneTaskOnTime.toFixed(2) }} %</div>
         </div>
         <div class="w-50">
           <div>Công việc trễ hạn</div>
-          <div>{{dbData?.overdueTasks}}</div>
+          <div>{{ dbData?.overdueTasks }}</div>
         </div>
       </div>
     </div>
@@ -307,92 +319,17 @@
 <!-- Khối lượng công việc -->
 <ng-template #volumeWork>
   <div class="d-flex flex-column">
-    <div class="d-flex flex-row justify-content-end">
-      <span>Lê Phạm Hoài Thương</span>
+    <div
+      class="d-flex flex-row justify-content-end"
+      *ngFor="let item of vlWork"
+    >
+      <span>{{ item.id }}</span>
       <codx-img
-        [objectId]="'ADMIN'"
+        [objectId]="item.id"
         [objectName]="'Lê Phạm Hoài Thương'"
         [objectType]="'AD_Users'"
       ></codx-img>
-    </div>
-    <div class="d-flex justify-content-between">
-      <div class="">12</div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
-    </div>
-
-    <div class="d-flex flex-column">
-      <div class="d-flex flex-row justify-content-end">
-        <span>Lê Phạm Hoài Thương</span>
-        <codx-img
-          [objectId]="'ADMIN'"
-          [objectName]="'Lê Phạm Hoài Thương'"
-          [objectType]="'AD_Users'"
-        ></codx-img>
-      </div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
-    </div>
-
-    <div class="d-flex flex-column">
-      <div class="d-flex flex-row justify-content-end">
-        <span>Lê Phạm Hoài Thương</span>
-        <codx-img
-          [objectId]="'ADMIN'"
-          [objectName]="'Lê Phạm Hoài Thương'"
-          [objectType]="'AD_Users'"
-        ></codx-img>
-      </div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
+      <div>{{ item.qtyTasks }}</div>
     </div>
   </div>
 </ng-template>
@@ -400,36 +337,6 @@
 <!-- Thời gian thực hiện -->
 <ng-template #workHours>
   <div class="d-flex flex-column">
-    <div class="d-flex flex-row justify-content-end">
-      <span>Lê Phạm Hoài Thương</span>
-      <codx-img
-        [objectId]="'ADMIN'"
-        [objectName]="'Lê Phạm Hoài Thương'"
-        [objectType]="'AD_Users'"
-      ></codx-img>
-    </div>
-    <div class="d-flex justify-content-between">
-      <div class="">12</div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
-    </div>
-
     <div class="d-flex flex-column">
       <div class="d-flex flex-row justify-content-end">
         <span>Lê Phạm Hoài Thương</span>
@@ -439,53 +346,14 @@
           [objectType]="'AD_Users'"
         ></codx-img>
       </div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
-    </div>
-
-    <div class="d-flex flex-column">
-      <div class="d-flex flex-row justify-content-end">
-        <span>Lê Phạm Hoài Thương</span>
-        <codx-img
-          [objectId]="'ADMIN'"
-          [objectName]="'Lê Phạm Hoài Thương'"
-          [objectType]="'AD_Users'"
-        ></codx-img>
-      </div>
-      <div class="progress">
-        <div
-          class="progress-bar bg-success"
-          role="progressbar"
-          style="width: 40%"
-        ></div>
-        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar bg-danger"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-      </div>
+      <ejs-progressbar
+        #linear
+        id="linear"
+        value="70"
+        [rangeColors]="rangeColors"
+        [isGradient]="isGradient"
+      >
+      </ejs-progressbar>
     </div>
   </div>
 </ng-template>

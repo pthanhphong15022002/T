@@ -9,6 +9,10 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
+  override asideFixed = false;
+  // override asideTheme: 'dark' | 'light' | 'transparent'= 'transparent';
+  override toolbar = false;
+  
   constructor(inject: Injector) {
     super(inject);
     this.codxService.init(this.module);

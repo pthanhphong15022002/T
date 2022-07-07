@@ -522,11 +522,21 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     }
   }
   valueChangeEstimated(data) {
-    var num = Number.parseInt(data.data);
-    if(num < 0){
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào phải là số dương !');
-      this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
+    if(!data.data) return;
+    var num = Number.parseFloat(data.data);
+    if(!num){
+       //  this.notiService.notifyCode("can cai code o day đang gan tam")
+       this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
+       this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
+       this.changeDetectorRef.detectChanges();
+       return ;
+    }
+    if(num<0){
+        //  this.notiService.notifyCode("can cai code o day đang gan tam")
+        this.notiService.notify('Giá trị nhập vào phải lớn hơn hoặc bằng 0 !');
+        this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
+        this.changeDetectorRef.detectChanges();
+        return ;
     }
     if (data.data && num) {
       this.task[data.field] = data.data;
@@ -537,14 +547,11 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
         var time = crrDay.getTime();
         var timeEndDate = time + estimated;
         this.task.endDate = moment(new Date(timeEndDate)).toDate();
+        this.crrEstimated = this.crrEstimated?this.crrEstimated : this.task.estimated;
       } else if(!this.crrEstimated){
         var timeEndDate = this.task.startDate.getTime() + estimated;
         this.task.endDate = moment(new Date(timeEndDate)).toDate();
       }
-    } else {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
-      this.task.estimated = this.crrEstimated? this.crrEstimated : 0 ;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -569,10 +576,12 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate)
-        this.task.estimated = moment(this.task.endDate).diff(
-          moment(this.task.startDate),
-          'hours'
-        );
+        // this.task.estimated = moment(this.task.endDate).diff(
+        //   moment(this.task.startDate),
+        //   'hours'
+        // );
+        var time = (((this.task.endDate.getTime() -this.task.startDate.getTime())/3600000).toFixed(1));
+        this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
     }
   }
@@ -683,7 +692,10 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   }
 
   valueChangeTags(e) {
-    this.task.tags = e.data;
+    if(e.data!=""){
+      this.task.tags = e.data.splice(1);
+    }
+  
   }
 
   textboxChange(e) {
@@ -738,13 +750,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     });
     this.listTaskResources = listTaskResources;
   }
-  addFile(evt: any) {
-    //this.attachment.openPopup();
-    this.attachment.uploadFile();
-  }
-  fileAdded(e) {
-    console.log(e);
-  }
+
   changeMemo2(e, id) {
     var message = e?.data;
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
@@ -766,5 +772,15 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
 
   valueChangeUser(e){
 
+  }
+  addFile(evt: any) {
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e){
+    console.log(e);
   }
 }

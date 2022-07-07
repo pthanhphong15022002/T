@@ -1,16 +1,7 @@
-<div class="modal-header">
-
-</div>
-<div class="modal-body">
-    <div class="d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-between note-title">
-            <div class="text-dark fw-bold">
-                <codx-label name="lblDeleteNote" formName="Notes" default="Cập nhật danh sách ghim"></codx-label>
-            </div>
-            <span></span>
-        </div>
+<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup add #body>
         <codx-listview [itemTemplate]="template" #listview1 [funcId]="''" entityName="WP_Notes"
-            gridViewName="'grvNotes'" service="WP" (valueProperty)="valueProperty($event)">
+            gridViewName="'grvNotes'" service="WP">
         </codx-listview>
         <ng-template #template let-item>
             <div *ngIf="item.isPin == true">
@@ -19,36 +10,12 @@
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div class="active">
+                                        <span class="icon-push_pin1 icon-20" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center top-25px">
                                         <span class=" text-primary">{{item.createdOn |
                                             date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <span class="icon-more_vert icon-18"></span>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-edit text-warning icon-18"></span>
-                                                        <span class="ms-3">Nav 1</span>
-                                                    </div>
-                                                </a>
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-list_alt text-primary icon-18"></span>
-                                                        <span class="ms-3">Nav 2</span>
-                                                    </div>
-                                                </a>
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-clear text-danger icon-18"></span>
-                                                        <span class="ms-3">Nav 3</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option">
@@ -56,35 +23,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div class="active">
+                                        <span class="icon-push_pin1 icon-20" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center top-25px">
                                         <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <span class="icon-more_vert icon-18"></span>
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-edit text-warning icon-18"></span>
-                                                        <span class="ms-3">Nav 1</span>
-                                                    </div>
-                                                </a>
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-list_alt text-primary icon-18"></span>
-                                                        <span class="ms-3">Nav 2</span>
-                                                    </div>
-                                                </a>
-                                                <a class="dropdown-item">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-clear text-danger icon-18"></span>
-                                                        <span class="ms-3">Nav 3</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option">
@@ -112,13 +55,21 @@
                     <div class="" style="margin-left: 20px;">
                         <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" field="checkboxUpdateNotePin"
                             labelPosition="After" [disabled]="false" class="test-check"
-                            (valueChange)="valueChange($event, item.recID, item)"></codx-input>
+                            (valueChange)="valueChange($event, item)"></codx-input>
                     </div>
                 </div>
             </div>
         </ng-template>
-    </div>
-</div>
-<div class="modal-footer">
-    <button type="submit" class="btn btn-primary" (click)="onEditNote()">Cập nhật</button>
-</div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-light-primary" (click)="dialog.close()">
+                <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+            </button>
+            <button type="button" class="btn btn-primary ms-1" (click)="onEditNote()" *ngIf="!readOnly">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

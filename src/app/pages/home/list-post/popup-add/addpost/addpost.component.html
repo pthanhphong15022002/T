@@ -7,13 +7,13 @@
                     </codx-img>
                 </div>
                 <div class="ms-2">
-                    <div class="user-name fw-bold">{{user?.userName}}</div>
+                    <div class="user-name fw-bold">{{user.userName}}</div>
                     <ng-container *ngIf="lstRecevier.length > 0">
                         <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
                             <div class="fw-bold fs-6">
                                 <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
                                     default="cùng với "></codx-label>
-                                <span class="me-2 ">{{userRecevier.UserName}}</span>
+                                <span class="me-2 ">{{recevierName}}</span>
                             </div>
                         </ng-container>
                         <ng-template #shareWith>
@@ -28,7 +28,14 @@
                     </ng-container>
                     <div class="d-flex align-items-center justify-content-start user-square">
                         <div class="me-2">
-                            <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
+                            <!-- <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share> -->
+                            <codx-input
+                                type="Share"
+                                refValue="L1901"
+                                [showInput]="false"
+                                [multiple]="true"
+                                (valueChange)="eventApply($event)">
+                            </codx-input>
                         </div>
                         <i class="icon-arrow_drop_down icon-16 text-dark"></i>
                     </div>

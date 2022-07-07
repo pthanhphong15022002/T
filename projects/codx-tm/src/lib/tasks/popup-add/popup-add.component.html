@@ -1,12 +1,10 @@
 <codx-form headerText="{{title}}" [subHeader]="subHeader" subHeaderText="" [body]="body" [footer]="footer"
   [dialog]="dialog">
   <ng-template #subHeader>
-    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags"
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags || ''"
       (valueChange)="valueChangeTags($event)"></codx-tag>
   </ng-template>
   <ng-template #body>
-    <!-- <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags"
-    (valueChange)="valueChangeTags($event)"></codx-tag> -->
 
     <!-- <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex mb-5">
@@ -164,12 +162,12 @@
                   </div>
                 </div>
                 <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
-                <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="task.assignTo" multiple="true"
+                <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
                   [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
               </div>
-              <div class="symbol-group">
+              <div class="">
                 <ng-container *ngFor="let item of listUser">
-                  <codx-img class="symbol flex symbol-40px symbol-circle me-4" [objectId]="item" objectType="AD_Users">
+                  <codx-img class=" flex symbol-40px " [objectId]="item" objectType="AD_Users">
                   </codx-img>
                 </ng-container>
               </div>
@@ -188,9 +186,14 @@
             </div>
 
             <div class="d-flex align-items-center file-item mt-5">
-              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+              <!-- <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
                 hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
-                (fileAdded)="fileAdded($event)"></codx-attachment>
+                (fileAdded)="fileAdded($event)"></codx-attachment> -->
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+                hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+                [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
+                (fileCount)="getfileCount($event)" displayThumb="full">
+              </codx-attachment>
             </div>
           </ng-template>
         </e-tabitem>
@@ -270,7 +273,7 @@
                 </div>
               </div>
               <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
-              <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="task.assignTo" multiple="true"
+              <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
                 [showInput]="false" (valueChange)="eventApply($event)">
               </codx-input>
             </div>
@@ -278,8 +281,7 @@
               <ng-container *ngFor="let item of listUserDetail; index as i">
                 <div class="d-flex py-2 border-bottom justify-content-between list-title">
                   <div class="d-flex align-items-top">
-                    <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="item?.userID"
-                      objectType="AD_Users">
+                    <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
                     </codx-img>
 
                     <div class="d-flex flex-column me-2 ">

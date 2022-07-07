@@ -1,8 +1,7 @@
 <codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
   method="GetListTaskGroupsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="taskGroupID" [pageSize]="100"
-  [selectedFirst]="true">
+  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
+  idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #grid let-data>
@@ -26,7 +25,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.note">
+        <div [innerHTML]="data.note" [ngbTooltip]="data.note">
         </div>
       </div>
     </td>
@@ -210,6 +209,14 @@
     <codx-label fiedName="CreatedOn" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ngày tạo">
     </codx-label>
   </div>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="moreFuncClick($event,data)"
+    [title]="data.taskGroupName" [esc2]="data.note" [formModel]="view.formModel" [imageId]="data.createdBy"
+    imageObjType="AD_Users">
+    <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
+  </codx-temp-full>
 </ng-template>
 
 

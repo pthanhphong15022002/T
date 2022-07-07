@@ -8,58 +8,58 @@
   <div class="page-home page-master border-top-erm">
     <div id="erm_content">
       <div class="container-fluid">
-        <!-- <div class="font-size-h2 font-weight-bold text-dark mt-6">
+        <div class="font-size-h2 font-weight-bold text-dark mt-6">
           <codx-label name="ProjectBoard" formName="Sprints" default="My board"></codx-label>
-        </div> -->
-        <!-- <div class="text-muted mb-6">
+        </div>
+        <div class="text-muted mb-6">
           <codx-label name="ListMyBoard" formName="Sprints" default="Danh sách view board cá nhân được bạn chia sẻ">
           </codx-label>
-        </div> -->
+        </div>
         <div class="view-listbox card-with-dropdown p-6 row">
           <codx-listview type="cardView" #lstViewBoard service="TM" assemblyName="ERM.Business.TM"
             className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
             [predicate]="predicateViewBoards" class="" [formModel]="view.formModel" [itemTemplate]="itemViewBoard">
           </codx-listview>
         </div>
-        <div class="clear mb-6 d-flex justify-content-end pr-9">
+        <!-- <div class="clear mb-6 d-flex justify-content-end pr-9"> -->
           <!-- <div (click)="viewMoreMyBoard()" class="read-more d-flex align-items-center"
             *ngIf="totalRowMyBoard <= totalViewBoards">
             <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
             <span class="text-primary">Read more</span>
           </div> -->
-        </div>
+        <!-- </div> -->
         <!-- <div class="font-size-h2 font-weight-bold text-dark mt-6">
           <codx-label name="ProjectBoard" formName="Sprints" default="Project board"></codx-label>
-        </div> -->
-        <!-- <div class="text-muted mb-6">
+        </div>
+        <div class="text-muted mb-6">
           <codx-label name="ListProjectBoard" formName="Sprints"
             default="Danh sách view board theo dự án có bạn tham gia hoặc được bạn chia sẻ"></codx-label>
-        </div> -->
+        </div>
         <div class="view-listbox p-6">
           <codx-listview type="cardView" #lstProjectBoard service="TM" assemblyName="ERM.Business.TM"
             className="SprintsBusiness" method="GetListSprintAsync" entityName="TM_Sprints" gridViewName="grvSprints"
             [predicate]="predicateProjectBoards" class="" [formModel]="view.formModel"
             [itemTemplate]="itemProjectBoard">
           </codx-listview>
-        </div>
-        <div class="clear mb-6 d-flex justify-content-end pr-9">
+        </div> -->
+        <!-- <div class="clear mb-6 d-flex justify-content-end pr-9"> -->
           <!-- <div (click)="viewMoreProjectBoard()" class="read-more d-flex align-items-center"
             *ngIf="totalRowProjectBoard < totalProjectBoards">
             <span class="icon-keyboard_arrow_right icon-18 text-primary"></span>
             <span class="text-primary">Read more</span>
           </div> -->
-        </div>
+        <!-- </div> -->
       </div>
     </div>
   </div>
-
+</ng-template>
 
   <ng-template #itemViewBoard let-data>
-    <!-- <codx-card-center cardCss="border h-100 w-225px" [formModel]="view.formModel"
+    <codx-card-center cardCss="border h-100 w-225px" [formModel]="view.formModel"
       [iconCss]="data.sharedByOther?'icon-share':''" [iconColorCss]="'blue'" [imageId]="data.iterationID"
-      [title]="data.iterationName" [desc]="data.memo" [resources]="data.resources" [resourceObjType]="'AD_Users'"
-      [resourceNum]="4" (clickMF)="clickMF($event, data)">
-    </codx-card-center> -->
+      [title]="data.iterationName" [desc]="data.memo" [resources]="data.resources" resourceObjType="AD_Users"
+      [resourceNum]="4" (clickMF)="clickMF($event, data) ">
+    </codx-card-center>
   </ng-template>
 
   <ng-template #itemProjectBoard let-data>
@@ -71,8 +71,7 @@
   </ng-template>
   <ng-template #cardImgFooter let-data>
     <div class="d-flex flex-center flex-wrap">
-      <codx-imgs [width]="30" objectId="data.resources" objectType="AD_Users" [numberImages]="4">
+      <codx-imgs [width]="30" [objectId]="'cainay se truyen gi vao'" objectType="AD_Users" [numberImages]="4">
       </codx-imgs>
     </div>
   </ng-template>
-</ng-template>
