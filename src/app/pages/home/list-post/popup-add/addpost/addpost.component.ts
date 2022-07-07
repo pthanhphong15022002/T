@@ -210,9 +210,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.lstRecevier.map((item) => {
       var per = new Permission();
       per.memberType = "3";
-      per.objectType = this.objectType;
-      per.objectID = item.UserID;
-      per.objectName = item.UserName;
+      per.objectType = item.objectType;
+      per.objectID = item.id;
+      per.objectName = item.text;
       per.read = true;
       per.isActive = true;
       per.createdBy = this.user.userID;
@@ -273,9 +273,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.lstRecevier.map((item) => {
         var per = new Permission();
         per.memberType = "3";
-        per.objectType = this.objectType;
-        per.objectID = item.UserID;
-        per.objectName = item.UserName;
+        per.objectType = item.objectType;
+        per.objectID = item.id;
+        per.objectName = item.text;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -319,40 +319,20 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     else{
       this.isEdit = false;
     }
-    var data = event[0];
-    var objectType = data.objectType;
+    var data = event.data;
+    var objectType = data[0].objectType;
     if(objectType && !isNaN(Number(objectType))){
-      this.lstRecevier = data.data;
+      this.lstRecevier = data;
       this.shareControl = objectType;
     }
     else
     {
-      this.objectType = data.objectType;
-      this.lstRecevier = data.dataSelected;
+      this.objectType = objectType;
+      this.lstRecevier = data;
       this.shareControl = objectType;
-      this.userRecevier = this.lstRecevier[0];
-      switch(objectType){
-        case 'U':
-          this.recevierID = this.userRecevier.UserID;
-          this.recevierName = this.userRecevier.UserName;
-          break;
-        case 'D':
-          this.recevierID = this.userRecevier.OrgUnitID;
-          this.recevierName = this.userRecevier.OrgUnitName;
-          break;
-        case 'P':
-          this.recevierID = this.userRecevier.PositionID;
-          this.recevierName = this.userRecevier.PositionName;
-          break;
-        case 'G':
-          this.recevierID = this.userRecevier.UserID;
-          this.recevierName = this.userRecevier.UserName;
-          break;
-        case 'R':
-          this.recevierID = this.userRecevier.RoleID;
-          this.recevierName = this.userRecevier.RoleName;
-          break;
-      }
+      this.recevierID = data[0].id;
+      this.recevierName = data[0].dataSelected.UserName;
+      
       
     }
     this.dt.detectChanges();
@@ -388,9 +368,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.lstRecevier.map((item) => {
       var per = new Permission();
       per.memberType = "3";
-      per.objectType = this.objectType;
-      per.objectID = item.UserID;
-      per.objectName = item.UserName;
+      per.objectType = item.objectType;
+      per.objectID = item.id;
+      per.objectName = item.text;
       per.read = true;
       per.isActive = true;
       per.createdBy = this.user.userID;

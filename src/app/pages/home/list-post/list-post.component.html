@@ -25,7 +25,8 @@ idField="recID">
                     <div class="d-flex flex-column flex-grow-1 share">
                         <span class="text-gray-500 feed-box box-new share-input" (click)="openModal()">
                             <codx-label class="fw-normal" formName="Comments" name="lblThinks"
-                                default="Chọn vào đây để chia sẻ suy nghĩ của bạn"></codx-label>
+                                [default]="headerText">
+                            </codx-label>
                         </span>
                     </div>
                 </div>
@@ -72,7 +73,7 @@ idField="recID">
                     </ng-container>
                     <span *ngIf="item.shareControl == 'D' ||
                         item.shareControl == 'P' || item.shareControl == 'R' || item.shareControl == 'G' ||
-                        item.shareControl == 'U'; else other_option" class="ml-1 cursor-pointer" placement="bottom"
+                        item.shareControl == 'U'" class="ml-1 cursor-pointer" placement="bottom"
                         [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
                         (click)="getShareUser(item.shareControl, item.id)">
                         <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 "
@@ -91,7 +92,6 @@ idField="recID">
                             </ng-template>
                         </span>
                     </span>
-                    <ng-template #other_option></ng-template>
                 </div>
             </div>
             <div class="more">
