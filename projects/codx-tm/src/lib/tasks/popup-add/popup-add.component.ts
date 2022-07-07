@@ -781,6 +781,6 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     console.log(e);
   }
   getfileCount(e){
-    console.log(e);
+
   }
 }
