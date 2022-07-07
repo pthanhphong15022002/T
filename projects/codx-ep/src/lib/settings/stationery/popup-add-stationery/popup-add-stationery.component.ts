@@ -65,7 +65,7 @@ export class PopupAddStationeryComponent implements OnInit {
   data: any = {};
   dialog: DialogRef;
   isAdd = true;
-
+  colorItem: any;
   formModel: FormModel;
   constructor(
     private bookingService: CodxEpService,
@@ -272,7 +272,9 @@ export class PopupAddStationeryComponent implements OnInit {
     console.log(this.color);
     console.log('Aloo');
   }
+  listColor = [];
   valueChange(event) {
+    debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogStationery.patchValue({
@@ -282,9 +284,17 @@ export class PopupAddStationeryComponent implements OnInit {
         this.dialogStationery.patchValue({ [event['field']]: event.data });
       }
     }
+    this.colorItem = event.data;
   }
+
+  closeDialog(evt: any) {
+    this.listColor.push(this.colorItem);
+    console.log(this.listColor);
+    this.dialog.close();
+  }
+
   popupTab() {
-    this.cfService.openForm(this.popupTemp, 'Chọn màu',200,200);
+    this.cfService.openForm(this.popupTemp, 'Chọn màu', 200, 200);
   }
   getlstDevice(items: string) {
     this.lstDevices = items.split(';');

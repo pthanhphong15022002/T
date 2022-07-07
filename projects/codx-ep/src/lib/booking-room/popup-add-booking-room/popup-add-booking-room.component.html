@@ -850,8 +850,8 @@
 </codx-form>
 
 <ng-template #addLink let-dialog>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">
+  <div class="card-header">
+    <h4 class="card-title" id="card-basic-title">
       <codx-label
         name="lblLink"
         default="Link cuộc họp"
@@ -867,7 +867,7 @@
       <span class="icon-close icon-20"></span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="card-body">
     <div class="form-group row">
       <div class="col-4">
         <label
@@ -889,7 +889,7 @@
       ></codx-input>
     </div>
   </div>
-  <div class="modal-footer" (click)="dialog.close()">
+  <div class="card-footer" (click)="dialog.close()">
     <button type="button" class="btn btn-primary">
       <codx-label
         name="lblSave"
