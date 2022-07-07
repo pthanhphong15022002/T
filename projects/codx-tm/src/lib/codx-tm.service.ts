@@ -96,6 +96,7 @@ export class CodxTMService {
       data
     );
   }
+
   saveAssign(data) {
     return this.api.execSv<any>(
       'TM',
@@ -105,6 +106,7 @@ export class CodxTMService {
       data
     );
   }
+
   addTaskBoard(data) {
     return this.api.execSv<any>(
       'TM',
@@ -114,6 +116,7 @@ export class CodxTMService {
       data
     );
   }
+
   addTaskGroup(data) {
     return this.api.execSv<any>(
       'TM',
@@ -133,6 +136,7 @@ export class CodxTMService {
       data
     );
   }
+
   update(data) {
     return this.api.execSv<any>(
       'TM',
@@ -162,6 +166,7 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
+
   getMoreFunction(data) {
     return this.api.execSv<any>(
       'SYS',
@@ -239,12 +244,15 @@ export class CodxTMService {
       });
     }
   }
+
   getTask(id) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetTaskByIdAsync', id);
   }
+
   deleteTask(taskID) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'DeleteTaskAsync', taskID);
   }
+
   getSprints(id) {
     return this.api.execSv<any>(
       'TM',
@@ -254,6 +262,7 @@ export class CodxTMService {
       id
     );
   }
+
   deleteSprints(id) {
     return this.api.execSv<any>(
       'TM',
@@ -307,6 +316,42 @@ export class CodxTMService {
   ) {
     if (!Array.isArray(list) || list.length == 0) return {};
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
+  }
+
+  getMyDBData(
+    model: Object,
+    daySelectedFrom: Date,
+    daySelectedTo: Date,
+    fromDate: Date,
+    toDate: Date,
+    beginMonth: Date,
+    endMonth: Date
+  ) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'ReportBusiness',
+      'GetDataMyDashboardAsync',
+      [model, beginMonth, endMonth]
+    );
+  }
+
+  getTeamDBData(
+    model: Object,
+    daySelectedFrom: Date,
+    daySelectedTo: Date,
+    fromDate: Date,
+    toDate: Date,
+    beginMonth: Date,
+    endMonth: Date
+  ) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'ReportBusiness',
+      'GetDataTeamDashboardAsync',
+      [model, beginMonth, endMonth]
+    );
   }
 
   getFormModel(functionID): Promise<FormModel> {

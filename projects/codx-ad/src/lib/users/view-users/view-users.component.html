@@ -2,17 +2,16 @@
 
   <ng-template #body>
     <div *ngFor="let item of lstRoles">
-      <div class="d-flex align-items-start" *ngFor="let item2 of item.roles">
-        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item2.roleID" objectType="AD_Roles">
-        </codx-img>
-        
+      <div class="d-flex align-items-start" >
+        <!-- <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item.smallIcon" objectType="AD_Roles">
+        </codx-img> -->
+        <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
         <div class="d-flex flex-column flex-grow-1" >
-          <div class="font-weight-bold" style="font-weight: bold;">
-            {{item2.roleID}}
+          <div class="font-weight-bold" style="font-weight: bold; margin-left: 20px;">
+            {{item.customName}}
           </div>
-          <div>
-            
-            {{item2.roleName}}
+          <div style="margin-left: 20px;">       
+            {{item.roleName}}
           </div>
         </div>
       </div>
