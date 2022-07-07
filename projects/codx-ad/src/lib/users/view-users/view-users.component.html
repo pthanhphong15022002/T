@@ -3,7 +3,7 @@
   <ng-template #body>
     <div *ngFor="let item of lstRoles">
       <div class="d-flex align-items-start" *ngFor="let item2 of item.roles">
-        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item.roles.roleID" objectType="AD_Roles">
+        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item2.roleID" objectType="AD_Roles">
         </codx-img>
         
         <div class="d-flex flex-column flex-grow-1" >
