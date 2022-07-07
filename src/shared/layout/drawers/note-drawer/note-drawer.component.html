@@ -8,13 +8,8 @@
                 <div class="d-flex justify-content-center flex-column me-3">
                     <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
               me-1 mb-2 lh-1 cursor-pointer">
-                        Ghi chú
-                        <!-- <codx-label name="lblTitleNote" formName="WP_Notes" , default=" Ghi chú"></codx-label> -->
+                        <codx-label name="lblTitleNote" formName="WP_Notes" default=" Ghi chú"></codx-label>
                     </a>
-                    <!-- <div class="mb-0 lh-1">
-                        <span class="badge badge-success badge-circle w-10px h-10px me-1"></span><span
-                            class="fs-7 fw-bold text-gray-400">Active</span>
-                    </div> -->
                 </div>
             </div>
 
@@ -32,57 +27,16 @@
                 </div>
             </div>
         </div>
+        <br>
+        <div class="btn-add">
+            <span class="icon-edit-one icon-22 icon-add btn btn-icon btn-active-light-primary position-relative"
+                (click)="openFormAddNote()"></span>
+        </div>
         <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-between note-title">
-                <div class="ms-6 position-relative">
-                    <span class="icon-add_box icon-28" style="margin-left: 430px;" (click)="openFormAddNote()"></span>
-                    <div class="modal modal-sticky modal-sticky-top-right dropdown_modal" id="filter_modal"
-                        role="dialog" data-backdrop="false">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <!--begin::Card-->
-                                <div class="card card-custom">
-                                    <div class="card-body">
-                                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                                            data-dismiss="modal">
-                                            <i class="icon-close icon-18"></i>
-                                        </button>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-warning my-3">
-                                            <span class="text-dark ms-2">Ghi chú cá nhân</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-danger my-3">
-                                            <span class="text-dark ms-2">Lịch họp</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-info my-3">
-                                            <span class="text-dark ms-2">Nghỉ phép</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end::Card-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="text-dark fw-bold" style="margin-left: 20px;font-size: 15px;">
+            <!-- <br> -->
+            <!-- <div class="text-dark fw-bold" style="margin-left: 20px;font-size: 15px;">
                 <codx-label name="lblNotePin" formName="Notes" default="Ghi chú ghim"></codx-label>({{countIsPin}})
-            </div>
+            </div> -->
             <br>
             <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes" [groupBy]="'isPin'"
                 gridViewName="'grvNotes'" service="WP">
@@ -93,6 +47,11 @@
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
                                 <div *ngIf="item.memo != null">
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -105,6 +64,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -134,6 +98,11 @@
                             </div>
                             <div *ngIf="item.isPin == false">
                                 <div *ngIf="item.memo != null">
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -146,6 +115,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
+                                    <div class="has-action-menu">
+                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
+                                            (clickMF)="clickMF($event,item)">
+                                        </codx-mfunc>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -181,165 +155,4 @@
     </div>
 </div>
 
-<ng-template #popContentPinNote let-modal>
-    <div class="flex justify-content-between align-items-center" style="width: 150px;">
-        <codx-label name="lblPinNote" formName="Notes" default="Ghim ghi chú"></codx-label>
-        <codx-input type="switch" [checked]="itemUpdate?.isPin == 'true' || itemUpdate?.isPin == '1'" field="pinNote"
-            labelPosition="After" [disabled]="false" class="test-check" (valueChange)="valueChange($event)"
-            (click)="openFormUpdateIsPin(popContentUpdateIsPin)">
-        </codx-input>
-    </div>
-    <hr />
-    <div class="flex">
-        <span class="icon-delete icon-16 text-danger me-1"></span>
-        <div class="text-danger" (click)="onDeleteNote(itemUpdate.recID)">
-            <codx-label name="lblDeleteNote" formName="Notes" default="Xóa ghi chú"></codx-label>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #popContentUpdateIsPin let-modal>
-    <div class="modal-header">
-
-    </div>
-    <div class="modal-body">
-        <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-between note-title">
-                <div class="text-dark fw-bold">Cập nhật danh dách ghi chú</div>
-                <div class="ms-6 position-relative">
-                    <button class="btn btn-none btn-sm dropdown-toggle ps-0" type="button" data-toggle="modal"
-                        data-target="#filter_modal">
-                        <span class="icon-filter1 icon-18"></span>
-                    </button>
-                    <div class="modal modal-sticky modal-sticky-top-right dropdown_modal" id="filter_modal"
-                        role="dialog" data-backdrop="false">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <!--begin::Card-->
-                                <div class="card card-custom">
-                                    <div class="card-body">
-                                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                                            data-dismiss="modal">
-                                            <i class="icon-close icon-18"></i>
-                                        </button>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-warning my-3">
-                                            <span class="text-dark ms-2">Ghi chú cá nhân</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-danger my-3">
-                                            <span class="text-dark ms-2">Lịch họp</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-between border-left-3 border-info my-3">
-                                            <span class="text-dark ms-2">Nghỉ phép</span>
-                                            <label class="checkbox checkbox-square ms-6">
-                                                <input type="checkbox" name="Checkboxes1" />
-                                                <span></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--end::Card-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <codx-listview [itemTemplate]="template" #listview1 [funcId]="''" entityName="WP_Notes"
-                gridViewName="'grvNotes'" service="WP">
-            </codx-listview>
-            <ng-template #template let-item>
-                <div *ngIf="item.isPin == true">
-                    <div class="flex">
-                        <div class="">
-                            <div class="p-3 note-content mb-3">
-                                <div class="checkbox-list">
-                                    <div *ngIf="item.memo != null">
-                                        <div class="flex">
-                                            <div class="">
-                                                <div class="note-date d-flex justify-content-end align-items-center">
-                                                    <span class=" text-primary">{{item.createdOn |
-                                                        date:'dd-MM-yyy'}}</span>
-                                                    <div class="dropdown ms-2">
-                                                        <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                            <span class="icon-more_vert icon-18"></span>
-                                                        </button>
-                                                        <span class="icon-menu icon-18"
-                                                            (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="">
-                                                <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" [checked]=""
-                                                    labelPosition="After" [disabled]="false" class="test-check"
-                                                    (valueChange)="valueChange($event)"></codx-input>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="d-flex flex-column note-option ms-3"
-                                            (click)="openFormUpdateNote(item.recID, item)">
-                                            <span [innerHTML]="item.memo"></span>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="item.memo == null">
-                                        <div class="note-date d-flex justify-content-end align-items-center">
-                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                            <div class="dropdown ms-2">
-                                                <button class="btn btn-icon btn-xs h-20px" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                    <span class="icon-more_vert icon-18"></span>
-                                                </button>
-                                                <span class="icon-menu icon-18"
-                                                    (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="d-flex flex-column note-option ms-3"
-                                            (click)="openFormUpdateNote(item.recID, item)">
-                                            <div *ngFor="let itemList of item.checkList">
-                                                <div *ngIf="itemList.status == null">
-                                                    <div class="my-1">
-                                                        <div>.{{itemList.listNote}}</div>
-                                                    </div>
-                                                </div>
-                                                <div *ngIf="itemList.status != null">
-                                                    <div class="my-1">
-                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                            label="{{itemList.listNote}}"
-                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                            labelPosition="After" [disabled]="false" class="test-check"
-                                                            (valueChange)="valueChange($event)"></codx-input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="" style="margin-left: 220px;width: 16px;">
-                            <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" field="checkboxUpdateNotePin"
-                                labelPosition="After" [disabled]="false" class="test-check"
-                                (valueChange)="valueChange($event, item.recID, item)"></codx-input>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" (click)="onEditNote()">Cập nhật</button>
-    </div>
-</ng-template>
+<codx-views #view funcID="WPT08"></codx-views>

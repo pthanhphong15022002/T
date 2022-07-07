@@ -68,6 +68,7 @@ export class UpdateNotePinComponent implements OnInit {
       this.api
         .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.itemUpdate?.recID, this.itemUpdate])
         .subscribe((res) => {
+          this.dialog.close();
           this.changeDetectorRef.detectChanges();
         });
     } else {

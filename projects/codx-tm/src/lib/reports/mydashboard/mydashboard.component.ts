@@ -1,3 +1,4 @@
+import { CodxTMService } from './../../codx-tm.service';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -107,6 +108,7 @@ export class MyDashboardComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
+    private tmService: CodxTMService,
     private activedRouter: ActivatedRoute
   ) {}
 
@@ -149,15 +151,19 @@ export class MyDashboardComponent implements OnInit {
   }
 
   private getGeneralData() {
-    this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataMyDashboardAsync', [
+    this.tmService
+      .getMyDBData(
         this.model,
+        this.daySelectedFrom,
+        this.daySelectedTo,
+        this.fromDate,
+        this.toDate,
         this.beginMonth,
-        this.endMonth,
-      ])
+        this.endMonth
+      )
       .subscribe((res) => {
         this.dbData = res;
-        console.log(this.dbData);
+        console.log('MyDB', this.dbData);
       });
 
     this.api

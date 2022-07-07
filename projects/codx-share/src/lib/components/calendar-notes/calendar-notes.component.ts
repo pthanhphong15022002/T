@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -47,7 +47,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   daySelected: any;
   toDate: any;
   changeDateSelect = false;
-  checkMonth = false;
   checkWeek = true;
   typeList = 'notes-home';
   dataValue = ['WP_Calendars', '', 'SettingShow'];
@@ -282,7 +281,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     var obj = {
       data: this.WP_Notes,
       dataUpdate: data,
-      formType: 'edit'
+      formType: 'edit',
+      maxPinNotes: this.maxPinNotes,
     };
     this.callfc.openForm(
       AddNoteComponent,
@@ -385,48 +385,14 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
   valueChangeTyCalendar(e) {
     if (e) {
-      var field = e.field;
-      if (field == 'onTypeCalendarByWeek') {
-        if (e.data == true) {
-          this.checkMonth = false;
-          this.checkWeek = true;
-          this.typeCalendar = 'week';
-        } else {
-          this.checkMonth = true;
-          this.checkWeek = false;
-          this.typeCalendar = 'month';
-        }
-        this.changeDetectorRef.detectChanges();
+      if (e.data == true) {
+        this.typeCalendar = 'week';
       } else {
-        if (e.data == true) {
-          this.checkWeek = false;
-          this.checkMonth = true;
-          this.typeCalendar = 'month';
-        } else {
-          this.checkWeek = true;
-          this.checkMonth = false;
-          this.typeCalendar = 'week';
-        }
-        this.changeDetectorRef.detectChanges();
+        this.typeCalendar = 'month';
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
-
-  // onEditNote() {
-  //   this.api
-  //     .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-  //       this.recID,
-  //       this.dataAdd,
-  //     ])
-  //     .subscribe((res) => {
-  //       for (let i = 0; i < this.WP_Notes.length; i++) {
-  //         if (this.WP_Notes[i].recID == this.recID) {
-  //           this.WP_Notes[i].isPin = res.isPin;
-  //         }
-  //       }
-  //       this.changeDetectorRef.detectChanges();
-  //     });
-  // }
 
   onEditIsPin(data: Notes) {
     var isPin = !data.isPin;
@@ -479,7 +445,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
-        this.openFormAddNote();
+        this.openFormUpdateNote(data);
         break;
       case 'delete':
         this.onDeleteNote(data)

@@ -45,12 +45,15 @@ ngx-skeleton-loader {
 }
 
 .tagitem {
-    padding: 2px;
     border-radius: 15px;
     width: fit-content;
-    height: 30px;
-    padding-right: 10px;
-    padding-left: 10px;
+    height: 26px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.tagitem div {
+    line-height: 26px;
 }
 
 .swiper-button-next {
@@ -109,8 +112,8 @@ ngx-skeleton-loader {
 }
 
 .pw-menu {
-    height: 48px;
-    line-height: 48px;
+    height: 42px;
+    line-height: 42px;
     border-radius: 6px !important;
     background-color: var(--bs-body-bg);
     width: 100%;
@@ -119,6 +122,7 @@ ngx-skeleton-loader {
     position: relative;
     z-index: 99;
     justify-content: space-around;
+    box-shadow: 0px 0px 8px 0px rgb(76 87 125 / 15%);
 }
 
 .pw-menu a {
@@ -154,4 +158,21 @@ ngx-skeleton-loader {
 
 .header-fixed .wrapper {
     padding-top: 50px !important;
+}
+
+.aside {
+    display: none;
+}
+
+lib-employee-infomation {
+    padding: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.list-hoppy {
+    overflow: hidden;
 }
