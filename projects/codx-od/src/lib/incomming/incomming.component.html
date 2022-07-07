@@ -24,19 +24,19 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #panelLeft>
-  <div class="codx_e-main codx_left my-2">
+  <div class="codx_e-main codx_left">
     <div class="codx_e-header">
       <div class="d-flex align-items-center btn-tabs ">
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='1'" [class.text-white]="activeDiv=='1'" (click)="clickChangeStatus('1')">
-          <i class="icon-format_list_numbered icon-16"></i>
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='1'" [class.text-primary]="activeDiv=='1'" (click)="clickChangeStatus('1')">
+          <i class="icon-format_list_numbered icon-16 text-warning"></i>
           <span class="ms-2 fw-bold fs-7">Chờ xử lý</span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='3'" [class.text-white]="activeDiv=='3'" (click)="clickChangeStatus('3')">
-          <i class=" icon-sort icon-16"></i>
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='3'" [class.text-primary]="activeDiv=='3'" (click)="clickChangeStatus('3')">
+          <i class="icon-construction icon-16"></i>
           <span class="ms-2 fw-bold fs-7">Đang xử lý</span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='7'" [class.text-white]="activeDiv=='7'" (click)="clickChangeStatus('7')">
-          <i class="icon-check icon-16"></i>
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='7'" [class.text-primary]="activeDiv=='7'" (click)="clickChangeStatus('7')">
+          <i class="icon-check icon-16 text-success"></i>
           <span class="ms-2 fw-bold fs-7">Chờ duyệt</span>
         </div>
       </div>

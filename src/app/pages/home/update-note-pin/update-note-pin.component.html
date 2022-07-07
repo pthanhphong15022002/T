@@ -1,7 +1,7 @@
 <codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup add #body>
         <codx-listview [itemTemplate]="template" #listview1 [funcId]="''" entityName="WP_Notes"
-            gridViewName="'grvNotes'" service="WP" (valueProperty)="valueProperty($event)">
+            gridViewName="'grvNotes'" service="WP">
         </codx-listview>
         <ng-template #template let-item>
             <div *ngIf="item.isPin == true">
@@ -55,7 +55,7 @@
                     <div class="" style="margin-left: 20px;">
                         <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" field="checkboxUpdateNotePin"
                             labelPosition="After" [disabled]="false" class="test-check"
-                            (valueChange)="valueChange($event, item.recID, item)"></codx-input>
+                            (valueChange)="valueChange($event, item)"></codx-input>
                     </div>
                 </div>
             </div>
