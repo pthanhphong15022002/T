@@ -15,32 +15,41 @@
   [selectedFirst]="true"
   (selectedChange)="changeItemDetail($event)"
   [autoLoad]="autoLoad"
-  (buttonClick)="click($event)"
   [button]="button"
+  (buttonClick)="click($event)"
   (requestEnded)="closeAddForm($event)"
 >
 </codx-views>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    iconCss="icon-flag"
-    [icoStatusVll]="'ES002'"
-    [imageId]="data.categoryID"
-    imageObjType=""
-    [title]="data.title"
-    [desc]="data.abstract"
-    icoSubTitleCss="icon-assignment"
-    [subTitle]="data.positionName"
-    [content]="data.memo"
-    [status]="data.approveStatus"
-    [statusVll]="'VL003'"
-    cardCss="card-template border-bottom px-2 py-3"
-    [date]="data.createdOn"
-    [icoDesc2Fld]="data.createdBy"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''"
-    [resourceObjType]="'AD_Users'"
-  >
-  </codx-temp-full>
+  <div class="w-100 d-flex p-1">
+    <div
+      [class]="
+        'icon-60 icon align-self-start rounded-circle p-3 m-1 ' + data?.icon
+      "
+      [style.background-color]="'lightgreen'"
+    ></div>
+    <codx-temp-full
+      class="w-100 position-relative"
+      iconCss="icon-flag"
+      [icoStatusVll]="'ES002'"
+      imgCss="ml-6"
+      imageObjType=""
+      [title]="data.title"
+      [desc]="data.abstract"
+      icoSubTitleCss="icon-assignment"
+      [subTitle]="data.positionName"
+      [content]="data.memo"
+      [status]="data.approveStatus"
+      [statusVll]="'ES003'"
+      cardCss="card-template border-bottom px-2 py-3"
+      [date]="data.createdOn"
+      [icoDesc2Fld]="data.createdBy"
+      [resources]="data.createdBy != undefined ? data.createdBy : ''"
+      [resourceObjType]="'AD_Users'"
+    >
+    </codx-temp-full>
+  </div>
 </ng-template>
 
 <ng-template #paneLeft>
@@ -51,7 +60,12 @@
       (click)="clickChangeTaskViewStatus('1')"
     >
       <i class="icon-format_list_numbered icon-16"></i>
-      <codx-label name="lblTitleNew" [formModel]="codxViews.formModel" default="Mới tạo" class="ms-2 fw-bold"></codx-label>
+      <codx-label
+        name="lblTitleNew"
+        [formModel]="codxViews.formModel"
+        default="Mới tạo"
+        class="ms-2 fw-bold"
+      ></codx-label>
     </button>
     <button
       class="btn btn-white text-dark me-1"
@@ -59,7 +73,12 @@
       (click)="clickChangeTaskViewStatus('2')"
     >
       <i class="icon-spellcheck icon-16"></i>
-      <codx-label name="lblTitlePending" [formModel]="codxViews.formModel" default="Chờ duyệt" class="ms-2 fw-bold"></codx-label>
+      <codx-label
+        name="lblTitlePending"
+        [formModel]="codxViews.formModel"
+        default="Chờ duyệt"
+        class="ms-2 fw-bold"
+      ></codx-label>
     </button>
     <button
       class="btn btn-white text-dark me-1"
@@ -67,7 +86,12 @@
       (click)="clickChangeTaskViewStatus('3')"
     >
       <i class="icon-download_done icon-16"></i>
-      <codx-label name="lblTitleDone" [formModel]="codxViews.formModel" default="Hoàn tất" class="ms-2 fw-bold"></codx-label>
+      <codx-label
+        name="lblTitleDone"
+        [formModel]="codxViews.formModel"
+        default="Hoàn tất"
+        class="ms-2 fw-bold"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
@@ -76,7 +100,8 @@
   <lib-view-detail
     #viewdetail
     [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="codxViews?.currentView?.formModel"
   >
   </lib-view-detail>
 </ng-template>
-
