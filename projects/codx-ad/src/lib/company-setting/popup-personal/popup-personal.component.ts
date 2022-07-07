@@ -1,27 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import {
-  ApiHttpService,
-  CodxService,
-  DialogData,
-  DialogRef,
-  NotificationsService,
-  UrlUtil,
-} from 'codx-core';
-import * as moment from 'moment';
+import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
 
 @Component({
-  selector: 'lib-popup-settings-contact',
-  templateUrl: './popup-contact.component.html',
-  styleUrls: ['./popup-contact.component.css'],
+  selector: 'lib-popup-personal',
+  templateUrl: './popup-personal.component.html',
+  styleUrls: ['./popup-personal.component.css']
 })
-export class PopupContactComponent implements OnInit {
+export class PopupPersonalComponent implements OnInit {
   data: any;
   dialog: any;
   items: AD_CompanySettings;
-  title: string = 'Liên hệ';
+  title: string = 'Người đại diện';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -45,7 +36,7 @@ export class PopupContactComponent implements OnInit {
   UpdateData() {
     console.log(this.items);
     this.adService
-      .updateContactCompanySettings(this.items)
+      .updatePersonalCompanySettings(this.items)
       .subscribe((response) => {
         if (response) {
           this.notiService.notifyCode('thêm thành công');
@@ -57,30 +48,21 @@ export class PopupContactComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  txtValuePhone(e: any){
-    this.items.phone = e.data;
-    console.log(this.items.phone);
+  txtValueContactName(e: any){
+    this.items.contactName = e.data;
   }
 
 
-  txtValueFaxNo(e: any){
-    this.items.faxNo = e.data;
-    console.log(this.items.phone);
+  txtValueJobTitle(e: any){
+    this.items.jobTitle = e.data;
   }
 
   txtValueEmail(e: any){
-    this.items.email = e.data;
-    console.log(this.items.phone);
+    this.items.personalEmail = e.data;
   }
 
-  txtValueWebPage(e: any){
-    this.items.webPage = e.data;
-    console.log(this.items.phone);
-  }
-
-  txtValueStreet(e: any){
-    this.items.street = e.data;
-    console.log(this.items.phone);
+  txtValuePhone(e: any){
+    this.items.mobile = e.data;
   }
 
 }
