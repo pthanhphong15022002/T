@@ -129,7 +129,8 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.owner = event.data[0]
   }
   //Nơi nhận
-  changeValueBUID(event: any, component: any = null) {
+  changeValueBUID(event: any) {
+    this.dispatch.deptID = event.data.value[0];
     /* this.dispatchForm.controls.deptID.setValue(event.data[0]);
     if (event.data[0] != "" && event.data[0] != null) {
      this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data[0], null, null]).subscribe((item: any) => {
@@ -144,7 +145,6 @@ export class IncommingAddComponent implements OnInit {
         }
       })
     }  */
-    
   }
   openFormUploadFile()
   {

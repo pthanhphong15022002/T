@@ -5,7 +5,6 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
-
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
@@ -18,27 +17,26 @@ export class LayoutComponent extends LayoutBaseComponent {
     private route: ActivatedRoute,
     private changedt: ChangeDetectorRef,
     private cache: CacheService,
-    inject: Injector) {
+    inject: Injector
+  ) {
     super(inject);
-    this.codxService.init(this.module, false,false, 'light',false);
+    this.codxService.init(this.module, false,false);
     
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
     });
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
-  onAfterViewInit(): void { }
+  onAfterViewInit(): void {}
 
-
-  category = "news";
+  category = 'news';
   navigate(category = 'news', funcID = null) {
     this.category = category;
     if (!funcID) {
-      funcID = this.route.firstChild.snapshot.params["funcID"];
+      funcID = this.route.firstChild.snapshot.params['funcID'];
     }
-    this.codxService.navigate('', "wp/" + category + "/" + funcID)
+    this.codxService.navigate('', 'wp/' + category + '/' + funcID);
   }
 }

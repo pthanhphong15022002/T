@@ -80,25 +80,24 @@
                 </div>
             </div>
             <br>
-            <div class="text-dark fw-bold" style="margin-left: 20px;font-size: 15px;">Ghi chú ghim ({{countIsPin}})
+            <div class="text-dark fw-bold" style="margin-left: 20px;font-size: 15px;">
+                <codx-label name="lblNotePin" formName="Notes" default="Ghi chú ghim"></codx-label>({{countIsPin}})
             </div>
             <br>
             <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes" [groupBy]="'isPin'"
                 gridViewName="'grvNotes'" service="WP">
             </codx-listview>
             <ng-template #template let-item>
-                <div>
+                <div class="pd-note">
                     <div class="p-3 note-content mb-3">
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
                                         <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option ms-3">
@@ -106,13 +105,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
                                         <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option ms-3">
@@ -137,13 +134,11 @@
                             </div>
                             <div *ngIf="item.isPin == false">
                                 <div *ngIf="item.memo != null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
                                         <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option ms-3">
@@ -151,13 +146,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="note-date d-flex justify-content-end align-items-center">
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
                                         <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                        <div class="dropdown ms-2">
-                                            <span class="icon-more_vert icon-18" placement="start" container="body"
-                                                [ngbPopover]="popContentPinNote" [autoClose]="'outside'"
-                                                (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
-                                        </div>
                                     </div>
                                     <br>
                                     <div class="d-flex flex-column note-option ms-3">

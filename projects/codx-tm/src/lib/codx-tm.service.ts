@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { ApiHttpService, AuthStore, FormModel, UploadFile, UserModel, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  FormModel,
+  UploadFile,
+  UserModel,
+  CacheService,
+} from 'codx-core';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxTMService {
   active = '';
@@ -19,9 +26,9 @@ export class CodxTMService {
   taskGroupComponent = false;
   constructor(
     private api: ApiHttpService,
-    private authStore: AuthStore, 
+    private authStore: AuthStore,
     private cache: CacheService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.user = this.authStore.get();
   }
@@ -90,7 +97,13 @@ export class CodxTMService {
     );
   }
   saveAssign(data) {
-    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddAssignToTaskAsync', data);
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'AddAssignToTaskAsync',
+      data
+    );
   }
   addTaskBoard(data) {
     return this.api.execSv<any>(
@@ -150,7 +163,13 @@ export class CodxTMService {
     );
   }
   getMoreFunction(data) {
-    return this.api.execSv<any>("SYS", "SYS", "MoreFunctionsBusiness", "GetWithPermAsync", data)
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermAsync',
+      data
+    );
   }
 
   getGridViewSetup(predicate, dataValue?) {
@@ -245,12 +264,14 @@ export class CodxTMService {
     );
   }
 
-  getUserByListDepartmentID(listDepID){
-    return this.api.execSv<any>('HR',
-    'HR',
-    'OrganizationUnitsBusiness',
-    'GetUserByListDepartmentIDAsync',
-    listDepID)
+  getUserByListDepartmentID(listDepID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetUserByListDepartmentIDAsync',
+      listDepID
+    );
   }
 
   getChartData(
@@ -262,15 +283,21 @@ export class CodxTMService {
     beginMonth: Date,
     endMonth: Date
   ) {
-    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'GetGeneralDataAsync', [
-      model,
-      daySelectedFrom,
-      daySelectedTo,
-      fromDate,
-      toDate,
-      beginMonth,
-      endMonth,
-    ]);
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetGeneralDataAsync',
+      [
+        model,
+        daySelectedFrom,
+        daySelectedTo,
+        fromDate,
+        toDate,
+        beginMonth,
+        endMonth,
+      ]
+    );
   }
 
   convertListToObject(

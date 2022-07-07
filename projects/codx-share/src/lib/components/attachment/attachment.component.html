@@ -1,108 +1,105 @@
-<!-- <div *ngIf="(checkUserForder(data)) then noContext else context"></div> -->
-<!-- <ng-template #noContext></ng-template> -->
-<div *ngIf="(type == 'popup') then popup else inline">
-</div>
+<div *ngIf="(type == 'popup') then popup else inline"></div>
 <ng-template #popup>
-    <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
+    <codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [footer]="footer" [dialog]="dialog">     
+        <ng-template #header>
+            <div class="card-body p-0">
+                <form name="frm_file"> 
+                    <div class="offcanvas-wrapper">
+                        <div class="modal-subheader">
+                            <div for="fileName" class="d-flex justify-content-between mb-1">
+                                <div class="d-flex align-items-center col-form-label pb-0">
+                                    <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
+                                </div>
+                                <div *ngIf="disableFolderSelect()">
+                                    <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
+                                        <span class="icon-folder_open icon-18"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-section">
+                            <div class="col-lg-12">
+                                <div class="control_wrapper">
+                                    <div class="uploadtemplate">
+                                        <div id='dropArea'>
+                                            <div class="d-none">
+                                                <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                            </div>
+                                            <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>      
+                </form>
+            </div>
+        </ng-template>
         <ng-template #body>      
-                <div class="card-body p-0">
-                    <form name="frm_file1"> 
-                        <div class="offcanvas-wrapper">
-                            <div class="modal-subheader">
-                                <div for="fileName" class="d-flex justify-content-between mb-1">
-                                    <div class="d-flex align-items-center col-form-label pb-0">
-                                        <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
-                                    </div>
-                                    <div *ngIf="disableFolderSelect()">
-                                        <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
-                                            <span class="icon-folder_open icon-18"></span>
-                                        </a>
-                                    </div>
+            <div class="card-body p-0">
+                <form name="frm_file1"> 
+                    <!-- <div class="offcanvas-wrapper">
+                        <div class="modal-subheader">
+                            <div for="fileName" class="d-flex justify-content-between mb-1">
+                                <div class="d-flex align-items-center col-form-label pb-0 w-100">
+                                    <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>                            
+                                </div>
+                                <div *ngIf="disableFolderSelect()">
+                                    <a (click)="openFormFolder()" class="btn btn-icon btn-xs btn-light-primary">
+                                        <span class="icon-folder_open icon-18"></span>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="control-section">
-                                <div class="col-lg-12">
-                                    <div class="control_wrapper">
-                                        <div class="uploadtemplate">
-                                            <div id='dropArea'>
-                                                <div class="d-none">
-                                                    <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
-                                                </div>
-                                                <ejs-uploader #templateupload id='templatefileupload' [asyncSettings]='path' [dropArea]='dropElement' (selected)='onFileSelect($event)'></ejs-uploader>
+                        </div>
+                        <div class="control-section">
+                            <div class="col-lg-12">
+                                <div class="control_wrapper">
+                                    <div class="uploadtemplate">
+                                        <div id='dropArea'>
+                                            <div class="d-none">
+                                                <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
                                             </div>
+                                            <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="col-lg-3 property-section">
-                                    <div class="property-panel-section">
-                                        <div class="property-panel-header">Properties</div>
-                                        <div class="property-panel-content">
-                                            <button class="e-btn e-css" id="clearbtn" title="Clear All">Clear All</button>
-                                        </div>
+                            </div>                                
+                        </div>
+                    </div>       -->
+                    <div class="offcanvas-wrapper">
+                        <div *ngFor="let file of sortBy();  index as i;" class=" mt-2 mb-2 has-action-menu">                                   
+                            <codx-temp-full  imageSrc="../../../assets/demos/dms/{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
+                                [subTitleTmp]="cardImgFooter"
+                                [descLine]="1">
+                            </codx-temp-full>
+                            <ng-template #cardImgFooter let-data>
+                                <div class="d-flex flex-column flex-grow-1 file-item">
+                                    <span class="text-dark"></span>
+                                    <div class="d-flex">
+                                        <codx-input
+                                            placeholder="Mô tả tài liệu"
+                                            style="width:86%"
+                                            class="form-control no-boder"
+                                            type="text"
+                                            [crrValue]="file.description"
+                                            (valueChange)="changeValueAgencyText($event)"                                       
+                                        > </codx-input> 
                                     </div>
-                                </div> -->
-                            </div>
-                            
-                            <!-- <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">
-                                <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-                                    class="drop-zoon h-100px p-3 cancelEvent">
-                                    <div class="drop-text d-flex justify-content-center">
-                                        <codx-label default='Drap & Drop'></codx-label>                            
-                                    </div>
+                                </div>                                      
+                            </ng-template>                                   
+                            <div class="action-menu d-flex align-items-center cursor-pointer">
+                                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteUploaded(file.fileName)">
+                                    <i class="icon-delete text-primary icon-18"></i> 
+                                </div> 
+                                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onEditUploaded(file.fileName)">
+                                    <i class="icon-edit_file text-primary icon-18"></i> 
                                 </div>
-                                <div appDragDropFileUpload class="btn-choose-file">
-                                    <div class="btn btn-light-primary justify-content-center">
-                                        <codx-label default='Chọn file'></codx-label>    
-                                    </div>
-                                    <input type="file" id="file" #file (change)="handleFileInput($event.target.files)">
-                                </div>
-                            </div> -->
-                            <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
-                                <div class="d-flex flex-grow-1">
-                                    <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
-                                    <!-- <codx-img class="h-35px me-3"></codx-img> -->
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <span class="text-dark">{{file.fileName}}</span>
-                                        <div class="d-flex mt-1">
-                                            <div class="text-gray-800 me-3">{{file.uploadDate}}</div>
-                                            <div class="text-gray-800">{{file.userName}}</div>
-                                        </div>
-                                        <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1">
-                                            <span class="text-dark"></span>
-                                            <div class="d-flex">
-                                                <codx-input
-                                                    placeholder="Mô tả tài liệu"
-                                                    style="width:100%"
-                                                    class="form-control no-boder"
-                                                    type="text"
-                                                    [crrValue]="file.description"
-                                                    (valueChange)="changeValueAgencyText($event)"                                       
-                                                > </codx-input>                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-            
-                                <div ngbDropdown class="dropdown d-flex align-items-center">
-                                    <button ngbDropdownToggle class="btn align-items-center mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <span class="icon-more_vert icon-18"></span>
-                                    </button>
-                                    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a ngbDropdownItem class="dropdown-item" (click)="onDeleteUploaded(file.fileName)">
-                                            <span class="navi-icon">
-                                                <span class="icon-clear icon-18"></span>
-                                            </span>
-                                            <span class="navi-text">
-                                                <codx-label default='Xóa'></codx-label> 
-                                            </span>
-                                        </a>                          
-                                    </div>
-                                </div>                   
-                            </div>
-                        </div>           
-                    </form>
-                </div>
+                            </div>                                
+                        </div>
+                    </div>           
+                </form>
+            </div>
         </ng-template>    
         <ng-template #footer>
             <div class="card-footer pt-4">
@@ -137,76 +134,68 @@
                             <div class="control_wrapper">
                                 <div class="uploadtemplate">
                                     <div id='dropArea'>
-                                        <span id='drop' class="droparea">Drop files here or <a href="" id='browse'><u>Browse</u></a> </span>
-                                        <ejs-uploader #templateupload id='templatefileupload' [asyncSettings]='path' [dropArea]='dropElement' (selected)='onFileSelect($event)'></ejs-uploader>
+                                        <div class="d-none">
+                                            <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                        </div>                                        
+                                        <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                     </div>
                                 </div>
                             </div>
                         </div>                       
                     </div>
-
-                    <!-- <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="dms-dropzoon">                        
-                        <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-                            class="drop-zoon h-100px p-3 cancelEvent">
-                            <div class="drop-text d-flex justify-content-center">
-                                <codx-label default='Drap & Drop'></codx-label>                            
-                            </div>
-                        </div>
-                        <div appDragDropFileUpload class="btn-choose-file">
-                            <div class="btn btn-light-primary justify-content-center">
-                                <codx-label default='Chọn file'></codx-label>    
-                            </div>
-                            <input type="file" multiple id="file" #file (change)="handleFileInput1($event.target.files)">
-                        </div> 
-                    </div>  -->
-                    <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center file-item mb-3">
-                        <div class="d-flex flex-grow-1">
-                            <img  class="w-20px me-3" src="../../../assets/demos/dms/{{file.avatar}}">
-                            <!-- <codx-img class="h-35px me-3"></codx-img> -->
-                            <div class="d-flex flex-column flex-grow-1">
-                                <span class="text-dark">{{file.fileName}}</span>
-                                <div class="d-flex mt-1">
-                                    <div class="text-gray-800 me-3">{{file.uploadDate}}</div>
-                                    <div class="text-gray-800">{{file.userName}}</div>
-                                </div>
-                                <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1">
+                    <div style="max-height: 100px; overflow-y: auto;">
+                        <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center mt-2 mb-2 has-action-menu">                           
+                            <codx-temp-full  imageSrc="../../../assets/demos/dms/{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
+                                [subTitleTmp]="cardImgFooter"
+                                [descLine]="1">
+                            </codx-temp-full>
+                            <ng-template #cardImgFooter let-data>
+                                <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item">
                                     <span class="text-dark"></span>
                                     <div class="d-flex">
                                         <codx-input
                                             placeholder="Mô tả tài liệu"
-                                            style="width:100%"
+                                            style="width:86%"
                                             class="form-control no-boder"
                                             type="text"
                                             [crrValue]="file.description"
                                             (valueChange)="changeValueAgencyText($event)"                                       
-                                        > </codx-input>                                                
+                                        > </codx-input> 
                                     </div>
+                                </div>                                      
+                            </ng-template>                             
+                            <div class="action-menu d-flex align-items-center cursor-pointer">
+                                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteUploaded(file.fileName)">
+                                  <i class="icon-delete text-primary icon-18"></i> 
+                                </div> 
+                                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onEditUploaded(file.fileName)">
+                                    <i class="icon-edit_file text-primary icon-18"></i> 
                                 </div>
-                            </div>
+                            </div> 
+                            <!-- <div ngbDropdown class="dropdown d-flex align-items-center">
+                                <button ngbDropdownToggle class="btn align-items-center mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <span class="icon-more_vert icon-18"></span>
+                                </button>
+                                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a ngbDropdownItem class="dropdown-item" (click)="onDeleteUploaded(file.fileName)">
+                                        <span class="navi-icon">
+                                            <span class="icon-clear icon-18"></span>
+                                        </span>
+                                        <span class="navi-text">
+                                            <codx-label default='Xóa'></codx-label> 
+                                        </span>
+                                    </a>                          
+                                </div>
+                            </div>                    -->
                         </div>
-    
-                        <div ngbDropdown class="dropdown d-flex align-items-center">
-                            <button ngbDropdownToggle class="btn align-items-center mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <span class="icon-more_vert icon-18"></span>
-                            </button>
-                            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a ngbDropdownItem class="dropdown-item" (click)="onDeleteUploaded(file.fileName)">
-                                    <span class="navi-icon">
-                                        <span class="icon-clear icon-18"></span>
-                                    </span>
-                                    <span class="navi-text">
-                                        <codx-label default='Xóa'></codx-label> 
-                                    </span>
-                                </a>                          
-                            </div>
-                        </div>                   
-                    </div>
+                    </div>                 
                 </div>           
             </form>
         </div>
     </div>   
-    <codx-thumbnail [files]="data"></codx-thumbnail>     
+    <codx-thumbnail [displayThumb]="displayThumb"  [formModel]="formModel" [files]="data"></codx-thumbnail>     
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

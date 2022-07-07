@@ -12,13 +12,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   user: any;
   predicate = "CreatedBy=@0";
   dataValue = "";
-  memo: any;
-  checkList: any;
-  noteType: any;
-  dataAdd = new Notes();
-  dataUpdate = new Notes();
-  objectID: any;
-  recID: any;
+  data = new Notes();
   header = 'Sổ tay cá nhân';
   dialog: any;
 
@@ -30,40 +24,24 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dt;
+    this.data = data?.data?.itemUpdate;
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
-    this.memo = data.data?.memo;
-    this.checkList = data.data?.checkList;
-    this.noteType = data.data?.noteType;
-    this.recID = data.data?.recID;
   }
 
   onInit(): void {
   }
 
   onEditNote(recID) {
-    if (this.noteType == "check" || this.noteType == "list") {
-      this.dataUpdate.memo = null;
-      this.dataUpdate.checkList = this.checkList;
-
-    } else {
-      this.dataUpdate.checkList = null;
-      this.dataUpdate.memo = this.memo;
-    }
-    this.dataUpdate.isPin = false;
-    this.dataUpdate.showCalendar = false;
-    this.dataUpdate.transID = recID;
+    this.data.transID = recID;
     this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recID, this.dataUpdate])
+      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.data?.recID, this.data])
       .subscribe((res) => {
         if (res) {
+          this.dialog.close();
           this.changeDetectorRef.detectChanges();
         }
       });
-  }
-
-  saveNote(recID) {
-    this.onEditNote(recID);
   }
 
 }

@@ -50,30 +50,24 @@ export class UpdateStatusPopupComponent implements OnInit {
     this.completedOn = moment(new Date()).toDate();
     if(this.task.startDate)
     this.startDate = moment(new Date(this.task.startDate)).toDate();else  this.startDate = moment(new Date(this.task.createdOn)).toDate();
-    this.estimated = moment(this.completedOn).diff(
-      moment(this.startDate),
-      'hours'
-    ).toFixed(1);
+    // this.estimated = moment(this.completedOn).diff(
+    //   moment(this.startDate),
+    //   'hours'
+    // ).toFixed(1);
+    var time = (((this.completedOn.getTime() -this.startDate.getTime())/3600000).toFixed(1));
+    this.estimated = Number.parseFloat(time);
   }
   changeTime(data) {
+    if(!data.data)return ; 
     this.completedOn = data.data.fromDate;
-    this.estimated = moment(this.completedOn)
-        .diff(moment(this.startDate), 'hours')
-        .toFixed(1);
+    // this.estimated = moment(this.completedOn)
+    //     .diff(moment(this.startDate), 'hours')
+    var time = (((this.completedOn.getTime() -this.startDate.getTime())/3600000).toFixed(1));
+    this.estimated = Number.parseFloat(time);
     this.changeDetectorRef.detectChanges();
   }
   changeEstimated(data) {
-    // var num = Number.parseInt(data.data)
-    // if (data.data && num) {
-    //   this.task[data.field] = data.data;
-    //   var estimated = num * 3600000;
-    //   var timeComplete = this.task.completedOn.getTime() + estimated;
-    //   this.task.completedOn = moment(new Date(timeComplete)).toDate();
-    // }else{
-    //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
-    //   this.notiService.notify("Giá trị nhập vào không phải là 1 số !")
-    // }
-    // this.changeDetectorRef.detectChanges();
+   
   }
 
   beforeSave(op: any) {
