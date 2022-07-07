@@ -88,7 +88,7 @@ export class FileUpload {
     relation: string;
     source: string;
     fileName: string;
-    avatar: string;
+    avatar: any;
     thumbnail: string;
     uploadId: string;
     createdBy: string;

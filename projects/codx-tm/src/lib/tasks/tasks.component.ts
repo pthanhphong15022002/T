@@ -346,9 +346,7 @@ export class TasksComponent extends UIComponent {
         this.dialog.closed.subscribe((e) => {
           this.itemSelected = this.view.dataService.dataSelected
         });
-
       });
-
   }
 
   copy(data) {

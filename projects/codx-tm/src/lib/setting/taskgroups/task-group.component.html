@@ -1,7 +1,7 @@
 <codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
   method="GetListTaskGroupsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)" idField="taskGroupID" [pageSize]="100"
-  [selectedFirst]="true">
+  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
+  idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #grid let-data>
@@ -11,8 +11,8 @@
         {{data.taskGroupID}}
       </div>
     </td>
-    <td class="rowphoto" placement="left" [ngbTooltip]="data.taskGroupName">
-      <div class="padding">
+    <td class="rowphoto" placement="left">
+      <div class="padding  cursor-pointer line-clamp line-clamp-2" [ngbTooltip]="data.taskGroupName">
         {{data.taskGroupName}}
 
       </div>
@@ -25,7 +25,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.note">
+        <div [innerHTML]="data.note" [ngbTooltip]="data.note">
         </div>
       </div>
     </td>
@@ -70,10 +70,10 @@
       " [style.background-color]="
         (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
       " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
-            {{data?.checkListControl|vll:"L1463":"text"|async}}
-          </div>
+          {{data?.checkListControl|vll:"L1463":"text"|async}}
+        </div>
       </div>
-      
+
     </td>
     <td class="rowphoto">
       <div class="padding">
@@ -87,18 +87,18 @@
           </div>
         </ng-container>
         <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
-          (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+            (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
       </div>
-      
-      
+
+
     </td>
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex align-items-center" #itemCreateBy>
-          <codx-img class="symbol symbol-24 symbol-circle mr-3" width="25" [objectId]="data.createdBy"
+          <codx-img class="symbol symbol-24 symbol-circle me-2" width="25" [objectId]="data.createdBy"
             objectType="AD_Users">
           </codx-img>
-          <div class="text-dark font-size-lg" placement="left" [ngbTooltip]="data.createName">
+          <div class="text-dark" placement="left" [ngbTooltip]="data.createName">
             {{data.createName}}
           </div>
         </div>
@@ -114,8 +114,8 @@
     <td class="rowphoto">
       <div class="padding">
         <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-        (clickMF)="clickMF($event,data)">
-      </codx-mfunc>
+          (clickMF)="clickMF($event,data)">
+        </codx-mfunc>
       </div>
     </td>
   </tr>
@@ -222,7 +222,7 @@
 
 <!-- <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
-    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    <codx-img class="symbol symbol-24 symbol-circle me-2" [objectId]="dataItem.createdBy" objectType="AD_Users">
     </codx-img>
     <div class="text-dark font-size-lg" placement="bottom">
       {{dataItem.createName}}
