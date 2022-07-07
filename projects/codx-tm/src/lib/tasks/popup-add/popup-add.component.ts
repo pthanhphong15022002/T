@@ -14,6 +14,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxTagComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -69,10 +70,9 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('tags') tagsComponent: TagsComponent;
+ 
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
-  tags: any;
   taskCopy: any;
   newID :string ;
   constructor(
@@ -114,7 +114,6 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     } else this.openInfo(this.task.taskID, this.action);
   }
   ngAfterViewInit(): void {
-    
   }
 
   getParam(callback = null) {
@@ -241,7 +240,6 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         this.task = res[0] as TM_Tasks;
-        this.tags = this.task.tags;
         this.listUserDetail = res[1] || [];
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
@@ -463,7 +461,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     var listDepartmentID = '';
     var listUserID = '';
 
-    e?.data.forEach((obj) => {
+    e?.data?.forEach((obj) => {
      // if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
@@ -562,27 +560,29 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
 
   changeTime(data) {
     if (!data.field) return;
-    this.task[data.field] = data.data.fromDate;
+    this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
-      if (!this.task.endDate)
+      if (!this.task.endDate && this.task.startDate){
         if (this.task.estimated) {
           var timeEndDay =
             this.task.startDate.getTime() + this.task.estimated * 3600000;
           this.task.endDate = moment(new Date(timeEndDay)).toDate();
         } else
-          this.task.endDate = moment(new Date(data.data.fromDate))
+          this.task.endDate = moment(new Date(this.task.startDate))
             .add(1, 'hours')
             .toDate();
+      }    
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task.startDate && this.task.endDate)
-        // this.task.estimated = moment(this.task.endDate).diff(
-        //   moment(this.task.startDate),
-        //   'hours'
-        // );
+      if (this.task.startDate && this.task.endDate){
         var time = (((this.task.endDate.getTime() -this.task.startDate.getTime())/3600000).toFixed(1));
         this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
+      }
+        // this.task.estimated = moment(this.task.endDate).diff(
+        //   moment(this.task.startDate),
+        //   'hours'
+        // );   
     }
   }
 
