@@ -103,6 +103,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.Signature1 = null;
         this.Signature2 = null;
         this.Stamp = null;
+
+        console.log(this.dialogSignature);
       });
   }
 
@@ -150,6 +152,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     if (this.dialogSignature.invalid == true) {
+      this.notification.notifyCode('E0016');
       return;
     }
 
