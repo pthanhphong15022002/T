@@ -692,10 +692,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   }
 
   valueChangeTags(e) {
-    if(e.data!=""){
-      this.task.tags = e.data.splice(1);
-    }
-  
+     this.task.tags = e.data;
   }
 
   textboxChange(e) {
