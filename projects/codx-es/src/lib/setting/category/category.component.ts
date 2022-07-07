@@ -31,7 +31,7 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { ActivatedRoute } from '@angular/router';
 
-export class defaultRecource { }
+export class defaultRecource {}
 @Component({
   selector: 'doc-category',
   templateUrl: './category.component.html',
@@ -49,6 +49,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('noName', { static: true }) noName;
   @ViewChild('process', { static: true }) process;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
+  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
 
   devices: any;
   editform: FormGroup;
@@ -65,7 +66,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   entityName = 'ES_Categories';
   predicate = '';
   dataValue = '';
-  idField = 'recID';
+  idField = 'categoryID';
   className = 'CategoriesBusiness';
   method = 'GetListAsync';
 
@@ -110,9 +111,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         width: 120,
       },
       {
-        field: 'icons',
+        field: 'icon',
         headerText: 'Icon',
-        template: '',
+        template: this.icon,
         width: 60,
       },
       {
@@ -138,6 +139,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
+
     this.views = [
       {
         sameData: true,
@@ -179,7 +182,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
@@ -198,7 +201,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
@@ -230,13 +233,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  closeEditForm(event) { }
-
-  closeSidebar(data) {
-    if (data) {
-      this.gridView.addHandler(data.dataItem, data.isAdd, data.key);
-    }
-    this.cr.detectChanges();
+  closeEditForm(event) {
+    this.dialog && this.dialog.close();
   }
 
   popup(evt: any) {
@@ -259,7 +257,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   //   this.editCategory.isAdd = false;
   // }
 
-  deleteCategory(data) { }
+  deleteCategory(data) {}
 
   getCount(countStep) {
     let lstNumber = [];

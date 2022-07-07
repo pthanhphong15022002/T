@@ -61,3 +61,13 @@ codx-view-content {
     border-radius: 0;
     padding: 0;
 }
+
+ejs-listview {
+    background-color: transparent;
+}
+
+ejs-listview .e-ul>li {
+    margin-bottom: 15px;
+    background-color: #fff !important;
+    border-radius: 0.475rem;
+}

@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
   module = 'WP';
   override asideFixed = false;
   override asideTheme: 'dark' | 'light' | 'transparent'= 'transparent';

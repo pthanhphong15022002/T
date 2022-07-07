@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Post } from '@shared/models/post';
 import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService } from 'codx-core';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
   selector: 'app-list-post',
   templateUrl: './list-post.component.html',
   styleUrls: ['./list-post.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
@@ -123,13 +124,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             data.recID
           )
           .subscribe((res) => {
-            if(res)
-            {
+            if (res) {
               this.api.execSv("DM",
-              "ERM.Business.DM",
-              "FileBussiness",
-              "DeleteByObjectIDAsync",
-              [data.recID,'WP_Comments',true]
+                "ERM.Business.DM",
+                "FileBussiness",
+                "DeleteByObjectIDAsync",
+                [data.recID, 'WP_Comments', true]
               ).subscribe();
               this.notifySvr.notifyCode('E0026');
               this.dt.detectChanges();
@@ -185,7 +185,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj,'',option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
 
   }
 

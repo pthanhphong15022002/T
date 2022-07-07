@@ -1,9 +1,9 @@
-<codx-views #view [funcID]="funcID" service="WP" entityName="WP_NoteBooks" [views]="views"
-    [predicate]="predicate" [dataValue]="dataValue" idField="recID">
+<codx-views #view [funcID]="funcID" service="WP" entityName="WP_NoteBooks" [views]="views" [predicate]="predicate"
+    [dataValue]="dataValue" idField="recID">
 </codx-views>
 
-<div class="pw-container mt-6 d-flex flex-column justify-content-center">
-    <div class="d-flex align-items-center justify-content-between pw-header px-3">
+<div class="pw-container d-flex flex-column justify-content-center">
+    <div class="d-flex align-items-center justify-content-between pw-header">
         <div class="pw-search">
             <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
         </div>
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="pw-listcard mt-6">
-        <div class="mx-3 mb-6" *ngFor="let item of view.dataService.data">
+        <div *ngFor="let item of view.dataService.data">
             <div class="pw-card delay-500" (click)="openDetailPage(item)">
                 <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
                     imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"

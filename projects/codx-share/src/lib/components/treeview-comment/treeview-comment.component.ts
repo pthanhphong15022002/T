@@ -7,6 +7,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { SignalRService } from '@core/services/signalr/signalr.service';
@@ -18,6 +19,7 @@ import { ApiHttpService, CacheService, CallFuncService, NotificationsService } f
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
   styleUrls: ['./treeview-comment.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() rootData: any;
@@ -36,7 +38,7 @@ export class TreeviewCommentComponent implements OnInit {
   checkVoted = false;
   comments = "";
   repComment = "";
-  dicDatas={};
+  dicDatas = {};
   constructor(
     private dt: ChangeDetectorRef,
     private signalR: SignalRService,
@@ -104,65 +106,61 @@ export class TreeviewCommentComponent implements OnInit {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    if(post.recID)
-    {
-      var type="WP_Comments";
+    if (post.recID) {
+      var type = "WP_Comments";
       this.api
-      .execSv<any>(
-        'WP',
-        'ERM.Business.WP',
-        'CommentBusiness',
-        'PublishCommentAsync',
-        [post.recID, value, this.rootData.recID,type]
-      )
-      .subscribe((res) => {
-      if(res)
-      {
-        this.rootData.totalComment += 1;    
-        this.comments = "";
-        this.repComment = "";
-        post.showReply = false;
-        this.crrId = "";
-        this.setNodeTree(res);
-        // this.loadSubComment(post);
-        this.dt.detectChanges();
-      }
-      });
+        .execSv<any>(
+          'WP',
+          'ERM.Business.WP',
+          'CommentBusiness',
+          'PublishCommentAsync',
+          [post.recID, value, this.rootData.recID, type]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.rootData.totalComment += 1;
+            this.comments = "";
+            this.repComment = "";
+            post.showReply = false;
+            this.crrId = "";
+            this.setNodeTree(res);
+            // this.loadSubComment(post);
+            this.dt.detectChanges();
+          }
+        });
     }
   }
 
-  sendComment(post:any,value:any) {
+  sendComment(post: any, value: any) {
     if (!value.trim()) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    if(post.recID)
-    {
-      var type="WP_Comments";
+    if (post.recID) {
+      var type = "WP_Comments";
       this.api
-      .execSv<any>(
-        'WP',
-        'ERM.Business.WP',
-        'CommentBusiness',
-        'PublishCommentAsync',
-        [post.recID, value, this.rootData.recID,type]
-      )
-      .subscribe((res) => {
-      if(res)
-      { 
-        this.comments = "";
-        this.repComment = "";
-        this.rootData.totalComment += 1;
-        post.showReply = false;
-        this.crrId = "";
-        this.dicDatas[res["recID"]] = res;
-        this.setNodeTree(res);
-        this.dt.detectChanges();
-      }
-      });
+        .execSv<any>(
+          'WP',
+          'ERM.Business.WP',
+          'CommentBusiness',
+          'PublishCommentAsync',
+          [post.recID, value, this.rootData.recID, type]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.comments = "";
+            this.repComment = "";
+            this.rootData.totalComment += 1;
+            post.showReply = false;
+            this.crrId = "";
+            this.dicDatas[res["recID"]] = res;
+            this.setNodeTree(res);
+            this.dt.detectChanges();
+          }
+        });
     }
   }
-  
+
   replyTo(data) {
     this.crrId = data.cm;
     data.showReply = !data.showReply;
@@ -226,14 +224,13 @@ export class TreeviewCommentComponent implements OnInit {
         [data.recID, "1"]
       )
       .subscribe((res) => {
-      if(res)
-      {
-        data.myVoted = true;
-        data.totalVote +=1;
-        this.dt.detectChanges();
-      }
+        if (res) {
+          data.myVoted = true;
+          data.totalVote += 1;
+          this.dt.detectChanges();
+        }
       });
-  } 
+  }
 
 
   //#region handle data from serve
@@ -291,16 +288,16 @@ export class TreeviewCommentComponent implements OnInit {
       'CommentBusiness',
       "GetSubCommentAsync",
       [data.recID, 0]
-      ).subscribe((res: any) => {
-        res.map( p => {
-          this.setNodeTree(p);
-        })
-        this.dt.detectChanges();
+    ).subscribe((res: any) => {
+      res.map(p => {
+        this.setNodeTree(p);
       })
+      this.dt.detectChanges();
+    })
   }
 
 
-  
+
   recursiveComment(root, data) {
     const t = this;
     _.filter(root, function (o) {
@@ -347,8 +344,7 @@ export class TreeviewCommentComponent implements OnInit {
     if(post.isShowComment){
       post.isShowComment = false;
     }
-    else
-    {
+    else {
       post.isShowComment = true;
     }
     this.dt.detectChanges();
@@ -366,16 +362,14 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
 
-  
-  valueChange(value:any,type){
+
+  valueChange(value: any, type) {
     var text = value.data.toString().trim();
-    if(text){
-      if(type == "comments")
-      {
+    if (text) {
+      if (type == "comments") {
         this.comments = text;
       }
-      else
-      {
+      else {
         this.repComment = text;
       }
       this.dt.detectChanges();
@@ -409,11 +403,10 @@ export class TreeviewCommentComponent implements OnInit {
       dataNode = [newNode];
     } else {
       var idx = -1;
-      if(!dataNode.listComment){
+      if (!dataNode.listComment) {
         dataNode.listComment = [];
       }
-      else
-      {
+      else {
         dataNode.listComment.forEach(function (element: any, index: any) {
           if (element["recID"] == id) {
             idx = index;
