@@ -5,6 +5,7 @@ import { SaveNoteComponent } from './save-note/save-note.component';
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -67,6 +68,7 @@ export class AddNoteComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private modalService: NgbModal,
     private callfc: CallFuncService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -79,6 +81,7 @@ export class AddNoteComponent implements OnInit {
       this.note = dt.data?.dataUpdate;
     }
     this.noteType.text = true;
+    this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes');
   }
   ngAfterViewInit() {
     if (this.formType == 'edit')
