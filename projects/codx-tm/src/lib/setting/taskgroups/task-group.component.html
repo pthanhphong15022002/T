@@ -11,8 +11,8 @@
         {{data.taskGroupID}}
       </div>
     </td>
-    <td class="rowphoto" placement="left" [ngbTooltip]="data.taskGroupName">
-      <div class="padding">
+    <td class="rowphoto" >
+      <div class="padding" [ngbTooltip]="data.taskGroupName">
         {{data.taskGroupName}}
 
       </div>
@@ -25,7 +25,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.note">
+        <div [innerHTML]="data.note" [ngbTooltip]="data.note">
         </div>
       </div>
     </td>

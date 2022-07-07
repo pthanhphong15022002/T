@@ -21,6 +21,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
 import { ViewUsersComponent } from './users/view-users/view-users.component';
+import { AddUserComponent } from './users/add-user/add-user.component';
 export const routes: Routes = [
   {
     path: '',
@@ -56,7 +57,8 @@ const T_Component: Type<any>[] = [
   UserComponent,
   CompanySettingComponent,
   PopupContactComponent,
-  ViewUsersComponent
+  ViewUsersComponent,
+  AddUserComponent
 ];
 @NgModule({
   imports: [
