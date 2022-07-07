@@ -17,7 +17,7 @@ export class ViewUsersComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,) {
       this.data = dt?.data;
-      this.lstRoles = this.data.userRole;
+      this.lstRoles = this.data.chooseRoles;
       this.dialog = dialog;
      }
 
@@ -32,4 +32,5 @@ export class ViewUsersComponent implements OnInit {
     this.title = 'Danh sách module ('+ this.count+')';
   }
 
+  
 }
