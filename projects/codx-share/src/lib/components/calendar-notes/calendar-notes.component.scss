@@ -77,6 +77,11 @@ app-notes-home {
     border-left: 3px #ffd075 solid;
 }
 
+.task-content {
+    background-color: #F08080;
+    border-left: 3px red solid;
+}
+
 .pd-left-10 {
     padding-left: 10px;
 }
@@ -96,4 +101,32 @@ app-notes-home {
 
 .note-option {
     margin-top: 5px;
+}
+
+.w-136px {
+    width: 136px;
+}
+
+.w-5px {
+    width: 5px;
+}
+
+.show-event {
+    margin-left: 10px;
+    margin-top: -20px;
+    width: 130px;
+}
+
+.show-event-check {
+    margin-left: 10px;
+    margin-top: -20px;
+}
+
+.pd-note {
+    padding-left: 3% !important;
+    padding-right: 3% !important;
+}
+
+.top-5 {
+    margin-top: 5%;
 }

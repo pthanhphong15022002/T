@@ -24,7 +24,7 @@
 <ng-template #tab let-name>
   <ng-container *ngIf="name.toLowerCase() == 'attachment'">
     <ng-container>
-      <!-- <codx-attachment
+      <codx-attachment
         #attachment
         [objectType]="entityName"
         [objectId]="objectID"
@@ -40,7 +40,7 @@
         (fileCount)="getfileCount($event)"
         [displayThumb]="displayThumb"
       >
-      </codx-attachment> -->
+      </codx-attachment>
 
       <div class="tab-att">
         <div class="tab_container">

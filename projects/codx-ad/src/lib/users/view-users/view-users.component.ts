@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
@@ -12,8 +12,10 @@ export class ViewUsersComponent implements OnInit {
   count : number = 0;
   title='';
   lstRoles = [];
+  itemSelected: any;
 
   constructor(
+    
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,) {
       this.data = dt?.data;
@@ -22,8 +24,8 @@ export class ViewUsersComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    if(this.data.resource){
-      for(let item of this.data.resource.split(";")){
+    if(this.data){
+      for(let item of this.lstRoles){
         if(item!=""){
           this.count = this.count + 1;
         }
