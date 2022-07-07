@@ -25,12 +25,13 @@ import { CodxEsComponent } from './codx-es.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DocCategoryComponent } from './setting/category/category.component';
 import { SignatureComponent } from './setting/signature/signature.component';
-import { MarkSignatureComponent } from './sign-file/mark-signature/mark-signature.component';
 import { SignFileComponent } from './sign-file/sign-file.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { PopupAddAutoNumberComponent } from './setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ViewDetailComponent } from './sign-file/view-detail/view-detail.component';
+import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
 
 const routes: Routes = [
@@ -53,11 +54,6 @@ const routes: Routes = [
       {
         path: 'home/:funcID',
         component: DashboardComponent,
-      },
-
-      {
-        path: 'mark',
-        component: MarkSignatureComponent,
       },
       {
         path: 'setting',
@@ -86,6 +82,8 @@ const routes: Routes = [
     DashboardComponent,
     CodxEsComponent,
     PopupAddAutoNumberComponent,
+    PopupAddSignFileComponent,
+    ApprovalStepComponent,
     ViewDetailComponent,
     SignFileComponent,
     PopupSignatureComponent,

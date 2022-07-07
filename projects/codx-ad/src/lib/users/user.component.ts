@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, AuthStore, ViewModel, ViewType, DialogRef } from 'codx-core';
+import { UIComponent, AuthStore, ViewModel, ViewType, DialogRef, ButtonModel } from 'codx-core';
 import { Component, OnInit, inject, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { ViewUsersComponent } from './view-users/view-users.component';
 
@@ -14,6 +14,8 @@ export class UserComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
+  button?: ButtonModel;
+  moreFuncs: Array<ButtonModel> = [];
 
  // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
 
@@ -32,6 +34,21 @@ export class UserComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+    this.moreFuncs = [
+      {
+        id: 'edit',
+        icon: 'icon-list-checkbox',
+        text: 'Sửa',
+      },
+      {
+        id: 'btnMF2',
+        icon: 'icon-list-checkbox',
+        text: 'more 2',
+      },
+    ];
   }
 
   ngAfterViewInit():void{
@@ -62,10 +79,20 @@ export class UserComponent extends UIComponent {
     }
   }
 
+
   openPopup(item: any) {
     this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 500, '', item);
     this.dialog.closed.subscribe(e => {
       console.log(e);
     })
+  }
+
+  convertHtmlAgency(buID:any)
+  {
+    var desc = '<div class="d-flex">';
+    if(buID)
+      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +buID+'</span></div>';
+    
+    return desc + '</div>';
   }
 }
