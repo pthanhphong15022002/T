@@ -543,6 +543,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       //Export file
       case "SYS002":
         {
+          debugger;
           var gridModel = new DataRequest();
           gridModel.formName = this.formModel.formName;
           gridModel.entityName = this.formModel.entityName;
@@ -553,6 +554,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           gridModel.predicate = this.view.dataService.request.predicates;
           gridModel.dataValue = this.view.dataService.request.dataValues;
           gridModel.entityPermission = this.formModel.entityPer;
+          //
+          //Chưa có group
+          gridModel.groupFields = "createdBy";
           this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
           break;
         }
