@@ -4,6 +4,7 @@
         height: 52px;
     }
 }
+
 @media (min-width: 992px) {
     .header-fixed.subheader-fixed.subheader-enabled .wrapper {
         padding-top: 52px !important;
@@ -18,9 +19,11 @@
     opacity: 1 !important;
     width: 100%;
 }
+
 .cardExp {
     width: 500px;
 }
+
 ngx-skeleton-loader {
     width: 100%;
 }
@@ -57,6 +60,7 @@ ngx-skeleton-loader {
     background-color: #f2fcfb;
     border-radius: 4px;
 }
+
 .swiper-button-prev {
     top: 22px;
     position: absolute;
@@ -64,14 +68,90 @@ ngx-skeleton-loader {
     background-color: #f2fcfb;
     border-radius: 4px;
 }
+
 .yeartoyear {
     min-width: 76px;
 }
+
 #Training .yeartoyear {
     margin-left: 40px;
 }
+
 .user-item.tagitem {
     float: left;
     margin-bottom: 4px;
     margin-right: 4px;
+}
+
+
+.pw-profile {
+    background-color: #d7d7d7;
+    height: 150px;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 25px 60px;
+    background-size: cover;
+}
+
+.personal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.personal-container>div {
+    max-width: 900px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.personal-container>div.pw-lg {
+    max-width: 1000px;
+}
+
+.pw-menu {
+    height: 48px;
+    line-height: 48px;
+    border-radius: 6px !important;
+    background-color: var(--bs-body-bg);
+    width: 100%;
+    margin: 0 auto;
+    margin-top: -24px !important;
+    position: relative;
+    z-index: 99;
+    justify-content: space-around;
+}
+
+.pw-menu a {
+    cursor: pointer;
+}
+
+.pw-content {
+    border-radius: 6px !important;
+    background-color: var(--bs-body-bg);
+    margin-top: 20px;
+}
+
+.pw-menu div.active a,
+.pw-menu div:hover a {
+    color: #0078ff;
+}
+
+.pw-menu div.active span,
+.pw-menu div:hover span {
+    color: #0078ff;
+}
+
+.pw-menu div a .mn-icon {
+    margin-right: 5px;
+}
+
+.pw-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.header-fixed .wrapper {
+    padding-top: 50px !important;
 }

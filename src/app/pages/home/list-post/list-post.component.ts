@@ -50,6 +50,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   predicate = "ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)";
   dataValue: any = "0;1;5";
   modal: DialogRef;
+  headerText = "";
   views: Array<ViewModel> | any = [];
   @Input() predicates = "";
   @Input() dataValues = "";
@@ -93,6 +94,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         panelLeftRef: this.panelLeftRef
       }
     }]
+    this.getGridViewSetUp();
     this.codxViews.dataService.methodDelete = "DeletePostAsync";
   }
 
@@ -100,7 +102,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
   }
+  getGridViewSetUp(){
+    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) =>{
+      this.cache.gridViewSetup(func.formName,func.gridViewName)
+      .subscribe((grd:any) => {
+      this.headerText = grd['Comments']['headerText'];
+      this.dt.detectChanges();
+      })
+    })
 
+  }
   removePost(data: any) {
 
     this.notifySvr.alertCode('E0327').subscribe((e: any) => {
