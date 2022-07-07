@@ -12,7 +12,6 @@ import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { MyTeamComponent } from '@pages/home/my-team/my-team.component';
-import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @NgModule({
@@ -25,7 +24,6 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
     SaveNoteComponent,
     UpdateNotePinComponent,
     MyTeamComponent,
-    UpdateNoteComponent,
   ],
   imports: [
     CommonModule,

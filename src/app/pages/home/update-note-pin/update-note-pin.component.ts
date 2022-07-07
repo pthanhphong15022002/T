@@ -1,4 +1,4 @@
-import { ApiHttpService, CallFuncService, DialogData } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 
@@ -20,13 +20,18 @@ export class UpdateNotePinComponent implements OnInit {
   recIdOld: any;
   isPinOld: any;
   lstview: any;
+  header = 'Cập nhật ghi chú ghim';
+  dialog: any;
+  readOnly = false;
 
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
     @Optional() data?: DialogData,
+    @Optional() dt?: DialogRef,
   ) { 
+    this.dialog = dt;
     this.lstview = data.data?.lstview;
     this.itemUpdate = data.data?.data;
     this.recID = data.data?.recID;

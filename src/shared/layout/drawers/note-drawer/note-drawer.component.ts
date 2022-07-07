@@ -1,10 +1,10 @@
-import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CallFuncService, ApiHttpService, CodxListviewComponent } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
+import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 
 @Component({
   selector: 'app-note-drawer',
@@ -195,7 +195,7 @@ export class NoteDrawerComponent implements OnInit {
       recID: recID,
       data: data,
     }
-    this.callfc.openForm(UpdateNoteComponent, "Cập nhật ghi chú", 0, 0, "", obj);
+    this.callfc.openForm(AddUpdateNoteBookComponent, "Cập nhật ghi chú", 0, 0, "", obj);
     this.itemUpdate = data;
     this.listNote = this.itemUpdate.checkList;
     this.type = data.noteType;
