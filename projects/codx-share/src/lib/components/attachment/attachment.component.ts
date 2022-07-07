@@ -590,6 +590,9 @@ export class AttachmentComponent implements OnInit {
           this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
+         // for(var i=0; i<addList.length; i++) {
+          this.data.push(Object.assign({}, item));
+          //}     
           this.closePopup();
         }
         else if (item.status == 6) {
@@ -618,6 +621,7 @@ export class AttachmentComponent implements OnInit {
            done.then(async res => {
              this.fileUploadList[0].recID = res.data.recID;
              this.atSV.fileListAdded.push(Object.assign({}, item));
+             this.data.push(Object.assign({}, item));
              this.notificationsService.notify(res.message);
              this.closePopup();
              this.fileUploadList = [];
@@ -640,6 +644,10 @@ export class AttachmentComponent implements OnInit {
       binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
+  }
+
+  onEditUploaded(file) {
+    alert('edit');
   }
 
   onDeleteUploaded(file: string) {
