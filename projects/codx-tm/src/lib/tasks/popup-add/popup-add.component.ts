@@ -522,6 +522,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     }
   }
   valueChangeEstimated(data) {
+    if(!data.data) return;
     var num = Number.parseFloat(data.data);
     if(!num){
        //  this.notiService.notifyCode("can cai code o day đang gan tam")
@@ -691,7 +692,10 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   }
 
   valueChangeTags(e) {
-    this.task.tags = e.data;
+    if(e.data!=""){
+      this.task.tags = e.data.splice(1);
+    }
+  
   }
 
   textboxChange(e) {
@@ -746,13 +750,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
     });
     this.listTaskResources = listTaskResources;
   }
-  addFile(evt: any) {
-    //this.attachment.openPopup();
-    this.attachment.uploadFile();
-  }
-  fileAdded(e) {
-    console.log(e);
-  }
+
   changeMemo2(e, id) {
     var message = e?.data;
     var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
@@ -773,6 +771,16 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   }
 
   valueChangeUser(e){
+
+  }
+  addFile(evt: any) {
+    //this.attachment.openPopup();
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e){
 
   }
 }
