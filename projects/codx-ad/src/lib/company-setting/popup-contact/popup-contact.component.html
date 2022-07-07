@@ -1,25 +1,50 @@
-<codx-form [headerText]="title" [body]="body" [dialog]="dialog" >
+<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog">
 </codx-form>
-
 <ng-template #body>
-  <div class="form-group row">
+  <div class="row">
+    <div class="col-2">
+      <codx-label name="" formName="" default="Điện thoại"></codx-label>
+    </div>
+    <div class="col-10">
+      <codx-input class="form-control" type="text" [crrValue]="items?.phone" (valueChange)="txtValuePhone($event)" ></codx-input>
+    </div>
+    <div class="col-2">
+      <codx-label name="" formName="" default="FaxNo"></codx-label>
+    </div>
+    <div class="col-10">
+      <codx-input class="form-control" type="text" [crrValue]="items?.faxNo" (valueChange)="txtValueFaxNo($event)"></codx-input>
+    </div>
+    <div class="col-2">
+      <codx-label name="" formName="" default="Email"></codx-label>
+    </div>
+    <div class="col-10">
+      <codx-input class="form-control" type="text" [crrValue]="items?.email" (valueChange)="txtValueEmail($event)"></codx-input>
+    </div>
+    <div class="col-2">
+      <codx-label name="" formName="" default="Webiste"></codx-label>
+    </div>
+    <div class="col-10">
+      <codx-input class="form-control" type="text" [crrValue]="items?.webPage" (valueChange)="txtValueWebPage($event)" ></codx-input>
+    </div>
+
+    <div class="col-2">
+      <codx-label name="" formName="" default="Địa chỉ"></codx-label>
+    </div>
+    <div class="col-10">
+      <codx-input class="form-control" type="text" [crrValue]="items?.street" (valueChange)="txtValueStreet($event)"></codx-input>
+    </div>
     <div class="col-12">
-        <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
-        <codx-input class="form-control" type="text"  [crrValue]="test?.legalName2" [disabled]="true"></codx-input>
+      <iframe class="contact-map-size"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1916277478313!2d106.67422991524113!3d10.796630561771677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528d61d708d9b%3A0xa88abf9cfd8e5128!2zMjMgTmd1eeG7hW4gVGjhu4sgSHXhu7NuaCwgUGjGsOG7nW5nIDgsIFBow7ogTmh14bqtbiwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaWV0bmFt!5e0!3m2!1sen!2sus!4v1657168799748!5m2!1sen!2sus"
+      allowfullscreen="" loading="lazy"></iframe>
     </div>
-    <!-- <div class="col-6" *ngIf="status =='9'">
-        <codx-label fiedName ="CompletedOn" formName="Tasks"  default="Ngày cập nhật"></codx-label>
-        <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
-            [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
-        </codx-input>
-    </div>
-    <div class="col-6" *ngIf="status =='9'">
-        <codx-label fiedName="Estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
-        <codx-input class="form-control" type="number" field="estimated" [crrValue]="estimated" [disabled]="true" ></codx-input>
-    </div>
-    <div class="col-12">
-         <codx-label fiedName="comment" formName="Tasks"  default="Comment"></codx-label>
-        <textarea [(ngModel)]="comment" class="form-control" rows="2"></textarea>
-    </div> -->
-</div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onEdit()">
+      <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+    </button>
+  </div>
 </ng-template>

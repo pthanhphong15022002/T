@@ -44,7 +44,7 @@
                     [formModel]="formModel"
                   ></codx-label>
                 </div>
-                <div class="fw-bold text-black">
+                <div class="text-gray-900 fw-bold mb-2 mt-5">
                   <codx-label
                     name="lblOverdueTask"
                     default="Chưa thực hiên"
@@ -65,7 +65,7 @@
             <div class="d-flex justify-content-between">
               <div class="icon icon-access_time"></div>
               <div>
-                <div class="fw-bold text-gray-400">
+                <div class="text-gray-900 fw-bold mb-2 mt-5">
                   <codx-label
                     name="lblTask"
                     default="Công việc"
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -135,8 +135,12 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>Availability</div>
+          <div>{{ dbData?.availability }}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -182,8 +186,12 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>Performance</div>
+          <div>{{ dbData?.performance }}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -229,8 +237,12 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>Quality</div>
+          <div>{{ dbData?.quality }}</div>
+        </div>
       </div>
-      <div class="w-25">
+      <div class="w-25" style="position: relative">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
@@ -276,10 +288,14 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>KPI</div>
+          <div>{{ dbData?.kpi }}</div>
+        </div>
       </div>
     </div>
     <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-50 test">
+      <div class="w-50 test" style="position: relative">
         <ejs-accumulationchart
           id="chart-task-group"
           [legendSettings]="legendSettings"
@@ -293,6 +309,15 @@
             ></e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
+        <div style="position: absolute; top: 50%; left: 50%">
+          <div>{{ dbData?.tasks }}</div>
+          <codx-label
+            name="lblTasks"
+            default="Công việc"
+            [formModel]="formModel"
+          >
+          </codx-label>
+        </div>
       </div>
       <div class="w-50 test">
         <ejs-accumulationchart

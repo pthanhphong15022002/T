@@ -17,6 +17,7 @@ export class UpdateNotePinComponent implements OnInit {
   readOnly = false;
   checkEditIsPin = false;
   data: any = [];
+  dataOld: any;
 
   constructor(
     private api: ApiHttpService,
@@ -38,22 +39,22 @@ export class UpdateNotePinComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       if (field == "checkboxUpdateNotePin") {
-        if (dt == true || dt == '1'){
-          this.onEditIsPin(item);
+        if (dt == true || dt == '1') {
+          this.checkEditIsPin = true;
+          this.dataOld = item;
         }
       }
     }
   }
 
-  onEditIsPin(item: Notes) {
-    this.checkEditIsPin = true;
-    var isPin = !item.isPin;
-    item.isPin = isPin;
+  onEditIsPin() {
+    var isPin = !this.dataOld.isPin;
+    this.dataOld.isPin = isPin;
     this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [item.recID, item])
+      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.dataOld.recID, this.dataOld])
       .subscribe((res) => {
         for (let i = 0; i < this.data.length; i++) {
-          if (this.data[i].recID == item?.recID) {
+          if (this.data[i].recID == this.dataOld?.recID) {
             this.data[i].isPin = res?.isPin;
           }
         }
@@ -62,12 +63,19 @@ export class UpdateNotePinComponent implements OnInit {
 
   onEditNote() {
     if (this.checkEditIsPin == true) {
+      this.onEditIsPin();
+
       var isPin = !this.itemUpdate.isPin;
       this.itemUpdate.isPin = isPin;
-      this.itemUpdate;
       this.api
         .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.itemUpdate?.recID, this.itemUpdate])
         .subscribe((res) => {
+          this.dialog.close();
+          this.notificationsService.notify(
+            'Thực thi thành công',
+            'error',
+            2000
+          );
           this.changeDetectorRef.detectChanges();
         });
     } else {
