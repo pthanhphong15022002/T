@@ -7,3 +7,12 @@
     padding-left: 20px;
     padding-right: 20px;
 }
+
+.active [class*="icon-"] {
+    color: var(--primary-dark);
+}
+
+.format-date {
+    // margin-top: -5px;
+    // margin-left: 80%;
+}
