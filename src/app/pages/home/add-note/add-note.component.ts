@@ -1,3 +1,4 @@
+import { NotificationsService } from 'codx-core';
 import { NoteType } from './../../../../shared/models/notes.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -24,6 +25,7 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -32,7 +34,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
-  note: Notes = new Notes();
+  note: any = new Notes();
   noteType: NoteType = new NoteType();
   tempNote: TempNote = new TempNote();
   message: any;
@@ -41,20 +43,19 @@ export class AddNoteComponent implements OnInit {
   label = 'Hiển thị trên lịch';
   showCalendar = false;
   pin = false;
-  // lstview: any = [];
-  // lstviewNotePin: any;
-  // typeList_: any;
-  // ngForLstview_: any;
   formType = '';
   data: any;
   predicate = 'CreatedBy=@0';
   dataValue = '';
   user: any;
-  dialog: any;
+  dialog: DialogRef;
   formAdd: FormGroup;
   readOnly = false;
   header = 'Thêm mới sổ tay';
   dataListView = [];
+  checkNull = false;
+  save = false;
+  gridViewSetup: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -69,6 +70,7 @@ export class AddNoteComponent implements OnInit {
     private modalService: NgbModal,
     private callfc: CallFuncService,
     private cache: CacheService,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -79,10 +81,23 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
+      this.addFirstObjectInArray();
     }
     this.noteType.text = true;
-    this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes');
+    this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
+      console.log("check gridViewSetup", res)
+    });
   }
+
+  addFirstObjectInArray() {
+    var dtFirst: any;
+    if (this.note.noteType == 'check')
+      dtFirst = [{ status: 0, listNote: '' }];
+    else
+      dtFirst = [{ status: null, listNote: '' }];
+    this.note.checkList.unshift(dtFirst[0]);
+  }
+
   ngAfterViewInit() {
     if (this.formType == 'edit')
       this.checkActiveFormEdit();
@@ -157,7 +172,7 @@ export class AddNoteComponent implements OnInit {
           if (this.formType == 'edit') this.listNote = this.note.checkList;
           this.listNote.forEach((data) => {
             if (item?.listNote == data.listNote) {
-              if (field == 'status') data.status = dt
+              if (field == 'status') data.status = dt;
               else data.listNote = dt;
             }
           })
@@ -173,28 +188,49 @@ export class AddNoteComponent implements OnInit {
       this.listNote.shift();
       this.note.checkList = this.listNote;
       this.note.memo = null;
+      if (this.listNote == null || this.listNote == '')
+        this.checkNull = true;
+      else this.checkNull = false;
     } else {
-      this.note.checkList == null;
+      this.note.checkList = null;
+      if (this.note.memo == null || this.note.memo == '')
+        this.checkNull = true;
+      else this.checkNull = false;
+
     }
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'CreateNoteAsync',
-        this.note
-      )
-      .subscribe((res) => {
-        this.data.push(res);
-        if (this.note?.showCalendar == true) {
-          this.changeDetectorRef.detectChanges();
-          var today: any = document.querySelector(
-            ".e-footer-container button[aria-label='Today']"
-          );
-          if (today) {
-            today.click();
+    if (this.checkNull == false) {
+      this.api
+        .exec<any>(
+          'ERM.Business.WP',
+          'NotesBusiness',
+          'CreateNoteAsync',
+          this.note
+        )
+        .subscribe((res) => {
+          this.data.push(res);
+          this.dialog.dataService.add(res, 0).subscribe();
+          if (this.note?.showCalendar == true) {
+            var today: any = document.querySelector(
+              ".e-footer-container button[aria-label='Today']"
+            );
+            if (today) {
+              today.click();
+            }
           }
-        }
-      });
+          this.changeDetectorRef.detectChanges();
+        });
+    } else {
+      this.notificationsService.notify(
+        'Vui lòng nhập ghi chú',
+        'error',
+        2000
+      );
+
+      this.listNote[0] = {
+        status: this.type == 'check' ? 0 : null,
+        listNote: '',
+      };
+    }
   }
 
   onEditNote() {
@@ -203,6 +239,7 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.dialog.close();
           for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].recID == this.note?.recID) {
               this.data[i].checkList = res.checkList;
@@ -267,35 +304,20 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  // onEditNote(recID) {
-  //   if (this.type == 'check' || this.type == 'list') {
-  //     this.dataUpdate.memo = null;
-  //     this.dataUpdate.checkList = this.listNote;
-  //   } else {
-  //     this.dataUpdate.checkList = null;
-  //     this.dataUpdate.memo = this.message;
-  //   }
-  //   this.dataUpdate.noteType = this.type;
-  //   this.dataUpdate.isPin = false;
-  //   this.dataUpdate.showCalendar = false;
-  //   this.dataUpdate.transID = recID;
-  //   this.api
-  //     .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-  //       this.data.recID,
-  //       this.dataUpdate,
-  //     ])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.changeDetectorRef.detectChanges();
-  //       }
-  //     });
-  // }
 
   openFormNoteBooks() {
-    var obj = {
-      data: this.note,
-    };
-    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
+    if(this.formType == 'edit') {
+      var obj = {
+        itemUpdate: this.note,
+      };
+      this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
+    } else {
+      this.notificationsService.notify(
+        'Vui lòng thêm mới ghi chú',
+        'error',
+        2000
+      );
+    }
   }
 
   popupFile() {
