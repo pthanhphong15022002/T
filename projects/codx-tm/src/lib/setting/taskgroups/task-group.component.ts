@@ -223,7 +223,7 @@ export class TaskGroupComponent implements OnInit {
     opt.data = itemSelected.taskGroupID;
     return true;
   }
- 
+
   requestEnded(evt: any) {
     // if (evt) {
     //   this.dialog.close();
