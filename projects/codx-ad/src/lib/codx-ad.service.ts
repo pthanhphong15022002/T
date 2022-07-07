@@ -15,4 +15,11 @@ export class CodxAdService {
   getListCompanySettings(){
     return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","GetAsync")
   }
+
+  updateContactCompanySettings(data){
+    return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","UpdateBusinessContactAsync",data)
+  }
+  updatePersonalCompanySettings(data){
+    return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","UpdateBusinessPersonalAsync",data)
+  }
 }
