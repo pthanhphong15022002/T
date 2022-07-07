@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Injector,
   Input,
   OnChanges,
@@ -35,6 +36,7 @@ export class CodxExportComponent implements OnInit, OnChanges
   exportGroup : FormGroup;
   lblExtend: string = '';
   request = new DataRequest();
+  optionEx = new DataRequest();
   @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     private callfunc: CallFuncService,
@@ -73,17 +75,17 @@ export class CodxExportComponent implements OnInit, OnChanges
   ngOnChanges(changes: SimpleChanges) {}
   load()
   {
-    var option = new DataRequest();
-    option.page=0;
-    option.pageSize=10;
-    option.entityName = 'AD_ExcelTemplates';
-    option.funcID = "ODT3";
+
+    this.optionEx.page=0;
+    this.optionEx.pageSize=10;
+    this.optionEx.entityName = 'AD_ExcelTemplates';
+    this.optionEx.funcID = "ODT3";
     this.api.execSv<any>(
       'SYS',
       'AD', 
       'ExcelTemplatesBusiness', 
       'GetByEntityAsync', 
-      option
+      this.optionEx
     ).subscribe(item=>
     {
       if(item[0])
@@ -183,5 +185,15 @@ export class CodxExportComponent implements OnInit, OnChanges
   openFormUploadFile()
   {
     this.attachment.uploadFile();
+  }
+  onScroll(e:any)
+  {
+    const dcScroll = e.srcElement;
+    if (dcScroll.scrollTop + dcScroll.clientHeight == dcScroll.scrollHeight) 
+    {
+      var data = this.optionEx
+      //alert("a");
+    }
+     
   }
 }

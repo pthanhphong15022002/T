@@ -21,6 +21,9 @@ export class ViewDetailComponent implements OnInit {
   ) {}
 
   @Input() itemDetail;
+  @Input() funcID;
+  @Input() formModel;
+  @ViewChild('attachment') attachment;
 
   openNav = false;
   canRequest;
@@ -73,9 +76,19 @@ export class ViewDetailComponent implements OnInit {
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
   }
-  
-  clickMF(e){
+
+  clickMF(e) {
     console.log(e);
-    
   }
+
+  saveFile() {
+    this.attachment.saveFiles();
+  }
+
+  openFile() {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded($event) {}
+  getfileCount($event) {}
 }

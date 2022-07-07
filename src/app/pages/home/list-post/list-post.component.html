@@ -17,7 +17,8 @@
                     <div class="d-flex flex-column flex-grow-1 share">
                         <span class="text-gray-500 feed-box box-new share-input" (click)="openModal()">
                             <codx-label class="fw-normal" formName="Comments" name="lblThinks"
-                                default="Chọn vào đây để chia sẻ suy nghĩ của bạn"></codx-label>
+                                [default]="headerText">
+                            </codx-label>
                         </span>
                     </div>
                 </div>
@@ -34,7 +35,7 @@
 </ng-template>
 
 <ng-template #tmpPortal let-item>
-    <div class="p-4">
+    <div class="p-5">
         <div class="d-flex align-items-top">
             <div class="me-3">
                 <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40"
@@ -66,7 +67,7 @@
                     </ng-container>
                     <span *ngIf="item.shareControl == 'D' ||
                         item.shareControl == 'P' || item.shareControl == 'R' || item.shareControl == 'G' ||
-                        item.shareControl == 'U'; else other_option" class="ml-1 cursor-pointer" placement="bottom"
+                        item.shareControl == 'U'" class="ml-1 cursor-pointer" placement="bottom"
                         [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
                         (click)="getShareUser(item.shareControl, item.id)">
                         <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 "
@@ -99,7 +100,6 @@
                             </ng-template>
                         </span>
                     </span>
-                    <ng-template #other_option></ng-template>
                 </div>
             </div>
             <div class="more">

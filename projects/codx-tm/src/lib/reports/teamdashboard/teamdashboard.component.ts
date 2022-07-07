@@ -4,6 +4,7 @@ import {
   GaugeTheme,
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-circulargauge';
+import { AnimationModel, RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
@@ -28,6 +29,13 @@ export class TeamDashboardComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
+  vlWork: any
+
+  public rangeColors: RangeColorModel[] = [
+    { start: 0, end: 50, color: 'red' },
+    { start: 50, end: 100, color: 'orange' },
+  ];
+  public isGradient: boolean = true;
 
   //#region gauge
   public font1: Object = {
@@ -189,20 +197,10 @@ export class TeamDashboardComponent implements OnInit {
         this.data = res.tasksByGroup;
         this.dataColumn = res.dataBarChart.barChart;
         this.dataLine = res.dataBarChart.lineChart;
+        this.vlWork = res.tasksbyEmp;
       });
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    this.piedata1 = [
-      {
-        x: 'Group 1',
-        y: 2,
-      },
-      {
-        x: 'Group 2',
-        y: 5,
-      },
-    ];
 
     this.piedata2 = [
       {
