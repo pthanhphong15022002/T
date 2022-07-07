@@ -15,3 +15,50 @@
 .menu {
   margin-top: -24px;
 }
+.accountinfo {
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+.header_title {
+  padding-bottom: 30px;
+}
+.header_detail {
+  /* background: white;
+  background-size: 5000px 1000px;
+  background-repeat: no-repeat; */
+  /* background-color: white; */
+}
+.body_title {
+  padding-bottom: 30px;
+}
+.contact {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.body_detail {
+  border: 1px solid #dbd8d9;
+}
+.footer_detail {
+  border: 1px solid #dbd8d9;
+}
+.contact-map {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.contact-map-size {
+  height: 250px;
+  width: 100%;
+}
+.button_edit{
+  text-align: right;
+}
+.content {
+  padding: 10px 10px 10px 10px;
+}
+.background_form {
+  background: white;
+  padding-bottom: 50px;
+}

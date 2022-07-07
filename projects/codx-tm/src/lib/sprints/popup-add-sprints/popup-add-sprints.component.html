@@ -48,7 +48,9 @@
             </codx-label>
           </div>
         </div>
-        <codx-share (eventApply)="eventApply($event)"> </codx-share>
+        <!-- <codx-share (eventApply)="eventApply($event)"> </codx-share> -->
+        <codx-input type="Share" refValue="L1901" field="AssignTo" [dataShared]="taskBoard.resources" multiple="true" [showInput] = "false"
+        (valueChange)="eventApply($event)"></codx-input>
       </div>
       <div>
         <ng-container *ngFor="let item of listUserDetail; index as i">

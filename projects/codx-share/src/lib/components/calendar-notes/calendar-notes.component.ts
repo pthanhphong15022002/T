@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -13,9 +13,9 @@ import {
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { Notes } from '@shared/models/notes.model';
 import { StatusNote } from '@shared/models/enum/enum';
-import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -65,18 +65,25 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   dialog!: DialogRef;
   dataValue = ['WP_Calendars', '', 'SettingShow'];
   predicate = '';
+  dataValue1: any;
+  predicate1 = 'CreatedBy=@0';
+  userID = ''
 
   @ViewChild('listview') lstView;
   @ViewChild('calendar') calendar: any;
   constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private auth: AuthStore,
   ) {
     super(injector);
+    this.dataValue1 = this.auth.get();
+    this.userID = this.dataValue1?.userID;
     this.setEventWeek();
     this.messageParam = this.cache.message('WP003');
   }
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+  }
 
   onInit(): void {
     this.getEvents();
@@ -113,7 +120,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             var daq = new Date(Date.parse(date));
             var d = daq.toLocaleDateString();
           }
-          this.changeDetectorRef.detectChanges();
+          this.getNumberNotePin();
         }
       });
   }
@@ -169,7 +176,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     let calendar = 0;
     let calendarTM = 0;
     let countShowCalendar = 0;
-    let temp = 0;
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
@@ -294,36 +300,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       'Selected Value: ' + args.value.toLocaleDateString() + title;
   }
 
-  valueProperty(e) {
-    this.lstView = e.datas;
-    let i = 0;
-    var date;
-    var arr = [];
-    let countLstNotePin = 0;
-    for (i; i < e.datas.length; i++) {
-      date = e.datas[i].createdOn;
-      var dateParse = new Date(Date.parse(date));
-      arr.push(dateParse);
-      countLstNotePin++;
-      if (e.datas[i].isPin == true) {
-        this.countNotePin++;
-      }
-    }
-
-    this.countLstNote = countLstNotePin;
-    this.getDate = arr;
-    if (this.typeCalendar == 'week') {
-      this.setEventWeek();
-    } else {
-      var today: any = document.querySelector(
-        ".e-footer-container button[aria-label='Today']"
-      );
-      if (today) {
-        today.click();
-      }
-    }
-  }
-
   openFormUpdateNote(data) {
     var obj = {
       data: this.WP_Notes,
@@ -333,8 +309,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
-      747,
-      570,
+      600,
+      450,
       '',
       obj
     )
@@ -355,17 +331,38 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.type = data.noteType;
   }
 
-  openFormUpdateIsPin(content, data) {
-    //this.callfc.openForm(content);
-    if (this.checkUpdateNotePin == true) {
-      this.modalService.open(content, { centered: true });
-    } else return;
-    if (this.checkUpdateNotePin == true) {
+  getNumberNotePin() {
+    this.WP_Notes.forEach((res) => {
+      if (res.isPin == true || res.isPin == '1') {
+        this.countNotePin++;
+      }
+    })
+  }
+
+  checkNumberNotePin(data) {
+    if (data?.isPin == '1' || data?.isPin == true) {
+      this.countNotePin -= 1;
+      this.checkUpdateNotePin = false;
+    } else if (data?.isPin == '0' || data?.isPin == false) {
+      if (this.countNotePin + 1 <= this.maxPinNotes) {
+        this.countNotePin += 1;
+        this.checkUpdateNotePin = false;
+      } else {
+        this.checkUpdateNotePin = true;
+      }
+    }
+    this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
+  }
+
+  openFormUpdateIsPin(data, checkUpdateNotePin) {
+    if (checkUpdateNotePin == true) {
       var obj = {
         lstview: this.lstView,
         data: data,
       }
-      this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 0, 0, "", obj);
+      this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj);
+    } else {
+      this.onEditIsPin(data);
     }
   }
 
@@ -377,42 +374,21 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     };
     this.callfc
       .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj)
-    // this.view.dataService.addNew().subscribe((res: any) => {
-    //   let option = new DialogModel();
-    //   option.DataService = this.view?.dataService;
-    //   option.FormModel = this.view?.formModel;
-    //   this.dialog = this.callfc.openForm(AddNoteComponent,
-    //     'Thêm mới ghi chú', 720, 600, '', [this.WP_Notes, 'add'], '', option
-    //   );
-    // });
   }
 
   valueChange(e, recID = null, item = null) {
     if (e) {
       var field = e.field;
       if (field == 'textarea') this.message = e.data.checked.checked;
-      else if (field == 'pinNote') {
-        if (e.data.checked == true) {
-          if (this.countNotePin + 1 <= this.maxPinNotes) {
-            this.onEditNote();
-            this.countNotePin += 1;
-          } else if (this.countNotePin + 1 > this.maxPinNotes) {
-            this.checkUpdateNotePin = true;
-          }
-        } else if (e.data.checked == false) {
-          this.countNotePin -= 1;
-          this.onEditNote();
-        }
-      } else if (field == 'checkboxUpdateNotePin') {
+      else if (field == 'checkboxUpdateNotePin') {
         this.messageOld = item.memo;
         this.listNoteOld = item.checkList;
         this.isPinOld = !item.isPin;
         this.isCalendarOld = item.showCalendar;
         this.recIdOld = recID;
         this.noteTypeOld = item.noteType;
-        this.onEditIsPin();
+        // this.onEditIsPin();
       } else if (field == 'WP_Notes_ShowEvent') {
-        debugger;
         if (e.data == false) {
           this.checkWP_NotesParam = false;
         } else {
@@ -427,7 +403,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         }
         this.setEventWeek();
       } else if (field == 'TM_Tasks_ShowEvent') {
-        debugger;
         if (e.data == false) {
           this.checkTM_TasksParam = false;
         } else {
@@ -478,16 +453,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onEditNote() {
-    if (this.type == 'check' || this.type == 'list') {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNote;
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.message;
-    }
-    this.dataAdd.isPin = !this.isPin;
-    this.dataAdd.showCalendar = this.isCalendar;
-    this.dataAdd.transID = null;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         this.recID,
@@ -503,24 +468,17 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
-  onEditIsPin() {
-    if (this.noteTypeOld == 'check' || this.noteTypeOld == 'list') {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNoteOld;
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.messageOld;
-    }
-    this.dataAdd.isPin = this.isPinOld;
-    this.dataAdd.showCalendar = this.isCalendarOld;
+  onEditIsPin(data: Notes) {
+    var isPin = !data.isPin;
+    data.isPin = isPin;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.recIdOld,
-        this.dataAdd,
+        data?.recID,
+        data
       ])
       .subscribe((res) => {
         for (let i = 0; i < this.WP_Notes.length; i++) {
-          if (this.WP_Notes[i].recID == this.recIdOld) {
+          if (this.WP_Notes[i].recID == data?.recID) {
             this.WP_Notes[i].isPin = res.isPin;
           }
         }
@@ -528,22 +486,17 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
-  onDeleteNote() {
+  onDeleteNote(item) {
     this.api
       .exec<any>(
         'ERM.Business.WP',
         'NotesBusiness',
         'DeleteNoteAsync',
-        this.recID
+        item?.recID
       )
       .subscribe((res) => {
         if (res) {
-          // this.lstView.removeHandler(dt, "recID");
-          for (let i = 0; i < this.WP_Notes.length; i++) {
-            if (this.WP_Notes[i].recID == this.recID) {
-              this.WP_Notes.splice(i, 1);
-            }
-          }
+          this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID)
           this.changeDetectorRef.detectChanges();
           this.setEventWeek();
           var today: any = document.querySelector(
@@ -554,5 +507,21 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
           }
         }
       });
+  }
+
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.openFormAddNote();
+        break;
+      case 'delete':
+        this.onDeleteNote(data)
+        break;
+      case 'WPT0801':
+        this.checkNumberNotePin(data);
+        break;
+      case 'WPT0802':
+        break;
+    }
   }
 }

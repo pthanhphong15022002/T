@@ -296,7 +296,7 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
   }
 
   viewChange(event) {}
-  
+
   deleteBooking(event) {
     if (confirm('Are you sure to delete booking')) {
       this.api

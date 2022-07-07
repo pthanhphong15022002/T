@@ -2,8 +2,8 @@
     overflow: hidden;
 }
 
-.pw-listcard>div {
-    float: left;
+.pw-listcard {
+    justify-content: space-around;
 }
 
 .h-150px {
@@ -34,26 +34,22 @@
     position: relative;
 }
 
-.btn-add {
-    margin-left: 20px;
-}
-
-.w-1160px {
-    width: 1060px;
-}
-
-.h-152 {
-    height: 152.02px !important;
-}
 
 .header {
     align-items: stretch;
 }
 
-.left-20 {
-    margin-left: 20px;
+.pw-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.right-20 {
+.pw-card {
+    width: 220px;
+    float: left;
     margin-right: 20px;
+    margin-bottom: 20px;
+
 }

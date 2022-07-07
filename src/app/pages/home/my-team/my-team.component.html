@@ -4,7 +4,7 @@
             <codx-label class="mt-2" name="lblTeam" formName="HR_Employees" default="Thành viên nhóm"></codx-label>
         </div>
     </div>
-    <div class="card-body">
+    <div class="card-body pd-top-0">
         <div class="team-group">
             <ngx-skeleton-loader *ngIf="!employeeMyTeam" count="5" animation="progress"></ngx-skeleton-loader>
             <div class="user-teams">
@@ -12,7 +12,7 @@
                     <ng-container *ngFor="let myTeam of employeeMyTeam">
                         <div *ngIf="myTeam.isOnline" class="ut-item user-online">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
-                                #empPopover="ngbPopover" [width]="45" [style.border-color]="online?.color"
+                                #empPopover="ngbPopover" [width]="40" [style.border-color]="online?.color"
                                 [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, myTeam)"
                                 (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
                                 [objectId]="myTeam.employeeID" objectType="HR_Employees">
@@ -21,7 +21,7 @@
                         </div>
                         <div *ngIf="!myTeam.isOnline" class="ut-item user-offline">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
-                                #empPopover="ngbPopover" [width]="45" [openDelay]="500"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
                                 (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
                                 [objectId]="myTeam.employeeID" objectType="HR_Employees"
@@ -35,7 +35,7 @@
                     <ng-container *ngFor="let myTeam of employeeMyTeam; index as num">
                         <div *ngIf="myTeam.isOnline && num < 9" class="ut-item user-online">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
-                                #empPopover="ngbPopover" [width]="45" [openDelay]="500"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
                                 (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
                                 [objectId]="myTeam.employeeID" objectType="HR_Employees"
@@ -45,7 +45,7 @@
                         </div>
                         <div *ngIf="!myTeam.isOnline && num < 9" class="ut-item user-offline">
                             <codx-img popoverClass="userPopoverClass" [ngbPopover]="popEmpTitle" placement="bottom"
-                                #empPopover="ngbPopover" [width]="45" [openDelay]="500"
+                                #empPopover="ngbPopover" [width]="40" [openDelay]="500"
                                 (mouseenter)="PopoverEmp(empPopover, myTeam)"
                                 (mouseleave)="PopoverEmp(empPopover, null)" [objectName]="myTeam.employeeName"
                                 [objectId]="myTeam.employeeID" objectType="HR_Employees"
@@ -76,7 +76,7 @@
                     (click)="PopoverEmpOfList(pemp,emp)">
                     <div class="d-flex align-items-start">
                         <codx-img class="symbol symbol-40 symbol-circle me-4" [objectId]="emp.employeeID"
-                            [objectName]="emp.employeeName" objectType="HR_Employees">
+                            [objectName]="emp.employeeName" objectType="HR_Employees" [width]="40">
                         </codx-img>
                         <div class="d-flex flex-column flex-grow-1">
                             <div class="text-dark">{{emp.employeeName}}</div>

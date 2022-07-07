@@ -6,8 +6,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DialogData, DialogRef } from 'codx-core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { CacheService, CodxService, DialogData, DialogRef } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -16,7 +16,9 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   styleUrls: ['./popup-signature.component.scss'],
 })
 export class PopupSignatureComponent implements OnInit {
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attSignature1') attSignature1: AttachmentComponent;
+  @ViewChild('attSignature2') attSignature2: AttachmentComponent;
+  @ViewChild('attStamp') attStamp: AttachmentComponent;
 
   currentTab: number = 1;
   dataFile: any = null;
@@ -24,24 +26,79 @@ export class PopupSignatureComponent implements OnInit {
   Signature2: any = null;
   Stamp: any = null;
 
+  isAddSignature1 = false;
+  isAddSignature2 = false;
+  isAddStamp = false;
+
   headerText = 'Chọn chữ kí';
 
   dialog: DialogRef;
   dialogSignature: FormGroup;
 
   constructor(
+    private codxService: CodxService,
     private cr: ChangeDetectorRef,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.dialogSignature = data?.data;
+    this.dialog.formModel = data?.data.dialog.formModel;
+    this.dialogSignature = data?.data.model;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.dialogSignature.value);
+    if (this.dialogSignature.value.signature1 == null) {
+      this.codxService
+        .getAutoNumber(
+          this.dialog.formModel.funcID,
+          this.dialog.formModel.entityName,
+          'Signature1'
+        )
+        .subscribe((res) => {
+          this.Signature1 = res + 'signature1';
+        });
+    }
+    if (this.dialogSignature.value.signature2 == null) {
+      this.codxService
+        .getAutoNumber(
+          this.dialog.formModel.funcID,
+          this.dialog.formModel.entityName,
+          'Signature2'
+        )
+        .subscribe((res) => {
+          this.Signature2 = res + 'signature2';
+        });
+    }
+    if (this.dialogSignature.value.stamp == null) {
+      this.codxService
+        .getAutoNumber(
+          this.dialog.formModel.funcID,
+          this.dialog.formModel.entityName,
+          'Stamp'
+        )
+        .subscribe((res) => {
+          this.Stamp = res + 'stamp';
+        });
+    }
+  }
 
   onSaveForm() {
-    this.attachment.onMultiFileSave();
+    console.log(this.dialogSignature.value);
+    if (this.isAddSignature1) {
+      this.dialogSignature.patchValue({ signature1: this.Signature1 });
+    }
+    if (this.isAddSignature1) {
+      this.dialogSignature.patchValue({ signature2: this.Signature2 });
+    }
+    if (this.isAddStamp) {
+      this.dialogSignature.patchValue({ stamp: this.Stamp });
+    }
+
+    this.attSignature1.saveFiles();
+    this.attSignature2.saveFiles();
+    this.attStamp.saveFiles();
+    this.dialog.close();
   }
 
   onSavePopup() {}
@@ -49,23 +106,21 @@ export class PopupSignatureComponent implements OnInit {
   fileAdded(event, currentTab) {
     switch (currentTab) {
       case 3:
-        this.Signature1 = event.data;
-        this.dialogSignature.patchValue({
-          signature1: event.data[0].recID ?? null,
-        });
+        if (event.data) {
+          this.isAddSignature1 = true;
+        }
         break;
       case 4:
-        this.Signature2 = event.data;
-        this.dialogSignature.patchValue({
-          signature2: event.data[0].recID ?? null,
-        });
+        if (event.data) {
+          this.isAddSignature2 = true;
+        }
         break;
       case 5:
-        this.Stamp = event.data;
-        this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
+        if (event.data) {
+          this.isAddStamp = true;
+        }
         break;
     }
-    this.cr.detectChanges();
   }
 
   changeTab(tab) {

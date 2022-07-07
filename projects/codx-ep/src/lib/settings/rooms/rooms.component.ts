@@ -61,7 +61,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     private cacheSv: CacheService,
     private callFunc: CallFuncService,
     private activedRouter: ActivatedRoute
-  ) {}
+  ) { }
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.columnGrids = [

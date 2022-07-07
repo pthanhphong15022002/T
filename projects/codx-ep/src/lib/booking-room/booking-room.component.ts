@@ -240,7 +240,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  initForm() {}
+  initForm() { }
   getSelectedItem(evt: any) {
     if (evt) {
       this.selectedItem = evt;
@@ -418,7 +418,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
     });
   }
 
-  toggleClick() {}
+  toggleClick() { }
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -448,7 +448,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   //   //this.viewBase.currentView.openSidebarRight();
   // }
 
-  viewChange(event) {}
+  viewChange(event) { }
 
   deleteTask(event) {
     console.log('delete', event);

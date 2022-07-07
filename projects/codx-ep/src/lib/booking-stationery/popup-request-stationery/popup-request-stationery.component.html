@@ -4,6 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  #form
   [formControl]="dialogRequest"
   *ngIf="isAfterRender"
 >
@@ -25,14 +26,14 @@
           ><codx-label
             name="lblPerson"
             default="Cá nhân"
-            [formModel]="dialog.formModel"
+            [formModel]="form.formModel"
           ></codx-label
         ></span>
         <span class="badge badge-primary"
           ><codx-label
             name="lblRoom"
             default="Phòng"
-            [formModel]="dialog.formModel"
+            [formModel]="form.formModel"
           ></codx-label
         ></span>
       </div>
@@ -45,7 +46,7 @@
         <codx-label
           name="lblDepartment"
           default="Đơn vị/bộ phận:"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
           >{{ dialog.BUID }}</codx-label
         >
       </div>
@@ -71,7 +72,7 @@
         <codx-label
           name="lblAgent"
           default="Số lượng nhân viên của phòng: "
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </div>
       <!--begin: btn-icon-->
@@ -162,7 +163,7 @@
         <codx-label
           name="lblItems"
           default="Tổng số mặt hàng yêu cầu:"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <div class="numberCircle">{{ count }}</div>
       </div>
@@ -170,7 +171,7 @@
         <codx-label
           name="lblDay"
           default="Ngày yêu cầu"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           type="datetime"
@@ -191,7 +192,7 @@
           <codx-label
             fieldname="ReasonID"
             default="Lý do"
-            [formModel]="dialog.formModel"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
         <div class="col-10">
@@ -213,17 +214,19 @@
         <codx-label
           name="lblSend"
           default="Gởi duyệt"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
       <button class="btn btn-light-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
   </ng-template>
 </codx-form>
-<ng-template #popupDevice> </ng-template>
+<ng-template #popupDevice let-dialog>
+  
+</ng-template>

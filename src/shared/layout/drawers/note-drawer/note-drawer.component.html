@@ -15,7 +15,7 @@
                         <span class="badge badge-success badge-circle w-10px h-10px me-1"></span><span
                             class="fs-7 fw-bold text-gray-400">Active</span>
                     </div> -->
-                </div> 
+                </div>
             </div>
 
             <div class="card-toolbar">
@@ -87,7 +87,7 @@
                 gridViewName="'grvNotes'" service="WP">
             </codx-listview>
             <ng-template #template let-item>
-                <div>
+                <div class="pd-note">
                     <div class="p-3 note-content mb-3">
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
@@ -189,30 +189,19 @@
 </div>
 
 <ng-template #popContentPinNote let-modal>
-    <div class="modal-header">
-        <div class="flex">
-            <div class="">
-                <codx-label name="lblPinNote" formName="Notes" default="Ghim ghi chú"></codx-label>
-            </div>
-            <div class="" style="margin-left: 10px;">
-                <codx-input type="switch" [checked]="itemUpdate?.isPin == 'true' || itemUpdate?.isPin == '1'"
-                    field="pinNote" labelPosition="After" [disabled]="false" class="test-check"
-                    (valueChange)="valueChange($event)" (click)="openFormUpdateIsPin(popContentUpdateIsPin)">
-                </codx-input>
-            </div>
-        </div>
+    <div class="flex justify-content-between align-items-center" style="width: 150px;">
+        <codx-label name="lblPinNote" formName="Notes" default="Ghim ghi chú"></codx-label>
+        <codx-input type="switch" [checked]="itemUpdate?.isPin == 'true' || itemUpdate?.isPin == '1'" field="pinNote"
+            labelPosition="After" [disabled]="false" class="test-check" (valueChange)="valueChange($event)"
+            (click)="openFormUpdateIsPin(popContentUpdateIsPin)">
+        </codx-input>
     </div>
-    <div class="modal-body">
-        <button style="width: fit-content;height: fit-content;border: thin;outline: none;background-color: white;">
-            <div class="flex">
-                <div class="">
-                    <span class=" icon-delete icon-18"></span>
-                </div>
-                <div class="" (click)="onDeleteNote(itemUpdate.recID)">
-                    <codx-label name="lblDeleteNote" formName="Notes" default="Xóa ghi chú"></codx-label>
-                </div>
-            </div>
-        </button>
+    <hr />
+    <div class="flex">
+        <span class="icon-delete icon-16 text-danger me-1"></span>
+        <div class="text-danger" (click)="onDeleteNote(itemUpdate.recID)">
+            <codx-label name="lblDeleteNote" formName="Notes" default="Xóa ghi chú"></codx-label>
+        </div>
     </div>
 </ng-template>
 
@@ -293,27 +282,6 @@
                                                             aria-haspopup="true" aria-expanded="false">
                                                             <span class="icon-more_vert icon-18"></span>
                                                         </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="icon-edit text-warning icon-18"></span>
-                                                                    <span class="ms-3">Nav 1</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="dropdown-item">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span
-                                                                        class="icon-list_alt text-primary icon-18"></span>
-                                                                    <span class="ms-3">Nav 2</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="dropdown-item">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="icon-clear text-danger icon-18"></span>
-                                                                    <span class="ms-3">Nav 3</span>
-                                                                </div>
-                                                            </a>
-                                                        </div>
                                                         <span class="icon-menu icon-18"
                                                             (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
                                                     </div>
@@ -340,26 +308,6 @@
                                                     aria-expanded="false">
                                                     <span class="icon-more_vert icon-18"></span>
                                                 </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-edit text-warning icon-18"></span>
-                                                            <span class="ms-3">Nav 1</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-list_alt text-primary icon-18"></span>
-                                                            <span class="ms-3">Nav 2</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-clear text-danger icon-18"></span>
-                                                            <span class="ms-3">Nav 3</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
                                                 <span class="icon-menu icon-18"
                                                     (click)="openFormPinNote(popContentPinNote, item.recID, item)"></span>
                                             </div>

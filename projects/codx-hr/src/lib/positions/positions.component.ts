@@ -17,7 +17,7 @@ export class PositionsComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
 
-  
+
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
 
@@ -31,10 +31,10 @@ export class PositionsComponent implements OnInit {
     private notiService: NotificationsService,
     private api: ApiHttpService,
   ) {
-    
+
     // this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   }
+  }
 
   ngOnInit(): void {
     this.button = {

@@ -196,7 +196,7 @@ export class BookingStationeryComponent implements OnInit {
       option.FormModel = this.viewBase.currentView.formModel;
       this.dialog = this.callfunc.openSide(
         PopupRequestStationeryComponent,
-        [dataItem, this.listData,this.count],
+        [dataItem, this.listData, this.count],
         option
       );
     });
@@ -253,7 +253,7 @@ export class BookingStationeryComponent implements OnInit {
     console.log('COunt: ', this.count);
   }
 
-  clickMF(evt, data) {}
+  clickMF(evt, data) { }
 
   click(data) {
     console.log(data);
