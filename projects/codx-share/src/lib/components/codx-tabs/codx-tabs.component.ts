@@ -17,7 +17,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() entityName!: string;
   @Input() objectID!: any;
   @Input() TabControl: TabModel[] = [];
-  private all = ['attachment', 'history', 'comment', 'reference', 'approve'];
+  private all = ['Attachment', 'History', 'Comment', 'Reference', 'Approve'];
   constructor(
     injector: Injector,
     private changeDetectorRef: ChangeDetectorRef
