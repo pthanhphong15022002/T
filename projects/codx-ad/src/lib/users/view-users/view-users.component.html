@@ -1,1 +1,23 @@
-<p>view-users works!</p>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+
+  <ng-template #body>
+    <div *ngFor="let item of lstRoles">
+      <div class="d-flex align-items-start" *ngFor="let item2 of item.roles">
+        <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item.roles.roleID" objectType="AD_Roles">
+        </codx-img>
+        
+        <div class="d-flex flex-column flex-grow-1" >
+          <div class="font-weight-bold" style="font-weight: bold;">
+            {{item2.roleID}}
+          </div>
+          <div>
+            
+            {{item2.roleName}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+  <ng-template #footer></ng-template>
+</codx-form>

@@ -20,6 +20,7 @@ import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { CompanySettingDetailsComponent } from './company-setting/company-setting-details/company-setting-details.component';
+import { ViewUsersComponent } from './users/view-users/view-users.component';
 export const routes: Routes = [
   {
     path: '',
@@ -64,7 +65,8 @@ const T_Component: Type<any>[] = [
   UserComponent,
   CompanySettingComponent,
   CompanySettingComponent,
-  CompanySettingDetailsComponent
+  CompanySettingDetailsComponent,
+  ViewUsersComponent
 ];
 @NgModule({
   imports: [
