@@ -147,9 +147,9 @@
           </div>
         </div>
         <div class="mt-2">
-            <codx-tag *ngIf="!itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
+            <codx-tag *ngIf="!itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
             [value]="''"></codx-tag>
-            <codx-tag *ngIf="itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
+            <codx-tag *ngIf="itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
             [value]="itemSelected.tags"></codx-tag>        
         </div>
       </div>
