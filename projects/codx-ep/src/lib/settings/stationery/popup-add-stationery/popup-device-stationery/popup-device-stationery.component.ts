@@ -1,0 +1,47 @@
+import { Component, OnInit, Optional } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
+
+@Component({
+  selector: 'lib-popup-device-stationery',
+  templateUrl: './popup-device-stationery.component.html',
+  styleUrls: ['./popup-device-stationery.component.scss'],
+})
+export class PopupDeviceStationeryComponent implements OnInit {
+  data: any = {};
+  dialog: DialogRef;
+  headerText = 'Thiết lập định mức VPP';
+  subheaderText = 'Cho phép thiết lập định mức cho theo cấp bậc nhân viên';
+  formModel: FormModel;
+  dialogVPP: FormGroup;
+  CbxName: any;
+  isAfterRender = false;
+  constructor( private bookingService: CodxEpService,@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+    this.formModel = this.dialog.formModel;
+  }
+
+  ngOnInit(): void {
+    this.bookingService
+      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        this.CbxName = res;
+      });
+
+    this.initForm();
+  }
+  initForm() {
+    this.bookingService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        this.dialogVPP = item;
+        this.isAfterRender = true;
+        if (this.data) {
+          this.dialogVPP.patchValue(this.data);
+        }
+        console.log(this.isAfterRender);
+      });
+  }
+}
