@@ -31,7 +31,7 @@
                 </div>
               </td>
               <td>
-                <div class="w-200px ">
+                <div class="w-200px" *ngIf="data.memo.length <= 10">
                   <div class="dropdown ml-2" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
                     [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
                     placement="bottom" autoClose="outside">
@@ -39,6 +39,20 @@
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <span class="icon-assignment icon-16 text-dark-50 mr-1"></span>
                       <span *ngIf="data.memo" [innerHTML]="data.memo" class="task-des"></span>
+                      <span *ngIf="!data.memo" class="task-des">Mô tả công
+                        việc</span>
+                    </button>
+    
+                  </div>
+                </div>
+                <div class="w-200px" *ngIf="data.memo.length > 10">
+                  <div class="dropdown ml-2" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+                    [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+                    placement="bottom" autoClose="outside">
+                    <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="icon-assignment icon-16 text-dark-50 mr-1"></span>
+                      <span *ngIf="data.memo" [innerHTML]="data.memo" class="task-des">+</span>
                       <span *ngIf="!data.memo" class="task-des">Mô tả công
                         việc</span>
                     </button>

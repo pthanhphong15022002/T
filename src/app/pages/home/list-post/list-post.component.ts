@@ -200,7 +200,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     option.Resizeable = true;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 600, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
@@ -212,7 +212,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 400, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 
   }
 
@@ -226,7 +226,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 600, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
     this.modal.closed.subscribe();
   }
 

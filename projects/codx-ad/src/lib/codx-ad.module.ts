@@ -81,6 +81,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+
   ],
   exports: [RouterModule],
   declarations: T_Component,

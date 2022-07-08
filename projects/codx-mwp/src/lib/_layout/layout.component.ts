@@ -14,15 +14,9 @@ export class LayoutComponent extends LayoutBaseComponent {
   override toolbar = false;
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
   onInit(): void {
-    // this.funcs$.subscribe((res) => {
-    // });
-    this.codxService.modulesOb$.subscribe((res) => {
-      console.log("checkskdhjfjsdkhfd", res);
-    });
   }
 
   onAfterViewInit(): void { }
