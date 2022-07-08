@@ -144,6 +144,8 @@ export class IncommingAddComponent implements OnInit {
    {
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
+    if(!event.data) return
+
     if(event.data.length == 0 )
     {
       this.hidepb = true;
@@ -176,6 +178,7 @@ export class IncommingAddComponent implements OnInit {
         //this.checkAgenciesErrors = false;
       }
     }
+    this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
 
   /////// lưu/câp nhật công văn

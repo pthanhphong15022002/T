@@ -50,6 +50,7 @@ idField="recID"
       type="inline"
       allowExtensions=".jpg,.png"
       allowMultiFile="1"
+      idBrowse="btn1"
       [formModel]="view.formModel"
       [functionID]="'ODT3'" 
       (fileAdded)="fileAdded($event)" 
@@ -57,7 +58,29 @@ idField="recID"
       displayThumb="simple"
     > 
   </codx-attachment>
+  
   <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
+    <i class="icon-add"></i>
+    <span class="font-size-lg">Open File 1</span>
+  </button>
+  <codx-attachment  
+  #attachment1  
+  [objectType]="'OD_Dispatches'" 
+  [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
+  hideFolder="1"  
+  hideUploadBtn="0"   
+  hideDes="1" 
+  type="inline"
+  idBrowse="btn2"
+  allowExtensions=".jpg,.png"
+  allowMultiFile="1"
+  [formModel]="view.formModel"
+  [functionID]="'ODT3'" 
+ 
+  displayThumb="simple"
+> 
+</codx-attachment>
 </ng-template>
 <ng-template #templateSmallCard>
   <card type="smallcard" [listFolders]="listFolders" [formModel]="view.formModel"></card>

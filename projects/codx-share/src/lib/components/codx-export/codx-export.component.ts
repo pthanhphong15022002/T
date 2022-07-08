@@ -105,7 +105,7 @@ export class CodxExportComponent implements OnInit, OnChanges
           this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
           .closed.subscribe(item=>
           {
-            if(item.event.length>0) 
+            if(item.event && item.event.length>0) 
             {
               if(val == "add") this.load();
               else if(val == "edit")

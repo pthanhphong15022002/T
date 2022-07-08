@@ -118,7 +118,7 @@ ngx-skeleton-loader {
     background-color: var(--bs-body-bg);
     width: 100%;
     margin: 0 auto;
-    margin-top: -24px !important;
+    /* margin-top: -24px !important; */
     position: relative;
     z-index: 99;
     justify-content: space-around;
@@ -158,10 +158,6 @@ ngx-skeleton-loader {
 
 .header-fixed .wrapper {
     padding-top: 50px !important;
-}
-
-.aside {
-    display: none;
 }
 
 lib-employee-infomation {

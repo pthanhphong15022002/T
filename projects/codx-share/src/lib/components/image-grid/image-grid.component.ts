@@ -6,7 +6,7 @@ import 'lodash';
 import { FilesService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
 @Component({
-  selector: 'lv-image-grid',
+  selector: 'codx-image-grid',
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
 })
@@ -15,10 +15,11 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() files: any = [];
   @Input() database: boolean = false;
   @Input() changed: number = 0;
+  @Input() images: Array<any> = [];
+  @Input() objectID:string = "";
   @Output() viewDetail = new EventEmitter();
 
   fileLength: number;
-  images: Array<any> = [];
   @ViewChild('video') video: ElementRef;
   private subscription: Subscription = new Subscription();
   constructor(
@@ -31,7 +32,9 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getFile();
+    if(this.objectID){
+      this.getFile();
+    } 
   }
 
 

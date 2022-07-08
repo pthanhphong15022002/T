@@ -50,7 +50,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('attachment1') attachment1: AttachmentComponent;
   currView?: TemplateRef<any>;
   path: string;
   button?: ButtonModel;
@@ -154,6 +154,10 @@ export class HomeComponent extends UIComponent {
 
   openFile() {
     this.attachment.uploadFile();
+  }
+
+  openFile1() {
+    this.attachment1.uploadFile();
   }
 
   getPath() {

@@ -23,7 +23,7 @@
                                     <div class="uploadtemplate">
                                         <div id='dropArea'>
                                             <div class="d-none">
-                                                <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                                <span id='drop' class="droparea">Drop files here or <a href="" [id]='idBrowse'><u>Browse</u></a> </span>
                                             </div>
                                             <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                         </div>
@@ -69,8 +69,7 @@
                     <div class="offcanvas-wrapper">
                         <div *ngFor="let file of sortBy();  index as i;" class=" mt-2 mb-2 has-action-menu">                                   
                             <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
-                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
-                             
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
                                 [descLine]="1">
                             </codx-temp-full>
                             <ng-template #cardImgFooter let-data>
@@ -135,7 +134,7 @@
                                 <div class="uploadtemplate">
                                     <div id='dropArea'>
                                         <div class="d-none">
-                                            <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                            <span id='drop' class="droparea">Drop files here or <a href="" [id]='idBrowse'><u>Browse</u></a> </span>
                                         </div>                                        
                                         <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                     </div>
@@ -146,8 +145,7 @@
                     <div style="max-height: 100px; overflow-y: auto;">
                         <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center mt-2 mb-2 has-action-menu">                           
                             <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
-                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
-                               
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
                                 [descLine]="1">
                             </codx-temp-full>
                             <ng-template #cardImgFooter let-data>
@@ -197,26 +195,3 @@
     </div>   
     <codx-thumbnail [displayThumb]="displayThumb"  [formModel]="formModel" [files]="data"></codx-thumbnail>     
 </ng-template>
-
-<!-- <ng-template #openFolder let-dialog>
-  <div class="card-body">
-    <form name="frm_move">
-      <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeAdd" entityName="DM_FolderInfo"
-        service="DM" textField="folderName" fieldCheck="hasChild" [enableCheck]=false idField="recID"
-        parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
-        [isOutput]="true" [isLoadChild]="false">
-      </codx-treeview>
-
-      <ng-template #templatetree let-data>
-        <div class="d-flex align-items-center mb-2" #item>
-          <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
-        </div>
-      </ng-template>
-    </form>
-  </div>
-  <div class="card-footer pt-4">
-    <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
-    </div>
-  </div> 
-</ng-template> -->

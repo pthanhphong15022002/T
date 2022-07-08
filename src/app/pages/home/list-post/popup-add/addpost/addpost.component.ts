@@ -184,7 +184,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.sharePost();
     }
   }
-
   valueChangeTags(e) {
     this.data.tags = e.data;
   }
@@ -302,6 +301,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   recevierID:string;
   recevierName:string;
   eventApply(event:any){
+    if(!event || !event.data){
+      return;
+    }
     if (this.dataPost.status == "edit"){
       this.isEdit = true;
     }
@@ -440,13 +442,23 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
 
   isUploadFile = false;
   openFile() {
-    this.isUploadFile = true;
     this.attachment.uploadFile();
   }
-
-  getfileCount(data:any){
-    console.log('getfileCount',data);
-
+  fileAdded(event){
+    console.log(event)
   }
+  listImgUpload:any[] = [];
+
+  getfileCount(event:any){
+    if(!event || event.data.length <= 0){
+      this.isUploadFile = false;
+      return;
+    }
+    this.isUploadFile = true;
+    this.listImgUpload = event.data;
+    this.dt.detectChanges();
+  }
+
+
 
 }
