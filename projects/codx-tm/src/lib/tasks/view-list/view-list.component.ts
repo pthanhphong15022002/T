@@ -12,7 +12,7 @@ export class ViewListComponent implements OnInit {
   popoverDetail: any;
   item: any;
 
-  @Input() itemSelected?: any
+  @Input() data?: any
   @Input() formModel?: FormModel;
 
   @Output() clickMoreFunction = new EventEmitter<any>();

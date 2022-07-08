@@ -24,6 +24,7 @@ import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
 import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
+import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -54,6 +55,9 @@ export class AttachmentComponent implements OnInit {
   remotePermission: Permission[];
   dialog: any;
   data: any;
+  isFileList = false;  
+  fileEditing: FileUpload;
+  fileEditingTemp: FileUpload;
 
   @Input() formModel: any;
   @Input() allowExtensions: string;
@@ -590,6 +594,9 @@ export class AttachmentComponent implements OnInit {
           this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
+         // for(var i=0; i<addList.length; i++) {
+          this.data.push(Object.assign({}, item));
+          //}     
           this.closePopup();
         }
         else if (item.status == 6) {
@@ -618,6 +625,7 @@ export class AttachmentComponent implements OnInit {
            done.then(async res => {
              this.fileUploadList[0].recID = res.data.recID;
              this.atSV.fileListAdded.push(Object.assign({}, item));
+             this.data.push(Object.assign({}, item));
              this.notificationsService.notify(res.message);
              this.closePopup();
              this.fileUploadList = [];
@@ -642,6 +650,11 @@ export class AttachmentComponent implements OnInit {
     return window.btoa(binary);
   }
 
+  onEditUploaded(file) {
+    //alert('edit');
+    this.callfc.openForm(EditFileComponent, this.titleDialog, 500, 500, "", [this.functionID], "");
+  }
+
   onDeleteUploaded(file: string) {
     let index = this.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
     if (index > -1) {
@@ -649,6 +662,20 @@ export class AttachmentComponent implements OnInit {
       //  this.dmSV.fileUploadList.next(this.fileUploadList);
     }
   }
+
+  
+  editfile(file, multi = false, index = 0) {
+    // let option = new SidebarModel();
+    // //option.DataService = this.dataService;
+    // option.FormModel = this.formModel;
+    // option.Width = '550px';
+    // let data = {} as any;
+    // data.title = "test";
+    // this.callfc.openSide(EditFileComponent, data, option);
+  //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
+    this.callfc.openForm(EditFileComponent, this.titleDialog, 800, 800, "", [this.functionID, file], "");
+  }
+  
 
   sortBy() {
     if (this.fileUploadList != null)
@@ -717,8 +744,8 @@ export class AttachmentComponent implements OnInit {
         case ".7z":
         case ".rar":
         case ".zip":
-          return "zip.svg";
-        case ".jpg":
+          return "zip.svg";        
+        case ".jpg":     
           return "jpg.svg";
         case ".mp4":
           return "mp4.svg";
@@ -903,11 +930,61 @@ export class AttachmentComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
+  addPermissionForRoot(list: Permission[]) {
+   // var id = this.dmSV.folderId.getValue();
+    var permissions = [];
+    if (list != null && list.length > 0)
+      permissions = list;
+
+   // if (id == "3" || id == "4") {
+      //this.fileEditing.permissions = [];
+      list = [];
+      permissions = list;
+      let perm = new Permission;
+      perm.objectType = "7";
+      perm.objectName = "Administrator";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.read = true;
+      perm.download = true;
+      perm.isSharing = false;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      //perm.delete = false;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+
+      perm = new Permission;
+      perm.objectType = "1";
+      perm.objectID = this.user.userID;
+      perm.objectName = "Owner (" + this.user.userName + ")";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.isSharing = false;
+      perm.read = true;
+      perm.download = true;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+   // }
+    return permissions;
+  }
+
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.fileUploadList.length;
+    //var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
+    var addedList = [];
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
@@ -915,7 +992,12 @@ export class AttachmentComponent implements OnInit {
         var fileUpload = new FileUpload();
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
-        fileUpload.avatar = this.getAvatar(fileUpload.fileName);
+        var type = files[i].type.toLowerCase();
+        if (type == "png" || type == "jpg" || type == "bmp")
+        {        
+          fileUpload.avatar = data;
+        }
+        else fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(fileUpload.fileName)}`;
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
@@ -930,12 +1012,22 @@ export class AttachmentComponent implements OnInit {
         fileUpload.data = data.toString();
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
-        fileUpload.permissions = this.remotePermission;
+        //fileUpload.permissions = this.remotePermission;
+      //  if (this.parentFolder != null && this.parentFolder.permissions != null)
+       //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);
+      // fileUpload = this.addEveryOnePermission(fileUpload);
+        fileUpload.permissions = this.addPermissionForRoot(fileUpload.permissions);
+        // if (this.remote) {
+        //   fileUpload.permissions = this.remotePermission;
+        // }
+        addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
-    this.fileCount.emit(files.length);
+    //   this.fileAdded.emit({ data: this.fileUploadList });
+  //  this.fileCount.emit(data: addedList);
+     this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

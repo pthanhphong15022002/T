@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -16,6 +16,7 @@ import { StatusNote } from '@shared/models/enum/enum';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 import { ActivatedRoute } from '@angular/router';
+import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -23,46 +24,31 @@ import { ActivatedRoute } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class CalendarNotesComponent extends UIComponent implements OnInit, AfterViewInit {
+
   @Input() dataAdd = new Notes();
   @Input() dataUpdate = new Notes();
   message: any;
   messageParam: any;
   listNote: any[] = [];
-  messageOld: any;
-  listNoteOld: any[] = [];
   type: any;
-  getDate: any;
-  isCalendar = false;
-  isCalendarOld: any;
-  noteTypeOld: any;
   typeCalendar = 'week';
   itemUpdate: any;
   recID: any;
-  recIdOld: any;
-  isPin: any;
-  isPinOld: any;
   countNotePin = 0;
   maxPinNotes: any;
-  STATUS_NOTE = StatusNote;
   checkUpdateNotePin = false;
-  countLstNote: any;
   TM_Tasks: any;
   WP_Notes: any = [];
   TM_TasksParam: any;
   WP_NotesParam: any;
   checkTM_TasksParam = true;
   checkWP_NotesParam = true;
-  events: any;
-  dataObj: any;
   param: any;
   daySelected: any;
   toDate: any;
   changeDateSelect = false;
-  checkMonth = false;
   checkWeek = true;
   typeList = 'notes-home';
-  views = [];
-  dialog!: DialogRef;
   dataValue = ['WP_Calendars', '', 'SettingShow'];
   predicate = '';
   dataValue1: any;
@@ -73,14 +59,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   @ViewChild('calendar') calendar: any;
   constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private modalService: NgbModal,
     private auth: AuthStore,
   ) {
     super(injector);
     this.dataValue1 = this.auth.get();
     this.userID = this.dataValue1?.userID;
-    this.setEventWeek();
     this.messageParam = this.cache.message('WP003');
+    this.setEventWeek();
   }
   ngAfterViewInit() {
   }
@@ -166,7 +151,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
   onChangeValueSelectedWeek(e) {
     this.changeDateSelect = true;
-
     this.daySelected = e.daySelected;
     var daySelected = new Date(Date.parse(this.daySelected));
     this.daySelected = daySelected.toLocaleDateString();
@@ -209,11 +193,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
                 if (this.WP_Notes[y]?.showCalendar == false) {
                   countShowCalendar += 1;
-                  // if(this.WP_Notes[y+1]?.showCalendar == true) {
-                  //   temp = 0;
-                  // } else {
-                  //   temp += 1;
-                  // }
                 } else {
                   countShowCalendar = 0;
                 }
@@ -227,8 +206,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     var span: HTMLElement = document.createElement('span');
     var span2: HTMLElement = document.createElement('span');
     var flex: HTMLElement = document.createElement('span');
-
-    // span13.innerText = (`+${total - 2}`);
     flex.className = 'd-flex note-point';
     ele.append(flex);
 
@@ -304,7 +281,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     var obj = {
       data: this.WP_Notes,
       dataUpdate: data,
-      formType: 'edit'
+      formType: 'edit',
+      maxPinNotes: this.maxPinNotes,
     };
     this.callfc.openForm(
       AddNoteComponent,
@@ -319,16 +297,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.listNote = this.itemUpdate.checkList;
     this.type = data.noteType;
     this.recID = data?.recID;
-  }
-
-  openFormPinNote(recID, data = null) {
-    this.itemUpdate = data;
-    this.listNote = data.checkList;
-    this.message = data.memo;
-    this.isCalendar = data.showCalendar;
-    this.isPin = data.isPin;
-    this.recID = recID;
-    this.type = data.noteType;
   }
 
   getNumberNotePin() {
@@ -357,8 +325,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   openFormUpdateIsPin(data, checkUpdateNotePin) {
     if (checkUpdateNotePin == true) {
       var obj = {
-        lstview: this.lstView,
-        data: data,
+        data: this.WP_Notes,
+        itemUpdate: data,
       }
       this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj);
     } else {
@@ -380,15 +348,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     if (e) {
       var field = e.field;
       if (field == 'textarea') this.message = e.data.checked.checked;
-      else if (field == 'checkboxUpdateNotePin') {
-        this.messageOld = item.memo;
-        this.listNoteOld = item.checkList;
-        this.isPinOld = !item.isPin;
-        this.isCalendarOld = item.showCalendar;
-        this.recIdOld = recID;
-        this.noteTypeOld = item.noteType;
-        // this.onEditIsPin();
-      } else if (field == 'WP_Notes_ShowEvent') {
+      else if (field == 'WP_Notes_ShowEvent') {
         if (e.data == false) {
           this.checkWP_NotesParam = false;
         } else {
@@ -425,47 +385,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
   valueChangeTyCalendar(e) {
     if (e) {
-      var field = e.field;
-      if (field == 'onTypeCalendarByWeek') {
-        if (e.data == true) {
-          this.checkMonth = false;
-          this.checkWeek = true;
-          this.typeCalendar = 'week';
-        } else {
-          this.checkMonth = true;
-          this.checkWeek = false;
-          this.typeCalendar = 'month';
-        }
-        this.changeDetectorRef.detectChanges();
+      if (e.data == true) {
+        this.typeCalendar = 'week';
       } else {
-        if (e.data == true) {
-          this.checkWeek = false;
-          this.checkMonth = true;
-          this.typeCalendar = 'month';
-        } else {
-          this.checkWeek = true;
-          this.checkMonth = false;
-          this.typeCalendar = 'week';
-        }
-        this.changeDetectorRef.detectChanges();
+        this.typeCalendar = 'month';
       }
+      this.changeDetectorRef.detectChanges();
     }
-  }
-
-  onEditNote() {
-    this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.recID,
-        this.dataAdd,
-      ])
-      .subscribe((res) => {
-        for (let i = 0; i < this.WP_Notes.length; i++) {
-          if (this.WP_Notes[i].recID == this.recID) {
-            this.WP_Notes[i].isPin = res.isPin;
-          }
-        }
-        this.changeDetectorRef.detectChanges();
-      });
   }
 
   onEditIsPin(data: Notes) {
@@ -509,10 +435,17 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
+  openFormNoteBooks(item) {
+    var obj = {
+      itemUpdate: item,
+    };
+    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
+  }
+
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
-        this.openFormAddNote();
+        this.openFormUpdateNote(data);
         break;
       case 'delete':
         this.onDeleteNote(data)
@@ -521,6 +454,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         this.checkNumberNotePin(data);
         break;
       case 'WPT0802':
+        this.openFormNoteBooks(data);
         break;
     }
   }

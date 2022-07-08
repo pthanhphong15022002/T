@@ -87,27 +87,18 @@ export class PopupShareSprintsComponent implements OnInit {
   //caí này chạy tạm đã
   eventApply(e: any) {
     var resources = '';
-    e.forEach(obj => {
-      if (obj?.data && obj?.data != '') {
-        switch (obj.objectType) {
-          case 'U':
-            resources += obj?.data;
-            this.valueSelectUser(resources)
-            break;
-          // case 'D':
-          //   //chưa chạy xong câu lệnh này đã view ra...
-          //   const t = this;
-          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
-          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
-          //     if (res) {
-          //       assignTo += res + ";";
-          //       this.valueSelectUser(assignTo)
-          //     }
-          //   })
-          //   break;
-        }
-      }
-    })
+    e?.data?.forEach((obj) => {
+      // if (obj?.data && obj?.data != '') {
+         switch (obj.objectType) {
+           case 'U':
+            resources += obj.id+';';
+             break;
+          //  case 'D':
+          //   resources += obj.id+";";
+          //    break;
+         }
+     //  }
+     });
   }
 
   valueSelectUser(resources) {

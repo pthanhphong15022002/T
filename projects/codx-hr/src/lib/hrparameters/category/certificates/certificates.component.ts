@@ -45,7 +45,7 @@ export class CertificatesComponent implements OnInit {
     // private baseService: BaseService,
     // private confirmationDialogService: ConfirmationDialogService,
   ) {
-  
+
   }
 
   ngAfterViewInit(): void {
@@ -78,10 +78,10 @@ export class CertificatesComponent implements OnInit {
     this.columnsGrid = [
       { field: '', headerText: '', template: this.GiftIDCell, width: 30 },
       { field: 'certificateID', headerText: 'Mã', width: 100 },
-      { field: 'certificateName', headerText: 'Bằng cấp - Chứng chỉ', width: 150 },
-      { field: 'searchName', headerText: 'Tên khác', width: 140 },
-      { field: 'stop', headerText: 'Ngưng sử dụng', template: this.itemStopCheck, width: 100 },
-      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 100 },
+      { field: 'certificateName', headerText: 'Bằng cấp - Chứng chỉ' },
+      { field: 'searchName', headerText: 'Tên khác' },
+      { field: 'stop', headerText: 'Ngưng sử dụng', template: this.itemStopCheck, width: 150 },
+      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
       { field: 'createdOn', headerText: 'Ngày tạo', template: this.itemCreate, width: 100 }
     ];
   }
@@ -89,15 +89,15 @@ export class CertificatesComponent implements OnInit {
 
   headerStyle = {
     textAlign: 'center',
-    backgroundColor: '#F1F2F3',
+    //backgroundColor: '#F1F2F3',
     fontWeight: 'bold',
     border: 'none'
   }
   columnStyle = {
     border: 'none',
     fontSize: '13px !important',
-    fontWeight: 400,
-    lineHeight: 1.4
+    fontWeight: 300,
+    lineHeight: 1.3
   }
   isAddMode = true;
 
@@ -105,7 +105,7 @@ export class CertificatesComponent implements OnInit {
     if (e.field === "stop")
       this.addEditForm.patchValue({ stop: e.data })
   }
-  
+
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -118,8 +118,8 @@ export class CertificatesComponent implements OnInit {
 
   requestEnded(evt: any) {
   }
-  
-  valueChangeShared(e){
+
+  valueChangeShared(e) {
     console.log(e)
   }
 }

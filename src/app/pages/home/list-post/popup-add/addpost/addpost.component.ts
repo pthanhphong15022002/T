@@ -16,7 +16,7 @@ import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -72,19 +72,25 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   dataPost:any;
   dataShare : any;
   dataEdit : any ;
-
+  myPermission:Permission;
+  sets = [
+    'native',
+    'google',
+    'twitter',
+    'facebook',
+    'emojione',
+    'apple',
+    'messenger'
+  ]
+  set = 'apple';
   @Input() isShow: boolean;
   constructor(
-    injector: Injector,
-    private modalService: NgbModal,
-    private authStore: AuthStore,
-    private cdr: ChangeDetectorRef,
-    private signalRAPI: WPService,
     private dt: ChangeDetectorRef,
     public atSV: AttachmentService,
     private notifySvr: NotificationsService,
     private cache : CacheService,
     private api:ApiHttpService,
+    private authStore:AuthService,
     @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
     
@@ -92,7 +98,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.dialogRef = dialog;
     this.dataPost = dd.data;
     this.title = dd.data.title;
-    this.user = authStore.get();
+    this.user = authStore.userValue;
     this.cache.valueList('L1901').subscribe((res) => {
       if (res) {
         this.dataVll = res.datas;
@@ -104,6 +110,22 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
 
   ngOnInit() {
     this.setDataPost(this.dataPost);
+    this.myPermission = new Permission();
+    this.myPermission.objectType = '1';
+    this.myPermission.memberType = "1";
+    this.myPermission.objectID = this.user.userID;
+    this.myPermission.objectName = this.user.userName;
+    this.myPermission.create = true;
+    this.myPermission.update = true;
+    this.myPermission.delete = true;
+    this.myPermission.upload = true;
+    this.myPermission.download = true;
+    this.myPermission.assign = true;
+    this.myPermission.share = true;
+    this.myPermission.read = true;
+    this.myPermission.isActive = true;
+    this.myPermission.createdBy = this.user.userID;
+    this.myPermission.createdOn = new Date();
   }
 
   setDataPost(dataPost:any){
@@ -189,24 +211,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.data.approveControl = "0";
     this.data.refType = "post";
     var lstPermissions: Permission[] = [];
-    var per1 = new Permission();
-    per1.objectType = '1';
-    per1.memberType = "1";
-    per1.objectID = this.user.userID;
-    per1.objectName = this.user.userName;
-    per1.create = true;
-    per1.update = true;
-    per1.delete = true;
-    per1.upload = true;
-    per1.download = true;
-    per1.assign = true;
-    per1.share = true;
-    per1.read = true;
-    per1.isActive = true;
-    per1.createdBy = this.user.userID;
-    per1.createdOn = new Date();
-    lstPermissions.push(per1);
-
+    lstPermissions.push(this.myPermission);
     this.lstRecevier.map((item) => {
       var per = new Permission();
       per.memberType = "3";
@@ -253,23 +258,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     }
     if(this.shareControl){
       isShare = true;
-      var per1 = new Permission();
-      per1.objectType = '1';
-      per1.memberType = "1";
-      per1.objectID = this.user.userID;
-      per1.objectName = this.user.userName;
-      per1.create = true;
-      per1.update = true;
-      per1.delete = true;
-      per1.upload = true;
-      per1.download = true;
-      per1.assign = true;
-      per1.share = true;
-      per1.read = true;
-      per1.isActive = true;
-      per1.createdBy = this.user.userID;
-      per1.createdOn = new Date();
-      lstPermission.push(per1);
+      lstPermission.push(this.myPermission);
       this.lstRecevier.map((item) => {
         var per = new Permission();
         per.memberType = "3";
@@ -348,23 +337,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.data.approveControl = "0";
     this.data.refID = this.dataShare.recID;
     var lstPermissions: Permission[] = [];
-    var per1 = new Permission();
-    per1.objectType = '1';
-    per1.memberType = "1";
-    per1.objectID = this.user.userID;
-    per1.objectName = this.user.userName;
-    per1.create = true;
-    per1.update = true;
-    per1.delete = true;
-    per1.upload = true;
-    per1.download = true;
-    per1.assign = true;
-    per1.share = true;
-    per1.read = true;
-    per1.isActive = true;
-    per1.createdBy = this.user.userID;
-    per1.createdOn = new Date();
-    lstPermissions.push(per1);
+    lstPermissions.push(this.myPermission);
     this.lstRecevier.map((item) => {
       var per = new Permission();
       per.memberType = "3";
@@ -415,20 +388,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
         });
     }
   }
-
-  getDisplayName() {
-    const type = this.shareType;
-    const t = this;
-    const ext = ['O', 'D', 'P', 'R', 'G', 'U'];
-    if (ext.includes(this.shareType)) {
-      // _.filter(this.lstType, function (o) {
-      //   if (o.value == type)
-      //     t.displayShare = o.name;
-      // })
-    } else {
-      t.displayShare = t.shareWith[0].name;
-    }
-  }
   getShareOfComment(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -463,16 +422,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     }
   }
 
-  sets = [
-    'native',
-    'google',
-    'twitter',
-    'facebook',
-    'emojione',
-    'apple',
-    'messenger'
-  ]
-  set = 'apple';
+  
   toggleEmojiPicker() {
     this.showEmojiPicker = !this.showEmojiPicker;
     this.dt.detectChanges();
