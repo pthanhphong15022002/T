@@ -16,7 +16,7 @@ import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -90,6 +90,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     private notifySvr: NotificationsService,
     private cache : CacheService,
     private api:ApiHttpService,
+    private callFunc: CallFuncService,
     private authStore:AuthService,
     @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
@@ -184,7 +185,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.sharePost();
     }
   }
-
   valueChangeTags(e) {
     this.data.tags = e.data;
   }
@@ -295,6 +295,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       });
   }
 
+  openFormShare(content:any){
+    this.callFunc.openForm(content, '', 420, window.innerHeight);
+  }
   lstRecevier = [];
   shareControl:string = "";
   objectType:string = "";
@@ -302,27 +305,27 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   recevierID:string;
   recevierName:string;
   eventApply(event:any){
+    if(!event){
+      return;
+    }
     if (this.dataPost.status == "edit"){
       this.isEdit = true;
     }
     else{
       this.isEdit = false;
     }
-    var data = event.data;
-    var objectType = data[0].objectType;
+    var data = event[0];
+    var objectType = data.objectType;
+    this.lstRecevier = data.dataSelected;
     if(objectType && !isNaN(Number(objectType))){
-      this.lstRecevier = data;
       this.shareControl = objectType;
     }
     else
     {
       this.objectType = objectType;
-      this.lstRecevier = data;
       this.shareControl = objectType;
-      this.recevierID = data[0].id;
-      this.recevierName = data[0].dataSelected.UserName;
-      
-      
+      this.recevierID = data.id;
+      this.recevierName = data.objectName;
     }
     this.dt.detectChanges();
   }
@@ -440,13 +443,23 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
 
   isUploadFile = false;
   openFile() {
-    this.isUploadFile = true;
     this.attachment.uploadFile();
   }
-
-  getfileCount(data:any){
-    console.log('getfileCount',data);
-
+  fileAdded(event){
+    console.log(event)
   }
+  listImgUpload:any[] = [];
+
+  getfileCount(event:any){
+    if(!event || event.data.length <= 0){
+      this.isUploadFile = false;
+      return;
+    }
+    this.isUploadFile = true;
+    this.listImgUpload = event.data;
+    this.dt.detectChanges();
+  }
+
+
 
 }

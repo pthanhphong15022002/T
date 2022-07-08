@@ -406,7 +406,110 @@ export class EditFileComponent implements OnInit {
   }
 
 
-  validate(ext) {
+  validate(item) {
+    //  fileName
+    this.errorshow = false;
+    switch (item) {
+      case "requestContent":
+        // if (this.requestContent === "") {
+        //   $('#requestContent').addClass('form-control is-invalid');
+        //   $("#btnRequest").attr('disabled', 'disabled');
+        //   $('#requestContent').focus();
+        // }
+        // else {
+        //   $('#requestContent').addClass('form-control').removeClass("is-invalid");
+        //   $("#btnRequest").removeAttr('disabled');
+        // }
+
+        break;
+
+      case "requestTitle":
+        // if (this.requestTitle === "") {
+        //   $('#requestTitle').addClass('form-control borderless is-invalid');
+        //   $("#btnRequest").attr('disabled', 'disabled');
+        //   $('#requestTitle').focus();
+        // }
+        // else {
+        //   $('#requestTitle').addClass('form-control borderless').removeClass("is-invalid");
+        //   $("#btnRequest").removeAttr('disabled');
+        // }
+
+        break;
+
+      case "fullName":
+        // if (this.fullName === "") {
+        //   $('#fullName').addClass('form-control is-invalid');
+        //   $("#btnRename").attr('disabled', 'disabled');
+        //   $('#fullName').focus();
+        // }
+        // else {
+        //   $('#fullName').addClass('form-control').removeClass("is-invalid");
+        //   $("#btnRename").removeAttr('disabled');
+        // }
+
+        break;
+
+      case "fullNameMove":
+        // if (this.fullName === "") {
+        //   $('#fullNameMove').addClass('form-control is-invalid');
+        //   $("#btnMove").attr('disabled', 'disabled');
+        //   $('#fullNameMove').focus();
+        // }
+        // else {
+        //   $('#fullNameMove').addClass('form-control').removeClass("is-invalid");
+        //   $("#btnMove").removeAttr('disabled');
+        // }
+
+        break;
+
+      case "folderName":
+        // if (this.folderName === "") {
+        //   $('#folderName').addClass('form-control is-invalid');
+        //   $("#btnCreateFolder").attr('disabled', 'disabled');
+        //   $('#folderName').focus();
+        // }
+        // else {
+        //   $('#folderName').addClass('form-control').removeClass("is-invalid");
+        //   $("#btnCreateFolder").removeAttr('disabled');
+        // }
+
+        break;
+
+      case "fileName":
+        if (this.fileEditing.fileName === "" || this.fileEditing.fileName.indexOf(".") === -1) {
+          return "form-control is-invalid";
+          //$('#fileName').addClass('form-control is-invalid');
+         // $('#fileName').focus();
+        }
+        else {
+          return "form-control";
+         // $('#fileName').addClass('form-control').removeClass("is-invalid");
+        }
+
+        break;
+
+      case "startDateRole":
+        // if (!this.checkDateValid(this.startDate)) {
+        //   $('#startDateRole').addClass('form-control is-invalid');
+        // }
+        // else {
+
+        //   $('#startDateRole').addClass('form-control').removeClass("is-invalid");
+        // }
+        break;
+
+      case "endDateRole":
+        // if (!this.checkDateValid(this.endDate)) {
+        //   $('#endDateRole').addClass('form-control is-invalid');
+        // }
+        // else {
+
+        //   $('#endDateRole').addClass('form-control').removeClass("is-invalid");
+        // }
+        break;
+    }
+    this.changeDetectorRef.detectChanges();
+    return "";    
 
   }
 

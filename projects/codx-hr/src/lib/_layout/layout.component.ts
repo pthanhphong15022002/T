@@ -10,13 +10,9 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'HR1';
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
   onInit(): void {
-    this.codxService.modulesOb$.subscribe((res) => {
-      console.log(res);
-    });
   }
 
   onAfterViewInit(): void { }

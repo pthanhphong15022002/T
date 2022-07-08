@@ -181,23 +181,39 @@
                       </codx-label>
                       <span
                         class="icon-select_all text-primary icon-20"
-                        (click)="openPopupDevice(popupColor)"
+                        (click)="openPopupDevice(popupColor, null)"
                       ></span>
                     </div>
                   </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Title-->
-                    <codx-img
-                      funcId="this.dialog.formModel.funcId"
-                      #imageUpLoad
-                      aria-disabled="true"
-                      objectType="this.dialog.formModel.entityName"
-                      [isAllowEdit]="true"
-                      [width]="90"
-                      [objectId]="dialogStationery.value.Icon"
-                    >
-                    </codx-img>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-2">
+                        <!-- <codx-attachment
+                        #attachment
+                        objectType="ES_Stationery"
+                        [objectId]=""
+                        hideBtnSave="1"
+                        hideFolder="1"
+                        hideUploadBtn="1"
+                        [functionID]="formModel.funcID"
+                        type="inline"
+                        >
+                        </codx-attachment> -->
+                      </div>
+                      <div class="col-10">
+                        <div class="d-flex justify-content-start mb-4">
+                          <div class="button-color">
+                            <button
+                              *ngFor="let item of listColor"
+                              type="button"
+                              class="btn btn-sm w-30px h-30px mx-2 border"
+                              style="background-color:{{ item }}"
+                              (click)="openPopupDevice(popupColor, item)"
+                            ></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -208,7 +224,7 @@
               <div class="d-flex justify-content-end">
                 <span
                   class="icon-add_circle text-primary icon-20"
-                  (click)="openPopupDevice(popupDevice)"
+                  (click)="openPopupDevice(popupDevice, null)"
                 ></span>
               </div>
               <table class="table">
@@ -260,9 +276,6 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                        </codx-input> -->
                       <codx-input
                         type="text"
                         name="text"
@@ -282,9 +295,7 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                        </codx-input> -->
+
                       <codx-input
                         type="text"
                         name="text"
@@ -304,9 +315,7 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                        </codx-input> -->
+
                       <codx-input
                         type="text"
                         name="text"
@@ -327,9 +336,7 @@
                       >
                       </codx-label>
                       <!--begin::Input-->
-                      <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                          dataformat="t" (valueChange)="valueStartTimeChange($event)">
-                        </codx-input> -->
+
                       <codx-input
                         type="text"
                         name="text"
@@ -491,9 +498,7 @@
         >
         </codx-label>
         <!--begin::Input-->
-        <!-- <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-            dataformat="t" (valueChange)="valueStartTimeChange($event)">
-          </codx-input> -->
+
         <codx-input
           type="number"
           field="number"
@@ -517,9 +522,7 @@
       >
       </codx-label>
       <!--end::Label-->
-      <!-- <codx-combobox service="SYS" name="combobox" placeholder="" ngDefaultControl refValue="Users"
-          file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="dialogStationery">
-        </codx-combobox> -->
+
       <codx-input type="combobox" name="combobox" ControlName="Location">
       </codx-input>
     </div>
@@ -579,14 +582,13 @@
       (valueChange)="valueChange($event)"
     >
     </codx-input>
-    {{ color }}
     <!--end::Card body-->
   </div>
   <div
     class="card-footer d-flex justify-content-end"
     (click)="closeDialog($event)"
   >
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="dialog.close()">
       <codx-label
         name="lblSave"
         default="Lưu"
@@ -615,14 +617,6 @@
     }}</span>
   </div>
 </ng-template>
-
-<!-- <ng-template #roomResourceDialog>
-  <app-dialog-stationery
-    #editRoomBookingForm
-    (closeEdit)="closeEditForm()"
-    (onDone)="onDone($event)"
-  ></app-dialog-stationery>
-</ng-template> -->
 
 <ng-template #Devices let-dataItem>
   <div class="d-flex align-items-center fw-bold">
