@@ -34,6 +34,8 @@ export class IncommingAddComponent implements OnInit {
   fileCount : number = 0;
   files: any;
   hideThumb = false;
+  hidepb = true;
+  activeDiv: any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -63,6 +65,7 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
       this.dispatch.owner = null;
+      this.dispatch.agencyName = null;
     }
    /*  else if(this.type == "edit")
     {
@@ -104,9 +107,18 @@ export class IncommingAddComponent implements OnInit {
   }
 
 
-  hideDept()
+  hideDept(action:any)
   {
-    this.showAgency = false;
+    this.activeDiv = action;
+    if(action == "dv")
+    {
+      //this.hidepb = true;
+      this.showAgency = false;
+    }
+    else if(action == "pb")
+    {
+      this.showAgency = true;
+    }
     //this.dispatchForm.value.deptID = '';
     //this.dispatch.controls.agencyID.setValue(null)
   }
@@ -115,68 +127,54 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.agencyID = event[0];
   }
   
-  //Ngày nhận
-  changeValueDispatchOn(event: any) {
-    this.dispatch.dispatchOn = event?.data?.fromDate
-  }
-  //Ngày đến hạn
-  changeValueDeadLine(event: any) {
-    this.dispatch.deadline = event?.data?.fromDate
-  }
-  
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
-    this.dispatch.owner = event.data[0]
+    this.dispatch.owner = event.data.value[0]
   }
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.deptID = event.data.value[0];
-    /* this.dispatchForm.controls.deptID.setValue(event.data[0]);
-    if (event.data[0] != "" && event.data[0] != null) {
-     this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data[0], null, null]).subscribe((item: any) => {
-        if (item != null && item.length > 0) {
-          this.dispatchForm.patchValue({
-            owner : item[0].domainUser
-          })
-          //this.dispatchForm.controls.owner.setValue(item[0].domainUser)
-        }
-        else {
-          this.dispatchForm.controls.owner.setValue("");
-        }
-      })
-    }  */
   }
   openFormUploadFile()
   {
-    // var obj = new dispatch;
-    // obj.DeptID = "1";
-    // this.odService.SaveAgency1(obj).subscribe(item => {
-    //   console.log(item);
-    // });
     this.attachment.uploadFile();
   }
    //Các hàm value change 
    changeValueAgency(event: any) 
    {
-    if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
+    //ktra nếu giá trị trả vô = giá trị trả ra return null
+    //if(this.dispatch.agencyName == event.data[0]) return;
+    if(event.data.length == 0 )
     {
-      if(event.component.itemsSelected[0].AgencyID!= undefined)
+      this.hidepb = true;
+      this.dispatch.agencyID = null;
+      this.dispatch.agencyName = null;
+      this.activeDiv = null;
+    }
+    else if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
+    {
+      if(event.component.itemsSelected[0].AgencyID)
       {
         var data = event.component.itemsSelected[0];
-        //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
+        this.dispatch.agencyID = data.AgencyID;
+        this.dispatch.agencyName = data.AgencyName;
         //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
       }
-      else if(event.component.itemsSelected[0][0].AgencyID!= undefined)
+      else if(event.component.itemsSelected[0][0].AgencyID)
       {
         var data = event.component.itemsSelected[0][0];
+        this.dispatch.agencyID = data.AgencyID;
+        this.dispatch.agencyName = data.AgencyName;
         //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
         //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
       }
-      /* if(this.dispatchForm.value.agencyID!= this.dispatchForm.value.agencyName) 
+      if(this.dispatch.agencyID!= this.dispatch.agencyName && this.dispatch.agencyName.length >0) 
       {
-        this.showAgency = true;
-        this.checkAgenciesErrors = false;
-      } */
+        this.hidepb = false;
+        this.activeDiv = 'dv';
+        //this.showAgency = true;
+        //this.checkAgenciesErrors = false;
+      }
     }
   }
 
@@ -196,17 +194,16 @@ export class IncommingAddComponent implements OnInit {
       }
       if(this.fileCount > 0)
       {
-        this.dispatch.RecID = this.dialog.dataService.dataSelected.recID;
-        this.dispatch.Status = "1",
-        this.dispatch.ApproveStatus = "1",
-        this.dispatch.DispatchType = "1";
+        this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+        this.dispatch.status = "1",
+        this.dispatch.approveStatus = "1",
+        this.dispatch.dispatchType = "1";
         this.odService.saveDispatch(this.dispatch).subscribe((item) => {
           if (item.status == 0) 
           {
             this.data = item;
             this.attachment.objectId = item.data.recID;
             this.attachment.saveFiles();
-
             this.dialog.close(item.data);
           }
           this.notifySvr.notify(item.message); 

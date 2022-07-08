@@ -49,12 +49,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     this.type = dt.data?.type;
     if(this.action == "add")
     {
-      this.headerText = "Thêm Excel Template";
+      this.headerText = "Thêm " + this.type +" Template";
     }
-
     else if(this.action == "edit")
     {
-      this.headerText = "Chỉnh sửa Excel Template";
+      this.headerText = "Chỉnh sửa " + this.type + " Template";
     }
     this.data = dialog.dataService;
     this.dialog = dialog;
