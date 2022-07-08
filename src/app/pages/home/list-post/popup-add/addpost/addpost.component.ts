@@ -24,8 +24,9 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
   styleUrls: ['./addpost.component.scss'],
+
 })
-export class AddPostComponent  implements OnInit,AfterViewInit {
+export class AddPostComponent implements OnInit, AfterViewInit {
   @Input() dataRef = new Post();
   @Output() update = new EventEmitter();
   @Output() create = new EventEmitter();
@@ -46,7 +47,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   count = 0;
   tag = 0;
   idx = 0;
-  title ="";
+  title = "";
   dialogRef: DialogRef;
   @ViewChild('template') template: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -69,10 +70,10 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   checkValueTag = false;
   checkValueShare = false;
   checkOpenTags = false;
-  dataPost:any;
-  dataShare : any;
-  dataEdit : any ;
-  myPermission:Permission;
+  dataPost: any;
+  dataShare: any;
+  dataEdit: any;
+  myPermission: Permission;
   sets = [
     'native',
     'google',
@@ -88,13 +89,13 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     private dt: ChangeDetectorRef,
     public atSV: AttachmentService,
     private notifySvr: NotificationsService,
-    private cache : CacheService,
-    private api:ApiHttpService,
+    private cache: CacheService,
+    private api: ApiHttpService,
     private callFunc: CallFuncService,
-    private authStore:AuthService,
+    private authStore: AuthService,
     @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
-    
+
   ) {
     this.dialogRef = dialog;
     this.dataPost = dd.data;
@@ -107,7 +108,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       }
     });
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnInit() {
     this.setDataPost(this.dataPost);
@@ -129,23 +130,21 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.myPermission.createdOn = new Date();
   }
 
-  setDataPost(dataPost:any){
-    if(!dataPost) return;
-    if(dataPost.status == "create"){
+  setDataPost(dataPost: any) {
+    if (!dataPost) return;
+    if (dataPost.status == "create") {
       this.data = new Post();
       this.dataEdit = null;
       this.dataShare = null;
       this.message = "";
     }
-    else if(dataPost.status == "edit")
-    {
+    else if (dataPost.status == "edit") {
       this.data = dataPost.post;
       this.dataEdit = dataPost.post;
       this.dataShare = null;
       this.message = this.data.content;
     }
-    else
-    {
+    else {
       this.data = new Post();
       this.dataEdit = null;
       this.dataShare = dataPost.post;
@@ -174,27 +173,25 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   }
 
   Submit() {
-    if (this.dataPost.status == "create") 
-    {
+    if (this.dataPost.status == "create") {
       this.publishPost();
-    } 
-    else if (this.dataPost.status == "edit")  {
+    }
+    else if (this.dataPost.status == "edit") {
       this.editPost();
     }
-    else{
+    else {
       this.sharePost();
     }
   }
+
   valueChangeTags(e) {
     this.data.tags = e.data;
   }
-  valueChange(e:any) {
-    if(!e.data.value)
-    {
+  valueChange(e: any) {
+    if (!e.data.value) {
       this.message = e.data;
     }
-    else
-    {
+    else {
       this.message = e.data.value;
     }
     this.dt.detectChanges();
@@ -226,11 +223,11 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     })
     this.data.Permissions = lstPermissions;
 
-    this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync",[this.data, this.shareWith])
-    .subscribe((res: any) => {
-        this.dialogRef.dataService.add(res,0).subscribe();
+    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [this.data, this.shareWith])
+      .subscribe((res: any) => {
+        this.dialogRef.dataService.add(res, 0).subscribe();
         this.clearForm();
-        if(this.isUploadFile){
+        if (this.isUploadFile) {
           this.attachment.objectId = res.recID;
           this.saveFile();
         }
@@ -242,21 +239,21 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
 
   isEdit = false;
   editPost() {
-    if (!this.message || this.shareControl || this.isEdit){
+    if (!this.message || this.shareControl || this.isEdit) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    
+
     var recID = this.data.recID;
     var comment = "";
     var isComment = false;
     var isShare = false;
     var lstPermission = [];
-    if(this.message != this.data.content){
+    if (this.message != this.data.content) {
       isComment = true;
       comment = this.message;
     }
-    if(this.shareControl){
+    if (this.shareControl) {
       isShare = true;
       lstPermission.push(this.myPermission);
       this.lstRecevier.map((item) => {
@@ -295,33 +292,32 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       });
   }
 
-  openFormShare(content:any){
+  openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   lstRecevier = [];
-  shareControl:string = "";
-  objectType:string = "";
-  userRecevier:any;
-  recevierID:string;
-  recevierName:string;
-  eventApply(event:any){
-    if(!event){
+  shareControl: string = "";
+  objectType: string = "";
+  userRecevier: any;
+  recevierID: string;
+  recevierName: string;
+  eventApply(event: any) {
+    if (!event) {
       return;
     }
-    if (this.dataPost.status == "edit"){
+    if (this.dataPost.status == "edit") {
       this.isEdit = true;
     }
-    else{
+    else {
       this.isEdit = false;
     }
     var data = event[0];
     var objectType = data.objectType;
     this.lstRecevier = data.dataSelected;
-    if(objectType && !isNaN(Number(objectType))){
+    if (objectType && !isNaN(Number(objectType))) {
       this.shareControl = objectType;
     }
-    else
-    {
+    else {
       this.objectType = objectType;
       this.shareControl = objectType;
       this.recevierID = data.id;
@@ -354,9 +350,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       lstPermissions.push(per);
     })
     this.data.Permissions = lstPermissions;
-    this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync",[this.data, this.shareWith])
-    .subscribe((res: any) => {
-        this.dialogRef.dataService.add(res,0).subscribe();
+    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [this.data, this.shareWith])
+      .subscribe((res: any) => {
+        this.dialogRef.dataService.add(res, 0).subscribe();
         this.clearForm();
         this.notifySvr.notifyCode('E0026');
       });
@@ -425,7 +421,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     }
   }
 
-  
+
   toggleEmojiPicker() {
     this.showEmojiPicker = !this.showEmojiPicker;
     this.dt.detectChanges();
@@ -445,13 +441,13 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   openFile() {
     this.attachment.uploadFile();
   }
-  fileAdded(event){
+  fileAdded(event) {
     console.log(event)
   }
-  listImgUpload:any[] = [];
+  listImgUpload: any[] = [];
 
-  getfileCount(event:any){
-    if(!event || event.data.length <= 0){
+  getfileCount(event: any) {
+    if (!event || event.data.length <= 0) {
       this.isUploadFile = false;
       return;
     }
