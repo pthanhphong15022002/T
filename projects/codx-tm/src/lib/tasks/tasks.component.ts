@@ -331,6 +331,11 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
+    if(data && data.status>= 8){
+      // this.notiService.notifyCode('cần code đoạn nay');
+      this.notiService.notify('Không cho phép chỉnh sửa !');
+      return;
+    }
     if (data) {
       this.view.dataService.dataSelected = data;
     }
