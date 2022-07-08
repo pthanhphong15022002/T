@@ -26,8 +26,9 @@
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag"
     [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
     [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel"
-    [setting]="setting" [footer]="cardImgFooter">
+    [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
+  
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
