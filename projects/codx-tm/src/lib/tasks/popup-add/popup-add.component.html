@@ -59,8 +59,6 @@
                 </span>
               </a>
             </div>
-
-
           </ng-template>
           <ng-template #content>
             <div class="form-group">
@@ -161,7 +159,6 @@
                     </codx-label>
                   </div>
                 </div>
-                <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
                 <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
                   [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
               </div>
@@ -186,13 +183,11 @@
             </div>
 
             <div class="d-flex align-items-center file-item mt-5">
-              <!-- <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
-                hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
-                (fileAdded)="fileAdded($event)"></codx-attachment> -->
-              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
-                hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
-                [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
-                (fileCount)="getfileCount($event)" displayThumb="full">
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName"
+                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1"
+                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel"
+                [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+                displayThumb="full">
               </codx-attachment>
             </div>
           </ng-template>
@@ -510,9 +505,6 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <!-- <button class="btn btn-light-primary" (click)="dialog.close()">
-        <codx-label name="Close" formName="TM_Tasks" default="Đóng"></codx-label>
-      </button> -->
       <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
         <i class="icon-cloud_upload fs-5"></i>Upload file
       </button>

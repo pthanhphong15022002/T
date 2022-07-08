@@ -6,17 +6,15 @@
 
 <ng-template #process let-data>
   <div class="has-action-menu">
-    <div id="progress" class="cdx-progress mt-3 mb-3" *ngIf="data?.countStep > 1">
-      <div id="progress-bar"></div>
-      <ul id="progress-num">
-        <ng-container *ngFor="let item of getCount(data?.countStep)">
-          <li class="step">{{item}}</li>
-        </ng-container>
-      </ul>
+    <div class="progress-approval mt-3 mb-3" *ngIf="data?.countStep > 0">
+      <ng-container *ngFor="let item of getCount(data?.countStep)">
+        <div class="process-step">
+          <div class="step-node">{{item}}</div>
+        </div>
+      </ng-container>
+
     </div>
-    <div class="cdx-progress progress-num mt-3 mb-3" *ngIf="data?.countStep == 1">
-      <div class="step1">1</div>
-    </div>
+
     <div class="center w-400 mt-5 mb-3" *ngIf="data?.countStep == 0">
       <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel">
       </codx-label>
@@ -35,7 +33,6 @@
 
 <ng-template #listItem let-data>
   <div class="task-row py-3 px-6">
-
     <table class="table w-100 table-action-menu">
       <tbody>
         <td class="w-25">
@@ -67,7 +64,7 @@
             <li class="step">1</li>
           </div>
           <div class="center" *ngIf="data?.countStep == 0">
-            Chưa thiết lập
+            <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel"></codx-label>
           </div>
         </td>
       </tbody>

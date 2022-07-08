@@ -258,7 +258,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       model: this.dialogCategory,
     };
 
-    this.cfService.openForm(ApprovalStepComponent, '', 900, 800, '', data);
+    this.cfService.openForm(
+      ApprovalStepComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      data
+    );
   }
 
   closePopup() {

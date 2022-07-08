@@ -262,7 +262,8 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+     this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+     //this.codxService.navigate('',this.urlView)
   }
 
   changeView(evt: any) {

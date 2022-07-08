@@ -54,7 +54,8 @@
             ],
             "styles": [
               "node_modules/codx-core/assets/sass/style.scss",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
