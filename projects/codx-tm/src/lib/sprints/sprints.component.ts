@@ -38,8 +38,10 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
   gridView: any;
-  predicateViewBoards =
-    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
+  // predicateViewBoards =
+  //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
+    predicateViewBoards =
+    '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
   predicateProjectBoards =
     '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
   totalRowMyBoard: number = 6;
@@ -50,6 +52,7 @@ export class SprintsComponent extends UIComponent {
   user: any;
   @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: CodxListviewComponent;
+  @ViewChild('itemViewBoard') itemViewBoard : TemplateRef<any>
   urlShare = '';
   urlView = '';
   moreFunc: any[];
@@ -123,11 +126,11 @@ export class SprintsComponent extends UIComponent {
     this.views = [
       {
         id: '2',
-        type: ViewType.content,
+        type: ViewType.card,
         sameData: true,
         active: true,
         model: {
-          panelLeftRef: this.listCardSprints,
+          template: this.itemViewBoard,
         },
       },
     ];
