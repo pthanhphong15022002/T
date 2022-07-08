@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
@@ -11,6 +12,7 @@ import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, ViewMod
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
+import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
 
 @Component({
   selector: 'lib-company-setting',
@@ -32,7 +34,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private codxService: CodxService
+    private codxService: CodxService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -67,13 +70,36 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
         },
       },
     ];
+    this.view.dataService.methodUpdate = 'UpdateBusinessContactAsync';
+    this.view.dataService.methodUpdate = 'UpdateBusinessPersonalAsync';
     this.detectorRef.detectChanges()
 
   }
   valueChange(e){
 
   }
-  clickEdit(data) {
-  this.dialog = this.callfc.openForm(PopupContactComponent,data);
+  clickEditContact(data) {
+  this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "",data);
+  this.changeDetectorRef.detectChanges();
   }
+
+  clickEditPersonal(data) {
+    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
+    if(this.dialog.close) {
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  // clickEditPersonal(data: any) {
+  //   var obj = {
+  //     post: data,
+  //     title: "Chia sẻ bài viết"
+  //   }
+  //   this.changeDetectorRef.detectChanges()
+  //   let option = new DialogModel();
+  //   option.DataService = this.listview.dataService as CRUDService;
+  //   option.FormModel = this.listview.formModel;
+  //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
+  //   this.modal.closed.subscribe();
+  // }
 }

@@ -1,0 +1,15 @@
+.col-3, .col-9, .col-12 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+ }
+ .contact-map {
+   display: -webkit-box;
+   display: -webkit-flex;
+   display: -ms-flexbox;
+   display: flex;
+ }
+
+ .contact-map-size {
+   height: 250px;
+   width: 100%;
+ }

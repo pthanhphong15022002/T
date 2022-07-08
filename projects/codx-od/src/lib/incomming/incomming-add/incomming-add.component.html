@@ -222,19 +222,14 @@
     <codx-label default='Nơi nhận'></codx-label>
     <div class="d-flex">
       <codx-input
-        style="width:100%"
-        [formModel]="form.formModel" 
-        [Group]="form.formGroup"
-        field="deptID"
-      >
-      <!-- (valueChange)="changeValueBUID($event)" -->
-      </codx-input>
-      <codx-input
         type="Combobox"
         name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
         refType="P"
-        field="DeptID"
+        field="deptID"
+        [showInput]="true"
+        [crrValue]="dispatch?.deptID"
+        (valueChange)="changeValueBUID($event)"
       >
       </codx-input>
     </div>

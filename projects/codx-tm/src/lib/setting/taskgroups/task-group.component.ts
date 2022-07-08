@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
+import { TaskgroupAddComponent } from './taskgroup-add/taskgroup-add.component';
 
 @Component({
   selector: 'lib-task-group',
@@ -93,7 +95,7 @@ export class TaskGroupComponent implements OnInit {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
       case 'edit':
         this.edit(data);
@@ -106,7 +108,7 @@ export class TaskGroupComponent implements OnInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.show();
+        this.add();
         break;
     }
   }
@@ -114,19 +116,65 @@ export class TaskGroupComponent implements OnInit {
     this.views = [{
       type: ViewType.grid,
       sameData: true,
-      active: true,
+      active: false,
       model: {
         resources: this.columnsGrid,
-        template: this.grid
+        template: this.grid,
+      }
+    },
+    {
+      type: ViewType.list,
+      sameData: true,
+      active: true,
+      model: {
+        template: this.itemTemplate,
       }
     }];
-    this.view.dataService.methodSave = 'AddTaskGroupsAsync';
-    this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
-    this.view.dataService.methodDelete = 'DeleteTaskGroupAsync';
+    this.view.dataService.methodSave = '';
+    this.view.dataService.methodDelete = '';
 
   }
 
+  //#region Functions
+  changeView(evt: any) {
+    console.log('evt: ', evt);
+    var t = this;
+  }
 
+
+  selectedChange(val: any) {
+    console.log(val);
+    this.itemSelected = val.data;
+    this.dt.detectChanges();
+  }
+
+  readMore(dataItem) {
+    dataItem.disableReadmore = !dataItem.disableReadmore;
+    this.dt.detectChanges();
+    //this.tableView.addHandler(dataItem, false, "taskGroupID");
+  }
+  //#endregion
+
+  //#region Events
+  buttonClick(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  moreFuncClick(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.edit(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
+  }
+  //#endregion
 
   getCheckList(checkList) {
     if (checkList != null) {
@@ -136,22 +184,16 @@ export class TaskGroupComponent implements OnInit {
 
   }
 
-  readMore(dataItem) {
-    dataItem.disableReadmore = !dataItem.disableReadmore;
-    this.dt.detectChanges();
-    //this.tableView.addHandler(dataItem, false, "taskGroupID");
-  }
 
-  show() {
-    this.view.dataService.addNew().subscribe((res: any) => {
+
+  add() {
+    this.view.dataService.addNew(0).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-      })
+      option.Width = '800px'; // s k thấy gửi từ ben đây,
+      this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
+
     });
   }
 
@@ -164,20 +206,15 @@ export class TaskGroupComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
+    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+  };
 
-      });
-  }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0][0];
@@ -186,10 +223,7 @@ export class TaskGroupComponent implements OnInit {
     opt.data = itemSelected.taskGroupID;
     return true;
   }
-  changeView(evt: any) {
-    console.log('evt: ', evt);
-    var t = this;
-  }
+
   requestEnded(evt: any) {
     // if (evt) {
     //   this.dialog.close();
@@ -198,9 +232,5 @@ export class TaskGroupComponent implements OnInit {
   aaa(val: any) {
     console.log(val);
   }
-  selectedChange(val: any) {
-    console.log(val);
-    this.itemSelected = val.data;
-    this.dt.detectChanges();
-  }
+
 }

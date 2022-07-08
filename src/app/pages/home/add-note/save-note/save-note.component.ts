@@ -24,7 +24,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dt;
-    this.data = data?.data?.data;
+    this.data = data?.data?.itemUpdate;
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
   }

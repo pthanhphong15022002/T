@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarkSignatureComponent } from './mark-signature.component';
+import { EditFileComponent } from './editFile.component';
 
-describe('MarkSignatureComponent', () => {
-  let component: MarkSignatureComponent;
-  let fixture: ComponentFixture<MarkSignatureComponent>;
+describe('EditFileComponent', () => {
+  let component: EditFileComponent;
+  let fixture: ComponentFixture<EditFileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MarkSignatureComponent ]
+      declarations: [ EditFileComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MarkSignatureComponent);
+    fixture = TestBed.createComponent(EditFileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
