@@ -14,8 +14,8 @@
     <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
     </codx-label>
   </div>
-  <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.userGroup">
-    {{data.userGroup}}
+  <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.GroupName">
+    {{data.GroupName}}
   </div>
   <div class="rowphoto" *ngIf="data.chooseRoles.length <= 5">
     <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
