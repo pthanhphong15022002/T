@@ -42,7 +42,7 @@ export class InfoLeftComponent implements OnInit {
               this.codxMwpService.empInfo.next(response);
               this.dt.detectChanges();
               setTimeout(() => {
-                this.imageAvatar.getFormServer();
+                this.imageAvatar?.getFormServer();
               }, 100);
             }
           });

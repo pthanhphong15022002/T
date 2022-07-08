@@ -9,7 +9,12 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
-import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
+import {
+  AuthGuard,
+  CodxCoreModule,
+  CodxShareComponent,
+  EnvironmentConfig,
+} from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutComponent } from './_layout/layout.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
@@ -24,6 +29,10 @@ import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { PopupAddBookingRoomComponent } from './booking-room/popup-add-booking-room/popup-add-booking-room.component';
 import { PopupRequestStationeryComponent } from './booking-stationery/popup-request-stationery/popup-request-stationery.component';
 import { PopupListStationeryComponent } from './booking-stationery/popup-list-stationery/popup-list-stationery.component';
+import { PopupDeviceStationeryComponent } from './settings/stationery/popup-add-stationery/popup-device-stationery/popup-device-stationery.component';
+import { PopupColorStationeryComponent } from './settings/stationery/popup-add-stationery/popup-color-stationery/popup-color-stationery.component';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 
 const routes: Route[] = [
   {
@@ -95,6 +104,9 @@ const Components: Type<any>[] = [
     Components,
     PopupRequestStationeryComponent,
     PopupListStationeryComponent,
+    PopupDeviceStationeryComponent,
+    PopupColorStationeryComponent,
+    PopupAddStationeryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -105,6 +117,7 @@ const Components: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarAllModule,
     TabModule,
+    CodxShareModule,
   ],
   exports: [RouterModule],
 })

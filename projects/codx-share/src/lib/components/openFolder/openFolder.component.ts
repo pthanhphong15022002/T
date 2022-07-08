@@ -154,8 +154,8 @@ export class OpenFolderComponent implements OnInit {
     //   this.atSV.openForm.unsubscribe();
   }
 
-  onSelectionAddChanged($data, tree) {
-    var id = $data.dataItem.recID;
+  onSelectionAddChanged($node, tree) {
+    var id = $node.data.recID;
     this.selectId = id;
     var that = this;
     var list = tree.getBreadCumb(id);
@@ -193,9 +193,9 @@ export class OpenFolderComponent implements OnInit {
 
     });
 
-    if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
+    if ($node.data.items && $node.data.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async res => {
-        tree.addChildNodes($data.dataItem, res[0]);
+        tree.addChildNodes($node.data, res[0]);
         that.changeDetectorRef.detectChanges();
       });
     }

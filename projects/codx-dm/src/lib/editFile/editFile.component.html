@@ -6,23 +6,28 @@
                     <div class="d-flex align-items-center file-item ng-star-inserted">
                         <img alt="{{fileEditing.fileName}}" class="max-h-35px mr-3"
                             src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
-    
-                        <input [disabled]="noeditName ? 'disabled' : null" type="text" required id="fileName"
+                        <codx-input placeholder="Tên tài liệu..."                                    
+                            [class]="validate('folderName')"
+                            type="text"
+                            [crrValue]="fileEditing.fileName"
+                                                                  
+                        ></codx-input> 
+                        <!-- <input [disabled]="noeditName ? 'disabled' : null" type="text" required id="fileName"
                             name="fileName" class="form-control" (input)="validate('fileName')"
                             placeholder="Tên tài liệu..." minlength="4" [(ngModel)]="fileEditing.fileName" #fileNamectrl
-                            matInput />
+                            matInput /> -->
                     </div>
                     <div>
                         {{fileEditing.description}}
                     </div>
-                    <div autofocus *ngIf="fileNamectrl.value === ''" class="invalid-feedback">
+                    <!-- <div autofocus *ngIf="fileNamectrl.value === ''" class="invalid-feedback">
                         Tên tài liệu bắt buộc.
                     </div>
                     <div id="fileError" autofocus
                         *ngIf="errorshow || (fileNamectrl.value != '' && fileNamectrl.value.indexOf('.') === -1)"
                         class="invalid-feedback">
                         Tên tài liệu không hợp lệ.
-                    </div>
+                    </div> -->
                 </div>
                 <div class="d-flex mb-4">
                     <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"
