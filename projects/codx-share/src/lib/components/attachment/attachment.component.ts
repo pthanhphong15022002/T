@@ -67,6 +67,7 @@ export class AttachmentComponent implements OnInit {
   @Input() folderType: string;
   @Input() functionID: string;
   @Input() type: string;
+  @Input() idBrowse = "browse";
   @Input() popup = "1";
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
@@ -141,14 +142,25 @@ export class AttachmentComponent implements OnInit {
       })
     };
 
-    if (document.getElementById('browse') != null) {
-      document.getElementById('browse').onclick = () => {
+    if (document.getElementById(this.idBrowse) != null) {     
+      var list = document.getElementsByName('UploadFiles');
+      if (list?.length > 0) {
+        for(var i=0; i<list.length; i++) {
+          if (document.getElementsByName('UploadFiles')[i].getAttribute("idbutton") == null)
+          {
+            document.getElementsByName('UploadFiles')[i].setAttribute("idbutton", this.idBrowse);
+            break;
+          }            
+        }        
+      }
+      
+      document.getElementById(this.idBrowse).onclick = () => {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       };
 
       this.dropElement = document.querySelector('#dropArea') as HTMLElement;
-      document.getElementById('browse').onclick = function () {
+      document.getElementById(this.idBrowse).onclick = function () {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       }
@@ -832,10 +844,11 @@ export class AttachmentComponent implements OnInit {
   } 
  
 
-  uploadFile() {
-    document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
-    // document.getElementById('browse').click();
-    //this.file.nativeElement.click();
+  uploadFile() {    
+    console.log(this.uploadObj);
+    var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    if (ctrl != null)
+      ctrl.click();    
   }
 
   async handleFileInput1(files: FileList) {

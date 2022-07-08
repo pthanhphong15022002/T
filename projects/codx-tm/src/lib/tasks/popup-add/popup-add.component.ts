@@ -559,7 +559,7 @@ export class PopupAddComponent implements OnInit,AfterViewInit {
   }
 
   changeTime(data) {
-    if (!data.field) return;
+    if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
       if (!this.task.endDate && this.task.startDate){

@@ -109,8 +109,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) =>{
       this.cache.gridViewSetup(func.formName,func.gridViewName)
       .subscribe((grd:any) => {
-      this.headerText = grd['Comments']['headerText'];
-      this.dt.detectChanges();
+        console.log(grd);
+        this.headerText = grd['Comments']['headerText'];
+        this.dt.detectChanges();
       })
     })
 
@@ -198,7 +199,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 400, "", obj, '', option);
+    option.Resizeable = true;
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600,600, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
