@@ -57,7 +57,7 @@
               <codx-input type="text" field="" [crrValue]="data.companyCode" disabled="true"></codx-input>
             </div>
             <div class="col-9">
-              <codx-label fiedName="" formName="" gridViewName="" default=".erm.com"></codx-label>
+              <codx-label fiedName="" class="url" formName="" gridViewName="" default=".erm.com"></codx-label>
             </div>
           </div>
 
@@ -89,7 +89,7 @@
       <div class="row content">
         <div class="col-6">
           <div class="body_title">
-            <codx-label fiedName="" formName="" gridViewName="" default="Liên hệ"></codx-label>
+          <strong> <codx-label fiedName="" formName="" gridViewName="" default="Liên hệ"></codx-label> </strong>
           </div>
         </div>
         <div class="col-6">
@@ -110,10 +110,12 @@
             </codx-label>
           </div>
           <div class="contact">
-            <codx-label fiedName="" formName="" gridViewName="" [default]="'Email: '+data.email"></codx-label>
+            <codx-label  fiedName="" formName="" gridViewName="" [default]="'Email: '"></codx-label>
+            <codx-label  fiedName="" class="url-contact" formName="" gridViewName="" [default]="data.email"></codx-label>
           </div>
           <div class="contact">
-            <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '+data.webPage"></codx-label>
+            <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '"></codx-label>
+            <codx-label fiedName="" formName="" class="url-contact" gridViewName="" [default]="data.webPage"></codx-label>
           </div>
         </div>
         <div class="col-7">
