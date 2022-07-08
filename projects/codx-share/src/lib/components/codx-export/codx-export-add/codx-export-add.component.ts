@@ -101,12 +101,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     //Thêm mới
     if(this.action == "add")
     {
-      
       if(this.fileCount>0)
       {
+        var module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates" 
         this.api
         .execActionData<any>(
-          'AD_ExcelTemplates',
+          module,
           [this.exportAddForm.value],
           'SaveAsync'
         ).subscribe(item=>{
