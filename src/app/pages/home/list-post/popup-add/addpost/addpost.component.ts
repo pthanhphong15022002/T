@@ -185,6 +185,11 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     }
   }
 
+
+
+
+
+  
   valueChangeTags(e) {
     this.data.tags = e.data;
   }
