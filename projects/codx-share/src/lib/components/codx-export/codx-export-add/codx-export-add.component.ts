@@ -33,6 +33,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   exportAddForm : FormGroup;
   submitted = false;
   fileCount = 0;
+  module: any;
   @ViewChild('attachment') attachment: AttachmentComponent
   @Output() setDefaultValue = new EventEmitter();
   constructor(
@@ -60,6 +61,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     //this.data = dt.data;
   }
   ngOnInit(): void {
+    this.module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates" 
     this.exportAddForm = this.formBuilder.group(
       {
         templateName: [this.data?.templateName , Validators.required],
@@ -103,10 +105,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     {
       if(this.fileCount>0)
       {
-        var module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates" 
+      
         this.api
         .execActionData<any>(
-          module,
+          this.module,
           [this.exportAddForm.value],
           'SaveAsync'
         ).subscribe(item=>{
