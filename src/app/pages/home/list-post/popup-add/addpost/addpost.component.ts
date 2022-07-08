@@ -443,7 +443,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
 
   isUploadFile = false;
   openFile() {
-    this.isUploadFile = true;
     this.attachment.uploadFile();
   }
   fileAdded(event){
@@ -452,7 +451,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   listImgUpload:any[] = [];
 
   getfileCount(event:any){
-    if(!event || !event.data){
+    if(!event || event.data.length <= 0){
       this.isUploadFile = false;
       return;
     }
