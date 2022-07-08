@@ -54,6 +54,7 @@
 }
 .button_edit{
   text-align: right;
+
 }
 .content {
   padding: 10px 10px 10px 10px;
@@ -62,3 +63,9 @@
   background: white;
   padding-bottom: 50px;
 }
+button{ border: transparent;}
+button:hover {
+  cursor: pointer;
+  background-color: cornflowerblue;
+  }
+

@@ -1,37 +1,40 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog">
 </codx-form>
 
-<ng-template #body>
+<ng-template #body >
   <div class="row">
-    <div class="col-2">
+    <div class="col-3">
       <codx-label name="" formName="" default="Tên người đại diện"></codx-label>
     </div>
-    <div class="col-10">
+    <div class="col-9">
       <codx-input class="form-control" type="text" [crrValue]="items?.contactName" (valueChange)="txtValueContactName($event)" ></codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <codx-label name="" formName="" default="Chức danh"></codx-label>
     </div>
-    <div class="col-10">
-      <codx-input class="form-control" type="text" [crrValue]="items?.jobTitle" (valueChange)="txtValueJobTitle($event)"></codx-input>
+    <div class="col-9">
+      <codx-input class="form-control" type="text" [crrValue]="items.jobTitle" (valueChange)="txtValueJobTitle($event)"></codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <codx-label name="" formName="" default="Email"></codx-label>
     </div>
-    <div class="col-10">
+    <div class="col-9">
       <codx-input class="form-control" type="text" [crrValue]="items?.personalEmail" (valueChange)="txtValueEmail($event)"></codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <codx-label name="" formName="" default="Điện thoại"></codx-label>
     </div>
-    <div class="col-10">
+    <div class="col-9">
       <codx-input class="form-control" type="text" [crrValue]="items?.mobile" (valueChange)="txtValuePhone($event)"></codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <codx-label name="" formName="" default="Hình đại diện"></codx-label>
     </div>
-    <div class="col-10">
-
+    <div class="col-9">
+      <codx-img #imageAvatar class="symbol symbol-50 symbol-circle"
+      isAllowEdit="true" updateDirect="true" [width]="100"
+      [disabled]="" [height]="100">
+    </codx-img>
     </div>
   </div>
 </ng-template>

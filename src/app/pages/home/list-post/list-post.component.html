@@ -1,6 +1,14 @@
-<codx-views #codxViews funcID="WP" [service]="service" [assemblyName]="assemblyName" [className]="className"
-    [method]="method" [views]="views" entityName="WP_Comments" idField="recID">
-
+<codx-views #codxViews 
+    funcID="WP" 
+    [service]="service" 
+    [assemblyName]="assemblyName" 
+    [className]="className"
+    [method]="method"
+    [predicate]="predicate"
+    [dataValue]="dataValue" 
+    [views]="views" 
+    entityName="WP_Comments" 
+    idField="recID">
 </codx-views>
 
 
@@ -82,20 +90,6 @@
                                 </ng-template>
                             </ng-container>
                             <ng-template #notU>
-                                <!-- <ng-container *ngIf="item.shared -1 > 0; else elseDisplay2">
-                                    <codx-label formName="" name="lblWith" default="cùng với "></codx-label>
-                                    {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}}
-                                    <codx-label formName="" name="lblAnd" default="và"></codx-label>
-                                    {{item.shared -1}}
-                                    <codx-label formName="" name="lblDeparment" default="phòng ban khác"></codx-label>
-                                </ng-container>
-                                <ng-template #elseDisplay2>
-                                    <codx-label formName="" name="lblWithDeparment" default="cùng với phòng ">
-                                    </codx-label>
-                                    {{item.shareName.replace(item.shareControl |
-                                    sharedControl:'wp' | async,'')}}
-                                </ng-template> -->
                                 {{item.shareName}}
                             </ng-template>
                         </span>
@@ -109,20 +103,20 @@
                         <i class="fas fa-ellipsis-h"></i>
                     </a>
                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                        <li *ngIf="user.userID == item.createdBy || user.userID =='ADMIN' ">
+                        <li *ngIf="item.write">
                             <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
                                 <span class="icon-edit icon-16 me-2"></span>
                                 <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
                                 </codx-label>
                             </a>
                         </li>
-                        <li *ngIf="user.userID == item.createdBy || user.userID =='ADMIN'">
+                        <li *ngIf="item.delete">
                             <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
                                 <span class="icon-delete icon-16 me-2"></span>
                                 <codx-label formName="Comments" name="lblDelete_comments" default="Xóa"></codx-label>
                             </a>
                         </li>
-                        <li>
+                        <li *ngIf="item.share">
                             <a (click)="openModalShare(item)" ngbDropdownItem href="javascript:void(0)">
                                 <span class="icon-share icon-16 me-2"></span>
                                 <codx-label formName="Comments" name="lblShare_comments" default="Chia sẻ"></codx-label>
@@ -200,7 +194,7 @@
                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
             </ng-template>
         </div>
-        <treeview-comment [rootData]="item" (pushComment)="pushComment($event)"></treeview-comment>
+        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)"></treeview-comment>
     </div>
 </ng-template>
 
