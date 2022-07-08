@@ -1,6 +1,7 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-  <ng-template popup adde #body>
-    <div *ngIf="isAfterRender && gridViewSetup">
+<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
+  [dialog]="dialog">  
+  <ng-template #body>
+    <div >
       <form>
         <div class="row">
           <div class="form-group">
@@ -8,7 +9,7 @@
               <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups"
                 default="Mã nhóm công việc">
               </codx-label>
-              <codx-input field="taskGroupID" [attr.disabled]="!isAddMode ? '' : null" type="text"
+              <codx-input field="taskGroupID"  [attr.disabled]="!data?.isNew() ? '' : null" type="text"
                 [crrValue]="taskGroups.taskGroupID">
               </codx-input>
 
@@ -17,7 +18,7 @@
               <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups"
                 default="Nhóm công việc">
               </codx-label>
-              <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text"
+              <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text" loadFull="true"
                 [crrValue]="taskGroups.taskGroupName" (valueChange)="valueChange($event)">
               </codx-input>
             </div>

@@ -56,7 +56,6 @@ import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
 import { PopAddRangesComponent } from './setting/rangeskanban/ranges-add/ranges-add.component';
-import { TaskgroupAddComponent } from './setting/taskgroups/taskgroup-add/taskgroup-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -192,7 +191,7 @@ const T_Component: Type<any>[] = [
   // MwpViewDetailComponent,
   // MwpPopupAddComponent,
   ViewListComponent,
-  TaskgroupAddComponent
+  
 ];
 @NgModule({
   imports: [
