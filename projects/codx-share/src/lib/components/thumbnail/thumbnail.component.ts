@@ -150,10 +150,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  getExtension(ext) {
-    ext = ext.substring(1);
-    ext = ext.toLocaleLowerCase();
-    return `../../../assets/demos/dms/${ext}.svg`;
+  getExtension(thumbnail, ext) {
+    if (thumbnail != "" && thumbnail != undefined)
+      return thumbnail;
+    else {
+      ext = ext.substring(1);
+      ext = ext.toLocaleLowerCase();
+      return `../../../assets/demos/dms/${ext}.svg`;
+    }    
   }
 
   getSubTitle(id)

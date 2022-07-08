@@ -26,11 +26,14 @@
 //////////////tbchung custom css///////////////////
 .is-invalid-a,
 .is-invalid .e-date-wrapper,
-.is-invalid .ng-invalid {
-    border: solid 1px red !important;
+.is-invalid .ng-invalid  {
+    border: solid 1px #F3416C !important;
     border-radius: 5px;
 }
-
+.is-invalid .ng-invalid+label::before
+{
+    border: solid 1px #F3416C !important;
+}
 .div-active {
     border-bottom: solid 2px #187DE4;
     //border-radius: 5px;
