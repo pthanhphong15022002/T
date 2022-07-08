@@ -44,30 +44,37 @@
           [formModel]="view.formModel" [dataItem]="data" [footer]="footer">
         </codx-temp-full>
       </div>
-      <div class="justify-content-end">
-        <div class="" *ngIf="data.chooseRoles.length <= 5">
-          <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
-            <a (click)="openPopup(data)">
-              <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
-            </a>
-          </ng-container>
+      <div class="d-flex flex-wrap">
+        <div class="d-flex">
+          <div class="" *ngIf="data.chooseRoles.length <= 5">
+            <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+              <a (click)="openPopup(data)">
+                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+              </a>
+            </ng-container>
 
-          <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+            <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
           [numberImages]="5" (click)="openPopup(data)">
         </codx-imgs> -->
-        </div>
-        <div class="" *ngIf="data.chooseRoles.length > 5">
-          <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
-            <span class="symbol-label fs-4" (click)="openPopup(data)">
-              <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
-            </span>
-          </ng-container>
+          </div>
+          <div class="" *ngIf="data.chooseRoles.length > 5">
+            <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+              <span class="symbol-label fs-4" (click)="openPopup(data)">
+                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+              </span>
+            </ng-container>
 
-          <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+            <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
         [numberImages]="5" (click)="openPopup(data)">
       </codx-imgs> -->
+          </div>
+        </div>
+        <div class="d-flex flex-column text-right ms-4">
+          <div>trang thai</div>
+          <div>Ngày</div>
         </div>
       </div>
+
     </div>
     <div class="separator"></div>
   </div>
