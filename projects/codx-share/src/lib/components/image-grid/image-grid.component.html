@@ -4,7 +4,7 @@
       <div class="row row-custom feed-1pic">
         <div class="col-xl-12">
           <ng-container *ngIf="images[0] ;else else0">
-            <img class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
+            <img class="w-100" class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
               [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
@@ -19,7 +19,7 @@
       <div class="row row-custom feed-2pic">
         <div class="col-xl-7 pr-1">
           <ng-container *ngIf="images[0];else else0">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
               [src]="images[0].avatar"/>
           </ng-container>
@@ -31,7 +31,7 @@
         </div>
         <div class="col-xl-5 pl-0">
           <ng-container *ngIf="images[1];else else1">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
               [src]="images[1].avaar"/>
           </ng-container>
@@ -47,7 +47,7 @@
       <div class="row row-custom feed-3pic">
         <div class="col-xl-7 pr-1">
           <ng-container *ngIf="images[0];else else0">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-320px"
               [src]="images[0].avatar"/>
           </ng-container>
@@ -59,7 +59,7 @@
         </div>
         <div class="col-xl-5 pl-0">
           <ng-container *ngIf="images[1];else else1">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-155px"
               [src]="images[1].avatar"/>
           </ng-container>
@@ -69,7 +69,7 @@
             </video>
           </ng-template>
           <ng-container *ngIf="images[2];else else2">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-155px mt-1"
               [src]="images[2].avatar"/>
           </ng-container>
@@ -85,7 +85,7 @@
       <div class="row row-custom feed-4pic">
         <div class="col-xl-5 pr-1">
           <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-340px"
               [src]="images[0].avatar"/>
           </ng-container>
@@ -97,7 +97,7 @@
         </div>
         <div class="col-xl-7 pl-0">
           <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
               [src]="images[1].avatar"/>
           </ng-container>
@@ -109,7 +109,7 @@
           <div class="row row-custom mt-1">
             <div class="col-xl-6 pr-1">
               <ng-container *ngIf="images[2];else else2">
-                <img
+                <img class="w-100"
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
                   [src]="images[2].avatar"/>
               </ng-container>
@@ -121,7 +121,7 @@
             </div>
             <div class="col-xl-6 pl-0">
               <ng-container *ngIf="images[3] ;else else3">
-                <img
+                <img class="w-100"
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
                   [src]="images[3].avatar"/>
               </ng-container>
@@ -139,7 +139,7 @@
       <div class="row row-custom feed-5pic">
         <div class="col-xl-7 pr-1">
           <ng-container *ngIf="images[0];else else0">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
               [src]="images[0].avatar"/>
           </ng-container>
@@ -151,7 +151,7 @@
           <div class="row row-custom mt-1">
             <div class="col-xl-6 pr-1">
               <ng-container *ngIf="images[1];else else1">
-                <img
+                <img class="w-100"
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
                   [src]="images[1].avatar"/>
               </ng-container>
@@ -163,7 +163,7 @@
             </div>
             <div class="col-xl-6 pl-0">
               <ng-container *ngIf="images[2] ;else else2">
-                <img
+                <img class="w-100"
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
                   [src]="images[2].avatar"/>
               </ng-container>
@@ -177,7 +177,7 @@
         </div>
         <div class="col-xl-5 pl-0">
           <ng-container *ngIf="images[3] ;else else3">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
               [src]="images[3].avatar"/>
           </ng-container>
@@ -187,7 +187,7 @@
             </video>
           </ng-template>
           <ng-container *ngIf="images[4] ;else else4">
-            <img
+            <img class="w-100"
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
               [src]="images[4].avatar"/>
           </ng-container>
