@@ -35,7 +35,8 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end row">
         <div class="col-6">
-            <codx-share (eventApply)="eventApply($event)" style="float: left;"> </codx-share>
+            <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
+        [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
         </div>
         <div class="col-6">
             <button style="float: right;" type="button" class="btn btn-primary" (click)="saveData()">

@@ -137,22 +137,22 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   getDataValuelist()
   {
-    if (this.gridViewSetup["Security"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;
       })
-    if (this.gridViewSetup["Urgency"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Urgency"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Urgency"]["referedValue"]).subscribe((item) => {
         this.dvlUrgency = item;
         //this.ref.detectChanges();
       })
-    if (this.gridViewSetup["Status"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Status"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Status"]["referedValue"]).subscribe((item) => {
         this.dvlStatus = item;
         console.log(this.dvlStatus);
         //this.ref.detectChanges();
       })
-    if (this.gridViewSetup["Category"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Category"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Category"]["referedValue"]).subscribe((item) => {
         this.dvlCategory = item;
         //this.ref.detectChanges();
@@ -543,7 +543,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       //Export file
       case "SYS002":
         {
-          debugger;
           var gridModel = new DataRequest();
           gridModel.formName = this.formModel.formName;
           gridModel.entityName = this.formModel.entityName;

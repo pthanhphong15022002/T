@@ -981,9 +981,10 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.fileUploadList.length;
+    //var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
+    var addedList = [];
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
@@ -996,7 +997,7 @@ export class AttachmentComponent implements OnInit {
         {        
           fileUpload.avatar = data;
         }
-        else fileUpload.avatar = `../../../assets/demos/dms/${this.getAvatar(fileUpload.fileName)}`;
+        else fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(fileUpload.fileName)}`;
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
@@ -1019,11 +1020,14 @@ export class AttachmentComponent implements OnInit {
         // if (this.remote) {
         //   fileUpload.permissions = this.remotePermission;
         // }
+        addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
-    this.fileCount.emit(files.length);
+    //   this.fileAdded.emit({ data: this.fileUploadList });
+  //  this.fileCount.emit(data: addedList);
+     this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

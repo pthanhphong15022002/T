@@ -58,12 +58,7 @@
           </div>
         </div>
         <div class="d-flex mt-1">
-          <ng-container *ngIf="data && data?.files">
-            <codx-thumbnail
-              [files]="data?.files"
-            >
-            </codx-thumbnail>
-          </ng-container>
+          
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
@@ -82,6 +77,13 @@
       </div>
      
     </div>
+    <ng-container *ngIf="data && data?.files">
+      <codx-thumbnail
+        [files]="data?.files"
+        displayThumb="simple"
+      >
+      </codx-thumbnail>
+    </ng-container>
   </ng-template>
   <ng-template #body>
     <div class="tab-horizone">
@@ -150,6 +152,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
+    <codx-tabs></codx-tabs>
   </ng-template>
   <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">

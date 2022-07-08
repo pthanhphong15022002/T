@@ -107,6 +107,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
+        debugger;
         this.dialogApprovalStep = item;
         this.isAfterRender = true;
         if (this.isAdd) {
@@ -224,6 +225,16 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     console.log('representative', this.dialogApprovalStep.value.representative);
 
     this.cr.detectChanges();
+  }
+
+  parseInt(data) {
+    let leadtime = parseInt(data);
+    if (leadtime) {
+      return leadtime;
+    } else {
+      this.notify.notifyCode('E0016');
+      return 0;
+    }
   }
 }
 export class Approvers {

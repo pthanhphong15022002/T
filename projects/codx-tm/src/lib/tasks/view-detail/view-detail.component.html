@@ -125,8 +125,8 @@
               </span>
               <span [ngClass]="
                   itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400'
-                "><span *ngIf="itemSelected?.completedOn">{{ itemSelected?.completedOn | date: "dd/MM/yyyy" }}
-                  {{ " | " + itemSelected?.completed +" h "}}</span></span>
+                ">{{ itemSelected?.completedOn ?(itemSelected?.completedOn| date: "dd/MM/yyyy"): "dd/mm/yyyy"}}
+                  {{ " | " + (itemSelected?.completed?itemSelected?.completed : 0 ) +" h "}}</span>
             </div>
           </div>
         </div>
@@ -147,8 +147,10 @@
           </div>
         </div>
         <div class="mt-2">
-          <codx-tag [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
-            [value]="itemSelected.tags? itemSelected.tags : ''"></codx-tag>
+            <codx-tag *ngIf="!itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+            [value]="''"></codx-tag>
+            <codx-tag *ngIf="itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+            [value]="itemSelected.tags"></codx-tag>        
         </div>
       </div>
     </ng-template>
