@@ -184,12 +184,6 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
       this.sharePost();
     }
   }
-
-
-
-
-
-  
   valueChangeTags(e) {
     this.data.tags = e.data;
   }
