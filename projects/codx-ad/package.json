@@ -6,6 +6,7 @@
     "@angular/core": "^13.3.0"
   },
   "dependencies": {
+    "codx-core": "^1.0.0",
     "tslib": "^2.3.0"
   }
 }
