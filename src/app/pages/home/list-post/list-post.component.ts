@@ -85,7 +85,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -105,19 +105,19 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
   }
-  getGridViewSetUp(){
-    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) =>{
-      this.cache.gridViewSetup(func.formName,func.gridViewName)
-      .subscribe((grd:any) => {
-        console.log(grd);
-        this.headerText = grd['Comments']['headerText'];
-        this.dt.detectChanges();
-      })
+  getGridViewSetUp() {
+    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) => {
+      this.cache.gridViewSetup(func.formName, func.gridViewName)
+        .subscribe((grd: any) => {
+          console.log(grd);
+          this.headerText = grd['Comments']['headerText'];
+          this.dt.detectChanges();
+        })
     })
 
   }
 
-  beforDelete(option: RequestOption):RequestOption{
+  beforDelete(option: RequestOption): RequestOption {
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
     option.className = "CommentBusiness";
@@ -126,20 +126,20 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   removePost(data: any) {
     this.codxViews.dataService.delete([data]).subscribe((res) => {
-      if(res){
-        if(data.lstFile){
+      if (res) {
+        if (data.lstFile) {
           this.api.execSv("DM",
             "ERM.Business.DM",
             "FileBussiness",
             "DeleteByObjectIDAsync",
             [data.recID, 'WP_Comments', true]
-            ).subscribe();
+          ).subscribe();
         }
       }
       this.notifySvr.notifyCode('E0026');
       this.dt.detectChanges();
     });
-    
+
     // this.notifySvr.alertCode('E0327').subscribe((e: any) => {
     //   if (e.event.status == "Y") {
     //     this.api
@@ -212,7 +212,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600, 0, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 400, "", obj, '', option);
 
   }
 

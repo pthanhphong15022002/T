@@ -11,15 +11,12 @@ import {
 import { FormGroup } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  ApiHttpService,
-  CacheService,
   CallFuncService,
   CodxGridviewComponent,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
-  NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
@@ -69,11 +66,8 @@ export class PopupAddStationeryComponent implements OnInit {
   formModel: FormModel;
   constructor(
     private bookingService: CodxEpService,
-    private api: ApiHttpService,
-    private cacheSv: CacheService,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private notification: NotificationsService,
     private cfService: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -197,20 +191,6 @@ export class PopupAddStationeryComponent implements OnInit {
     }
   }
 
-  // openPopupDevice() {
-  //   this.modalService
-  //     .open(this.popupDevice, { centered: true, size: 'md' })
-  //     .result.then(
-  //       (result) => {
-  //         this.lstDeviceRoom = JSON.parse(JSON.stringify(this.tmplstDevice));
-  //       },
-  //       (reason) => {
-  //         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-  //       }
-  //     );
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -263,8 +243,9 @@ export class PopupAddStationeryComponent implements OnInit {
     console.log(evt);
   }
 
-  openPopupDevice(template: any) {
-    var dialog = this.cfService.openForm(template, '', 600, 350);
+  openPopupDevice(template: any, color) {
+    this.color = color;
+    var dialog = this.cfService.openForm(template, '', 300, 300);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -288,14 +269,19 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   closeDialog(evt: any) {
-    this.listColor.push(this.colorItem);
-    console.log(this.listColor);
-    this.dialog.close();
+    if (this.color != null) {
+      let i = this.listColor.indexOf(this.color);
+      if (i != -1) {
+        this.listColor[i] = this.colorItem;
+      }
+    } else {
+      this.listColor.push(this.colorItem);
+      console.log(this.listColor);
+    }
+
+    this.changeDetectorRef.detectChanges();
   }
 
-  popupTab() {
-    this.cfService.openForm(this.popupTemp, 'Chọn màu', 200, 200);
-  }
   getlstDevice(items: string) {
     this.lstDevices = items.split(';');
     return this.lstDevices;
@@ -305,4 +291,6 @@ export class PopupAddStationeryComponent implements OnInit {
     let device = this.vllDevices.find((x) => x.value == value);
     if (device) return device.text;
   }
+
+  getfileCount(event) {}
 }

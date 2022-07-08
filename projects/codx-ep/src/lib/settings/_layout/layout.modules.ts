@@ -1,4 +1,3 @@
-import { PopupAddStationeryComponent } from './../stationery/popup-add-stationery/popup-add-stationery.component';
 import { PopupAddCarsComponent } from './../cars/popup-add-cars/popup-add-cars.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -14,7 +13,6 @@ import { PopupAddRoomsComponent } from '../rooms/popup-add-rooms/popup-add-rooms
     LayoutComponent,
     PopupAddCarsComponent,
     PopupAddRoomsComponent,
-    PopupAddStationeryComponent,
   ],
   imports: [FormsModule, ReactiveFormsModule, SharedModule, TabModule],
   exports: [RouterModule],
