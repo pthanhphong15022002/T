@@ -981,9 +981,10 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.fileUploadList.length;
+    //var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
+    var addedList = [];
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
@@ -1019,11 +1020,14 @@ export class AttachmentComponent implements OnInit {
         // if (this.remote) {
         //   fileUpload.permissions = this.remotePermission;
         // }
+        addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
-    this.fileCount.emit(files.length);
+    //   this.fileAdded.emit({ data: this.fileUploadList });
+  //  this.fileCount.emit(data: addedList);
+     this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

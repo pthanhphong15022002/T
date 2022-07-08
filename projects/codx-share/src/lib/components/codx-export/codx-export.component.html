@@ -183,8 +183,8 @@
                         name="format"  
                         [Group]="exportGroup"
                         ControlName="format"
-                        [crrValue]="item.recID"
-                        [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+                        [crrValue]="'excelTemp_'+item.recID"
+                        [ngClass]="{'is-invalid': submitted && f.format.errors }"
                     >
                     </codx-input>
                 </div>
