@@ -139,7 +139,9 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  getfileCount($event) {}
+  getfileCount($event) {
+    console.log($event);
+  }
 
   fileAdded($event) {
     console.log($event);

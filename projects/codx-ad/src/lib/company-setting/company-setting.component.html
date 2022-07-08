@@ -42,17 +42,33 @@
       <div class="header_content">
         <div class="accountinfo">
           <codx-label fiedName="" formName="" gridViewName="" default="Tên công ty"></codx-label>
-          <codx-input type="text" field="legalName" [crrValue]="data.legalName" placeholder="Tên công ty"></codx-input>
+          <div class="row">
+            <div class="col-6">
+              <codx-input type="text" field="legalName" [crrValue]="data.legalName" placeholder="Tên công ty"></codx-input>
+            </div>
+         </div>
+
 
         </div>
         <div class="accountinfo">
           <codx-label fiedName="" formName="" gridViewName="" default="Web Address"></codx-label>
-          <codx-input type="text" field="" [crrValue]="data.companyCode" disabled="true"></codx-input>
-          <codx-label fiedName="" formName="" gridViewName="" default=".erm.com"></codx-label>
+          <div class="row">
+            <div class="col-3">
+              <codx-input type="text" field="" [crrValue]="data.companyCode" disabled="true"></codx-input>
+            </div>
+            <div class="col-9">
+              <codx-label fiedName="" class="url" formName="" gridViewName="" default=".erm.com"></codx-label>
+            </div>
+          </div>
+
         </div>
         <div class="accountinfo">
           <codx-label fiedName="" formName="" gridViewName="" default="Mã số thuế"></codx-label>
-          <codx-input type="text" field="" [crrValue]="data.taxCode"></codx-input>
+          <div class="row">
+            <div class="col-3">
+              <codx-input type="text" field="" [crrValue]="data.taxCode"></codx-input>
+            </div>
+         </div>
         </div>
         <div class="accountinfo">
           <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.logoFile">
@@ -73,13 +89,17 @@
       <div class="row content">
         <div class="col-6">
           <div class="body_title">
-            <codx-label fiedName="" formName="" gridViewName="" default="Liên hệ"></codx-label>
+          <strong> <codx-label fiedName="" formName="" gridViewName="" default="Liên hệ"></codx-label> </strong>
           </div>
         </div>
         <div class="col-6">
           <div class="button_edit">
-            <button (click)="clickEditContact(data)">contact</button>
+            <button (click)="clickEditContact(data)">      <i
+              class="icon-edit_file icon-18"
+            ></i> </button>
+
           </div>
+
         </div>
         <div class="col-5">
           <div class="contact">
@@ -90,10 +110,12 @@
             </codx-label>
           </div>
           <div class="contact">
-            <codx-label fiedName="" formName="" gridViewName="" [default]="'Email: '+data.email"></codx-label>
+            <codx-label  fiedName="" formName="" gridViewName="" [default]="'Email: '"></codx-label>
+            <codx-label  fiedName="" class="url-contact" formName="" gridViewName="" [default]="data.email"></codx-label>
           </div>
           <div class="contact">
-            <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '+data.webPage"></codx-label>
+            <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '"></codx-label>
+            <codx-label fiedName="" formName="" class="url-contact" gridViewName="" [default]="data.webPage"></codx-label>
           </div>
         </div>
         <div class="col-7">
@@ -120,7 +142,9 @@
         </div>
         <div class="col-6">
           <div class="button_edit">
-            <button (click)="clickEditPersonal(data)">personal</button>
+            <button (click)="clickEditPersonal(data)"> <i
+              class="icon-edit_file icon-18"
+            ></i></button>
           </div>
         </div>
       </div>
@@ -132,21 +156,8 @@
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="55"> </codx-img>
               </div>
               <div class="col-sm-10">
-                <codx-label fiedName="" formName="" gridViewName="" [default]="data.contactName"></codx-label> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="'Email: '+data.personalEmail"></codx-label> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="'Phone: '+data.mobile"></codx-label> <br>
-              </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="row">
-              <div class="col-sm-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="55"> </codx-img>
-              </div>
-              <div class="col-sm-10">
-                <codx-label fiedName="" formName="" gridViewName="" [default]="data.contactName"></codx-label> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label> <br>
+               <strong><codx-label fiedName="" formName="" gridViewName="" [default]="data.contactName"></codx-label></strong> <br>
+              <i>  <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label></i> <br>
                 <codx-label fiedName="" formName="" gridViewName="" [default]="'Email: '+data.personalEmail"></codx-label> <br>
                 <codx-label fiedName="" formName="" gridViewName="" [default]="'Phone: '+data.mobile"></codx-label> <br>
               </div>

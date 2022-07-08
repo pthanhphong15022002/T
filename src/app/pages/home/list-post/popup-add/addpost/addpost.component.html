@@ -28,7 +28,6 @@
                     </ng-container>
                     <div class="d-flex align-items-center justify-content-start user-square">
                         <div class="me-2">
-                            <!-- <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share> -->
                             <codx-input
                                 type="Share"
                                 refValue="L1901"
@@ -45,7 +44,26 @@
             <div class="my-3 h-50">
                 <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
                     placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)"
-                    ngDefaultControl></codx-input>
+                    ngDefaultControl>
+                </codx-input>
+                <div class="" style="display:none;">
+                    <codx-attachment  
+                        #attachment  
+                        objectType="WP_Comments"   
+                        hideFolder="1"  
+                        hideUploadBtn="1"   
+                        hideDes="1" 
+                        type="inline"
+                        allowExtensions=".jpg,.png" 
+                        allowMultiFile="1" 
+                        (fileCount)="getfileCount($event)"
+                        [functionID]="dialogRef.formModel.funcID" 
+                        > 
+                    </codx-attachment>
+                </div>
+                <ng-container *ngIf="isUploadFile">
+                    <codx-image-grid [images]="listImgUpload"></codx-image-grid>
+                </ng-container>
             </div>
             <ng-container *ngIf="dataEdit?.recID">
                 <div class="border ndchiase p-4 mt-3">
@@ -95,7 +113,7 @@
                     <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
                         <i class="icon-local_offer icon-30 text-primary"></i>
                     </button>
-                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
+                    <button (click)="openFile()" type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
                         <i class="icon-photo icon-30 text-success"></i>
                     </button>
                 </div>
@@ -103,8 +121,12 @@
         </div>
         <ng-container *ngIf="showEmojiPicker">
             <div class="emoji">
-                <emoji-mart class="emoji-mart" skin="6" [showPreview]="false" [set]="set"
-                    (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+                <emoji-mart class="emoji-mart"  
+                [showSingleCategory]="true" 
+                [showPreview]="false" [set]="set"
+                [perLine]="7"
+                (emojiSelect)="addEmoji($event)"
+                ></emoji-mart>
             </div>
         </ng-container>
         <ng-template #containTemplate let-item>
@@ -113,10 +135,10 @@
                     <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
                     </read-more>
                 </div>
-                <div class="pic-feed">
+                <!-- <div class="pic-feed">
                     <lv-image-grid #player [database]="true" [files]="item?.listImage">
                     </lv-image-grid>
-                </div>
+                </div> -->
             </ng-container>
             <ng-template #category2>
                 <div class="p-0 m-0">
