@@ -90,7 +90,7 @@
                   </codx-label>
                 </label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
-                  [crrValue]="task.dueDate" [disabled]="readOnly" (valueChange)="changeTime($event)">
+                  [crrValue]="task?.dueDate"  (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -103,7 +103,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
+            <div class="extend-function" *ngIf="(param?.PlanControl !='1'|| param?.PlanControl == null)">
               <hr />
               <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
                 <div class="d-flex align-items-center w-auto extend-title">
@@ -117,15 +117,15 @@
                 </div>
               </div>
             </div>
-            <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
+            <ng-container *ngIf="(param?.PlanControl !='1'|| param?.PlanControl == null) && showPlan ">
               <div class="form-group row mt-3">
                 <div class="col-4">
                   <label>
                     <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-                    placeholder="datetime" [crrValue]="task.startDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime"  field="startDate"
+                    placeholder="datetime" [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -133,8 +133,8 @@
                     <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime"  field="endDate"
+                    placeholder="datetime" [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">

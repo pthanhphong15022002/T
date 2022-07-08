@@ -47,7 +47,7 @@ export class EmployeesComponent implements OnInit {
       { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      { headerText: 'Hành động', width: 200, template: this.itemAction },
+      // { headerText: 'Hành động', width: 200, template: this.itemAction },
     ];
   }
 

@@ -28,7 +28,6 @@
                     </ng-container>
                     <div class="d-flex align-items-center justify-content-start user-square">
                         <div class="me-2">
-                            <!-- <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share> -->
                             <codx-input
                                 type="Share"
                                 refValue="L1901"
@@ -47,16 +46,24 @@
                     placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)"
                     ngDefaultControl>
                 </codx-input>
-                <codx-attachment  
-                    #attachment  
-                    objectType="WP_Comments"   
-                    hideFolder="1"  
-                    hideUploadBtn="1"   
-                    hideDes="1" 
-                    type="inline"
-                    [functionID]="dialogRef.formModel.funcID" 
-                    > 
-                </codx-attachment>
+                <div class="" style="display:none;">
+                    <codx-attachment  
+                        #attachment  
+                        objectType="WP_Comments"   
+                        hideFolder="1"  
+                        hideUploadBtn="1"   
+                        hideDes="1" 
+                        type="inline"
+                        allowExtensions=".jpg,.png" 
+                        allowMultiFile="1" 
+                        (fileCount)="getfileCount($event)"
+                        [functionID]="dialogRef.formModel.funcID" 
+                        > 
+                    </codx-attachment>
+                </div>
+                <ng-container *ngIf="isUploadFile">
+                    <codx-image-grid [images]="listImgUpload"></codx-image-grid>
+                </ng-container>
             </div>
             <ng-container *ngIf="dataEdit?.recID">
                 <div class="border ndchiase p-4 mt-3">
@@ -128,10 +135,10 @@
                     <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
                     </read-more>
                 </div>
-                <div class="pic-feed">
+                <!-- <div class="pic-feed">
                     <lv-image-grid #player [database]="true" [files]="item?.listImage">
                     </lv-image-grid>
-                </div>
+                </div> -->
             </ng-container>
             <ng-template #category2>
                 <div class="p-0 m-0">
