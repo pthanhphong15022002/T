@@ -13,6 +13,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.codxService.init(this.module);
   }
 
+
+
+
+  
   onInit(): void {
     this.codxService.modulesOb$.subscribe((res) => {
       console.log(res);
