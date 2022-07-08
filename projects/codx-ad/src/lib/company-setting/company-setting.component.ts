@@ -79,15 +79,27 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
 
   }
   clickEditContact(data) {
-  this.dialog = this.callfc.openSide(PopupContactComponent,data);
+  this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "",data);
   this.changeDetectorRef.detectChanges();
   }
 
   clickEditPersonal(data) {
-    this.dialog = this.callfc.openSide(PopupPersonalComponent,data);
+    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
     if(this.dialog.close) {
       this.changeDetectorRef.detectChanges();
     }
-
   }
+
+  // clickEditPersonal(data: any) {
+  //   var obj = {
+  //     post: data,
+  //     title: "Chia sẻ bài viết"
+  //   }
+  //   this.changeDetectorRef.detectChanges()
+  //   let option = new DialogModel();
+  //   option.DataService = this.listview.dataService as CRUDService;
+  //   option.FormModel = this.listview.formModel;
+  //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
+  //   this.modal.closed.subscribe();
+  // }
 }
