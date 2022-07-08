@@ -160,6 +160,17 @@ export class CodxEsService {
                 model[element.fieldName].push(null);
               }
 
+              let modelValidator = [];
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
+              if (element.fieldName == 'email') {
+                modelValidator.push(Validators.email);
+              }
+              if (modelValidator.length > 0) {
+                model[element.fieldName].push(modelValidator);
+              }
+
               // if (element.isRequire) {
               //   model[element.fieldName].push(
               //     Validators.compose([Validators.required])
@@ -170,7 +181,6 @@ export class CodxEsService {
             }
           }
         }
-
         resolve(this.fb.group(model, { updateOn: 'blur' }));
       });
     });

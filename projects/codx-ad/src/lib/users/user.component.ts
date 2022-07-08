@@ -1,7 +1,8 @@
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, AuthStore, ViewModel, ViewType, DialogRef, ButtonModel } from 'codx-core';
+import { UIComponent, AuthStore, ViewModel, ViewType, DialogRef, ButtonModel, SidebarModel, CallFuncService } from 'codx-core';
 import { Component, OnInit, inject, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { ViewUsersComponent } from './view-users/view-users.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
   selector: 'lib-user',
@@ -24,9 +25,11 @@ export class UserComponent extends UIComponent {
   funcID: string;
   constructor(
     private inject: Injector,
+    private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activeRouter: ActivatedRoute,
-    private changeDetectorRef:ChangeDetectorRef
+    private changeDetectorRef:ChangeDetectorRef,
+    private callfunc: CallFuncService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -68,20 +71,27 @@ export class UserComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-        // this.show();
+         this.add();
         break;
       case 'edit':
-        // this.edit(data);
+         this.edit(data);
         break;
       case 'delete':
-        // this.delete(data);
+         this.delete(data);
         break;
     }
   }
 
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 500, '', item);
+    this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 400, '', item);
     this.dialog.closed.subscribe(e => {
       console.log(e);
     })
@@ -95,4 +105,55 @@ export class UserComponent extends UIComponent {
     
     return desc + '</div>';
   }
+
+  add() {
+    this.view.dataService.addNew(0).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px'; // s k thấy gửi từ ben đây,
+      this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
+
+    });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
+    });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+  };
+
+  //#region Functions
+  changeView(evt: any) {
+    console.log('evt: ', evt);
+    var t = this;
+  }
+
+
+  selectedChange(val: any) {
+    console.log(val);
+    this.itemSelected = val.data;
+    this.dt.detectChanges();
+  }
+
+  readMore(dataItem) {
+    dataItem.disableReadmore = !dataItem.disableReadmore;
+    this.dt.detectChanges();
+    //this.tableView.addHandler(dataItem, false, "taskGroupID");
+  }
+  //#endregion
+
+  
 }

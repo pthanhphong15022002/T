@@ -1,34 +1,59 @@
 <codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
   method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
-  [moreFuncs]="moreFuncs">
+  [moreFuncs]="moreFuncs" (buttonClick)="click($event)"  (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 <ng-template #titleTmp let-data>
-  <div class="font-weight-bold">
+  <div class="font-weight-bold rowphoto">
     {{data.userName}}
   </div>
-  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap margin  icon-account_box"
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap rowphoto  icon-account_box"
     *ngIf="data.employeeID">
     {{data.employeeID}}</div>
-  <div class="text-dark-75 font-weight-bold text-muted icon-account_box margin" *ngIf="!data.employeeID">
+  <div class="text-dark-75 font-weight-bold text-muted icon-account_box rowphoto" *ngIf="!data.employeeID">
     <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
     </codx-label>
   </div>
-  <div class="text-dark-75 font-weight-bold margin icon-group" *ngIf="data.userGroup">
+  <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.userGroup">
     {{data.userGroup}}
   </div>
-
+  <div class="rowphoto" *ngIf="data.chooseRoles.length <= 5">
+    <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+        <a (click)="openPopup(data)">
+          <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+        </a>
+    </ng-container>
+     
+    <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+      [numberImages]="5" (click)="openPopup(data)">
+    </codx-imgs> -->
+</div>
+<div class="rowphoto" *ngIf="data.chooseRoles.length > 5">
+  <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+      <span class="symbol-label fs-4" (click)="openPopup(data)">
+        <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+      </span>
+  </ng-container>
+   
+  <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+    [numberImages]="5" (click)="openPopup(data)">
+  </codx-imgs> -->
+</div>
 </ng-template>
+<ng-template #footer let-data>
+  <div>
+    <span class="font-size-sm icon-email" *ngIf="data.email">{{data.email}}
+    </span>
+    <span class="font-size-sm icon-phone_android" *ngIf="data.mobile">{{data.mobile}}</span>
+  </div>
+</ng-template>
+
 <ng-template #itemTemplate let-data>
-  
-  <table style="width: 100%;">
-    <tr>
-      <td class="w-300 mw-700px " style="width: 60%;">
-        <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-          [imageId]="data.userID" imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [formModel]="view.formModel"
-          [dataItem]="data">
-        </codx-temp-full>
-        <!-- <div class="d-flex align-items-top">
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+    [imageId]="data.userID" imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)"
+    [formModel]="view.formModel" [dataItem]="data" [footer]="footer">
+  </codx-temp-full>
+  <!-- <div class="d-flex align-items-top">
           <div class="d-flex align-items-start">
             <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.userID" objectType="AD_Users"
               [objectName]="data.userName">
@@ -63,24 +88,5 @@
             </div>
           </div>
         </div> -->
-      </td>
-      <td class="w-200 col-lg-6" style="width: 30%;">
-        <div>
-          <!-- <ng-container *ngFor="let item of data.resource.split(';'); index as num">
-            <img class="w-40px" src="../../../{{ item}}" alt="" (click)="openPopup(data)" />
-          </ng-container> -->
-          <codx-imgs class="symbol symbol-30px symbol-circle ms-1" objectType="AD_Users"
-            [numberImages]="5" (click)="openPopup(data)" inlineSVG="../../../{{ data.resource}}">
-          </codx-imgs>
-        </div>
-      </td>
-      <td style="width: 10%">
-        <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-          (clickMF)="clickMF($event,data)">
-        </codx-mfunc>
-      </td>
-    </tr>
-
-  </table>
 
 </ng-template>
