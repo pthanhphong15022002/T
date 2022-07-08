@@ -24,6 +24,24 @@
 <ng-template #tab let-name>
   <ng-container *ngIf="name.toLowerCase() == 'attachment'">
     <ng-container>
+      <codx-attachment
+        #attachment
+        [objectType]="entityName"
+        [objectId]="objectID"
+        [hideFolder]="1"
+        [hideUploadBtn]="0"
+        [hideDes]="hideFolder"
+        [type]="type"
+        [allowExtensions]="allowExtensions"
+        [allowMultiFile]="allowMultiFile"
+        [formModel]="formModel"
+        [functionID]="funcID"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        [displayThumb]="displayThumb"
+      >
+      </codx-attachment>
+
       <div class="tab-att">
         <div class="tab_container">
           <div class="tab_body">

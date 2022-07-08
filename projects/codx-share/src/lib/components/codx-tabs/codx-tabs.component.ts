@@ -14,10 +14,18 @@ import { TabModel } from './model/tabControl.model';
 })
 export class CodxTabsComponent implements OnInit {
   @Input() active = 1;
+  @Input() funcID!: string;
   @Input() entityName!: string;
   @Input() objectID!: any;
+  @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
-  private all = ['attachment', 'history', 'comment', 'reference', 'approve'];
+  //Attachment
+  @Input() hideFolder: string = '1';
+  @Input() type: string = 'inline';
+  @Input() allowExtensions: string = '.jpg,.png';
+  @Input() allowMultiFile: string = '1';
+  @Input() displayThumb: string = 'full';
+  private all = ['Attachment', 'History', 'Comment', 'Reference', 'Approve'];
   constructor(
     injector: Injector,
     private changeDetectorRef: ChangeDetectorRef
@@ -38,5 +46,13 @@ export class CodxTabsComponent implements OnInit {
       );
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  fileAdded(e: any) {
+    console.log(e);
+  }
+
+  getfileCount(e: any) {
+    console.log(e);
   }
 }

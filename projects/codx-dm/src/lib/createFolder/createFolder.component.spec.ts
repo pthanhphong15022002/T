@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateFolderComponent } from './createFolder.component';
 
-describe('CardComponent', () => {
+describe('CreateFolderComponent', () => {
   let component: CreateFolderComponent;
   let fixture: ComponentFixture<CreateFolderComponent>;
 

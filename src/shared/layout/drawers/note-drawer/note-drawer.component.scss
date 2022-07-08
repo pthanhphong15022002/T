@@ -7,3 +7,11 @@
     padding-left: 20px;
     padding-right: 20px;
 }
+
+.active [class*="icon-"] {
+    color: var(--primary-dark);
+}
+
+.btn-add {
+    margin-left: 91%;
+}

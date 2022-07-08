@@ -92,15 +92,41 @@
       <div class="d-flex">
         <!-- <span>Số BHXH:</span> -->
         <span class="text-dark font-weight-bold mr-1">
-          <codx-label fiedName="siRegisterOn" formName="Employees" gridViewName="grvEmployees" default="Số BHXH: ">
+          <codx-label fiedName="birthday" formName="Employees" gridViewName="grvEmployees" default="Ngày sinh ">
           </codx-label>
         </span>
-        <span class="navi-text font-size-lg">{{dataEmployee.employeeInfo.siRegisterOn}}</span>
+        <span>{{dataEmployee.employeeInfo.birthday | date: "dd/mm/yyyy"}}, </span>
+
+        <span class="text-dark font-weight-bold mr-1">
+          <codx-label fiedName="birthPlaceName" formName="Employees" gridViewName="grvEmployees" default="tại ">
+          </codx-label>
+          <span>{{dataEmployee.employeeInfo.birthPlaceName}}, </span>
+        </span>
+        <span class="text-dark font-weight-bold mr-1">
+          <codx-label fiedName="gender" formName="Employees" gridViewName="grvEmployees" default="Giới tính ">
+          </codx-label>
+        </span>
+        <span>{{dataEmployee.employeeInfo.gender}}, </span>
+        <span>
+          <codx-label fiedName="maritalStatus" formName="Employees" gridViewName="grvEmployees"></codx-label>
+        </span>
+        <span>{{dataEmployee.employeeInfo.maritalStatus}}</span>
       </div>
 
-
-      <div>
-        <h4>Thông tin cá nhân</h4>
+      <div class="mb-3">
+        <codx-label fiedName="address" formName="Employees" gridViewName="grvEmployees"></codx-label>
+        <span>{{dataEmployee.employeeInfo.address}}</span>
+        <codx-label fiedName="personalEmail" formName="Employees" gridViewName="grvEmployees"></codx-label>
+        <span>{{dataEmployee.employeeInfo.personalEmail}}</span>
+      </div>
+      <div class="mb-3">
+        <codx-label fiedName="phone" formName="Employees" gridViewName="grvEmployees"></codx-label>
+        <span>{{dataEmployee.employeeInfo.phone}}</span>
+      </div>
+      <div class="mb-3">
+        <codx-label fiedName="education" formName="Employees" gridViewName="grvEmployees" default="Trình độ văn hóa ">
+        </codx-label>
+        <span>{{dataEmployee.employeeInfo.education}}</span>
       </div>
       <!-- <div class="row">
         <div class="col"> -->

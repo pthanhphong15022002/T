@@ -1,4 +1,4 @@
-import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 
@@ -9,105 +9,81 @@ import { Notes } from '@shared/models/notes.model';
 })
 export class UpdateNotePinComponent implements OnInit {
 
-  @Input() dataAdd = new Notes();
-  @Input() dataUpdate = new Notes();
-  messageOld: any;
-  listNoteOld: any[] = [];
+
   type: any;
-  isCalendarOld: any;
-  itemUpdate: any;
-  recID: any;
-  recIdOld: any;
-  isPinOld: any;
-  lstview: any;
+  itemUpdate: Notes = new Notes();
   header = 'Cập nhật ghi chú ghim';
   dialog: any;
   readOnly = false;
+  checkEditIsPin = false;
+  data: any = [];
+  dataOld: any;
 
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
+    private notificationsService: NotificationsService,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef,
-  ) { 
+  ) {
     this.dialog = dt;
-    this.lstview = data.data?.lstview;
-    this.itemUpdate = data.data?.data;
-    this.recID = data.data?.recID;
+    this.itemUpdate = data.data?.itemUpdate;
+    this.data = data.data?.data;
   }
 
   ngOnInit(): void {
   }
 
-  valueChange(e, recID = null, item = null) {
-    var field = e.field;
-    if (field == "checkboxUpdateNotePin") {
-      this.messageOld = item.memo;
-      this.listNoteOld = item.checkList;
-      this.isPinOld = !item.isPin;
-      this.isCalendarOld = item.showCalendar;
-      this.recIdOld = recID;
-      this.onEditIsPin();
-    }
-  }
-
-  valueProperty(e) {
-    let i = 0;
-    var date;
-    var arr = [];
-    let countNote = 0;
-    let countLstNotePin = 0;
-    for (i; i < e.datas.length; i++) {
-      date = e.datas[i].createdOn;
-      var dateParse = new Date(Date.parse(date));
-      arr.push(dateParse);
-      countLstNotePin++;
-      if (e.datas[i].isPin == true) {
-        countNote++;
+  valueChange(e, item = null) {
+    if (e) {
+      var field = e.field;
+      var dt = e.data;
+      if (field == "checkboxUpdateNotePin") {
+        if (dt == true || dt == '1') {
+          this.checkEditIsPin = true;
+          this.dataOld = item;
+        }
       }
     }
-    console.log("CHECK valueProperty", e)
   }
 
   onEditIsPin() {
-    if (this.type == "check" || this.type == "list") {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNoteOld;
-
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.messageOld
-    }
-    this.dataAdd.isPin = this.isPinOld;
-    this.dataAdd.showCalendar = this.isCalendarOld;
+    var isPin = !this.dataOld.isPin;
+    this.dataOld.isPin = isPin;
     this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recIdOld, this.dataAdd])
+      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.dataOld.recID, this.dataOld])
       .subscribe((res) => {
-        console.log("CHECK onEditIsPin", res);
-        this.changeDetectorRef.detectChanges();
+        for (let i = 0; i < this.data.length; i++) {
+          if (this.data[i].recID == this.dataOld?.recID) {
+            this.data[i].isPin = res?.isPin;
+          }
+        }
       });
   }
 
   onEditNote() {
-    if (this.itemUpdate.noteType == "check" || this.itemUpdate.noteType == "list") {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.itemUpdate.checkList;
+    if (this.checkEditIsPin == true) {
+      this.onEditIsPin();
 
+      var isPin = !this.itemUpdate.isPin;
+      this.itemUpdate.isPin = isPin;
+      this.api
+        .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.itemUpdate?.recID, this.itemUpdate])
+        .subscribe((res) => {
+          this.dialog.close();
+          this.notificationsService.notify(
+            'Thực thi thành công',
+            'error',
+            2000
+          );
+          this.changeDetectorRef.detectChanges();
+        });
     } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.itemUpdate.memo
+      this.notificationsService.notify(
+        'Vui lòng chọn ghi chú thay thế',
+        'error',
+        2000
+      );
     }
-    this.dataAdd.isPin = this.itemUpdate.isPin;
-    this.dataAdd.showCalendar = this.itemUpdate.showCalendar;
-    this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recID, this.dataAdd])
-      .subscribe((res) => {
-        this.changeDetectorRef.detectChanges();
-      });
-  }
-
-  testload(dt){
-   console.log(dt);
   }
 }

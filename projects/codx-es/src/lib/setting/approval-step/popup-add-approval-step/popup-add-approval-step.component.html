@@ -24,11 +24,11 @@
                           (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.stepType">
                         </codx-input>
                       </div>
-                      <div class="col-5">
+                      <div class="col-4">
                         <codx-label default="Thời gian xử lí (giờ)" fiedName="Leadtime" [formModel]="formModel">
                         </codx-label>
-                        <codx-input type="number" name="number" field="leadtime" [min]="0" placeholder="0"
-                          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.leadtime">
+                        <codx-input type="text" ControlName="leadtime" placeholder="0" [Group]="dialogApprovalStep"
+                          (valueChange)="valueChange($event)" [crrValue]="parseInt(dialogApprovalStep.value.leadtime)">
                         </codx-input>
                       </div>
                     </div>
@@ -54,7 +54,7 @@
                           [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
                           [resourceObjType]="'AD_Users'" [icoStatus]="lstStep?.urgency" [icoStatusVll]="'referedValue'"
                           [icoStatus2]="lstStep?.security" [icoStatusVll2]="'referedValue'" [modeImgs]="false"
-                          [titleLine]="3">
+                          [titleLine]="3" [formModel]="formModel">
                         </codx-temp-full>
                       </div>
                     </ng-container>
@@ -124,7 +124,7 @@
 
                   </div>
 
-                  <div class="d-flex align-items-center mb-4">
+                  <!-- <div class="d-flex align-items-center mb-4">
                     <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
                       data-bs-original-title="Trần Quốc Hoàn">
                       <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
@@ -173,7 +173,7 @@
                         Tham dự
                       </a>
                     </div>
-                  </div>
+                  </div> -->
 
                 </div>
               </div>
