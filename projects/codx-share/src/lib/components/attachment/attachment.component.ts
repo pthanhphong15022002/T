@@ -996,7 +996,7 @@ export class AttachmentComponent implements OnInit {
         {        
           fileUpload.avatar = data;
         }
-        else fileUpload.avatar = `../../../assets/demos/dms/${this.getAvatar(fileUpload.fileName)}`;
+        else fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(fileUpload.fileName)}`;
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();

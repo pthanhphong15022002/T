@@ -1,1 +1,27 @@
-<p>add-user works!</p>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template #body>
+    <ejs-tab headerPlacement="Left">
+      <e-tabitems>
+        <ng-template #headerText class="">
+          <div class="nav-item  mb-2">
+            <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
+              <span class="icon-info icon-24 me-2"></span>
+              <span class="d-flex flex-column align-items-start">
+                <span class="fw-bolder">
+                  <codx-label name="GeneralInformation" formName="Users" default="Thông tin chung">
+                  </codx-label>
+                </span>
+                <span class="fs-7 text-gray-500  ">Thông tin chung</span>
+              </span>
+            </a>
+          </div>
+        </ng-template>
+        <ng-template #content class="ms-10">
+        </ng-template>
+      </e-tabitems>
+    </ejs-tab>
+  </ng-template>
+
+  <ng-template #footer></ng-template>
+
+</codx-form>
