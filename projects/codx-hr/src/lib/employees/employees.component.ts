@@ -166,10 +166,10 @@ export class EmployeesComponent implements OnInit {
         this.add();
         break;
       case 'edit':
-        this.copy(data);
-        break;
-      case 'edit':
         this.edit(data);
+        break;
+      case 'copy':
+        this.copy(data);
         break;
       case 'delete':
         // this.delete(data);
