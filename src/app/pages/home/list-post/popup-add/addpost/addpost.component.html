@@ -28,11 +28,7 @@
                     </ng-container>
                     <div class="d-flex align-items-center justify-content-start user-square">
                         <div class="me-2">
-                            <codx-input
-                                type="Share"
-                                refValue="L1901"
-                                [showInput]="false"
-                                [multiple]="true"
+                            <codx-input type="Share" refValue="L1901" [showInput]="false" [multiple]="true"
                                 (valueChange)="eventApply($event)">
                             </codx-input>
                         </div>
@@ -47,18 +43,9 @@
                     ngDefaultControl>
                 </codx-input>
                 <div class="" style="display:none;">
-                    <codx-attachment  
-                        #attachment  
-                        objectType="WP_Comments"   
-                        hideFolder="1"  
-                        hideUploadBtn="1"   
-                        hideDes="1" 
-                        type="inline"
-                        allowExtensions=".jpg,.png" 
-                        allowMultiFile="1" 
-                        (fileCount)="getfileCount($event)"
-                        [functionID]="dialogRef.formModel.funcID" 
-                        > 
+                    <codx-attachment #attachment objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
+                        type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfileCount($event)"
+                        [functionID]="dialogRef.formModel.funcID">
                     </codx-attachment>
                 </div>
                 <ng-container *ngIf="isUploadFile">
@@ -113,7 +100,8 @@
                     <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
                         <i class="icon-local_offer icon-30 text-primary"></i>
                     </button>
-                    <button (click)="openFile()" type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
+                    <button (click)="openFile()" type="button" data-toggle="tooltip"
+                        class="btn btn-icon btn-md ml-2 ng-star-inserted">
                         <i class="icon-photo icon-30 text-success"></i>
                     </button>
                 </div>
@@ -121,12 +109,8 @@
         </div>
         <ng-container *ngIf="showEmojiPicker">
             <div class="emoji">
-                <emoji-mart class="emoji-mart"  
-                [showSingleCategory]="true" 
-                [showPreview]="false" [set]="set"
-                [perLine]="7"
-                (emojiSelect)="addEmoji($event)"
-                ></emoji-mart>
+                <emoji-mart class="emoji-mart" [showSingleCategory]="true" [showPreview]="false" [set]="set"
+                    [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
             </div>
         </ng-container>
         <ng-template #containTemplate let-item>
@@ -196,6 +180,24 @@
         </ng-template>
     </ng-template>
     <ng-template #footer>
+        <!-- <div class="my-3 d-flex justify-content-between align-items-center body-function">
+            <div class="text-dark-50 fw-bold">
+                <codx-label formName="" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
+            </div>
+            <div>
+                <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
+                    class="btn btn-icon btn-md ml-2 btn-emoji">
+                    <i class="icon-tag_faces icon-30 text-warning"></i>
+                </button>
+                <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
+                    <i class="icon-local_offer icon-30 text-primary"></i>
+                </button>
+                <button (click)="openFile()" type="button" data-toggle="tooltip"
+                    class="btn btn-icon btn-md ml-2 ng-star-inserted">
+                    <i class="icon-photo icon-30 text-success"></i>
+                </button>
+            </div>
+        </div> -->
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-primary btn-post" (click)="Submit()">
                 <codx-label formName="WP_Comments" name="lblSubmit" default="Đăng"></codx-label>
