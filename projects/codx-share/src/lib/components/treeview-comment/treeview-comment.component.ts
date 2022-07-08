@@ -23,6 +23,7 @@ import { ApiHttpService, CacheService, CallFuncService, NotificationsService } f
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() rootData: any;
+  @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
   crrId = '';
   checkValueInput = false;
@@ -67,10 +68,13 @@ export class TreeviewCommentComponent implements OnInit {
   showVotes(content:any, postID:string) {
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",postID)
     .subscribe((res:any[]) => {
-      this.votes = Object.keys(res[0]);
-      this.lstUserVote = res[1];
-      this.dt.detectChanges();
-      this.callFuc.openForm(content,"",600,600)
+      if(res)
+      {
+        this.votes = res[0];
+        this.lstUserVote = res[1];
+        this.dt.detectChanges();
+        this.callFuc.openForm(content,"",600,600)
+      }
     })
   }
 
@@ -192,18 +196,18 @@ export class TreeviewCommentComponent implements OnInit {
     .subscribe((res:any) => {
       if(res)
       {
-        this.rootData.votes = res[0];
-        this.rootData.totalVote = res[1];
-        this.rootData.listVoteType = res[2];
+        data.votes = res[0];
+        data.totalVote = res[1];
+        data.listVoteType = res[2];
         if(voteType == data.myVotedType)
         {
-            this.rootData.myVotedType = null;
-            this.rootData.myVoted = false;
-            this.checkVoted = false;
+          data.myVotedType = null;
+          data.myVoted = false;
+          this.checkVoted = false;
         }
         else{
-          this.rootData.myVotedType = voteType;
-          this.rootData.myVoted = true;
+          data.myVotedType = voteType;
+          data.myVoted = true;
           this.checkVoted = true;
         }
         this.dt.detectChanges();
@@ -414,7 +418,12 @@ export class TreeviewCommentComponent implements OnInit {
           }
         });
       }
-      if (idx == -1) dataNode.listComment.push(newNode);
+      if (idx == -1){
+        if(dataNode.length == 0)
+          dataNode.push(newNode);
+        else
+        dataNode.listComment.push(newNode);
+      }
       else {
         var obj = dataNode[idx];
         newNode.listComment = obj.listComment;
@@ -444,5 +453,23 @@ export class TreeviewCommentComponent implements OnInit {
       delete this.dicDatas[id];
     }
     this.dt.detectChanges();
+  }
+
+
+  deleteComment(comment:any){
+    if(!comment) return;
+    else{
+      this.api.execSv("WP","ERM.Business.WP","CommentBusiness","DeletePostAsync",comment)
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.removeNodeTree(comment.recID);
+          this.notifySvr.notifyCode('E0026');
+        }
+      })
+    }
+  }
+  editComment(comment:any){
+
   }
 }

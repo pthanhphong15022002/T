@@ -5,7 +5,7 @@
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
+  <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
 
