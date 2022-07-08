@@ -443,10 +443,21 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
     this.isUploadFile = true;
     this.attachment.uploadFile();
   }
-
-  getfileCount(data:any){
-    console.log('getfileCount',data);
-
+  fileAdded(event){
+    console.log(event)
   }
+  listImgUpload:any[] = null;
+
+  getfileCount(event:any){
+    if(!event || !event.data){
+      this.isUploadFile = false;
+      return;
+    }
+    this.isUploadFile = true;
+    this.listImgUpload = event.data;
+    this.dt.detectChanges();
+  }
+
+
 
 }

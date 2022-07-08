@@ -109,8 +109,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) =>{
       this.cache.gridViewSetup(func.formName,func.gridViewName)
       .subscribe((grd:any) => {
-      this.headerText = grd['Comments']['headerText'];
-      this.dt.detectChanges();
+        console.log(grd);
+        this.headerText = grd['Comments']['headerText'];
+        this.dt.detectChanges();
       })
     })
 
