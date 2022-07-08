@@ -199,8 +199,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    option.Resizeable = true;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 600,600, "", obj, '', option);
+    // option.Resizeable = true;
+    this.modal = this.callfc.openForm(AddPostComponent, "", 600,420, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
