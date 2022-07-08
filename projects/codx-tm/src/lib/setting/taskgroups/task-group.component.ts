@@ -191,7 +191,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px'; // s k thấy gửi từ ben đây,
+      option.Width = '550px'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
 
     });
@@ -205,7 +205,7 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
     });
   }
