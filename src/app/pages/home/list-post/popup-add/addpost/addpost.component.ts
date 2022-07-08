@@ -302,6 +302,9 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   recevierID:string;
   recevierName:string;
   eventApply(event:any){
+    if(!event || !event.data){
+      return;
+    }
     if (this.dataPost.status == "edit"){
       this.isEdit = true;
     }
@@ -446,7 +449,7 @@ export class AddPostComponent  implements OnInit,AfterViewInit {
   fileAdded(event){
     console.log(event)
   }
-  listImgUpload:any[] = null;
+  listImgUpload:any[] = [];
 
   getfileCount(event:any){
     if(!event || !event.data){

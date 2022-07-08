@@ -61,14 +61,8 @@
                         > 
                     </codx-attachment>
                 </div>
-                <ng-container *ngIf="isUploadFile">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <ng-container *ngFor="let img of listImgUpload">
-                            <div class="img-upload">
-                                <img [src]="img.avatar" [width]="100" [height]="100" alt="">
-                           </div>
-                        </ng-container>
-                    </div>
+                <ng-container *ngIf="isUploadFile && listImgUpload.length > 0">
+                    <codx-image-grid [images]="listImgUpload"></codx-image-grid>
                 </ng-container>
             </div>
             <ng-container *ngIf="dataEdit?.recID">

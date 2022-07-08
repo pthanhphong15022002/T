@@ -1,17 +1,15 @@
 <ng-container *ngIf="images.length">
-  <ng-container>
+  <ng-container [ngSwitch]="images.length">
     <ng-container *ngSwitchCase="1">
       <div class="row row-custom feed-1pic">
         <div class="col-xl-12">
-          <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <div (click)="openDetail(0)"
-              class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
-              [style.background-image]="images[0].fileName">
-            </div>
+          <ng-container *ngIf="images[0] ;else else0">
+            <img class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
+              [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
-            <video #video controls class="w-100" (click)="openDetail(0)">
-              <source [src]="images[0].fileName" type="video/mp4">
+            <video #video controls class="w-100">
+              <!-- <source [src]="images[0].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
         </div>
@@ -20,28 +18,26 @@
     <ng-container *ngSwitchCase="2">
       <div class="row row-custom feed-2pic">
         <div class="col-xl-7 pr-1">
-          <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <div (click)="openDetail(0)"
+          <ng-container *ngIf="images[0];else else0">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
-              [style.background-image]="images[0].fileName">
-            </div>
+              [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100" (click)="openDetail(0)">
-              <source [src]="images[0].fileName">
+              <!-- <source [src]="images[0].avatar"> -->
             </video>
           </ng-template>
         </div>
         <div class="col-xl-5 pl-0">
-          <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
-            <div (click)="openDetail(1)"
+          <ng-container *ngIf="images[1];else else1">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-275px"
-              [style.background-image]="images[1].fileName">
-            </div>
+              [src]="images[1].avaar"/>
           </ng-container>
           <ng-template #else1>
-            <video #video controls class="w-100" (click)="openDetail(1)">
-              <source [src]="images[1].fileName">
+            <video #video controls class="w-100">
+              <source>
             </video>
           </ng-template>
         </div>
@@ -50,39 +46,36 @@
     <ng-container *ngSwitchCase="3">
       <div class="row row-custom feed-3pic">
         <div class="col-xl-7 pr-1">
-          <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <div (click)="openDetail(0)"
+          <ng-container *ngIf="images[0];else else0">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-320px"
-              [style.background-image]="images[0].fileName">
-            </div>
+              [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100">
-              <source (click)="openDetail(0)" [src]="images[0].fileName" type="video/mp4">
+              <!-- <source [src]="images[0].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
         </div>
         <div class="col-xl-5 pl-0">
-          <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
-            <div (click)="openDetail(1)"
+          <ng-container *ngIf="images[1];else else1">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-155px"
-              [style.background-image]="images[1].fileName">
-            </div>
+              [src]="images[1].avatar"/>
           </ng-container>
           <ng-template #else1>
-            <video (click)="openDetail(1)" #video controls class="w-100">
-              <source [src]="images[1].fileName" type="video/mp4">
+            <video #video controls class="w-100">
+              <!-- <source [src]="images[1].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images[2] && images[2].category == '9';else else2">
-            <div (click)="openDetail(2)"
+          <ng-container *ngIf="images[2];else else2">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-155px mt-1"
-              [style.background-image]="images[2].fileName">
-            </div>
+              [src]="images[2].avatar"/>
           </ng-container>
           <ng-template #else2>
-            <video (click)="openDetail(2)" #video controls class="w-100 mt-1">
-              <source [src]="images[2].fileName" type="video/mp4">
+            <video #video controls class="w-100 mt-1">
+              <!-- <source [src]="images[2].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
         </div>
@@ -92,53 +85,49 @@
       <div class="row row-custom feed-4pic">
         <div class="col-xl-5 pr-1">
           <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <div (click)="openDetail(0)"
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-340px"
-              [style.background-image]="images[0].fileName">
-            </div>
+              [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
-            <video (click)="openDetail(0)" #video controls class="w-100">
-              <source [src]="images[0].fileName" type="video/mp4">
+            <video #video controls class="w-100">
+              <!-- <source [src]="images[0].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
         </div>
         <div class="col-xl-7 pl-0">
           <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
-            <div (click)="openDetail(1)"
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-              [style.background-image]="images[1].fileName">
-            </div>
+              [src]="images[1].avatar"/>
           </ng-container>
           <ng-template #else1>
             <video (click)="openDetail(1)" #video controls class="w-100">
-              <source [src]="images[1].fileName" type="video/mp4">
+              <!-- <source [src]="images[1].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
           <div class="row row-custom mt-1">
             <div class="col-xl-6 pr-1">
-              <ng-container *ngIf="images[2] && images[2].category == '9';else else2">
-                <div (click)="openDetail(2)"
+              <ng-container *ngIf="images[2];else else2">
+                <img
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-                  [style.background-image]="images[2].fileName">
-                </div>
+                  [src]="images[2].avatar"/>
               </ng-container>
               <ng-template #else2>
-                <video (click)="openDetail(2)" #video controls class="w-100">
-                  <source [src]="images[2].fileName" type="video/mp4">
+                <video  #video controls class="w-100">
+                  <!-- <source [src]="images[2].avatar" type="video/mp4"> -->
                 </video>
               </ng-template>
             </div>
             <div class="col-xl-6 pl-0">
-              <ng-container *ngIf="images[3] && images[3].category == '9';else else3">
-                <div (click)="openDetail(3)"
+              <ng-container *ngIf="images[3] ;else else3">
+                <img
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-                  [style.background-image]="images[3].fileName">
-                </div>
+                  [src]="images[3].avatar"/>
               </ng-container>
               <ng-template #else3>
-                <video (click)="openDetail(3)" #video controls class="w-100">
-                  <source [src]="images[3].fileName" type="video/mp4">
+                <video #video controls class="w-100">
+                  <!-- <source [src]="images[3].avatar" type="video/mp4"> -->
                 </video>
               </ng-template>
             </div>
@@ -149,76 +138,70 @@
     <ng-container *ngSwitchDefault>
       <div class="row row-custom feed-5pic">
         <div class="col-xl-7 pr-1">
-          <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
-            <div (click)="openDetail(0)"
+          <ng-container *ngIf="images[0];else else0">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-              [style.background-image]="images[0].fileName">
-            </div>
+              [src]="images[0].avatar"/>
           </ng-container>
           <ng-template #else0>
-            <video (click)="openDetail(0)" #video controls class="w-100">
-              <source [src]="images[0].fileName" type="video/mp4">
+            <video #video controls class="w-100">
+              <!-- <source [src]="images[0].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
           <div class="row row-custom mt-1">
             <div class="col-xl-6 pr-1">
-              <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
-                <div (click)="openDetail(1)"
+              <ng-container *ngIf="images[1];else else1">
+                <img
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-                  [style.background-image]="images[1].fileName">
-                </div>
+                  [src]="images[1].avatar"/>
               </ng-container>
               <ng-template #else1>
-                <video (click)="openDetail(1)" #video controls class="w-100">
-                  <source [src]="images[1].fileName" type="video/mp4">
+                <video #video controls class="w-100">
+                  <!-- <source [src]="images[1].avatar" type="video/mp4"> -->
                 </video>
               </ng-template>
             </div>
             <div class="col-xl-6 pl-0">
-              <ng-container *ngIf="images[2] && images[2].category == '9';else else2">
-                <div (click)="openDetail(2)"
+              <ng-container *ngIf="images[2] ;else else2">
+                <img
                   class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-                  [style.background-image]="images[2].fileName">
-                </div>
+                  [src]="images[2].avatar"/>
               </ng-container>
               <ng-template #else2>
-                <video (click)="openDetail(2)" #video controls class="w-100">
-                  <source [src]="images[2].fileName" type="video/mp4">
+                <video  #video controls class="w-100">
+                  <!-- <source [src]="images[2].avatar" type="video/mp4"> -->
                 </video>
               </ng-template>
             </div>
           </div>
         </div>
         <div class="col-xl-5 pl-0">
-          <ng-container *ngIf="images[3] && images[3].category == '9';else else3">
-            <div (click)="openDetail(3)"
+          <ng-container *ngIf="images[3] ;else else3">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-              [style.background-image]="images[3].fileName">
-            </div>
+              [src]="images[3].avatar"/>
           </ng-container>
           <ng-template #else3>
-            <video (click)="openDetail(3)" #video controls class="w-100">
-              <source [src]="images[3].fileName" type="video/mp4">
+            <video  #video controls class="w-100">
+              <!-- <source [src]="images[3].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images[4] && images[4].category == '9';else else4">
-            <div (click)="openDetail(4)"
+          <ng-container *ngIf="images[4] ;else else4">
+            <img
               class="bgi-no-repeat bgi-size-cover bgi-position-x-center bgi-position-y-center rounded min-h-165px"
-              [style.background-image]="images[4].fileName">
-            </div>
+              [src]="images[4].avatar"/>
           </ng-container>
           <ng-template #else4>
-            <video (click)="openDetail(4)" #video controls class="w-100">
-              <source [src]="images[4].fileName" type="video/mp4">
+            <video #video controls class="w-100">
+              <!-- <source [src]="images[4].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
           <ng-container *ngIf="images.length - 5 > 0">
-            <div (click)="openDetail(0)" class="overlay-wrapper-opacity feed-img-more">
+            <div class="overlay-wrapper-opacity feed-img-more">
               <span class="text-number">+ {{images.length - 5}}</span>
             </div>
           </ng-container>
         </div>
-
       </div>
     </ng-container>
   </ng-container>
