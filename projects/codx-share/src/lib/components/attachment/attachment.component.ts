@@ -67,6 +67,7 @@ export class AttachmentComponent implements OnInit {
   @Input() folderType: string;
   @Input() functionID: string;
   @Input() type: string;
+  @Input() idBrowse = "browse";
   @Input() popup = "1";
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
@@ -133,22 +134,33 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != "" && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
-        if (res?.result) {
-          this.data = res.result;
+        if (res) {
+          this.data = res;
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
       })
     };
 
-    if (document.getElementById('browse') != null) {
-      document.getElementById('browse').onclick = () => {
+    if (document.getElementById(this.idBrowse) != null) {     
+      var list = document.getElementsByName('UploadFiles');
+      if (list?.length > 0) {
+        for(var i=0; i<list.length; i++) {
+          if (document.getElementsByName('UploadFiles')[i].getAttribute("idbutton") == null)
+          {
+            document.getElementsByName('UploadFiles')[i].setAttribute("idbutton", this.idBrowse);
+            break;
+          }            
+        }        
+      }
+      
+      document.getElementById(this.idBrowse).onclick = () => {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       };
 
       this.dropElement = document.querySelector('#dropArea') as HTMLElement;
-      document.getElementById('browse').onclick = function () {
+      document.getElementById(this.idBrowse).onclick = function () {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       }
@@ -832,10 +844,11 @@ export class AttachmentComponent implements OnInit {
   } 
  
 
-  uploadFile() {
-    document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
-    // document.getElementById('browse').click();
-    //this.file.nativeElement.click();
+  uploadFile() {    
+    console.log(this.uploadObj);
+    var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    if (ctrl != null)
+      ctrl.click();    
   }
 
   async handleFileInput1(files: FileList) {
@@ -981,9 +994,10 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.fileUploadList.length;
+    //var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
+    var addedList = [];
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
@@ -996,7 +1010,7 @@ export class AttachmentComponent implements OnInit {
         {        
           fileUpload.avatar = data;
         }
-        else fileUpload.avatar = `../../../assets/demos/dms/${this.getAvatar(fileUpload.fileName)}`;
+        else fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(fileUpload.fileName)}`;
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
@@ -1019,11 +1033,14 @@ export class AttachmentComponent implements OnInit {
         // if (this.remote) {
         //   fileUpload.permissions = this.remotePermission;
         // }
+        addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
-    this.fileCount.emit(files.length);
+    //   this.fileAdded.emit({ data: this.fileUploadList });
+  //  this.fileCount.emit(data: addedList);
+     this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

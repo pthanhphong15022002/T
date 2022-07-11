@@ -5,7 +5,7 @@
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
+  <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
 
@@ -16,7 +16,7 @@
     [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
     [title]="data.userName" [desc2]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn"
-    [resources]="data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel">
+    [resources]="(data.category=='1'|| data.category=='2') ?data.owner :data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel">
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
   </codx-temp-full>
 </ng-template>
@@ -26,8 +26,9 @@
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" icoSubTitleCss="icon-flag"
     [subTitle]="data.positionName" [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614"
     [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel"
-    [setting]="setting" [footer]="cardImgFooter">
+    [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
+  
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">

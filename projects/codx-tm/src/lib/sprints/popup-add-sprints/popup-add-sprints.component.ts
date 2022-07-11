@@ -176,11 +176,10 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   openInfo(interationID, action) {
-    this.taskBoard = new TM_Sprints();
+    // this.taskBoard = new TM_Sprints();
 
-    this.readOnly = action === 'edit' ? false : true;
-    this.title =
-      action === 'edit' ? 'Chỉnh sửa task board' : 'Xem chi tiết task board';
+    this.readOnly = false 
+    this.title ='Chỉnh sửa task board' ;
       this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
         this.taskBoard = res;
@@ -195,7 +194,6 @@ export class PopupAddSprintsComponent implements OnInit {
     this.title = 'Copy task boads';
     this.readOnly = false;
     this.listUserDetail = [];
-    this.taskBoard = new TM_Sprints();
     this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
         this.taskBoard.projectID = res.projectID;
@@ -215,37 +213,61 @@ export class PopupAddSprintsComponent implements OnInit {
     }
   }
 
-  //caí này chạy tạm đã
   eventApply(e: any) {
     var resources = '';
-    var i = 0;
-    e.forEach((obj) => {
-      if (obj?.data && obj?.data != '') {
+    var listDepartmentID = '';
+    var listUserID = '';
+
+    e?.data?.forEach((obj) => {
+     // if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
-            resources += obj?.data;
-            this.valueSelectUser(resources);
+            listUserID += obj.id+';';
             break;
-          // case 'D':
-          //   //chưa chạy xong câu lệnh này đã view ra...
-          //   const t = this;
-          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
-          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
-          //     if (res) {
-          //       assignTo += res + ";";
-          //       this.valueSelectUser(assignTo)
-          //     }
-          //   })
-          //   break;
+          case 'D':
+            listDepartmentID += obj.id+";";
+            break;
         }
-      }
+    //  }
     });
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          resources += res;
+          if (listUserID != '') resources += ';' + listUserID;
+          this.valueSelectUser(resources);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
   }
+
   valueSelectUser(resources) {
     if (resources != '') {
-      resources = resources.substring(0, resources.length - 1);
-      this.getListUser(resources);
-      this.changeDetectorRef.detectChanges();
+      if (this.taskBoard.resources && this.taskBoard.resources != '') {
+        var arrAssign = resources.split(';');
+        var arrNew = [];
+        arrAssign.forEach((e) => {
+          if (!this.taskBoard.resources.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          resources = arrNew.join(';');
+          this.taskBoard.resources += ';' + resources;
+          this.getListUser(resources);
+        }
+      } else {
+        this.taskBoard.resources = resources;
+        this.getListUser(resources);
+      }
     }
+    this.changeDetectorRef.detectChanges();
   }
 }

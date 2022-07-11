@@ -105,7 +105,7 @@ export class CodxExportComponent implements OnInit, OnChanges
           this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
           .closed.subscribe(item=>
           {
-            if(item.event.length>0) 
+            if(item.event && item.event.length>0) 
             {
               if(val == "add") this.load();
               else if(val == "edit")
@@ -148,33 +148,44 @@ export class CodxExportComponent implements OnInit, OnChanges
   {
     this.submitted = true;
     if(this.exportGroup.invalid) return;
-    var dt = this.exportGroup.value;
-    switch(dt.format)
+    var idTemp = null;
+    var value  = this.exportGroup.value;
+    var splitFormat = value.format.split("_");
+    switch(splitFormat[0])
     {
       case "excel":
+      case 'excelTemp':
         {
-          if(dt.dataExport == "all")
+          if(value.dataExport == "all")
           {
             this.gridModel.page=1;
             this.gridModel.pageSize=-1;
           }
-          else if(dt.dataExport == "selected")
+          else if(value.dataExport == "selected")
           {
             this.gridModel.predicates = this.gridModel.predicate+"&&RecID=@1"
             this.gridModel.dataValues = [this.gridModel.dataValue,this.recID].join(";");
           }
+          if(splitFormat[1]) idTemp = splitFormat[1];
+          this.api.execSv<any>(
+            "OD",
+            'CM', 
+            'CMBusiness', 
+            'ExportExcelAsync', 
+            [this.gridModel,idTemp]
+          ).subscribe(item=>
+            {
+              if(item)
+              {
+                this.downloadFile(item);
+              }
+            }
+          );
           break;
         }
     }
     
-    this.api.execSv<any>("OD",'CM', 'CMBusiness', 'ExportExcelAsync', this.gridModel).subscribe(item=>
-    {
-      if(item)
-      {
-        this.downloadFile(item);
-      }
-      
-    }) 
+   /*    */
       
   }
   downloadFile(data: any) {

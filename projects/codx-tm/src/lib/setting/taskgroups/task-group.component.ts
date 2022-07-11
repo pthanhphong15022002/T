@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
+// import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
-import { TaskgroupAddComponent } from './taskgroup-add/taskgroup-add.component';
 
 @Component({
   selector: 'lib-task-group',
@@ -130,8 +129,9 @@ export class TaskGroupComponent implements OnInit {
         template: this.itemTemplate,
       }
     }];
-    this.view.dataService.methodSave = '';
-    this.view.dataService.methodDelete = '';
+    this.view.dataService.methodSave = 'AddTaskGroupsAsync';
+    this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync'
+    this.view.dataService.methodDelete = 'DeleteTaskGroupAsync';
 
   }
 
@@ -191,8 +191,8 @@ export class TaskGroupComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, null, option);
 
     });
   }
@@ -206,18 +206,24 @@ export class TaskGroupComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(TaskgroupAddComponent, null, option);
+      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, 'edit', option);
     });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+    this.view.dataService.delete([this.view.dataService.dataSelected], (opt) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
   };
 
 
   beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0][0];
+    var itemSelected = opt.data[0];
     opt.methodName = 'DeleteTaskGroupAsync';
 
     opt.data = itemSelected.taskGroupID;
