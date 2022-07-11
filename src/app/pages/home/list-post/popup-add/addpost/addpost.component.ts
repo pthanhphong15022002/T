@@ -20,6 +20,7 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ThisReceiver } from '@angular/compiler';
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -49,11 +50,20 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   idx = 0;
   title = "";
   dialogRef: DialogRef;
+  lstRecevier = [];
+  shareControl:string = "";
+  objectType:string = "9";
+  userRecevier:any;
+  recevierID:string;
+  recevierName:string = "";
   @ViewChild('template') template: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentUpload') attachmentUpload: AttachmentComponent;
   modalPost: NgbModalRef;
   //Variable for control share
-  entityName = '';
+  POST:number = 1;
+  COMMENTS:number = 2;
+  SHARE:number = 4;
+  entityName = 'WP_Comments';
   predicate = '';
   dataValue = '';
   viewMember = '';
@@ -84,6 +94,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     'messenger'
   ]
   set = 'apple';
+  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
+  lstExtensionVideo:Array<string> = [".mp4"];
   @Input() isShow: boolean;
   constructor(
     private dt: ChangeDetectorRef,
@@ -204,9 +216,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.data.content = this.message;
     this.data.shareControl = this.shareControl;
-    this.data.category = "1";
+    this.data.category = this.POST;
     this.data.approveControl = "0";
-    this.data.refType = "post";
+    this.data.refType = this.entityName;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
     this.lstRecevier.map((item) => {
@@ -228,7 +240,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         this.dialogRef.dataService.add(res, 0).subscribe();
         this.clearForm();
         if (this.isUploadFile) {
-          this.attachment.objectId = res.recID;
+          this.attachmentUpload.objectId = res.recID;
           this.saveFile();
         }
         this.notifySvr.notifyCode('E0026');
@@ -295,14 +307,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  lstRecevier = [];
-  shareControl: string = "";
-  objectType: string = "";
-  userRecevier: any;
-  recevierID: string;
-  recevierName: string;
-  eventApply(event: any) {
-    if (!event) {
+  
+  eventApply(event:any){
+    if(!event){
       return;
     }
     if (this.dataPost.status == "edit") {
@@ -313,16 +320,25 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     var data = event[0];
     var objectType = data.objectType;
-    this.lstRecevier = data.dataSelected;
-    if (objectType && !isNaN(Number(objectType))) {
-      this.shareControl = objectType;
+    this.objectType = objectType;
+    this.shareControl = objectType;
+
+    if(isNaN(Number(objectType))){
+      this.lstRecevier = data.dataSelected;
+      if(objectType == 'U')
+      {
+        this.recevierID = data.id;
+        this.recevierName = data.text;
+      }
+      else{
+        this.recevierName = data.objectName + " " + data.text;
+      }
     }
-    else {
-      this.objectType = objectType;
-      this.shareControl = objectType;
-      this.recevierID = data.id;
-      this.recevierName = data.objectName;
+    else
+    {
+        this.recevierName = data.objectName;
     }
+    
     this.dt.detectChanges();
   }
   sharePost() {
@@ -434,12 +450,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
 
   saveFile() {
-    this.attachment.saveFiles();
+    this.attachmentUpload.saveFiles();
   }
 
   isUploadFile = false;
   openFile() {
-    this.attachment.uploadFile();
+    this.attachmentUpload.uploadFile();
   }
   fileAdded(event) {
     console.log(event)
@@ -451,8 +467,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.isUploadFile = false;
       return;
     }
-    this.isUploadFile = true;
-    this.listImgUpload = event.data;
+    if(this.lstExtensionIMG.includes(event.data[0].extension)){
+      this.isUploadFile = true;
+      this.listImgUpload = event.data;
+    }
+    else
+    {
+      this.isUploadFile = false;
+    }
     this.dt.detectChanges();
   }
 

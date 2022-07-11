@@ -1,3 +1,4 @@
+import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupEditCalendarComponent } from './setting/calendar/popup-edit-calendar/popup-edit-calendar.component';
@@ -55,7 +56,6 @@ import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.co
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
-import { PopAddRangesComponent } from './setting/rangeskanban/ranges-add/ranges-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -168,7 +168,7 @@ const T_Component: Type<any>[] = [
   TaskGroupComponent,
   PopAddTaskgroupComponent,
   RangesKanbanComponent,
-  PopAddRangesComponent,
+  AddEditComponent,
   ProjectComponent,
   PopAddProjectComponent,
   ProjectgroupsComponent,

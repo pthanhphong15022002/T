@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
+// import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
 
 @Component({

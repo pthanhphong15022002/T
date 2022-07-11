@@ -17,19 +17,19 @@
         <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
         </codx-label>
       </div>
-      <div class="badge badge-light-primary  d-flex align-items-center me-2 " *ngIf="data.GroupName"><span
-          class="icon-group icon-14 me-1"></span><span>{{data.GroupName}}</span>
+      <div class="badge badge-light-primary  d-flex align-items-center me-2 " *ngIf="data.groupName"><span
+          class="icon-group icon-14 me-1"></span><span>{{data.groupName}}</span>
       </div>
     </div>
   </div>
-  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap rowphoto  icon-account_box"
+  <!-- <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap rowphoto  icon-account_box"
     *ngIf="data.employeeID">
     {{data.employeeID}}</div>
   <div class="text-dark-75 font-weight-bold text-muted icon-account_box rowphoto" *ngIf="!data.employeeID">
     <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
     </codx-label>
-  </div>
-  <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.groupName">
+  </div> -->
+  <!-- <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.groupName">
     {{data.groupName}}
   </div>
   <div class="rowphoto" *ngIf="data.chooseRoles.length <= 5">
@@ -38,11 +38,8 @@
           <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
         </a>
     </ng-container>
-     
-    <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
-      [numberImages]="5" (click)="openPopup(data)">
-    </codx-imgs> -->
-</div>
+
+</div> -->
 <div class="rowphoto" *ngIf="data.chooseRoles.length > 5">
   <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
       <span class="symbol-label fs-4" (click)="openPopup(data)">
@@ -110,40 +107,5 @@
     </div>
     <div class="separator"></div>
   </div>
-
-  <!-- <div class="d-flex align-items-top">
-    <div class="d-flex align-items-start">
-      <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.userID" objectType="AD_Users"
-        [objectName]="data.userName">
-      </codx-img>
-      <div class="d-flex flex-column flex-grow-1 ">
-        <div class="d-flex align-items-center">
-          <div class="font-weight-bold" style="font-weight: bold;">
-            {{data.userName}}
-          </div>
-          <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap margin  icon-account_box"
-            *ngIf="data.employeeID">
-            {{data.employeeID}}</div>
-          <div class="text-dark-75 font-weight-bold text-muted icon-account_box margin" *ngIf="!data.employeeID">
-            <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
-            </codx-label>
-          </div>
-          <div class="text-dark-75 font-weight-bold margin icon-group" *ngIf="data.userGroup">
-            {{data.userGroup}}
-          </div>
-        </div>
-        <div class="text-dark-75 font-weight-bold icon-apartment1" *ngIf="data.buName">
-          {{data.buName}}
-        </div>
-
-        <div>
-          <span class="font-size-sm icon-email" *ngIf="data.email">{{data.email}}
-          </span>
-          <span class="font-size-sm icon-phone_android" *ngIf="data.mobile">{{data.mobile}}</span>
-
-        </div>
-      </div>
-    </div>
-  </div> -->
 
 </ng-template>

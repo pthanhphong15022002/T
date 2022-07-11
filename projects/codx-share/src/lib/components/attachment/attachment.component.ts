@@ -72,7 +72,9 @@ export class AttachmentComponent implements OnInit {
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
-  @Input() hideDes = "0";
+  @Input() hideDes = "0";  
+  @Input() hideImageUpload = "1";
+  @Input() hideImageThumb = "1";
   @Input() displayThumb: string;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
@@ -134,8 +136,8 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != "" && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
-        if (res?.result) {
-          this.data = res.result;
+        if (res) {
+          this.data = res;
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
