@@ -213,14 +213,18 @@
             <ng-container *ngFor="let file of item.lstFile">
                 <div class="pic-feed">
                     <ng-container [ngSwitch]="file.extension">
+                        <!-- image -->
                         <ng-container *ngSwitchCase="lstExtensionIMG.includes(file.extension)?file.extension:''">
-                            <p>hình ảnh</p>
+                            <div class="pic-feed-img">
+                                <codx-img imageType="square" [width]="200" [objectId]="item.recID"ctType="WP_Comments"></codx-img>
+                            </div>
                         </ng-container>
+                        <!-- video -->
                         <ng-container *ngSwitchCase="lstExtensionVideo.includes(file.extension)?file.extension:''">
                             <p>videos</p>
                         </ng-container>
+                        <!-- file -->
                         <ng-container *ngSwitchDefault>
-                            <p>file</p>
                             <codx-attachment [objectId]="item.recID" 
                                 objectType="WP_Comments" 
                                 hideFolder="1" 
@@ -236,8 +240,6 @@
                     <!-- <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
                         hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
                     </codx-attachment> -->
-                    <!-- img -->
-                    
                 </div>
  
             </ng-container>
