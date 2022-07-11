@@ -28,7 +28,7 @@ export class PopupPersonalComponent implements OnInit {
   ngOnInit(): void {
     this.items = this.data;
   }
-  saveData() {}
+  saveData() { }
   onEdit() {
     this.UpdateData();
   }
@@ -48,20 +48,20 @@ export class PopupPersonalComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  txtValueContactName(e: any){
+  txtValueContactName(e: any) {
     this.items.contactName = e.data;
   }
 
 
-  txtValueJobTitle(e: any){
+  txtValueJobTitle(e: any) {
     this.items.jobTitle = e.data;
   }
 
-  txtValueEmail(e: any){
+  txtValueEmail(e: any) {
     this.items.personalEmail = e.data;
   }
 
-  txtValuePhone(e: any){
+  txtValuePhone(e: any) {
     this.items.mobile = e.data;
   }
 
