@@ -26,10 +26,29 @@ export class EditFileComponent implements OnInit {
   titleDialog = 'Cập nhật file';
   titleFileNameRequire = 'Tên tài liệu không để trống';
   titleFileNameInvalid = 'Tên tài liệu không hợp lệ';
+  titleFileType = 'Loại tập tin';
+  titleSize = 'Kích cỡ file';
+  titleCreator = 'Người tạo';
+  titleCreaton = 'Người tạo';
+  titleShare = 'Chia sẻ';
+  titleSelectObject = 'Chọn đối tượng';
+  titleExpand = 'Thông tin mở rộng';
+  titleFile = 'Tiêu đề';
+  titleSubject = 'Chủ đề';
+  titleCate = 'Phân loại';
+  titleLanguage = 'Ngôn ngữ';
+  titleExcerpts = 'Trích lục';
+  tieleRelation = 'Mối quan hệ';
+  titleSource = 'Nguồn';
+  titleCopyright  = 'Bản quyền';
+  titleAuthor = 'Tên tác giả';
+  titlePublisher = 'Nhà xuất bản';
+  titlePublishyear = 'Năm xuất bản';
+  titlePublishDate = 'Ngày hết hạn';
+  titleSave = 'Lưu';
   historyFile: HistoryFile;
   propertiesFolder: boolean;
   closeResult = '';
-  
   id: string;
   listLevel: any;
   listType: any;
@@ -421,12 +440,34 @@ export class EditFileComponent implements OnInit {
       case 'relation':
           this.fileEditing.relation = $event.data;
           break;
+      case 'category':
+        this.fileEditing.category = $event.data;
+        break;
+      case 'language':
+          this.fileEditing.language = $event.data;
+          break;
       case 'source':
           this.fileEditing.source = $event.data;
+          break;
+      case 'excerpts':
+          this.fileEditing.excerpts = $event.data;
           break;
       case 'authur':
         this.fileEditing.author = $event.data;
         break;
+      case 'publishdate':
+          this.fileEditing.publishDate = $event.data.fromDate;
+          break;
+      case 'publisher':
+        this.fileEditing.publisher = $event.data;
+        break;
+      case 'publishyear':
+        this.fileEditing.publishYear = $event.data.fromDate;
+        break;
+      case 'copyrights':
+        this.fileEditing.copyRights = $event.data;
+        break;
+          
     }
     
     this.changeDetectorRef.detectChanges();
