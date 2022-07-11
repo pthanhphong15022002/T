@@ -56,7 +56,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   recevierID:string;
   recevierName:string = "";
   @ViewChild('template') template: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentUpload') attachmentUpload: AttachmentComponent;
   modalPost: NgbModalRef;
   //Variable for control share
   POST:number = 1;
@@ -93,6 +93,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     'messenger'
   ]
   set = 'apple';
+  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
+  lstExtensionVideo:Array<string> = [".mp4"];
   @Input() isShow: boolean;
   constructor(
     private dt: ChangeDetectorRef,
@@ -237,7 +239,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         this.dialogRef.dataService.add(res, 0).subscribe();
         this.clearForm();
         if (this.isUploadFile) {
-          this.attachment.objectId = res.recID;
+          this.attachmentUpload.objectId = res.recID;
           this.saveFile();
         }
         this.notifySvr.notifyCode('E0026');
@@ -447,12 +449,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
 
   saveFile() {
-    this.attachment.saveFiles();
+    this.attachmentUpload.saveFiles();
   }
 
   isUploadFile = false;
   openFile() {
-    this.attachment.uploadFile();
+    this.attachmentUpload.uploadFile();
   }
   fileAdded(event) {
     console.log(event)
