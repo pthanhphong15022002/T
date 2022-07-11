@@ -99,3 +99,54 @@ ejs-listview .e-ul>li {
     bottom: 0;
     width: 100%;
 }
+
+.body-post {
+    bottom: 45px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.body-post-scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+
+    overflow: auto;
+}
+
+.card-body.hover-scroll-y {
+    padding-bottom: 0 !important;
+}
+
+
+/*** 1 - 5 pic ***/
+.feed-5pic .col-xl-5.pl-0 div+div {
+    margin-top: 3px;
+}
+
+.feed-img-more {
+    margin-top: -165px !important;
+    height: 165px;
+    position: relative;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-number {
+    font-size: 24px;
+    color: #fff;
+}
+
+.feed-3pic .min-h-320px {
+    min-height: 313px !important;
+}
+
+.feed-4pic .min-h-340px {
+    min-height: 333px !important;
+}
