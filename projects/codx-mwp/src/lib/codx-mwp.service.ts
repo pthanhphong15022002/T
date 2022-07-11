@@ -87,4 +87,14 @@ export class CodxMwpService {
         finalize(() => null)
       );
   }
+
+  getMoreFunction(data) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermAsync',
+      data
+    );
+  }
 }
