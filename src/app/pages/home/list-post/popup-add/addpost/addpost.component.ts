@@ -20,6 +20,7 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ThisReceiver } from '@angular/compiler';
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -56,7 +57,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   recevierID:string;
   recevierName:string = "";
   @ViewChild('template') template: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentUpload') attachmentUpload: AttachmentComponent;
   modalPost: NgbModalRef;
   //Variable for control share
   POST:number = 1;
@@ -93,6 +94,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     'messenger'
   ]
   set = 'apple';
+  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
+  lstExtensionVideo:Array<string> = [".mp4"];
   @Input() isShow: boolean;
   constructor(
     private dt: ChangeDetectorRef,
@@ -237,7 +240,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         this.dialogRef.dataService.add(res, 0).subscribe();
         this.clearForm();
         if (this.isUploadFile) {
-          this.attachment.objectId = res.recID;
+          this.attachmentUpload.objectId = res.recID;
           this.saveFile();
         }
         this.notifySvr.notifyCode('E0026');
@@ -447,12 +450,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
 
   saveFile() {
-    this.attachment.saveFiles();
+    this.attachmentUpload.saveFiles();
   }
 
   isUploadFile = false;
   openFile() {
-    this.attachment.uploadFile();
+    this.attachmentUpload.uploadFile();
   }
   fileAdded(event) {
     console.log(event)
@@ -464,8 +467,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.isUploadFile = false;
       return;
     }
-    this.isUploadFile = true;
-    this.listImgUpload = event.data;
+    if(this.lstExtensionIMG.includes(event.data[0].extension)){
+      this.isUploadFile = true;
+      this.listImgUpload = event.data;
+    }
+    else
+    {
+      this.isUploadFile = false;
+    }
     this.dt.detectChanges();
   }
 

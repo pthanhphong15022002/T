@@ -135,7 +135,7 @@
                                 <div class="uploadtemplate">
                                     <div id='dropArea'>
                                         <div class="d-none">
-                                            <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                            <span id='drop' class="droparea">Drop files here or <a href="" [id]='idBrowse'><u>Browse</u></a> </span>
                                         </div>                                        
                                         <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                     </div>
@@ -143,7 +143,7 @@
                             </div>
                         </div>                       
                     </div>
-                    <div style="max-height: 100px; overflow-y: auto;">
+                    <div *ngIf="hideImageUpload == '1'" style="max-height: 100px; overflow-y: auto;">
                         <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center mt-2 mb-2 has-action-menu">                           
                             <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-40px me-3 cursor-pointer" 
                                 title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
@@ -195,7 +195,9 @@
             </form>
         </div>
     </div>   
-    <codx-thumbnail [displayThumb]="displayThumb"  [formModel]="formModel" [files]="data"></codx-thumbnail>     
+    <div *ngIf="hideImageThumb == '1'">
+        <codx-thumbnail [displayThumb]="displayThumb"  [formModel]="formModel" [files]="data"></codx-thumbnail>     
+    </div>   
 </ng-template>
 
 <!-- <ng-template #openFolder let-dialog>

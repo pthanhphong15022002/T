@@ -51,8 +51,7 @@
                         </div> -->
                         <div class="bg-secondary rounded-1 p-1">
                             <span class="symbol symbol-20 symbol-circle fw-bolder">
-                                <i class="assets/themes/sys/default/img/{{(objectType | vll:'L1901' : 'icon' | async)}}"></i>
-                                
+                                <img class="w-20px h-20px" src="assets/themes/sys/default/img/{{(objectType | vll:'L1901' : 'icon' | async)}}"/>
                             </span>
                             <span class="text-dark-75 font-size-sm ms-2">
                                 {{objectType | vll:'L1901' : 'text' | async}}
@@ -75,10 +74,15 @@
                         [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}"
                         (valueChange)="valueChange($event)" ngDefaultControl>
                     </codx-input>
-                    <div class="" style="display:none;">
-                        <codx-attachment #attachment objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
-                            hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
-                            (fileCount)="getfileCount($event)" [functionID]="dialogRef.formModel.funcID">
+                    <div class="d-none">
+                        <codx-attachment #attachmentUpload 
+                            objectType="WP_Comments" 
+                            hideFolder="1" hideUploadBtn="1"
+                            hideDes="1" type="inline" 
+                            allowExtensions=".jpg,.png" allowMultiFile="1"
+                            (fileCount)="getfileCount($event)"
+                            idBrowse="btn2"
+                            [functionID]="dialogRef.formModel.funcID">
                         </codx-attachment>
                     </div>
                     <ng-container *ngIf="isUploadFile">
@@ -129,15 +133,15 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-emoji">
                         <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
-                        class="btn btn-icon btn-md ms-2 btn-emoji">
-                        <i class="icon-tag_faces icon-24 text-warning"></i>
+                            class="btn btn-icon btn-md ms-2 btn-emoji">
+                            <i class="icon-tag_faces icon-24 text-warning"></i>
+                        </button>
                         <ng-container *ngIf="showEmojiPicker">
                             <div class="emoji">
                                 <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
                                     (emojiSelect)="addEmoji($event)"></emoji-mart>
                             </div>
                         </ng-container>
-                    </button>
                     </div>
                     <div>
                         <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ms-2">
@@ -160,10 +164,43 @@
                     <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
                     </read-more>
                 </div>
-                <!-- <div class="pic-feed">
-                    <lv-image-grid #player [database]="true" [files]="item?.listImage">
-                    </lv-image-grid>
-                </div> -->
+
+                <div class="pic-feed">
+                    <ng-container *ngIf="item.isUploadFile">
+                        <ng-container *ngFor="let file of item.lstFile">
+                            <div class="pic-feed">
+                                <ng-container [ngSwitch]="file.extension">
+                                    <!-- image -->
+                                    <ng-container *ngSwitchCase="lstExtensionIMG.includes(file.extension)?file.extension:''">
+                                        <div class="pic-feed-img">
+                                            <codx-img imageType="square" [width]="200" [objectId]="item.recID"ctType="WP_Comments"></codx-img>
+                                        </div>
+                                    </ng-container>
+                                    <!-- video -->
+                                    <ng-container *ngSwitchCase="lstExtensionVideo.includes(file.extension)?file.extension:''">
+                                        <p>videos</p>
+                                    </ng-container>
+                                    <!-- file -->
+                                    <ng-container *ngSwitchDefault>
+                                        <codx-attachment [objectId]="item.recID" 
+                                            idBrowse="btn3"
+                                            objectType="WP_Comments" 
+                                            hideFolder="1" 
+                                            hideUploadBtn="1"
+                                            hideDes="1" 
+                                            type="inline" 
+                                            allowExtensions=".jpg,.png"
+                                            [functionID]="dialogRef.formModel.funcID">
+                                        </codx-attachment>
+                                    </ng-container>
+                                </ng-container>
+                                <!-- <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
+                                    hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
+                                </codx-attachment> -->
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
             </ng-container>
             <ng-template #category2>
                 <div class="p-0 m-0">

@@ -51,7 +51,9 @@ export class EmployeeInfomationComponent implements OnInit {
   data: Object[];
   primaryXAxis: Object;
   primaryYAxis: Object;
-
+  moreFunc = []
+  functionID: any;
+  defautFunc :any ;
   // parentID: string = "WPT0321";
   formName: string = "";
   gridViewName: string = "";
@@ -72,7 +74,26 @@ export class EmployeeInfomationComponent implements OnInit {
     private auth: AuthStore,
     private cachesv: CacheService,
   ) {
-    // this.user = this.auth.get();
+    this.user = this.auth.get();
+    this.functionID = this.routeActive.snapshot.params['funcID'] ;
+    // this.cachesv.moreFunction(this.functionID,null).subscribe(res=>{
+    //   if(res)this.moreFunc=res;
+    // })
+    // this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=>{
+    //     if(res)this.moreFunc=res;
+    // });
+    this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=> {
+      if (res) {
+        this.defautFunc =res[0]
+        this.formName = res.formName;
+        this.gridViewName = res.gridViewName;
+        this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
+          if(res)
+           this.moreFunc =res ;
+          this.dt.detectChanges();
+        });
+      }
+    });
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");

@@ -46,6 +46,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   onlyDepartment = false;
   orgchartServiceSub: Subscription;
   OrgUnitID = '';
+  dataVll = [];
+
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
@@ -106,7 +108,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     console.log(this.codxViews.dataService);
   }
 
-  dataVll = [];
 
   ngOnDestroy() {
   }
@@ -180,7 +181,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService as CRUDService;
     option.FormModel = this.codxViews.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
+    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
