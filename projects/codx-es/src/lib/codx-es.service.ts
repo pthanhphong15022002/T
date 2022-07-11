@@ -104,6 +104,7 @@ export class CodxEsService {
     this.autoNoCode.next(autoNo);
   }
 
+  //#region Get from FunctionList
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
@@ -161,9 +162,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              if (element.isRequire) {
-                modelValidator.push(Validators.required);
-              }
+              // if (element.isRequire) {
+              //   modelValidator.push(Validators.required);
+              // }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
@@ -204,6 +205,8 @@ export class CodxEsService {
       resolve(obj as object);
     });
   }
+
+  //#endregion
 
   execEP(
     className: string,
@@ -543,6 +546,28 @@ export class CodxEsService {
         [lstData]
       );
     } else return null;
+  }
+
+  getNewDefaultEmail() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetEmailDefaultAsync',
+      []
+    );
+  }
+  //#endregion
+
+  //#region EmailTemplate
+  getEmailTemplate(templateID: string): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetEmailTemplateAsync',
+      templateID
+    );
   }
   //#endregion
 }

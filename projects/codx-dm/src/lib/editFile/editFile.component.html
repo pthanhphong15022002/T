@@ -46,32 +46,31 @@
                         (valueChange)="tagsChange($event)"> </tags> -->
                 </div>
                 <div class="d-flex mb-2">
-                    <span class="text-dark-75 mr-2">Loại tập tin: </span>
+                    <span class="text-dark-75 mr-2">{{titleFileType}}: </span>
                     <span class="font-weight-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
                 </div>
                 <div class="d-flex mb-2">
-                    <span class="text-dark-75 mr-2">Kích cỡ file: </span>
+                    <span class="text-dark-75 mr-2">{{titleSize}}: </span>
                     <span class="text-dark font-weight-bold">{{getSizeKB(fileEditing.fileSize)}} KB
                         ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
                 </div>
                 <div class="d-flex mb-2">
-                    <span class="text-dark-75 mr-2">Người tạo: </span>
+                    <span class="text-dark-75 mr-2">{{titleCreator}}: </span>
                     <span class="text-dark font-weight-bold">{{fileEditing.createdBy}}</span>
                 </div>
                 <div class="d-flex mb-2">
-                    <span class="text-dark-75 mr-2">Ngày tạo: </span>                    
+                    <span class="text-dark-75 mr-2">{{titleCreaton}}: </span>                    
                     <span class="text-dark font-weight-bold">{{fileEditing.createdOn  | date: 'dd/MM/yyyy'}}</span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
                     <ul class="nav nav-tabs nav-tabs-line">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" (click)="onSetPermision(false)">
-                                <span class="nav-text">Chia sẻ</span>
+                                <span class="nav-text">{{titleShare}}</span>
                             </a>
                         </li>
                     </ul>
-                    <button type="button" (click)="openRight()" class="btn btn-pill btn-xs btn-outline-primary">Chọn đối
-                        tượng</button>
+                    <button type="button" (click)="openRight()" class="btn btn-pill btn-xs btn-outline-primary">{{titleSelectObject}}</button>
                 </div>       
                 <div class="user-mini-group">
                     <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
@@ -128,13 +127,13 @@
                 <div (click)="hideInfo()"
                     class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
                     <span class="icon-add_circle icon-18 mr-2"></span>
-                    <span class="font-weight-bold">Thông tin mở rộng</span>
+                    <span class="font-weight-bold">{{titleExpand}}</span>
                 </div>
                 <div [hidden]="!information" class="mt-3 mb-3">
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Tiêu đề</div>
+                        <div class="col-3 col-form-label">{{titleFile}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="title..."                                
+                            <codx-input placeholder="{{titleFile}}..."                                
                                 class="form-control"
                                 type="text"
                                 style="width:100%"
@@ -144,11 +143,11 @@
                             <!-- <input [(ngModel)]="fileEditing.title" name="title" type="text" class="form-control"
                                 placeholder="title..." /> -->
                         </div>
-                    </div>
+                    </div> 
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Chủ đề</div>
+                        <div class="col-3 col-form-label">{{titleSubject}}</div>
                         <div class="col-9">                          
-                            <codx-input placeholder="Subject..."                                     
+                            <codx-input placeholder="{{titleSubject}}..."                                     
                                 class="form-control"
                                 type="text"
                                 style="width:100%"                              
@@ -158,9 +157,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Phân loại</div>
+                        <div class="col-3 col-form-label">{{titleCate}}</div>
                         <div class="col-4">
-                            <codx-input placeholder="category..."
+                            <codx-input placeholder="{{titleCate}}..."
                                 class="form-control test-datetime"
                                 type="combobox" 
                                 style="width:100%"                              
@@ -169,9 +168,9 @@
                                 (valueChange)="txtValue($event, 'category')" 
                             ></codx-input>                           
                         </div>
-                        <div class="col-2 col-form-label">Ngôn ngữ</div>
+                        <div class="col-2 col-form-label">{{titleLanguage}}</div>
                         <div class="col-3">                            
-                            <codx-input placeholder="language..."
+                            <codx-input placeholder="{{titleLanguage}}..."
                                 class="form-control test-datetime"
                                 type="valuelist" 
                                 style="width:100%"          
@@ -182,9 +181,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Trích lục</div>
+                        <div class="col-3 col-form-label">{{titleExcerpts}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="category..."
+                            <codx-input placeholder="{{titleExcerpts}}..."
                                 class="form-control test-datetime"
                                 type="textarea" 
                                 style="width:100%" dataformat="d"                               
@@ -196,9 +195,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Mối quan hệ</div>
+                        <div class="col-3 col-form-label">{{tieleRelation}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="relation..."                               
+                            <codx-input placeholder="{{tieleRelation}}..."                               
                                 class="form-control"
                                 type="text"
                                 style="width:100%"
@@ -208,9 +207,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Nguồn</div>
+                        <div class="col-3 col-form-label">{{titleSource}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="source..."                                    
+                            <codx-input placeholder="{{titleSource}}..."                                    
                                 class="form-control"
                                 type="text"
                                 style="width:100%"
@@ -223,13 +222,13 @@
                 <div (click)="hideLicence()"
                     class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
                     <span class="icon-add_circle icon-18 mr-2"></span>
-                    <span class="font-weight-bold">Bản quyền</span>
+                    <span class="font-weight-bold">{{titleCopyright}}</span>
                 </div>
                 <div [hidden]="!license" class="mt-3 mb-3">
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Tên tác giả</div>
+                        <div class="col-3 col-form-label">{{titleAuthor}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="authur..."                                    
+                            <codx-input placeholder="{{titleAuthor}}..."                                    
                                 class="form-control"
                                 type="text"
                                 style="width:100%"
@@ -239,9 +238,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Nhà xuất bản</div>
+                        <div class="col-3 col-form-label">{{titlePublisher}}</div>
                         <div class="col-9">                          
-                            <codx-input placeholder="Publisher..."
+                            <codx-input placeholder="{{titlePublisher}}..."
                                 class="form-control test-datetime"
                                 type="combobox" 
                                 style="width:100%"
@@ -252,9 +251,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Năm xuất bản</div>
+                        <div class="col-3 col-form-label">{{titlePublishyear}}</div>
                         <div class="col-4">
-                            <codx-input placeholder="publishYear..."
+                            <codx-input placeholder="{{titlePublishyear}}..."
                                 class="form-control test-datetime"
                                 type="dateTime" 
                                 style="width:100%" format="d"                               
@@ -264,12 +263,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Bản quyền</div>
+                        <div class="col-3 col-form-label">{{titleCopyright}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="copyrights..."
+                            <codx-input placeholder="{{titleCopyright}}..."
                                 class="form-control test-datetime"
-                                type="dateTime" 
-                                style="width:100%" format="d"                               
+                                type="text" 
+                                style="width:100%"                  
                                 [crrValue]="fileEditing.copyRights"    
                                 (valueChange)="txtValue($event, 'copyrights')" 
                             ></codx-input>  
@@ -278,14 +277,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">Ngày hết hạn</div>
+                        <div class="col-3 col-form-label">{{titlePublishDate}}</div>
                         <div class="col-4">
-                            <codx-input placeholder="publishDate..."
+                            <codx-input placeholder="{{titlePublishDate}}..."
                                 class="form-control test-datetime"
                                 type="dateTime" 
                                 style="width:100%" format="d"                               
                                 [crrValue]="fileEditing.publishDate"    
-                                (valueChange)="txtValue($event, 'publishDate')" 
+                                (valueChange)="txtValue($event, 'publishdate')" 
                             ></codx-input>                           
                         </div>
                     </div>
@@ -295,6 +294,6 @@
     </ng-template>    
     <ng-template #footer>
         <button type="button" class="btn btn-primary" [disabled]="checkInputFile()"
-        (click)="onSaveEditingFile()">Lưu</button>
+        (click)="onSaveEditingFile()">{{titleSave}}</button>
     </ng-template>
 </codx-form>

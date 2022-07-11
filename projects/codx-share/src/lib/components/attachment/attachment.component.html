@@ -135,7 +135,7 @@
                                 <div class="uploadtemplate">
                                     <div id='dropArea'>
                                         <div class="d-none">
-                                            <span id='drop' class="droparea">Drop files here or <a href=""   id='browse'><u>Browse</u></a> </span>
+                                            <span id='drop' class="droparea">Drop files here or <a href="" [id]='idBrowse'><u>Browse</u></a> </span>
                                         </div>                                        
                                         <ejs-uploader #templateupload id='templatefileupload' [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()' [asyncSettings]='path' [dropArea]='dropElement'  (selected)='onFileSelect($event)'></ejs-uploader>
                                     </div>
