@@ -94,7 +94,14 @@ export class RangesKanbanComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
-      this.dialog.closed.subscribe();
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null)
+          this.view.dataService
+            .remove(this.view.dataService.dataSelected)
+            .subscribe(x => {
+              this.dt.detectChanges();
+            });
+      });
     });
   }
 
@@ -115,14 +122,6 @@ export class RangesKanbanComponent implements OnInit {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
   };
-
-  beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0][0];
-    opt.methodName = 'DeleteRangesKanbanAsync';
-
-    opt.data = itemSelected.rangeID;
-    return true;
-  }
   //#endregion
 
   //#region Functions
