@@ -46,105 +46,107 @@
           </div>
         </div>
         <div *ngIf="lstStep != 0">
-          <div class=" mx-5 mx-xl-4 pt-0 pb-5 max-h-450px">
-            <div class="text-center mb-5 mt-5">
-              <h1 class="mb-3">
-                <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
-                </codx-label>
-              </h1>
-              <!-- <div class="text-muted fw-bold fs-5">
-                <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
-                </codx-label>
-              </div> -->
-            </div>
+          <div class="text-center mb-5 mt-5">
+            <h1 class="mb-3">
+              <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+              </codx-label>
+            </h1>
+            <!-- <div class="text-muted fw-bold fs-5">
+              <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+              </codx-label>
+            </div> -->
+          </div>
+          <div class="scroll-y  max-h-500px" style="height: 425px;">
+            <div class=" mx-5 mx-xl-4 pt-0 pb-5">
+              <div class="bodyContent cdx-timeline-vertical scroll-y">
+                <div class="timeline timeline-3">
 
-            <div class="cdx-timeline-vertical scroll-y">
-              <div class="timeline timeline-3">
+                  <div class="timeline-items">
+                    <ng-container *ngFor="let item of lstStep; let index=index">
 
-                <div class="timeline-items">
-                  <ng-container *ngFor="let item of lstStep; let index=index">
-
-                    <div class="timeline-item ">
-                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                        <div class="timeline-media">
-                          <span class="">{{item.stepNo}}</span>
-                        </div>
-                        <div class="stepper-label  has-action-menu">
-                          <h3 class="stepper-title">
-                            {{item.memo}}
-                          </h3>
-                          <div class="stepper-desc">
-                            {{(item.stepType | vll:'ES002':'text'|async)}}
+                      <div class="timeline-item ">
+                        <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                          <div class="timeline-media">
+                            <span class="">{{item.stepNo}}</span>
                           </div>
-                          <div class="action-menu">
-                            <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover">
-                            </codx-mfunc>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="timeline-content mx-auto">
-                        <div class="d-flex flex-wrap">
-                          <ng-container *ngFor="let approver of item.approvers">
-                            <div class="d-flex border border-gray-300 rounded min-w-250px mw-300px px-4 me-6 mb-3">
-                              <codx-temp-full imageId="ADMIN" [subTitle]="" [title]="approver.approverName"
-                                [subTitle]="approver.positionName" [desc]="lstStep.agencyName" [status]="lstStep.status"
-                                cardCss="card-template border-bottom px-2 py-3"
-                                [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
-                                [resourceObjType]="'AD_Users'" [icoStatus]="lstStep?.urgency"
-                                [icoStatusVll]="'referedValue'" [icoStatus2]="lstStep?.security"
-                                [icoStatusVll2]="'referedValue'" [modeImgs]="false" [titleLine]="3" [footer]="footer1">
-                              </codx-temp-full>
-
-                              <ng-template #footer1>
-                                <!-- <div class="d-flex flex-column">11111111111111111111111111111</div>
-                              <div>{{item.leadtime}}</div> -->
-                              </ng-template>
+                          <div class="stepper-label  has-action-menu">
+                            <h3 class="stepper-title">
+                              {{item.memo}}
+                            </h3>
+                            <div class="stepper-desc">
+                              {{(item.stepType | vll:'ES002':'text'|async)}}
                             </div>
-
-
-                          </ng-container>
-                        </div>
-                      </div>
-
-                    </div>
-                    <div class="timeline-item" *ngIf="index==lstStep.length-1">
-                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                        <div class="step-add" (click)="add()">
-                          +
-                        </div>
-                      </div>
-                      <!-- <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                      <div class="timeline-media-add">
-                        <span class="icon-add_circle_outline icon-24" (click)="add()"></span>
-                      </div>
-                    </div> -->
-                      <!-- <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                      <div class="timeline-media-add">
-                        <div class="timeline-item ">
-                          <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                            <div class="timeline-media">
-                              <span class="">{{item.stepNo}}</span>
+                            <div class="action-menu">
+                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover">
+                              </codx-mfunc>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div> -->
-                    </div>
-                  </ng-container>
+                        <div class="timeline-content mx-auto">
+                          <div class="d-flex flex-wrap">
+                            <ng-container *ngFor="let approver of item.approvers">
+                              <div class="d-flex border border-gray-300 rounded min-w-250px mw-300px px-4 me-6 mb-3">
+                                <codx-temp-full [imageId]="approver.approver" [title]="approver.approverName"
+                                  [subTitle]="approver.positionName ?? 'Vị trí công việc'"
+                                  [desc]="getLeadTime(item.leadtime)" [status]="lstStep.status"
+                                  cardCss="card-template border-bottom px-2 py-3"
+                                  [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
+                                  [resourceObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
+                                </codx-temp-full>
 
+                                <ng-template #footer1>
+
+                                </ng-template>
+                              </div>
+
+
+                            </ng-container>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="timeline-item" *ngIf="index==lstStep.length-1">
+                        <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                          <div class="step-add" (click)="add()">
+                            +
+                          </div>
+                        </div>
+                        <!-- <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                        <div class="timeline-media-add">
+                          <span class="icon-add_circle_outline icon-24" (click)="add()"></span>
+                        </div>
+                      </div> -->
+                        <!-- <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                        <div class="timeline-media-add">
+                          <div class="timeline-item ">
+                            <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                              <div class="timeline-media">
+                                <span class="">{{item.stepNo}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+                      </div>
+                    </ng-container>
+
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
+
+        <!-- <ng-container *ngIf="data == 0;then dataEmpty;else content">
+      </ng-container> -->
         <div class="container-footer" (click)="onSaveForm()">
           <button type="button" class="btn btn-primary">
             <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
           </button>
         </div>
-        <!-- <ng-container *ngIf="data == 0;then dataEmpty;else content">
-      </ng-container> -->
       </div>
+
     </div>
 
 

@@ -24,10 +24,10 @@
         <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
         </codx-label>
         <codx-input type="text" name="text" ControlName="fixedString" [Group]="dialogAutoNum"
-          [crrValue]="dialogAutoNum.value.fixedString">
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class=" col-4">
         <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" field="separator" [crrValue]="dialogAutoNum.value.separator"
