@@ -1,0 +1,204 @@
+<codx-form headerText="{{fileEditing.fileName}}" [body]="body" [footer]="footer" [dialog]="dialog">               
+    <ng-template #body>      
+        <div class="modal-body">
+            <form nane="frm_editfile1">      
+                <div class="mb-4">
+                    <div class="d-flex align-items-center file-item ng-star-inserted">
+                        <img alt="{{fileEditing.fileName}}" class="max-h-35px mr-3"
+                            src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
+                        <codx-input placeholder="Tên tài liệu..."                                    
+                            [class]="validate('folderName')"
+                            type="text"
+                            [crrValue]="fileEditing.fileName"
+                                                                  
+                        ></codx-input> 
+                        <!-- <input [disabled]="noeditName ? 'disabled' : null" type="text" required id="fileName"
+                            name="fileName" class="form-control" (input)="validate('fileName')"
+                            placeholder="Tên tài liệu..." minlength="4" [(ngModel)]="fileEditing.fileName" #fileNamectrl
+                            matInput /> -->
+                    </div>
+                    <div>
+                        {{fileEditing.description}}
+                    </div>
+                    <!-- <div autofocus *ngIf="fileNamectrl.value === ''" class="invalid-feedback">
+                        Tên tài liệu bắt buộc.
+                    </div>
+                    <div id="fileError" autofocus
+                        *ngIf="errorshow || (fileNamectrl.value != '' && fileNamectrl.value.indexOf('.') === -1)"
+                        class="invalid-feedback">
+                        Tên tài liệu không hợp lệ.
+                    </div> -->
+                </div>
+                <div class="d-flex mb-4">
+                    <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"
+                        (valueChange)="tagsChange($event)"> </tags> -->
+                </div>
+                <div class="d-flex mb-2">
+                    <span class="text-dark-75 mr-2">Loại tập tin: </span>
+                    <span class="font-weight-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
+                </div>
+                <div class="d-flex mb-2">
+                    <span class="text-dark-75 mr-2">Kích cỡ file: </span>
+                    <span class="text-dark font-weight-bold">{{getSizeKB(fileEditing.fileSize)}} KB
+                        ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
+                </div>
+                <div class="d-flex mb-2">
+                    <span class="text-dark-75 mr-2">Người tạo: </span>
+                    <span class="text-dark font-weight-bold">{{fileEditing.createdBy}}</span>
+                </div>
+                <div class="d-flex mb-2">
+                    <span class="text-dark-75 mr-2">Ngày tạo: </span>                    
+                    <span class="text-dark font-weight-bold">{{fileEditing.createdOn  | date: 'dd/MM/yyyy'}}</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <ul class="nav nav-tabs nav-tabs-line">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" (click)="onSetPermision(false)">
+                                <span class="nav-text">Chia sẻ</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <button type="button" (click)="openRight()" class="btn btn-pill btn-xs btn-outline-primary">Chọn đối
+                        tượng</button>
+                </div>       
+                <div class="user-mini-group">
+                    <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
+                        <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
+                            <ng-container
+                                *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
+                                <div class="user-mini-item">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-30 symbol-circle mr-2">
+                                            <div
+                                                *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                                            </div>
+                                            <ng-template #thenAvatar1>
+                                                <img class="symbol symbol-30 symbol-circle"
+                                                    src="../../../assets/codx/user/user-admin.svg">
+                                            </ng-template>
+                                            <ng-template #elsethenAvatar1>
+                                                <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                    [objectId]="perm.objectID" objectType="AD_Users"> </lv-image-viewer>
+                                            </ng-template>
+                                        </div>
+                                        <div class="text-dark-75">{{perm.objectName}}</div>
+                                        <span *ngIf="perm.isSystem == false && this.assignRight"
+                                            (click)="removeUserRight(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>  
+                <div (click)="hideInfo()"
+                    class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
+                    <span class="icon-add_circle icon-18 mr-2"></span>
+                    <span class="font-weight-bold">Thông tin mở rộng</span>
+                </div>
+                <div [hidden]="!information" class="mt-3 mb-3">
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Tiêu đề</div>
+                        <div class="col-9">
+                            <input [(ngModel)]="fileEditing.title" name="title" type="text" class="form-control"
+                                placeholder="title..." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Chủ đề</div>
+                        <div class="col-9">
+                            <input [(ngModel)]="fileEditing.subject" name="subject" type="text" class="form-control"
+                                placeholder="Subject..." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Phân loại</div>
+                        <div class="col-4">
+                            <!-- <lvInput type="combobox" name="combobox" [value]="fileEditing.category"
+                                class="form-control borderless p-0" style="border: none;" placeholder="Loại"
+                                ngDefaultControl refValue="CategoriesDM" loadFull="true"
+                                (valueChange)="valueChange($event, 'category')" field="fileEditing.category"></lvInput> -->
+                        </div>
+                        <div class="col-2 col-form-label">Ngôn ngữ</div>
+                        <div class="col-3">
+                            <!-- <lvInput type="select" name="select" [value]="fileEditing.language"
+                                (valueChange)="valueChange($event, 'language')" class="form-control borderless p-0"
+                                style="border: none;" placeholder="Loại" ngDefaultControl refValue="L1473" loadFull="true"
+                                field="fileEditing.language"></lvInput> -->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Trích lục</div>
+                        <div class="col-9">
+                            <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
+                                [(ngModel)]="fileEditing.excerpts"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Mối quan hệ</div>
+                        <div class="col-9">
+                            <input [(ngModel)]="fileEditing.relation" name="relation" type="text" class="form-control"
+                                placeholder="title..." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Nguồn</div>
+                        <div class="col-9">
+                            <input [(ngModel)]="fileEditing.source" name="source" type="text" class="form-control"
+                                placeholder="source..." />
+                        </div>
+                    </div>
+                </div>
+                <div (click)="hideLicence()"
+                    class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
+                    <span class="icon-add_circle icon-18 mr-2"></span>
+                    <span class="font-weight-bold">Bản quyền</span>
+                </div>
+                <div [hidden]="!license" class="mt-3 mb-3">
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Tên tác giả</div>
+                        <div class="col-9">
+                            <input type="text" name="author" class="form-control" [(ngModel)]="fileEditing.author"
+                                placeholder="Authur..." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Nhà xuất bản</div>
+                        <div class="col-9">
+                            <!-- <lvInput type="combobox" name="combobox" [value]="fileEditing.publisher"
+                                (valueChange)="valueChange($event, 'publisher')" class="form-control borderless p-0"
+                                style="border: none;" placeholder="Publisher..." ngDefaultControl refValue="Publishers"
+                                loadFull="true" field="fileEditing.publisher"></lvInput>                         -->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Năm xuất bản</div>
+                        <div class="col-4">
+                            <!-- <lvInput datatype="datetime" dataformat="d" (valueChange)="changeDate($event, 'publishYear')"
+                                [value]="fileEditing.publishYear"></lvInput> -->
+    
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Bản quyền</div>
+                        <div class="col-9">
+                            <input type="text" class="form-control" [(ngModel)]="fileEditing.copyRights" name="copyRights"
+                                placeholder="Copyrights..." />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-3 col-form-label">Ngày hết hạn</div>
+                        <div class="col-4">
+                            <!-- <lvInput datatype="datetime" dataformat="d" (valueChange)="changeDate($event, 'publishDate')"
+                                [value]="fileEditing.publishDate"></lvInput> -->
+    
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>    
+    <ng-template #footer>
+        <button type="button" class="btn btn-primary" [disabled]="checkInputFile()"
+        (click)="onSaveEditingFile()">Lưu</button>
+    </ng-template>
+</codx-form>

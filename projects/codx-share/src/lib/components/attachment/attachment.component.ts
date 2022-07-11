@@ -23,6 +23,8 @@ import { ViewEncapsulation, Inject } from '@angular/core';
 import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
 import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
+import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -53,17 +55,25 @@ export class AttachmentComponent implements OnInit {
   remotePermission: Permission[];
   dialog: any;
   data: any;
+  isFileList = false;  
+  fileEditing: FileUpload;
+  fileEditingTemp: FileUpload;
+
   @Input() formModel: any;
+  @Input() allowExtensions: string;
+  @Input() allowMultiFile = "1";
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;
   @Input() functionID: string;
   @Input() type: string;
+  @Input() idBrowse = "browse";
   @Input() popup = "1";
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
   @Input() hideDes = "0";
+  @Input() displayThumb: string;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -124,22 +134,33 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != "" && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
-        if (res) {
-          this.data = res;
+        if (res?.result) {
+          this.data = res.result;
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
       })
     };
 
-    if (document.getElementById('browse') != null) {
-      document.getElementById('browse').onclick = () => {
+    if (document.getElementById(this.idBrowse) != null) {     
+      var list = document.getElementsByName('UploadFiles');
+      if (list?.length > 0) {
+        for(var i=0; i<list.length; i++) {
+          if (document.getElementsByName('UploadFiles')[i].getAttribute("idbutton") == null)
+          {
+            document.getElementsByName('UploadFiles')[i].setAttribute("idbutton", this.idBrowse);
+            break;
+          }            
+        }        
+      }
+      
+      document.getElementById(this.idBrowse).onclick = () => {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       };
 
       this.dropElement = document.querySelector('#dropArea') as HTMLElement;
-      document.getElementById('browse').onclick = function () {
+      document.getElementById(this.idBrowse).onclick = function () {
         document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click();
         return false;
       }
@@ -155,6 +176,10 @@ export class AttachmentComponent implements OnInit {
     // };
   }
 
+  allowMultiple() {
+    return this.allowMultiFile == "1" ? true : false;
+  }
+  
   // upload file tai day
   public onFileSelect(args: SelectedEventArgs): void {
     if (isNullOrUndefined(document.getElementById('dropArea').querySelector('.upload-list-root'))) {
@@ -205,19 +230,21 @@ export class AttachmentComponent implements OnInit {
   closePopup() {
     // this.notificationsService.alertCode('DM001')
     // this.cacheService.message('DM001')
-    this.fileAdded.emit({ data: this.atSV.fileListAdded });
-    if (this.data == undefined)
-      this.data = [];
+  
+    // if (this.data == undefined)
+    //   this.data = [];
 
-    for (var i = 0; i < this.atSV.fileListAdded.length; i++) {
-      this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));
-    }
+    // for (var i = 0; i < this.atSV.fileListAdded.length; i++) {
+    //   this.data.push(Object.assign({}, this.atSV.fileListAdded[i]));
+    // }
+
+    this.fileAdded.emit({ data: this.data });
 
     if (this.type == "popup") {
       this.dialog.close();
     }
 
-    this.fileUploadList = [];
+    this.fileUploadList = [];   
     this.changeDetectorRef.detectChanges();
   }
 
@@ -408,8 +435,25 @@ export class AttachmentComponent implements OnInit {
   }
 
   onMultiFileSave() {
+    // var config = new AlertConfirmInputConfig();
+    //           config.type = "checkBox";
+              
+    //           this.notificationsService.alert(this.titlemessage, "item.message", config).closed.subscribe(x=>{
+    //              console.log(x);
+    //              if(x.event.status == "Y")
+    //              { 
+    //               //if (x.event.data)
+    //              }
+    //              else if (x.event.status == "N") {
+
+    //              }
+    //           });
+    //           return;
     // this.dialog.close();
     // return;
+    if (this.data == undefined)
+      this.data = [];
+
     let total = this.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
@@ -422,6 +466,10 @@ export class AttachmentComponent implements OnInit {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
           var addList = res.filter(x => x.status == 0 || x.status == 9);
+
+          for(var i=0; i<addList.length; i++) {
+            this.data.push(Object.assign({}, addList[i]));
+          }            
 
           if (addList.length == this.fileUploadList.length) {
             this.atSV.fileList.next(this.fileUploadList);
@@ -444,12 +492,57 @@ export class AttachmentComponent implements OnInit {
               }
             }
             if (newlistNot.length > 0) {
-              this.notificationsService.notify(newlistNot[0].message);
-              //this.closeFileDialog('dms_file');
+              this.notificationsService.notify(newlistNot[0].message);             
               this.closePopup();
             }
             else {
               this.fileUploadList = newUploadList;
+              var config = new AlertConfirmInputConfig();
+              config.type = "checkBox";
+              
+              this.notificationsService.alert(this.titlemessage, item.message, config).closed.subscribe(x=>{
+                if(x.event.status == "Y")
+                 { 
+                  // save all
+                  if (x.event.data) {
+                    for (var i = 0; i < this.fileUploadList.length; i++) {
+                      this.fileUploadList[i].reWrite = true;
+                    }
+                    this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
+                      var mess = '';
+                      for (var i = 0; i < result.length; i++) {
+                        var f = result[i];
+                        mess = mess + (mess != "" ? "<br/>" : "") + f.message;
+
+                      }
+                      this.notificationsService.notify(mess);
+                      this.fileUploadList = [];
+                      this.closePopup();
+                    });
+                  }
+                  else {
+                    // save 1
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList[index].reWrite = true;
+                    this.onMultiFileSave();
+                  }
+                 }
+                 else if (x.event.status == "N") {
+                  // cancel all
+                  if (x.event.data) { 
+                     this.fileUploadList = [];
+                     this.closePopup();              
+                  }
+                  else {
+                    // cancel 1
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList.splice(index, 1);//remove element from array
+                    if (this.fileUploadList.length > 0)
+                      this.onMultiFileSave();
+                  }
+                 }
+              })
+
               // this.confirmationDialogService.confirmAll(this.titlemessage, item.message, this.fileUploadList.length > 1 ? true : false).then((confirmed) => {
               //     if (confirmed == "save_all") {
               //       for (var i = 0; i < this.fileUploadList.length; i++) {
@@ -513,6 +606,9 @@ export class AttachmentComponent implements OnInit {
           this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
+         // for(var i=0; i<addList.length; i++) {
+          this.data.push(Object.assign({}, item));
+          //}     
           this.closePopup();
         }
         else if (item.status == 6) {
@@ -529,51 +625,31 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  rewriteFile(title: any, message: any, item: FileUpload) {
-    var that = this;
+  rewriteFile(title: any, message: any, item: FileUpload) { 
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
-
-    /*  this.notificationsService.alert(title, message, config).subscribe((res: Dialog)=>{
-       let that = this;
-       res.close = function(e) {
-         item.reWrite = true;
+    this.notificationsService.alert(title, message, config).closed.subscribe(x=>{
+      if(x.event.status == "Y")
+      { 
+        item.reWrite = true;
          var done = this.fileService.updateVersionFile(item).toPromise();
          if (done) {
            done.then(async res => {
              this.fileUploadList[0].recID = res.data.recID;
              this.atSV.fileListAdded.push(Object.assign({}, item));
+             this.data.push(Object.assign({}, item));
              this.notificationsService.notify(res.message);
-             this.closePopup(modal);
+             this.closePopup();
              this.fileUploadList = [];
            }).catch((error) => {
              console.log("Promise rejected with " + JSON.stringify(error));
            });
          }
-       }
-     }) */
-
-    // this.confirmationDialogService.confirm(title, message).then((confirmed) => {
-    //   if (confirmed) {
-    //     item.reWrite = true;
-    //     var done = this.fileService.updateVersionFile(item).toPromise();
-    //     if (done) {
-    //       done.then(async res => {
-    //         this.fileUploadList = [];
-    //         this.notificationsService.notify(res.message);
-    //         this.modalService.dismissAll();
-    //       }).catch((error) => {
-    //         console.log("Promise rejected with " + JSON.stringify(error));
-    //       });
-    //     }
-    //   }
-    // });
+      }
+    })
   }
 
-  closeFileDialog(form): void {
-    //$('#dms_properties').removeClass('offcanvas-on');
-    // $('#' + form).css('z-index', '1000');
-    // $('#' + form).removeClass('offcanvas-on');
+  closeFileDialog(form): void {  
   }
 
   arrayBufferToBase64(buffer) {
@@ -586,6 +662,11 @@ export class AttachmentComponent implements OnInit {
     return window.btoa(binary);
   }
 
+  onEditUploaded(file) {
+    //alert('edit');
+    this.callfc.openForm(EditFileComponent, this.titleDialog, 500, 500, "", [this.functionID], "");
+  }
+
   onDeleteUploaded(file: string) {
     let index = this.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
     if (index > -1) {
@@ -593,6 +674,20 @@ export class AttachmentComponent implements OnInit {
       //  this.dmSV.fileUploadList.next(this.fileUploadList);
     }
   }
+
+  
+  editfile(file, multi = false, index = 0) {
+    // let option = new SidebarModel();
+    // //option.DataService = this.dataService;
+    // option.FormModel = this.formModel;
+    // option.Width = '550px';
+    // let data = {} as any;
+    // data.title = "test";
+    // this.callfc.openSide(EditFileComponent, data, option);
+  //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
+    this.callfc.openForm(EditFileComponent, this.titleDialog, 800, 800, "", [this.functionID, file], "");
+  }
+  
 
   sortBy() {
     if (this.fileUploadList != null)
@@ -661,8 +756,8 @@ export class AttachmentComponent implements OnInit {
         case ".7z":
         case ".rar":
         case ".zip":
-          return "zip.svg";
-        case ".jpg":
+          return "zip.svg";        
+        case ".jpg":     
           return "jpg.svg";
         case ".mp4":
           return "mp4.svg";
@@ -737,13 +832,7 @@ export class AttachmentComponent implements OnInit {
             var list = listFolder[0].folderPath.split(";");
             this.loadChildNode(res[0], 0, list);
           }
-        }
-        // FolderPath
-        //for (var i = 0; i < res.length; i++) {
-        // this.loadChildNode();
-        // }
-        // this.refreshSelect(res);
-        //   this.loadSelectEventTreeSelect();
+        }      
         this.changeDetectorRef.detectChanges();
         this.remotePermission = res[0].permissions;
       }
@@ -752,70 +841,14 @@ export class AttachmentComponent implements OnInit {
     // DM058: Vui lòng chọn file tải lên
     // DM059: Đã thêm file thành công
     //  this.openDialogFolder(this.openFolder, "sm", "folder");
-  }
+  } 
+ 
 
-  // openDialogFolder(content, size: string = "", name: string = '') {
-
-  //     if (this.dmSV.listDialog.indexOf(name) > -1)
-  //       return;
-
-  //     if (this.dmSV.listDialog == null)
-  //       this.dmSV.listDialog = [];
-
-  //     if (this.isFileList) {
-  //       this.fileUploadList = [];
-  //       this.dmSV.fileUploadList.next(this.fileUploadList);
-  //     }
-
-  //     if (name != "") {
-  //       this.dmSV.listDialog.push(name);
-  //     }
-
-  //     // const modalRef = this.modalService.open(NgbdModalContent, {windowClass: 'modal-holder', centered: true});
-  //     //this.modalServic
-  //     // console.log(content.toString());
-  //     //  content.dismiss();
-  //     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: size, windowClass: 'custom-class my-dialog' }).result.then((result) => {
-  //       //  alert(1);
-  //       this.closeResult = `Closed with: ${result}`;
-  //     }, (reason) => {
-  //       // alert(2);
-  //       if (name != '') {
-  //         var index = this.dmSV.listDialog.indexOf(name);
-  //         if (index > -1)
-  //           this.dmSV.listDialog.splice(index, 1);
-  //       }
-  //       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-  //     });
-
-  //     // this.dialogRef.afterClosed().pipe(
-  //     //   finalize(() => this.dialogRef = undefined)
-  //     // );
-
-  //     //  $('.my-dialog').css("z-index", '9999');
-  //   }
-
-  private getDismissReason(reason: any): string {
-    // if (!this.onRole) {
-    //   $('#dms_share').css('z-index', '9999');
-    //   $('#dms_properties').css('z-index', '9999');
-    //   $('#dms_request-permission').css('z-index', '9999');
-    // }
-
-    // if (reason === ModalDismissReasons.ESC) {
-    //   return 'by pressing ESC';
-    // } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    //   return 'by clicking on a backdrop';
-    // } else {
-    //   return `with: ${reason}`;
-    // }
-    return "";
-  }
-
-  uploadFile() {
-    document.getElementsByClassName('e-file-select-wrap')[0].querySelector('button').click()
-    // document.getElementById('browse').click();
-    //this.file.nativeElement.click();
+  uploadFile() {    
+    console.log(this.uploadObj);
+    var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    if (ctrl != null)
+      ctrl.click();    
   }
 
   async handleFileInput1(files: FileList) {
@@ -879,14 +912,10 @@ export class AttachmentComponent implements OnInit {
   public readURL(liImage: HTMLElement, file: any) {
     let imgPreview: HTMLImageElement = liImage as HTMLImageElement;
     let imageFile: File = file.rawFile;
-    let reader: FileReader = new FileReader();
-    // reader.addEventListener( 'load', () => {
-    //     imgPreview.src = reader.result as string;
-    // }, false);
+    let reader: FileReader = new FileReader();    
     if (imageFile) {
       reader.readAsDataURL(imageFile);
-    }
-    //  return reader.result as string;
+    }    
   }
 
   getBase64(file) {
@@ -902,11 +931,73 @@ export class AttachmentComponent implements OnInit {
   //   return await blobToBase64(blob);
   // }
 
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  addPermissionForRoot(list: Permission[]) {
+   // var id = this.dmSV.folderId.getValue();
+    var permissions = [];
+    if (list != null && list.length > 0)
+      permissions = list;
+
+   // if (id == "3" || id == "4") {
+      //this.fileEditing.permissions = [];
+      list = [];
+      permissions = list;
+      let perm = new Permission;
+      perm.objectType = "7";
+      perm.objectName = "Administrator";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.read = true;
+      perm.download = true;
+      perm.isSharing = false;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      //perm.delete = false;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+
+      perm = new Permission;
+      perm.objectType = "1";
+      perm.objectID = this.user.userID;
+      perm.objectName = "Owner (" + this.user.userName + ")";
+      perm.isSystem = true;
+      perm.isActive = true;
+      perm.isSharing = false;
+      perm.read = true;
+      perm.download = true;
+      perm.full = true;
+      perm.share = true;
+      perm.update = true;
+      perm.create = true;
+      perm.delete = true;
+      perm.upload = true;
+      perm.assign = true;
+      permissions.push(Object.assign({}, perm));
+   // }
+    return permissions;
+  }
+
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.fileUploadList.length;
+    //var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
+    var addedList = [];
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
@@ -914,7 +1005,12 @@ export class AttachmentComponent implements OnInit {
         var fileUpload = new FileUpload();
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
-        fileUpload.avatar = this.getAvatar(fileUpload.fileName);
+        var type = files[i].type.toLowerCase();
+        if (type == "png" || type == "jpg" || type == "bmp")
+        {        
+          fileUpload.avatar = data;
+        }
+        else fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(fileUpload.fileName)}`;
         fileUpload.extension = files[i].name.substring(files[i].name.lastIndexOf('.'), files[i].name.length) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
@@ -929,17 +1025,27 @@ export class AttachmentComponent implements OnInit {
         fileUpload.data = data.toString();
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
-        fileUpload.permissions = this.remotePermission;
+        //fileUpload.permissions = this.remotePermission;
+      //  if (this.parentFolder != null && this.parentFolder.permissions != null)
+       //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);
+      // fileUpload = this.addEveryOnePermission(fileUpload);
+        fileUpload.permissions = this.addPermissionForRoot(fileUpload.permissions);
+        // if (this.remote) {
+        //   fileUpload.permissions = this.remotePermission;
+        // }
+        addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
-    this.fileCount.emit(files.length);
+    //   this.fileAdded.emit({ data: this.fileUploadList });
+  //  this.fileCount.emit(data: addedList);
+     this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";
     //  this.dmSV.fileUploadList.next(this.fileUploadList);
-    this.fileAdded.emit({ data: this.fileUploadList });
+   // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
 
     return false;

@@ -190,7 +190,8 @@ const T_Component: Type<any>[] = [
   // MwpComponent,
   // MwpViewDetailComponent,
   // MwpPopupAddComponent,
-  ViewListComponent
+  ViewListComponent,
+  
 ];
 @NgModule({
   imports: [

@@ -32,6 +32,7 @@
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
       [objectId]="dispatch?.recID"
+      [allowMultiFile]="0"
     >
     </codx-attachment>
   </div>
@@ -39,12 +40,13 @@
     <div class="d-flex align-items-center mb-1">
       <codx-label 
         class="me-2 cursor-pointer" 
-        [class.text-primary]="!showAgency" 
-        default="Đơn vị" (click)="hideDept()">
+        default="Đơn vị"
+        [class.text-primary]="activeDiv == 'dv'" 
+        (click)="hideDept('dv')">
       </codx-label>
-      <ng-container *ngIf="showAgency">
+      <ng-container *ngIf="!hidepb">
         <codx-label class="me-2 " default="|"></codx-label>
-        <codx-label class="cursor-pointer text-primary" default="Phòng ban" ></codx-label>
+        <codx-label class="cursor-pointer text-primary" [class.text-primary]="activeDiv == 'pb'" default="Phòng ban" (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>
     <div class="align-items-center" style="display:flex" [hidden]="showAgency">
@@ -194,7 +196,7 @@
       [formModel]="form.formModel" 
       [Group]="form.formGroup"
       field="title"
-      [format]="'ed2'"
+      
     >
     </codx-input>
   </div>
@@ -222,19 +224,14 @@
     <codx-label default='Nơi nhận'></codx-label>
     <div class="d-flex">
       <codx-input
-        style="width:100%"
-        [formModel]="form.formModel" 
-        [Group]="form.formGroup"
-        field="deptID"
-      >
-      <!-- (valueChange)="changeValueBUID($event)" -->
-      </codx-input>
-      <codx-input
         type="Combobox"
         name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null"
         refType="P"
-        field="DeptID"
+        field="deptID"
+        [showInput]="true"
+        [crrValue]="dispatch?.deptID"
+        (valueChange)="changeValueBUID($event)"
       >
       </codx-input>
     </div>
@@ -271,19 +268,12 @@
     <codx-label default='Người chịu trách nhiệm'></codx-label>
     <div class="d-flex">
       <codx-input
-        [formModel]="form.formModel" 
-        [Group]="form.formGroup"
-        field="owner" 
-        style="width:100%"
-      >
-      </codx-input>
-      <codx-input
         type="Combobox"
         name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
         refType="P"
         field="popup"
-       
+        (valueChange)="changeValueOwner($event)"
       >
      <!--  (valueChange)="changeValueBUID($event)" -->
       </codx-input>

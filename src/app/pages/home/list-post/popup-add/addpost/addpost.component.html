@@ -1,103 +1,130 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
-        <div class="body">
-            <div class="my-3 d-flex">
-                <div class="body-user-img me-3">
-                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
-                    </codx-img>
-                </div>
-                <div class="ms-2">
-                    <div class="user-name fw-bold">{{user?.userName}}</div>
-                    <ng-container *ngIf="lstRecevier.length > 0">
-                        <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
-                            <div class="fw-bold fs-6">
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                    default="cùng với "></codx-label>
-                                <span class="me-2 ">{{userRecevier.UserName}}</span>
-                            </div>
+        <div class="position-relative h-100 body-post">
+            <div class="body-post-scroll">
+                <div class="my-3 d-flex">
+                    <div class="body-user-img me-3">
+                        <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
+                        </codx-img>
+                    </div>
+                    <div class="ms-2">
+                        <div class="user-name fw-bold">{{user.userName}}</div>
+                        <ng-container *ngIf="lstRecevier.length > 0">
+                            <ng-container *ngIf="shareControl == 'U'">
+                                <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
+                                    <div class="fw-bold fs-6">
+                                        <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                            default="cùng với "></codx-label>
+                                        <span class="me-2 ">{{recevierName}}</span>
+                                    </div>
+                                </ng-container>
+                                <ng-template #shareWith>
+                                    <div class="fw-bold fs-6">
+                                        <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                            default="cùng với "></codx-label>
+                                        <span class="ms-2 me-2">{{lstRecevier.length}}</span>
+                                        <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                            default=" người khác "></codx-label>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
                         </ng-container>
-                        <ng-template #shareWith>
-                            <div class="fw-bold fs-6">
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                    default="cùng với "></codx-label>
-                                <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                                <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                    default=" người khác "></codx-label>
-                            </div>
-                        </ng-template>
-                    </ng-container>
-                    <div class="d-flex align-items-center justify-content-start user-square">
-                        <div class="me-2">
-                            <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
-                        </div>
-                        <i class="icon-arrow_drop_down icon-16 text-dark"></i>
-                    </div>
-                </div>
 
-            </div>
-            <div class="my-3 h-50">
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)"
-                    ngDefaultControl></codx-input>
-            </div>
-            <ng-container *ngIf="dataEdit?.recID">
-                <div class="border ndchiase p-4 mt-3">
-                    <div class="d-flex mb-3 card-border">
-                        <codx-img [width]="30" [objectId]="dataEdit?.createdBy" bjectType="AD_Users">
-                        </codx-img>
-                        <div class="d-flex flex-column flex-grow-1 ms-2">
-                            <div class="d-flex align-items-center">
-                                <span class="text-gray-800 fw-bold">{{dataEdit?.createdName}}</span>
-                            </div>
-                            <div class="text-info-date">
-                                <span class="text-gray-400 me-2">{{dataEdit?.createdOn | timefrom}}</span>
-                            </div>
+
+                        <div class="d-flex align-items-center justify-content-start user-square">
+                            <!-- <div class="me-2">
+                            <codx-input
+                                type="Share"
+                                refValue="L1901"
+                                [showInput]="false"
+                                [multiple]="true"
+                                (valueChange)="eventApply($event)">
+                            </codx-input>
+                        </div> -->
+                            <button (click)="openFormShare(controlShare)">click</button>
+                            <ng-template #controlShare let-dialog>
+                                <codx-share [dialog]="dialog" [multiple]="false" (eventApply)="eventApply($event)">
+                                </codx-share>
+                            </ng-template>
                         </div>
                     </div>
-                    <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataEdit }">
+
+                </div>
+                <div class="my-3">
+                    <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
+                        [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}"
+                        (valueChange)="valueChange($event)" ngDefaultControl>
+                    </codx-input>
+                    <div class="" style="display:none;">
+                        <codx-attachment #attachment objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
+                            hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
+                            (fileCount)="getfileCount($event)" [functionID]="dialogRef.formModel.funcID">
+                        </codx-attachment>
+                    </div>
+                    <ng-container *ngIf="isUploadFile">
+                        <codx-image-grid [images]="listImgUpload"></codx-image-grid>
                     </ng-container>
                 </div>
-            </ng-container>
-            <ng-container *ngIf="dataShare?.recID">
-                <div class="border ndchiase p-4 mt-3">
-                    <div class="d-flex mb-3 card-border">
-                        <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
-                        </codx-img>
-                        <div class="d-flex flex-column flex-grow-1 ms-2">
-                            <div class="d-flex align-items-center">
-                                <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
-                            </div>
-                            <div class="text-info-date">
-                                <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                <ng-container *ngIf="dataEdit?.recID">
+                    <div class="border ndchiase p-4 mt-3">
+                        <div class="d-flex mb-3 card-border">
+                            <codx-img [width]="30" [objectId]="dataEdit?.createdBy" bjectType="AD_Users">
+                            </codx-img>
+                            <div class="d-flex flex-column flex-grow-1 ms-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="text-gray-800 fw-bold">{{dataEdit?.createdName}}</span>
+                                </div>
+                                <div class="text-info-date">
+                                    <span class="text-gray-400 me-2">{{dataEdit?.createdOn | timefrom}}</span>
+                                </div>
                             </div>
                         </div>
+                        <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataEdit }">
+                        </ng-container>
                     </div>
-                    <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataShare }">
-                    </ng-container>
-                </div>
-            </ng-container>
-            <div class="my-3 d-flex justify-content-between align-items-center body-function">
-                <div class="text-dark-50 fw-bold">
+                </ng-container>
+                <ng-container *ngIf="dataShare?.recID">
+                    <div class="border ndchiase p-4 mt-3">
+                        <div class="d-flex mb-3 card-border">
+                            <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
+                            </codx-img>
+                            <div class="d-flex flex-column flex-grow-1 ms-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                                </div>
+                                <div class="text-info-date">
+                                    <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: dataShare }">
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="d-flex justify-content-between align-items-center body-function">
+                <div class="text-gray-500 fw-bold">
                     <codx-label formName="" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
                 </div>
                 <div>
                     <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
-                        class="btn btn-icon btn-md ml-2 btn-emoji">
-                        <i class="icon-tag_faces icon-30 text-warning"></i>
+                        class="btn btn-icon btn-md ms-2 btn-emoji">
+                        <i class="icon-tag_faces icon-24 text-warning"></i>
                     </button>
-                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2">
-                        <i class="icon-local_offer icon-30 text-primary"></i>
+                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ms-2">
+                        <i class="icon-local_offer icon-24 text-primary"></i>
                     </button>
-                    <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ml-2 ng-star-inserted">
-                        <i class="icon-photo icon-30 text-success"></i>
+                    <button (click)="openFile()" type="button" data-toggle="tooltip"
+                        class="btn btn-icon btn-md ms-2 ng-star-inserted">
+                        <i class="icon-photo icon-24 text-success"></i>
                     </button>
                 </div>
             </div>
         </div>
         <ng-container *ngIf="showEmojiPicker">
             <div class="emoji">
-                <emoji-mart class="emoji-mart" skin="6" [showPreview]="false" [set]="set"
-                    (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+                <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
+                    (emojiSelect)="addEmoji($event)"></emoji-mart>
             </div>
         </ng-container>
         <ng-template #containTemplate let-item>
@@ -106,10 +133,10 @@
                     <read-more #readmore [content]="item?.content" [limit]="800" [completeWords]="true">
                     </read-more>
                 </div>
-                <div class="pic-feed">
+                <!-- <div class="pic-feed">
                     <lv-image-grid #player [database]="true" [files]="item?.listImage">
                     </lv-image-grid>
-                </div>
+                </div> -->
             </ng-container>
             <ng-template #category2>
                 <div class="p-0 m-0">

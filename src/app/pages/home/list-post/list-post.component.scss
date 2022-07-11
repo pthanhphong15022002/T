@@ -52,6 +52,10 @@ app-list-post .e-listview .e-list-item {
     border: 1px solid #f2f3f7 !important;
 }
 
+.tag-img {
+    width: 20px;
+}
+
 codx-view-content {
     background-color: transparent;
     border-radius: 0;
@@ -66,4 +70,83 @@ ejs-listview .e-ul>li {
     margin-bottom: 15px;
     background-color: #fff !important;
     border-radius: 0.475rem;
+}
+
+
+.emoji {
+    position: absolute;
+    z-index: 99;
+    bottom: 0px;
+    right: 12px;
+}
+
+.emoji-mart-scroll {
+    height: 220px;
+}
+
+.emoji-mart-scroll ::-webkit-scrollbar {
+    width: 5px;
+    height: 7px;
+    border-radius: 5px !important;
+}
+
+.e-popup .card-body {
+    height: 100%;
+}
+
+.body-function {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.body-post {
+    bottom: 45px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.body-post-scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+
+    overflow: auto;
+}
+
+.card-body.hover-scroll-y {
+    padding-bottom: 0 !important;
+}
+
+
+/*** 1 - 5 pic ***/
+.feed-5pic .col-xl-5.pl-0 div+div {
+    margin-top: 3px;
+}
+
+.feed-img-more {
+    margin-top: -165px !important;
+    height: 165px;
+    position: relative;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-number {
+    font-size: 24px;
+    color: #fff;
+}
+
+.feed-3pic .min-h-320px {
+    min-height: 313px !important;
+}
+
+.feed-4pic .min-h-340px {
+    min-height: 333px !important;
 }

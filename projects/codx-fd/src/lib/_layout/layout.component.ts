@@ -8,19 +8,11 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'FD';
-  menu: any;
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
   onInit(): void {
-    // this.funcs$.subscribe((res) => {
-    //   console.log(res);
-    // });
-    this.codxService.modulesOb$.subscribe((res) => {
-      this.menu = res;
-    });
   }
 
   onAfterViewInit(): void { }

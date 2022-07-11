@@ -91,7 +91,7 @@
                     <div class="codx_title_sub"><codx-label default="Pivot Table"></codx-label></div>
                     <div class="codx_des"><i class="text-gray-400"><codx-label default="Xuất dữ liệu được chọn thành file excel có định dạng pivot table"></codx-label></i></div>
                     <div class="codx_des">
-                        <codx-attachment 
+                       <!--  <codx-attachment 
                             #attachment 
                             hideBtnSave="1"  
                             hideFolder="1" 
@@ -99,8 +99,9 @@
                             hideDes="1"
                             objectType="AD_ExcelTemplates"
                             [functionID]="formModel?.funcID"
-                      >
-                    </codx-attachment></div>
+                        >
+                        </codx-attachment> -->
+                    </div>
                 </div>
               </div>
               <div class="d-flex align-items-start ms-6 mt-2">
@@ -174,44 +175,46 @@
               </button>
             </div>
           </div>
-          <div class="d-flex align-items-start mb-3" *ngFor="let item of dataEx">
-            <div class="w-30px mt-1">
-                <codx-input 
-                type="radio" 
-                name="format"  
-                [Group]="exportGroup"
-                ControlName="format"
-                [crrValue]="item.recID"
-                [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-            >
-            </codx-input>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-              <div class="codx_title_sub">{{item.templateName}}</div>
-              <div class="codx_des"> <i class="text-gray-400">{{item.description}}</i></div>
-            </div>
-            <div class="d-flex align-items-start ms-6 ">
-              <div ngbDropdown class="dropdown ms-6">
-                <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-expanded="false">
-                  <span class="icon-more_vert icon-18"></span>
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                    <a ngbDropdownItem class="dropdown-item">
-                        <div class="d-flex align-items-center cursor-pointer" (click)="openForm('edit',item,'excel')">
-                            <span class="icon-edit text-primary icon-16"></span>
-                            <span class="ms-2">Chỉnh sửa</span>
-                        </div>
-                    </a>
-                    <a ngbDropdownItem class="dropdown-item" >
-                        <div class="d-flex align-items-center cursor-pointer" (click)="openForm('delete',item,'excel')">
-                            <span class="icon-delete text-danger icon-16"></span>
-                            <span class="ms-2">Xóa</span>
-                        </div>
-                    </a>
+          <div (scroll)="onScroll($event)" style="max-height:100px;overflow:auto">
+            <div class="d-flex align-items-start mb-3" *ngFor="let item of dataEx"  >
+                <div class="w-30px mt-1">
+                    <codx-input 
+                        type="radio" 
+                        name="format"  
+                        [Group]="exportGroup"
+                        ControlName="format"
+                        [crrValue]="'excelTemp_'+item.recID"
+                        [ngClass]="{'is-invalid': submitted && f.format.errors }"
+                    >
+                    </codx-input>
                 </div>
-              </div>
+                <div class="d-flex flex-column flex-grow-1">
+                <div class="codx_title_sub">{{item.templateName}}</div>
+                <div class="codx_des"> <i class="text-gray-400">{{item.description}}</i></div>
+                </div>
+                <div class="d-flex align-items-start ms-6 ">
+                <div ngbDropdown class="dropdown ms-6">
+                    <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-expanded="false">
+                    <span class="icon-more_vert icon-18"></span>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                        <a ngbDropdownItem class="dropdown-item">
+                            <div class="d-flex align-items-center cursor-pointer" (click)="openForm('edit',item,'excel')">
+                                <span class="icon-edit text-primary icon-16"></span>
+                                <span class="ms-2">Chỉnh sửa</span>
+                            </div>
+                        </a>
+                        <a ngbDropdownItem class="dropdown-item" >
+                            <div class="d-flex align-items-center cursor-pointer" (click)="openForm('delete',item,'excel')">
+                                <span class="icon-delete text-danger icon-16"></span>
+                                <span class="ms-2">Xóa</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                </div>
             </div>
-          </div>
+        </div>
     </div>
     <div class="separator my-2"></div>
     <div class="my-7">

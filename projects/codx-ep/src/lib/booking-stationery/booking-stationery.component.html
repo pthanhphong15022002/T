@@ -1,7 +1,6 @@
 <codx-views
   #view
   [funcID]="funcID"
-
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
@@ -30,15 +29,16 @@
 
 <ng-template #cardItem let-data>
   <codx-card-img
-    cardCss="border w-300px h-100"
+    cardCss="border w-250px h-100"
     [imageSrc]="
       data.icon
         ? data.icon
         : '../assets/media/img/codx/default/card-default.svg'
     "
     [content]="'content'"
+    [subTitle]="data.resourceName"
     [title]="data.resourceName"
-    [subTitle]="data.costPrice | currency: 'VND':'symbol':'3.0'"
+    [desc]="data.costPrice | currency: 'VND':'symbol':'3.0'"
     [rootData]="data"
     [footer]="cardItemFooter"
   >

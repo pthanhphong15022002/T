@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { ApiHttpService, AuthStore, FormModel, UploadFile, UserModel, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  FormModel,
+  UploadFile,
+  UserModel,
+  CacheService,
+} from 'codx-core';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxTMService {
   active = '';
@@ -19,9 +26,9 @@ export class CodxTMService {
   taskGroupComponent = false;
   constructor(
     private api: ApiHttpService,
-    private authStore: AuthStore, 
+    private authStore: AuthStore,
     private cache: CacheService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.user = this.authStore.get();
   }
@@ -89,9 +96,17 @@ export class CodxTMService {
       data
     );
   }
+
   saveAssign(data) {
-    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'AddAssignToTaskAsync', data);
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'AddAssignToTaskAsync',
+      data
+    );
   }
+
   addTaskBoard(data) {
     return this.api.execSv<any>(
       'TM',
@@ -101,6 +116,7 @@ export class CodxTMService {
       data
     );
   }
+
   addTaskGroup(data) {
     return this.api.execSv<any>(
       'TM',
@@ -120,6 +136,7 @@ export class CodxTMService {
       data
     );
   }
+
   update(data) {
     return this.api.execSv<any>(
       'TM',
@@ -149,8 +166,15 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
+
   getMoreFunction(data) {
-    return this.api.execSv<any>("SYS", "SYS", "MoreFunctionsBusiness", "GetWithPermAsync", data)
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermAsync',
+      data
+    );
   }
 
   getGridViewSetup(predicate, dataValue?) {
@@ -220,12 +244,15 @@ export class CodxTMService {
       });
     }
   }
+
   getTask(id) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetTaskByIdAsync', id);
   }
+
   deleteTask(taskID) {
     return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'DeleteTaskAsync', taskID);
   }
+
   getSprints(id) {
     return this.api.execSv<any>(
       'TM',
@@ -235,6 +262,7 @@ export class CodxTMService {
       id
     );
   }
+
   deleteSprints(id) {
     return this.api.execSv<any>(
       'TM',
@@ -245,12 +273,14 @@ export class CodxTMService {
     );
   }
 
-  getUserByListDepartmentID(listDepID){
-    return this.api.execSv<any>('HR',
-    'HR',
-    'OrganizationUnitsBusiness',
-    'GetUserByListDepartmentIDAsync',
-    listDepID)
+  getUserByListDepartmentID(listDepID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetUserByListDepartmentIDAsync',
+      listDepID
+    );
   }
 
   getChartData(
@@ -262,15 +292,21 @@ export class CodxTMService {
     beginMonth: Date,
     endMonth: Date
   ) {
-    return this.api.execSv<any>('TM', 'TM', 'TaskBusiness', 'GetGeneralDataAsync', [
-      model,
-      daySelectedFrom,
-      daySelectedTo,
-      fromDate,
-      toDate,
-      beginMonth,
-      endMonth,
-    ]);
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetGeneralDataAsync',
+      [
+        model,
+        daySelectedFrom,
+        daySelectedTo,
+        fromDate,
+        toDate,
+        beginMonth,
+        endMonth,
+      ]
+    );
   }
 
   convertListToObject(
@@ -280,6 +316,42 @@ export class CodxTMService {
   ) {
     if (!Array.isArray(list) || list.length == 0) return {};
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
+  }
+
+  getMyDBData(
+    model: Object,
+    daySelectedFrom: Date,
+    daySelectedTo: Date,
+    fromDate: Date,
+    toDate: Date,
+    beginMonth: Date,
+    endMonth: Date
+  ) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'ReportBusiness',
+      'GetDataMyDashboardAsync',
+      [model, beginMonth, endMonth]
+    );
+  }
+
+  getTeamDBData(
+    model: Object,
+    daySelectedFrom: Date,
+    daySelectedTo: Date,
+    fromDate: Date,
+    toDate: Date,
+    beginMonth: Date,
+    endMonth: Date
+  ) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'ReportBusiness',
+      'GetDataTeamDashboardAsync',
+      [model, beginMonth, endMonth]
+    );
   }
 
   getFormModel(functionID): Promise<FormModel> {

@@ -50,7 +50,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('attachment1') attachment1: AttachmentComponent;
   currView?: TemplateRef<any>;
   path: string;
   button?: ButtonModel;
@@ -139,9 +139,12 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  getfileCount($event) {}
+  getfileCount($event) {
+    console.log($event);
+  }
 
   fileAdded($event) {
+    console.log($event);
     // this.data = event.stopImmediatePropagation;
   }
 
@@ -151,6 +154,10 @@ export class HomeComponent extends UIComponent {
 
   openFile() {
     this.attachment.uploadFile();
+  }
+
+  openFile1() {
+    this.attachment1.uploadFile();
   }
 
   getPath() {
@@ -186,8 +193,8 @@ export class HomeComponent extends UIComponent {
 
   onSelectionChanged($data) {
     //   console.log($data);
-    let id = $data.dataItem.recID;
-    let item = $data.dataItem;
+    let id = $data.recID;
+    let item = $data;
     if (item.read) {
       // var breadcumb = [];
       // var breadcumbLink = [];

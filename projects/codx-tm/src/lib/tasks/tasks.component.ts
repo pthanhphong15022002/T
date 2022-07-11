@@ -99,14 +99,17 @@ export class TasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT02015': // cái này xem lại , nên có biến gì đó để xét
+      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
-      case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
+      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
         break;
-      case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
+      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
+        break;
+      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
+        //???? chắc làm sau ??
         break;
       default:
         this.changeStatusTask(e, data);
@@ -328,6 +331,11 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
+    if(data && data.status>= 8){
+      // this.notiService.notifyCode('cần code đoạn nay');
+       this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+      return;
+    }
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -346,9 +354,7 @@ export class TasksComponent extends UIComponent {
         this.dialog.closed.subscribe((e) => {
           this.itemSelected = this.view.dataService.dataSelected
         });
-
       });
-
   }
 
   copy(data) {
@@ -458,17 +464,26 @@ export class TasksComponent extends UIComponent {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     //  this.view.dataService.dataSelected = taskAction;
-    this.api
+    // this.api
+    //   .execSv<any>(
+    //     'SYS',
+    //     'ERM.Business.CM',
+    //     'ParametersBusiness',
+    //     'GetOneField',
+    //     [fromName, null, fieldName]
+    //   )
+     this.api
       .execSv<any>(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        [fromName, null, fieldName]
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'TM_Parameters'
       )
       .subscribe((res) => {
         if (res) {
-          var fieldValue = res.fieldValue;
+          var param = JSON.parse(res.dataValue);
+          var fieldValue = param[fieldName];
           if (fieldValue != '0') {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
@@ -494,6 +509,8 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
+                  // this.view.dataService.setDataSelected(taskAction);
+                  // this.detectorRef.detectChanges
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(

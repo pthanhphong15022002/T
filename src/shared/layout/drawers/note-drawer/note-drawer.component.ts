@@ -1,17 +1,19 @@
-import { UpdateNoteComponent } from '@pages/home/update-note/update-note.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
+import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
+import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
+import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 
 @Component({
   selector: 'app-note-drawer',
   templateUrl: './note-drawer.component.html',
   styleUrls: ['./note-drawer.component.scss'],
 })
-export class NoteDrawerComponent implements OnInit {
+export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   @Input() dataAdd = new Notes();
 
@@ -42,202 +44,176 @@ export class NoteDrawerComponent implements OnInit {
   typeList = "note-drawer";
 
   @ViewChild('listview') lstView: CodxListviewComponent;
-  constructor(
-    private api: ApiHttpService,
+  constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
-  ) { }
-
-  ngOnInit(): void {
-    this.getEvents();
+  ) {
+    super(injector)
   }
 
-  getEvents() {
-    this.api
-      .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetDataByRecIDAsync", ["WP_Calendars", "", "SettingShow"])
-      .subscribe((res) => {
-        if (res && res.msgBodyData) {
-          this.param = res.msgBodyData[0];
-          //this.arrKey = Object.keys(this.param);
-          //this.dataObj = {tm_task: "ddddd"};
-          this.TM_Tasks = this.param[0];
-          this.WP_Notes = this.param[1];
-          this.TM_TasksParam = this.param[2].TM_Tasks;
-          this.WP_NotesParam = this.param[2].WP_Notes;
+  onInit(): void {
+  }
 
-
-          for (let i = 0; i < this.WP_Notes.length; i++) {
-            var date = this.WP_Notes[i].createdOn;
-            var daq = new Date(Date.parse(date));
-            var d = daq.toLocaleDateString();
-          }
-        }
-        this.onCountNotePin();
-      });
+  ngAfterViewInit(): void {
+    this.onCountNotePin();
   }
 
   valueChange(e, recID = null, item = null) {
     if (e) {
       var field = e.field;
-      if (field == "textarea")
-        this.message = e.data;
-      else if (field == "pinNote") {
-        if (e.data == true) {
-          if ((this.countNotePin + 1) <= this.maxPinNotes) {
-            this.onEditNote();
-            this.countNotePin += 1;
-          } else if ((this.countNotePin + 1) > this.maxPinNotes) {
-            this.checkUpdateNotePin = true;
-          }
-        } else {
-          this.onEditNote();
-        }
-      } else if (field == "checkboxUpdateNotePin") {
-        this.messageOld = item.memo;
-        this.listNoteOld = item.checkList;
-        this.isPinOld = !item.isPin;
-        this.isCalendarOld = item.showCalendar;
-        this.recIdOld = recID;
-        this.noteTypeOld = item.noteType;
-        this.onEditIsPin();
-      } else if (field == "WP_Notes_ShowEvent") {
-        // if (e.data == false) {
-        //   this.checkWP_NotesParam = false;
-        // } else {
-        //   this.checkWP_NotesParam = true;
-        // }
-
-        // var today: any = document.querySelector(".e-footer-container button[aria-label='Today']");
-        // if (today) {
-        //   today.click();
-        // }
-        // this.setEventWeek();
-      } else if (field == "TM_Tasks_ShowEvent") {
-        // if (e.data == false) {
-        //   this.checkTM_TasksParam = false;
-        // } else {
-        //   this.checkTM_TasksParam = true;
-        // }
-
-        // var today: any = document.querySelector(".e-footer-container button[aria-label='Today']");
-        // if (today) {
-        //   today.click();
-        // }
-        // this.setEventWeek();
-      } else if (item) {
-        this.message = "";
-        item[field] = e.data;
+      if (field == 'textarea') this.message = e.data.checked.checked;
+      else if (item) {
+        this.message = '';
+        item[field] = e.data.checked;
       }
     }
   }
 
   onCountNotePin() {
-    var dt = this.WP_Notes;
-    let i = 0;
-    let ip = 0;
-    let np = 0;
-    for (i; i < dt.length; i++) {
-      if (dt[i].isPin == true) {
-        ip++;
-      } else if (dt[i].isPin == false) {
-        np++;
+    // let i = 0;
+    // let ip = 0;
+    // let np = 0;
+    // for (i; i < dt.length; i++) {
+    //   if (dt[i].isPin == true) {
+    //     ip++;
+    //   } else if (dt[i].isPin == false) {
+    //     np++;
+    //   }
+    // }
+    // this.countIsPin = ip;
+    // this.countNotPin = np;
+  }
+
+  openFormUpdateNote(data) {
+    var obj = {
+      data: this.lstView.dataService.data,
+      dataUpdate: data,
+      formType: 'edit'
+    };
+    this.callfc.openForm(
+      AddNoteComponent,
+      'Cập nhật ghi chú',
+      600,
+      450,
+      '',
+      obj
+    )
+
+    this.itemUpdate = data;
+    this.listNote = this.itemUpdate.checkList;
+    this.type = data.noteType;
+    this.recID = data?.recID;
+  }
+
+  getNumberNotePin() {
+    this.lstView.dataService.data.forEach((res) => {
+      if (res.isPin == true || res.isPin == '1') {
+        this.countNotePin++;
+      }
+    })
+  }
+
+  checkNumberNotePin(data) {
+    if (data?.isPin == '1' || data?.isPin == true) {
+      this.countNotePin -= 1;
+      this.checkUpdateNotePin = false;
+    } else if (data?.isPin == '0' || data?.isPin == false) {
+      if (this.countNotePin + 1 <= this.maxPinNotes) {
+        this.countNotePin += 1;
+        this.checkUpdateNotePin = false;
+      } else {
+        this.checkUpdateNotePin = true;
       }
     }
-    this.countIsPin = ip;
-    this.countNotPin = np;
+    this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
+  }
+
+  openFormUpdateIsPin(data, checkUpdateNotePin) {
+    if (checkUpdateNotePin == true) {
+      var obj = {
+        data: this.lstView.dataService.data,
+        itemUpdate: data,
+      }
+      this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj);
+    } else {
+      this.onEditIsPin(data);
+    }
   }
 
   openFormAddNote() {
     var obj = {
-      lstview: this.lstView,
-      ngForLstview: this.WP_Notes,
+      data: this.lstView.dataService.data,
       typeLst: this.typeList,
       formType: 'add',
-    }
-    this.callfc.openForm(AddNoteComponent, "Thêm mới ghi chú", 600, 450, "", obj);
+    };
+    let option = new DialogModel();
+    option.DataService = this.lstView.dataService as CRUDService;
+    this.callfc
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
   }
 
-  openFormPinNote(content, recID, data = null) {
-    // this.modalService.open(content, { centered: true });
-    this.itemUpdate = data;
-    this.listNote = data.checkList;
-    this.message = data.memo;
-    this.isCalendar = data.showCalendar;
-    this.isPin = data.isPin;
-    this.recID = recID;
-    this.type = data.noteType;
-  }
-
-  openFormUpdateIsPin(content) {
-    if (this.checkUpdateNotePin == true) {
-      this.modalService.open(content, { centered: true });
-    } else return;
-  }
-
-  onDeleteNote(recID) {
+  onEditIsPin(data: Notes) {
+    var isPin = !data.isPin;
+    data.isPin = isPin;
     this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "DeleteNoteAsync", recID)
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+        data?.recID,
+        data
+      ])
       .subscribe((res) => {
-        this.lstView.dataService.data = this.lstView.dataService.data.filter(x => x.recID != res.recID);
+        for (let i = 0; i < this.lstView.dataService.data.length; i++) {
+          if (this.lstView.dataService.data[i].recID == data?.recID) {
+            this.lstView.dataService.data[i].isPin = res.isPin;
+          }
+        }
         this.changeDetectorRef.detectChanges();
+      });
+  }
 
-        var today: any = document.querySelector(".e-footer-container button[aria-label='Today']");
-        if (today) {
-          today.click();
+  onDeleteNote(item) {
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'NotesBusiness',
+        'DeleteNoteAsync',
+        item?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.lstView.dataService.data = this.lstView.dataService.data.filter(x => x.recID != res.recID)
+          // this.setEventWeek();
+          var today: any = document.querySelector(
+            ".e-footer-container button[aria-label='Today']"
+          );
+          if (today) {
+            today.click();
+          }
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
 
-  openFormUpdateNote(recID, data = null) {
+  openFormNoteBooks(item) {
     var obj = {
-      lstview: this.lstView,
-      recID: recID,
-      data: data,
-    }
-    this.callfc.openForm(UpdateNoteComponent, "Cập nhật ghi chú", 0, 0, "", obj);
-    this.itemUpdate = data;
-    this.listNote = this.itemUpdate.checkList;
-    this.type = data.noteType;
-    this.recID = recID;
+      itemUpdate: item,
+    };
+    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
-  onEditNote() {
-    if (this.type == "check" || this.type == "list") {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNote;
-
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.message
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.openFormUpdateNote(data);
+        break;
+      case 'delete':
+        this.onDeleteNote(data)
+        break;
+      case 'WPT0801':
+        this.checkNumberNotePin(data);
+        break;
+      case 'WPT0802':
+        this.openFormNoteBooks(data);
+        break;
     }
-    // this.api.execAction("WP_Notes", [this.dataAdd], "UpdateAsync").subscribe((res: any) => {
-    //   console.log(res);
-    // });
-    this.dataAdd.isPin = !this.isPin;
-    this.dataAdd.showCalendar = this.isCalendar;
-    this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recID, this.dataAdd])
-      .subscribe((res) => {
-        this.changeDetectorRef.detectChanges();
-      });
-  }
-
-  onEditIsPin() {
-    if (this.noteTypeOld == "check" || this.noteTypeOld == "list") {
-      this.dataAdd.memo = null;
-      this.dataAdd.checkList = this.listNoteOld;
-
-    } else {
-      this.dataAdd.checkList = null;
-      this.dataAdd.memo = this.messageOld
-    }
-    this.dataAdd.isPin = this.isPinOld;
-    this.dataAdd.showCalendar = this.isCalendarOld;
-    this.api
-      .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.recIdOld, this.dataAdd])
-      .subscribe((res) => {
-        this.changeDetectorRef.detectChanges();
-      });
   }
 }

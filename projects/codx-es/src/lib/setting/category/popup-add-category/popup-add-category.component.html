@@ -87,70 +87,96 @@
       </span>
     </div>
 
-    <!-- <div class="col-12">
-      <div class="codx-approval">
-        <div class="codx-approval-step step-test pb-3">
-          <div class="codx-approval-header d-flex align-items-center mb-4">
-            <div class="step-number" [class.active]="true">
-              {{ 1 }}
-            </div>
-            <div class="step-title text-gray-800 fw-bold fs-4">
-              {{ "ES002" }}
-            </div>
-            <div class="badge badge-success badge-sm badge-circle ms-3" *ngIf=" true ">
-              <span class="icon-check icon-16"></span>
-            </div>
+    <div class="codx-approval">
+      <div class="codx-approval-step step-test pb-3">
+        <div class="codx-approval-header d-flex align-items-center">
+          <div class="step-number">1</div>
+          <div class="step-title text-gray-800 fw-bold fs-4">KIỂM TRA</div>
+          <div class="badge badge-success badge-sm badge-circle ms-3">
+            <span class="icon-check icon-16"></span>
           </div>
-          <div class="codx-approval-content ms-17" *ngFor="let approve of getCount(dialogCategory?.value.countStep)">
-            <div class="d-flex align-items-top justify-content-between mb-3">
-              <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
-                [title]="approve.approverName" [desc]="approve.approverPosition" [desc2]="approve.comment">
-              </codx-temp-full>
-              <div class="d-flex align-items-center text-center">
-                <div class="d-flex flex-column">
-                  <div class="text-dark fw-bold">
-                    {{ approve.status | vll: "ES003":"text" | async }}
-                  </div>
-                  <div class="badge my-1 badge-primary" *ngIf="
-                      approve.duration <= approve.leadtime;
-                      else inQueue
-                    ">
-                    {{ 'getHour("2022-07-06T00:00:00Z", 0)' }}
-                    -cc
-                    {{ 'getHour(approve.activedOn, approve.leadtime)' }}
-                  </div>
-                  <ng-template #inQueue>
-                    <div class="badge badge-danger">
-                      {{ approve.leadtime }}
-                    </div>
-                  </ng-template>
-                  <div class="text-gray-600 fs-7" *ngIf="approve.approvedOn ? true : false">
-                    {{ approve.approvedOn | date: "medium" }}
-                  </div>
-                </div>
-                <div class="ms-6 d-flex">
-                  <span class="icon-attach_file icon-18 me-1"></span>
-                  <span class="text-dark">
-                    {{
-                    approve.attachments ? approve.attachments : 0
-                    }}</span>
-                </div>
+        </div>
+        <div class="codx-approval-content ms-17">
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div> -->
+      <div class="codx-approval-step step-signature-temp pb-3">
+        <div class="codx-approval-header d-flex align-items-center">
+          <div class="step-number">2</div>
+          <div class="step-title text-gray-800 fw-bold fs-4">KÝ NHÁY</div>
+        </div>
+        <div class="codx-approval-content ms-17">
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="codx-approval-step step-signature-temp pb-3">
+        <div class="codx-approval-header d-flex align-items-center">
+          <div class="step-number">2</div>
+          <div class="step-title text-gray-800 fw-bold fs-4">KÝ NHÁY</div>
+        </div>
+        <div class="codx-approval-content ms-17">
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="codx-approval-step step-signature-temp pb-3"></div> -->
+    </div>
 
 
-    <div id="progress" class="cdx-progress mt-3" *ngIf="dialogCategory?.value.countStep > 0">
+    <!-- <div id="progress" class="cdx-progress mt-3" *ngIf="dialogCategory?.value.countStep > 0">
       <div id="progress-bar"></div>
       <ul id="progress-num">
         <ng-container *ngFor="let item of getCount(dialogCategory?.value.countStep)">
           <li class="step">{{item}}</li>
         </ng-container>
       </ul>
-    </div>
+    </div> -->
 
   </ng-template>
   <ng-template #footer>

@@ -1,40 +1,149 @@
-<codx-views #view >
-
+<codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
+  method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
+  [moreFuncs]="moreFuncs" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
+  (selectedChange)="selectedChange($event)">
 </codx-views>
-<div class="container">
-    <div class="row">
-      <div class="col-1">
-        aaaa
+
+<ng-template #titleTmp let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-1">
+      <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.userName}}</div>
+      <div class="badge border badge-white d-flex align-items-center me-2" *ngIf="data.employeeID">
+        <span class=" icon-account_box  icon-14 me-1"></span>
+        {{data.employeeID}}
       </div>
-      <div class="col">
-        <div class="grid-container">
-          <div class="item1">
-            aaaaaa
-          </div>
-          <div>
-            zzzz
-          </div>
-          <div>
-            ccc
-          </div>
-        </div>
-        <div class="col-6 col-md-4">bbbb</div>
-        <div class="col-6 col-md-4">
-          <div class="grid-container">
-            <div class="item2">
-              vvvvv
-            </div>
-            <div>
-              âccacaF
-            </div>
-          </div>
-        </div>
+      <div class="badge badge-light-primary  d-flex align-items-center me-2" *ngIf="!data.employeeID"><span
+          class="icon-account_box icon-14 me-1"></span>
+        <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
+        </codx-label>
       </div>
-      <div class="col-md-auto">
-        Variable width content
+      <div class="badge badge-light-primary  d-flex align-items-center me-2 " *ngIf="data.GroupName"><span
+          class="icon-group icon-14 me-1"></span><span>{{data.GroupName}}</span>
       </div>
-      <div class="col col-lg-2">
-        3 of 3
-      </div>
-    </div>   
+    </div>
+  </div>
+  <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap rowphoto  icon-account_box"
+    *ngIf="data.employeeID">
+    {{data.employeeID}}</div>
+  <div class="text-dark-75 font-weight-bold text-muted icon-account_box rowphoto" *ngIf="!data.employeeID">
+    <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
+    </codx-label>
+  </div>
+  <div class="text-dark-75 font-weight-bold rowphoto icon-group" *ngIf="data.groupName">
+    {{data.groupName}}
+  </div>
+  <div class="rowphoto" *ngIf="data.chooseRoles.length <= 5">
+    <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+        <a (click)="openPopup(data)">
+          <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+        </a>
+    </ng-container>
+     
+    <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+      [numberImages]="5" (click)="openPopup(data)">
+    </codx-imgs> -->
 </div>
+<div class="rowphoto" *ngIf="data.chooseRoles.length > 5">
+  <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+      <span class="symbol-label fs-4" (click)="openPopup(data)">
+        <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+      </span>
+  </ng-container>
+   
+  <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+    [numberImages]="5" (click)="openPopup(data)">
+  </codx-imgs> -->
+</div>
+</ng-template>
+<ng-template #footer let-data>
+  <div class="d-flex flex-wrap  ms-17">
+    <div class="d-flex align-items-center me-4" *ngIf="data.email"><span class="icon-email icon-16 me-1"></span>
+      <div class="">{{data.email}}</div>
+    </div>
+    <div class="d-flex align-items-center me-4" *ngIf="data.mobile"><span
+        class="icon-phone_android icon-16 me-1"></span>
+      <div class="">{{data.mobile}} </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <div class="px-5">
+    <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
+      <div class=" justify-content-start">
+        <codx-temp-full cardCss="card-template " (clickMF)="clickMF($event,data)" [imageId]="data.userID"
+          imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)"
+          [formModel]="view.formModel" [dataItem]="data" [footer]="footer">
+        </codx-temp-full>
+      </div>
+      <div class="d-flex flex-wrap">
+        <div class="d-flex">
+          <div class="" *ngIf="data.chooseRoles.length <= 5">
+            <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+              <a (click)="openPopup(data)">
+                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+              </a>
+            </ng-container>
+
+            <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+          [numberImages]="5" (click)="openPopup(data)">
+        </codx-imgs> -->
+          </div>
+          <div class="" *ngIf="data.chooseRoles.length > 5">
+            <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+              <span class="symbol-label fs-4" (click)="openPopup(data)">
+                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+              </span>
+            </ng-container>
+
+            <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
+        [numberImages]="5" (click)="openPopup(data)">
+      </codx-imgs> -->
+          </div>
+        </div>
+        <div class="d-flex flex-column text-right ms-4">
+          <div>trang thai</div>
+          <div>Ngày</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="separator"></div>
+  </div>
+
+  <!-- <div class="d-flex align-items-top">
+    <div class="d-flex align-items-start">
+      <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.userID" objectType="AD_Users"
+        [objectName]="data.userName">
+      </codx-img>
+      <div class="d-flex flex-column flex-grow-1 ">
+        <div class="d-flex align-items-center">
+          <div class="font-weight-bold" style="font-weight: bold;">
+            {{data.userName}}
+          </div>
+          <div class="label label-xxs label-pill label-inline label-success mt-1 flex-wrap margin  icon-account_box"
+            *ngIf="data.employeeID">
+            {{data.employeeID}}</div>
+          <div class="text-dark-75 font-weight-bold text-muted icon-account_box margin" *ngIf="!data.employeeID">
+            <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
+            </codx-label>
+          </div>
+          <div class="text-dark-75 font-weight-bold margin icon-group" *ngIf="data.userGroup">
+            {{data.userGroup}}
+          </div>
+        </div>
+        <div class="text-dark-75 font-weight-bold icon-apartment1" *ngIf="data.buName">
+          {{data.buName}}
+        </div>
+
+        <div>
+          <span class="font-size-sm icon-email" *ngIf="data.email">{{data.email}}
+          </span>
+          <span class="font-size-sm icon-phone_android" *ngIf="data.mobile">{{data.mobile}}</span>
+
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+</ng-template>

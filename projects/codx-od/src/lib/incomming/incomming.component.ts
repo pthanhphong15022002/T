@@ -170,15 +170,10 @@ export class IncommingComponent
         option
       );
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-          this.view.dataService
-            .remove(this.view.dataService.data[0])
-            .subscribe();
-        else {
+        if (x.event)
+        {
           delete x.event._uuid;
-          this.view.dataService.update(x.event).subscribe();
-          this.view.dataService.data[0]=x.event;
-          this.view.dataService.setDataSelected(x.event);
+          this.view.dataService.add(x.event,0).subscribe();
         }
       });
     });

@@ -137,22 +137,22 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   getDataValuelist()
   {
-    if (this.gridViewSetup["Security"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;
       })
-    if (this.gridViewSetup["Urgency"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Urgency"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Urgency"]["referedValue"]).subscribe((item) => {
         this.dvlUrgency = item;
         //this.ref.detectChanges();
       })
-    if (this.gridViewSetup["Status"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Status"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Status"]["referedValue"]).subscribe((item) => {
         this.dvlStatus = item;
         console.log(this.dvlStatus);
         //this.ref.detectChanges();
       })
-    if (this.gridViewSetup["Category"]["referedValue"] != undefined)
+    if (this.gridViewSetup["Category"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Category"]["referedValue"]).subscribe((item) => {
         this.dvlCategory = item;
         //this.ref.detectChanges();
@@ -553,6 +553,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           gridModel.predicate = this.view.dataService.request.predicates;
           gridModel.dataValue = this.view.dataService.request.dataValues;
           gridModel.entityPermission = this.formModel.entityPer;
+          //
+          //Chưa có group
+          gridModel.groupFields = "createdBy";
           this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
           break;
         }

@@ -142,16 +142,22 @@
           </div>
         </div>
         <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab==3?'active show':''">
-          <!-- <attachment #attachment1 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
-            hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 3)"></attachment> -->
+          <codx-attachment #attSignature1 [objectType]="dialog.formModel.entityName" [objectId]="Signature1"
+            hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID"
+            (fileAdded)="fileAdded($event,3)" type="inline">
+          </codx-attachment>
         </div>
         <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab==4?'active show':''">
-          <!-- <attachment #attachment2 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
-            hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 4)"></attachment> -->
+          <codx-attachment #attSignature2 [objectType]="dialog.formModel.entityName" [objectId]="Signature2"
+            hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID"
+            (fileAdded)="fileAdded($event,4)" type="inline">
+          </codx-attachment>
         </div>
         <div class="tab-pane fade" id="pane_5" [ngClass]="currentTab==5?'active show':''">
-          <!-- <attachment #attachment3 type="center" objectType="ES_SignFiles" objectId="628c326c590addf224627f42"
-            hideBtnSave="1" popup="0" functionID="EPS21" (fileAdded)="fileAdded($event, 5)"></attachment> -->
+          <codx-attachment #attStamp [objectType]="dialog.formModel.entityName" [objectId]="Stamp" hideBtnSave="1"
+            hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event,5)"
+            type="inline">
+          </codx-attachment>
         </div>
 
       </div>
@@ -165,7 +171,7 @@
         <codx-label default="Thiết lập template" name="lblSettingTemplate" [formModel]="dialog.formModel">
         </codx-label>
       </button> -->
-      <button type="button" class="btn btn-primary" (click)="onSavePopup()">
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
         <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
       </button>
     </div>

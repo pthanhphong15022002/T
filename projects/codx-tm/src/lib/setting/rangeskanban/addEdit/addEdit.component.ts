@@ -42,7 +42,7 @@ export class AddEditComponent implements OnInit {
         else {
           this.rangeLines.recID = Util.uid();
           this.rangeLines.rangeID = this.range.rangeID;
-          this.codxService.setAddNew(this.rangeLines, 'recID')
+          // this.codxService.setAddNew(this.rangeLines, 'recID')
         }
         this.callfc.openForm(template, '', 500, 400);
       }
