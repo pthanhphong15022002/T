@@ -10,8 +10,6 @@
     entityName="WP_Comments" 
     idField="recID">
 </codx-views>
-
-
 <ng-template #panelLeftRef>
     <ng-container *ngIf="isShowCreate">
         <div class="card card-custom post-new">
@@ -66,14 +64,24 @@
                     <span class="text-muted font-size-sm mr-2" data-toggle="tooltip"
                         title="{{item.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{item.createdOn | timefrom}}</span>
 
-                    <ng-container *ngFor="let dtVll of dataVll">
+                    <!-- <ng-container *ngFor="let dtVll of dataVll">
                         <span class="label label-xxs label-inline label-light-primary mx-2"
                             *ngIf="dtVll.value == item.shareControl">
                             <span class="{{dtVll.icon}}"></span>&nbsp;{{item.shareControl |
                             sharedControl:'wp' | async}}
                         </span>
-                    </ng-container>
-                    <span *ngIf="item.shareControl == 'D' ||
+
+                        
+                    </ng-container> -->
+                    <span class="rounded-1 py-1 px-2 bg-secondary ms-2">
+                        <span class="symbol symbol-circle ">
+                            <img class="h-20px w-20px" src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}"/>
+                        </span>
+                        <span class="font-size-sm">
+                            {{item.shareControl | vll:'L1901' : 'text' | async}}
+                        </span>
+                    </span>
+                    <!-- <span *ngIf="item.shareControl == 'D' ||
                         item.shareControl == 'P' || item.shareControl == 'R' || item.shareControl == 'G' ||
                         item.shareControl == 'U'" class="ml-1 cursor-pointer" placement="bottom"
                         [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
@@ -86,14 +94,15 @@
                                 </ng-container>
 
                                 <ng-template #multipleShared>
-                                    <span class="ms-2 me-2">{{item.shareName}}</span>
                                 </ng-template>
                             </ng-container>
                             <ng-template #notU>
                                 {{item.shareName}}
                             </ng-template>
                         </span>
-                    </span>
+                    </span> -->
+                    <span class="ms-2 me-2">{{item.shareName}}</span>
+
                 </div>
             </div>
             <div class="more">
@@ -125,7 +134,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
         <!--begin::Bottom-->
         <div class="pt-3">
@@ -226,6 +234,7 @@
                         <!-- file -->
                         <ng-container *ngSwitchDefault>
                             <codx-attachment [objectId]="item.recID" 
+                                idBrowse="btn1"
                                 objectType="WP_Comments" 
                                 hideFolder="1" 
                                 hideUploadBtn="1"
@@ -241,9 +250,7 @@
                         hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
                     </codx-attachment> -->
                 </div>
- 
             </ng-container>
-            
         </ng-container>
         
     </ng-container>
