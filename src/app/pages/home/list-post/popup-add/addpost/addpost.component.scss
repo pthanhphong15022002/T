@@ -42,7 +42,6 @@
 }
 
 .body-function {
-    margin-top: 10px;
     padding: 3px 10px;
     border: 1px solid #cfd0d3;
     border-radius: 3px !important;
@@ -54,11 +53,4 @@
 
 .btn-emoji {
     position: relative;
-}
-
-.emoji {
-    position: absolute;
-    z-index: 99;
-    top: 230px;
-    right: 12px;
 }
