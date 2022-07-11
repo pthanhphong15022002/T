@@ -82,6 +82,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.data = data?.data[0];
     this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
+
+    console.log(this.form);
   }
   ngAfterViewInit(): void {
     this.esService.isSetupAutoNumber.subscribe((res) => {
