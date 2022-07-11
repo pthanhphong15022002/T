@@ -48,16 +48,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
         console.log(res);
       }
     });
-    this.adService.getListCompanySettings().subscribe((response) => {
-      if (response) {
-        this.data = response;
-        console.log(response);
-        this.detectorRef.detectChanges()
-      }
-      else {
-        console.log('khong duoc');
-      }
-    })
+    this.updateLoad();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -102,4 +93,24 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
   //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
   //   this.modal.closed.subscribe();
   // }
+
+  updateLoad() {
+    this.adService.getListCompanySettings().subscribe((response) => {
+      if (response) {
+        this.data = response;
+        console.log(response);
+        this.detectorRef.detectChanges()
+      }
+      else {
+        console.log('khong duoc');
+      }
+    })
+  }
+
+  loadData(dataItem?) {
+    // console.log(dataItem);
+    // this.data = dataItem;
+    // console.log(this.data);
+    console.log('test12334');
+  }
 }

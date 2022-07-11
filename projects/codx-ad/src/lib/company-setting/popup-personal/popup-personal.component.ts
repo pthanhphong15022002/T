@@ -1,12 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
+import { CompanySettingComponent } from '../company-setting.component';
 
 @Component({
   selector: 'lib-popup-personal',
   templateUrl: './popup-personal.component.html',
-  styleUrls: ['./popup-personal.component.css']
+  styleUrls: ['./popup-personal.component.css'],
+  providers:[CompanySettingComponent ],
 })
 export class PopupPersonalComponent implements OnInit {
   data: any;
@@ -18,6 +20,8 @@ export class PopupPersonalComponent implements OnInit {
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private adService: CodxAdService,
+
+    private loadData: CompanySettingComponent,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -38,8 +42,10 @@ export class PopupPersonalComponent implements OnInit {
     this.adService
       .updatePersonalCompanySettings(this.items)
       .subscribe((response) => {
-        if (response) {
+        if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
+          console.log(response[0]);
+      //    this.loadData.updateLoad();
         } else {
           this.notiService.notifyCode('thêm thất bại');
         }
@@ -65,4 +71,6 @@ export class PopupPersonalComponent implements OnInit {
     this.items.mobile = e.data;
   }
 
+  @ViewChild(CompanySettingComponent)
+  public childCmp: CompanySettingComponent;
 }
