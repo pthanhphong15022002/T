@@ -209,13 +209,41 @@
                 <div [innerHTML]="item.content"></div>
             </ng-template>
         </div>
-        <div class="pic-feed">
-            <!-- <div class="pic-feed">
-                <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
-                </codx-attachment>
-            </div> -->
-        </div>
+        <ng-container *ngIf="item.isUploadFile">
+            <ng-container *ngFor="let file of item.lstFile">
+                <div class="pic-feed">
+                    <ng-container [ngSwitch]="file.extension">
+                        <ng-container *ngSwitchCase="lstExtensionIMG.includes(file.extension)?file.extension:''">
+                            <p>hình ảnh</p>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="lstExtensionVideo.includes(file.extension)?file.extension:''">
+                            <p>videos</p>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <p>file</p>
+                            <codx-attachment [objectId]="item.recID" 
+                                objectType="WP_Comments" 
+                                hideFolder="1" 
+                                hideUploadBtn="1"
+                                hideDes="1" 
+                                type="inline" 
+                                allowExtensions=".jpg,.png"
+                                [formModel]="codxViews.formModel"
+                                [functionID]="codxViews.formModel.funcID">
+                            </codx-attachment>
+                        </ng-container>
+                    </ng-container>
+                    <!-- <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
+                        hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
+                    </codx-attachment> -->
+                    <!-- img -->
+                    
+                </div>
+ 
+            </ng-container>
+            
+        </ng-container>
+        
     </ng-container>
     <ng-template #category2>
         <ng-container *ngIf="item?.card?.cardType == '4' || item?.card?.cardType=='5';else haveBg">

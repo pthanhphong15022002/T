@@ -6,31 +6,40 @@
                     <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
                     </codx-img>
                 </div>
-                <div class="ms-2">
-                    <div class="user-name fw-bold">{{user.userName}}</div>
-                    <ng-container *ngIf="lstRecevier.length > 0">
-                        <ng-container *ngIf="shareControl == 'U'">
-                            <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
-                                <div class="fw-bold fs-6">
-                                    <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                        default="cùng với "></codx-label>
-                                    <span class="me-2 ">{{recevierName}}</span>
-                                </div>
+                <div class="ms-2 ">
+                    <div class="d-flex">
+                        <div class="user-name fw-bolder">{{user.userName}}</div>
+                        <div class="ms-2">
+                            <ng-container *ngIf="lstRecevier.length > 0">
+                                <ng-container *ngIf="shareControl == 'U';else notUser">
+                                    <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
+                                        <div class="fw-bold fs-6">
+                                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                                default="cùng với "></codx-label>
+                                            <span class="me-2 fw-bolder">{{recevierName}}</span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #shareWith>
+                                        <div class="fw-bold fs-6">
+                                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                                default="cùng với "></codx-label>
+                                            <span class="ms-2 me-2">{{lstRecevier.length}}</span>
+                                            <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                                default=" người khác "></codx-label>
+                                        </div>
+                                    </ng-template>
+                                </ng-container>
+                                <ng-template #notUser>
+                                    <div class="fw-bold fs-6">
+                                        <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
+                                            default="cùng với "></codx-label>
+                                        <span class="me-2 fw-bolder">{{recevierName}}</span>
+                                    </div>
+                                </ng-template>
                             </ng-container>
-                            <ng-template #shareWith>
-                                <div class="fw-bold fs-6">
-                                    <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                        default="cùng với "></codx-label>
-                                    <span class="ms-2 me-2">{{lstRecevier.length}}</span>
-                                    <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
-                                        default=" người khác "></codx-label>
-                                </div>
-                            </ng-template>
-                        </ng-container>
-                    </ng-container>
-                      
-
-                    <div class="d-flex align-items-center justify-content-start user-square">
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
                         <!-- <div class="me-2">
                             <codx-input
                                 type="Share"
@@ -40,7 +49,16 @@
                                 (valueChange)="eventApply($event)">
                             </codx-input>
                         </div> -->
-                        <button (click)="openFormShare(controlShare)">click</button>
+                        <div class="bg-secondary rounded-1 p-1">
+                            <span class="symbol symbol-20 symbol-circle fw-bolder">
+                                <i [class]="objectType | vll:'L1901' : 'icon' | async"></i>
+                                
+                            </span>
+                            <span class="text-dark-75 font-size-sm ms-2">
+                                {{objectType | vll:'L1901' : 'text' | async}}
+                            </span>
+                            <i class="icon-arrow_drop_down icon-16 text-dark"></i>
+                        </div>
                         <ng-template #controlShare let-dialog>
                             <codx-share
                                 [dialog]="dialog"
@@ -57,7 +75,17 @@
                     placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)"
                     ngDefaultControl>
                 </codx-input>
-                <div class="" style="display:none;">
+
+                <!-- <div class="comment">
+                    <ejs-inplaceeditor 
+                        mode="Inline" emptyText='Enter your comment'
+                        submitOnEnter='false' 
+                        type='RTE' name='rte' data-underline="false" 
+                        [value]="'12313'"
+                        >
+                    </ejs-inplaceeditor>
+                </div> -->
+                <div>
                     <codx-attachment #attachment objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
                         type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfileCount($event)"
                         [functionID]="dialogRef.formModel.funcID">

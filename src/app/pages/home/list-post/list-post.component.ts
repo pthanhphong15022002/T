@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Post } from '@shared/models/post';
+import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService } from 'codx-core';
 import { Subscription } from 'rxjs';
@@ -53,6 +54,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   modal: DialogRef;
   headerText = "";
   views: Array<ViewModel> | any = [];
+  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
+  lstExtensionVideo:Array<string> = [".mp4"];
+
   @Input() predicates = "";
   @Input() dataValues = "";
   @ViewChild('codxViews') codxViews: ViewsComponent;
@@ -72,6 +76,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
     private notifySvr: NotificationsService,
+    private fileService: FileService,
     private codxService: CodxService
   ) {
     this.tenant = this.tenantStore.getName();
