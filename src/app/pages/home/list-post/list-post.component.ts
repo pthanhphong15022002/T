@@ -145,30 +145,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
     });
 
-    // this.notifySvr.alertCode('E0327').subscribe((e: any) => {
-    //   if (e.event.status == "Y") {
-    //     this.api
-    //       .exec<any>(
-    //         'ERM.Business.WP',
-    //         'CommentBusiness',
-    //         'DeletePostAsync',
-    //         data.recID
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           this.api.execSv("DM",
-    //             "ERM.Business.DM",
-    //             "FileBussiness",
-    //             "DeleteByObjectIDAsync",
-    //             [data.recID, 'WP_Comments', true]
-    //           ).subscribe();
-    //           this.notifySvr.notifyCode('E0026');
-    //           this.dt.detectChanges();
-    //         }
-    //       });
-    //   }
-    // })
-
   }
 
 
@@ -202,9 +178,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges()
     let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    option.Resizeable = true;
+    option.DataService = this.codxViews.dataService as CRUDService;
+    option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
     this.modal.closed.subscribe();
   }
@@ -215,8 +190,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       title: "Chỉnh sửa bài viết"
     }
     let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
+    option.DataService = this.codxViews.dataService as CRUDService;
+    option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 
   }
