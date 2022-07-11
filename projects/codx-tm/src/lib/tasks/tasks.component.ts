@@ -325,15 +325,17 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
 
   edit(data?) {
-    if(data && data.status>= 8){
+    if (data && data.status >= 8) {
       // this.notiService.notifyCode('cần code đoạn nay');
-       this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+      this.notiService.notify(
+        'Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"'
+      );
       return;
     }
     if (data) {
@@ -352,7 +354,7 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected = this.view.dataService.dataSelected
+          this.itemSelected = this.view.dataService.dataSelected;
         });
       });
   }
@@ -369,7 +371,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
@@ -414,7 +416,7 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
-  sendemail(data) { }
+  sendemail(data) {}
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -438,7 +440,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {
     //this.dialog && this.dialog.close(); sai vẫn bị đóng
@@ -463,16 +465,7 @@ export class TasksComponent extends UIComponent {
   changeStatusTask(moreFunc, taskAction) {
     const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
-    //  this.view.dataService.dataSelected = taskAction;
-    // this.api
-    //   .execSv<any>(
-    //     'SYS',
-    //     'ERM.Business.CM',
-    //     'ParametersBusiness',
-    //     'GetOneField',
-    //     [fromName, null, fieldName]
-    //   )
-     this.api
+    this.api
       .execSv<any>(
         'SYS',
         'ERM.Business.SYS',
@@ -497,6 +490,7 @@ export class TasksComponent extends UIComponent {
 
             this.tmSv
               .setStatusTask(
+                this.funcID,
                 taskAction.taskID,
                 status,
                 completedOn,
@@ -509,8 +503,11 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  // this.view.dataService.setDataSelected(taskAction);
-                  // this.detectorRef.detectChanges
+                 for(var i=0 ; i<res.length;i++){
+                    var index = this.view.dataService.data.findIndex(x=>x.taskID==res[i].taskID);
+                    this.view.dataService.data[index] = res[i];
+                  }
+                 this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
