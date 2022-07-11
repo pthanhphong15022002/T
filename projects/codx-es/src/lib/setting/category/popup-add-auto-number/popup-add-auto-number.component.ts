@@ -59,6 +59,11 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.initForm();
   }
 
+  getViewAutoNumber(dialog) {
+    this.setViewAutoNumber();
+    return this.viewAutoNumber;
+  }
+
   initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_AutoNumbers';

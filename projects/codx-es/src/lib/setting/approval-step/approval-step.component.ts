@@ -195,6 +195,7 @@ export class ApprovalStepComponent implements OnInit {
           }
         }
       });
+
     // let i = this.lstStep.indexOf(approvalStep);
     // console.log(i);
 
@@ -207,5 +208,9 @@ export class ApprovalStepComponent implements OnInit {
     // for (let i = 0; i < this.lstStep.length; i++) {
     //   this.lstStep[i].stepNo = i + 1;
     // }
+  }
+
+  getLeadTime(event) {
+    return '';
   }
 }
