@@ -1,4 +1,6 @@
 import {
+  AfterContentInit,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -48,7 +50,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
         console.log(res);
       }
     });
-    this.updateLoad();
+    this.loadData();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -60,10 +62,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
           panelRightRef: this.paneleft,
         },
       },
-    ];
-    this.view.dataService.methodUpdate = 'UpdateBusinessContactAsync';
-    this.view.dataService.methodUpdate = 'UpdateBusinessPersonalAsync';
-    this.detectorRef.detectChanges()
+     ];
+
 
   }
   valueChange(e){
@@ -76,9 +76,6 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
 
   clickEditPersonal(data) {
     this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
-    if(this.dialog.close) {
-      this.changeDetectorRef.detectChanges();
-    }
   }
 
   // clickEditPersonal(data: any) {
@@ -94,11 +91,10 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
   //   this.modal.closed.subscribe();
   // }
 
-  updateLoad() {
+  loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
-        console.log(response);
         this.detectorRef.detectChanges()
       }
       else {
@@ -107,10 +103,10 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
     })
   }
 
-  loadData(dataItem?) {
-    // console.log(dataItem);
-    // this.data = dataItem;
-    // console.log(this.data);
-    console.log('test12334');
-  }
+  // loadData(dataItem?) {
+  //   // console.log(dataItem);
+  //   // this.data = dataItem;
+  //   // console.log(this.data);
+  //   console.log('test12334');
+  // }
 }

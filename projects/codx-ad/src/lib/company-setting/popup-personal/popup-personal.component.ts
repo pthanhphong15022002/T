@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { BehaviorSubject } from 'rxjs';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
 import { CompanySettingComponent } from '../company-setting.component';
@@ -15,6 +16,7 @@ export class PopupPersonalComponent implements OnInit {
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Người đại diện';
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -44,14 +46,15 @@ export class PopupPersonalComponent implements OnInit {
       .subscribe((response) => {
         if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
-          console.log(response[0]);
-      //    this.loadData.updateLoad();
+          this.dialog.dataService.setDataSelected(response[0]);
+          this.dialog.dataService.next(response[0]);
+          this.changeDetectorRef.detectChanges();
         } else {
           this.notiService.notifyCode('thêm thất bại');
         }
       });
     this.dialog.close();
-    this.changeDetectorRef.detectChanges();
+
   }
 
   txtValueContactName(e: any) {
