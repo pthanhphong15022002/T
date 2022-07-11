@@ -54,7 +54,7 @@ export class PopupAddSprintsComponent implements OnInit {
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
-  
+
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
@@ -64,7 +64,7 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.taskBoard.iterationID) {
+    if (this.action=='add') {
        this.taskBoard.viewMode='1';
     } else {
       if (this.action == 'copy')
