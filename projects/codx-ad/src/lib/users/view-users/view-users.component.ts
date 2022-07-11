@@ -1,5 +1,5 @@
 import { validateHorizontalPosition } from '@angular/cdk/overlay';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef, Pipe } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
@@ -37,6 +37,7 @@ export class ViewUsersComponent implements OnInit {
       }
     }
     this.title = 'Danh sách module (' + this.count + ')';
+    // this.assignCopy();
   }
 
   assignCopy() {
@@ -47,13 +48,15 @@ export class ViewUsersComponent implements OnInit {
       this.assignCopy();
     } // when nothing has typed
     this.allRoles = Object.assign([], this.lstRoles).filter(
-      item => item.customName.toLowerCase().indexOf(value.toLowerCase()) > -1
+      item => item.searchItem.toLowerCase().indexOf(value.toLowerCase()) > -1
     )
   }
 
-  search(data: string): void {
-    this.lstRoles = this.allRoles.filter((val) =>
-      val.customName.toLowerCase().includes(data)
+  
+
+  search(data) {
+      this.allRoles = this.lstRoles.filter((val) =>
+      val.customName.includes(data)
     );
   }
   

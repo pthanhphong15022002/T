@@ -23,6 +23,7 @@ import { PopupContactComponent } from './company-setting/popup-contact/popup-con
 import { ViewUsersComponent } from './users/view-users/view-users.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
 import { PopupPersonalComponent } from './company-setting/popup-personal/popup-personal.component';
+import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
 export const routes: Routes = [
   {
     path: '',
@@ -60,7 +61,8 @@ const T_Component: Type<any>[] = [
   PopupContactComponent,
   ViewUsersComponent,
   AddUserComponent,
-  PopupPersonalComponent
+  PopupPersonalComponent,
+  PopRolesComponent
 ];
 @NgModule({
   imports: [

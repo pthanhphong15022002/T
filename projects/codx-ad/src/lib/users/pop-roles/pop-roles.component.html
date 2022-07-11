@@ -1,0 +1,62 @@
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template #body>
+    <ejs-tab headerPlacement="Top">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
+                <span class="icon-info icon-24 me-2"></span>
+                <span class="d-flex flex-column align-items-start">
+                  <span class="fw-bolder">
+                    <codx-label name="Apps" formName="Users" default="Ứng dụng">
+                    </codx-label>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div class="form-group">
+              <div class="form-group mt-3">
+                <div class="text-dark fw-bolder d-flex justify-content-end">
+                  Đã chọn (0)
+                </div>
+              </div>
+              <div class="form-group mt-3" *ngFor="let item of count; index as i">
+                <div class="form-group col-4">
+                    {{i+1}}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
+                <span class="icon-info icon-24 me-2"></span>
+                <span class="d-flex flex-column align-items-start">
+                  <span class="fw-bolder">
+                    <codx-label name="Employees" formName="UserRoles" default="Dịch vụ nhân viên">
+                    </codx-label>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <div class="form-group">
+                <div class="form-group mt-3">
+                  <div class="text-dark fw-bolder d-flex justify-content-end">
+                    Đã chọn (0)
+                  </div>
+                </div>
+  
+              </div>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </ng-template>
+  <ng-template #footer></ng-template>
