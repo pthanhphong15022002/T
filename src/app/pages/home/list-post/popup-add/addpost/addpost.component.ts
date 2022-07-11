@@ -473,7 +473,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     else
     {
-      this.isUploadFile = true;
+      this.isUploadFile = false;
     }
     this.dt.detectChanges();
   }
