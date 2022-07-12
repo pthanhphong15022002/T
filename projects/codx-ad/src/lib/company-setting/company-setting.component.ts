@@ -1,7 +1,11 @@
+import { I } from '@angular/cdk/keycodes';
 import {
+  AfterContentInit,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -13,13 +17,15 @@ import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
+import { LowerCasePipe } from '@angular/common';
 
 @Component({
   selector: 'lib-company-setting',
   templateUrl: './company-setting.component.html',
   styleUrls: ['./company-setting.component.css'],
+  providers: [LowerCasePipe]
 })
-export class CompanySettingComponent extends UIComponent implements OnInit {
+export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
   funcID: any;
   moreFunc = [];
   @ViewChild('itemView') itemView: TemplateRef<any>;
@@ -48,16 +54,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
         console.log(res);
       }
     });
-    this.adService.getListCompanySettings().subscribe((response) => {
-      if (response) {
-        this.data = response;
-        console.log(response);
-        this.detectorRef.detectChanges()
-      }
-      else {
-        console.log('khong duoc');
-      }
-    })
+    this.loadData();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -69,10 +66,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
           panelRightRef: this.paneleft,
         },
       },
-    ];
-    this.view.dataService.methodUpdate = 'UpdateBusinessContactAsync';
-    this.view.dataService.methodUpdate = 'UpdateBusinessPersonalAsync';
-    this.detectorRef.detectChanges()
+     ];
+
 
   }
   valueChange(e){
@@ -85,11 +80,14 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
 
   clickEditPersonal(data) {
     this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
-    if(this.dialog.close) {
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-
+    this.dialog.closed.subscribe(e => {
+      if(e?.event){
+        this.data = e?.event
+        this.detectorRef.detectChanges() ;
+      }
+    
+    })}
+ 
   // clickEditPersonal(data: any) {
   //   var obj = {
   //     post: data,
@@ -101,5 +99,28 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
   //   option.FormModel = this.listview.formModel;
   //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
   //   this.modal.closed.subscribe();
+  // }
+
+  loadData() {
+    this.adService.getListCompanySettings().subscribe((response) => {
+      if (response) {
+        this.data = response;
+       // this.data.companyCode.toString().toLowerCase();
+        this.detectorRef.detectChanges()
+      }
+      else {
+        console.log('khong duoc');
+      }
+    })
+  }
+  txtToLower(e: any) {
+    this.data.companyCode = this.data.companyCode.toLowerCase();
+  }
+
+  // loadData(dataItem?) {
+  //   // console.log(dataItem);
+  //   // this.data = dataItem;
+  //   // console.log(this.data);
+  //   console.log('test12334');
   // }
 }

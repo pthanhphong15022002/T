@@ -13,3 +13,7 @@
    height: 250px;
    width: 100%;
  }
+ .font_size {
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
+}

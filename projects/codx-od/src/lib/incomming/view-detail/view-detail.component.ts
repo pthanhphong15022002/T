@@ -3,6 +3,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { FolderComponent } from '../folder/folder.component';
@@ -538,6 +539,25 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               })
             }
           })
+          break;
+        }
+      //Import file
+      case "SYS001":
+        {
+          var gridModel = new DataRequest();
+          gridModel.formName = this.formModel.formName;
+          gridModel.entityName = this.formModel.entityName;
+          gridModel.funcID = this.formModel.funcID;
+          gridModel.gridViewName = this.formModel.gridViewName;
+          gridModel.page = this.view.dataService.request.page;
+          gridModel.pageSize = this.view.dataService.request.pageSize;
+          gridModel.predicate = this.view.dataService.request.predicates;
+          gridModel.dataValue = this.view.dataService.request.dataValues;
+          gridModel.entityPermission = this.formModel.entityPer;
+          //
+          //Chưa có group
+          gridModel.groupFields = "createdBy";
+          this.callfunc.openForm(CodxImportComponent,null,null,800,"",[gridModel,datas.recID],null);
           break;
         }
       //Export file

@@ -2,48 +2,61 @@
   font-size: 30px !important;
   padding-right: 10px;
 }
+
 .dropdown-toggle {
   font-size: 15px;
 }
+
 .title {
-  color: #342d2d;
+  color: #8E8F90;
+  margin-bottom: 10px;
 }
+
 .w-1000px {
   width: 1200px !important;
   height: 100%;
 }
+
 .menu-item {
   padding-top: -24px;
 }
+
 .menu {
   margin-top: -24px;
 }
+
 .accountinfo {
-  padding-top: 10px;
-  padding-bottom: 15px;
+  padding-top: 6px;
 }
+
 .header_title {
-  padding-bottom: 30px;
+  padding-bottom: 10px;
 }
+
 .header_detail {
   /* background: white;
   background-size: 5000px 1000px;
   background-repeat: no-repeat; */
   /* background-color: white; */
 }
+
 .body_title {
   padding-bottom: 30px;
 }
+
 .contact {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
 .body_detail {
   border: 1px solid #dbd8d9;
 }
+
 .footer_detail {
   border: 1px solid #dbd8d9;
 }
+
 .contact-map {
   display: -webkit-box;
   display: -webkit-flex;
@@ -55,26 +68,72 @@
   height: 250px;
   width: 100%;
 }
-.button_edit{
-  text-align: right;
 
+.button_edit {
+  text-align: right;
 }
+
 .content {
-  padding: 10px 10px 10px 10px;
+  padding: 15px 15px 15px 15px;
 }
-.background_form {
-  background: white;
-  padding-bottom: 50px;
+
+button {
+  border: transparent;
 }
-button{ border: transparent;}
+
 button:hover {
   cursor: pointer;
   background-color: cornflowerblue;
-  }
+}
+
 .url {
+  padding-top: 18px;
   margin-left: -15px;
 }
 
 .url-contact {
-  color: #47B5FF;
+  color: #47b5ff;
+}
+
+.header_title {
+  font-size: 19px;
+}
+
+
+.title_mf {
+  color: #0055c5;
+}
+.font_size {
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
+}
+
+i.fa {
+  color: #0055c5;
+  font-size: 30px;
+}
+
+.background_form {
+  height: 940px;
+  width: 1250px;
+  border-radius: 1% 1% 1% 1%;
+  background: white;
+  padding-bottom: 15px;
+}
+.footer_content {
+  padding: 15px 15px 15px 15px;
+}
+
+.title_contact {
+  font-size: 14px;
+}
+.col-2 {
+  flex: 0 0 auto;
+  width: 8.666667%;
+}
+.col-6 {
+  padding-bottom: 10px;
+}
+.test123 {
+  text-transform: lowercase;
 }

@@ -27,8 +27,7 @@ export class TaskGroupComponent implements OnInit {
 
   @ViewChild('view') view!: ViewsComponent;
 
-  constructor(private cache: CacheService, private auth: AuthStore,
-    private dt: ChangeDetectorRef, private callfunc: CallFuncService,
+  constructor(private dt: ChangeDetectorRef, private callfunc: CallFuncService,
   ) {
 
   }

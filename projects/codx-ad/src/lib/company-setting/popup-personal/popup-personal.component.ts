@@ -1,34 +1,40 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { BehaviorSubject } from 'rxjs';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
+import { CompanySettingComponent } from '../company-setting.component';
 
 @Component({
   selector: 'lib-popup-personal',
   templateUrl: './popup-personal.component.html',
-  styleUrls: ['./popup-personal.component.css']
+  styleUrls: ['./popup-personal.component.css'],
+  providers:[CompanySettingComponent ],
 })
 export class PopupPersonalComponent implements OnInit {
   data: any;
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Người đại diện';
+  dataUpdate = new BehaviorSubject<any>(null);
+  isUpdate = this.dataUpdate.asObservable();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private adService: CodxAdService,
+
+    private loadData: CompanySettingComponent,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
   }
-
   ngOnInit(): void {
     this.items = this.data;
   }
-  saveData() {}
+  saveData() { }
   onEdit() {
     this.UpdateData();
   }
@@ -38,31 +44,43 @@ export class PopupPersonalComponent implements OnInit {
     this.adService
       .updatePersonalCompanySettings(this.items)
       .subscribe((response) => {
-        if (response) {
+        if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
+<<<<<<< HEAD
+
+          // this.dialog.dataService.setDataSelected(response[0]);
+          this.dialog.dataService.next(response[0]);
+
+=======
+          this.dialog.close(response[0]);
+>>>>>>> 00cb1beb3bbe3a1e3a3ad86db5adbf621eaa1abf
         } else {
           this.notiService.notifyCode('thêm thất bại');
+          this.dialog.close();
         }
+
       });
-    this.dialog.close();
-    this.changeDetectorRef.detectChanges();
+ 
+
   }
 
-  txtValueContactName(e: any){
+  txtValueContactName(e: any) {
     this.items.contactName = e.data;
   }
 
 
-  txtValueJobTitle(e: any){
+  txtValueJobTitle(e: any) {
     this.items.jobTitle = e.data;
   }
 
-  txtValueEmail(e: any){
+  txtValueEmail(e: any) {
     this.items.personalEmail = e.data;
   }
 
-  txtValuePhone(e: any){
+  txtValuePhone(e: any) {
     this.items.mobile = e.data;
   }
 
+  @ViewChild(CompanySettingComponent)
+  public childCmp: CompanySettingComponent;
 }

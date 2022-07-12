@@ -1,4 +1,4 @@
-<codx-views #view service="TM" entityName="TM_Sprints" idField="sprintID" assemblyName="ERM.Business.TM"
+<codx-views #view service="TM" entityName="TM_Sprints" idField="iterationID" assemblyName="ERM.Business.TM"
   className="SprintsBusiness" method="GetListSprintAsync" [views]="views" [button]="button" [autoLoad]="false"
   (buttonClick)="click($event)" [moreFuncs]="moreFuncs">
 </codx-views>
@@ -6,7 +6,7 @@
 <ng-template #itemViewBoard let-data>
   <ng-container >
     <codx-card-center cardCss="border h-100 w-225px" [formModel]="view.formModel"
-      [iconCss]="data.sharedByOther?'icon-share':' '" [iconColorCss]="'blue'" [imageId]="data.iterationID"
+      [iconCss]="data.sharedByOther?'icon-share':' '" [iconColorCss]="'blue'" [imageId]="data.iterationID" [imageObjType]="view.formModel.entityName" 
       [imageWidth]="55" [title]="data.iterationName" [icoDescCss]="'icon-assignment'" [desc]="data.projectName"
       [desc2]="data.memo" [footer]="cardImgFooter" (clickMF)="clickMF($event, data)" [dataItem]="data">
     </codx-card-center>

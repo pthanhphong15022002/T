@@ -14,7 +14,7 @@ import { FileUpload, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, CodxService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import * as moment from 'moment';
 import { OpenFolderComponent } from '../openFolder/openFolder.component';
 import { AttachmentService } from './attachment.service';
@@ -25,6 +25,7 @@ import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } fro
 import { createSpinner, showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/cdk/overlay/overlay-directives';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -51,7 +52,7 @@ export class AttachmentComponent implements OnInit {
   titleDialog = "Thêm file";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
-  fileUploadList: FileUpload[];
+  //fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
   data: any;
@@ -72,7 +73,9 @@ export class AttachmentComponent implements OnInit {
   @Input() hideBtnSave = "0";
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
-  @Input() hideDes = "0";
+  @Input() hideDes = "0";  
+  @Input() hideImageUpload = "1";
+  @Input() hideImageThumb = "1";
   @Input() displayThumb: string;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
@@ -96,6 +99,7 @@ export class AttachmentComponent implements OnInit {
     public modalService: NgbModal,
     private auth: AuthStore,
     private folderService: FolderService,
+    private dmSV: CodxDMService,
     private fileService: FileService,
     public atSV: AttachmentService,
     public cache: CacheService,
@@ -116,7 +120,7 @@ export class AttachmentComponent implements OnInit {
       this.hideBtnSave = data?.data.hideBtnSave;
     }
 
-    this.fileUploadList = [];
+    this.dmSV.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
       this.folderType = "3";
 
@@ -128,14 +132,20 @@ export class AttachmentComponent implements OnInit {
 
     if (this.hideBtnSave == null || this.hideBtnSave == "")
       this.hideBtnSave = "0";
+
+    this.dmSV.isFileUploadListAdd.subscribe(item => {
+      if (item == true) {
+        this.changeDetectorRef.detectChanges();
+      }
+    })  
   }
 
 
   ngAfterViewInit(): void {
     if (this.objectId != "" && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe(res => {
-        if (res?.result) {
-          this.data = res.result;
+        if (res) {
+          this.data = res;
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
@@ -219,7 +229,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   openPopup() {
-    this.fileUploadList = [];
+    this.dmSV.fileUploadList = [];
     // if (this.type == "center") {
     // }
     // else {
@@ -244,7 +254,7 @@ export class AttachmentComponent implements OnInit {
       this.dialog.close();
     }
 
-    this.fileUploadList = [];   
+    this.dmSV.fileUploadList = [];   
     this.changeDetectorRef.detectChanges();
   }
 
@@ -454,14 +464,14 @@ export class AttachmentComponent implements OnInit {
     if (this.data == undefined)
       this.data = [];
 
-    let total = this.fileUploadList.length;
+    let total = this.dmSV.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.dmSV.fileUploadList[i].objectId = this.objectId;
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
-      var done = this.fileService.addMultiFile(this.fileUploadList).toPromise().then(res => {
+      var done = this.fileService.addMultiFile(this.dmSV.fileUploadList).toPromise().then(res => {
         if (res != null) {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
@@ -471,12 +481,12 @@ export class AttachmentComponent implements OnInit {
             this.data.push(Object.assign({}, addList[i]));
           }            
 
-          if (addList.length == this.fileUploadList.length) {
-            this.atSV.fileList.next(this.fileUploadList);
+          if (addList.length == this.dmSV.fileUploadList.length) {
+            this.atSV.fileList.next(this.dmSV.fileUploadList);
             this.atSV.fileListAdded = addList;
             this.notificationsService.notify(this.title);
             this.closePopup();
-            this.fileUploadList = [];
+            this.dmSV.fileUploadList = [];
           }
           else {
             var item = newlist[0];
@@ -484,8 +494,8 @@ export class AttachmentComponent implements OnInit {
             //   this.fileUploadList = [];
             //   this.fileUploadList = addList;
             // copy list
-            for (var i = 0; i < this.fileUploadList.length; i++) {
-              var file = this.fileUploadList[i];
+            for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
+              var file = this.dmSV.fileUploadList[i];
               var index = newlist.findIndex(x => x.data.fileName == file.fileName);
               if (index > -1) {
                 newUploadList.push(Object.assign({}, file));
@@ -496,7 +506,7 @@ export class AttachmentComponent implements OnInit {
               this.closePopup();
             }
             else {
-              this.fileUploadList = newUploadList;
+              this.dmSV.fileUploadList = newUploadList;
               var config = new AlertConfirmInputConfig();
               config.type = "checkBox";
               
@@ -505,10 +515,10 @@ export class AttachmentComponent implements OnInit {
                  { 
                   // save all
                   if (x.event.data) {
-                    for (var i = 0; i < this.fileUploadList.length; i++) {
-                      this.fileUploadList[i].reWrite = true;
+                    for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
+                      this.dmSV.fileUploadList[i].reWrite = true;
                     }
-                    this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
+                    this.fileService.addMultiFile(this.dmSV.fileUploadList).toPromise().then(result => {
                       var mess = '';
                       for (var i = 0; i < result.length; i++) {
                         var f = result[i];
@@ -516,28 +526,28 @@ export class AttachmentComponent implements OnInit {
 
                       }
                       this.notificationsService.notify(mess);
-                      this.fileUploadList = [];
+                      this.dmSV.fileUploadList = [];
                       this.closePopup();
                     });
                   }
                   else {
                     // save 1
-                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                    this.fileUploadList[index].reWrite = true;
+                    var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.dmSV.fileUploadList[index].reWrite = true;
                     this.onMultiFileSave();
                   }
                  }
                  else if (x.event.status == "N") {
                   // cancel all
                   if (x.event.data) { 
-                     this.fileUploadList = [];
+                    this.dmSV.fileUploadList = [];
                      this.closePopup();              
                   }
                   else {
                     // cancel 1
-                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                    this.fileUploadList.splice(index, 1);//remove element from array
-                    if (this.fileUploadList.length > 0)
+                    var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.dmSV.fileUploadList.splice(index, 1);//remove element from array
+                    if (this.dmSV.fileUploadList.length > 0)
                       this.onMultiFileSave();
                   }
                  }
@@ -586,8 +596,8 @@ export class AttachmentComponent implements OnInit {
       });
     }
     else if (total == 1) {
-      this.addFile(this.fileUploadList[0]);
-      this.atSV.fileList.next(this.fileUploadList);
+      this.addFile(this.dmSV.fileUploadList[0]);
+      this.atSV.fileList.next(this.dmSV.fileUploadList);
     }
     else {
       // this.cacheService.message('DM001')
@@ -603,7 +613,7 @@ export class AttachmentComponent implements OnInit {
       done.then(item => {
         if (item.status == 0) {
           this.notificationsService.notify(item.message);
-          this.fileUploadList[0].recID = item.data.recID;
+          this.dmSV.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
          // for(var i=0; i<addList.length; i++) {
@@ -635,12 +645,12 @@ export class AttachmentComponent implements OnInit {
          var done = this.fileService.updateVersionFile(item).toPromise();
          if (done) {
            done.then(async res => {
-             this.fileUploadList[0].recID = res.data.recID;
+            this.dmSV.fileUploadList[0].recID = res.data.recID;
              this.atSV.fileListAdded.push(Object.assign({}, item));
              this.data.push(Object.assign({}, item));
              this.notificationsService.notify(res.message);
              this.closePopup();
-             this.fileUploadList = [];
+             this.dmSV.fileUploadList = [];
            }).catch((error) => {
              console.log("Promise rejected with " + JSON.stringify(error));
            });
@@ -668,9 +678,9 @@ export class AttachmentComponent implements OnInit {
   }
 
   onDeleteUploaded(file: string) {
-    let index = this.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
+    let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
     if (index > -1) {
-      this.fileUploadList.splice(index, 1);//remove element from array
+      this.dmSV.fileUploadList.splice(index, 1);//remove element from array
       //  this.dmSV.fileUploadList.next(this.fileUploadList);
     }
   }
@@ -690,8 +700,8 @@ export class AttachmentComponent implements OnInit {
   
 
   sortBy() {
-    if (this.fileUploadList != null)
-      return this.fileUploadList.sort((a, b) => a.order - b.order)
+    if (this.dmSV.fileUploadList != null)
+      return this.dmSV.fileUploadList.sort((a, b) => a.order - b.order)
     else
       return null;
   }
@@ -853,11 +863,11 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput1(files: FileList) {
 
-    var count = this.fileUploadList.length;
+    var count = this.dmSV.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
         let no = count + i;
         let data: ArrayBuffer;
@@ -882,7 +892,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
         fileUpload.permissions = this.remotePermission;
-        this.fileUploadList.push(Object.assign({}, fileUpload));
+        this.dmSV.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
@@ -891,7 +901,7 @@ export class AttachmentComponent implements OnInit {
     if (this.file)
       this.file.nativeElement.value = "";
     //  this.dmSV.fileUploadList.next(this.fileUploadList);
-    this.fileAdded.emit({ data: this.fileUploadList });
+    this.fileAdded.emit({ data: this.dmSV.fileUploadList });
     this.changeDetectorRef.detectChanges();
 
     return false;
@@ -994,16 +1004,16 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput(files: FileInfo[]) {
 
-    //var count = this.fileUploadList.length;
+    var count = this.dmSV.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
         var data = await this.convertBlobToBase64(files[i].rawFile);
         var fileUpload = new FileUpload();
-        fileUpload.order = i;
+        fileUpload.order = count;
         fileUpload.fileName = files[i].name;
         var type = files[i].type.toLowerCase();
         if (type == "png" || type == "jpg" || type == "bmp")
@@ -1034,13 +1044,13 @@ export class AttachmentComponent implements OnInit {
         //   fileUpload.permissions = this.remotePermission;
         // }
         addedList.push(Object.assign({}, fileUpload));
-        this.fileUploadList.push(Object.assign({}, fileUpload));
+        this.dmSV.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
     //   this.fileAdded.emit({ data: this.fileUploadList });
   //  this.fileCount.emit(data: addedList);
-     this.fileCount.emit({ data: this.fileUploadList });
+     this.fileCount.emit({ data: this.dmSV.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

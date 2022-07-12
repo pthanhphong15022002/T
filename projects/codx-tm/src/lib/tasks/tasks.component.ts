@@ -310,7 +310,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
@@ -337,7 +337,7 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected = this.view.dataService.dataSelected
+          this.itemSelected = this.view.dataService.dataSelected;
         });
       });
   }
@@ -354,7 +354,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
@@ -448,15 +448,6 @@ export class TasksComponent extends UIComponent {
 
   changeStatusTask(moreFunc, taskAction) {
     const fieldName = 'UpdateControl';
-    //  this.view.dataService.dataSelected = taskAction;
-    // this.api
-    //   .execSv<any>(
-    //     'SYS',
-    //     'ERM.Business.CM',
-    //     'ParametersBusiness',
-    //     'GetOneField',
-    //     [fromName, null, fieldName]
-    //   )
     this.api
       .execSv<any>(
         'SYS',
@@ -482,6 +473,7 @@ export class TasksComponent extends UIComponent {
 
             this.tmSv
               .setStatusTask(
+                this.funcID,
                 taskAction.taskID,
                 status,
                 completedOn,
@@ -520,7 +512,7 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    );
+    )
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
