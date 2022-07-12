@@ -69,7 +69,7 @@
                                 <span class="nav-text">{{titleShare}}</span>
                             </a>
                         </li>
-                    </ul>
+                    </ul> 
                     <button type="button" (click)="openRight()" class="btn btn-pill btn-xs btn-outline-primary">{{titleSelectObject}}</button>
                 </div>       
                 <div class="user-mini-group">
@@ -106,12 +106,12 @@
                                             </ng-template>    -->
 
                                             <ng-template #thenAvatar1>
-                                                <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" 
-                                                imgCss="w-30px cursor-pointer symbol symbol-30 symbol-circle"  [title]="perm.objectName" [descLine]="1">
+                                                <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"
+                                                imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"  [title]="perm.objectName" [descLine]="1">
                                                 </codx-temp-full>                                               
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-30 symbol-circle" [imageWidth]="30" [title]="perm.objectName">
+                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="perm.objectName">
                                                 </codx-temp-full>                                                
                                             </ng-template>
                                         </div>
