@@ -238,8 +238,7 @@ export class EditFileComponent implements OnInit {
     @Optional() dialog?: DialogRef
     ) {
       this.data = data.data;
-      this.fileEditing = this.data[1];
-   
+      this.fileEditing = this.data[1];   
       this.user = this.auth.get();
       this.dialog = dialog;     
     //  this.changeDetectorRef.detectChanges();
@@ -260,7 +259,7 @@ export class EditFileComponent implements OnInit {
       return;
     }
 
-    if (this.id != "") {
+    if (this.id !=undefined &&  this.id != "") {
       // update file
       // save permisson
       this.fileService.updateFile(this.fileEditing).subscribe(item => {
@@ -314,19 +313,19 @@ export class EditFileComponent implements OnInit {
         else {
           this.notificationsService.notify(item.message);
         }
-
+        this.dialog.close();
       });
 
     }
     else {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === this.fileEditing.fileName.toString()); //find index in your array
+      let index = this.dmSV.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
       if (index > -1) {
-        this.fileUploadList.splice(index, 1);//remove element from array
+        this.dmSV.fileUploadList.splice(index, 1);//remove element from array
         // this.fileUploadList.push(new Object(), this.fileEditing);
-        this.fileUploadList.push(Object.assign({}, this.fileEditing));
-        this.dmSV.fileUploadList.next(this.fileUploadList);
+        this.dmSV.fileUploadList.push(Object.assign({}, this.fileEditing));
+        this.dmSV.fileUploadListAdd.next(true);
       }
-
+      this.dialog.close();
       // if (modal != null)
       //   modal.dismiss('Cross click');//modal.close();
     }
@@ -334,8 +333,8 @@ export class EditFileComponent implements OnInit {
   }
   
   checkInputFile() {
-
-  }
+    return this.fileEditing.fileName === ""  ? true : false;
+  } 
 
   doTrichluc($event) {
 
@@ -427,52 +426,57 @@ export class EditFileComponent implements OnInit {
   }
 
   txtValue($event, type) {
-    switch(type) {
-      case 'filename':
-        this.fileEditing.fileName = $event.data;
-        break;
-      case 'title':
-        this.fileEditing.title = $event.data;
-        break;
-      case 'subject':
-          this.fileEditing.subject = $event.data;
+    if ($event.data != null) {
+      switch(type) {
+        case 'filename':
+          this.fileEditing.fileName = $event.data;
           break;
-      case 'relation':
-          this.fileEditing.relation = $event.data;
+        case 'title':
+          this.fileEditing.title = $event.data;
           break;
-      case 'category':
-        this.fileEditing.category = $event.data;
-        break;
-      case 'language':
-          this.fileEditing.language = $event.data;
+        case 'subject':
+            this.fileEditing.subject = $event.data;
+            break;
+        case 'relation':
+            this.fileEditing.relation = $event.data;
+            break;
+        case 'category':
+          if ($event.data.length > 0)
+            this.fileEditing.category = $event.data[0];
+          else
+            this.fileEditing.category = "";
           break;
-      case 'source':
-          this.fileEditing.source = $event.data;
+        case 'language':
+            this.fileEditing.language = $event.data;
+            break;
+        case 'source':
+            this.fileEditing.source = $event.data;
+            break;
+        case 'excerpts':
+            this.fileEditing.excerpts = $event.data;
+            break;
+        case 'authur':
+          this.fileEditing.author = $event.data;
           break;
-      case 'excerpts':
-          this.fileEditing.excerpts = $event.data;
+        case 'publishdate':
+            this.fileEditing.publishDate = $event.data.fromDate;
+            break;
+        case 'publisher':
+          if ($event.data.length > 0)
+            this.fileEditing.publisher = $event.data[0];
+          else
+            this.fileEditing.publisher = "";
+         // this.fileEditing.publisher = $event.data;
           break;
-      case 'authur':
-        this.fileEditing.author = $event.data;
-        break;
-      case 'publishdate':
-          this.fileEditing.publishDate = $event.data.fromDate;
+        case 'publishyear':
+          this.fileEditing.publishYear = $event.data.fromDate;
           break;
-      case 'publisher':
-        this.fileEditing.publisher = $event.data;
-        break;
-      case 'publishyear':
-        this.fileEditing.publishYear = $event.data.fromDate;
-        break;
-      case 'copyrights':
-        this.fileEditing.copyRights = $event.data;
-        break;
-          
+        case 'copyrights':
+          this.fileEditing.copyRights = $event.data;
+          break;
+      }
     }
-    
-    this.changeDetectorRef.detectChanges();
-  //  if (this.checkFileName() != "0") 
-    //  this.fileNameCtrl.focus();
+    this.changeDetectorRef.detectChanges();  
   }
 
   checkFileName() {

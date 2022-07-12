@@ -17,14 +17,13 @@ import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
 import { Observable , finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CodxExportAddComponent } from './codx-export-add/codx-export-add.component';
 
 @Component({
-  selector: 'codx-export',
-  templateUrl: './codx-export.component.html',
-  styleUrls: ['./codx-export.component.scss'],
+  selector: 'codx-import',
+  templateUrl: './codx-import.component.html',
+  styleUrls: ['./codx-import.component.scss'],
 })
-export class CodxExportComponent implements OnInit, OnChanges
+export class CodxImportComponent implements OnInit, OnChanges
 {
   submitted = false;
   gridModel : any;
@@ -43,6 +42,7 @@ export class CodxExportComponent implements OnInit, OnChanges
   assemblyName: string = "AD";
   className: string = "ExcelTemplatesBusiness";
   method: string = "GetByEntityAsync";
+  headerText : string = "Import File"
   @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     private callfunc: CallFuncService,
@@ -141,7 +141,7 @@ export class CodxExportComponent implements OnInit, OnChanges
           var option = new DialogModel();
           option.FormModel = this.formModel;
           option.DataService = data;
-          this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
+         /*  this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
           .closed.subscribe(item=>
           {
             if(item.event && item.event.length>0) 
@@ -166,7 +166,7 @@ export class CodxExportComponent implements OnInit, OnChanges
                 }
               }
             }
-          })
+          }) */
           break;
         }
       case "delete":
