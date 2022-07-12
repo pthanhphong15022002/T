@@ -117,7 +117,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
             this.notifySvr.notifyCode("RS002");
             this.attachment.objectId = item[1][0].recID;
             this.attachment.saveFiles();
-            this.dialog.close(item[1]);
+            this.dialog.close([item[1],this.type]);
           }
           else this.notifySvr.notify("Thêm không thành công");
         })
@@ -147,7 +147,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
               this.attachment.objectId = item[1][0].recID;
               this.attachment.saveFiles();
             }
-            this.dialog.close(item[1]);
+            this.dialog.close([item[1],this.type]);
           }
           else this.notifySvr.notify("Chỉnh sửa không thành công");
         })
@@ -155,7 +155,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   }
   getfileCount(e:any)
   {
-    this.fileCount = e;
+    this.fileCount = e.data.length;
   }
   getFile(e:any)
   {

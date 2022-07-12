@@ -33,6 +33,7 @@
       (fileCount)="getfileCount($event)"
       [objectId]="dispatch?.recID"
       [allowMultiFile]="0"
+      [idBrowse]="'add'"
     >
     </codx-attachment>
   </div>
@@ -231,6 +232,7 @@
         field="deptID"
         [showInput]="true"
         [crrValue]="dispatch?.deptID"
+        [ngClass]="'w-100'"
         (valueChange)="changeValueBUID($event)"
       >
       </codx-input>
@@ -271,13 +273,16 @@
         type="Combobox"
         name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
+        [crrValue]="this.dispatch.owner"
+        [showInput]="true"
         refType="P"
         field="popup"
+        [ngClass]="'w-100'"
         (valueChange)="changeValueOwner($event)"
       >
-     <!--  (valueChange)="changeValueBUID($event)" -->
       </codx-input>
     </div>
+    
   </div>
 </ng-template>
 <ng-template #footer>

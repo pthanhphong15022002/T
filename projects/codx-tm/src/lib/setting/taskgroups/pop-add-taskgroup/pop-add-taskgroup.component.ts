@@ -15,7 +15,7 @@ import { TM_TaskGroups } from '../../../models/TM_TaskGroups.model';
 })
 export class PopAddTaskgroupComponent implements OnInit {
   @Input() taskGroups = new TM_TaskGroups();
- 
+
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('view') viewBase: ViewsComponent;
 
@@ -41,10 +41,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     private authStore: AuthStore,
     private cache: CacheService,
     private changDetec: ChangeDetectorRef,
-    private fb: FormBuilder,
-    private tmSv: CodxTMService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
 
@@ -60,12 +57,12 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
- //   this.initForm();
+    //   this.initForm();
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe(res => {
       if (res)
         this.gridViewSetup = res
     })
-    
+
     if (this.taskGroups.checkList) {
       for (let item of this.taskGroups.checkList.split(";")) {
         if (this.listTodo == null)
@@ -77,7 +74,7 @@ export class PopAddTaskgroupComponent implements OnInit {
       }
     }
     this.changDetec.detectChanges();
-      // this.openForm(this.taskGroups, false);
+    // this.openForm(this.taskGroups, false);
   }
 
   // initForm() {
@@ -269,7 +266,7 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   addRow() {
     this.dialog.dataService
-      .save((option: any)=>this.beforeSave(option))
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
           this.dialog.dataService.setDataSelected(res.save);

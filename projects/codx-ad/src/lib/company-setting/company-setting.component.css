@@ -8,7 +8,7 @@
 }
 
 .title {
-  color: #342d2d;
+  color: #8E8F90;
 }
 
 .w-1000px {
@@ -25,13 +25,13 @@
 }
 
 .accountinfo {
-  padding-top: 10px;
-  padding-bottom: 15px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .header_title {
-  padding-bottom: 30px;
-
+  font-size: 19px;
+  padding-bottom: 14px;
 }
 
 .header_detail {
@@ -52,6 +52,8 @@
 
 .body_detail {
   border: 1px solid #dbd8d9;
+  margin-top: 15px;
+  margin-bottom: 30px;
 }
 
 .footer_detail {
@@ -72,16 +74,10 @@
 
 .button_edit {
   text-align: right;
-
 }
 
 .content {
-  padding: 10px 10px 10px 10px;
-}
-
-.background_form {
-  background: white;
-  padding-bottom: 50px;
+  padding: 18px 18px 20px 18px;
 }
 
 button {
@@ -94,35 +90,45 @@ button:hover {
 }
 
 .url {
-  padding-top: 5px;
+  padding-top: 18px;
   margin-left: -15px;
 }
 
 .url-contact {
-  color: #47B5FF;
+  color: #47b5ff;
 }
 
-.header_title {
-  font-size: 19px;
-}
-
-.title {
-  color: #8A8A8A;
-}
 .title_mf {
-    color: #0055C5;
+  color: #0055c5;
 }
 .font_size {
-  font-size: 14px;
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
 }
 
 i.fa {
-  color: #0055C5;
+  color: #0055c5;
   font-size: 30px;
 }
 
 .background_form {
-    height: 1000px;
-    width: 1245px;
-    border-radius: 1% 1% 1% 1%;
+  height: 940px;
+  width: 1280px;
+  border-radius: 1% 1% 1% 1%;
+  background: white;
+  padding-bottom: 15px;
+}
+.footer_content {
+  padding: 15px 15px 15px 15px;
+}
+
+.title_contact {
+  font-size: 14px;
+}
+.col-2 {
+  flex: 0 0 auto;
+  width: 8.666667%;
+}
+.test123 {
+  text-transform: lowercase;
 }

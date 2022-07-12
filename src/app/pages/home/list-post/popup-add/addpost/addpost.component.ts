@@ -20,6 +20,7 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ThisReceiver } from '@angular/compiler';
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -466,8 +467,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.isUploadFile = false;
       return;
     }
-    this.isUploadFile = true;
-    this.listImgUpload = event.data;
+    if(this.lstExtensionIMG.includes(event.data[0].extension)){
+      this.isUploadFile = true;
+      this.listImgUpload = event.data;
+    }
+    else
+    {
+      this.isUploadFile = false;
+    }
     this.dt.detectChanges();
   }
 

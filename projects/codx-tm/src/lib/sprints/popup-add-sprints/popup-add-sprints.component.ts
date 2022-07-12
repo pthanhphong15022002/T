@@ -34,7 +34,9 @@ export class PopupAddSprintsComponent implements OnInit {
   dialog: any;
   user: any;
   funcID: string = '';
-  // @Input('viewBase') viewBase: ViewsComponent;
+  sprintDefaut = new TM_Sprints() ;
+  dataDefault = [] ;
+  dataOnLoad=[]
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -52,13 +54,17 @@ export class PopupAddSprintsComponent implements OnInit {
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
+
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
+    this.sprintDefaut =  this.dialog.dataService.data[0];
+    this.dataDefault.push(this.sprintDefaut)
+    this.dataOnLoad = this.dialog.dataService.data ;
   }
 
   ngOnInit(): void {
-    if (!this.taskBoard.iterationID) {
+    if (this.action=='add') {
        this.taskBoard.viewMode='1';
     } else {
       if (this.action == 'copy')
@@ -85,31 +91,42 @@ export class PopupAddSprintsComponent implements OnInit {
     if (!this.taskBoard.isShared) this.taskBoard.resources = null;
     if (this.resources == '') this.taskBoard.resources = null;
     else this.taskBoard.resources = this.resources;
-    var isAdd = id ? false : true;
+    var isAdd = this.action=='edit' ? false : true;
     this.addTaskBoard(isAdd);
   }
 
+
+  //cai nay mac dinh cai dau tien la sprints defaut nen làm tạm the nay da
+
   addTaskBoard(isAdd: boolean) {
-    // this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
-    //   if (res) {
-    //     // if (taskBoard.iterationID) {
-    //     //   this.updateData.next(res);
-    //     // } else
-    //     //   this.dataAddNew.next(res);
-    //     // this.closeTaskBoard();
-    //   }
-    // });
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd))
-      .subscribe((res) => {
-        if (res.save) {
-          this.notiService.notifyCode('TM005');
-        }
-        if (res.update) {
-        this.notiService.notifyCode('E0528');
+    this.tmSv.addTaskBoard([this.taskBoard, isAdd]).subscribe((res) => {
+      if (res) {
+        if(isAdd){
+          this.dataOnLoad[0]= res;
+          this.dataOnLoad=this.dataDefault.concat(this.dataOnLoad);
+          this.dialog.dataService.data =  this.dataOnLoad
+         // this.notiService.notifyCode('TM005');
+        }else{
+           var index = this.dialog.dataService.data.findIndex(x=>x.iterationID==res.iterationID)
+           this.dialog.dataService.data[index] = res;
+         // this.notiService.notifyCode('E0528');
         }
         this.dialog.close();
-      });
+      }
+    });
+
+    //khong refes dc
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option, isAdd))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.notiService.notifyCode('TM005');
+    //     }
+    //     if (res.update) {
+    //     this.notiService.notifyCode('E0528');
+    //     }
+    //     this.dialog.close();
+    //   });
   }
 
   closeTaskBoard() {

@@ -23,6 +23,9 @@
             (fileGet)="getFile($event)"
             [objectId]="data?.recID"
             [allowMultiFile]="0"
+            idBrowse="3"
+            [allowMultiFile]=""
+            [allowExtensions]="'.docx,.xlsx'"
           >
           </codx-attachment>
         <!--   (fileAdded)="fileAdded($event)"
