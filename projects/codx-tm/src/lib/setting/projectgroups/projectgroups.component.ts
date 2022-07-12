@@ -171,7 +171,7 @@ export class ProjectgroupsComponent implements OnInit {
   deleteData(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, this.beforeDel)
+      .delete([this.view.dataService.dataSelected], true,this.beforeDel)
       .subscribe();
   }
 
