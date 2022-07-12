@@ -9,6 +9,7 @@
 
 .title {
   color: #8E8F90;
+  font-weight: 600;
 }
 
 .w-1000px {
@@ -68,7 +69,7 @@
 }
 
 .contact-map-size {
-  height: 250px;
+  height: 300px;
   width: 100%;
 }
 
@@ -104,6 +105,7 @@ button:hover {
 .font_size {
   font-size: 13px;
   font-family: Roboto, Helvetica, "sans-serif" !important;
+  font-weight: 400;
 }
 
 i.fa {
@@ -112,14 +114,14 @@ i.fa {
 }
 
 .background_form {
-  height: 940px;
+  height: 1000px;
   width: 1280px;
   border-radius: 1% 1% 1% 1%;
   background: white;
   padding-bottom: 15px;
 }
 .footer_content {
-  padding: 15px 15px 15px 15px;
+  padding: 15px 15px 2px 15px;
 }
 
 .title_contact {
@@ -129,6 +131,41 @@ i.fa {
   flex: 0 0 auto;
   width: 8.666667%;
 }
-.test123 {
-  text-transform: lowercase;
+
+.img_logo {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img_logoFull {
+  width: 200px;
+  height:60px ;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.img_option {
+  width: 4.333333%;
+}
+.img_optionFull {
+  width: 17.333333%;
+}
+.contactName {
+  font-size: 120%;
+  padding-bottom: 5px;
+}
+.personal_option {
+  padding-bottom: 5px;
+}
+.col-3 {
+  width: 19%;
+}
+.img_avatar {
+  width: 100%;
+  height: 100%;
 }
