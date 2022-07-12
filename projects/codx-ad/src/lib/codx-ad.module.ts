@@ -24,6 +24,7 @@ import { AddUserComponent } from './users/add-user/add-user.component';
 import { PopupPersonalComponent } from './company-setting/popup-personal/popup-personal.component';
 import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
+import { SharedModule } from '@shared/shared.module';
 
 export const routes: Routes = [
   {
@@ -84,6 +85,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+    SharedModule
 
   ],
   exports: [RouterModule],
