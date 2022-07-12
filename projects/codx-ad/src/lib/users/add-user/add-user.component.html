@@ -60,15 +60,15 @@
               </div>
               <div class="form-group row mt-3">
                 <div class="form-group col-6">
-                  <codx-label fiedName="Email" [formModel]="form.formModel" default="Email">
+                  <codx-label fiedName="Email" formName="Users" gridViewName="grvUsers" default="Email">
                   </codx-label>
-                  <codx-input field="email" type="text" [formModel]="form.formModel" [Group]="form.formGroup">
+                  <codx-input field="email" type="text" [crrValue]="adUser.email">
                   </codx-input>
                 </div>
                 <div class="form-group col-6">
-                  <codx-label fiedName="Phone" [formModel]="form.formModel" default="Phone">
+                  <codx-label fiedName="Phone" formName="Users" gridViewName="grvUsers" default="Phone">
                   </codx-label>
-                  <codx-input type="text" field="phone" [formModel]="form.formModel" [Group]="form.formGroup">
+                  <codx-input type="text" field="phone" [crrValue]="adUser.mobile">
                   </codx-input>
                 </div>
               </div>

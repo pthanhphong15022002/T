@@ -533,7 +533,7 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    );
+    )
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
