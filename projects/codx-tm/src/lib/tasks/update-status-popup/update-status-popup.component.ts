@@ -101,10 +101,11 @@ export class UpdateStatusPopupComponent implements OnInit {
           this.task.completedOn = this.completedOn;
           this.task.comment = this.comment;
           this.task.completed = this.estimated;
-          res.forEach(obj=>{
-            var i = this.dialog.dataSelected.data.findIndex(x=>x.taskID==obj.taskID);
-            this.dialog.dataService.data[i] = obj;
-          })
+          this.dialog.close(res)
+          // res.forEach(obj=>{
+          //   var i = this.dialog.dataSelected.data.findIndex(x=>x.taskID==obj.taskID);
+          //   this.dialog.dataService.data[i] = obj;
+          // })
           
           this.dialog.close();
           this.notiService.notify('Cập nhật trạng thái thành công !');

@@ -204,7 +204,7 @@ export class CodxImportComponent implements OnInit, OnChanges
   {
     this.submitted = true;
     if(this.exportGroup.invalid) return;
-    var idTemp = null;
+   /*  var idTemp = null;
     var value  = this.exportGroup.value;
     var splitFormat = value.format.split("_");
     switch(splitFormat[0])
@@ -239,10 +239,7 @@ export class CodxImportComponent implements OnInit, OnChanges
           );
           break;
         }
-    }
-    
-   /*    */
-      
+    } */
   }
   downloadFile(data: any) {
     const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

@@ -1,4 +1,4 @@
-<codx-views #view [funcID]="'WPT08'">
+<codx-views #view [funcID]="'WPT08'" (requestEnded)="requestEnded($event)">
 </codx-views>
 
 <div class="cal-notes">
@@ -21,11 +21,14 @@
             </div>
         </div>
     </div>
-    <!-- <codx-listview service="SYS" assemblyName="ERM.Business.CM" className="ParametersBusiness"
-        method="GetDataByRecIDAsync" [predicate]="predicate" [dataValue]="dataValue"></codx-listview> -->
-    <div class="d-flex flex-column top-5">
-        <div *ngIf="checkWP_NotesParam == true" class="pd-note">
-            <div *ngFor="let item of WP_Notes">
+    <codx-listview #listview service="SYS" assemblyName="ERM.Business.CM" className="ParametersBusiness"
+        method="GetDataByRecIDAsync" entityName="WP_Notes" [formModel]="view.formModel" [predicate]="predicate"
+        [dataValue]="dataValue" [itemTemplate]="dataPara" type="listView" [funcId]="view.formModel.funcID">
+    </codx-listview>
+
+    <ng-template #dataPara let-item>
+        <div class="d-flex flex-column top-5">
+            <div *ngIf="item.type == 'WP_Notes'" class="pd-note">
                 <div *ngIf="item.showCalendar == true">
                     <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                         <div class="note-content mb-3">
@@ -123,9 +126,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div *ngIf="checkTM_TasksParam == true" class="pd-note">
-            <div *ngFor="let item of TM_Tasks">
+            <div *ngIf="item.note == 'TM_Tasks'" class="pd-note">
                 <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                     <div class="task-content mb-3">
                         <div class="checkbox-list">
@@ -146,7 +147,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </ng-template>
 </div>
 
 <ng-template #popContentTypeCalendar let-modal>

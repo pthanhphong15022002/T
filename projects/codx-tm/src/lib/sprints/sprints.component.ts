@@ -100,23 +100,23 @@ export class SprintsComponent extends UIComponent {
         this.add();
         break;
       case 'edit':
-        if(data.iterationID!=this.user.userID)
-        this.edit(data);
+        if (data.iterationID != this.user.userID)
+          this.edit(data);
         break;
       case 'copy':
-        if(data.iterationID!=this.user.userID)
-        this.copy(data);
+        if (data.iterationID != this.user.userID)
+          this.copy(data);
         break;
       case 'delete':
-        if(data.iterationID!=this.user.userID)
-        this.delete(data);
+        if (data.iterationID != this.user.userID)
+          this.delete(data);
         break;
       case 'sendemail':
         this.sendemail(data);
         break;
       case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-      if(data.iterationID!=this.user.userID)
-        this.shareBoard(e, data);
+        if (data.iterationID != this.user.userID)
+          this.shareBoard(e, data);
         break;
       case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
         this.viewBoard(e, data);
@@ -203,13 +203,13 @@ export class SprintsComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
+   /*  this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
-      .subscribe(res=>{
-      if(res)  this.notiService.notifyCode('TM004');else   this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
-      })
+      .subscribe(res => {
+        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
+      }) */
   }
 
   beforeDel(opt: RequestOption) {
@@ -217,7 +217,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) {}
+  sendemail(data) { }
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -255,12 +255,7 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(
-      e.functionID,
-      this.view.formModel.formName,
-      this.view.formModel.gridViewName,
-      data
-    );
+    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     //this.codxService.navigate('',this.urlView)
   }
 

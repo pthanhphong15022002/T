@@ -14,16 +14,17 @@
                 </div>
                 <div class="d-flex align-items-center flex-grow-1">
                     <div class="w-50px">To:</div>
-                    <codx-input 
-                        [refValue]="gridViewSetup['Owner']['referedValue']" 
-                        placeholder="Chọn tài khoản" 
-                        [multiple]="true"
-                        type="combobox" 
-                        style="width:100%" 
-                        [Group]="forwardForm"
-                        ControlName="userID"
-                        >
-                    </codx-input>
+                    <codx-input
+                        type="Combobox"
+                        name="combobox"
+                        [refValue]="gridViewSetup['Owner']['referedValue']"
+                        [showInput]="true"
+                        refType="P"
+                        field="popup"
+                        [ngClass]="'w-100'"
+                        (valueChange)="changeValueUserID($event)"
+                    >
+                  </codx-input>
                 </div>
             </div>
             <div class="mx-2">

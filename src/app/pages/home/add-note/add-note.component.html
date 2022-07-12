@@ -3,31 +3,44 @@
     <ng-template popup add #body>
         <div class="flex position-relative">
             <div [class.active]="noteType.text">
-                <span (click)="onType('text')" class="icon-font_download icon-22 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
+                <span (click)="onType('text')"
+                    class="icon-font_download icon-22 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <div [class.active]="noteType.list">
-                <span (click)="onType('list')" class="icon-list_alt icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
+                <span (click)="onType('list')"
+                    class="icon-list_alt icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <div [class.active]="noteType.check">
-                <span (click)="onType('check')" class="icon-check_box icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
+                <span (click)="onType('check')"
+                    class="icon-check_box icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
-            <span class="icon-image icon-24 btn btn-icon btn-active-light-primary position-relative" (click)="popupFile()">
+            <span class="icon-image icon-24 btn btn-icon btn-active-light-primary position-relative"
+                (click)="popupFile()">
             </span>
             <div class="d-flex align-items-center pw-menu">
                 <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
                     triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                    <span class="icon-push_pin1 icon-20 btn btn-icon btn-active-light-primary position-relative" type="button"></span>
+                    <span class="icon-push_pin1 icon-20 btn btn-icon btn-active-light-primary position-relative"
+                        type="button"></span>
                 </div>
                 <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
                     triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                    <span class="icon-download icon-20 btn btn-icon btn-active-light-primary position-relative" type="button"></span>
+                    <span class="icon-download icon-20 btn btn-icon btn-active-light-primary position-relative"
+                        type="button"></span>
                 </div>
             </div>
         </div>
         <div class="mb-3">
-            <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1" hideFolder="1"
-                hideUploadBtn="1" functionID="WPT03941" (fileAdded)="fileAdded()" type="inline">
-            </codx-attachment>
+            <div *ngIf="formType == 'edit'">
+                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
+                </codx-attachment>
+            </div>
+            <div *ngIf="formType == 'add'">
+                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1"
+                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
+                </codx-attachment>
+            </div>
         </div>
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">

@@ -9,17 +9,17 @@ import { CompanySettingComponent } from '../company-setting.component';
   selector: 'lib-popup-personal',
   templateUrl: './popup-personal.component.html',
   styleUrls: ['./popup-personal.component.css'],
-  providers:[CompanySettingComponent ],
+  providers: [CompanySettingComponent],
 })
 export class PopupPersonalComponent implements OnInit {
   data: any;
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Người đại diện';
-
+  dataUpdate = new BehaviorSubject<any>(null);
+  isUpdate = this.dataUpdate.asObservable();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
     private notiService: NotificationsService,
     private adService: CodxAdService,
 
@@ -30,7 +30,6 @@ export class PopupPersonalComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
   }
-
   ngOnInit(): void {
     this.items = this.data;
   }
@@ -46,14 +45,14 @@ export class PopupPersonalComponent implements OnInit {
       .subscribe((response) => {
         if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
-          this.dialog.dataService.setDataSelected(response[0]);
-          this.dialog.dataService.next(response[0]);
-          this.changeDetectorRef.detectChanges();
+          this.dialog.close(response[0]);
         } else {
           this.notiService.notifyCode('thêm thất bại');
+          this.dialog.close();
         }
+
       });
-    this.dialog.close();
+
 
   }
 
