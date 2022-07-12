@@ -199,8 +199,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       this.cfService.openForm(
         PopupAddEmailTemplateComponent,
         '',
-        750,
-        1500,
+        800,
+        screen.height,
         '',
         data
       );

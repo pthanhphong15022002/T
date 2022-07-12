@@ -91,7 +91,7 @@
                                   [desc]="getLeadTime(item.leadtime)" [status]="lstStep.status"
                                   cardCss="card-template border-bottom px-2 py-3"
                                   [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
-                                  [resourceObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
+                                  [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
                                 </codx-temp-full>
 
                                 <ng-template #footer1>

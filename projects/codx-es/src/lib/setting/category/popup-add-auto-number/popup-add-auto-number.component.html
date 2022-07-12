@@ -1,5 +1,5 @@
 <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="bodyPopup"
-  [footer]="footer" [formGroup]="dialogAutoNum" *ngIf="isAfterRender">
+  [footer]="footer" [data]="{}" *ngIf="isAfterRender">
   <ng-template #bodyPopup>
     <div class="row mt-3">
       <div class="col-6">
@@ -23,7 +23,7 @@
       <div class="col-4">
         <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
         </codx-label>
-        <codx-input type="text" name="text" ControlName="fixedString" [Group]="dialogAutoNum"
+        <codx-input type="text" name="text" [Group]="dialogAutoNum" ControlName="fixedString"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>

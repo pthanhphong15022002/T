@@ -49,11 +49,8 @@
                     <ng-container *ngFor="let item of dialogApprovalStep.value.approvers">
                       <div class="d-flex align-items-center mb-4 min-w-300px mw-300px">
                         <codx-temp-full [imageId]="item.approver" [subTitle]="" [title]="item.approverName"
-                          [subTitle]="item.positionName ?? 'Vị trí công việc'" [desc]="lstStep.agencyName"
-                          [status]="lstStep.status" [statusVll]="" cardCss="card-template border-bottom px-2 py-3"
-                          [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
-                          [resourceObjType]="'AD_Users'" [icoStatus]="lstStep?.urgency" [icoStatusVll]="'referedValue'"
-                          [icoStatus2]="lstStep?.security" [icoStatusVll2]="'referedValue'" [modeImgs]="false"
+                          [subTitle]="item.positionName ?? 'Vị trí công việc'" [status]="lstStep.status" [statusVll]=""
+                          cardCss="card-template border-bottom px-2 py-3" [imageObjType]="'AD_Users'" [modeImgs]="false"
                           [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)">
                         </codx-temp-full>
                       </div>
