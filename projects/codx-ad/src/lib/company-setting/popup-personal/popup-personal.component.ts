@@ -9,7 +9,7 @@ import { CompanySettingComponent } from '../company-setting.component';
   selector: 'lib-popup-personal',
   templateUrl: './popup-personal.component.html',
   styleUrls: ['./popup-personal.component.css'],
-  providers:[CompanySettingComponent ],
+  providers: [CompanySettingComponent],
 })
 export class PopupPersonalComponent implements OnInit {
   data: any;
@@ -20,7 +20,6 @@ export class PopupPersonalComponent implements OnInit {
   isUpdate = this.dataUpdate.asObservable();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
     private notiService: NotificationsService,
     private adService: CodxAdService,
 
@@ -53,7 +52,7 @@ export class PopupPersonalComponent implements OnInit {
         }
 
       });
- 
+
 
   }
 
