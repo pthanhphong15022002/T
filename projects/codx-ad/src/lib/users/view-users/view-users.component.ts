@@ -43,16 +43,7 @@ export class ViewUsersComponent implements OnInit {
   assignCopy() {
     this.allRoles = Object.assign([], this.lstRoles);
   }
-  filterItem(value) {
-    if (!value) {
-      this.assignCopy();
-    } // when nothing has typed
-    this.allRoles = Object.assign([], this.lstRoles).filter(
-      item => item.searchItem.toLowerCase().indexOf(value.toLowerCase()) > -1
-    )
-  }
 
-  
 
   search(data) {
       this.allRoles = this.lstRoles.filter((val) =>

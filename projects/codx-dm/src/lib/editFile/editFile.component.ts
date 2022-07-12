@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
@@ -11,6 +11,7 @@ import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder 
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { RolesComponent } from '../roles/roles.component';
 
 @Component({
   selector: 'editFile',
@@ -24,6 +25,7 @@ export class EditFileComponent implements OnInit {
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
   titleDialog = 'Cập nhật file';
+  titleRolesDialog = 'Cập nhật quyền';
   titleFileNameRequire = 'Tên tài liệu không để trống';
   titleFileNameInvalid = 'Tên tài liệu không hợp lệ';
   titleFileType = 'Loại tập tin';
@@ -228,6 +230,7 @@ export class EditFileComponent implements OnInit {
     private fileService: FileService,    
     private api: ApiHttpService,
     public dmSV: CodxDMService,
+    private callfc: CallFuncService,
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
@@ -287,6 +290,29 @@ export class EditFileComponent implements OnInit {
 
         if (item.status == 6) {
           let newNameMessage = this.renamemessage.replace("{0}", item.data.fileName);
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notificationsService.alert(this.titlemessage, item.message + ". " + newNameMessage, config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            { 
+                this.fileEditing.fileName = item.data.fileName;
+                this.fileService.updateFile(this.fileEditing).subscribe(async res => {
+                  if (res.status == 0) {
+                    var files = this.dmSV.listFiles.getValue();
+                    let index = files.findIndex(d => d.recID.toString() === this.id);
+                    if (index != -1) {
+                      files[index].fileName = res.data.fileName;
+                    }
+                    this.dmSV.listFiles.next(files);                    
+                    // if (modal != null)
+                    //   this.modalService.dismissAll();
+                    this.changeDetectorRef.detectChanges();
+                    this.dialog.close();
+                  }
+                  this.notificationsService.notify(res.message);
+                });
+            }
+          })
           // this.confirmationDialogService.confirm(this.titlemessage, item.message + ". " + newNameMessage)
           //   .then((confirmed) => {
           //     if (confirmed) {
@@ -361,46 +387,47 @@ export class EditFileComponent implements OnInit {
   }  
 
   openRight(mode = 1, type = true) {
-    if (this.fileEditing != null)
-      this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
-    if (mode == 2) {
-      // $('app-customdialog').css('z-index', '1000');
-      this.onSetPermision(type);
-    }
-    //  $('#dms_properties').css('z-index', '1000');    
-    this.modeRequest = "";
-    this.modeShare = "";
-    var index = 0;
-    var i = 0;
-    this.currentPemission = -1;
-    if (this.modeSharing) { //findIndex
-      index = this.fileEditing.permissions.findIndex(d => d.isSharing);
-    }
+    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 800, 650, "", [this.functionID, this.fileEditing], "");
+    // if (this.fileEditing != null)
+    //   this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
+    // if (mode == 2) {
+    //   // $('app-customdialog').css('z-index', '1000');
+    //   this.onSetPermision(type);
+    // }
+    // //  $('#dms_properties').css('z-index', '1000');    
+    // this.modeRequest = "";
+    // this.modeShare = "";
+    // var index = 0;
+    // var i = 0;
+    // this.currentPemission = -1;
+    // if (this.modeSharing) { //findIndex
+    //   index = this.fileEditing.permissions.findIndex(d => d.isSharing);
+    // }
 
-    if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0 && index > -1) {
-      // if (this.fileEditing.permissions[index].startDate != null && this.fileEditing.permissions[index].startDate != null)
-      //   this.startDate = this.formatDate(this.fileEditing.permissions[index].startDate.toString());
-      // if (this.fileEditing.permissions[index].endDate != null && this.fileEditing.permissions[index].endDate != null)
-      //   this.endDate = this.formatDate(this.fileEditing.permissions[0].endDate.toString());
-    }
+    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0 && index > -1) {
+    //   // if (this.fileEditing.permissions[index].startDate != null && this.fileEditing.permissions[index].startDate != null)
+    //   //   this.startDate = this.formatDate(this.fileEditing.permissions[index].startDate.toString());
+    //   // if (this.fileEditing.permissions[index].endDate != null && this.fileEditing.permissions[index].endDate != null)
+    //   //   this.endDate = this.formatDate(this.fileEditing.permissions[0].endDate.toString());
+    // }
 
-    // modal-xs/modal-sm/modal-md/modal-lg/modal-xl   
-    //this.openDialogFolder(this.contentRight, "lg", "right");
-    if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
-    //  this.changePermission(index);
-    }    
-    else {
-      this.full = false;
-      this.create = false;
-      this.read = false;
-      this.update = false;
-      this.delete = false;
-      this.download = false;
-      this.share = false;
-      this.upload = false;
-      this.assign = false;
-    }
-    this.changeDetectorRef.detectChanges();
+    // // modal-xs/modal-sm/modal-md/modal-lg/modal-xl   
+    // //this.openDialogFolder(this.contentRight, "lg", "right");
+    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
+    // //  this.changePermission(index);
+    // }    
+    // else {
+    //   this.full = false;
+    //   this.create = false;
+    //   this.read = false;
+    //   this.update = false;
+    //   this.delete = false;
+    //   this.download = false;
+    //   this.share = false;
+    //   this.upload = false;
+    //   this.assign = false;
+    // }
+    // this.changeDetectorRef.detectChanges();
   }
 
   hideLicence() {

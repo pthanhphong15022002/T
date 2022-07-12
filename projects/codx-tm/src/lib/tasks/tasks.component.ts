@@ -8,18 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  DataRequest,
-  ViewModel,
-  ViewType,
-  RequestOption,
-  ButtonModel,
-  ResourceModel,
-  SidebarModel,
-  DialogRef,
-  AuthStore,
-  UrlUtil,
-  NotificationsService,
-  UIComponent,
+  DataRequest, ViewModel, ViewType, RequestOption, ButtonModel, ResourceModel, SidebarModel, DialogRef, AuthStore, UrlUtil, NotificationsService, UIComponent,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -156,8 +145,6 @@ export class TasksComponent extends UIComponent {
   }
 
   change() {
-    // this.view.dataService.dataValues = "1";
-    // this.view.dataService.load();
     this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
@@ -239,9 +226,7 @@ export class TasksComponent extends UIComponent {
         { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
       ],
     };
-    //reload data
-    // this.schedule.reloadDataSource();
-    // this.schedule.reloadResource();
+
   }
 
   getCellContent(evt: any) {
@@ -333,9 +318,7 @@ export class TasksComponent extends UIComponent {
   edit(data?) {
     if (data && data.status >= 8) {
       // this.notiService.notifyCode('cần code đoạn nay');
-      this.notiService.notify(
-        'Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"'
-      );
+      this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
       return;
     }
     if (data) {
@@ -402,8 +385,8 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.view.dataService
-              .delete([this.view.dataService.dataSelected], (opt) =>
+           /*  this.view.dataService
+              .delete([this.view.dataService.dataSelected], true, (opt) =>
                 this.beforeDel(opt)
               )
               .subscribe((res) => {
@@ -411,12 +394,13 @@ export class TasksComponent extends UIComponent {
                   this.itemSelected = this.view.dataService.data[0];
                   this.notiService.notifyCode('TM004');
                 }
-              });
+              }); */
           }
         }
       });
   }
-  sendemail(data) {}
+
+  sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -440,7 +424,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     //this.dialog && this.dialog.close(); sai vẫn bị đóng
@@ -463,7 +447,6 @@ export class TasksComponent extends UIComponent {
   }
 
   changeStatusTask(moreFunc, taskAction) {
-    const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
     this.api
       .execSv<any>(
@@ -503,11 +486,7 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                 for(var i=0 ; i<res.length;i++){
-                    var index = this.view.dataService.data.findIndex(x=>x.taskID==res[i].taskID);
-                    this.view.dataService.data[index] = res[i];
-                  }
-                 this.dt.detectChanges();
+                  this.view.dataService.update(taskAction).subscribe();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -533,7 +512,7 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    );
+    )
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
