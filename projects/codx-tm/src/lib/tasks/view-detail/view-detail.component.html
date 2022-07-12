@@ -105,29 +105,36 @@
                 <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu:">
                 </codx-label>
               </span>
-              <span [ngClass]="
+              <!-- <span [ngClass]="
                   itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
+                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
+
+                <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date: "dd/MM/yyyy"}}</span>
+                <span #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue : formModel:"startDate" : startDate|async}}</span>
             </div>
             <div class="d-flex align-items-center text-dark me-6">
               <span class="me-1 fw-bold">
                 <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc:">
                 </codx-label>
               </span>
-              <span [ngClass]="
+              <!-- <span [ngClass]="
               itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
-            ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
-        </div>
+            ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
+            <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date: "dd/MM/yyyy"}}</span>
+            <span #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate" : endDate|async}}</span>
+            </div>
             <div class="d-flex">
               <span class="fw-bold me-1">
                 <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày hoàn tất:">
                 </codx-label>
               </span>
-              <span [ngClass]="
+              <!-- <span [ngClass]="
                   itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400'
                 ">{{ itemSelected?.completedOn ?(itemSelected?.completedOn| date: "dd/MM/yyyy"): "dd/mm/yyyy"}}
-                  {{ " | " + (itemSelected?.completed?itemSelected?.completed : 0 ) +" h "}}</span>
-            </div>
+                {{ " | " + (itemSelected?.completed?itemSelected?.completed : 0 ) +" h "}}</span>-->
+                <span #completedOn class="text-gray-700">{{itemSelected?.completedOn? (itemSelected?.completedOn| date: "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue : formModel:"completedOn" : completedOn|async )}}</span>
+            </div> 
+           
           </div>
         </div>
         <div class="mt-2">
@@ -136,7 +143,7 @@
               <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label>
             </span>
-            <span class="text-gray-700">{{ itemSelected?.projectName }}</span>
+            <span #projectname class="text-gray-700">{{ itemSelected?.projectName| formatvalue : formModel:"projectName" : projectname|async }}</span>
           </div>
           <div class="d-flex">
             <span class="fw-bold me-2">
@@ -147,10 +154,10 @@
           </div>
         </div>
         <div class="mt-2">
-            <codx-tag *ngIf="!itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+          <codx-tag *ngIf="!itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
             [value]="''"></codx-tag>
-            <codx-tag *ngIf="itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-            [value]="itemSelected.tags"></codx-tag>        
+          <codx-tag *ngIf="itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+            [value]="itemSelected.tags"></codx-tag>
         </div>
       </div>
     </ng-template>
@@ -161,17 +168,16 @@
       </div>
       <div class="">
         <div *ngIf="itemSelected.category == '3'" class="">
-          <codx-imgs  [objectId]="itemSelected?.assignTo" objectType="AD_Users" [i] [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [i] [numberImages]="4">
           </codx-imgs>
         </div>
-        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
-          class="">
-          <codx-imgs  [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="4">
+        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
+          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="4">
           </codx-imgs>
         </div>
       </div>
       <div class="codx_title_sub_primary mt-6 mb-3">
-        <codx-label  fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
+        <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
         </codx-label>
       </div>
       <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">

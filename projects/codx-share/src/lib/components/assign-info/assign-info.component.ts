@@ -214,11 +214,9 @@ export class AssignInfoComponent implements OnInit {
   }
 
   addFile(evt: any) {
-    //this.attachment.openPopup();
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
   }
   getfileCount(e){
