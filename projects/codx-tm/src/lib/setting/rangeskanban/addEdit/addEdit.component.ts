@@ -8,12 +8,12 @@ import { RangeLine } from '../../../models/task.model';
   styleUrls: ['./addEdit.component.css']
 })
 export class AddEditComponent implements OnInit {
-  rangeLines: RangeLine = new RangeLine();
-  lstRangeLine: RangeLine[];
+  line: RangeLine = new RangeLine();
+  lines: RangeLine[];
   title = 'Thêm khoảng thời gian';
-  range: any;
+  master: any;
   dialog: DialogRef;
-
+  dialogRangeLine: DialogRef;
   formModelRangeLine: FormModel = {
     formName: 'RangeLines',
     gridViewName: 'grvRangeLines',
@@ -27,22 +27,24 @@ export class AddEditComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.range = dialog.dataService!.dataSelected;
-    this.lstRangeLine = this.range.rangeLines || [];
+    this.master = dialog.dataService!.dataSelected;
+    this.lines = this.master.line || [];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
 
   ngOnInit(): void { }
 
-  openPopup(template: any, data = null) {
+  addLine(template: any, data = null) {
     this.dialog.dataService.save().subscribe(res => {
       if (!res?.save?.error || !res?.update?.error) {
+        if (!this.dialog.dataService.dataSelected.isNew())
+          this.dialog.dataService.hasSaved = true;
         if (data)
-          this.rangeLines = data;
+          this.line = data;
         else {
-          this.rangeLines.recID = Util.uid();
-          this.rangeLines.rangeID = this.range.rangeID;
-          // this.codxService.setAddNew(this.rangeLines, 'recID')
+          this.line.recID = Util.uid();
+          this.line.rangeID = this.master.rangeID;
+          this.codxService.setAddNew(this.line, 'recID')
         }
         this.callfc.openForm(template, '', 500, 400);
       }
@@ -50,15 +52,11 @@ export class AddEditComponent implements OnInit {
   }
 
   saveLine(dialog) {
-    let method = 'SaveAsync';
-
-    if (!this.rangeLines['isNew'])
-      method = 'UpdateAsync';
-
-    this.api.exec<any>('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', this.rangeLines).subscribe(res => {
+    this.api.exec<any>('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', this.line).subscribe(res => {
       if (res) {
-        this.lstRangeLine.push(res)
-        this.rangeLines = new RangeLine();
+        if (this.line['isNew'])
+          this.lines.push(res)
+        this.line = new RangeLine();
         dialog.close();
       }
     })
@@ -69,17 +67,21 @@ export class AddEditComponent implements OnInit {
       .save()
       .subscribe(res => {
         if (res && !res.error) {
+          this.dialog.dataService.hasSaved = false;
           this.dialog.close();
         }
       });
   }
 
-  deletePopup(index) {
-    this.lstRangeLine.splice(index, 1);
+  removeLine(item, index) {
+    this.api.exec<any>('BS', 'RangeLinesBusiness', 'DeleteRangeLineAsync', item).subscribe(res => {
+      if (res)
+        this.lines.splice(index, 1);
+    })
   }
 
   valueChange(data) {
-    this.rangeLines[data.field] = data.data;
+    this.line[data.field] = data.data;
   }
 }
 

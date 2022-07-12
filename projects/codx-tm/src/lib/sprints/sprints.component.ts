@@ -40,7 +40,7 @@ export class SprintsComponent extends UIComponent {
   gridView: any;
   // predicateViewBoards =
   //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
-    predicateViewBoards =
+  predicateViewBoards =
     '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
   predicateProjectBoards =
     '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
@@ -52,7 +52,7 @@ export class SprintsComponent extends UIComponent {
   user: any;
   @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
   @ViewChild('lstProjectBoard') lstProjectBoard: CodxListviewComponent;
-  @ViewChild('itemViewBoard') itemViewBoard : TemplateRef<any>
+  @ViewChild('itemViewBoard') itemViewBoard: TemplateRef<any>
   urlShare = '';
   urlView = '';
   moreFunc: any[];
@@ -196,7 +196,7 @@ export class SprintsComponent extends UIComponent {
     this.view.dataService.dataSelected = data;
     // this.itemSelected = data;
     this.view.dataService
-      .delete([this.lstViewBoard.dataService.dataSelected], (opt) =>
+      .delete([this.lstViewBoard.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {
@@ -217,7 +217,7 @@ export class SprintsComponent extends UIComponent {
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) {}
+  sendemail(data) { }
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -265,8 +265,8 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-     this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
-     //this.codxService.navigate('',this.urlView)
+    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    //this.codxService.navigate('',this.urlView)
   }
 
   changeView(evt: any) {
