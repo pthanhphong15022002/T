@@ -67,7 +67,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   showAssignTo = false;
   isAdd = false;
   crrEstimated: any;
-  isSaveFile = false;
+  isHaveFile = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -382,7 +382,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.convertToListTaskResources();
     this.task.taskType = this.param['TaskType'];
-    if (this.isSaveFile) this.attachment.saveFiles();
+    if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
   }
@@ -634,7 +634,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (this.isCheckAttachmentControl) {
       this.isCheckAttachmentTrue =
-        this.isCheckAttachmentControl && this.isSaveFile;
+        this.isCheckAttachmentControl && this.isHaveFile;
     } else this.isCheckAttachmentTrue = true;
   }
 
@@ -786,6 +786,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isSaveFile = true;
+    if (e.data.length > 0) this.isHaveFile = true;
   }
 }
