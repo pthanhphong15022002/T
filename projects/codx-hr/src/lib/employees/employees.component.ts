@@ -139,7 +139,7 @@ export class EmployeesComponent implements OnInit {
 
   delete(data: any) {
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
+      .delete([this.view.dataService.dataSelected],true,(opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {

@@ -77,7 +77,6 @@ export class IncommingAddComponent implements OnInit {
     } */
   }
   fileAdded(event:any) { 
-    debugger;
     if(event?.data) this.hideThumb = true  
   }
 
