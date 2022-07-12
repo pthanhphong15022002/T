@@ -231,7 +231,7 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e:any)
   {
-    this.fileCount = e;
+    this.fileCount = e.data.length;
   }
   changeFormAgency(val:any)
   {
