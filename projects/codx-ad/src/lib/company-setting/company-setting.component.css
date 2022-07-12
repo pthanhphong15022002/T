@@ -9,7 +9,7 @@
 
 .title {
   color: #8E8F90;
-  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .w-1000px {
@@ -27,10 +27,12 @@
 
 .accountinfo {
   padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .header_title {
-  padding-bottom: 10px;
+  font-size: 19px;
+  padding-bottom: 14px;
 }
 
 .header_detail {
@@ -51,6 +53,8 @@
 
 .body_detail {
   border: 1px solid #dbd8d9;
+  margin-top: 15px;
+  margin-bottom: 30px;
 }
 
 .footer_detail {
@@ -65,7 +69,7 @@
 }
 
 .contact-map-size {
-  height: 250px;
+  height: 300px;
   width: 100%;
 }
 
@@ -74,7 +78,7 @@
 }
 
 .content {
-  padding: 15px 15px 15px 15px;
+  padding: 18px 18px 20px 18px;
 }
 
 button {
@@ -95,17 +99,13 @@ button:hover {
   color: #47b5ff;
 }
 
-.header_title {
-  font-size: 19px;
-}
-
-
 .title_mf {
   color: #0055c5;
 }
 .font_size {
   font-size: 13px;
   font-family: Roboto, Helvetica, "sans-serif" !important;
+  font-weight: 400;
 }
 
 i.fa {
@@ -114,14 +114,14 @@ i.fa {
 }
 
 .background_form {
-  height: 940px;
-  width: 1250px;
+  height: 1000px;
+  width: 1280px;
   border-radius: 1% 1% 1% 1%;
   background: white;
   padding-bottom: 15px;
 }
 .footer_content {
-  padding: 15px 15px 15px 15px;
+  padding: 15px 15px 2px 15px;
 }
 
 .title_contact {
@@ -131,9 +131,41 @@ i.fa {
   flex: 0 0 auto;
   width: 8.666667%;
 }
-.col-6 {
-  padding-bottom: 10px;
+
+.img_logo {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-.test123 {
-  text-transform: lowercase;
+
+.img_logoFull {
+  width: 200px;
+  height:60px ;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.img_option {
+  width: 4.333333%;
+}
+.img_optionFull {
+  width: 17.333333%;
+}
+.contactName {
+  font-size: 120%;
+  padding-bottom: 5px;
+}
+.personal_option {
+  padding-bottom: 5px;
+}
+.col-3 {
+  width: 19%;
+}
+.img_avatar {
+  width: 100%;
+  height: 100%;
 }

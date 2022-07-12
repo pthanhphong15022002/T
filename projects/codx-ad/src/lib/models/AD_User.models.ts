@@ -4,7 +4,7 @@ export class AD_User{
     userName: string;
     userGroup: string;
     email: string;
-    buID: string;
+    buid: string;
     activeOn: Date;
     mobile: string;
     employeeID: string;
@@ -13,4 +13,9 @@ export class AD_User{
     groupName: string;
     resource: string;
     buName: string;
+    createdOn: Date;
+    modifiedOn: Date;
+    sessionID: string;
+    owner: String;
+
 }

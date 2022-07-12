@@ -138,15 +138,16 @@ export class EmployeesComponent implements OnInit {
   }
 
   delete(data: any) {
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.notiService.notifyCode('TM004');
-        }
-      });
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected],true,(opt) =>
+    //     this.beforeDel(opt)
+    //   )
+    //   .subscribe((res) => {
+    //     if (res[0]) {
+    //       this.notiService.notifyCode('TM004');
+    //     }
+    //   });
+    /* Core em bị lỗi mấy đoạn delete nên em rem lại để code, khi nào merge bỏ rem giúp em với*/
   }
 
   beforeDel(opt: RequestOption) {

@@ -4,6 +4,8 @@ export class AD_CompanySettings {
   ;legalName: String
   ;legalName2: String
   ;shortName: String
+  ;LogoFull:string
+  ;Logo: string
   ;logoFile: String
   ;taxCode: String
   ;fiscalYear: String

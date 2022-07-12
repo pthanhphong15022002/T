@@ -1,6 +1,11 @@
 import { CodxTMService } from './../../codx-tm.service';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DataRequest,
+  CallFuncService,
+} from 'codx-core';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   GaugeTheme,
@@ -28,40 +33,58 @@ export class MyDashboardComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
+  border: {
+    color: 'grey';
+    width: 0;
+  };
+  animation: {
+    enable: false;
+  };
 
   //#region gauge
   public font1: Object = {
     size: '15px',
     color: '#00CC66',
   };
-  public rangeWidth: number = 25;
-  //Initializing titleStyle
-  public titleStyle: Object = { size: '18px' };
-  public font2: Object = {
-    size: '15px',
-    color: '#fcde0b',
-  };
-  // custom code start
-  public load(args: ILoadedEventArgs): void {
-    let selectedTheme: string = location.hash.split('/')[1];
-    selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.gauge.theme = <GaugeTheme>(
-      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
-        .replace(/-dark/i, 'Dark')
-        .replace(/contrast/i, 'Contrast')
-    );
-  }
 
+  public rangeLinearGradient: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#5465FF', offset: '0%', opacity: 1 },
+      { color: '#04DEB7', offset: '70%', opacity: 1 },
+    ],
+  };
+  
   public animation1: Object = { duration: 1500 };
-  public markerWidth: number = 28;
-  public markerHeight: number = 28;
-  public value: number = 12;
   public markerWidth1: number = 90;
   public markerHeight1: number = 90;
   public lineStyle: Object = { width: 0, color: '#1d1d1d' };
-  public labelStyle: Object = { font: { size: '0px' } };
-  public majorTicks: Object = { interval: 20, width: 0 };
-  public minorTicks: Object = { width: 0 };
+  public labelStyle1: Object = { position: 'Outside', font: { size: '10px' } };
+  public labelStyle2: Object = {
+    position: 'Outside',
+    offset: 5,
+    useRangeColor: true,
+    font: {
+      size: '0px',
+      color: 'white',
+      fontFamily: 'Roboto',
+      fontStyle: 'Regular',
+    },
+  };
+  public majorTicks1: Object = {
+    position: 'Outside',
+    color: 'green',
+    height: 5,
+    width: 2,
+    offset: 10,
+    interval: 30,
+  };
+  public minorTicks1: Object = { width: 0 };
+  public majorTicks2: Object = {
+    height: 0,
+  };
+  public minorTicks2: Object = { width: 0 };
   //#endregion gauge
 
   public piedata1: Object[];
@@ -103,12 +126,34 @@ export class MyDashboardComponent implements OnInit {
   };
   //#endregion chartcolumn
 
+  public ranges: Object[] = [
+    {
+      start: 0,
+      end: 100,
+      radius: '50%',
+      startWidth: 10,
+      endWidth: 10,
+      color: '#E0E0E0',
+      roundedCornerRadius: 10,
+    },
+  ];
+
+  public tail: Object = {
+    length: '18%',
+    color: '#757575',
+  };
+  public pointerCap: Object = {
+    radius: 7,
+    color: '#757575',
+  };
+
   dbData: any;
 
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
     private tmService: CodxTMService,
+    private cf: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {}
 
@@ -146,7 +191,9 @@ export class MyDashboardComponent implements OnInit {
     ];
     this.legendSettings = {
       visible: true,
+      position: 'Top'
     };
+    
     this.getGeneralData();
   }
 

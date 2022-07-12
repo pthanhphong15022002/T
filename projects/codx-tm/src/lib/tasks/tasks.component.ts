@@ -385,7 +385,7 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.view.dataService
+           /*  this.view.dataService
               .delete([this.view.dataService.dataSelected], true, (opt) =>
                 this.beforeDel(opt)
               )
@@ -394,7 +394,7 @@ export class TasksComponent extends UIComponent {
                   this.itemSelected = this.view.dataService.data[0];
                   this.notiService.notifyCode('TM004');
                 }
-              });
+              }); */
           }
         }
       });

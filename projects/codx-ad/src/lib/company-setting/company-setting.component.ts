@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
@@ -18,6 +18,7 @@ import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
 import { LowerCasePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-company-setting',
@@ -28,6 +29,7 @@ import { LowerCasePipe } from '@angular/common';
 export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
   funcID: any;
   moreFunc = [];
+  @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
@@ -63,6 +65,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         active: true,
         sameData: false,
         model: {
+         // template: this.template,
+
           panelRightRef: this.paneleft,
         },
       },
@@ -85,9 +89,9 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         this.data = e?.event
         this.detectorRef.detectChanges() ;
       }
-    
+
     })}
- 
+
   // clickEditPersonal(data: any) {
   //   var obj = {
   //     post: data,
