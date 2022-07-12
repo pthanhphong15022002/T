@@ -34,7 +34,9 @@ export class PopupAddSprintsComponent implements OnInit {
   dialog: any;
   user: any;
   funcID: string = '';
-  // @Input('viewBase') viewBase: ViewsComponent;
+  sprintDefaut = new TM_Sprints() ;
+  dataDefault = [] ;
+  dataOnLoad=[]
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -52,13 +54,17 @@ export class PopupAddSprintsComponent implements OnInit {
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
+
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
+    this.sprintDefaut =  this.dialog.dataService.data[0];
+    this.dataDefault.push(this.sprintDefaut)
+    this.dataOnLoad = this.dialog.dataService.data ;
   }
 
   ngOnInit(): void {
-    if (!this.taskBoard.iterationID) {
+    if (this.action=='add') {
        this.taskBoard.viewMode='1';
     } else {
       if (this.action == 'copy')
@@ -85,31 +91,42 @@ export class PopupAddSprintsComponent implements OnInit {
     if (!this.taskBoard.isShared) this.taskBoard.resources = null;
     if (this.resources == '') this.taskBoard.resources = null;
     else this.taskBoard.resources = this.resources;
-    var isAdd = id ? false : true;
+    var isAdd = this.action=='edit' ? false : true;
     this.addTaskBoard(isAdd);
   }
 
+
+  //cai nay mac dinh cai dau tien la sprints defaut nen làm tạm the nay da
+
   addTaskBoard(isAdd: boolean) {
-    // this.tmSv.addTaskBoard([taskBoard, isAdd]).subscribe((res) => {
-    //   if (res) {
-    //     // if (taskBoard.iterationID) {
-    //     //   this.updateData.next(res);
-    //     // } else
-    //     //   this.dataAddNew.next(res);
-    //     // this.closeTaskBoard();
-    //   }
-    // });
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd))
-      .subscribe((res) => {
-        if (res.save) {
-          this.notiService.notifyCode('TM005');
-        }
-        if (res.update) {
-        this.notiService.notifyCode('E0528');
+    this.tmSv.addTaskBoard([this.taskBoard, isAdd]).subscribe((res) => {
+      if (res) {
+        if(isAdd){
+          this.dataOnLoad[0]= res;
+          this.dataOnLoad=this.dataDefault.concat(this.dataOnLoad);
+          this.dialog.dataService.data =  this.dataOnLoad
+         // this.notiService.notifyCode('TM005');
+        }else{
+           var index = this.dialog.dataService.data.findIndex(x=>x.iterationID==res.iterationID)
+           this.dialog.dataService.data[index] = res;
+         // this.notiService.notifyCode('E0528');
         }
         this.dialog.close();
-      });
+      }
+    });
+
+    //khong refes dc
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option, isAdd))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.notiService.notifyCode('TM005');
+    //     }
+    //     if (res.update) {
+    //     this.notiService.notifyCode('E0528');
+    //     }
+    //     this.dialog.close();
+    //   });
   }
 
   closeTaskBoard() {
@@ -176,11 +193,10 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   openInfo(interationID, action) {
-    this.taskBoard = new TM_Sprints();
+    // this.taskBoard = new TM_Sprints();
 
-    this.readOnly = action === 'edit' ? false : true;
-    this.title =
-      action === 'edit' ? 'Chỉnh sửa task board' : 'Xem chi tiết task board';
+    this.readOnly = false 
+    this.title ='Chỉnh sửa task board' ;
       this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
         this.taskBoard = res;
@@ -195,7 +211,6 @@ export class PopupAddSprintsComponent implements OnInit {
     this.title = 'Copy task boads';
     this.readOnly = false;
     this.listUserDetail = [];
-    this.taskBoard = new TM_Sprints();
     this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
         this.taskBoard.projectID = res.projectID;
@@ -215,37 +230,61 @@ export class PopupAddSprintsComponent implements OnInit {
     }
   }
 
-  //caí này chạy tạm đã
   eventApply(e: any) {
     var resources = '';
-    var i = 0;
-    e.forEach((obj) => {
-      if (obj?.data && obj?.data != '') {
+    var listDepartmentID = '';
+    var listUserID = '';
+
+    e?.data?.forEach((obj) => {
+     // if (obj?.data && obj?.data != '') {
         switch (obj.objectType) {
           case 'U':
-            resources += obj?.data;
-            this.valueSelectUser(resources);
+            listUserID += obj.id+';';
             break;
-          // case 'D':
-          //   //chưa chạy xong câu lệnh này đã view ra...
-          //   const t = this;
-          //   var depID = obj?.data.substring(0, obj?.data.length - 1);
-          //   t.tmSv.getUserByDepartment(depID).subscribe(res => {
-          //     if (res) {
-          //       assignTo += res + ";";
-          //       this.valueSelectUser(assignTo)
-          //     }
-          //   })
-          //   break;
+          case 'D':
+            listDepartmentID += obj.id+";";
+            break;
         }
-      }
+    //  }
     });
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          resources += res;
+          if (listUserID != '') resources += ';' + listUserID;
+          this.valueSelectUser(resources);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
   }
+
   valueSelectUser(resources) {
     if (resources != '') {
-      resources = resources.substring(0, resources.length - 1);
-      this.getListUser(resources);
-      this.changeDetectorRef.detectChanges();
+      if (this.taskBoard.resources && this.taskBoard.resources != '') {
+        var arrAssign = resources.split(';');
+        var arrNew = [];
+        arrAssign.forEach((e) => {
+          if (!this.taskBoard.resources.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          resources = arrNew.join(';');
+          this.taskBoard.resources += ';' + resources;
+          this.getListUser(resources);
+        }
+      } else {
+        this.taskBoard.resources = resources;
+        this.getListUser(resources);
+      }
     }
+    this.changeDetectorRef.detectChanges();
   }
 }

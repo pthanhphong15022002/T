@@ -8,29 +8,15 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  onInit(): void {
-  }
-  onAfterViewInit(): void {
-  }
-
   module = "ES";
   constructor(
     inject: Injector
   ) {
     super(inject);
-    // this.codxService.init(this.module);
-
-    // this.funcs$  = this.codxService.getFuncs(this.module);
-    // this.codxService.getFuncs(this.module).subscribe(res => {
-    //   this.funcs = res;
-    //   this.funcs$ = of(this.funcs);
-    // })
   }
-
-  public contentResized(size: any){
-    // if(size){
-    //   console.log(JSON.stringify(size));
-    // }
+  
+  onInit(): void {
   }
-
+  onAfterViewInit(): void {
+  }
 }

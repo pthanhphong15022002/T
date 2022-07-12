@@ -23,11 +23,32 @@ export class EditFileComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
-  titleDialog: any;
+  titleDialog = 'Cập nhật file';
+  titleFileNameRequire = 'Tên tài liệu không để trống';
+  titleFileNameInvalid = 'Tên tài liệu không hợp lệ';
+  titleFileType = 'Loại tập tin';
+  titleSize = 'Kích cỡ file';
+  titleCreator = 'Người tạo';
+  titleCreaton = 'Người tạo';
+  titleShare = 'Chia sẻ';
+  titleSelectObject = 'Chọn đối tượng';
+  titleExpand = 'Thông tin mở rộng';
+  titleFile = 'Tiêu đề';
+  titleSubject = 'Chủ đề';
+  titleCate = 'Phân loại';
+  titleLanguage = 'Ngôn ngữ';
+  titleExcerpts = 'Trích lục';
+  tieleRelation = 'Mối quan hệ';
+  titleSource = 'Nguồn';
+  titleCopyright  = 'Bản quyền';
+  titleAuthor = 'Tên tác giả';
+  titlePublisher = 'Nhà xuất bản';
+  titlePublishyear = 'Năm xuất bản';
+  titlePublishDate = 'Ngày hết hạn';
+  titleSave = 'Lưu';
   historyFile: HistoryFile;
   propertiesFolder: boolean;
   closeResult = '';
-  
   id: string;
   listLevel: any;
   listType: any;
@@ -200,6 +221,7 @@ export class EditFileComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = "";
   data: any;
+  @ViewChild('fileNameCtrl') fileNameCtrl;
   constructor(  
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
@@ -216,18 +238,16 @@ export class EditFileComponent implements OnInit {
     @Optional() dialog?: DialogRef
     ) {
       this.data = data.data;
-      this.fileEditing = this.data[1];
-   
+      this.fileEditing = this.data[1];   
       this.user = this.auth.get();
-      this.dialog = dialog;
-      this.titleDialog = data.data.title;
+      this.dialog = dialog;     
     //  this.changeDetectorRef.detectChanges();
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
   ngOnInit(): void {   
-    this.titleDialog = this.fileEditing.fileName;
+   
   }
   
   
@@ -239,7 +259,7 @@ export class EditFileComponent implements OnInit {
       return;
     }
 
-    if (this.id != "") {
+    if (this.id !=undefined &&  this.id != "") {
       // update file
       // save permisson
       this.fileService.updateFile(this.fileEditing).subscribe(item => {
@@ -293,19 +313,19 @@ export class EditFileComponent implements OnInit {
         else {
           this.notificationsService.notify(item.message);
         }
-
+        this.dialog.close();
       });
 
     }
     else {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === this.fileEditing.fileName.toString()); //find index in your array
+      let index = this.dmSV.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
       if (index > -1) {
-        this.fileUploadList.splice(index, 1);//remove element from array
+        this.dmSV.fileUploadList.splice(index, 1);//remove element from array
         // this.fileUploadList.push(new Object(), this.fileEditing);
-        this.fileUploadList.push(Object.assign({}, this.fileEditing));
-        this.dmSV.fileUploadList.next(this.fileUploadList);
+        this.dmSV.fileUploadList.push(Object.assign({}, this.fileEditing));
+        this.dmSV.fileUploadListAdd.next(true);
       }
-
+      this.dialog.close();
       // if (modal != null)
       //   modal.dismiss('Cross click');//modal.close();
     }
@@ -313,8 +333,8 @@ export class EditFileComponent implements OnInit {
   }
   
   checkInputFile() {
-
-  }
+    return this.fileEditing.fileName === ""  ? true : false;
+  } 
 
   doTrichluc($event) {
 
@@ -405,6 +425,70 @@ export class EditFileComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  txtValue($event, type) {
+    if ($event.data != null) {
+      switch(type) {
+        case 'filename':
+          this.fileEditing.fileName = $event.data;
+          break;
+        case 'title':
+          this.fileEditing.title = $event.data;
+          break;
+        case 'subject':
+            this.fileEditing.subject = $event.data;
+            break;
+        case 'relation':
+            this.fileEditing.relation = $event.data;
+            break;
+        case 'category':
+          if ($event.data.length > 0)
+            this.fileEditing.category = $event.data[0];
+          else
+            this.fileEditing.category = "";
+          break;
+        case 'language':
+            this.fileEditing.language = $event.data;
+            break;
+        case 'source':
+            this.fileEditing.source = $event.data;
+            break;
+        case 'excerpts':
+            this.fileEditing.excerpts = $event.data;
+            break;
+        case 'authur':
+          this.fileEditing.author = $event.data;
+          break;
+        case 'publishdate':
+            this.fileEditing.publishDate = $event.data.fromDate;
+            break;
+        case 'publisher':
+          if ($event.data.length > 0)
+            this.fileEditing.publisher = $event.data[0];
+          else
+            this.fileEditing.publisher = "";
+         // this.fileEditing.publisher = $event.data;
+          break;
+        case 'publishyear':
+          this.fileEditing.publishYear = $event.data.fromDate;
+          break;
+        case 'copyrights':
+          this.fileEditing.copyRights = $event.data;
+          break;
+      }
+    }
+    this.changeDetectorRef.detectChanges();  
+  }
+
+  checkFileName() {
+   // const fs = require('fs');
+    
+    if (this.fileEditing.fileName === "")
+      return "1";
+    else if (this.fileEditing.fileName.indexOf(".") === -1)
+      return "2";
+    else
+      return "0";
+  }
 
   validate(item) {
     //  fileName
@@ -476,13 +560,13 @@ export class EditFileComponent implements OnInit {
         break;
 
       case "fileName":
-        if (this.fileEditing.fileName === "" || this.fileEditing.fileName.indexOf(".") === -1) {
-          return "form-control is-invalid";
+        if (this.checkFileName() != "0") {        
+          return "w-100 text-error is-invalid";
           //$('#fileName').addClass('form-control is-invalid');
          // $('#fileName').focus();
         }
         else {
-          return "form-control";
+          return "w-100";
          // $('#fileName').addClass('form-control').removeClass("is-invalid");
         }
 
@@ -508,7 +592,7 @@ export class EditFileComponent implements OnInit {
         // }
         break;
     }
-    this.changeDetectorRef.detectChanges();
+  
     return "";    
 
   }
