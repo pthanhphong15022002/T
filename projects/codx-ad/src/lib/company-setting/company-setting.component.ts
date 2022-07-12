@@ -1,9 +1,11 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -15,13 +17,15 @@ import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
+import { LowerCasePipe } from '@angular/common';
 
 @Component({
   selector: 'lib-company-setting',
   templateUrl: './company-setting.component.html',
   styleUrls: ['./company-setting.component.css'],
+  providers: [LowerCasePipe]
 })
-export class CompanySettingComponent extends UIComponent implements OnInit {
+export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
   funcID: any;
   moreFunc = [];
   @ViewChild('itemView') itemView: TemplateRef<any>;
@@ -95,12 +99,16 @@ export class CompanySettingComponent extends UIComponent implements OnInit {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
+       // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
       }
       else {
         console.log('khong duoc');
       }
     })
+  }
+  txtToLower(e: any) {
+    this.data.companyCode = this.data.companyCode.toLowerCase();
   }
 
   // loadData(dataItem?) {

@@ -16,7 +16,8 @@ export class PopupPersonalComponent implements OnInit {
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Người đại diện';
-
+  dataUpdate = new BehaviorSubject<any>(null);
+  isUpdate = this.dataUpdate.asObservable();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -30,7 +31,6 @@ export class PopupPersonalComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
   }
-
   ngOnInit(): void {
     this.items = this.data;
   }
@@ -46,9 +46,10 @@ export class PopupPersonalComponent implements OnInit {
       .subscribe((response) => {
         if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
-          this.dialog.dataService.setDataSelected(response[0]);
+
+          // this.dialog.dataService.setDataSelected(response[0]);
           this.dialog.dataService.next(response[0]);
-          this.changeDetectorRef.detectChanges();
+
         } else {
           this.notiService.notifyCode('thêm thất bại');
         }

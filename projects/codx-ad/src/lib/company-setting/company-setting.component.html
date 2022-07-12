@@ -33,8 +33,11 @@
   <!-- <lib-company-setting-details [formModel]="view.formModel"  >
   </lib-company-setting-details> -->
 
-  <codx-detail-tmp [header]="header" [body]="body" [footer]="footer" class="font_size"></codx-detail-tmp>
-  <ng-template #header>
+  <codx-detail-tmp [body]="body" class="font_size"></codx-detail-tmp>
+
+  <ng-template #body>
+
+    <!-- Account Information -->
     <div class="header_detail" *ngIf="data">
       <div class="header_title">
         <codx-label fiedName="" class="header_title" formName="" gridViewName="" default="Thông tin tài khoản">
@@ -44,19 +47,17 @@
         <div class="accountinfo">
           <codx-label fiedName="" formName="" class="title" gridViewName="" default="Tên công ty"></codx-label>
           <div class="row">
-            <div class="col-6">
+            <div class="col-6 mt-2">
               <codx-input type="text" field="legalName" [crrValue]="data.legalName" placeholder="Tên công ty">
               </codx-input>
             </div>
           </div>
-
-
         </div>
         <div class="accountinfo">
           <codx-label fiedName="" formName="" class="title" gridViewName="" default="Web Address"></codx-label>
           <div class="row">
-            <div class="col-3">
-              <codx-input type="text" field="" [crrValue]="data.companyCode" disabled="true"></codx-input>
+            <div class="col-3 mt-2">
+            <codx-input type="text" field="" [crrValue]="data.companyCode" (valueChange)="txtToLower($event)" disabled="true"></codx-input>
             </div>
             <div class="col-9 url">
               <i>
@@ -64,12 +65,11 @@
               </i>
             </div>
           </div>
-
         </div>
         <div class="accountinfo">
           <codx-label fiedName="" class="title" formName="" gridViewName="" default="Mã số thuế"></codx-label>
           <div class="row">
-            <div class="col-3">
+            <div class="col-3 mt-2">
               <codx-input type="text" field="" [crrValue]="data.taxCode"></codx-input>
             </div>
           </div>
@@ -86,9 +86,8 @@
         </div>
       </div>
     </div>
-  </ng-template>
 
-  <ng-template #body>
+     <!-- Contact Information -->
     <div class="body_detail" *ngIf="data">
       <div class="row content">
         <div class="col-6">
@@ -132,9 +131,8 @@
         </div>
       </div>
     </div>
-  </ng-template>
 
-  <ng-template #footer>
+    <!-- Personal Information -->
     <div class="footer_detail" *ngIf="data">
       <div class="row footer_content">
         <div class="col-6">
@@ -173,7 +171,7 @@
         </div>
       </div>
     </div>
-  </ng-template>
 
+  </ng-template>
   <codx-views #view [views]="views" entityName="AD_CompanySettings" service="SYS" assemblyName="AD"
     className="CompanySettingsBusiness" method="GetAsync" [autoLoad]="false"></codx-views>
