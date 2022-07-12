@@ -18,11 +18,13 @@ import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
 import { ViewUsersComponent } from './users/view-users/view-users.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
 import { PopupPersonalComponent } from './company-setting/popup-personal/popup-personal.component';
+import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
+import { CompanySettingComponent } from './company-setting/company-setting.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -60,7 +62,8 @@ const T_Component: Type<any>[] = [
   PopupContactComponent,
   ViewUsersComponent,
   AddUserComponent,
-  PopupPersonalComponent
+  PopupPersonalComponent,
+  PopRolesComponent
 ];
 @NgModule({
   imports: [

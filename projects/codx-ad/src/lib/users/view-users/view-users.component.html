@@ -1,13 +1,12 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
 
   <ng-template #body>
-    <div>
-      <codx-input type="text" placeholder="Tìm kiếm.." name="searchItem" [(ngModel)]="searchItem" (input)="search(searchItem)"></codx-input>
-      <button type="submit"><i class="fa fa-search"></i></button>
+    <div style="margin-bottom: 10px;">
+      <codx-searchbar  (searchEvent)="search($event)"></codx-searchbar>
     </div>
     
-    <div *ngFor="let item of lstRoles">
-      <div class="d-flex align-items-start" >
+    <div *ngFor="let item of allRoles">
+      <div class="d-flex align-items-start" style="margin-bottom: 10px;">
         <!-- <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="item.smallIcon" objectType="AD_Roles">
         </codx-img> -->
         <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />

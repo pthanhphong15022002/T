@@ -25,13 +25,12 @@
 }
 
 .accountinfo {
-  padding-top: 10px;
-  padding-bottom: 15px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .header_title {
-  padding-bottom: 30px;
-
+  padding-bottom: 10px;
 }
 
 .header_detail {
@@ -72,16 +71,10 @@
 
 .button_edit {
   text-align: right;
-
 }
 
 .content {
-  padding: 10px 10px 10px 10px;
-}
-
-.background_form {
-  background: white;
-  padding-bottom: 50px;
+  padding: 8px 8px 0px 8px;
 }
 
 button {
@@ -99,7 +92,7 @@ button:hover {
 }
 
 .url-contact {
-  color: #47B5FF;
+  color: #47b5ff;
 }
 
 .header_title {
@@ -107,22 +100,39 @@ button:hover {
 }
 
 .title {
-  color: #8A8A8A;
+  color: #8a8a8a;
 }
 .title_mf {
-    color: #0055C5;
+  color: #0055c5;
 }
 .font_size {
-  font-size: 14px;
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
 }
 
 i.fa {
-  color: #0055C5;
+  color: #0055c5;
   font-size: 30px;
 }
 
 .background_form {
-    height: 1000px;
-    width: 1245px;
-    border-radius: 1% 1% 1% 1%;
+  height: 940px;
+  width: 1250px;
+  border-radius: 1% 1% 1% 1%;
+  background: white;
+  padding-bottom: 15px;
+}
+.footer_content {
+  padding: 8px 8px 5px 5px;
+}
+
+.title_contact {
+  font-size: 14px;
+}
+.col-2 {
+  flex: 0 0 auto;
+  width: 8.666667%;
+}
+.col-6 {
+  padding-bottom: 10px;
 }

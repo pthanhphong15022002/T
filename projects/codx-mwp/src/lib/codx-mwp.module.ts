@@ -41,6 +41,7 @@ import {
   ILoadedEventArgs,
   SplineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export const routes: Routes = [
   {
@@ -104,6 +105,7 @@ const Component: Type<any>[] = [
     SidebarModule,
     AccumulationChartModule,
     TabModule,
+    NgbModule
   ],
   exports: [
     RouterModule,
