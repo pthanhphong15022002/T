@@ -320,8 +320,10 @@ export class IncommingComponent
   clickChangeStatus(status: any) {
     this.view.dataService.predicates = 'Status=@0';
     this.view.dataService.dataValues = status;
-    this.view.dataService.load().subscribe();
-    this.activeDiv = status
+    this.view.dataService.load().subscribe((item)=>{
+      this.lstDtDis = this.view.dataService.data[0];
+    });
+    this.activeDiv = status;
   }
   getIdUser(createdBy:any,owner:any)
   {

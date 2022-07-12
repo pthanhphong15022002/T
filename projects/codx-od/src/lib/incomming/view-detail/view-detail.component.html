@@ -127,14 +127,13 @@
                       [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy , item?.createdBy)"
                       [descLine]="1"
                     >
-
                     </codx-temp-full>
                   </div>
                   <div class="ms-2">
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
-                  <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.employeeID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
+                  <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
                     <div class="action-menu d-flex align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
                       <div class="btn btn-sm btn-icon btn-white" ><!-- (click)="openFormRecallSharing(data?.recID,item.recID)" -->
                         <i class="icon-redo text-primary icon-18"></i>
