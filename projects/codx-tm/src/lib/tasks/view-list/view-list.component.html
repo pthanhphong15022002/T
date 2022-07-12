@@ -14,7 +14,7 @@
             </span>
           </div>
         </td>
-        <td class="" style="width: 10%; text-align: center">
+        <td class="" style="width: 10%; text-align: left">
           <div class="d-status">
             <div class="badge badge-danger me-2 label-status" [style.border-color]="
                     (data?.status | vll: 'L0614':'textColor' | async) +
@@ -47,7 +47,7 @@
         </td>
         <td class="" style="width: 15%;">
           <div class="d-flex align-items-center" >
-            <div class="symbol-group symbol-hover justify-content-end"
+            <div class=" symbol-hover justify-content-end"
               *ngIf="data?.category == '3' || data?.category == '4'">
               <codx-img popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom"
                 #empPopover="ngbPopover" [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, data)"
@@ -55,7 +55,7 @@
                 [objectId]="data?.assignTo" objectName="AD_Users" [numberImages]="4">
               </codx-img>
             </div>
-            <div class="symbol-group symbol-hover justify-content-end"
+            <div class="symbol-hover justify-content-end"
               *ngIf="data?.category == '1' || data?.category == '2'">
               <codx-img class="symbol symbol-30 symbol-circle ml-1" [objectId]="data?.assignTo" objectName="AD_Users" [numberImages]="4">
               </codx-img>

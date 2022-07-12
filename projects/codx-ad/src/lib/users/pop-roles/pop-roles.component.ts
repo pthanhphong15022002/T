@@ -17,9 +17,9 @@ export class PopRolesComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef,
+    @Optional() dialog1?: DialogRef,
   ) { 
-    this.dialog1 = dialog;
+    this.dialog1 = dialog1;
     this.data = dt?.data;
   }
 
