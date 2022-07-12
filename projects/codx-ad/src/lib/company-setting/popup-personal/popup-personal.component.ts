@@ -46,14 +46,7 @@ export class PopupPersonalComponent implements OnInit {
       .subscribe((response) => {
         if (response[1]) {
           this.notiService.notifyCode('thêm thành công');
-<<<<<<< HEAD
-
-          // this.dialog.dataService.setDataSelected(response[0]);
-          this.dialog.dataService.next(response[0]);
-
-=======
           this.dialog.close(response[0]);
->>>>>>> 00cb1beb3bbe3a1e3a3ad86db5adbf621eaa1abf
         } else {
           this.notiService.notifyCode('thêm thất bại');
           this.dialog.close();
