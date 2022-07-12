@@ -66,18 +66,10 @@ export class RangesKanbanComponent implements OnInit {
     this.views = [{
       type: ViewType.grid,
       sameData: true,
-      active: false,
+      active: true,
       model: {
         resources: this.columnsGrid,
         template: this.grid,
-      }
-    },
-    {
-      type: ViewType.list,
-      sameData: true,
-      active: true,
-      model: {
-        template: this.itemTemplate,
       }
     }];
     this.view.dataService.methodSave = '';
@@ -88,16 +80,16 @@ export class RangesKanbanComponent implements OnInit {
 
   //#region CRUD Methods
   add() {
-    this.view.dataService.addNew(0).subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px'; // s k thấy gửi từ ben đây,
+      option.Width = '550px';
       this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
+        if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
-            .remove(this.view.dataService.dataSelected)
+            .delete([this.view.dataService.dataSelected], false)
             .subscribe(x => {
               this.dt.detectChanges();
             });
