@@ -58,6 +58,7 @@ export class CodxDMService {
     public listDialog = [];
     public loadedFile: boolean;
     public loadedFolder: boolean;
+    public fileUploadList: FileUpload[];
     // public confirmationDialogService: ConfirmationDialogService;
 
     public HideTree = new BehaviorSubject<boolean>(null);
@@ -108,8 +109,8 @@ export class CodxDMService {
     public fileEditing = new BehaviorSubject<FileUpload>(null);
     isFileEditing = this.fileEditing.asObservable();
 
-    public fileUploadList = new BehaviorSubject<FileUpload[]>(null);
-    isFileUploadList = this.fileUploadList.asObservable();
+    public fileUploadListAdd = new BehaviorSubject<boolean>(null);
+    isFileUploadListAdd = this.fileUploadListAdd.asObservable();
 
     public setDisableSave = new BehaviorSubject<boolean>(null);
     isSetDisableSave = this.setDisableSave.asObservable();

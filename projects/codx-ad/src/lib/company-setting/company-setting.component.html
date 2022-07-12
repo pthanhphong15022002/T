@@ -157,14 +157,16 @@
               </div>
               <div class="col-10">
                 <strong>
-                  <codx-label fiedName="" formName="" gridViewName="" [default]="data.contactName"></codx-label>
+                  <codx-label fiedName="" formName="" gridViewName="" [default]="">{{data.contactName}}</codx-label>
                 </strong> <br>
                 <i>
                   <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label>
                 </i> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="'Email: '+data.personalEmail">
-                </codx-label> <br>
-                <codx-label fiedName="" formName="" gridViewName="" [default]="'Phone: '+data.mobile"></codx-label> <br>
+                <codx-label fiedName="" formName="" gridViewName="" default="Email">
+                </codx-label><span>{{data.personalEmail}}</span> <br>
+                <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
+               
+                </codx-label>   {{data.mobile}} <br>
               </div>
             </div>
           </div>

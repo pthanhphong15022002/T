@@ -80,8 +80,14 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
 
   clickEditPersonal(data) {
     this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
-  }
-
+    this.dialog.closed.subscribe(e => {
+      if(e?.event){
+        this.data = e?.event
+        this.detectorRef.detectChanges() ;
+      }
+    
+    })}
+ 
   // clickEditPersonal(data: any) {
   //   var obj = {
   //     post: data,

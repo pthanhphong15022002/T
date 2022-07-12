@@ -293,7 +293,7 @@
         </div>
     </ng-template>    
     <ng-template #footer>
-        <button type="button" class="btn btn-primary" [disabled]="checkInputFile()"
+        <button type="button" class="btn btn-primary" [disabled]="this.checkFileName() !='0'"
         (click)="onSaveEditingFile()">{{titleSave}}</button>
     </ng-template>
 </codx-form>

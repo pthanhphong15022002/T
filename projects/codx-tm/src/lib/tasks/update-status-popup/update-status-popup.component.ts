@@ -88,6 +88,7 @@ export class UpdateStatusPopupComponent implements OnInit {
     }
     this.tmSv
       .setStatusTask(
+        this.dialog.formModel.funcID,
         this.task.taskID,
         this.status,
         this.completedOn,
@@ -95,11 +96,17 @@ export class UpdateStatusPopupComponent implements OnInit {
         this.comment
       )
       .subscribe((res) => {
-        if (res) {
+        if (res &&res.length >0) {
           this.task.status = this.status;
           this.task.completedOn = this.completedOn;
           this.task.comment = this.comment;
           this.task.completed = this.estimated;
+          this.dialog.close(res)
+          // res.forEach(obj=>{
+          //   var i = this.dialog.dataSelected.data.findIndex(x=>x.taskID==obj.taskID);
+          //   this.dialog.dataService.data[i] = obj;
+          // })
+          
           this.dialog.close();
           this.notiService.notify('Cập nhật trạng thái thành công !');
         } else {
