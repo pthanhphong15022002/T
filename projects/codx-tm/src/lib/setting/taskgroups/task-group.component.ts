@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-// import { PopAddRangesComponent } from '../rangeskanban/ranges-add/ranges-add.component';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
 
 @Component({
@@ -28,8 +27,7 @@ export class TaskGroupComponent implements OnInit {
 
   @ViewChild('view') view!: ViewsComponent;
 
-  constructor(private cache: CacheService, private auth: AuthStore,
-    private dt: ChangeDetectorRef, private callfunc: CallFuncService,
+  constructor(private dt: ChangeDetectorRef, private callfunc: CallFuncService,
   ) {
 
   }
@@ -187,7 +185,7 @@ export class TaskGroupComponent implements OnInit {
 
 
   add() {
-    this.view.dataService.addNew(0).subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
@@ -212,7 +210,7 @@ export class TaskGroupComponent implements OnInit {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], (opt) =>
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt) =>
       this.beforeDel(opt)).subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
