@@ -50,8 +50,9 @@ export class AssignInfoComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  @Input() vllShare = "L1906"
-   vllRole =''
+  vllShare = "L1906"
+  vllRole ='' 
+  listRoles
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -72,12 +73,10 @@ export class AssignInfoComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-
-    this.cache.valueList(this.vllShare).subscribe(res => {
-     console.log(res)
-    });
     this.cache.valueList(this.vllRole).subscribe(res => {
-      console.log(res)
+     if(res && res?.datas.length >0){
+      this.listRoles =res.datas
+     }
      });
   }
 
