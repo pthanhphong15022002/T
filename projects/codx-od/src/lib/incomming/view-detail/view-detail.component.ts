@@ -291,7 +291,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               headerText:"Chỉnh sửa công văn đến",
               formModel: this.formModel,
               type: "edit",
-              data: res
+              data: datas
             }, option);
             this.dialog.closed.subscribe(x=>{
               if(x.event) 
