@@ -1,7 +1,8 @@
 import { AD_User } from './../../models/AD_User.models';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService } from 'codx-core';
+import { DialogData, DialogRef, CallFuncService, AuthStore } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
+import { throws } from 'assert';
 
 @Component({
   selector: 'lib-add-user',
@@ -14,20 +15,26 @@ export class AddUserComponent implements OnInit {
   data: any;
   readOnly = false;
   isAddMode = true;
-
+  user: any;
+  data1: any;
   adUser = new AD_User();
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
+    private auth: AuthStore,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.dialog = dialog;
     this.data = dialog.dataService!.dataSelected;
     this.adUser = this.data;
+    this.dialog = dialog;
+    this.data1 = dt?.data;
+    this.user = auth.get();
   }
 
   ngOnInit(): void {
+    if(this.data1=='edit')
+      this.title = 'Cập nhật người dùng';
   }
 
   openPopup(item: any) {
@@ -39,16 +46,27 @@ export class AddUserComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    op.method = 'SaveUsersAsync';
-    data = [
-      this.isAddMode,
-      this.adUser,
-    ];
+    if (this.data1=='add') {
+      this.isAddMode = true;
+      op.method = 'AddUserAsync';
+      data = [
+        this.adUser,
+        this.isAddMode,
+      ];
+    };
+    if(this.data1 == 'edit'){
+      this.isAddMode = false;
+      op.method = 'UpdateUserAsync';
+      data = [
+        this.adUser,
+        this.isAddMode,
+      ];
+    }
     op.data = data;
     return true;
   }
 
-  onSave() {
+  onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
@@ -59,7 +77,25 @@ export class AddUserComponent implements OnInit {
         }
       });
     this.closePanel();
-    
+
+  }
+
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave)
+      .subscribe((res) => {
+        if (res.update) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
+        }
+      })
+      this.closePanel();
+
+  }
+
+  onSave() {
+    if(this.isAddMode)
+      return this.onAdd();
+    return this.onUpdate();
   }
 
   closePanel() {
@@ -75,18 +111,18 @@ export class AddUserComponent implements OnInit {
 
   valueEmp(data) {
     if (data.data) {
-      this.adUser.employeeID = data.data;
+      this.adUser.employeeID = data.data[0];
     }
   }
 
   valueUG(data) {
     if (data.data) {
-      this.adUser.userGroup = data.data;
+      this.adUser.userGroup = data.data[0];
     }
   }
   valueBU(data) {
     if (data.data) {
-      this.adUser.buid = data.data;
+      this.adUser.buid = data.data[0];
     }
   }
 }

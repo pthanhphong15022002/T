@@ -16,8 +16,7 @@
     [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.userID" imageObjType="AD_Users"
     [title]="data.userName" [desc2]="data.memo" [status]="data.status" statusVll="L0614" [date]="data.createdOn"
-    [resources]="(data.category=='1'|| data.category=='2') ?data.owner :data.assignTo" resourceObjType="AD_Users" [formModel]="view.formModel">
-    <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
+    [resources]="(data.category=='3'||data.isAssign)?data.assignTo :''" resourceObjType="AD_Users" [formModel]="view.formModel">
   </codx-temp-full>
 </ng-template>
 
@@ -28,7 +27,7 @@
     [date]="data.createdOn" [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel"
     [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
-  
+
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">

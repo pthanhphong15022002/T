@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, O
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { FolderComponent } from '../folder/folder.component';
@@ -107,6 +109,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         // Phân loại
         case "4":
           {
+            debugger;
             var data = this.dvlCategory?.datas.filter(function (el: any) { return el.value == val });
             return data[0].text;
           }
@@ -138,6 +141,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   getDataValuelist()
   {
+    console.log(this.gridViewSetup);
     if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;
@@ -291,7 +295,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               data: datas
             }, option);
             this.dialog.closed.subscribe(x=>{
-              if(x.event != null &&  x.event.recID != undefined) 
+              if(x.event) 
               {
                 //this.ref.detectChanges();
                 //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
@@ -301,7 +305,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                   this.view.dataService.update(x.event).subscribe();
                   if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
-                      //this.view.dataService.setDataSelected(x.event);
                       this.data = item;
                       this.data.lstUserID = getListImg(item.relations);
                     });
@@ -313,15 +316,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         }
       case "delete":
         {
-          /* var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa?", config).closed.subscribe(x=>{
-            if(x.event.status == "Y")
-            {
-              this.deleteDispatchByID(this.view.dataService.dataSelected.recID);
-            }
-          }); */
-         
           this.view.dataService.delete([datas]).subscribe((item:any)=>{
             if(item.status == 0)
             {
@@ -331,8 +325,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 this.data.lstUserID = getListImg(this.data.relations)
               });
             }
-            if(item?.message)
-              this.notifySvr.notify(item?.message);
           });
           break;
         }
@@ -389,8 +381,22 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT102":
         {
           if(this.checkOpenForm(funcID))
-          {
-           
+          { 
+            var task = new TM_Tasks();
+            task.refID =datas?.recID ;
+            task.refType = this.view?.formModel.entityName;
+            let option = new SidebarModel();
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.view?.formModel;
+            option.Width = '800px';
+            this.dialog = this.callfunc.openSide(
+              AssignInfoComponent,
+              [task],
+              option
+            );
+            this.dialog.closed.subscribe((e) => {
+              console.log(e);
+            });
           }
           break;
         }

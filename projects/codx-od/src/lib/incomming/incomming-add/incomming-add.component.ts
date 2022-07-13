@@ -56,28 +56,28 @@ export class IncommingAddComponent implements OnInit {
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
     this.dispatch.status = '1';
-    this.gridViewSetup = this.data["gridViewSetup"];
-    this.headerText = this.data["headerText"];
-    this.subHeaderText = this.data["subHeaderText"];
-    this.type = this.data["type"];
-    this.formModel = this.data["formModel"];
-    if(this.type == "add")
+    this.gridViewSetup = this.data?.gridViewSetup;
+    this.headerText = this.data?.headerText;
+    this.subHeaderText = this.data?.subHeaderText;
+    this.type = this.data?.type;
+    this.formModel = this.data?.formModel;
+    if(this.type == "add" || this.type == "copy")
     {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
       this.dispatch.owner = null;
-      this.dispatch.agencyName = null;
+      if(this.type == "add")
+        this.dispatch.agencyName = null;
+      this.dispatch.createdOn = new Date();
     }
-   /*  else if(this.type == "edit")
+    else if(this.type == "edit")
     {
-      this.odService.getDetailDispatch(this.data.data.recID).subscribe(item=>{
-        this.files = item.files;
-      })
-    } */
+      this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    } 
   }
   fileAdded(event:any) { 
-    if(event?.data) this.hideThumb = true  
+    if(event?.data) this.hideThumb = true ;
   }
 
  //Mở form thêm mới đơn vị / phòng ban
@@ -125,12 +125,12 @@ export class IncommingAddComponent implements OnInit {
   }
 
   changeValueDept(event: any) {
-    this.dispatch.agencyID = event[0];
+    this.dispatch.agencyID = event?.data;
   }
   
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
-    this.dispatch.owner = event.data.value[0]
+    this.dispatch.owner = event.data?.value[0]
   }
   //Nơi nhận
   changeValueBUID(event: any) {
@@ -200,6 +200,7 @@ export class IncommingAddComponent implements OnInit {
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
+    this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if(this.type == "add" || this.type == "copy")
     {
       if(this.type == "copy")
@@ -210,7 +211,8 @@ export class IncommingAddComponent implements OnInit {
       }
       if(this.fileCount > 0)
       {
-        this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+        if(this.type == "add")
+          this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
         this.dispatch.status = "1",
         this.dispatch.approveStatus = "1",
         this.dispatch.dispatchType = "1";

@@ -35,7 +35,7 @@
                   <codx-label fiedName="EmployeeID" formName="Users" gridViewName="grvUsers" default="Nhân viên">
                   </codx-label>
                   <codx-input type="combobox" refValue="EmployeeUser" [disabled]="readOnly" field="employeeID"
-                    [crrValue]="adUser.employeeID" (valueChange)="valueEmp($event)">
+                    [crrValue]="adUser.employeeID" (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true">
                   </codx-input>
                 </div>
               </div>
@@ -49,13 +49,15 @@
               <div class="form-group row mt-3">
                 <codx-label fiedName="UserGroup" formName="Users" gridViewName="grvUsers" default="Nhóm người dùng">
                 </codx-label>
-                <codx-input type="text" field="userGroup" [crrValue]="adUser.userGroup" refValue="UserGroups" (valueChange)="valueUG($event)">
+                <codx-input type="combobox" field="userGroup" [crrValue]="adUser.userGroup" refValue="UserGroups" 
+                (valueChange)="valueUG($event)" [multiple]="false" loadFull="true">
                 </codx-input>
               </div>
               <div class="form-group row mt-3">
                 <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Đơn vị">
                 </codx-label>
-                <codx-input type="combobox" field="buid" [crrValue]="adUser.buName" refValue="BusinessUnits" (valueChange)="valueBU($event)">
+                <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits" 
+                (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
                 </codx-input>
               </div>
               <div class="form-group row mt-3">
@@ -66,9 +68,9 @@
                   </codx-input>
                 </div>
                 <div class="form-group col-6">
-                  <codx-label fiedName="Phone" formName="Users" gridViewName="grvUsers" default="Phone">
+                  <codx-label fiedName="Mobile" formName="Users" gridViewName="grvUsers" default="Phone">
                   </codx-label>
-                  <codx-input type="text" field="phone" [crrValue]="adUser.mobile" (valueChange)="valueChange($event)">
+                  <codx-input type="text" field="mobile" [crrValue]="adUser.mobile" (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
               </div>
