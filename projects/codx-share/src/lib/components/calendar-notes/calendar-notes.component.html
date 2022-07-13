@@ -30,7 +30,7 @@
         <div class="d-flex flex-column top-5">
             <div *ngIf="item.type == 'WP_Notes'" class="pd-note">
                 <div *ngIf="item.showCalendar == true">
-                    <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
+                    <div *ngIf="compareDate(item.createdOn, daySelected)">
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
+                    <!-- <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
                         <div class="note-content mb-3">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
@@ -123,10 +123,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
-            <div *ngIf="item.note == 'TM_Tasks'" class="pd-note">
+            <!-- <div *ngIf="item.note == 'TM_Tasks'" class="pd-note">
                 <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
                     <div class="task-content mb-3">
                         <div class="checkbox-list">
@@ -145,7 +145,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </ng-template>
 </div>

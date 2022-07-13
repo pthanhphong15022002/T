@@ -104,18 +104,6 @@ export class PopupAddRoomsComponent implements OnInit {
     }
   }
 
-  beforeSave(option: any) {
-    let itemData = this.dialogRoom.value;
-    if (!itemData.resourceID) {
-      this.isAdd = true;
-    } else {
-      this.isAdd = false;
-    }
-    option.method = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
-    return true;
-  }
-
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
@@ -145,11 +133,22 @@ export class PopupAddRoomsComponent implements OnInit {
       this.dialogRoom.value.linkType = '0';
     }
     this.dialogRoom.value.resourceType = '1';
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+
+    this.dialog.dataService.save((opt: any) => this.beforeSave(opt)).subscribe();
+
   }
 
+  beforeSave(option: any) {
+    let itemData = this.dialogRoom.value;
+    if (!itemData.resourceID) {
+      this.isAdd = true;
+    } else {
+      this.isAdd = false;
+    }
+    option.method = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);

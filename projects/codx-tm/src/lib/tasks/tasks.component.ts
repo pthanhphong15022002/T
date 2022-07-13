@@ -337,7 +337,8 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected = this.view.dataService.dataSelected;
+          this.itemSelected = e?.event;
+          this.dt.detectChanges();
         });
       });
   }
@@ -385,16 +386,15 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-           /*  this.view.dataService
+            this.view.dataService
               .delete([this.view.dataService.dataSelected], true, (opt) =>
                 this.beforeDel(opt)
               )
               .subscribe((res) => {
                 if (res[0]) {
                   this.itemSelected = this.view.dataService.data[0];
-                  this.notiService.notifyCode('TM004');
                 }
-              }); */
+              });
           }
         }
       });
@@ -416,7 +416,7 @@ export class TasksComponent extends UIComponent {
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      this.view.dataService.dataSelected,
+      [this.view.dataService.dataSelected],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -427,7 +427,9 @@ export class TasksComponent extends UIComponent {
   changeView(evt: any) { }
 
   requestEnded(evt: any) {
-    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    if (evt.type == 'read') {
+      console.log(this.view.dataService.data);
+    }
     this.view.currentView;
   }
   onDragDrop(e: any) {
@@ -464,11 +466,9 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate)).toDate();
-            var estimated = moment(completedOn).diff(
-              moment(startDate),
-              'hours'
-            );
+            var startDate =  moment(new Date(taskAction.startDate?taskAction.startDate:taskAction.createdOn)).toDate();
+            var time = (((completedOn.getTime() -startDate.getTime())/3600000).toFixed(1));
+            var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -486,7 +486,11 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.view.dataService.update(taskAction).subscribe();
+                  res.forEach(obj=>{
+                    this.view.dataService.update(obj).subscribe();
+                  })    
+                  this.itemSelected = res[0] ;      
+                  this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -513,6 +517,12 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     )
+    this.dialog.closed.subscribe(e=>{
+      if(e?.event){     
+          this.itemSelected =e?.event;
+          this.dt.detectChanges();
+      }
+    })
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);

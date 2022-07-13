@@ -100,7 +100,7 @@ export const routes: Routes = [
             component: RangesKanbanComponent,
           },
           {
-            path: 'project/:funcID',
+            path: 'tmprojects/:funcID',
             component: ProjectComponent,
           },
           {
@@ -191,7 +191,7 @@ const T_Component: Type<any>[] = [
   // MwpViewDetailComponent,
   // MwpPopupAddComponent,
   ViewListComponent,
-  
+
 ];
 @NgModule({
   imports: [

@@ -31,9 +31,20 @@ export class AddEditComponent implements OnInit {
     this.lines = this.master.line || [];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
-
+  //#region Init
   ngOnInit(): void { }
-
+  //#endregion
+  //#region master
+  onSave() {
+    this.dialog.dataService.save().subscribe(res => {
+      if (res && !res.error) {
+        this.dialog.dataService.hasSaved = false;
+        this.dialog.close();
+      }
+    });
+  }
+  //#endregion
+  //#region line
   addLine(template: any, data = null) {
     this.dialog.dataService.save().subscribe(res => {
       if (!res?.save?.error || !res?.update?.error) {
@@ -62,17 +73,6 @@ export class AddEditComponent implements OnInit {
     })
   }
 
-  onSave() {
-    this.dialog.dataService
-      .save()
-      .subscribe(res => {
-        if (res && !res.error) {
-          this.dialog.dataService.hasSaved = false;
-          this.dialog.close();
-        }
-      });
-  }
-
   removeLine(item, index) {
     this.api.exec<any>('BS', 'RangeLinesBusiness', 'DeleteRangeLineAsync', item).subscribe(res => {
       if (res)
@@ -83,6 +83,9 @@ export class AddEditComponent implements OnInit {
   valueChange(data) {
     this.line[data.field] = data.data;
   }
+  //#endregion
+
+
 }
 
 
