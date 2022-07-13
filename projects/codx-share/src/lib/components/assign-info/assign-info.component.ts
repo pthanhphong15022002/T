@@ -1,5 +1,6 @@
 import {
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -55,16 +56,22 @@ export class AssignInfoComponent implements OnInit {
     private notiService: NotificationsService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
+    private cache : CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.task = {
       ...this.task,
-      ...dt?.data,
+      ...dt?.data[0],
     };
+    this.vllShare = dt?.data[1]? dt?.data[1] : "L1906" ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+
+    this.cache.valueList(this.vllShare).subscribe(res => {
+     console.log(res)
+    });
   }
 
   ngOnInit(): void {
@@ -214,11 +221,9 @@ export class AssignInfoComponent implements OnInit {
   }
 
   addFile(evt: any) {
-    //this.attachment.openPopup();
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
   }
   getfileCount(e){

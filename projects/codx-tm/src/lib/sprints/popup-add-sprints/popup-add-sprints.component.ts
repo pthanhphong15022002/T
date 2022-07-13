@@ -142,7 +142,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.taskBoard[e.field] = e.data;
   }
   cbxChange(e: any) {
-    if (e?.data.length>0) {
+    if (e?.data?.length>0) {
       this.taskBoard[e.field] = e.data[0];
     }
   }
