@@ -42,7 +42,7 @@ app-list-post .e-listview .e-list-item {
     background-color: #f5f5f5;
     border-radius: 20px;
     height: 36px;
-    line-height: 36px;
+    line-height: 34px;
     padding: 2px 20px;
     white-space: nowrap;
 }
@@ -72,6 +72,9 @@ ejs-listview .e-ul>li {
     border-radius: 0.475rem;
 }
 
+.user-selected ejs-listview .e-ul>li {
+    margin-bottom: 0;
+}
 
 .emoji {
     position: absolute;
@@ -128,8 +131,8 @@ ejs-listview .e-ul>li {
 }
 
 .feed-img-more {
-    margin-top: -165px !important;
-    height: 165px;
+    margin-top: -150px !important;
+    height: 150px;
     position: relative;
     z-index: 999;
     background-color: rgba(0, 0, 0, 0.45);
@@ -143,10 +146,10 @@ ejs-listview .e-ul>li {
     color: #fff;
 }
 
-.feed-3pic .min-h-320px {
-    min-height: 313px !important;
+.e-dialog>.e-dlg-content div.card-body {
+    padding-bottom: 0px !important;
 }
 
-.feed-4pic .min-h-340px {
-    min-height: 333px !important;
+.card-body.hover-scroll-y {
+    overflow: hidden !important;
 }
