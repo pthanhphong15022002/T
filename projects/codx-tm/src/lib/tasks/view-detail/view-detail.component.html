@@ -121,10 +121,10 @@
                   itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
                 ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
 
-              <div *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date:
-                "dd/MM/yyyy"}}</div>
-              <div #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue :
-                formModel:"startDate" : startDate|async}}</div>
+              <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date:
+                "dd/MM/yyyy"}}</span>
+              <span #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue :
+                formModel:"startDate" : startDate|async}}</span>
             </div>
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
@@ -134,10 +134,10 @@
               <!-- <span [ngClass]="
               itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
             ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
-              <div *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date:
-                "dd/MM/yyyy"}}</div>
-              <div #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate" :
-                endDate|async}}</div>
+              <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date:
+                "dd/MM/yyyy"}}</span>
+              <span #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate" :
+                endDate|async}}</span>
             </div>
             <div class="float-left">
               <div class="fw-bold me-1">
@@ -151,11 +151,11 @@
               <!-- <span #completedOn class="text-gray-700">{{itemSelected?.completedOn? (itemSelected?.completedOn| date:
                 "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue :
                 formModel:"completedOn" : completedOn|async )}}</span> -->
-              <div *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
+              <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
                 "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h'
-                }}</div>
-              <div *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
-                formModel:"completedOn" : completedOn|async }}</div>
+                }}</span>
+              <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
+                formModel:"completedOn" : completedOn|async }}</span>
             </div>
 
           </div>
@@ -174,7 +174,10 @@
               <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm:">
               </codx-label>
             </span>
-            <span class="text-gray-700">{{ itemSelected?.location }}</span>
+            <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
+            <span *ngIf="itemSelected?.location" class="text-gray-700">{{itemSelected?.location}}</span>
+            <span #location *ngIf="!itemSelected?.location">{{itemSelected?.location| formatvalue :
+              formModel:"location" : location|async}}</span>
           </div>
         </div>
         <div class="mt-2">

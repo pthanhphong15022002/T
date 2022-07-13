@@ -8,8 +8,8 @@
                         </codx-img>
                     </div>
                     <div class="ms-2 ">
-                        <div class="d-flex">
-                            <div class="user-name fw-bolder">{{user.userName}}</div>
+                        <div class="float-left">
+                            <div class="user-name fw-bold">{{user.userName}}</div>
                             <div class="ms-2">
                                 <ng-container *ngIf="lstRecevier.length > 0">
                                     <ng-container *ngIf="shareControl == 'U';else notUser">
@@ -17,7 +17,7 @@
                                             <div class="fw-bold fs-6">
                                                 <codx-label [formName]="dialogRef.formModel.formName"
                                                     name="lblShareWith" default="cùng với "></codx-label>
-                                                <span class="me-2 fw-bolder">{{recevierName}}</span>
+                                                <span class="me-2 fw-bold">{{recevierName}}</span>
                                             </div>
                                         </ng-container>
                                         <ng-template #shareWith>
@@ -34,7 +34,7 @@
                                         <div class="fw-bold fs-6">
                                             <codx-label [formName]="dialogRef.formModel.formName" name="lblShareWith"
                                                 default="cùng với "></codx-label>
-                                            <span class="me-2 fw-bolder">{{recevierName}}</span>
+                                            <span class="me-2 fw-bold">{{recevierName}}</span>
                                         </div>
                                     </ng-template>
                                 </ng-container>
@@ -206,7 +206,7 @@
                     style="background-size: 100% auto;">
                     <div class="card-body card-custom-img-body ">
                         <div color="bg-transparent" class="ion-margin-vertical padding-start-0">
-                            <h2 class="fw-bolder mb-6 mt-3" [ngStyle]="{'color':item?.card?.pattern?.headerColor}">
+                            <h2 class="fw-bold mb-6 mt-3" [ngStyle]="{'color':item?.card?.pattern?.headerColor}">
                                 {{item?.card?.cardType | vll:'L1422':'text' | async}}
                             </h2>
                         </div>

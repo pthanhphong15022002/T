@@ -71,7 +71,7 @@
     <ng-container *ngSwitchCase="4">
       <div class="row row-custom feed-4pic m-0">
         <div class="col-5 pe-2">
-          <ng-container *ngIf="images[0] && images[0].category == '9';else else0">
+          <ng-container *ngIf="images[0];else else0">
             <img class="w-100 rounded h-320px" [src]="images[0].avatar" />
           </ng-container>
           <ng-template #else0>
@@ -81,7 +81,7 @@
           </ng-template>
         </div>
         <div class="col-7 px-0">
-          <ng-container *ngIf="images[1] && images[1].category == '9';else else1">
+          <ng-container *ngIf="images[1];else else1">
             <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
           </ng-container>
           <ng-template #else1>
