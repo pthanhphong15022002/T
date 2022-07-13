@@ -18,7 +18,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   assemblyName = "ERM.Business.WP"
   className = "CommentBusiness"
   method = "GetListPostAsync";
-  arrCbx = ['HRDepartments', 'Positions', 'UserRoles', 'UserGroups', 'Users'];
   totalPage: number = 0;
   pageIndex = 0;
   users = [];
@@ -51,8 +50,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate = "(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3";
-  dataValue: any = "0;1;5;false";
+  predicate = "Category =@0 && (ApproveControl=@1 or (ApproveControl=@2 && ApproveStatus = @3)) && Stop =@4";
+  dataValue: any = "1;0;1;5;false";
   modal: DialogRef;
   headerText = "";
   views: Array<ViewModel> | any = [];

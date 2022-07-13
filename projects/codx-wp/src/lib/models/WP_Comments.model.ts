@@ -28,6 +28,8 @@ export class WP_Comments{
     modifiedOn:Date;
     modifiedBy:string;
     content:string;
+    isUpload:boolean;
+    fileUpload:Array<{}>;
 
     constructor(){
         this.createdOn = new Date();

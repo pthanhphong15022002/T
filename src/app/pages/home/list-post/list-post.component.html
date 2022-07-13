@@ -191,7 +191,7 @@
             <div class="pic-feed">
                 <ng-container *ngIf="item.isUploadImg">
                     <div class="pic-feed-img">
-                        <codx-image-grid [images]="item.lstImage"></codx-image-grid>
+                        <codx-image-grid [images]="item.images"></codx-image-grid>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadVideo">
@@ -211,16 +211,6 @@
                         [functionID]="codxViews.formModel.funcID">
                     </codx-attachment>
                 </ng-container>
-                <!-- <codx-attachment 
-                    [objectId]="item.recID" 
-                    objectType="WP_Comments" hideFolder="1" 
-                    hideUploadBtn="1"
-                    hideDes="1" 
-                    type="inline" 
-                    idBrowse="btn2"
-                    allowExtensions=".jpg,.png" 
-                    [functionID]="codxViews.formModel.funcID">
-                </codx-attachment> -->
             </div>
         </ng-container>
     </ng-container>

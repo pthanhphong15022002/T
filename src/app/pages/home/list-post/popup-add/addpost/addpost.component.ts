@@ -20,6 +20,7 @@ import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -82,6 +83,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     public atSV: AttachmentService,
     private notifySvr: NotificationsService,
     private cache: CacheService,
+    private dmSV: CodxDMService,
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     private authStore: AuthService,
@@ -153,8 +155,35 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-
-
+    let post = new WP_Comments();
+    post.content = this.message;
+    post.shareControl = this.shareControl;
+    post.category = this.CATEGORY.POST;
+    post.approveControl = "0";
+    post.refType = this.entityName;
+    post.permissions = [];
+    post.permissions.push(this.myPermission);
+    if(this.lstRecevier.length > 0){
+      this.lstRecevier.forEach((item) => {
+        var per = new Permission();
+        per.memberType = "3";
+        per.objectType = item.objectType;
+        per.objectID = item.id;
+        per.objectName = item.text;
+        per.read = true;
+        per.isActive = true;
+        per.createdBy = this.user.userID;
+        per.createdOn = new Date();
+        post.permissions.push(per);
+      })
+    }
+    // upload file
+    if (this.dmSV.fileUploadList.length > 0) {
+      post.fileUpload = [];
+      this.dmSV.fileUploadList.forEach(file =>{
+        post.fileUpload.push({fileName: file.fileName,fileSize: file.fileSize, fileType: file.extension});
+      })
+    }
     // this.data = new WP_Comments();
     // this.data.content = this.message;
     // this.data.shareControl = this.shareControl;
@@ -177,17 +206,25 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     // })
     // this.data.Permissions = lstPermissions;
 
-    // this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [this.data])
-    //   .subscribe((res: any) => {
-    //     this.dialogRef.dataService.add(res, 0).subscribe();
-    //     if (this.isUploadFile) {
-    //       this.atmCreate.objectId = res.recID;
-    //       this.saveFile();
-    //     }
-    //     this.notifySvr.notifyCode('E0026');
-    //     this.dialogRef.close();
-    //     this.dt.detectChanges();
-    //   });
+    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+      .subscribe((res: any) => {
+        console.log('post insert: ',res)
+        this.dialogRef.dataService.add(res, 0).subscribe();
+        let lstImage = res.listImage;
+        if(lstImage.length > 0){
+          this.dmSV.fileUploadList.map((file:any) => {
+            lstImage.forEach((img:any) => {
+              if(file.fileName == img.fileName){
+                file.objectID = img.recID;
+              }
+            })
+          })
+          this.atmCreate.saveFiles();
+        }
+        this.notifySvr.notifyCode('E0026');
+        this.dialogRef.close();
+        this.dt.detectChanges();
+      });
   }
 
 
@@ -362,7 +399,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   openFile() {
     this.atmCreate.uploadFile();
   }
-
   listImgUpload: any[] = [];
   listFileUpload:any[] = []
   isUploadImg = false;
@@ -370,6 +406,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   getfileCount(event: any) {
     if (!event || event.data.length <= 0) {
       this.isUploadFile = false;
+      this.listFileUpload = [];
+      this.dmSV.fileUploadList = []
       return;
     }
     else{
