@@ -40,8 +40,9 @@
     <!-- Account Information -->
     <div class="header_detail" *ngIf="data">
       <div class="header_title">
-        <codx-label fiedName="" class="header_title" formName="" gridViewName="" default="Thông tin tài khoản">
+       <strong><codx-label fiedName="" class="header_title" formName="" gridViewName="" default="Thông tin tài khoản">
         </codx-label>
+      </strong>
       </div>
       <div class="header_content">
         <div class="accountinfo">
@@ -78,20 +79,32 @@
         <div class="accountinfo">
           <div class="row">
             <div class="col-1 img_option">
+              <!-- change url image Main logo -->
               <img alt="" class="img_logo" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
             </div>
             <div class="col-11">
-              <strong><codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label> </strong>
+              <div class="col-12">
+                <strong><codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label> </strong>
+              </div>
+              <div class="col-12">
+                <i><codx-label fiedName="" formName="" gridViewName="" default="Recommended: 40x40px PNG with"></codx-label><br> <codx-label default="transparent background"></codx-label> </i>
+              </div>
             </div>
           </div>
         </div>
         <div class="accountinfo">
           <div class="row">
             <div class="col-4 img_optionFull">
+              <!-- change url image E-mail header -->
               <img alt="" class="img_logoFull" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
             </div>
             <div class="col-8">
-              <strong> <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label> </strong>
+              <div class="col-12">
+                <strong> <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label> </strong>
+              </div>
+              <div class="col-12">
+                <i><codx-label fiedName="" formName="" gridViewName="" default="Recommended resolution"></codx-label><br> <codx-label default="580x80px"></codx-label> </i>
+              </div>
             </div>
           </div>
         </div>
@@ -114,23 +127,23 @@
         <div class="col-5">
           <div class="contact">
             <strong>
-              <codx-label fiedName="street" formName="CompanySetting" gridViewName="" [default]="data.street">
+              <codx-label formName="CompanySetting" gridViewName="" [default]="" >
               </codx-label>
+              {{data.street}}
             </strong>
           </div>
           <div class="contact">
-            <codx-label fiedName="phone" formName="" gridViewName="" [default]="'Tel: '+data.phone+' - '+data.faxNo">
+            <codx-label fiedName="phone" formName="" gridViewName="" [default]="'Tel: '">
             </codx-label>
+            {{data.phone}} - {{data.faxNo}}
           </div>
           <div class="contact">
             <codx-label [default]="'Email: '"></codx-label>
-            <codx-label fiedName="email" class="url-contact" formName="" gridViewName="" [default]="data.email">
-            </codx-label>
+            <span class="url-contact" >{{data.email}}</span>
           </div>
           <div class="contact">
             <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '"></codx-label>
-            <codx-label fiedName="" formName="" class="url-contact" gridViewName="" [default]="data.webPage">
-            </codx-label>
+            <span  class="url-contact"> {{data.webPage}}</span>
           </div>
         </div>
         <div class="col-7">
@@ -163,7 +176,7 @@
           <div class="col-6">
             <div class="row">
               <div class="col-3">
-                <div *ngIf="!data.Logo; else imgDefault">
+                <div *ngIf="data.Logo; else imgDefault">
                   <img class="img_avatar" src="../../../assets/img/{{data.Logo}}" />
                 </div>
                   <ng-template #imgDefault> <img class="img_avatar" src="../../../assets/img/avatar.png" /></ng-template>
@@ -172,12 +185,11 @@
                 <div class="col-12 contactName">
                   <strong>
                     <span>{{data.contactName}}</span>
-
                   </strong>
                 </div>
                 <div class="col-12 personal_option">
                   <i>
-                    <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label>
+                    {{data.jobTitle}}
                   </i>
                 </div>
                 <div class="col-12 personal_option">
