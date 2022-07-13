@@ -242,12 +242,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openAutoNumPopup() {
-    this.cfService.openForm(PopupAddAutoNumberComponent, '', 570, 650, '', [
-      {
-        formModel: this.dialog.formModel,
-        autoNoCode: this.dialogCategory.value.categoryID,
-      },
-    ]);
+    this.cfService.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      (screen.width * 35) / 100,
+      (screen.width * 40) / 100,
+      '',
+      [
+        {
+          formModel: this.dialog.formModel,
+          autoNoCode: this.dialogCategory.value.categoryID,
+        },
+      ]
+    );
   }
 
   openPopupApproval() {
