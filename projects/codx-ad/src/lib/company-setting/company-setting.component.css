@@ -114,7 +114,6 @@ i.fa {
 }
 
 .background_form {
-  height: 1000px;
   width: 1280px;
   border-radius: 1% 1% 1% 1%;
   background: white;
@@ -122,6 +121,7 @@ i.fa {
   padding-top: 15px;
   padding-left: 15px;
   padding-right: 30px;
+  height: 100%;
 }
 .footer_content {
   padding: 15px 15px 2px 15px;

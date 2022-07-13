@@ -83,16 +83,104 @@ export class SprintsComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.params['funcID'];
-    // this.sprintDefaut.iterationID = this.user.userID;
-    // this.sprintDefaut.iterationName = 'TaskBoard';
-    // this.sprintDefaut.memo = 'Danh sách công việc theo quyền của tôi';
   }
+
+
+  //#region Init
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
   }
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        id: '2',
+        type: ViewType.card,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemViewBoard,
+        },
+      },
+    ];
+    this.view.dataService.methodSave = 'AddEditSprintAsync';
+    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
+    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
+    this.changeDetectorRef.detectChanges();
+  }
+  //#endregion
 
+  //#region CRUD Methods
+  add() {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfc.openSide(
+        PopupAddSprintsComponent,
+        [this.view.dataService.dataSelected, 'add'],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
+    });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfc.openSide(
+          PopupAddSprintsComponent,
+          [this.view.dataService.dataSelected, 'edit'],
+          option
+        );
+      });
+  }
+
+  copy(data) {
+    this.view.dataService.copy().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.view.dataService.dataSelected = data;
+      this.dialog = this.callfc.openSide(
+        PopupAddSprintsComponent,
+        [this.view.dataService.dataSelected, 'copy'],
+        option
+      );
+    });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe(res => {
+        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
+      })
+  }
+
+  beforeDel(opt: RequestOption) {
+    opt.methodName = 'DeleteSprintsByIDAsync';
+    opt.data = this.itemSelected.iterationID;
+    return true;
+  }
+  //#endregion
+  //#region More function
   clickMF(e: any, data: any) {
     this.itemSelected = data;
     switch (e.functionID) {
@@ -132,91 +220,8 @@ export class SprintsComponent extends UIComponent {
         break;
     }
   }
-
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        id: '2',
-        type: ViewType.card,
-        sameData: true,
-        active: true,
-        model: {
-          template: this.itemViewBoard,
-        },
-      },
-    ];
-    this.view.dataService.methodSave = 'AddEditSprintAsync';
-    this.view.dataService.methodUpdate = 'AddEditSprintAsync';
-    this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
-    this.changeDetectorRef.detectChanges();
-  }
-
-  add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfc.openSide(
-        PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'add'],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        console.log(e);
-      });
-    });
-  }
-
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfc.openSide(
-          PopupAddSprintsComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
-      });
-  }
-  copy(data) {
-    this.view.dataService.copy().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.view.dataService.dataSelected = data;
-      this.dialog = this.callfc.openSide(
-        PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'copy'],
-        option
-      );
-    });
-  }
-
-  delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe(res => {
-        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
-      })
-  }
-
-  beforeDel(opt: RequestOption) {
-    opt.methodName = 'DeleteSprintsByIDAsync';
-    opt.data = this.itemSelected.iterationID;
-    return true;
-  }
+  //#endregion
+  //#region Event
   sendemail(data) { }
 
   shareBoard(e, data) {
@@ -269,8 +274,6 @@ export class SprintsComponent extends UIComponent {
     //   this.dialog.close();
     // }
   }
-  // selectedChange(val: any) {
-  //   this.itemSelected = val.data;
-  //   this.changeDetectorRef.detectChanges();
-  // }
+  //#endregion
+
 }
