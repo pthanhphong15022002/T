@@ -18,11 +18,12 @@ export class ForwardComponent implements OnInit {
   user: any;
   forward = new forwarDis();
   dialog: any;
+  gridViewSetup     : any;
   formatBytes = formatBytes;
   getJSONString = getJSONString;
   data : any;
   @Input() viewbase: ViewsComponent;
-  @Input() gridViewSetup     : any;
+ 
   @Output() save : EventEmitter<any> = new EventEmitter();
   forwardForm = new FormGroup({
     userID: new FormControl(),
@@ -46,7 +47,10 @@ export class ForwardComponent implements OnInit {
     this.gridViewSetup = this.data["gridViewSetup"];
     this.files = this.data?.files;
   }
-
+  changeValueUserID(event: any)
+  {
+    this.forwardForm.controls['userID'].setValue(event.data.value);
+  }
   onSave()
   {
     this.forwardForm.value.userID = this.forwardForm.value.userID.join(";");

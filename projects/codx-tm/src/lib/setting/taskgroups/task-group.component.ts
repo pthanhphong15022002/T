@@ -210,7 +210,7 @@ export class TaskGroupComponent implements OnInit {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt) =>
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
       this.beforeDel(opt)).subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];

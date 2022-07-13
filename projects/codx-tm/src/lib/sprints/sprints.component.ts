@@ -203,13 +203,13 @@ export class SprintsComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService
+   /*  this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
       .subscribe(res => {
         if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
-      })
+      }) */
   }
 
   beforeDel(opt: RequestOption) {
