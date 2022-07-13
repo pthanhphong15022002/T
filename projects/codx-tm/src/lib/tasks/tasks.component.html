@@ -86,5 +86,6 @@
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button" [predicate]="predicate"
   [dataValue]="dataValue" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true" [autoLoad]="true">
+  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+  [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
