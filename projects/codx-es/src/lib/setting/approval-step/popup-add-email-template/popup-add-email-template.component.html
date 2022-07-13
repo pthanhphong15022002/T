@@ -12,15 +12,16 @@
             <div class="w-100 me-2">
               <div class="d-flex align-items-center">
                 <ng-container *ngFor="let item of lstFrom">
-                  <div class="d-flex user-mini-nav-custom align-items-center">
-                    <div class="text-gray-600 flex-grow-1 me-3">{{item.text}}</div><a
+                  <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                    <div class="me-3">
+                      <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
+                    </div>
+                    <div class="text-gray-600 flex-grow-1 me-2">{{item.text}}</div><a
                       class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 1)"><span
                         class="icon-close icon-16"></span></a>
                   </div>
                 </ng-container>
               </div>
-              <!-- <codx-input type="combobox" refValue="Users" field="from" (valueChange)="valueChange($event)">
-              </codx-input> -->
             </div>
           </div>
           <span>
@@ -39,8 +40,11 @@
           <div class="w-100 me-2" (onblur)="focusOutFunction()">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstTo">
-                <div class="d-flex user-mini-nav-custom align-items-center">
-                  <div class="text-gray-600 flex-grow-1 me-3">{{item.text}}</div><a
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                  <div class="me-3">
+                    <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text}}</div><a
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 2)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
@@ -67,8 +71,11 @@
           <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstCc">
-                <div class="d-flex user-mini-nav-custom align-items-center">
-                  <div class="text-gray-600 flex-grow-1 me-3">{{item.text}}</div><a
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                  <div class="me-3">
+                    <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text}}</div><a
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 3)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
@@ -95,8 +102,11 @@
           <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstBcc">
-                <div class="d-flex user-mini-nav-custom align-items-center">
-                  <div class="text-gray-600 flex-grow-1 me-3">{{item.text}}</div><a
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                  <div class="me-3">
+                    <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text}}</div><a
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 4)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
@@ -208,7 +218,7 @@
                 fiedName="SendLater">
               </codx-label>
             </label>
-            <codx-input type="switch" [crrValue]="dialogETemplate.value.sendLater" field="sendLater"
+            <codx-input type="switch" [crrValue]="!dialogETemplate.value.sendLater" field="sendLater"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -229,10 +239,48 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm()">
+      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm(null)">
         <codx-label name="lblSave" default="Lưu" formName="EmailTemplates" gridViewName="grvEmailTemplates">
         </codx-label>
       </a>
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #addTemplateName let-dialog1>
+  <div class="card-header flex-column">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h3 id="modal-basic-title">
+          <codx-label name="lblEquipment" default="Nhập tên" [formModel]="dialog.formModel"></codx-label>
+        </h3>
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="close2(dialog1)">
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" style="min-height: 150px;">
+    <div class="d-flex align-items-center me-3 mt-10">
+      <label class="ms-2 me-2">
+        <codx-label default="Tên template mẫu" formName="EmailTemplates" gridViewName="grvEmailTemplates"
+          fiedName="TemplateName">
+        </codx-label>
+      </label>
+      <codx-input type="text" [crrValue]="dialogETemplate.value.templateName" field="templateName"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+
+  </div>
+  <div class="card-footer border-0">
+    <div class="d-flex justify-content-end">
+      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm1(dialog1)">
+        <codx-label name="lblSave" default="Lưu" formName="EmailTemplates" gridViewName="grvEmailTemplates">
+        </codx-label>
+      </a>
+    </div>
+  </div>
+
+</ng-template>

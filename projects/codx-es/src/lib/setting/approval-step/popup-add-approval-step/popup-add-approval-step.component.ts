@@ -9,6 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -191,6 +192,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     if (email?.IsEmail == '1' || email?.isEmail == '1') {
       let data = {
         dialog: this.dialog,
+        formGroup: this.dialogApprovalStep,
         dialogEmail: email,
         showIsTemplate: true,
         showIsPublish: true,

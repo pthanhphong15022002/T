@@ -1,7 +1,16 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { resizeStart } from '@syncfusion/ej2-grids';
 import { Alert } from 'bootstrap';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { elementAt } from 'rxjs';
 import { CodxEsService } from '../../../codx-es.service';
 
@@ -10,7 +19,8 @@ import { CodxEsService } from '../../../codx-es.service';
   templateUrl: './popup-add-email-template.component.html',
   styleUrls: ['./popup-add-email-template.component.scss'],
 })
-export class PopupAddEmailTemplateComponent implements OnInit {
+export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
+  @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -22,6 +32,7 @@ export class PopupAddEmailTemplateComponent implements OnInit {
   showIsTemplate = true;
   showIsPublish = true;
   showSendLater = true;
+  formGroup: FormGroup;
   showCC = false;
   showBCC = false;
 
@@ -33,15 +44,18 @@ export class PopupAddEmailTemplateComponent implements OnInit {
 
   constructor(
     private esService: CodxEsService,
+    private callFunc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    this.formGroup = data?.data.formGroup;
     this.email = data?.data.dialogEmail;
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
   }
+  ngAfterViewInit(): void {}
 
   initForm() {
     this.esService
@@ -55,6 +69,29 @@ export class PopupAddEmailTemplateComponent implements OnInit {
             .subscribe((res1) => {
               if (res1 != null) {
                 this.dialogETemplate.patchValue(res1[0]);
+                this.dialogETemplate.addControl(
+                  'recID',
+                  new FormControl(res1[0].recID)
+                );
+                let lstUser = res1[1];
+                if (lstUser.length > 0) {
+                  lstUser.forEach((element) => {
+                    switch (element.sendType) {
+                      case '1':
+                        this.lstFrom.push(element);
+                        break;
+                      case '2':
+                        this.lstTo.push(element);
+                        break;
+                      case '3':
+                        this.lstCc.push(element);
+                        break;
+                      case '4':
+                        this.lstBcc.push(element);
+                        break;
+                    }
+                  });
+                }
                 console.log('data', this.dialogETemplate);
               }
             });
@@ -66,7 +103,15 @@ export class PopupAddEmailTemplateComponent implements OnInit {
     this.initForm();
   }
 
-  onSaveForm() {
+  onSaveForm(dialog: DialogRef) {
+    if (this.dialogETemplate.value.isTemplate) {
+      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 300);
+    } else {
+      this.onSaveForm1(dialog);
+    }
+  }
+
+  onSaveForm1(dialog1: DialogRef) {
     let lstSento = [
       ...this.lstFrom,
       ...this.lstTo,
@@ -79,11 +124,24 @@ export class PopupAddEmailTemplateComponent implements OnInit {
       .addEmailTemplate(this.dialogETemplate.value, lstSento)
       .subscribe((res) => {
         console.log(res);
+        if (res) {
+          console.log(res);
+          let emailTemplates = this.formGroup.value.emailTemplates;
+          let i = emailTemplates.findIndex(
+            (p) => p.EmailType == res.templateType
+          );
+          if (i >= 0) {
+            emailTemplates[i].TemplateID = res.recID;
+            this.formGroup.patchValue({ emailTemplates: emailTemplates });
+          }
+          dialog1.close();
+          this.dialog && this.dialog.close();
+        }
       });
   }
 
   valueChange(event) {
-    if (event?.field && event.component && event.data) {
+    if (event?.field && event.component) {
       if (event.field == 'sendTime') {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
@@ -99,15 +157,15 @@ export class PopupAddEmailTemplateComponent implements OnInit {
   }
 
   valueSentoChange(event, sendType) {
-    if (event?.field && event.component && event.data) {
+    if (event?.field && event.component) {
       switch (event.field) {
         case 'from':
           event.data?.forEach((element) => {
-            let index = this.lstFrom.findIndex((p) => p.objectID == element.id);
+            let index = this.lstFrom.findIndex((p) => p.objetID == element.id);
 
             if (this.lstFrom.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objectID = element.id;
+              item.objetID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -119,10 +177,10 @@ export class PopupAddEmailTemplateComponent implements OnInit {
           break;
         case 'to':
           event.data?.forEach((element) => {
-            let index = this.lstTo.findIndex((p) => p.objectID == element.id);
+            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
             if (this.lstTo.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objectID = element.id;
+              item.objetID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -132,11 +190,11 @@ export class PopupAddEmailTemplateComponent implements OnInit {
           break;
         case 'cc':
           event.data?.forEach((element) => {
-            let index = this.lstCc.findIndex((p) => p.objectID == element.id);
+            let index = this.lstCc.findIndex((p) => p.objetID == element.id);
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objectID = element.id;
+              item.objetID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -146,11 +204,11 @@ export class PopupAddEmailTemplateComponent implements OnInit {
           break;
         case 'bcc':
           event.data?.forEach((element) => {
-            let index = this.lstTo.findIndex((p) => p.objectID == element.id);
+            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objectID = element.id;
+              item.objetID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -203,13 +261,17 @@ export class PopupAddEmailTemplateComponent implements OnInit {
   focusOutFunction() {
     alert('event');
   }
+
+  close2(dialog: DialogRef) {
+    dialog.close();
+  }
 }
 
 export class EmailSendTo {
   transID: string;
   sendType: string;
   objectType: string;
-  objectID: string;
+  objetID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;

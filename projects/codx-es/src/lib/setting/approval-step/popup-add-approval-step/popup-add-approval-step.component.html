@@ -36,8 +36,12 @@
 
                   <div class="d-flex flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 ">
-                      <codx-label default="Người xét duyệt" fiedName="Attendees" [formModel]="formModel">
-                      </codx-label>
+                      <h5 class="fw-bolder d-block mb-2">
+                        <codx-label class="text-primary" default="Người thực hiện" fiedName="Attendees"
+                          [formModel]="formModel">
+                        </codx-label>
+                      </h5>
+
                       <!-- <span class=" icon-group_add text-primary fs-1">
 
                       </span> -->
@@ -85,8 +89,12 @@
                   </div>
 
                   <div class="d-flex flex-column mb-4">
-                    <codx-label default="Đóng góp ý kiến" fiedName="Attendees" [formModel]="formModel">
-                    </codx-label>
+                    <h5 class="fw-bolder d-block mb-2">
+                      <codx-label class="text-primary" default="Đóng góp ý kiến" fiedName="Attendees"
+                        [formModel]="formModel">
+                      </codx-label>
+                    </h5>
+
                     <div class=" row mt-3">
                       <div class="col-6">
                         <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
@@ -191,22 +199,22 @@
                   <ng-container *ngFor="let item of dialogApprovalStep.value.emailTemplates">
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '11'">
                       <h5 class="fw-bolder d-block mb-2">
-                        <codx-label default="Thiết lập mẫu email duyệt" [formModel]="formModel"
+                        <codx-label class="text-primary" default="Thiết lập mẫu email duyệt" [formModel]="formModel"
                           fiedName="lblEmailSubmit">
                         </codx-label>
                       </h5>
                     </div>
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '21'">
                       <h5 class="fw-bolder d-block mb-2">
-                        <codx-label default="Email yêu cầu hủy kết quả duyệt/yêu cầu" [formModel]="formModel"
-                          fiedName="lblEmailReject">
+                        <codx-label class="text-primary" default="Email yêu cầu hủy kết quả duyệt/yêu cầu"
+                          [formModel]="formModel" fiedName="lblEmailReject">
                         </codx-label>
                       </h5>
                     </div>
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '31'">
                       <h5 class="fw-bolder d-block mb-2">
-                        <codx-label default="Thiết email cảnh báo quá hạn duyệt" [formModel]="formModel"
-                          fiedName="lblEmailAlert">
+                        <codx-label class="text-primary" default="Thiết email cảnh báo quá hạn duyệt"
+                          [formModel]="formModel" fiedName="lblEmailAlert">
                         </codx-label>
                       </h5>
                     </div>
@@ -233,7 +241,7 @@
                               </codx-input>
                             </div>
                             <div class="col-2">
-                              <div class="icon-email text-hover-primary icon-20 ml-2" (click)="openSetupEmail(item)">
+                              <div class="icon-email text-hover-primary icon-24 ml-2" (click)="openSetupEmail(item)">
                               </div>
                             </div>
                           </div>
