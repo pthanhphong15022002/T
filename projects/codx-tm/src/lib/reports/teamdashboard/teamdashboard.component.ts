@@ -4,7 +4,10 @@ import {
   GaugeTheme,
   ILoadedEventArgs,
 } from '@syncfusion/ej2-angular-circulargauge';
-import { AnimationModel, RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
+import {
+  AnimationModel,
+  RangeColorModel,
+} from '@syncfusion/ej2-angular-progressbar';
 import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
@@ -29,7 +32,7 @@ export class TeamDashboardComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
-  vlWork: any
+  vlWork: any;
 
   public rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -63,18 +66,30 @@ export class TeamDashboardComponent implements OnInit {
   public animation1: Object = { duration: 1500 };
   public markerWidth: number = 28;
   public markerHeight: number = 28;
-  public value: number = 12;
   public markerWidth1: number = 90;
   public markerHeight1: number = 90;
   public lineStyle: Object = { width: 0, color: '#1d1d1d' };
-  public labelStyle: Object = { font: { size: '0px' } };
-  public majorTicks: Object = { interval: 20, width: 0 };
+  public labelStyle: Object = { position: 'Outside', font: { size: '10px' } };
+  public majorTicks: Object = {
+    position: 'Outside',
+    color: 'green',
+    height: 5,
+    width: 2,
+    offset: 10,
+    interval: 30,
+  };
   public minorTicks: Object = { width: 0 };
   //#endregion gauge
 
   public piedata1: Object[];
   public piedata2: Object[];
-  public legendSettings: Object;
+  public legendSettings: Object = {
+    position: 'Top',
+    visible: true,
+  };
+  public legendRateDoneSettings: Object = {
+    visible: true,
+  };
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -212,9 +227,6 @@ export class TeamDashboardComponent implements OnInit {
         y: 5,
       },
     ];
-    this.legendSettings = {
-      visible: true,
-    };
   }
 
   private getGeneralData() {
