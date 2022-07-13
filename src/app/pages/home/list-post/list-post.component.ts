@@ -170,12 +170,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.player?.video?.nativeElement.pause();
   }
 
-  openModal() {
-    var data = new Post();
+  openCreateModal() {
     var obj = {
-      post: data,
       status: "create",
-      title: "Tạo bài viết"
+      title: "Tạo bài viết",
     }
     this.dt.detectChanges()
     let option = new DialogModel();
