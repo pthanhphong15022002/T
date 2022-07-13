@@ -1,4 +1,4 @@
-import { NotificationsService } from 'codx-core';
+import { CodxFormComponent, NotificationsService } from 'codx-core';
 import { NoteType } from './../../../../shared/models/notes.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -60,7 +60,7 @@ export class AddNoteComponent implements OnInit {
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent
-  @ViewChild("form", { static: true }) form: any;
+  @ViewChild("form", { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
 
@@ -86,7 +86,6 @@ export class AddNoteComponent implements OnInit {
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
-      console.log("check gridViewSetup", res)
     });
   }
 
@@ -208,6 +207,9 @@ export class AddNoteComponent implements OnInit {
           this.note
         )
         .subscribe((res) => {
+          debugger;
+          this.attachment.objectId = res.recID;
+          this.attachment.saveFiles();
           this.data.push(res);
           this.dialog.dataService.add(res, 0).subscribe();
           if (this.note?.showCalendar == true) {
@@ -240,6 +242,7 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.attachment.saveFiles();
           this.dialog.close();
           for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].recID == this.note?.recID) {

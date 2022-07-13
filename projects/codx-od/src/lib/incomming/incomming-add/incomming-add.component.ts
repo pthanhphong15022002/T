@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -20,6 +20,7 @@ export class IncommingAddComponent implements OnInit {
   @ViewChild('myform') myForm :any;
   submitted = false;
   checkAgenciesErrors = false;
+  change = "ADMIN";
   data: any = {};
   dialog: any;
   activeAngecy      = 1;
@@ -41,6 +42,7 @@ export class IncommingAddComponent implements OnInit {
     private odService: DispatchService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -75,7 +77,6 @@ export class IncommingAddComponent implements OnInit {
     } */
   }
   fileAdded(event:any) { 
-    debugger;
     if(event?.data) this.hideThumb = true  
   }
 
@@ -134,6 +135,18 @@ export class IncommingAddComponent implements OnInit {
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.deptID = event.data.value[0];
+    if (event.data?.value[0]) {
+      this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data?.value[0], null, null]).subscribe((item: any) => {
+         if (item != null && item.length > 0) {
+           this.dispatch.owner = item[0].domainUser;
+           this.change = this.dispatch.owner;
+           this.ref.detectChanges();
+         }
+         else {
+           this.dispatch.owner = "";
+         }
+       })
+     } 
   }
   openFormUploadFile()
   {
@@ -231,7 +244,7 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e:any)
   {
-    this.fileCount = e;
+    this.fileCount = e.data.length;
   }
   changeFormAgency(val:any)
   {

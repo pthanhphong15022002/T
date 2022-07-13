@@ -16,3 +16,9 @@
 .headerText {
   color: red;
 }
+
+.font_size {
+  padding-top: 18px;
+  font-size: 14px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
+}

@@ -188,6 +188,7 @@ export class CodxTMService {
   }
 
   setStatusTask(
+    funcID:string,
     id: string,
     status: string,
     datacomplete: Date,
@@ -199,7 +200,7 @@ export class CodxTMService {
       'TM',
       'TaskBusiness',
       'SetStatusTaskAsync',
-      [id, status, datacomplete, hour, comment]
+      [funcID,id, status, datacomplete, hour, comment]
     );
   }
 

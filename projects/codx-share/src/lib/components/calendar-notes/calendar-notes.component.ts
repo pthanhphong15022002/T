@@ -1,5 +1,6 @@
+import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -49,13 +50,14 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   changeDateSelect = false;
   checkWeek = true;
   typeList = 'notes-home';
-  dataValue = ['WP_Calendars', '', 'SettingShow'];
+  dataValue = 'WP_Calendars;SettingShow';
   predicate = '';
   dataValue1: any;
   predicate1 = 'CreatedBy=@0';
   userID = ''
+  data: any;
 
-  @ViewChild('listview') lstView;
+  @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
   constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -67,12 +69,22 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.messageParam = this.cache.message('WP003');
     this.setEventWeek();
   }
-  ngAfterViewInit() {
-  }
 
   onInit(): void {
-    this.getEvents();
+    this.getParam();
+    // this.getNoteData();
     this.getMaxPinNote();
+  }
+
+  ngAfterViewInit() {
+    console.log("check listView", this.lstView.dataService.data);
+  }
+
+  requestEnded(evt: any) {
+    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    this.view.currentView;
+    this.data = this.lstView.dataService.data;
+    console.log("check data", this.data);
   }
 
   getMaxPinNote() {
@@ -83,32 +95,65 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
-  getEvents() {
+  // getEvents() {
+  // this.api
+  //   .callSv(
+  //     'SYS',
+  //     'ERM.Business.CM',
+  //     'ParametersBusiness',
+  //     'GetDataByRecIDAsync',
+  //     ['WP_Calendars', '', 'SettingShow']
+  //   )
+  //   .subscribe((res) => {
+  //     if (res && res.msgBodyData) {
+  //       this.param = res.msgBodyData[0];
+  //       this.TM_Tasks = this.param[0];
+  //       this.WP_Notes = this.param[1];
+  //       this.TM_TasksParam = this.param[2].TM_Tasks;
+  //       this.WP_NotesParam = this.param[2].WP_Notes;
+
+  //       for (let i = 0; i < this.WP_Notes?.length; i++) {
+  //         var date = this.WP_Notes[i]?.createdOn;
+  //         var daq = new Date(Date.parse(date));
+  //         var d = daq.toLocaleDateString();
+  //       }
+  //       this.getNumberNotePin();
+  //     }
+  //   });
+  // }
+
+  getParam() {
     this.api
       .callSv(
         'SYS',
         'ERM.Business.CM',
         'ParametersBusiness',
-        'GetDataByRecIDAsync',
+        'GetDataParamAsync',
         ['WP_Calendars', '', 'SettingShow']
       )
       .subscribe((res) => {
         if (res && res.msgBodyData) {
-          this.param = res.msgBodyData[0];
-          this.TM_Tasks = this.param[0];
-          this.WP_Notes = this.param[1];
-          this.TM_TasksParam = this.param[2].TM_Tasks;
-          this.WP_NotesParam = this.param[2].WP_Notes;
-
-          for (let i = 0; i < this.WP_Notes?.length; i++) {
-            var date = this.WP_Notes[i]?.createdOn;
-            var daq = new Date(Date.parse(date));
-            var d = daq.toLocaleDateString();
-          }
-          this.getNumberNotePin();
+          var dt = res.msgBodyData;
+          this.TM_TasksParam = dt[0].TM_Tasks;
+          this.WP_NotesParam = dt[0].WP_Notes;
         }
       });
   }
+
+  // getNoteData() {
+  //   var dtWP_Notes = [];
+  //   var dtTM_Tasks = [];
+  //   this.data.forEach((res) => {
+  //     if (res?.type == 'WP_Notes') {
+  //       dtWP_Notes.push(res);
+  //     } else if (res?.type == 'TM_Tasks') {
+  //       dtTM_Tasks.push(res);
+  //     }
+  //   })
+  //   this.WP_Notes = dtWP_Notes;
+  //   this.TM_Tasks = dtTM_Tasks;
+  //   this.getNumberNotePin();
+  // }
 
   onLoad(args): void {
     this.setEvent(args.element, args);
@@ -265,6 +310,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onValueChange(args: any) {
+    debugger;
     this.changeDateSelect = true;
     this.daySelected = args.value.toLocaleDateString();
     let title: string = '';
@@ -340,8 +386,11 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       typeLst: this.typeList,
       formType: 'add',
     };
+    let option = new DialogModel();
+    option.DataService = this.view.dataService as CRUDService;
+    option.FormModel = this.view.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
   }
 
   valueChange(e, recID = null, item = null) {

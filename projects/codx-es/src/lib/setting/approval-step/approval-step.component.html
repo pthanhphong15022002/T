@@ -69,7 +69,7 @@
                           <div class="timeline-media">
                             <span class="">{{item.stepNo}}</span>
                           </div>
-                          <div class="stepper-label  has-action-menu">
+                          <div class="stepper-label has-action-menu">
                             <h3 class="stepper-title">
                               {{item.memo}}
                             </h3>
@@ -83,6 +83,7 @@
                           </div>
                         </div>
                         <div class="timeline-content mx-auto">
+
                           <div class="d-flex flex-wrap">
                             <ng-container *ngFor="let approver of item.approvers">
                               <div class="d-flex border border-gray-300 rounded min-w-250px mw-300px px-4 me-6 mb-3">
@@ -91,7 +92,7 @@
                                   [desc]="getLeadTime(item.leadtime)" [status]="lstStep.status"
                                   cardCss="card-template border-bottom px-2 py-3"
                                   [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
-                                  [resourceObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
+                                  [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
                                 </codx-temp-full>
 
                                 <ng-template #footer1>
@@ -107,7 +108,7 @@
                       </div>
                       <div class="timeline-item" *ngIf="index==lstStep.length-1">
                         <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                          <div class="step-add" (click)="add()">
+                          <div class="step-add" ngbTooltip="Thêm mới" (click)="add()">
                             +
                           </div>
                         </div>

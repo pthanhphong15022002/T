@@ -18,9 +18,9 @@ export class UserComponent extends UIComponent {
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
 
- // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
+  // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
 
-  
+
   user: any;
   funcID: string;
   constructor(
@@ -28,7 +28,7 @@ export class UserComponent extends UIComponent {
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activeRouter: ActivatedRoute,
-    private changeDetectorRef:ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService
   ) {
     super(inject);
@@ -54,7 +54,7 @@ export class UserComponent extends UIComponent {
     ];
   }
 
-  ngAfterViewInit():void{
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.list,
@@ -64,20 +64,21 @@ export class UserComponent extends UIComponent {
           template: this.itemTemplate,
         },
       },
-    ]
+    ];
+    this.view.dataService.methodSave = '';
     this.changeDetectorRef.detectChanges();
   }
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'btnAdd':
-         this.add();
+        this.add();
         break;
       case 'edit':
-         this.edit(data);
+        this.edit(data);
         break;
       case 'delete':
-         this.delete(data);
+        this.delete(data);
         break;
     }
   }
@@ -97,24 +98,39 @@ export class UserComponent extends UIComponent {
     })
   }
 
-  convertHtmlAgency(buID:any)
-  {
+  convertHtmlAgency(buID: any) {
     var desc = '<div class="d-flex">';
-    if(buID)
-      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +buID+'</span></div>';
-    
+    if (buID)
+      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' + buID + '</span></div>';
+
     return desc + '</div>';
   }
 
   add() {
-    this.view.dataService.addNew(0).subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px'; // s k thấy gửi từ ben đây,
+      option.Width = '800px'; 
       this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
 
     });
+
+    // this.view.dataService.addNew(0).subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '800px'; // s k thấy gửi từ ben đây,
+    //   this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
+    //   this.dialog.closed.subscribe((x) => {
+    //     if (x.event == null)
+    //       this.view.dataService
+    //         .remove(this.view.dataService.dataSelected)
+    //         .subscribe(x => {
+    //           this.dt.detectChanges();
+    //         });
+    //   });
+    // });
   }
 
   edit(data?) {
@@ -155,5 +171,5 @@ export class UserComponent extends UIComponent {
   }
   //#endregion
 
-  
+
 }

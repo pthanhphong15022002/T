@@ -169,10 +169,10 @@ export class ProjectgroupsComponent implements OnInit {
 
   // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
   deleteData(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], this.beforeDel)
-      .subscribe();
+    // this.view.dataService.dataSelected = data;
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected], true,this.beforeDel)
+    //   .subscribe();
   }
 
   beforeDel(opt: any) {

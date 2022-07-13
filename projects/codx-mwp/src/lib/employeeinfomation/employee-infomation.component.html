@@ -36,20 +36,28 @@
       <div class="w-100">
         <div class="employee-container">
           <div class="pw-menu d-flex">
-            <span><a href="/">Cá nhân</a></span>
-            <span><a href="/">Phúc lợi</a></span>
-            <span><a href="/">Quá trình nhân sự</a></span>
-            <span><a href="/">Kiến thức</a></span>
-            <span><a href="/">Sức khỏe</a></span>
-            <!-- <ejs-menu *ngIf='menuItems' [items]='menuItems' [fields]='menuFields'></ejs-menu> -->
+            <div ngbDropdown class="d-inline-block">
+              <codx-button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+                {{defautFunc.defaultName}}</codx-button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <ng-container *ngFor="let item of moreFunc">
+                  <codx-button ngbDropdownItem>
+                    <a href="{{'#' + item.functionID}}">{{item.defaultName}}</a>
+                  </codx-button>
+                </ng-container>
+              </div>
+            </div>
           </div>
+
           <div class="pw-content w-100 pw-lg">
-            <div class="user-content flex-row-fluid" scrollSpy (sectionChange)="onSectionChange($event)">
+            <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
               <ng-container>
                 <!-- thong tin chung -->
-                <div class="user-profile overview d-block mb-3" id="InfoPersonal">
+                <div class="user-profile overview d-block mb-3" id="MWP00201">
+
                   <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblInfoPersonal" formName="Employees"
                     default="Thông tin nhân viên">
+                    <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
                   </codx-label>
                   <div *ngIf="employeeInfo">
                     <div class="d-flex justify-content-between">
@@ -311,12 +319,13 @@
                 </div>
               </ng-container>
               <!-- kinh nghiem -->
-              <div id="Experences" class="d-block mt-6">
+              <div id="MWP00202" class="d-block mt-6">
 
                 <div class="user-profile overview">
                   <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblExperencies" formName="Employees"
                     default="Kinh nghiệm trước đây">
                   </codx-label>
+                  <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="ExperencesCurrent">
                     <div class="user-process process-h">
                       <div *ngFor="let experences of ExperencesWorked">
@@ -344,7 +353,7 @@
               </div>
 
               <!-- kỹ năng -->
-              <div id="Skill" class="d-block">
+              <div id="MWP00203" class="d-block">
                 <div class="user-profile overview">
                   <div class="d-flex justify-content-between mb-3">
                     <codx-label class="fw-bold fs-4 text-primary" name="lblSkill" formName="Employees"
@@ -354,7 +363,7 @@
                       <span class="icon-edit icon-18"></span>
                     </a>
                   </div>
-                  <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
+                  <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="skillEmployee">
                     <div class="row">
                       <div class="col-6 pe-9">
@@ -367,7 +376,7 @@
                                   <div class="wrap">
                                     <div class="sliderwrap">
                                       <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10"
-                                        [(ngModel)]="data.valueX">
+                                        [(ngModel)]="data.valueX" [readonly]="true">
                                       </ejs-slider>
                                     </div>
                                   </div>
@@ -404,11 +413,13 @@ value="setMyStyles(data)"
               </div>
 
               <!-- đào tạo -->
-              <div id="Training" class="d-block mb-3">
+              <div id="MWP00204" class="d-block mb-3">
                 <div class="user-profile overview">
                   <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblTraining" formName="Employees"
                     default="Đào tạo cá nhân">
                   </codx-label>
+                  <ngx-skeleton-loader *ngIf="!trainingInterObl && !trainingInterUnObl && !trainingPersonal" count="5"
+                    animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="trainingInterObl || trainingInterUnObl || trainingPersonal">
 
                     <div *ngIf="trainingPersonal && trainingPersonal.length>0"
@@ -453,12 +464,13 @@ value="setMyStyles(data)"
               </div>
 
               <!-- quan hệ gia đình -->
-              <div id="RelationShip" class="d-block mb-3">
+              <div id="MWP00205" class="d-block mb-3">
 
                 <div class="user-profile overview">
                   <div class="fw-bold fs-4 text-primary mb-6">
                     <codx-label name="lblRelationShip" formName="Employees" default="Quan hệ gia đình">
                     </codx-label>
+                    <ngx-skeleton-loader *ngIf="!employeeRelationship" count="5" animation="progress"></ngx-skeleton-loader>
                   </div>
                   <div *ngIf="employeeRelationship">
                     <div class="row">
@@ -487,11 +499,12 @@ value="setMyStyles(data)"
               </div>
 
               <!-- sở thích -->
-              <div id="Hobbie" class="d-block">
+              <div id="MWP00206" class="d-block">
                 <div class="user-profile overview">
                   <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblHobbie" formName="Employees"
                     default="Sở thích">
                   </codx-label>
+                  <ngx-skeleton-loader *ngIf="!employeeHobbie" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="employeeHobbie">
                     <div class="row">
                       <div class="list-hoppy">
