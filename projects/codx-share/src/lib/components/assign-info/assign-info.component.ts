@@ -1,12 +1,14 @@
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
   ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   ChangeDetectorRef,
@@ -43,13 +45,13 @@ export class AssignInfoComponent implements OnInit {
   disableAddToDo = true;
   grvSetup: any;
   param: any;
-  @Input() task = new TM_Tasks();
+  task: TM_Tasks = new TM_Tasks();
   functionID: string;
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
   @Input() vllShare = "L1906"
-
+   vllRole =''
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -57,6 +59,7 @@ export class AssignInfoComponent implements OnInit {
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private cache : CacheService,
+    private api : ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -64,7 +67,8 @@ export class AssignInfoComponent implements OnInit {
       ...this.task,
       ...dt?.data[0],
     };
-    this.vllShare = dt?.data[1]? dt?.data[1] : "L1906" ;
+    this.vllShare = dt?.data[1]? dt?.data[1] : this.vllShare ;
+    this.vllRole = dt?.data[2]? dt?.data[2] : this.vllRole  ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -72,10 +76,39 @@ export class AssignInfoComponent implements OnInit {
     this.cache.valueList(this.vllShare).subscribe(res => {
      console.log(res)
     });
+    this.cache.valueList(this.vllRole).subscribe(res => {
+      console.log(res)
+     });
   }
 
   ngOnInit(): void {
+    if(!this.task.taskID)
+    this.setDefault();
+    else
     this.openInfo();
+  }
+
+  setDefault(){
+    this.api
+    .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      this.functionID,
+      'TM_Tasks',
+      'taskID',
+    ])
+    .subscribe(
+    (response: any) => {
+        if (response) {
+          response['_uuid'] = response['taskID'] ?? Util.uid();
+          response['idField'] = 'taskID';
+          response['isNew'] = function () {
+            return response[response.taskID] != response['_uuid'];
+          };
+          response['taskID'] = response['_uuid'];
+          this.task = response;
+        this.openInfo();
+        }
+      }
+    );
   }
 
   showPanel() {
@@ -277,36 +310,36 @@ export class AssignInfoComponent implements OnInit {
         if (arrNew.length > 0) {
           assignTo = arrNew.join(';');
           this.task.assignTo += ';' + assignTo;
-          // this.getListUser(assignTo);
+          this.getListUser(assignTo);
         }
       } else {
         this.task.assignTo = assignTo;
-        // this.getListUser(assignTo);
+        this.getListUser(assignTo);
       }
     }
     this.changeDetectorRef.detectChanges();
   }
-  // getListUser(listUser) {
-  //   // this.listMemo2OfUser = [];
-  //   while (listUser.includes(' ')) {
-  //     listUser = listUser.replace(' ', '');
-  //   }
-  //   var arrUser = listUser.split(';');
-  //   this.listUser = this.listUser.concat(arrUser);
-  //   arrUser.forEach((u) => {
-  //     var obj = { userID: u.userID, memo2: null };
-  //     this.listMemo2OfUser.push(obj);
-  //   });
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetListUserDetailAsync',
-  //       listUser
-  //     )
-  //     .subscribe((res) => {
-  //       this.listUserDetail = this.listUserDetail.concat(res);
-  //     });
-  // }
+  getListUser(listUser) {
+    // this.listMemo2OfUser = [];
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    var arrUser = listUser.split(';');
+    this.listUser = this.listUser.concat(arrUser);
+    arrUser.forEach((u) => {
+      var obj = { userID: u.userID, memo2: null };
+      this.listMemo2OfUser.push(obj);
+    });
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        listUser
+      )
+      .subscribe((res) => {
+        this.listUserDetail = this.listUserDetail.concat(res);
+      });
+  }
 }

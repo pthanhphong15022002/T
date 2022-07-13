@@ -38,7 +38,8 @@ export class TaskGroupComponent implements OnInit {
   columnsGrid = [];
   dialog!: DialogRef;
   itemSelected: any;
-
+  popoverList: any;
+  popoverDetail: any;
   isAfterRender = false;
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -182,7 +183,16 @@ export class TaskGroupComponent implements OnInit {
 
   }
 
-
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp.split(";");
+      if (emp.checkList != null)
+        p.open();
+    }
+    else
+      p.close();
+  }
 
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {

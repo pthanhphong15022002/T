@@ -416,7 +416,7 @@ export class TasksComponent extends UIComponent {
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected],
+      [this.view.dataService.dataSelected,'L1906','TM001'],
       option
     );
     this.dialog.closed.subscribe((e) => {
