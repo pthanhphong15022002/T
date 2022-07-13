@@ -1,7 +1,7 @@
 <codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesBusiness"
   method="GetListRangesKanbanAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
-  idField="rangeID" [selectedFirst]="true">
+  idField="rangeID" [selectedFirst]="true" [autoLoad]="false">
 </codx-views>
 
 <ng-template #grid let-data>
@@ -9,11 +9,11 @@
     <td class="rowphoto">
       {{data.rangeID}}
     </td>
-    <td class="rowphoto"  >
+    <td class="rowphoto">
       <div [ngbTooltip]="data.rangeName">
         {{data.rangeName}}
       </div>
-     
+
     </td>
     <td class="rowphoto">
       <!-- <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">

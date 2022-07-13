@@ -385,16 +385,15 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-           /*  this.view.dataService
+            this.view.dataService
               .delete([this.view.dataService.dataSelected], true, (opt) =>
                 this.beforeDel(opt)
               )
               .subscribe((res) => {
                 if (res[0]) {
                   this.itemSelected = this.view.dataService.data[0];
-                  this.notiService.notifyCode('TM004');
                 }
-              }); */
+              });
           }
         }
       });
@@ -427,7 +426,9 @@ export class TasksComponent extends UIComponent {
   changeView(evt: any) { }
 
   requestEnded(evt: any) {
-    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    if (evt.type == 'read') {
+      console.log(this.view.dataService.data);
+    }
     this.view.currentView;
   }
   onDragDrop(e: any) {
@@ -487,6 +488,7 @@ export class TasksComponent extends UIComponent {
                   taskAction.comment = '';
                   taskAction.completed = estimated;
                   this.view.dataService.update(taskAction).subscribe();
+                  this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(

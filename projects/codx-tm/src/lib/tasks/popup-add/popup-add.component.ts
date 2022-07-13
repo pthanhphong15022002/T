@@ -116,7 +116,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.getTaskCoppied(this.taskCopy.taskID);
     } else this.openInfo(this.task.taskID, this.action);
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   getParam(callback = null) {
     // this.api
@@ -447,7 +447,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.dialog.dataService.setDataSelected(res.update[0]);
+          this.dialog.dataService.update(res.update[0]).subscribe();
           this.dialog.close();
           this.notiService.notifyCode('E0528');
         }
