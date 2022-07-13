@@ -416,7 +416,7 @@ export class TasksComponent extends UIComponent {
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      this.view.dataService.dataSelected,
+      [this.view.dataService.dataSelected],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -466,11 +466,9 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate)).toDate();
-            var estimated = moment(completedOn).diff(
-              moment(startDate),
-              'hours'
-            );
+            var startDate =  moment(new Date(taskAction.startDate?taskAction.startDate:taskAction.createdOn)).toDate();
+            var time = (((completedOn.getTime() -startDate.getTime())/3600000).toFixed(1));
+            var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -490,7 +488,8 @@ export class TasksComponent extends UIComponent {
                   taskAction.completed = estimated;
                   res.forEach(obj=>{
                     this.view.dataService.update(obj).subscribe();
-                  })               
+                  })    
+                  this.itemSelected = res[0] ;      
                   this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
