@@ -1,117 +1,81 @@
-<codx-form [headerText]="title" [subHeaderText]="" [body]="body" [footer]="footer" [dialog]="dialog">
-  <!-- <ng-template #subHeaderText>
-    aaaaaaaa
-  </ng-template> -->
-
+<codx-form #form [headerText]="title" [subHeaderText]="" [body]="body" [footer]="footer" [data]="project"
+  [formModel]="dialog.formModel" [dialog]="dialog">
   <ng-template popup adde #body>
     <div class="card-body">
       <div class="row">
         <div class="form-group">
           <div class="form-group row mt-3">
             <div class="form-group col-8">
-              <codx-label fiedName="ProjectID" formName="Projects" gridViewName="grvProjects" default="Mã dự án">
+              <codx-label fiedName="ProjectID" [formModel]="dialog.formModel" default="Mã dự án">
               </codx-label>
               <div>
-                <!-- <codx-input field="projectID" type="text" [crrValue]="projects.projectID">
-                </codx-input> -->
-
-                <codx-input field="projectID" type="text" [attr.disabled]="!isAddMode ? '' : null"
-                  [crrValue]="projects.projectID">
+                <codx-input field="projectID" [formModel]="dialog.formModel" [Group]="form.formGroup"
+                  [attr.disabled]="!project?.isNew() ? '' : null">
                 </codx-input>
               </div>
             </div>
             <div class="col-4">
-              <codx-label fiedName="ProjectCategory" default="Phân loại" formName="Projects" gridViewName="grvProjects">
+              <codx-label fiedName="ProjectCategory" default="Phân loại" [formModel]="dialog.formModel">
               </codx-label>
-              <!-- <codx-input name="projectCategory" type="valuelist" field="projectCategory" placeholder=""
-                [crrValue]="projects.projectCategory" (valueChange)="valueApp($event)"
-                [refValue]="gridViewSetup.ProjectCategory.referedValue">
-              </codx-input> -->
-
-              <codx-input type="valuelist" field="projectCategory" refValue="L0607"
-                [crrValue]="projects.projectCategory" (valueChange)="valueApp($event)">
+              <codx-input field="projectCategory" [formModel]="dialog.formModel" [Group]="form.formGroup">
               </codx-input>
             </div>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Nhóm công việc">
+            <codx-label fiedName="ProjectName" [formModel]="dialog.formModel" default="Nhóm công việc">
             </codx-label>
-            <codx-input placeholder="Tên dự án" field="projectName" type="text" [crrValue]="projects.projectName"
-              (valueChange)="valueChange($event)">
+            <codx-input field="projectName" [formModel]="dialog.formModel" [Group]="form.formGroup">
             </codx-input>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="ProjectGroupID" formName="Projects" gridViewName="grvProjects" default="Nhóm dự án">
+            <codx-label fiedName="ProjectGroupID" [formModel]="dialog.formModel" default="Nhóm dự án">
             </codx-label>
-            <!-- <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
-              refValue="Projects" loadFull="true" field="projectGroupID" (valueChange)="cbxChange($event)"
-              [multiple]="false" [crrValue]="projects.projectGroupID">
-            </codx-input> -->
-            <!--
-            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án"
-              refValue="Projects" loadFull="true" field="projectGroupID" (valueChange)="cbxChangeProjectGroup($event)"
-              [multiple]="false" [crrValue]="projects.projectGroupID">
-            </codx-input> -->
-
             <!-- LVbao -->
-            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm dự án" field="projectGroupID"
-              refValue="ProjectGroups" loadFull="true" (valueChange)="cbxChangeProjectGroup($event)" [multiple]="false"
-              [crrValue]="projects.projectGroupID">
+            <codx-input [formModel]="dialog.formModel" [Group]="form.formGroup" field="projectGroupID">
             </codx-input>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="CustomerName" formName="Projects" gridViewName="grvProjects" default="Khách hàng">
+            <codx-label fiedName="CustomerName" [formModel]="dialog.formModel" default="Khách hàng">
             </codx-label>
-            <codx-input placeholder="Khách hàng" field="customerName" type="text" [crrValue]="projects.customerName"
-              (valueChange)="valueCus($event)">
+            <codx-input field="customerName" [formModel]="dialog.formModel" [Group]="form.formGroup">
             </codx-input>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Location" formName="Projects" gridViewName="grvProjects" default="Địa điểm">
+            <codx-label fiedName="Location" [formModel]="dialog.formModel" default="Địa điểm">
             </codx-label>
-            <codx-input placeholder="Địa điểm" field="location" type="text" [crrValue]="projects.location"
-              (valueChange)="valueLocation($event)">
+            <codx-input field="location" [formModel]="dialog.formModel" [Group]="form.formGroup">
             </codx-input>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="ProjectManeger" formName="Projects" gridViewName="grvProjects"
-              default="Quản lý dự án">
+            <codx-label fiedName="ProjectManeger" [formModel]="dialog.formModel" default="Quản lý dự án">
             </codx-label>
 
-            <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Quản lý dự án"
-              refValue="AD_Users" loadFull="true" (valueChange)="cbxChangeProjects($event)" [multiple]="false"
-              [crrValue]="projects.projectManeger">
+            <codx-input field="projectManeger" [formModel]="dialog.formModel" [Group]="form.formGroup">
             </codx-input>
 
-            <!-- <codx-input name="projectManeger" type="valuelist" field="projectManeger" placeholder="Quản lý dự án"
-              [crrValue]="projects.projectManeger" (valueChange)="cbxUser($event)">
-            </codx-input> -->
           </div>
           <div class="form-group row mt-3">
             <div class="col-4">
               <label>
-                <codx-label fiedName="StartDate" formName="Projects" gridViewName="grvProjects" default="Ngày bắt đầu">
+                <codx-label fiedName="StartDate" [formModel]="dialog.formModel" default="Ngày bắt đầu">
                 </codx-label>
               </label>
-              <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-                placeholder="datetime" [crrValue]="projects.startDate" format="F" (valueChange)="changeTime($event)">
+              <codx-input field="startDate" [formModel]="dialog.formModel" [Group]="form.formGroup">
               </codx-input>
             </div>
             <div class="col-4">
               <label>
-                <codx-label fiedName="EndDate" formName="Projects" gridViewName="grvProjects" default="Ngày kết thúc">
+                <codx-label fiedName="EndDate" [formModel]="dialog.formModel" default="Ngày kết thúc">
                 </codx-label>
               </label>
-              <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="finishDate"
-                placeholder="datetime" [crrValue]="projects.finishDate" format="F" (valueChange)="changeTime($event)">
+              <codx-input [formModel]="dialog.formModel" [Group]="form.formGroup" field="finishDate">
               </codx-input>
             </div>
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="Memo" formName="Projects" gridViewName="grvProjects" default="Ghi chú">
+            <codx-label fiedName="Memo" [formModel]="dialog.formModel" default="Ghi chú">
             </codx-label>
-            <codx-input type="textarea" field="memo" [crrValue]="projects.memo" class="form-control"
-              (valueChange)="changeMemo($event)"></codx-input>
+            <codx-input field="memo" [formModel]="dialog.formModel" [Group]="form.formGroup"></codx-input>
           </div>
         </div>
       </div>

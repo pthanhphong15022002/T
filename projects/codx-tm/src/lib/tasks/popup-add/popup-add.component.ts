@@ -439,7 +439,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.close();
           this.notiService.notifyCode('TM005');
         }
-      }); //Xài cái này bị la á , đợi fix xong chỉnh lại=))
+      });
   }
 
   updateTask() {
