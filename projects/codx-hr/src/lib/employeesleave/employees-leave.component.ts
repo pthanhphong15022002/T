@@ -69,15 +69,15 @@ export class EmployeesLeaveComponent implements OnInit {
   }
 
   delete(data: any) {
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.notiService.notifyCode('TM004');
-        }
-      });
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
+    //     this.beforeDel(opt)
+    //   )
+    //   .subscribe((res) => {
+    //     if (res[0]) {
+    //       this.notiService.notifyCode('TM004');
+    //     }
+    //   });
   }
 
   beforeDel(opt: RequestOption) {

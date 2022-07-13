@@ -87,12 +87,12 @@ export class RangesKanbanComponent implements OnInit {
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved)
+    /*   if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
-            .delete([this.view.dataService.dataSelected], false)
+            .delete([this.view.dataService.dataSelected])
             .subscribe(x => {
               this.dt.detectChanges();
-            });
+            });  */
       });
     });
   }
