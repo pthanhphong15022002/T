@@ -1,12 +1,12 @@
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-75 m-2">
-    <div class="d-flex justify-content-around bg-body mb-2 p-4 rounded">
-      <div class="w-25 border rounded">
+    <!-- <codx-input type="switch"></codx-input> -->
+    <div class="d-xl-flex justify-content-xl-between bg-body mb-2 p-4 rounded">
+      <div class="border rounded" style="background-color: rgb(4, 222, 183, 0.1);">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="">
-                <span class="icon icon-access_time"></span>
+              <div class="icon icon-access_time" style="color: rgb(4, 222, 183)">
               </div>
               <div>
                 <div class="fw-bold text-gray-400">
@@ -31,11 +31,11 @@
           </div>
         </div>
       </div>
-      <div class="w-25 border rounded">
+      <div class="border rounded" style="background-color: rgb(0, 93, 199, 0.1);">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="icon icon-access_time"></div>
+              <div class="icon icon-access_time" style="color: rgb(0, 93, 199);"></div>
               <div>
                 <div class="fw-bold text-gray-400">
                   <codx-label
@@ -59,13 +59,13 @@
           </div>
         </div>
       </div>
-      <div class="w-25 border rounded">
+      <div class="border rounded" style="background-color: rgb(255, 128, 8, 0.1)">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="icon icon-access_time"></div>
+              <div class="icon icon-access_time" style="color:rgb(255, 128, 8)"></div>
               <div>
-                <div class="text-gray-900 fw-bold mb-2 mt-5">
+                <div class="fw-bold text-gray-400">
                   <codx-label
                     name="lblTask"
                     default="Công việc"
@@ -88,46 +88,42 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-25" style="position: relative">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          [titleStyle]="titleStyle"
-        >
+    <div class="row bg-body mb-2">
+      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+        <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="90%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
-              [minorTicks]="minorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks1"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
                   radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient"
+                  startWidth="17"
+                  endWidth="17"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.availability"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
+                  markerWidth="28"
+                  markerHeight="28"
                   [animation]="animation1"
                 >
                 </e-pointer>
@@ -135,50 +131,55 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Availability</div>
-          <div>{{ dbData?.availability }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center">Availability</p>
+          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ dbData?.availability.toFixed(2) }}
+          </p>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+        <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="90%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
-              [minorTicks]="minorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks1"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
                   radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient"
+                  startWidth="17"
+                  endWidth="17"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.performance"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
+                  markerWidth="28"
+                  markerHeight="28"
                   [animation]="animation1"
                 >
                 </e-pointer>
@@ -186,50 +187,55 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Performance</div>
-          <div>{{ dbData?.performance }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center">Performance</p>
+          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ dbData?.performance.toFixed(2) }}
+          </p>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+        <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="90%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
-              [minorTicks]="minorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks1"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
                   radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient"
+                  startWidth="17"
+                  endWidth="17"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.quality"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
+                  markerWidth="28"
+                  markerHeight="28"
                   [animation]="animation1"
                 >
                 </e-pointer>
@@ -237,50 +243,55 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Quality</div>
-          <div>{{ dbData?.quality }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center">Quality</p>
+          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ dbData?.quality.toFixed(2) }}
+          </p>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+        <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="90%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
-              [minorTicks]="minorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks1"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
                   radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient"
+                  startWidth="17"
+                  endWidth="17"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.kpi"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
+                  markerWidth="28"
+                  markerHeight="28"
                   [animation]="animation1"
                 >
                 </e-pointer>
@@ -288,17 +299,28 @@
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>KPI</div>
-          <div>{{ dbData?.kpi }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center">KPI</p>
+          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+            {{ dbData?.kpi.toFixed(2) }}
+          </p>
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-50 test" style="position: relative">
+    <div class="row bg-body mb-2">
+      <div class="col-xl-6" style="position: relative; width: 450px; height: 200px">
         <ejs-accumulationchart
           id="chart-task-group"
           [legendSettings]="legendSettings"
+          width="450"
+          height="200"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -309,8 +331,8 @@
             ></e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>{{ dbData?.tasks }}</div>
+        <div style="position: absolute; top: 35%; left: 35%">
+          <div class="text-center">{{ dbData?.tasks }}</div>
           <codx-label
             name="lblTasks"
             default="Công việc"
@@ -319,40 +341,101 @@
           </codx-label>
         </div>
       </div>
-      <div class="w-50 test">
-        <ejs-accumulationchart
-          id="chart-rate-done"
-          [legendSettings]="legendSettings"
-        >
-          <e-accumulation-series-collection>
-            <e-accumulation-series
-              [dataSource]="piedata1"
-              xName="x"
-              yName="y"
-              innerRadius="70%"
-            ></e-accumulation-series>
-          </e-accumulation-series-collection>
-        </ejs-accumulationchart>
+      <div class="col-xl-6">
+        <div class="d-flex">
+          <div style="height: 250px; width: 200px">
+            <ejs-circulargauge
+              id="range-container"
+              width="200"
+              height="250"
+              centerX="50%"
+              centerY="50%"
+            >
+              <e-axes>
+                <e-axis
+                  radius="150"
+                  minimum="0"
+                  maximum="100"
+                  startAngle="0"
+                  endAngle="360"
+                  [majorTicks]="majorTicks2"
+                  [labelStyle]="labelStyle2"
+                  [lineStyle]="lineStyle"
+                  [minorTicks]="minorTicks2"
+                  [ranges]="ranges"
+                >
+                  <e-pointers>
+                    <e-pointer
+                      [value]="dbData?.rateDoneTask.toFixed(2)"
+                      roundedCornerRadius="20"
+                      pointerWidth="10"
+                      type="RangeBar"
+                      radius="50%"
+                      color="#357CD2"
+                      [border]="border"
+                      [animation]="animation"
+                    ></e-pointer>
+                  </e-pointers>
+                </e-axis>
+                <e-axis
+                  radius="120"
+                  minimum="0"
+                  maximum="100"
+                  startAngle="0"
+                  endAngle="360"
+                  [majorTicks]="majorTicks2"
+                  [labelStyle]="labelStyle2"
+                  [lineStyle]="lineStyle"
+                  [minorTicks]="minorTicks2"
+                  [ranges]="ranges"
+                >
+                  <e-pointers>
+                    <e-pointer
+                      [value]="dbData?.rateDoneTaskOnTime.toFixed(2)"
+                      roundedCornerRadius="20"
+                      pointerWidth="10"
+                      type="RangeBar"
+                      radius="50%"
+                      color="#20BDAE"
+                      [border]="border"
+                      [animation]="animation"
+                    ></e-pointer>
+                  </e-pointers>
+                </e-axis>
+              </e-axes>
+            </ejs-circulargauge>
+          </div>
+          <div style="width: 200px; margin-top: 70px">
+            <div style="display: flex; justify-content: between">
+              <div class="label1" style="margin-left: 10px"></div>
+              <div>Tỷ lệ hoàn thành công việc</div>
+            </div>
+            <h3>{{ dbData?.rateDoneTask.toFixed(2) }}%</h3>
+            <div style="display: flex; justify-content: between">
+              <div class="label2"></div>
+              <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
+            </div>
+            <h3>{{ dbData?.rateDoneTaskOnTime.toFixed(2) }}%</h3>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row bg-body mb-2">
       <ejs-chart
         style="display: block"
         background="transparent"
-        [chartArea]=""
-        width="100%"
-        [align]="'center'"
+        align="center"
         id="chartbar"
         [primaryXAxis]="columnXAxis"
         [primaryYAxis]="columnYAxis"
         [legendSettings]="legendSettings"
+        width="100%"
       >
         <e-axes>
           <e-axis
             rowIndex="0"
             name="WorkHours"
             opposedPosition="true"
-            title=""
             labelFormat=""
             [minimum]="0"
             [maximum]="100"

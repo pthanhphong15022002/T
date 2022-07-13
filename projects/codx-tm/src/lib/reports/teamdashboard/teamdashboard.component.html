@@ -1,11 +1,13 @@
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-75 m-2">
-    <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-25" style="position: relative">
+    <div class="row bg-body mb-2">
+      <h3>Đánh giá hiệu quả làm việc</h3>
+      <div class="col-lg-3" style="position: relative; height: 350px">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
           centerY="57%"
+          height="350"
           [titleStyle]="titleStyle"
         >
           <e-axes>
@@ -15,7 +17,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -34,7 +36,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.availability"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
@@ -48,14 +50,16 @@
           </e-axes>
         </ejs-circulargauge>
         <div style="position: absolute; top: 50%; left: 50%">
-          <div>{{dbData?.availability}}</div>
+          <div>Availability</div>
+          <div>{{ dbData?.availability }}</div>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
+      <div class="col-lg-3" style="position: relative; height: 350px">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
           centerY="57%"
+          height="350"
           [titleStyle]="titleStyle"
         >
           <e-axes>
@@ -65,7 +69,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -84,7 +88,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.performance"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
@@ -98,14 +102,16 @@
           </e-axes>
         </ejs-circulargauge>
         <div style="position: absolute; top: 50%; left: 50%">
-          <div>{{dbData?.performance}}</div>
+          <div>Performance</div>
+          <div>{{ dbData?.performance }}</div>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
+      <div class="col-lg-3" style="position: relative; height: 350px">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
           centerY="57%"
+          height="350"
           [titleStyle]="titleStyle"
         >
           <e-axes>
@@ -115,7 +121,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -134,7 +140,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.quality"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
@@ -148,14 +154,16 @@
           </e-axes>
         </ejs-circulargauge>
         <div style="position: absolute; top: 50%; left: 50%">
-          <div>{{dbData?.quality}}</div>
+          <div>Quality</div>
+          <div>{{ dbData?.quality }}</div>
         </div>
       </div>
-      <div class="w-25" style="position: relative">
+      <div class="col-lg-3" style="position: relative; height: 350px">
         <ejs-circulargauge
           (load)="load($event)"
           style="display: block"
           centerY="57%"
+          height="350"
           [titleStyle]="titleStyle"
         >
           <e-axes>
@@ -165,7 +173,7 @@
               startAngle="230"
               endAngle="130"
               minimum="0"
-              maximum="18"
+              maximum="150"
               [labelStyle]="labelStyle"
               [majorTicks]="majorTicks"
               [minorTicks]="minorTicks"
@@ -184,7 +192,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="value"
+                  [value]="dbData?.kpi"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
@@ -198,26 +206,31 @@
           </e-axes>
         </ejs-circulargauge>
         <div style="position: absolute; top: 50%; left: 50%">
-          <div>{{dbData?.kpi}}</div>
+          <div>KPI</div>
+          <div>{{ dbData?.kpi }}</div>
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-around bg-body mb-2">
-      <div class="w-50 test">
+    <div class="row bg-body mb-2">
+      <h3>Thống kê theo nhóm công việc</h3>
+      <div class="col-lg-6" style="height: 350px">
         <ejs-treemap
           id="container"
           style="display: block"
           [dataSource]="data"
           weightValuePath="percentage"
           rangeColorValuePath="percentage"
+          height="350"
           [leafItemSettings]="leafItemSettings"
         >
         </ejs-treemap>
       </div>
-      <div class="w-50 test" style="position: relative">
+      <div class="col-lg-6" style="position: relative; height: 350px">
         <ejs-accumulationchart
           id="chart-rate-done"
-          [legendSettings]="legendSettings"
+          width="400"
+          height="350"
+          [legendSettings]="legendRateDoneSettings"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -231,6 +244,7 @@
       </div>
     </div>
     <div class="row bg-body mb-2">
+      <h3>Thống kê công việc hoàn thành và số giờ thực hiện</h3>
       <ejs-chart
         style="display: block"
         background="transparent"

@@ -5,7 +5,7 @@
         <ng-container [ngTemplateOutlet]="leftMenu"></ng-container>
       </div>
     </div>
-    <div class="page-home page-master">
+    <div class="page-home page-master container-fluid">
       <div class="d-flex flex-row">
         <div id="codx_master" class="background_form">
           <div class="codx_master_container">
@@ -76,14 +76,24 @@
           </div>
         </div>
         <div class="accountinfo">
-          <!-- <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.logoFile">
-          </codx-img> -->
-          <codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label>
+          <div class="row">
+            <div class="col-1 img_option">
+              <img alt="" class="img_logo" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
+            </div>
+            <div class="col-11">
+              <strong><codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label> </strong>
+            </div>
+          </div>
         </div>
         <div class="accountinfo">
-          <!-- <codx-img class="symbol symbol-40 symbol-circle mr-4" [objectId]="data.logoFile">
-          </codx-img> -->
-          <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label>
+          <div class="row">
+            <div class="col-4 img_optionFull">
+              <img alt="" class="img_logoFull" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
+            </div>
+            <div class="col-8">
+              <strong> <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label> </strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -91,14 +101,14 @@
     <!-- Contact Information -->
     <div class="body_detail" *ngIf="data">
       <div class="row content">
-        <div class="col-6">
+        <div class="col-6 pb-5">
           <strong>
             <codx-label fiedName="" class="title_contact" formName="" gridViewName="" default="Liên hệ"></codx-label>
           </strong>
         </div>
-        <div class="col-6">
+        <div class="col-6 pb-5">
           <div class="button_edit">
-            <button (click)="clickEditContact(data)"> <i class="icon-edit_file icon-18"></i> </button>
+            <button (click)="clickEditContact(data)"><i class="icon-edit_file icon-18"></i></button>
           </div>
         </div>
         <div class="col-5">
@@ -149,28 +159,35 @@
         </div>
       </div>
       <div class="footer_content">
-        <div class="row">
+        <div class="row pb-5">
           <div class="col-6">
             <div class="row">
-              <div class="col-2">
-                <codx-img #imageAvatar [objectId]="data?data.recID:''" [objectName]="data?data.contactName:''"
-                  objectType="AD_CompanySettings" [width]="80" [height]="80">
-                </codx-img >
+              <div class="col-3">
+                <div *ngIf="!data.Logo; else imgDefault">
+                  <img class="img_avatar" src="../../../assets/img/{{data.Logo}}" />
+                </div>
+                  <ng-template #imgDefault> <img class="img_avatar" src="../../../assets/img/avatar.png" /></ng-template>
               </div>
-              <div class="col-10">
-                <strong>
-                  <codx-label fiedName="" formName="" gridViewName="" [default]=""></codx-label>
-                  <span>{{data.contactName}}</span>
-                </strong>
-                <br>
-                <i>
-                  <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label>
-                </i> <br>
-                <codx-label fiedName="" formName="" gridViewName="" default="Email">
-                </codx-label><span>{{data.personalEmail}}</span> <br>
-                <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
+              <div class="col-9">
+                <div class="col-12 contactName">
+                  <strong>
+                    <span>{{data.contactName}}</span>
 
-                </codx-label> {{data.mobile}} <br>
+                  </strong>
+                </div>
+                <div class="col-12 personal_option">
+                  <i>
+                    <codx-label fiedName="" formName="" gridViewName="" [default]="data.jobTitle"></codx-label>
+                  </i>
+                </div>
+                <div class="col-12 personal_option">
+                  <codx-label fiedName="" formName="" gridViewName="" default="Email">
+                  </codx-label><span>{{data.personalEmail}}</span> <br>
+                </div>
+                <div class="col-12 personal_option">
+                  <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
+                  </codx-label>{{data.mobile}} <br>
+                </div>
               </div>
             </div>
           </div>

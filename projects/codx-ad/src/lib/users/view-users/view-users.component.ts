@@ -47,7 +47,7 @@ export class ViewUsersComponent implements OnInit {
 
   search(data) {
       this.allRoles = this.lstRoles.filter((val) =>
-      val.customName.includes(data)
+      val.customName.toLowerCase().includes(data.toLowerCase())
     );
   }
   

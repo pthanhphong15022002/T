@@ -71,12 +71,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onInit(): void {
-    // this.getEvents();
-    this.getNoteData();
+    this.getParam();
+    // this.getNoteData();
     this.getMaxPinNote();
   }
 
   ngAfterViewInit() {
+    console.log("check listView", this.lstView.dataService.data);
   }
 
   requestEnded(evt: any) {
@@ -95,48 +96,64 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   // getEvents() {
-  //   this.api
-  //     .callSv(
-  //       'SYS',
-  //       'ERM.Business.CM',
-  //       'ParametersBusiness',
-  //       'GetDataByRecIDAsync',
-  //       ['WP_Calendars', '', 'SettingShow']
-  //     )
-  //     .subscribe((res) => {
-  //       if (res && res.msgBodyData) {
-  //         this.param = res.msgBodyData[0];
-  //         this.TM_Tasks = this.param[0];
-  //         this.WP_Notes = this.param[1];
-  //         this.TM_TasksParam = this.param[2].TM_Tasks;
-  //         this.WP_NotesParam = this.param[2].WP_Notes;
+  // this.api
+  //   .callSv(
+  //     'SYS',
+  //     'ERM.Business.CM',
+  //     'ParametersBusiness',
+  //     'GetDataByRecIDAsync',
+  //     ['WP_Calendars', '', 'SettingShow']
+  //   )
+  //   .subscribe((res) => {
+  //     if (res && res.msgBodyData) {
+  //       this.param = res.msgBodyData[0];
+  //       this.TM_Tasks = this.param[0];
+  //       this.WP_Notes = this.param[1];
+  //       this.TM_TasksParam = this.param[2].TM_Tasks;
+  //       this.WP_NotesParam = this.param[2].WP_Notes;
 
-  //         for (let i = 0; i < this.WP_Notes?.length; i++) {
-  //           var date = this.WP_Notes[i]?.createdOn;
-  //           var daq = new Date(Date.parse(date));
-  //           var d = daq.toLocaleDateString();
-  //         }
-  //         this.getNumberNotePin();
+  //       for (let i = 0; i < this.WP_Notes?.length; i++) {
+  //         var date = this.WP_Notes[i]?.createdOn;
+  //         var daq = new Date(Date.parse(date));
+  //         var d = daq.toLocaleDateString();
   //       }
-  //     });
+  //       this.getNumberNotePin();
+  //     }
+  //   });
   // }
 
-  getNoteData() {
-    var dtWP_Notes = [];
-    var dtTM_Tasks = [];
-    this.data.forEach((res) => {
-      if (res?.type == 'WP_Notes') {
-        dtWP_Notes.push(res);
-      } else if (res?.type == 'TM_Tasks') {
-        dtTM_Tasks.push(res);
-      }
-    })
-    this.WP_Notes = dtWP_Notes;
-    this.TM_Tasks = dtTM_Tasks;
-    this.TM_TasksParam = this.data[1].TM_Tasks;
-    this.WP_NotesParam = this.data[1].WP_Notes;
-    this.getNumberNotePin();
+  getParam() {
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetDataParamAsync',
+        ['WP_Calendars', '', 'SettingShow']
+      )
+      .subscribe((res) => {
+        if (res && res.msgBodyData) {
+          var dt = res.msgBodyData;
+          this.TM_TasksParam = dt[0].TM_Tasks;
+          this.WP_NotesParam = dt[0].WP_Notes;
+        }
+      });
   }
+
+  // getNoteData() {
+  //   var dtWP_Notes = [];
+  //   var dtTM_Tasks = [];
+  //   this.data.forEach((res) => {
+  //     if (res?.type == 'WP_Notes') {
+  //       dtWP_Notes.push(res);
+  //     } else if (res?.type == 'TM_Tasks') {
+  //       dtTM_Tasks.push(res);
+  //     }
+  //   })
+  //   this.WP_Notes = dtWP_Notes;
+  //   this.TM_Tasks = dtTM_Tasks;
+  //   this.getNumberNotePin();
+  // }
 
   onLoad(args): void {
     this.setEvent(args.element, args);
@@ -293,6 +310,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onValueChange(args: any) {
+    debugger;
     this.changeDateSelect = true;
     this.daySelected = args.value.toLocaleDateString();
     let title: string = '';
