@@ -5,9 +5,10 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
   ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   ChangeDetectorRef,
@@ -44,7 +45,7 @@ export class AssignInfoComponent implements OnInit {
   disableAddToDo = true;
   grvSetup: any;
   param: any;
-  @Input() task = new TM_Tasks();
+  task: TM_Tasks = new TM_Tasks();
   functionID: string;
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
@@ -81,7 +82,33 @@ export class AssignInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(!this.task.taskID)
+    this.setDefault();
+    else
     this.openInfo();
+  }
+
+  setDefault(){
+    this.api
+    .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      this.functionID,
+      'TM_Tasks',
+      'taskID',
+    ])
+    .subscribe(
+    (response: any) => {
+        if (response) {
+          response['_uuid'] = response['taskID'] ?? Util.uid();
+          response['idField'] = 'taskID';
+          response['isNew'] = function () {
+            return response[response.taskID] != response['_uuid'];
+          };
+          response['taskID'] = response['_uuid'];
+          this.task = response;
+        this.openInfo();
+        }
+      }
+    );
   }
 
   showPanel() {

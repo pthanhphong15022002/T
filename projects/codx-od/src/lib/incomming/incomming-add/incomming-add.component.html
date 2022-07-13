@@ -75,12 +75,11 @@
         refValue="AgencyDepts"
         type="combobox"  
         placeholder="Phòng ban"
+        [value]="dispatch?.agencyID"
         style="width:100%"
         (valueChange)="changeValueDept($event)"
-        [pageSize]="'20'"
+        field="agencyName"
       > 
-    <!--  [predicate]="'parentID@0'"
-      [dataValue]="idAgency" -->
       </codx-combobox>
       <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')">Add</span>
     </div>
