@@ -1,22 +1,18 @@
-<div class="task-row py-3 px-6 ">
-  <table class="table w-100 table-action-menu ">
-    <tbody>
-      <tr >
-        <td class="" style="width: 20%;">
-          <div class="a" [ngbTooltip]="data.taskName">
-            {{ data?.taskName }}</div>
-        </td>
-        <td style="width: 5%">
-          <div class="d-flex align-items-center text-dark me-6">
-            <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
+<div class="d-flex flex-row">
+  <td class="col-2 w-25">
+    <div class="a" [ngbTooltip]="data.taskName">
+      {{ data?.taskName }}</div>
+  </td>
+  <td class="col-1 w-5">
+    <div class="align-items-center text-dark me-6">
+      <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
                   data?.priority | vll: 'L0186':'textColor' | async
                     ">
-            </span>
-          </div>
-        </td>
-        <td class="" style="width: 10%; text-align: left">
-          <div class="d-status">
-            <div class="badge badge-danger me-2 label-status" [style.border-color]="
+      </span>
+    </div>
+  </td>
+  <td class="col-1 w-10">
+    <div class="badge badge-danger me-2 label-status" [style.border-color]="
                     (data?.status | vll: 'L0614':'textColor' | async) +
                     '30'
                   " [style.background-color]="
@@ -25,85 +21,73 @@
                   " [style.color]="
                   data?.status | vll: 'L0614':'textColor' | async
                   " style="border: none">
-              {{ data?.status | vll: "L0614":"text" | async }}
-            </div>
+      {{ data?.status | vll: "L0614":"text" | async }}
+    </div>
+  </td>
+  <td class="col-2 w-15">
+    <div class="dropdown ml-2 " [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+      [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom"
+      autoClose="outside">
+      <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <div class="d-flex">
+          <span class=" icon-assignment icon-16  text-dark-50 mr-1"></span>
+          <div class="b" *ngIf="data.memo" [innerHTML]="data?.memo">
           </div>
-        </td>
-        <td class="" style="width: 20%; text-align: center">
-          <div >
-            <div class="dropdown ml-2" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
-              [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
-              placement="bottom" autoClose="outside">
-              <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="icon-assignment icon-16 text-dark-50 mr-1"></span>
-                <div class="b" *ngIf="data.memo" [innerHTML]="data?.memo">
-                </div>
-                <span *ngIf="!data.memo" class="b">Không có mô tả</span>
-              </button>
-
-            </div>
-          </div>
-        </td>
-        <td class="" style="width: 15%;">
-          <div class="d-flex align-items-center" >
-            <div class=" symbol-hover justify-content-end"
-              *ngIf="data?.category == '3' || data?.category == '4'">
-              <codx-img popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom"
-                #empPopover="ngbPopover" [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, data)"
-                (mouseleave)="PopoverEmp(empPopover, null)" class="symbol symbol-30 symbol-circle ml-1"
-                [objectId]="data?.assignTo" objectName="AD_Users" [numberImages]="4">
-              </codx-img>
-            </div>
-            <div class="symbol-hover justify-content-end"
-              *ngIf="data?.category == '1' || data?.category == '2'">
-              <codx-img class="symbol symbol-30 symbol-circle ml-1" [objectId]="data?.assignTo" objectName="AD_Users" [numberImages]="4">
-              </codx-img>
-            </div>
-            <!-- <div class="symbol-group symbol-hover justify-content-end"
-                  *ngIf="data?.category == '1' || data?.category == '2'">
-                  <codx-img class="symbol symbol-30 symbol-circle w-30px" [objectId]="data?.assignTo" objectType="AD_Users"
-                    width="40">
-                  </codx-img>
-                </div> -->
-          </div>
-        </td>
-        <td class="" style="width: 15%;">
-          <div class="d-flex align-items-center ">
-            <div class="text-dark font-weight-bold font-size-sm mr-1">
-              Ngày hết hạn:
-            </div>
-            <div class="text-dark-50 font-size-sm">
-              {{data.dueDate|date:'dd/MM/yyyy'}}
-            </div>
-          </div>
-        </td>
-        <td class="" style="width: 10%;">
-          <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center mr-3 {{data?.comments  ? 'text-success' : 'text-dark-50'}}">
-              <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
-              <span class="ml-1"> {{data?.comments}}</span>
-            </div>
-            <div class="d-flex align-items-center mr-3 {{data?.todo ? 'text-success' : 'text-dark-50'}}">
-              <span class="text-hover-primary icon-check-correct icon-16"></span>
-              <span class="ml-1">
-                {{data?.todo}}</span>
-            </div>
-            <div class="d-flex align-items-center {{data?.attachments ? 'text-success' : 'text-dark-50'}}">
-              <span class="text-hover-primary icon-attach_file icon-16"></span>
-              <span>
-                {{data?.attachments}}
-              </span>
-            </div>
-          </div>
-        </td>
-        <td class="" style="width: 5%;">
-          <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover">
-          </codx-mfunc>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <span *ngIf="!data.memo" class="b">Không có mô tả</span>
+        </div>
+      </button>
+    </div>
+  </td>
+  <td class="col-2 w-20">
+    <div class="d-flex" >
+      <div class=" symbol-hover justify-content-end" *ngIf="data?.category == '3' || data?.category == '4'">
+        <codx-img popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom" #empPopover="ngbPopover"
+          [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, data)" (mouseleave)="PopoverEmp(empPopover, null)"
+          class="symbol symbol-30 symbol-circle ml-1" [objectId]="data?.assignTo" objectName="AD_Users"
+          [numberImages]="4">
+        </codx-img>
+      </div>
+      <div class="symbol-hover justify-content-end" *ngIf="data?.category == '1' || data?.category == '2'">
+        <codx-img class="symbol symbol-30 symbol-circle ml-1" [objectId]="data?.assignTo" objectName="AD_Users"
+          [numberImages]="4">
+        </codx-img>
+      </div>
+    </div>
+  </td>
+  <td class="col-2 w-10">
+    <div class="d-flex align-items-center ">
+      <div class="text-dark font-weight-bold font-size-sm mr-1">
+        Ngày hết hạn:
+      </div>
+      <div class="text-dark-50 font-size-sm">
+        {{data.dueDate|date:'dd/MM/yyyy'}}
+      </div>
+    </div>
+  </td>
+  <td class="col-1 w-10">
+    <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center mr-4 {{data?.comments  ? 'text-success' : 'text-dark-50'}}">
+        <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
+        <span class="ml-1"> {{data?.comments}}</span>
+      </div>
+      <div class="d-flex align-items-center mr-4 {{data?.todo ? 'text-success' : 'text-dark-50'}}">
+        <span class="text-hover-primary icon-check-correct icon-16"></span>
+        <span class="ml-1">
+          {{data?.todo}}</span>
+      </div>
+      <div class="d-flex align-items-center mr-4{{data?.attachments ? 'text-success' : 'text-dark-50'}}">
+        <span class="text-hover-primary icon-attach_file icon-16"></span>
+        <span>
+          {{data?.attachments}}
+        </span>
+      </div>
+    </div>
+  </td>
+  <td class="col-1 w-5">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover">
+    </codx-mfunc>
+  </td>
 </div>
 
 <ng-template #popDetail>
@@ -111,12 +95,11 @@
     <ng-container>
       <div class="d-flex flex-column flex-grow-1">
         <div class="result-title text-dark font-size-h5 mb-2">Mô tả chi tiết</div>
-        <div class="text-dark-75 font-size-md">
-          {{popoverDetail?.memo}}
+        <div class="text-dark-75 font-size-md" [innerHTML]="popoverDetail?.memo">
           <div class="d-flex align-items-center mt-2">
             <div class="d-flex align-items-center me-2">
               <span class="icon-create icon-18 text-dark-50"></span>
-              <span class="text-dark-50 text-italic"> {{popoverDetail?.memo2}}
+              <span class="text-dark-50 text-italic" [innerHTML]="popoverDetail?.memo2"> 
               </span>
             </div>
           </div>
