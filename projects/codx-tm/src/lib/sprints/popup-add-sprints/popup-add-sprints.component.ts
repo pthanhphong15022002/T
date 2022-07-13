@@ -25,7 +25,7 @@ import { TM_Sprints } from '../../models/TM_Sprints.model';
   styleUrls: ['./popup-add-sprints.component.css'],
 })
 export class PopupAddSprintsComponent implements OnInit {
-  master = new TM_Sprints();
+  master: any;
   title = 'Thêm Task Board';
   readOnly = false;
   listUserDetail = [];
@@ -79,7 +79,7 @@ export class PopupAddSprintsComponent implements OnInit {
       this.master.iterationName.trim() == ''
     )
       return this.notiService.notify('Tên Task Board không được để trống !');
-    if (this.master.projectID)
+    if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
     if (!this.master.isShared)
       this.master.resources = null;
@@ -105,14 +105,14 @@ export class PopupAddSprintsComponent implements OnInit {
   beforeSave(op: any, isAdd) {
     var data = [];
     op.method = 'AddEditSprintAsync';
-    data = [this.master, isAdd];
+    data = [this.dialog.dataService.dataSelected, isAdd];
     op.data = data;
     return true;
   }
 
   closeTaskBoard() {
     this.listUserDetail = [];
-    this.master = new TM_Sprints();
+    this.master = {};
   }
 
   getListUser(listUser) {

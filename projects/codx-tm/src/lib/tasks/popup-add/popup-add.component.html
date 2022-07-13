@@ -182,10 +182,10 @@
               </button>
             </div>
 
-            <div class="d-flex align-items-center file-item mt-5">
+            <div >
               <codx-attachment #attachment [objectType]="dialog.formModel.entityName"
-                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel"
+                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1" 
+                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel" 
                 [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
                 displayThumb="full">
               </codx-attachment>

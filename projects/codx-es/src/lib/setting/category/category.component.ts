@@ -140,6 +140,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
 
     this.views = [
       {
