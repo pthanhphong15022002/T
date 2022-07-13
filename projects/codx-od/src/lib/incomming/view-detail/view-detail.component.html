@@ -11,50 +11,66 @@
           </codx-temp-full>
         </div>
         <div class="d-flex mt-2">
-          <div class="d-flex me-6">
-            <span class="text-dark me-2">Phân loại:</span>
-            <span class="text-gray-600">{{fmTextValuelist(data?.category,"4")}}</span>
+          <div class="float-left me-6">
+            <div>
+              <codx-label [default]="gridViewSetup?.Category?.headerText"></codx-label>
+            </div>
+            <div>
+              <codx-vll
+                [name]="this.gridViewSetup?.Category?.referedValue"
+                [value]="data['category']"
+                [showText]="true"
+                textCss="text-gray-600"
+              >
+              </codx-vll>
+            </div>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Mức độ khẩn:</span>
-            <ng-container *ngIf="data?.urgency">
-              <span class="icon-flag icon-16 me-2" [style.color]="getTextColor(data?.urgency,'2')"></span>
-              <span class="text-gray-600">{{fmTextValuelist(data?.urgency,"2")}}</span>
-            </ng-container>
+            <codx-label [default]="gridViewSetup?.Urgency?.headerText" [ngClass]="'me-1'"></codx-label>
+            <codx-vll
+              [name]="this.gridViewSetup?.Urgency?.referedValue"
+              [value]="data['urgency']"
+              [showText]="true"
+              [showIcon]="true"
+              textCss="text-gray-600"
+            >
+            </codx-vll>
             <!-- icon-flag -->
           </div>
           <div class="d-flex align-items-center">
-            <span class="text-dark me-2">Độ bảo mật:</span>
-            <ng-container *ngIf="data?.security">
-              <span class="icon-security icon-14 me-1" [style.color]="getTextColor(data?.security,'1')"></span>
-              <span class="text-gray-600">{{fmTextValuelist(data?.security,"1")}}</span>
-            </ng-container>
+            <codx-label [default]="gridViewSetup?.Security?.headerText" [ngClass]="'me-1'"></codx-label>
+            <codx-vll
+              [name]="this.gridViewSetup?.Security?.referedValue"
+              [value]="data['security']"
+              [showText]="true"
+              [showIcon]="true"
+              textCss="text-gray-600"
+            >
+            </codx-vll>
           </div>
         </div>
         <div class="d-flex mt-2">
           <div class="d-flex me-6">
-            <span class="text-dark me-2">Ngày gửi:</span>
-            <span class="text-gray-600">{{data?.createdOn | date:"dd/MM/yyyy"}}</span>
+            <codx-label [default]="gridViewSetup?.CreatedOn?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.createdOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Ngày nhận:</span>
-            <span class="text-gray-600">{{data?.dispatchOn | date:"dd/MM/yyyy"}}</span>
-            <!-- icon-flag -->
+            <codx-label [default]="gridViewSetup?.DispatchOn?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex">
-            <span class="text-dark me-2">Ngày hết hạn:</span>
-            <span class="text-gray-600">{{data?.deadline | date:"dd/MM/yyyy"}}</span>
+            <codx-label [default]="gridViewSetup?.Deadline?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.deadline ? (data?.deadline | date:'dd/MM/yyyy') : gridViewSetup?.Deadline?.headerText" ngClass="text-gray-600"></codx-label>
           </div>
         </div>
         <div class="d-flex mt-2">
           <div class="d-flex me-6">
-            <span class="text-dark me-2">Số văn bản:</span>
-            <span class="text-gray-600">{{data?.refNo}}</span>
+            <codx-label [default]="gridViewSetup?.RefNo?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.refNo" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Ngày:</span>
-            <span class="text-gray-600">{{data?.refDate | date:"dd/MM/yyyy"}}</span>
-            <!-- icon-flag -->
+            <codx-label [default]="gridViewSetup?.RefDate?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.refDate ? (data?.refDate | date:'dd/MM/yyyy') : gridViewSetup?.RefDate?.headerText" ngClass="text-gray-600"></codx-label>
           </div>
         </div>
         <div class="d-flex mt-1">
