@@ -5,6 +5,7 @@ import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallF
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { FolderComponent } from '../folder/folder.component';
@@ -380,14 +381,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT102":
         {
           if(this.checkOpenForm(funcID))
-          {
+          { 
+            var task = new TM_Tasks();
+            task.refID =datas?.recID ;
+            task.refType = this.view?.formModel.entityName;
             let option = new SidebarModel();
-            option.DataService = this.view?.currentView?.dataService;
-            option.FormModel = this.view?.currentView?.formModel;
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.view?.formModel;
             option.Width = '800px';
             this.dialog = this.callfunc.openSide(
               AssignInfoComponent,
-              [{refID : datas?.recID , refType : this.view?.currentView?.formModel.entityName}],
+              [task],
               option
             );
             this.dialog.closed.subscribe((e) => {
