@@ -337,7 +337,8 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected = this.view.dataService.dataSelected;
+          this.itemSelected = e?.event;
+          this.dt.detectChanges();
         });
       });
   }
@@ -487,7 +488,9 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  this.view.dataService.update(taskAction).subscribe();
+                  res.forEach(obj=>{
+                    this.view.dataService.update(obj).subscribe();
+                  })               
                   this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
@@ -515,6 +518,12 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     )
+    this.dialog.closed.subscribe(e=>{
+      if(e?.event){     
+          this.itemSelected =e?.event;
+          this.dt.detectChanges();
+      }
+    })
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
