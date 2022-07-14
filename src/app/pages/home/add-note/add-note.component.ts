@@ -221,8 +221,7 @@ export class AddNoteComponent implements OnInit {
           }
           this.noteService.data.next(res);
           this.dialog.close()
-          // this.data.push(res);
-          this.dialog.dataService.add(res, 0).subscribe();
+          // this.dialog.dataService.add(res, 0).subscribe();
           if (this.note?.showCalendar == true) {
             var today: any = document.querySelector(
               ".e-footer-container button[aria-label='Today']"
@@ -257,6 +256,9 @@ export class AddNoteComponent implements OnInit {
         if (res) {
           if (this.checkFile == true)
             this.attachment.saveFiles();
+
+          debugger;
+          this.dialog.dataService.update(res).subscribe();
           this.dialog.close();
           for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].recID == this.note?.recID) {
