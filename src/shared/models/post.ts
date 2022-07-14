@@ -1,3 +1,5 @@
+import { Permission } from "./file.model";
+
 export class Post {
   id: string;
   connectId: string;
@@ -5,6 +7,8 @@ export class Post {
   userName: string;
   status: string;
   content: string;
+  approveControl:string;
+  permissions:Permission[];
   thumb: string;
   title: string;
   subDescription: string;
@@ -42,4 +46,5 @@ export class Post {
   share: any;
   shareName: string;
   shortConent: string;
+
 }

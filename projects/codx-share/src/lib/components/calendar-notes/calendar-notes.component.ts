@@ -60,6 +60,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   fromDate: any;
   toDate: any;
   arrDate: any = [];
+  dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -78,9 +79,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   onInit(): void {
     this.getMaxPinNote();
     this.noteService.data.subscribe((res) => {
-      (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
-         this.changeDetectorRef.detectChanges();
-      });
+      if (this.lstView) {
+        (this.lstView.dataService as CRUDService).add(res).subscribe(dt => {
+          this.WP_Notes.push(res);
+          this.setEventWeek();
+          this.changeDetectorRef.detectChanges();
+        });
+      }
     })
   }
 
@@ -379,14 +384,25 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
     };
+    let option = new DialogModel();
+    option.DataService = this.lstView.dataService as CRUDService;
+    option.FormModel = this.lstView.formModel;
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
       600,
       450,
       '',
-      obj
+      obj,
+      '',
+      option,
     )
+
+    // this.dialog.closed.subscribe(x => {
+    //   if (x.event) {
+    //     (this.lstView.dataService as CRUDService).update(x.event).subscribe();
+    //   }
+    // });
 
     this.itemUpdate = data;
     this.listNote = this.itemUpdate.checkList;
@@ -514,14 +530,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       )
       .subscribe((res) => {
         if (res) {
-          // this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID)
-          this.view.dataService
-          .delete([this.view.dataService.dataSelected], true)
-          .subscribe((res) => {
-            if (res[0]) {
-              // this.itemSelected = this.view.dataService.data[0];
-            }
-          });
+          (this.lstView.dataService as CRUDService).remove(res).subscribe();
+          this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID);
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"
@@ -533,11 +543,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
-  // beforeDel(opt: RequestOption) {
-  //   opt.methodName = 'DeleteTaskAsync';
-  //   opt.data = this.itemSelected.taskID;
-  //   return true;
-  // }
 
   openFormNoteBooks(item) {
     var obj = {

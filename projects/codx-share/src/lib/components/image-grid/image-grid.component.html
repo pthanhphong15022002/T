@@ -1,8 +1,17 @@
 <ng-container *ngIf="images.length">
-  <ng-container [ngSwitch]="images.length">
+  <div [ngSwitch]="images.length" class="position-relative">
+    <ng-container *ngIf="showBtnRemove">
+      <label  (click)="removeImg()" class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+        data-kt-image-input-action="remove"
+        data-bs-toggle="tooltip"
+        data-bs-dismiss="click"
+        title="Remove avatar">
+        <span class="icon-close icon-14 "></span>
+      </label>
+    </ng-container>
     <ng-container *ngSwitchCase="1">
       <div class="feed-1pic">
-        <ng-container *ngIf="images[0] ;else else0">
+        <ng-container *ngIf="images[0]">
           <img class="w-100 rounded min-h-250px" [src]="images[0].avatar" />
         </ng-container>
         <ng-template #else0>
@@ -15,7 +24,7 @@
     <ng-container *ngSwitchCase="2">
       <div class="row row-custom feed-2pic m-0">
         <div class="col-7 pe-2 ps-0">
-          <ng-container *ngIf="images[0];else else0">
+          <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-250px" [src]="images[0].avatar" />
           </ng-container>
           <ng-template #else0>
@@ -25,7 +34,7 @@
           </ng-template>
         </div>
         <div class="col-5 px-0">
-          <ng-container *ngIf="images[1];else else1">
+          <ng-container *ngIf="images[1]">
             <img class="w-100 rounded h-250px" [src]="images[1].avatar" />
           </ng-container>
           <ng-template #else1>
@@ -39,7 +48,7 @@
     <ng-container *ngSwitchCase="3">
       <div class="row row-custom feed-3pic m-0">
         <div class="col-7 pe-2">
-          <ng-container *ngIf="images[0];else else0">
+          <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-320px" [src]="images[0].avatar" />
           </ng-container>
           <ng-template #else0>
@@ -49,7 +58,7 @@
           </ng-template>
         </div>
         <div class="col-5 px-0">
-          <ng-container *ngIf="images[1];else else1">
+          <ng-container *ngIf="images[1]">
             <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
           </ng-container>
           <ng-template #else1>
@@ -57,7 +66,7 @@
               <!-- <source [src]="images[1].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images[2];else else2">
+          <ng-container *ngIf="images[2]">
             <img class="w-100 rounded h-150px mt-2" [src]="images[2].avatar" />
           </ng-container>
           <ng-template #else2>
@@ -71,7 +80,7 @@
     <ng-container *ngSwitchCase="4">
       <div class="row row-custom feed-4pic m-0">
         <div class="col-5 pe-2">
-          <ng-container *ngIf="images[0];else else0">
+          <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-320px" [src]="images[0].avatar" />
           </ng-container>
           <ng-template #else0>
@@ -81,7 +90,7 @@
           </ng-template>
         </div>
         <div class="col-7 px-0">
-          <ng-container *ngIf="images[1];else else1">
+          <ng-container *ngIf="images[1]">
             <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
           </ng-container>
           <ng-template #else1>
@@ -91,7 +100,7 @@
           </ng-template>
           <div class="row row-custom mt-2 mx-0">
             <div class="col-6 ps-0 pe-2">
-              <ng-container *ngIf="images[2];else else2">
+              <ng-container *ngIf="images[2]">
                 <img class="w-100 rounded h-150px" [src]="images[2].avatar" />
               </ng-container>
               <ng-template #else2>
@@ -101,7 +110,7 @@
               </ng-template>
             </div>
             <div class="col-6 px-0">
-              <ng-container *ngIf="images[3] ;else else3">
+              <ng-container *ngIf="images[3]">
                 <img class="w-100 rounded h-150px" [src]="images[3].avatar" />
               </ng-container>
               <ng-template #else3>
@@ -117,7 +126,7 @@
     <ng-container *ngSwitchDefault>
       <div class="row row-custom feed-5pic m-0">
         <div class="col-7 pe-2">
-          <ng-container *ngIf="images[0];else else0">
+          <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-150px" [src]="images[0].avatar" />
           </ng-container>
           <ng-template #else0>
@@ -127,7 +136,7 @@
           </ng-template>
           <div class="row row-custom mt-2 mx-0">
             <div class="col-6 ps-0 pe-2">
-              <ng-container *ngIf="images[1];else else1">
+              <ng-container *ngIf="images[1]">
                 <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
               </ng-container>
               <ng-template #else1>
@@ -137,7 +146,7 @@
               </ng-template>
             </div>
             <div class="col-6 px-0">
-              <ng-container *ngIf="images[2] ;else else2">
+              <ng-container *ngIf="images[2]">
                 <img class="w-100 rounded h-150px" [src]="images[2].avatar" />
               </ng-container>
               <ng-template #else2>
@@ -149,7 +158,7 @@
           </div>
         </div>
         <div class="col-5 px-0">
-          <ng-container *ngIf="images[3] ;else else3">
+          <ng-container *ngIf="images[3]">
             <img class="w-100 rounded h-150px" [src]="images[3].avatar" />
           </ng-container>
           <ng-template #else3>
@@ -157,7 +166,7 @@
               <!-- <source [src]="images[3].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images[4] ;else else4">
+          <ng-container *ngIf="images[4]">
             <img class="w-100 rounded h-150px mt-2" [src]="images[4].avatar" />
           </ng-container>
           <ng-template #else4>
@@ -173,5 +182,5 @@
         </div>
       </div>
     </ng-container>
-  </ng-container>
+  </div>
 </ng-container>
