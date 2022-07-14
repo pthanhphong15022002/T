@@ -438,4 +438,98 @@
 //   }
 // }
 
+::ng-deep  {
+/*** boostrap tabs ****/
+.codx-form{
+    .e-tab{
+        height: 100%!important;              
+    } 
+    .e-tab .e-tab-header.e-vertical {
+        max-width: 220px;
+        width: 100% !important;
+    }
 
+    .e-tab .e-tab-header .e-toolbar-item {
+        border: 0 !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+        color: #212529;
+        border: 0 !important;
+        font-weight: 600;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+      //  color: $primary-dark;
+      color: #212529;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+        text-transform: none;
+    }
+
+    .e-content.e-lib {
+        padding-left: 25px;
+    }
+
+    .e-tab .e-tab-header.e-vertical::before {
+        display: none !important;
+    }
+
+    .e-tab.e-vertical-tab::before {
+        border-width: 0 1px 0 0;
+        content: "";
+        display: block;
+    }
+
+    .e-tab.e-vertical-tab::before {
+        bottom: 0;
+        height: 100%;
+        left: 220px;
+        top: 0;
+        position: absolute;
+    }
+
+    .e-tab.e-vertical-tab::before {
+        border-color: #3333330f;
+        border-style: solid;
+    }
+    /***fix**/
+    .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {        
+        height:auto;           
+        min-height:42px;
+        min-width:auto;
+        border-radius: 0!important; 
+        padding: 0 0px;
+        margin: 0;  
+    } 
+    .e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+        padding: 8px 8px 4px 8px;       
+        border-radius: 0!important; 
+        height: auto;     
+        min-width: auto;       
+        margin-bottom: 1px;   
+    } 
+    .e-tab.e-focused>.e-tab-header .e-toolbar-item .e-tab-wrap:focus{
+        border-radius: 0!important;     
+        background-color: #f3f6f9;
+    }
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+        border-radius: 0!important;      
+        background-color: #f3f6f9;
+    }
+    .e-tab .e-tab-header.e-vertical.e-vertical-left .e-toolbar-item.e-active .e-tab-wrap {
+        border-radius: 0!important;     
+        background-color: #f3f6f9;
+    }
+    .e-tab .e-tab-header .e-toolbar-item .e-text-wrap{       
+        height: auto;
+        min-height: 32px;        
+    }     
+    .e-tab .e-tab-header.e-vertical .line-clamp {
+        display: block;
+        max-width: 180px;
+    }
+}
+}
