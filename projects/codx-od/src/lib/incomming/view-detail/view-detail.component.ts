@@ -385,7 +385,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             var task = new TM_Tasks();
             task.refID =datas?.recID ;
             task.refType = this.view?.formModel.entityName;
-            var vllControlShare = 'L1906' ;
+            var vllControlShare = 'TM003' ;
             var vllRose = 'TM002' ;
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;
