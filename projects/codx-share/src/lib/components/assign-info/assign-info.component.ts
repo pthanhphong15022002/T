@@ -38,8 +38,8 @@ export class AssignInfoComponent implements OnInit {
   readOnly = false;
   listUser: any[];
   listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
-  listUserDetail: any[];
-  listTodo: TaskGoal[];
+  listUserDetail: any[] =[];
+  // listTodo: TaskGoal[];
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   disableAddToDo = true;
@@ -120,7 +120,7 @@ export class AssignInfoComponent implements OnInit {
   openInfo() {
     this.listUser = [];
     this.listMemo2OfUser = [];
-    this.listTodo = [];
+    // this.listTodo = [];
     // this.task = taskAction;
     if (this.task.memo == null) this.task.memo = '';
     this.listTaskResources = [];
@@ -181,7 +181,7 @@ export class AssignInfoComponent implements OnInit {
         this.task,
         this.functionID,
         this.listTaskResources,
-        this.listTodo,
+        null,
       ])
       .subscribe((res) => {
         if (res && res.length) {
@@ -247,7 +247,7 @@ export class AssignInfoComponent implements OnInit {
     this.listMemo2OfUser = [];
     this.listUserDetail = [];
     this.listTaskResources = [];
-    this.listTodo = [];
+    // this.listTodo = [];
     this.task = new TM_Tasks();
     this.task.status = '1';
   }
@@ -319,7 +319,7 @@ export class AssignInfoComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getListUser(listUser) {
-    // this.listMemo2OfUser = [];
+
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }

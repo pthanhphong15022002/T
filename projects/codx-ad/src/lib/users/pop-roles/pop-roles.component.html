@@ -20,14 +20,14 @@
             <div class="form-group">
               <div class="form-group mt-3">
                 <div class="text-dark fw-bolder d-flex justify-content-end">
-                  Đã chọn (0)
+                  Đã chọn ({{count}})
                 </div>
               </div>
               <div class="form-group row mt-3">
-                <div class="col-4" *ngFor="let item of lstFunc[0]; let i= index">
+                <div class="col-4" *ngFor="let item of lstFunc; let i= index">
                   <div class="col-2">
                     <input type="checkbox" [(ngModel)]="item.ischeck"
-                     class="check-{{i}}" name="Checkboxes4" (change)="onChange($event, i, item)">
+                     class="check-{{i}}" name="Checkboxes4" (change)="onChange($event)">
                     <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
                   </div>
                   <div class="col-4">
@@ -36,7 +36,7 @@
                         {{item.customName}}
                       </div>
                       <div style="margin-left: 20px;">
-                        <codx-input type="combobox" field="userID" refValue="UserRoles">
+                        <codx-input type="combobox" field="userID" refValue="UserRoles" (valueChange)="onCbx($event)">
                         </codx-input>
                       </div>
                     </div>
@@ -68,7 +68,7 @@
                 </div>
               </div>
               <div class="form-group row mt-3">
-                <div class="col-4" *ngFor="let item of lstEmp[0]">
+                <div class="col-4" *ngFor="let item of lstFunc">
                   <div class="col-2">
                     <input type="checkbox">
                     <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
@@ -94,6 +94,6 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary">Lưu</button>
+      <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
     </div>
   </ng-template>

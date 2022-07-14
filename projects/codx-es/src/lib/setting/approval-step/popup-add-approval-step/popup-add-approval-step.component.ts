@@ -52,13 +52,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
 
-  public headerText: Object = [
-    { text: 'Thông tin chung', iconCss: 'icon-info' },
-    { text: 'Điều kiện', iconCss: 'icon-person_add' },
-    { text: 'Email/thông báo', iconCss: 'icon-email' },
-    { text: 'Thông tin khác', iconCss: 'icon-tune' },
-  ];
-
   headerText1;
 
   constructor(
@@ -184,9 +177,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  popup(evt: any) {}
+  popup(evt: any) { }
 
-  checkedOnlineChange(event) {}
+  checkedOnlineChange(event) { }
 
   openSetupEmail(email) {
     if (email?.IsEmail == '1' || email?.isEmail == '1') {
