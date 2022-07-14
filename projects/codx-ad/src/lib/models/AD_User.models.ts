@@ -66,3 +66,15 @@ export class AD_User{
 
 
 }
+
+export class AD_Roles{
+  createdBy: string;
+  createOn: Date;
+  comments: number;
+  attachments: number;
+  note: string;
+  roleType: string;
+  roleID: string;
+  recID: string;
+  roleName: string;
+}
