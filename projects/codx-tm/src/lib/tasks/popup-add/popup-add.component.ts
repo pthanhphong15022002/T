@@ -192,7 +192,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.recIDTodoDelete += this.listTodo[index].recID + ';';
     }
     this.listTodo.splice(index, 1); //remove element from array
-    if (this.listTodo.length == 0) this.isCheckCheckListControl = false;
+    if (this.listTodo.length == 0) this.isCheckCheckListTrue = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -247,9 +247,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        if(this.task.taskGroupID){
-          this.logicTaskGroup(this.task.taskGroupID)
-        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -304,9 +301,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     const t = this;
     t.task = data as TM_Tasks;
     t.task.taskID = this.newID;
-    if(this.task.taskGroupID){
-      this.logicTaskGroup(this.task.taskGroupID)
-    }
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
@@ -367,7 +361,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.isCheckAttachmentTrue;
 
       if (!checkLogic) {
-        if (!this.isCheckCheckListTrue)
+        if (!this.isCheckAttachmentTrue)
           //  this.notiService.notifyCode('code nao vao day ??');
           this.notiService.notify('File tài liệu không được để trống');
         if (!this.isCheckProjectTrue)
@@ -608,8 +602,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
       if (data.field === 'taskGroupID') this.logicTaskGroup(data.data[0]);
-    }else{
-      
     }
   }
 

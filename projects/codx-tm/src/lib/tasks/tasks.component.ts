@@ -313,8 +313,7 @@ export class TasksComponent extends UIComponent {
 
   edit(data?) {
     if (data && data.status >= 8) {
-      // this.notiService.notifyCode('cần code đoạn nay');
-      this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+       this.notiService.notifyCode('TM007');
       return;
     }
     if (data) {
