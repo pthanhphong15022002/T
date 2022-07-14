@@ -62,7 +62,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: ':funcID',
+        path: 'mydashboard/:funcID',
         component: DashboardComponent
       },
       {
