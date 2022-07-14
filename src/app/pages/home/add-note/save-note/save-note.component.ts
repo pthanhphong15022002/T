@@ -1,4 +1,4 @@
-import { DialogData, AuthStore, ApiHttpService, DialogRef, UIComponent } from 'codx-core';
+import { DialogData, AuthStore, ApiHttpService, DialogRef, UIComponent, NotificationsService } from 'codx-core';
 import { ChangeDetectorRef, Component, OnInit, Optional, Injector } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 
@@ -19,6 +19,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   constructor(private injector: Injector,
     private authStore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef,
   ) {
@@ -38,6 +39,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.data?.recID, this.data])
       .subscribe((res) => {
         if (res) {
+          this.notificationsService.notifyCode('E0528');
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
         }

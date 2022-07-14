@@ -195,18 +195,14 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
-                    <codx-attachment 
-                        [objectId]="item.recID" 
-                        idBrowse="btn1"
-                        objectType="WP_Comments" 
-                        hideFolder="1" 
-                        hideUploadBtn="1"
-                        hideDes="1" 
-                        type="inline" 
-                        allowExtensions=".jpg,.png"
-                        [formModel]="codxViews.formModel"
-                        [functionID]="codxViews.formModel.funcID">
-                    </codx-attachment>
+                    <ng-container *ngFor="let file of item.files">
+                        <codx-temp-full  
+                            imageSrc="{{file.avatar}}" 
+                            imgCss="w-40px me-3 cursor-pointer" 
+                            title="{{file.fileName}}"        
+                            [descLine]="1">
+                        </codx-temp-full>
+                    </ng-container>
                 </ng-container>
             </div>
         </ng-container>

@@ -60,6 +60,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   dialog: DialogRef;
   data: any;
 
+  lstStep = [];
+
   autoNumber: any;
 
   formModel: FormModel;
@@ -136,6 +138,20 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           );
           if (!this.isAdd) {
             this.dialogCategory.patchValue(this.data);
+
+            this.api
+              .callSv(
+                'ES',
+                'ES',
+                'CategoriesBusiness',
+                'GetListApprovalStepAsync',
+                [this.data.id]
+              )
+              .subscribe((res) => {
+                if (res && res?.msgBodyData[0]) {
+                  this.lstStep = res.msgBodyData[0];
+                }
+              });
 
             //get Autonumber
             this.esService

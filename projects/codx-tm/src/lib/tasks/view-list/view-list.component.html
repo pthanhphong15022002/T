@@ -1,6 +1,6 @@
-<div class="d-flex flex-row">
+<div class="d-flex flex-row" style="margin-top: 10px;">
   <td class="col-2 w-25">
-    <div class="a" [ngbTooltip]="data.taskName">
+    <div class="a" [ngbTooltip]="data.taskName" style="margin-left: 10px; ">
       {{ data?.taskName }}</div>
   </td>
   <td class="col-1 w-5">
@@ -85,7 +85,7 @@
     </div>
   </td>
   <td class="col-1 w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" type="hover">
     </codx-mfunc>
   </td>
 </div>

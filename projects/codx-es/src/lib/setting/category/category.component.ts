@@ -31,7 +31,7 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { ActivatedRoute } from '@angular/router';
 
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'doc-category',
   templateUrl: './category.component.html',
@@ -97,6 +97,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         headerText: 'Mã phân loại',
         template: '',
         width: 70,
+        textAlign: 'Center'
       },
       {
         field: 'categoryName',
@@ -121,6 +122,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         headerText: 'Color',
         template: '',
         width: 60,
+        textAlign: 'Center'
       },
       {
         field: 'note',
@@ -259,7 +261,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   //   this.editCategory.isAdd = false;
   // }
 
-  deleteCategory(data) {}
+  deleteCategory(data) { }
 
   getCount(countStep) {
     let lstNumber = [];
