@@ -12,3 +12,37 @@
 .active [class*="icon-"] {
     color: var(--primary-dark);
 }
+
+.add-note {
+    position: relative;
+    height: 100%;
+}
+
+.note-text {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 120px;
+    top: 50px;
+    overflow: auto;
+}
+
+.note-action {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 65px;
+    padding: 5px 10px;
+}
+
+
+.note-footer {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 15px;
+}
+
+app-add-note {
+    height: 100%;
+}
