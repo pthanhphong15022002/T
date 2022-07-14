@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector } from '@angular/core';
@@ -43,6 +43,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
+  dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   constructor(private injector: Injector,
@@ -164,7 +165,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option);
   }
 
   onEditIsPin(data: Notes) {
