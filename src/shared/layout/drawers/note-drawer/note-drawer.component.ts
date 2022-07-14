@@ -57,7 +57,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.noteService.data.subscribe((res) => {
-      debugger;
       (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
         this.changeDetectorRef.detectChanges();
      });

@@ -1,4 +1,4 @@
-<codx-views #view funcID="MWP002"  service="HR" entityName="HR_Employees"   [views]="views">
+<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" [views]="views">
 </codx-views>
 
 
@@ -22,7 +22,7 @@
 
     <div class="d-flex w-100">
       <div class="w-300px min-w-300px">
-        <lib-info-left [formModel] ="view.formModel"></lib-info-left>
+        <lib-info-left [formModel]="view.formModel"></lib-info-left>
       </div>
 
       <div class="w-100">
@@ -324,6 +324,7 @@
                     <div class="user-process process-h">
                       <div *ngFor="let experences of ExperencesWorked">
                         <div class="process-item d-flex mb-4">
+
                           <div class="yeartoyear mt-3">{{experences.fromDate}} - {{experences.toDate}}
                           </div>
                           <div class="mx-3 mt-4 process-line">
@@ -331,7 +332,7 @@
                           </div>
                           <div class="d-flex flex-column py-3 px-4 process-r">
                             <div class="d-flex flex-column">
-                              <div class="d-flex justify-content-between cardExp">
+                              <!-- <div class="d-flex justify-content-between cardExp">
                                 <div class="p"><a class="text-dark fs-6 ">{{experences.companyName}}</a></div>
                                 <div class="">
                                   <a class="btn btn-xs btn-icon btn-light btn-hover-primary margin-left"
@@ -343,10 +344,14 @@
                                     <span class="icon-close icon-18"></span>
                                   </a>
                                 </div>
-                              </div>
+                              </div> -->
+                              <codx-temp-full [content]="experences.companyName" [desc]="experences.roleName"
+                              (clickMF)="clickMF($event, data)">
+                              </codx-temp-full>
                             </div>
-                            <div class="text-primary">{{experences.roleName}}</div>
-                          </div>
+                            <!-- <div class="text-primary">{{experences.roleName}}</div> -->
+                          </div>                      
+
                         </div>
                       </div>
                     </div>
@@ -361,7 +366,8 @@
                     <codx-label class="fw-bold fs-4 text-primary" name="lblSkill" formName="Employees"
                       default="Kỹ năng ">
                     </codx-label>
-                    <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="editSkill()">
+                    <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                      (click)="editSkill(skillEmployee)">
                       <span class="icon-edit icon-18"></span>
                     </a>
                   </div>
@@ -384,10 +390,9 @@
                                   </div>
                                 </div>
                               </div>
-                              <div *ngIf="editSkillMode">
-                                <!-- <div class="d-flex align-items-center"> -->
-                                <div id='container'>
-                                  <div class="wrap">
+                              <!-- <div *ngIf="editSkillMode"> -->
+                              <!-- <div id='container'>
+                                  <div class="ml-3">
                                     <div class="sliderwrap">
                                       <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10"
                                         [value]="data.valueX" (valueChange)="sliderChange($event,data)">
@@ -400,10 +405,10 @@
                                       <span class="icon-close icon-18"></span>
                                     </a>
                                   </div>
-                                </div>
-                              </div>
+                                </div> -->
+
+                              <!-- </div> -->
                             </div>
-                            <!-- </div> -->
                           </ng-container>
                         </div>
                       </div>
@@ -435,49 +440,49 @@
                     <div *ngIf="trainingPersonal && trainingPersonal.length>0"
                       class="text-dark fw-bold text-uppercase mt-8 mb-4">
                       Bên ngoài</div>
-                      <div class="user-process process-v swiper-wrapper">
-                        <!-- <swiper [slidesPerView]="3" [navigation]="true" class="mySwiper"> -->
-                          <ng-template swiperSlide *ngIf="editMode">
-                            <ng-container>
-                              <div class="process-item swiper-slide" (click)="editDataEdu(null)">
-                                <div class="line"></div>
-                                <span class="yeartoyear btn btn-sm add-process">Thêm mới</span>
+                    <div class="user-process process-v swiper-wrapper">
+                      <!-- <swiper [slidesPerView]="3" [navigation]="true" class="mySwiper"> -->
+                      <ng-template swiperSlide *ngIf="editMode">
+                        <ng-container>
+                          <div class="process-item swiper-slide" (click)="editDataEdu(null)">
+                            <div class="line"></div>
+                            <span class="yeartoyear btn btn-sm add-process">Thêm mới</span>
+                          </div>
+                        </ng-container>
+                      </ng-template>
+
+                      <ng-template swiperSlide *ngFor="let item of trainingPersonal">
+                        <ng-container>
+                          <div class="process-item swiper-slide">
+                            <div class="line"></div>
+                            <span class="yeartoyear btn btn-sm">{{item.completeOn}}</span>
+                            <div class="d-flex flex-column mt-4">
+                              <div class="text-dark mb-1">{{item.organizationName}}</div>
+                              <div class="text-dark mt-1 d-flex align-items-start">
+                                <span class="text-dark-50 icon-check_circle icon-16 mr-2"></span>
+                                <span class="text-dark-50">{{item.certificateName}}</span>
                               </div>
-                            </ng-container>
-                          </ng-template>
-              
-                          <ng-template swiperSlide *ngFor="let item of trainingPersonal">
-                            <ng-container>
-                              <div class="process-item swiper-slide">
-                                <div class="line"></div>
-                                <span class="yeartoyear btn btn-sm">{{item.completeOn}}</span>
-                                <div class="d-flex flex-column mt-4">
-                                  <div class="text-dark mb-1">{{item.organizationName}}</div>
-                                  <div class="text-dark mt-1 d-flex align-items-start">
-                                    <span class="text-dark-50 icon-check_circle icon-16 mr-2"></span>
-                                    <span class="text-dark-50">{{item.certificateName}}</span>
-                                  </div>
-                                  <div class="text-dark mt-1 d-flex align-items-start">
-                                    <span class="text-dark-50 icon-class icon-16 mr-2"></span>
-                                    <span class="text-dark-50">{{item.memo}}</span>
-                                  </div>
-                                  <div class="d-flex mt-4">
-                                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary mr-2" *ngIf="editMode"
-                                      (click)="editDataEdu(item)">
-                                      <span class="icon-edit icon-18"></span>
-                                    </a>
-                                    <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
-                                      (click)="deleteEducation(item)">
-                                      <span class="icon-close icon-18"></span>
-                                    </a>
-                                  </div>
-                                </div>
+                              <div class="text-dark mt-1 d-flex align-items-start">
+                                <span class="text-dark-50 icon-class icon-16 mr-2"></span>
+                                <span class="text-dark-50">{{item.memo}}</span>
                               </div>
-                            </ng-container>
-                          </ng-template>
-              
-                        <!-- </swiper> -->
-                      </div>
+                              <div class="d-flex mt-4">
+                                <a class="btn btn-xs btn-icon btn-light btn-hover-primary mr-2" *ngIf="editMode"
+                                  (click)="editDataEdu(item)">
+                                  <span class="icon-edit icon-18"></span>
+                                </a>
+                                <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
+                                  (click)="deleteEducation(item)">
+                                  <span class="icon-close icon-18"></span>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-template>
+
+                      <!-- </swiper> -->
+                    </div>
 
                   </div>
                 </div>

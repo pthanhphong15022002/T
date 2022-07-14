@@ -21,6 +21,7 @@ import {
   Optional,
   EventEmitter,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
@@ -31,6 +32,7 @@ import { NoteService } from '@pages/services/note.services';
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
   styleUrls: ['./add-note.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
@@ -59,6 +61,7 @@ export class AddNoteComponent implements OnInit {
   gridViewSetup: any;
   checkFile = false;
   checkPin = false;
+  empty = "";
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -74,7 +77,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private noteService: NoteService, 
+    private noteService: NoteService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -90,6 +93,7 @@ export class AddNoteComponent implements OnInit {
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
+      console.log("check gridViewSetup", res);
     });
   }
 
@@ -244,7 +248,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
-    if(this.checkPin == true)
+    if (this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
     this.api
