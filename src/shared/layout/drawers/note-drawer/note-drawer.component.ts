@@ -57,9 +57,11 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.noteService.data.subscribe((res) => {
-      (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
-        this.changeDetectorRef.detectChanges();
-     });
+      if (this.lstView) {
+        (this.lstView.dataService as CRUDService).add(res).subscribe(res => {
+          this.changeDetectorRef.detectChanges();
+        });
+      }
     })
     this.getMaxPinNote();
   }
@@ -132,7 +134,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         that.countNotePin += 1;
       }
     })
-    debugger;
   }
 
   checkNumberNotePin(data) {
