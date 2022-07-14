@@ -50,9 +50,9 @@ export class AssignInfoComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  vllShare = "L1906"
-  vllRole ='' 
-  listRoles
+  vllShare = "TM003"
+  vllRole ='TM001' 
+  listRoles = []
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,

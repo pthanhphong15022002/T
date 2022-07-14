@@ -410,7 +410,7 @@ export class TasksComponent extends UIComponent {
 
   assignTask(data) {
     this.view.dataService.dataSelected = data;
-    var vllControlShare = 'L1906' ;
+    var vllControlShare = 'TM003' ;
     var vllRose = 'TM001' ;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
