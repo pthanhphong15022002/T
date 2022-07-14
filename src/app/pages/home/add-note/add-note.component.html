@@ -22,11 +22,8 @@
     <div class="note-text">
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">
-                <!-- <codx-input type="text" field="memo" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)">
-                </codx-input> -->
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]=""
-                    placeholder="Ghi chú của bạn" (valueChange)="valueChange($event)" ngDefaultControl>
+                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="empty"
+                    placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)" ngDefaultControl>
                 </codx-input>
             </div>
             <div *ngIf="type == 'check' || type =='list'">
