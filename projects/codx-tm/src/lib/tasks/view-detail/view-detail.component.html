@@ -89,7 +89,7 @@
             itemSelected?.priority | vll: "L0186":"text" | async
             }}</span> -->
               <div *ngIf="itemSelected?.priority">
-                <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
+                <span class="icon-14 me-1" [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
                 itemSelected?.priority | vll: 'L0186':'textColor' | async
               ">
                 </span>
@@ -193,7 +193,7 @@
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="mt-6 mb-3 text-primary fw-bold">
         <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện: ">
         </codx-label>
       </div>
@@ -207,7 +207,7 @@
           </codx-imgs>
         </div>
       </div>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="mt-6 mb-3 text-primary fw-bold">
         <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
         </codx-label>
       </div>
@@ -216,8 +216,8 @@
       </div>
       <div class="text-gray-700" [innerHTML]="itemSelected?.memo"></div>
       <div class="text-gray-400" [innerHTML]="itemSelected?.memo2"></div>
-      <div class="codx_title_sub_primary mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
-        <div class="text-primary fw-bold mt-4 mb-2">
+      <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
+        <div class="text-primary fw-bold">
           <!-- <codx-label fiedName="ListTaskGoals" formName="Tasks" gridViewName="grvTasks" default="Danh sách việc cần làm: "></codx-label> -->
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm:"></codx-label>
         </div>
