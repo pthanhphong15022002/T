@@ -87,8 +87,35 @@
       </span>
     </div>
 
-    <div class="codx-approval">
-      <div class="codx-approval-step step-test pb-3">
+    <div class="codx-approval" *ngIf="lstStep.length > 0">
+      <ng-container *ngFor="let item of lstStep, let index = index">
+        <div class="codx-approval-step step-test pb-1">
+          <div class="codx-approval-header d-flex align-items-center">
+            <div class="step-number">{{item.stepNo}}</div>
+            <div class="step-title text-gray-800 fw-bolder fs-4">{{item.memo}}</div>
+            <!-- <div class="badge badge-success badge-sm badge-circle ms-3">
+              <span class="icon-check icon-16"></span>
+            </div> -->
+          </div>
+          <div class="codx-approval-content ms-17">
+            <ng-container *ngFor="let approver of item.approvers">
+              <div class="d-flex align-items-top justify-content-between mb-2">
+                <codx-temp-full [imageId]="approver.approver" [imageObjType]="'AD_Users'" [imageWidth]="40"
+                  [title]="approver.approverName" [desc]="approver.positionName ?? 'Vị trí công việc'">
+                </codx-temp-full>
+                <div class="d-flex align-items-center text-center">
+                  <div class="ms-6 d-flex">
+                    <span class="text-dark">{{item.leadtime}} giờ</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+        <div class="codx-approval-step step-signature-temp pb-3" *ngIf="index == lstStep.length-1"></div>
+      </ng-container>
+      <!-- <div class="codx-approval-step step-test pb-3">
         <div class="codx-approval-header d-flex align-items-center">
           <div class="step-number">1</div>
           <div class="step-title text-gray-800 fw-bold fs-4">KIỂM TRA</div>
@@ -97,6 +124,7 @@
           </div>
         </div>
         <div class="codx-approval-content ms-17">
+
           <div class="d-flex align-items-top justify-content-between mb-2">
             <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
               [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
@@ -165,19 +193,8 @@
           </div>
         </div>
       </div>
-      <div class="codx-approval-step step-signature-temp pb-3"></div>
+      <div class="codx-approval-step step-signature-temp pb-3"></div> -->
     </div>
-
-
-    <!-- <div id="progress" class="cdx-progress mt-3" *ngIf="dialogCategory?.value.countStep > 0">
-      <div id="progress-bar"></div>
-      <ul id="progress-num">
-        <ng-container *ngFor="let item of getCount(dialogCategory?.value.countStep)">
-          <li class="step">{{item}}</li>
-        </ng-container>
-      </ul>
-    </div> -->
-
   </ng-template>
   <ng-template #footer>
     <button class="btn btn-light-primary justify-content-end" (click)="onSaveForm(true)">
