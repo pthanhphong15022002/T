@@ -197,8 +197,8 @@
                 <ng-container *ngIf="item.isUploadFile">
                     <ng-container *ngFor="let file of item.files">
                         <codx-temp-full  
-                            imageSrc="{{file.avatar}}" 
-                            imgCss="w-40px me-3 cursor-pointer" 
+                            imageSrc="{{file.fileType | fileName}}" 
+                            imgCss="w-20px me-3 cursor-pointer" 
                             title="{{file.fileName}}"        
                             [descLine]="1">
                         </codx-temp-full>
