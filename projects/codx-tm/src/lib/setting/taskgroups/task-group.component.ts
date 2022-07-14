@@ -186,7 +186,7 @@ export class TaskGroupComponent implements OnInit {
   PopoverDetail(p: any, emp) {
     if (emp != null) {
       this.popoverList?.close();
-      this.popoverDetail = emp.split(";");
+      this.popoverDetail = emp.checkList.split(";");
       if (emp.checkList != null)
         p.open();
     }
