@@ -37,6 +37,7 @@
             <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Giao cho"></codx-label>
           </div>
           <div class="d-flex align-items-center w-100">
+            <ng-container [ngTemplateOutlet]="templetUserDetail"></ng-container>
             <!-- <codx-input
                                 [refValue]="'Users'"
                                 [crrValue]="task.assignTo"
@@ -46,9 +47,10 @@
                                 (valueChange)="changeUser($event)"
                                 >
                         </codx-input>  -->
-            <codx-input class="form-control" style="width:100%" type="Share" [refValue]="vllShare" field="AssignTo"
-              [dataShared]="[]" multiple="true" [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
+          
           </div>
+          <codx-input  type="Share" [refValue]="vllShare" field="AssignTo"
+          [dataShared]="[]" multiple="true" [showInput]="false"  (valueChange)="eventApply($event)"></codx-input>
         </div>
       </div>
     </div>
@@ -166,19 +168,19 @@
           [crrValue]="task.dueDate" format="F" (valueChange)="changeTime($event)">
         </codx-input>
 
-        <div class="col-6 d-flex align-items-center">
+        <!-- <div class="col-6 d-flex align-items-center">
                         <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #report type="switch" id="switch" [checked]="false" labelPosition="Before"
                             [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Yêu cầu báo cáo</div>
-                        </div>   
+                        </div>    -->
 
         <!-- <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #email type="switch" id="switch" [checked]="false" labelPosition="Before"
                             [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Gởi email thông báo</div>
                         </div>  -->
-        </div>  
+        <!-- </div>   -->
       </div>
     </div>
     <div class="row ">
@@ -210,3 +212,8 @@
     <!-- </div> -->
   </ng-template>
 </codx-form>
+
+
+<ng-template #templetUserDetail></ng-template>
+
+<ng-template #poper ></ng-template>

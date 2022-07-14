@@ -18,7 +18,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   assemblyName = "ERM.Business.WP"
   className = "CommentBusiness"
   method = "GetListPostAsync";
-  arrCbx = ['HRDepartments', 'Positions', 'UserRoles', 'UserGroups', 'Users'];
   totalPage: number = 0;
   pageIndex = 0;
   users = [];
@@ -51,13 +50,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate = "(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3";
+  predicate = "  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ";
   dataValue: any = "0;1;5;false";
+
   modal: DialogRef;
   headerText = "";
   views: Array<ViewModel> | any = [];
-  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
-  lstExtensionVideo:Array<string> = [".mp4"];
 
   @Input() predicates = "";
   @Input() dataValues = "";
@@ -170,12 +168,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.player?.video?.nativeElement.pause();
   }
 
-  openModal() {
-    var data = new Post();
+  openCreateModal() {
     var obj = {
-      post: data,
       status: "create",
-      title: "Tạo bài viết"
+      title: "Tạo bài viết",
     }
     this.dt.detectChanges()
     let option = new DialogModel();
