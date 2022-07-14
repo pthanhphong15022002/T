@@ -114,7 +114,7 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'reports',
+        path: 'reports/:funcID',
         component: ReportsComponent,
         children: [
           {
@@ -141,7 +141,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'null',
+        redirectTo: 'home/:null',
         // path: 'home/:funcID',
         // component: DashboardComponent,
       },

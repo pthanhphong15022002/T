@@ -5,7 +5,7 @@
 </codx-views>
 
 <ng-template #cardTemp let-data>
-    <codx-card-center cardCss="border h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
+    <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
         [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')"
         [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer"
         (clickMF)="clickMF($event, data)">

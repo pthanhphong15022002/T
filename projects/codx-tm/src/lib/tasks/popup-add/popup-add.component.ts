@@ -51,9 +51,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   contentTodoEdit = '';
   recIDTodoDelete = '';
   indexEditTodo = -1;
-  required = {
-    taskName: false,
-  };
+  // required = {
+  //   taskName: false,
+  // };
   isConfirm = true;
   isCheckTime = true;
   isCheckProjectControl = false;
@@ -102,6 +102,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    if(this.functionID =='TMT0203') this.showAssignTo = true ; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
   }
 
   ngOnInit(): void {
@@ -451,7 +452,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             this.dialog.dataService.update(obj).subscribe();
           }) 
           this.dialog.close(res.update[0]);
-          this.notiService.notifyCode('E0528');
+          // this.notiService.notifyCode('E0528');
         }
       });
   }
@@ -710,14 +711,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.task.tags = e.data;
   }
 
-  textboxChange(e) {
-    console.log('task-info.comp', e);
-    if (!e) {
-      this.required.taskName = true;
-    } else this.required.taskName = false;
+  // textboxChange(e) {
+  //   console.log('task-info.comp', e);
+  //   if (!e) {
+  //     this.required.taskName = true;
+  //   } else this.required.taskName = false;
 
-    console.log('task required', this.required.taskName);
-  }
+  //   console.log('task required', this.required.taskName);
+  // }
   closePanel() {
     this.dialog.close();
   }
