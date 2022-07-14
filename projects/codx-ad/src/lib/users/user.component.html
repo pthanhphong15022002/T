@@ -61,7 +61,7 @@
           <div class="" *ngIf="data.chooseRoles.length <= 5">
             <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
               <a (click)="openPopup(data)">
-                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+                <img class="w-40px" src="/{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
               </a>
             </ng-container>
 
