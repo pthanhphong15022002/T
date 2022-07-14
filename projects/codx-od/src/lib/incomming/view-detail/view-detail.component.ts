@@ -385,13 +385,15 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             var task = new TM_Tasks();
             task.refID =datas?.recID ;
             task.refType = this.view?.formModel.entityName;
+            var vllControlShare = 'TM003' ;
+            var vllRose = 'TM002' ;
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;
             option.FormModel = this.view?.formModel;
             option.Width = '800px';
             this.dialog = this.callfunc.openSide(
               AssignInfoComponent,
-              [task],
+              [task,vllControlShare,vllRose],
               option
             );
             this.dialog.closed.subscribe((e) => {
