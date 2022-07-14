@@ -1,13 +1,17 @@
 <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [formControl]="dialogApprovalStep" *ngIf="isAfterRender">
   <ng-template #body>
-    <div class="tab-content">
-      <ejs-tab id="tab_orientation" #orientationTab [showCloseButton]='false' heightAdjustMode='Auto'
-        headerPlacement="Left">
+    <div class="codx_tab h-100 pt-5">
+      <ejs-tab headerPlacement="Left">
         <e-tabitems>
-          <e-tabitem [header]='headerText[0]'>
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-temp-full cardCss="tab-temp" icoCss="icon-info icon-20  me-2" [title]="'Thông tin chung'"
+                [subTitle]="'Mô tả'">
+              </codx-temp-full>
+            </ng-template>
             <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
+              <div id="rome" class="tabpanel">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
                     <codx-label class="fw-bolder" default="Mô tả" fiedName="Memo" [formModel]="formModel">
@@ -121,10 +125,15 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem [header]='headerText[1]'>
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-temp-full cardCss="tab-temp" icoCss="icon-person_add icon-20  me-2" [title]="'Điều kiện'"
+                [subTitle]="'Mô tả'">
+              </codx-temp-full>
+            </ng-template>
             <ng-template #content>
 
-              <div id="rome" class="tabpanel p-5">
+              <div id="rome" class="tabpanel">
                 <div class="tab-content">
                   <!--begin::Title-->
                   <div class="d-flex justify-content-between align-items-center mb-4 ">
@@ -193,9 +202,14 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem [header]='headerText[2]'>
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-temp-full cardCss="tab-temp" icoCss="icon-email icon-20  me-2" [title]="'Email/thông báo'"
+                [subTitle]="'Mô tả'">
+              </codx-temp-full>
+            </ng-template>
             <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
+              <div id="rome" class="tabpanel">
                 <div class="tab-content">
 
 
@@ -416,9 +430,14 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem [header]='headerText[3]'>
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-temp-full cardCss="tab-temp" icoCss="icon-tune icon-20  me-2" [title]="'Thông tin khác'"
+                [subTitle]="'Mô tả'">
+              </codx-temp-full>
+            </ng-template>
             <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
+              <div id="rome" class="tabpanel">
                 <div class="tab-content">
                   <!-- <div class="d-flex justify-content-center mb-4">
                     <div class="d-flex align-items-center w-auto extend-title">
