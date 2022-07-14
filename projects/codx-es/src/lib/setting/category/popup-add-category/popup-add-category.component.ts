@@ -95,6 +95,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.esService.isSetupApprovalStep.subscribe((res) => {
+      this.lstStep = res;
+      console.log(this.lstStep);
+    });
+
     this.dialog.closed.subscribe((res) => {
       this.esService.setupAutoNumber.next(null);
       this.esService.setLstDeleteStep(null);

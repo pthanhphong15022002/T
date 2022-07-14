@@ -20,7 +20,7 @@ import {
 import { CodxEsService } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
-export class Approver { }
+export class Approver {}
 @Component({
   selector: 'app-approval-steps',
   templateUrl: './approval-step.component.html',
@@ -39,6 +39,7 @@ export class ApprovalStepComponent implements OnInit {
   approvers = [];
   lstStep: any;
   lstDeleteStep = [];
+  isDeleteAll = false;
 
   model: any;
 
@@ -67,7 +68,7 @@ export class ApprovalStepComponent implements OnInit {
     this.initForm();
   }
 
-  close() { }
+  close() {}
 
   initForm() {
     this.esService.isSetupApprovalStep.subscribe((res) => {
@@ -118,7 +119,7 @@ export class ApprovalStepComponent implements OnInit {
     this.dialog && this.dialog.close();
   }
 
-  openFormFuncID(val: any, data: any) { }
+  openFormFuncID(val: any, data: any) {}
 
   clickMF(event: any, data) {
     switch (event.functionID) {
@@ -182,7 +183,6 @@ export class ApprovalStepComponent implements OnInit {
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           let i = this.lstStep.indexOf(approvalStep);
-          console.log(i);
 
           if (i != -1) {
             this.lstStep.splice(i, 1);
@@ -193,21 +193,12 @@ export class ApprovalStepComponent implements OnInit {
           for (let i = 0; i < this.lstStep.length; i++) {
             this.lstStep[i].stepNo = i + 1;
           }
+
+          if (this.lstStep.length == 0) {
+            this.isDeleteAll = true;
+          }
         }
       });
-
-    // let i = this.lstStep.indexOf(approvalStep);
-    // console.log(i);
-
-    // if (i != -1) {
-    //   this.lstStep.splice(i, 1);
-    // }
-    // if (approvalStep.recID && approvalStep.recID != null) {
-    //   this.lstDeleteStep.push(approvalStep);
-    // }
-    // for (let i = 0; i < this.lstStep.length; i++) {
-    //   this.lstStep[i].stepNo = i + 1;
-    // }
   }
 
   getLeadTime(event) {
