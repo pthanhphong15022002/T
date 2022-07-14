@@ -62,7 +62,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: ':funcID',
+        path: 'mydashboard/:funcID',
         component: DashboardComponent
       },
       {
@@ -114,7 +114,7 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'reports',
+        path: 'reports/:funcID',
         component: ReportsComponent,
         children: [
           {
@@ -141,7 +141,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'mydashboard/:funcID',
+        redirectTo: 'home/:null',
         // path: 'home/:funcID',
         // component: DashboardComponent,
       },

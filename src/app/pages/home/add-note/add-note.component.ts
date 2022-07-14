@@ -21,15 +21,18 @@ import {
   Optional,
   EventEmitter,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
+import { NoteService } from '@pages/services/note.services';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
   styleUrls: ['./add-note.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
@@ -56,6 +59,9 @@ export class AddNoteComponent implements OnInit {
   checkNull = false;
   save = false;
   gridViewSetup: any;
+  checkFile = false;
+  checkPin = false;
+  empty = "";
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -71,6 +77,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
+    private noteService: NoteService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -86,6 +93,7 @@ export class AddNoteComponent implements OnInit {
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
+      console.log("check gridViewSetup", res);
     });
   }
 
@@ -207,11 +215,13 @@ export class AddNoteComponent implements OnInit {
           this.note
         )
         .subscribe((res) => {
-          debugger;
-          this.attachment.objectId = res.recID;
-          this.attachment.saveFiles();
-          this.data.push(res);
-          this.dialog.dataService.add(res, 0).subscribe();
+          if (this.checkFile == true) {
+            this.attachment.objectId = res.recID;
+            this.attachment.saveFiles();
+          }
+          this.noteService.data.next(res);
+          this.dialog.close()
+          // this.dialog.dataService.add(res, 0).subscribe();
           if (this.note?.showCalendar == true) {
             var today: any = document.querySelector(
               ".e-footer-container button[aria-label='Today']"
@@ -237,12 +247,18 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
+    if (this.checkPin == true)
+      this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
-          this.attachment.saveFiles();
+          if (this.checkFile == true)
+            this.attachment.saveFiles();
+
+          debugger;
+          this.dialog.dataService.update(res).subscribe();
           this.dialog.close();
           for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].recID == this.note?.recID) {
@@ -304,6 +320,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   isPin() {
+    this.checkPin = true;
     this.pin = !this.pin;
     this.changeDetectorRef.detectChanges();
   }
@@ -326,9 +343,14 @@ export class AddNoteComponent implements OnInit {
 
   popupFile() {
     this.attachment.uploadFile();
+    this.checkFile = true;
   }
 
   fileAdded() {
     this.attachment.saveFiles();
+  }
+
+  close() {
+    this.dialog.close();
   }
 }
