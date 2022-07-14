@@ -214,6 +214,33 @@
 </codx-form>
 
 
-<ng-template #templetUserDetail></ng-template>
+<ng-template #templetUserDetail>
+  <ng-container *ngFor="let item of listUserDetail; index as i">
+    <div class="d-flex py-2 border-bottom justify-content-between list-title">
+      <div class="d-flex align-items-top">
+        <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
+        </codx-img>
+
+        <div class="d-flex flex-column me-2 ">
+          <div class="text-dark fw-bold fs-6">
+            {{item?.userName}}
+          </div>
+          <div class="text-gray-700">{{item.positionName}} <span *ngIf=" item.departmentName"> |
+              {{item.departmentName}}</span></div>
+        </div>
+      </div>
+      <div *ngIf="!readOnly">
+        <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+          <div class="d-flex align-item-center">
+            <span class="icon-close icon-16 text-danger me-2"></span>
+            <span class="text-hover-danger">
+              <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
 
 <ng-template #poper ></ng-template>

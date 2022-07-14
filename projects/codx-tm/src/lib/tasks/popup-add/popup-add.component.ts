@@ -247,6 +247,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
+        if(this.task.taskGroupID){
+          this.logicTaskGroup(this.task.taskGroupID)
+        }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -301,6 +304,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     const t = this;
     t.task = data as TM_Tasks;
     t.task.taskID = this.newID;
+    if(this.task.taskGroupID){
+      this.logicTaskGroup(this.task.taskGroupID)
+    }
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
@@ -602,6 +608,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
       if (data.field === 'taskGroupID') this.logicTaskGroup(data.data[0]);
+    }else{
+      
     }
   }
 
