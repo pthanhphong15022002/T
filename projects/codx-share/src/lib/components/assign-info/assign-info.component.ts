@@ -1,5 +1,7 @@
 import {
+  ApiHttpService,
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -48,23 +50,34 @@ export class AssignInfoComponent implements OnInit {
   title = 'Giao việc';
   dialog: any;
   @Input() vllShare = "L1906"
-
+   vllRole =''
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
+    private cache : CacheService,
+    private api : ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.task = {
       ...this.task,
-      ...dt?.data,
+      ...dt?.data[0],
     };
+    this.vllShare = dt?.data[1]? dt?.data[1] : this.vllShare ;
+    this.vllRole = dt?.data[2]? dt?.data[2] : this.vllRole  ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+
+    this.cache.valueList(this.vllShare).subscribe(res => {
+     console.log(res)
+    });
+    this.cache.valueList(this.vllRole).subscribe(res => {
+      console.log(res)
+     });
   }
 
   ngOnInit(): void {
@@ -270,36 +283,36 @@ export class AssignInfoComponent implements OnInit {
         if (arrNew.length > 0) {
           assignTo = arrNew.join(';');
           this.task.assignTo += ';' + assignTo;
-          // this.getListUser(assignTo);
+          this.getListUser(assignTo);
         }
       } else {
         this.task.assignTo = assignTo;
-        // this.getListUser(assignTo);
+        this.getListUser(assignTo);
       }
     }
     this.changeDetectorRef.detectChanges();
   }
-  // getListUser(listUser) {
-  //   // this.listMemo2OfUser = [];
-  //   while (listUser.includes(' ')) {
-  //     listUser = listUser.replace(' ', '');
-  //   }
-  //   var arrUser = listUser.split(';');
-  //   this.listUser = this.listUser.concat(arrUser);
-  //   arrUser.forEach((u) => {
-  //     var obj = { userID: u.userID, memo2: null };
-  //     this.listMemo2OfUser.push(obj);
-  //   });
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetListUserDetailAsync',
-  //       listUser
-  //     )
-  //     .subscribe((res) => {
-  //       this.listUserDetail = this.listUserDetail.concat(res);
-  //     });
-  // }
+  getListUser(listUser) {
+    // this.listMemo2OfUser = [];
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    var arrUser = listUser.split(';');
+    this.listUser = this.listUser.concat(arrUser);
+    arrUser.forEach((u) => {
+      var obj = { userID: u.userID, memo2: null };
+      this.listMemo2OfUser.push(obj);
+    });
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        listUser
+      )
+      .subscribe((res) => {
+        this.listUserDetail = this.listUserDetail.concat(res);
+      });
+  }
 }

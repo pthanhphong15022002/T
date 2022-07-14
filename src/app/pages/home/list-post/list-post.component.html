@@ -194,9 +194,6 @@
                         <codx-image-grid [images]="item.images"></codx-image-grid>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="item.isUploadVideo">
-                    <video src="#"></video>
-                </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
                     <codx-attachment 
                         [objectId]="item.recID" 

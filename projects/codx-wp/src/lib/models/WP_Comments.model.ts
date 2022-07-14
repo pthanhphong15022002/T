@@ -29,9 +29,11 @@ export class WP_Comments{
     modifiedBy:string;
     content:string;
     isUpload:boolean;
-    fileUpload:Array<{}>;
+    files:any[];
 
     constructor(){
         this.createdOn = new Date();
+        this.files = [];
+        this.isUpload = false;
     }
 }

@@ -50,13 +50,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate = "Category =@0 && (ApproveControl=@1 or (ApproveControl=@2 && ApproveStatus = @3)) && Stop =@4";
-  dataValue: any = "1;0;1;5;false";
+  predicate = "  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ";
+  dataValue: any = "0;1;5;false";
+
   modal: DialogRef;
   headerText = "";
   views: Array<ViewModel> | any = [];
-  lstExtensionIMG:Array<string> = [".jpg",".png",".svg",".jpeg"];
-  lstExtensionVideo:Array<string> = [".mp4"];
 
   @Input() predicates = "";
   @Input() dataValues = "";

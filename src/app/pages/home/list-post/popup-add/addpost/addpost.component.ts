@@ -179,51 +179,20 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     // upload file
     if (this.dmSV.fileUploadList.length > 0) {
-      post.fileUpload = [];
-      this.dmSV.fileUploadList.forEach(file =>{
-        post.fileUpload.push({fileName: file.fileName,fileSize: file.fileSize, fileType: file.extension});
-      })
+        post.isUpload = true;
+        post.files = this.dmSV.fileUploadList;
     }
-    // this.data = new WP_Comments();
-    // this.data.content = this.message;
-    // this.data.shareControl = this.shareControl;
-    // this.data.category = this.CATEGORY.POST;
-    // this.data.approveControl = "0";
-    // this.data.refType = this.entityName;
-    // var lstPermissions: Permission[] = [];
-    // lstPermissions.push(this.myPermission);
-    // this.lstRecevier.map((item) => {
-    //   var per = new Permission();
-    //   per.memberType = "3";
-    //   per.objectType = item.objectType;
-    //   per.objectID = item.id;
-    //   per.objectName = item.text;
-    //   per.read = true;
-    //   per.isActive = true;
-    //   per.createdBy = this.user.userID;
-    //   per.createdOn = new Date();
-    //   lstPermissions.push(per);
-    // })
-    // this.data.Permissions = lstPermissions;
-
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
-        console.log('post insert: ',res)
-        this.dialogRef.dataService.add(res, 0).subscribe();
-        let lstImage = res.listImage;
-        if(lstImage.length > 0){
-          this.dmSV.fileUploadList.map((file:any) => {
-            lstImage.forEach((img:any) => {
-              if(file.fileName == img.fileName){
-                file.objectID = img.recID;
-              }
-            })
-          })
-          this.atmCreate.saveFiles();
-        }
+        if(res){
+          this.dialogRef.dataService.add(res, 0).subscribe();
         this.notifySvr.notifyCode('E0026');
+        this.atmCreate.objectId = res.recID;
+        this.atmCreate.saveFiles();
         this.dialogRef.close();
         this.dt.detectChanges();
+        }
+        
       });
   }
 
@@ -320,7 +289,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     let post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
-    post.category = "4";
+    post.category = this.CATEGORY.SHARE;
     post.approveControl = "0";
     post.refID = this.dataShare.recID;
     var lstPermissions: Permission[] = [];
@@ -399,7 +368,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   openFile() {
     this.atmCreate.uploadFile();
   }
-  listImgUpload: any[] = [];
   listFileUpload:any[] = []
   isUploadImg = false;
   isUploadFile = false;
