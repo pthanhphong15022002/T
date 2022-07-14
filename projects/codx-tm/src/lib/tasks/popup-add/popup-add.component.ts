@@ -448,10 +448,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          res.update.forEach(obj=>{
-            this.dialog.dataService.update(obj).subscribe();
-          }) 
-          this.dialog.close(res.update[0]);
+          // res.update.forEach(obj=>{
+          //   this.dialog.dataService.update(obj).subscribe();
+          // }) 
+          this.dialog.close(res.update);
           // this.notiService.notifyCode('E0528');
         }
       });
