@@ -1,7 +1,7 @@
 import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
 import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent, RequestOption } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -239,7 +239,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   setEvent(ele = null, args = null) {
-    let calendar = 0;
+    let calendarWP = 0;
     let calendarTM = 0;
     let countShowCalendar = 0;
     if (args) {
@@ -253,10 +253,9 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             this.TM_TasksParam[i]?.fieldValue == '1'
           ) {
             for (let y = 0; y < this.TM_Tasks?.length; y++) {
-              var dt = this.TM_Tasks[y];
               var dateParse = new Date(this.TM_Tasks[y]?.createdOn);
               // dateParse.setDate(dateParse.getDate() - 1);
-              var dataLocal = dt.toLocaleDateString();
+              var dataLocal = dateParse.toLocaleDateString();
               if (date == dataLocal) {
                 calendarTM++;
                 break;
@@ -276,7 +275,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
               var dateParse = new Date(Date.parse(this.WP_Notes[y]?.createdOn));
               if (date == dateParse.toLocaleDateString()) {
                 if (this.WP_Notes[y]?.showCalendar == true) {
-                  calendar++;
+                  calendarWP++;
+                  if (this.WP_Notes[y]?.showCalendar == false) {
+                    countShowCalendar += 1;
+                  } else {
+                    countShowCalendar = 0;
+                  }
                   break;
                 }
               }
@@ -292,7 +296,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     flex.className = 'd-flex note-point';
     ele.append(flex);
 
-    if (calendar > 0 && calendarTM == 0) {
+    if (calendarWP >= 1 && countShowCalendar < 1) {
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
@@ -307,7 +311,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       flex.append(span);
     }
 
-    if (calendarTM > 0 && calendar == 0) {
+    if (calendarTM >= 1) {
       if (this.typeCalendar == 'week') {
         span2.setAttribute(
           'style',
@@ -322,7 +326,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       flex.append(span2);
     }
 
-    if (calendar > 0 && calendarTM > 0) {
+    if (calendarWP >= 1 && calendarTM >= 1 && countShowCalendar < 1) {
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
@@ -425,10 +429,15 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'add',
     };
     let option = new DialogModel();
-    option.DataService = this.view.dataService as CRUDService;
-    option.FormModel = this.view.formModel;
+    option.DataService = this.lstView.dataService as CRUDService;
+    option.FormModel = this.lstView.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 500, '', obj, '', option)
+    // this.dialog.closed.subscribe(x => {
+    //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+    // });
+    // this.lstView.dataService.load().subscribe();
+
   }
 
   valueChange(e, recID = null, item = null) {
@@ -498,8 +507,14 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       )
       .subscribe((res) => {
         if (res) {
-          this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID)
-          this.changeDetectorRef.detectChanges();
+          // this.WP_Notes = this.WP_Notes.filter(x => x.recID != res.recID)
+          this.view.dataService
+          .delete([this.view.dataService.dataSelected], true)
+          .subscribe((res) => {
+            if (res[0]) {
+              // this.itemSelected = this.view.dataService.data[0];
+            }
+          });
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"
@@ -510,6 +525,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         }
       });
   }
+
+  // beforeDel(opt: RequestOption) {
+  //   opt.methodName = 'DeleteTaskAsync';
+  //   opt.data = this.itemSelected.taskID;
+  //   return true;
+  // }
 
   openFormNoteBooks(item) {
     var obj = {

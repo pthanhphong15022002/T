@@ -1,6 +1,5 @@
-<codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [data]="note"
-    [formModel]="dialog.formModel">
-    <ng-template popup add #body>
+    
+    <span class="icon-close icon-22 btn btn-icon btn-active-light-primary position-relative" (click)="close()"></span>
         <div class="flex position-relative">
             <div [class.active]="noteType.text">
                 <span (click)="onType('text')"
@@ -20,7 +19,7 @@
             <div class="d-flex align-items-center pw-menu">
                 <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
                     triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                    <span class="icon-push_pin1 icon-20 btn btn-icon btn-active-light-primary position-relative"
+                    <span class="icon-push_pin icon-20 btn btn-icon btn-active-light-primary position-relative"
                         type="button"></span>
                 </div>
                 <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
@@ -30,21 +29,9 @@
                 </div>
             </div>
         </div>
-        <div class="mb-3">
-            <div *ngIf="formType == 'edit'">
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
-                </codx-attachment>
-            </div>
-            <div *ngIf="formType == 'add'">
-                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
-                </codx-attachment>
-            </div>
-        </div>
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">
-                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
+                <codx-input type="text" field="memo" placeholder="textarea" crrValue=""
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -103,9 +90,21 @@
                 </ng-container>
             </div>
         </div>
-    </ng-template>
+        <div class="mb-3">
+            <div *ngIf="formType == 'edit'">
+                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
+                </codx-attachment>
+            </div>
+            <div *ngIf="formType == 'add'">
+                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                    functionID="WPT03941" type="inline">
+                </codx-attachment>
+            </div>
+        </div>
+    
 
-    <ng-template #footer>
+    
         <div class="d-flex justify-content-between">
             <div class="flex" style="margin-top: 10px;">
                 <div class="">
@@ -122,5 +121,4 @@
                 <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
             </button>
         </div>
-    </ng-template>
-</codx-form>
+    
