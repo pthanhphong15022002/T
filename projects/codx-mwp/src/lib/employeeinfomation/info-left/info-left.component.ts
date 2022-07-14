@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService, AuthStore, ImageViewerComponent } from 'codx-core';
 import { CodxMwpService } from '../../codx-mwp.service';
@@ -10,7 +10,7 @@ import { EmployeeInfomationComponent } from '../employee-infomation.component';
   styleUrls: ['./info-left.component.css']
 })
 export class InfoLeftComponent implements OnInit {
-
+  @Input() formModel: any;
   user: any = null;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   dataEmployee: any = {
@@ -42,7 +42,7 @@ export class InfoLeftComponent implements OnInit {
               this.codxMwpService.empInfo.next(response);
               this.dt.detectChanges();
               setTimeout(() => {
-                this.imageAvatar.getFormServer();
+                this.imageAvatar?.getFormServer();
               }, 100);
             }
           });
@@ -54,6 +54,7 @@ export class InfoLeftComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.formModel)
     this.codxMwpService.refreshActive.subscribe((o) => {
       if (!o) return;
       this.codxMwpService.currentSection = o;

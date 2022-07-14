@@ -18,7 +18,7 @@ export class FileService implements OnDestroy {
     //private API_DM_URL = `${environment.apiUrl}/dm`;
 
     options = new DataRequest();
-
+   
     ngOnDestroy() {
 
     }

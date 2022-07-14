@@ -10,7 +10,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'ES';
   constructor(inject: Injector) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
   onInit(): void {}

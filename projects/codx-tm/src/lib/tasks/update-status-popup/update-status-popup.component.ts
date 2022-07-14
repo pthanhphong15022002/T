@@ -62,7 +62,7 @@ export class UpdateStatusPopupComponent implements OnInit {
     this.completedOn = data.data.fromDate;
     // this.estimated = moment(this.completedOn)
     //     .diff(moment(this.startDate), 'hours')
-    var time = (((this.completedOn.getTime() -this.startDate.getTime())/3600000).toFixed(1));
+    var time = (((this.completedOn?.getTime() -this.startDate.getTime())/3600000).toFixed(1));
     this.estimated = Number.parseFloat(time);
     this.changeDetectorRef.detectChanges();
   }
@@ -88,6 +88,7 @@ export class UpdateStatusPopupComponent implements OnInit {
     }
     this.tmSv
       .setStatusTask(
+        this.dialog.formModel.funcID,
         this.task.taskID,
         this.status,
         this.completedOn,
@@ -95,12 +96,15 @@ export class UpdateStatusPopupComponent implements OnInit {
         this.comment
       )
       .subscribe((res) => {
-        if (res) {
+        if (res &&res.length >0) {
           this.task.status = this.status;
           this.task.completedOn = this.completedOn;
           this.task.comment = this.comment;
           this.task.completed = this.estimated;
-          this.dialog.close();
+          res.update.forEach(obj=>{
+            this.dialog.dataService.update(obj).subscribe();
+          }) 
+          this.dialog.close(res[0])
           this.notiService.notify('Cập nhật trạng thái thành công !');
         } else {
           this.notiService.notify(

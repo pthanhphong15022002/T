@@ -1,5 +1,7 @@
+import { DialogRef } from 'codx-core/public-api';
 import { Component, OnInit, Injector } from '@angular/core';
-import { LayoutBaseComponent } from 'codx-core';
+import { NoteDrawerComponent } from '@shared/layout/drawers/note-drawer/note-drawer.component';
+import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 
 import { Observable } from 'rxjs';
 @Component({
@@ -10,18 +12,26 @@ import { Observable } from 'rxjs';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
   override asideFixed = false;
-  // override asideTheme: 'dark' | 'light' | 'transparent'= 'transparent';
+  override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   override toolbar = false;
-  
-  constructor(inject: Injector) {
+  dialog!: DialogRef;
+
+  constructor(inject: Injector,
+    private callfc: CallFuncService) {
     super(inject);
-    this.codxService.init(this.module);
   }
 
   onInit() { }
 
   onAfterViewInit() {
 
+  }
+
+  openFormNoteDrawer() {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
+    this.dialog.closed.subscribe()
   }
 
 }

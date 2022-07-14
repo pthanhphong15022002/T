@@ -5,13 +5,13 @@
       <ng-template #data>
         <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
         <ng-template #simple>
-          <codx-temp-full  imageSrc="{{getExtension(item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
+          <codx-temp-full  imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
             title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"          
             [desc]="getSubTitle(item.data.recID)" [descLine]="1">
           </codx-temp-full>
         </ng-template>
         <ng-template #full>
-          <codx-temp-full  imageSrc="{{getExtension(item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
+          <codx-temp-full  imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
             title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
             subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.userName}}"
             [desc]="getSubTitle(item.data.recID)" [descLine]="1">
@@ -32,13 +32,13 @@
       <ng-template #nodata>
         <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
         <ng-template #simple>
-          <codx-temp-full  imageSrc="{{getExtension(item.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
+          <codx-temp-full  imageSrc="{{getExtension(item.thumbnail, item.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
             title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"          
              [descLine]="1">
           </codx-temp-full>
         </ng-template>
         <ng-template #full>
-          <codx-temp-full  imageSrc="{{getExtension(item.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
+          <codx-temp-full  imageSrc="{{getExtension(item.thumbnail, item.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
             title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
             subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.userName}}"
             [descLine]="1">

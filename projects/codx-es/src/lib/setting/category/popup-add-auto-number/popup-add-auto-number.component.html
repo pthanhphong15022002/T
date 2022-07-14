@@ -1,9 +1,9 @@
 <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="bodyPopup"
-  [footer]="footer" [formGroup]="dialogAutoNum" *ngIf="isAfterRender">
+  [footer]="footer" [data]="{}" [formModel]="formModel" [formGroup]="dialogAutoNum" *ngIf="isAfterRender">
   <ng-template #bodyPopup>
     <div class="row mt-3">
       <div class="col-6">
-        <codx-label fiedName="StringFormat" [formModel]="dialog.formModel" default="Định dạng số tự động">
+        <codx-label fiedName="StringFormat" [formModel]="formModel" default="Định dạng số tự động">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.stringFormat"
           [refValue]="cbxName['StringFormat']" field="stringFormat" (valueChange)="valueChange($event)">
@@ -21,21 +21,21 @@
 
     <div class="row mt-3">
       <div class="col-4">
-        <codx-label fiedName="FixedString" [formModel]="dialog.formModel" default="Chuỗi kí tự">
+        <codx-label fiedName="FixedString" [formModel]="formModel" default="Chuỗi kí tự">
         </codx-label>
-        <codx-input type="text" name="text" ControlName="fixedString" [Group]="dialogAutoNum"
-          [crrValue]="dialogAutoNum.value.fixedString">
+        <codx-input type="text" name="text" [Group]="dialogAutoNum" ControlName="fixedString"
+          (valueChange)="valueChange($event, 'fixedString')">
         </codx-input>
       </div>
-      <div class="col-4">
-        <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="dialog.formModel">
+      <div class=" col-4">
+        <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="formModel">
         </codx-label>
         <codx-input type="valuelist" field="separator" [crrValue]="dialogAutoNum.value.separator"
           [refValue]="cbxName['Separator']" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="dialog.formModel">
+        <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.dateFormat"
           [refValue]="cbxName['DateFormat']" field="dateFormat" (valueChange)="valueChange($event)">
@@ -59,7 +59,7 @@
         </codx-input>
       </div>
       <div class="col-5">
-        <!-- <codx-label fiedName="Interval" [formModel]="dialog.formModel" default="Chu kỳ reset ">
+        <!-- <codx-label fiedName="Interval" [formModel]="formModel" default="Chu kỳ reset ">
         </codx-label> -->
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.interval"
           [refValue]="cbxName['Interval']" field="interval" (valueChange)="valueChange($event)"
@@ -71,7 +71,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>
   </ng-template>

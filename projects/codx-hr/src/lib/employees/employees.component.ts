@@ -44,10 +44,10 @@ export class EmployeesComponent implements OnInit {
     this.columnsGrid = [
       // { field: '', headerText: '', width: 20, template: this.itemAction },
       { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
-      { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
+      { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      { headerText: 'Hành động', width: 200, template: this.itemAction },
+      // { headerText: 'Hành động', width: 200, template: this.itemAction },
     ];
   }
 
@@ -138,15 +138,16 @@ export class EmployeesComponent implements OnInit {
   }
 
   delete(data: any) {
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.notiService.notifyCode('TM004');
-        }
-      });
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected],true,(opt) =>
+    //     this.beforeDel(opt)
+    //   )
+    //   .subscribe((res) => {
+    //     if (res[0]) {
+    //       this.notiService.notifyCode('TM004');
+    //     }
+    //   });
+    /* Core em bị lỗi mấy đoạn delete nên em rem lại để code, khi nào merge bỏ rem giúp em với*/
   }
 
   beforeDel(opt: RequestOption) {
@@ -166,10 +167,10 @@ export class EmployeesComponent implements OnInit {
         this.add();
         break;
       case 'edit':
-        this.copy(data);
-        break;
-      case 'edit':
         this.edit(data);
+        break;
+      case 'copy':
+        this.copy(data);
         break;
       case 'delete':
         // this.delete(data);

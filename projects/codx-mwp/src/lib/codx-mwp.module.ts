@@ -41,6 +41,11 @@ import {
   ILoadedEventArgs,
   SplineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditInfoComponent } from './employeeinfomation/edit-info/edit-info.component';
+import { EditHobbyComponent } from './employeeinfomation/edit-hobby/edit-hobby.component';
+import { EditExperenceComponent } from './employeeinfomation/edit-experence/edit-experence.component';
+import { EditRelationComponent } from './employeeinfomation/edit-relation/edit-relation.component';
 
 export const routes: Routes = [
   {
@@ -85,6 +90,10 @@ const Component: Type<any>[] = [
   PopupAddUpdate,
   DetailNoteBooksComponent,
   PostsComponent,
+  EditInfoComponent, 
+  EditHobbyComponent, 
+  EditExperenceComponent, 
+  EditRelationComponent,
 ];
 
 @NgModule({
@@ -104,6 +113,7 @@ const Component: Type<any>[] = [
     SidebarModule,
     AccumulationChartModule,
     TabModule,
+    NgbModule
   ],
   exports: [
     RouterModule,

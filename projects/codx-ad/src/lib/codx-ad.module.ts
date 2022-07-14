@@ -18,9 +18,15 @@ import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
 import { ViewUsersComponent } from './users/view-users/view-users.component';
+import { AddUserComponent } from './users/add-user/add-user.component';
+import { PopupPersonalComponent } from './company-setting/popup-personal/popup-personal.component';
+import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
+import { CompanySettingComponent } from './company-setting/company-setting.component';
+import { SharedModule } from '@shared/shared.module';
+import { GroupUsersComponent } from './group-users/group-users.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -45,7 +51,10 @@ export const routes: Routes = [
         path: 'accountinfo/:funcID',
         component: CompanySettingComponent
       }
-
+      ,{
+        path: 'groupusers/:funcID',
+        component: GroupUsersComponent
+      }
 
     ]
   }
@@ -56,7 +65,11 @@ const T_Component: Type<any>[] = [
   UserComponent,
   CompanySettingComponent,
   PopupContactComponent,
-  ViewUsersComponent
+  ViewUsersComponent,
+  AddUserComponent,
+  PopupPersonalComponent,
+  PopRolesComponent,
+  GroupUsersComponent
 ];
 @NgModule({
   imports: [
@@ -77,6 +90,8 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+    SharedModule
+
   ],
   exports: [RouterModule],
   declarations: T_Component,

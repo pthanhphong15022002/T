@@ -33,6 +33,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   exportAddForm : FormGroup;
   submitted = false;
   fileCount = 0;
+  module: any;
   @ViewChild('attachment') attachment: AttachmentComponent
   @Output() setDefaultValue = new EventEmitter();
   constructor(
@@ -49,18 +50,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     this.type = dt.data?.type;
     if(this.action == "add")
     {
-      this.headerText = "Thêm Excel Template";
+      this.headerText = "Thêm " + this.type +" Template";
     }
-
     else if(this.action == "edit")
     {
-      this.headerText = "Chỉnh sửa Excel Template";
+      this.headerText = "Chỉnh sửa " + this.type + " Template";
     }
     this.data = dialog.dataService;
     this.dialog = dialog;
     //this.data = dt.data;
   }
   ngOnInit(): void {
+    this.module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates" 
     this.exportAddForm = this.formBuilder.group(
       {
         templateName: [this.data?.templateName , Validators.required],
@@ -102,12 +103,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     //Thêm mới
     if(this.action == "add")
     {
-      
       if(this.fileCount>0)
       {
+      
         this.api
         .execActionData<any>(
-          'AD_ExcelTemplates',
+          this.module,
           [this.exportAddForm.value],
           'SaveAsync'
         ).subscribe(item=>{
@@ -116,7 +117,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
             this.notifySvr.notifyCode("RS002");
             this.attachment.objectId = item[1][0].recID;
             this.attachment.saveFiles();
-            this.dialog.close(item[1]);
+            this.dialog.close([item[1],this.type]);
           }
           else this.notifySvr.notify("Thêm không thành công");
         })
@@ -146,7 +147,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
               this.attachment.objectId = item[1][0].recID;
               this.attachment.saveFiles();
             }
-            this.dialog.close(item[1]);
+            this.dialog.close([item[1],this.type]);
           }
           else this.notifySvr.notify("Chỉnh sửa không thành công");
         })
@@ -154,7 +155,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   }
   getfileCount(e:any)
   {
-    this.fileCount = e;
+    this.fileCount = e.data.length;
   }
   getFile(e:any)
   {

@@ -11,59 +11,70 @@
           </codx-temp-full>
         </div>
         <div class="d-flex mt-2">
-          <div class="d-flex me-6">
-            <span class="text-dark me-2">Phân loại:</span>
-            <span class="text-gray-600">{{fmTextValuelist(data?.category,"4")}}</span>
+          <div class="float-left me-6">
+            <div>
+              <codx-label [default]="gridViewSetup?.Category?.headerText"></codx-label>
+            </div>
+            <div>
+              <codx-vll
+                [name]="this.gridViewSetup?.Category?.referedValue"
+                [value]="data['category']"
+                [showText]="true"
+                textCss="text-gray-600"
+              >
+              </codx-vll>
+            </div>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Mức độ khẩn:</span>
-            <ng-container *ngIf="data?.urgency">
-              <span class="icon-flag icon-16 me-2" [style.color]="getTextColor(data?.urgency,'2')"></span>
-              <span class="text-gray-600">{{fmTextValuelist(data?.urgency,"2")}}</span>
-            </ng-container>
+            <codx-label [default]="gridViewSetup?.Urgency?.headerText" [ngClass]="'me-1'"></codx-label>
+            <codx-vll
+              [name]="this.gridViewSetup?.Urgency?.referedValue"
+              [value]="data['urgency']"
+              [showText]="true"
+              [showIcon]="true"
+              textCss="text-gray-600"
+            >
+            </codx-vll>
             <!-- icon-flag -->
           </div>
           <div class="d-flex align-items-center">
-            <span class="text-dark me-2">Độ bảo mật:</span>
-            <ng-container *ngIf="data?.security">
-              <span class="icon-security icon-14 me-1" [style.color]="getTextColor(data?.security,'1')"></span>
-              <span class="text-gray-600">{{fmTextValuelist(data?.security,"1")}}</span>
-            </ng-container>
+            <codx-label [default]="gridViewSetup?.Security?.headerText" [ngClass]="'me-1'"></codx-label>
+            <codx-vll
+              [name]="this.gridViewSetup?.Security?.referedValue"
+              [value]="data['security']"
+              [showText]="true"
+              [showIcon]="true"
+              textCss="text-gray-600"
+            >
+            </codx-vll>
           </div>
         </div>
         <div class="d-flex mt-2">
           <div class="d-flex me-6">
-            <span class="text-dark me-2">Ngày gửi:</span>
-            <span class="text-gray-600">{{data?.createdOn | date:"dd/MM/yyyy"}}</span>
+            <codx-label [default]="gridViewSetup?.CreatedOn?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.createdOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Ngày nhận:</span>
-            <span class="text-gray-600">{{data?.dispatchOn | date:"dd/MM/yyyy"}}</span>
-            <!-- icon-flag -->
+            <codx-label [default]="gridViewSetup?.DispatchOn?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex">
-            <span class="text-dark me-2">Ngày hết hạn:</span>
-            <span class="text-gray-600">{{data?.deadline | date:"dd/MM/yyyy"}}</span>
+            <codx-label [default]="gridViewSetup?.Deadline?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.deadline ? (data?.deadline | date:'dd/MM/yyyy') : gridViewSetup?.Deadline?.headerText" ngClass="text-gray-600"></codx-label>
           </div>
         </div>
         <div class="d-flex mt-2">
           <div class="d-flex me-6">
-            <span class="text-dark me-2">Số văn bản:</span>
-            <span class="text-gray-600">{{data?.refNo}}</span>
+            <codx-label [default]="gridViewSetup?.RefNo?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.refNo" ngClass="text-gray-600"></codx-label>
           </div>
           <div class="d-flex align-items-center text-dark me-6">
-            <span class="text-dark me-2">Ngày:</span>
-            <span class="text-gray-600">{{data?.refDate | date:"dd/MM/yyyy"}}</span>
-            <!-- icon-flag -->
+            <codx-label [default]="gridViewSetup?.RefDate?.headerText" ngClass="me-2"></codx-label>
+            <codx-label [default]="data?.refDate ? (data?.refDate | date:'dd/MM/yyyy') : gridViewSetup?.RefDate?.headerText" ngClass="text-gray-600"></codx-label>
           </div>
         </div>
         <div class="d-flex mt-1">
-          <ng-container *ngIf="data && data?.files">
-            <codx-thumbnail
-              [files]="data?.files"
-            >
-            </codx-thumbnail>
-          </ng-container>
+          
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
@@ -82,6 +93,13 @@
       </div>
      
     </div>
+    <ng-container *ngIf="data && data?.files">
+      <codx-thumbnail
+        [files]="data?.files"
+        displayThumb="simple"
+      >
+      </codx-thumbnail>
+    </ng-container>
   </ng-template>
   <ng-template #body>
     <div class="tab-horizone">
@@ -125,14 +143,13 @@
                       [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy , item?.createdBy)"
                       [descLine]="1"
                     >
-
                     </codx-temp-full>
                   </div>
                   <div class="ms-2">
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
-                  <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.employeeID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
+                  <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
                     <div class="action-menu d-flex align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
                       <div class="btn btn-sm btn-icon btn-white" ><!-- (click)="openFormRecallSharing(data?.recID,item.recID)" -->
                         <i class="icon-redo text-primary icon-18"></i>
@@ -150,6 +167,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
+    <codx-tabs></codx-tabs>
   </ng-template>
   <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">

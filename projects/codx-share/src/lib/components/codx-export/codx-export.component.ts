@@ -15,6 +15,7 @@ import {
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
+import { Observable , finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { CodxExportAddComponent } from './codx-export-add/codx-export-add.component';
 
@@ -37,6 +38,11 @@ export class CodxExportComponent implements OnInit, OnChanges
   lblExtend: string = '';
   request = new DataRequest();
   optionEx = new DataRequest();
+  optionWord = new DataRequest();
+  service: string = "SYS";
+  assemblyName: string = "AD";
+  className: string = "ExcelTemplatesBusiness";
+  method: string = "GetByEntityAsync";
   @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     private callfunc: CallFuncService,
@@ -66,6 +72,14 @@ export class CodxExportComponent implements OnInit, OnChanges
       funcID: this.gridModel?.funcID,
       gridViewName: this.gridModel?.gridViewName
     }
+
+    //////////////////////////
+    this.request.page=0;
+    this.request.pageSize=10;
+    this.request.entityName = 'AD_ExcelTemplates';
+    this.request.funcID = this.formModel?.funcID;
+    //////////////////////////
+
     //Load data excel template
     this.load();
   }
@@ -76,22 +90,48 @@ export class CodxExportComponent implements OnInit, OnChanges
   load()
   {
 
-    this.optionEx.page=0;
-    this.optionEx.pageSize=10;
-    this.optionEx.entityName = 'AD_ExcelTemplates';
-    this.optionEx.funcID = "ODT3";
-    this.api.execSv<any>(
-      'SYS',
-      'AD', 
-      'ExcelTemplatesBusiness', 
-      'GetByEntityAsync', 
-      this.optionEx
-    ).subscribe(item=>
-    {
-      if(item[0])
-        this.dataEx = item[0]
-    })
+   this.loadEx();
+   this.loadWord();
+    
   }
+  loadEx()
+  {
+
+    this.request.entityName = 'AD_ExcelTemplates';
+    this.className = "ExcelTemplatesBusiness";
+    this.fetch().subscribe((item)=>{
+      this.dataEx = item
+    });
+  }
+  loadWord()
+  {
+    this.request.entityName = 'AD_WordTemplates';
+    this.className = "WordTemplatesBusiness";
+    this.fetch().subscribe((item)=>{
+      this.dataWord = item
+    });
+  }
+  private fetch () : Observable<any[]> 
+  {
+    return this.api
+    .execSv<Array<any>>(
+      this.service,
+      this.assemblyName,
+      this.className,
+      this.method,
+      this.request
+    )
+    .pipe(
+      finalize(() => {
+        /*  this.onScrolling = this.loading = false;
+        this.loaded = true; */
+      }),
+      map((response: any) => {
+        return response[0]
+      })
+    );
+  }
+ 
   openForm(val:any,data:any,type:any)
   {
     switch(val)
@@ -101,17 +141,29 @@ export class CodxExportComponent implements OnInit, OnChanges
           var option = new DialogModel();
           option.FormModel = this.formModel;
           option.DataService = data;
-          
           this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
           .closed.subscribe(item=>
           {
-            if(item.event.length>0) 
+            if(item.event && item.event.length>0) 
             {
-              if(val == "add") this.load();
-              else if(val == "edit")
+              var typeR = item.event[1];
+              if(typeR == "excel")
               {
-                var index = this.dataEx.findIndex((x => x.recID == item.event[0]?.recID));
-                if(index>=0) {this.dataEx[index] = item.event[0]}
+                if(val == "add") this.loadEx();
+                else if(val == "edit") 
+                {
+                  var index = this.dataEx.findIndex((x => x.recID == item.event[0]?.recID));
+                  if(index>=0) {this.dataEx[index] = item.event[0]}
+                }
+              }
+              else if(typeR == "word")
+              {
+                if(val == "add") this.loadWord();
+                else if(val == "edit")
+                {
+                  var index = this.dataWord.findIndex((x => x.recID == item.event[0]?.recID));
+                  if(index>=0) {this.dataWord[index] = item.event[0]}
+                }
               }
             }
           })
@@ -125,16 +177,20 @@ export class CodxExportComponent implements OnInit, OnChanges
           this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa ?", config).closed.subscribe(x=>{
             if(x.event.status == "Y")
             {
+              var method = type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates"
               this.api
                 .execActionData<any>(
-                  'AD_ExcelTemplates',
+                  method,
                   [data],
                   'DeleteAsync'
                 ).subscribe(item=>{
                   if(item[0] == true)
                   {
                     this.notifySvr.notifyCode("RS002");
-                    this.dataEx = this.dataEx.filter(x=>x.recID != item[1][0].recID);
+                    if(type=="excel")
+                      this.dataEx = this.dataEx.filter(x=>x.recID != item[1][0].recID);
+                    else if(type=="word")
+                      this.dataWord = this.dataWord.filter(x=>x.recID != item[1][0].recID);
                   }
                   else this.notifySvr.notify("Xóa không thành công");
                 })
@@ -148,33 +204,44 @@ export class CodxExportComponent implements OnInit, OnChanges
   {
     this.submitted = true;
     if(this.exportGroup.invalid) return;
-    var dt = this.exportGroup.value;
-    switch(dt.format)
+    var idTemp = null;
+    var value  = this.exportGroup.value;
+    var splitFormat = value.format.split("_");
+    switch(splitFormat[0])
     {
       case "excel":
+      case 'excelTemp':
         {
-          if(dt.dataExport == "all")
+          if(value.dataExport == "all")
           {
             this.gridModel.page=1;
             this.gridModel.pageSize=-1;
           }
-          else if(dt.dataExport == "selected")
+          else if(value.dataExport == "selected")
           {
             this.gridModel.predicates = this.gridModel.predicate+"&&RecID=@1"
             this.gridModel.dataValues = [this.gridModel.dataValue,this.recID].join(";");
           }
+          if(splitFormat[1]) idTemp = splitFormat[1];
+          this.api.execSv<any>(
+            "OD",
+            'CM', 
+            'CMBusiness', 
+            'ExportExcelAsync', 
+            [this.gridModel,idTemp]
+          ).subscribe(item=>
+            {
+              if(item)
+              {
+                this.downloadFile(item);
+              }
+            }
+          );
           break;
         }
     }
     
-    this.api.execSv<any>("OD",'CM', 'CMBusiness', 'ExportExcelAsync', this.gridModel).subscribe(item=>
-    {
-      if(item)
-      {
-        this.downloadFile(item);
-      }
-      
-    }) 
+   /*    */
       
   }
   downloadFile(data: any) {

@@ -38,7 +38,7 @@ export class EmployeesLeaveComponent implements OnInit {
       { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      { headerText: 'Hành động', width: 200, template: this.itemAction },
+      // { headerText: 'Hành động', width: 100, template: this.itemAction },
     ];
   }
 
@@ -69,15 +69,15 @@ export class EmployeesLeaveComponent implements OnInit {
   }
 
   delete(data: any) {
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], (opt) =>
-        this.beforeDel(opt)
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.notiService.notifyCode('TM004');
-        }
-      });
+    // this.view.dataService
+    //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
+    //     this.beforeDel(opt)
+    //   )
+    //   .subscribe((res) => {
+    //     if (res[0]) {
+    //       this.notiService.notifyCode('TM004');
+    //     }
+    //   });
   }
 
   beforeDel(opt: RequestOption) {

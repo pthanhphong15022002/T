@@ -9,7 +9,7 @@
         <codx-input class="btn btn-icon btn-primary btn-icon btn-icon-md btn-circle me-5" type="vllicon"
           refValue="L1470" field="icon" [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
         </codx-input>
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md ms-2" data-dismiss="modal">
           <i class="icon-color_lens text-primary text-hover-primary-dark icon-24"></i>
         </button>
       </div>
@@ -58,7 +58,7 @@
     </div>
     <div class=" row mt-3">
       <div class="d-flex flex-stack mt-3">
-        <div class="fw-bolder ">
+        <div class="fw-bolder text-primary">
           <codx-label default="Đánh số văn bản" fiedName="AutoNumber" [formModel]="form.formModel">
           </codx-label>
         </div>
@@ -76,7 +76,7 @@
     </div>
     <div class="d-flex flex-stack mt-3">
       <div class="fw-bolder ">
-        <codx-label default="Qui trình duyệt" fiedName="ProcessID" [formModel]="form.formModel">
+        <codx-label class="text-primary" default="Qui trình duyệt" fiedName="ProcessID" [formModel]="form.formModel">
         </codx-label>
       </div>
       <span class="text-end align-items-end">
@@ -87,7 +87,7 @@
       </span>
     </div>
 
-    <div class="codx-approval">
+    <!-- <div class="codx-approval">
       <div class="codx-approval-step step-test pb-3">
         <div class="codx-approval-header d-flex align-items-center">
           <div class="step-number">1</div>
@@ -137,8 +137,36 @@
           </div>
         </div>
       </div>
+      <div class="codx-approval-step step-signature-temp pb-3">
+        <div class="codx-approval-header d-flex align-items-center">
+          <div class="step-number">2</div>
+          <div class="step-title text-gray-800 fw-bold fs-4">KÝ NHÁY</div>
+        </div>
+        <div class="codx-approval-content ms-17">
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-top justify-content-between mb-2">
+            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="ms-6 d-flex">
+                <span class="text-dark">45 phút</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="codx-approval-step step-signature-temp pb-3"></div>
-    </div>
+    </div> -->
 
 
     <!-- <div id="progress" class="cdx-progress mt-3" *ngIf="dialogCategory?.value.countStep > 0">

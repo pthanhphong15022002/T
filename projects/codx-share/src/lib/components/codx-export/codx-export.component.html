@@ -91,7 +91,7 @@
                     <div class="codx_title_sub"><codx-label default="Pivot Table"></codx-label></div>
                     <div class="codx_des"><i class="text-gray-400"><codx-label default="Xuất dữ liệu được chọn thành file excel có định dạng pivot table"></codx-label></i></div>
                     <div class="codx_des">
-                       <!--  <codx-attachment 
+                        <codx-attachment 
                             #attachment 
                             hideBtnSave="1"  
                             hideFolder="1" 
@@ -99,8 +99,9 @@
                             hideDes="1"
                             objectType="AD_ExcelTemplates"
                             [functionID]="formModel?.funcID"
+                            idBrowse="2"
                         >
-                        </codx-attachment> -->
+                        </codx-attachment>
                     </div>
                 </div>
               </div>
@@ -183,8 +184,8 @@
                         name="format"  
                         [Group]="exportGroup"
                         ControlName="format"
-                        [crrValue]="item.recID"
-                        [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+                        [crrValue]="'excelTemp_'+item.recID"
+                        [ngClass]="{'is-invalid': submitted && f.format.errors }"
                     >
                     </codx-input>
                 </div>
@@ -193,11 +194,11 @@
                 <div class="codx_des"> <i class="text-gray-400">{{item.description}}</i></div>
                 </div>
                 <div class="d-flex align-items-start ms-6 ">
-                <div ngbDropdown class="dropdown ms-6">
-                    <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-expanded="false">
-                    <span class="icon-more_vert icon-18"></span>
+                <div ngbDropdown class="dropdown ms-6" [container]="'body'" >
+                    <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-haspopup="true" aria-expanded="false">
+                        <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
                         <a ngbDropdownItem class="dropdown-item">
                             <div class="d-flex align-items-center cursor-pointer" (click)="openForm('edit',item,'excel')">
                                 <span class="icon-edit text-primary icon-16"></span>
@@ -253,8 +254,8 @@
               <div class="codx_des"> <i class="text-gray-400">{{item.description}}</i></div>
             </div>
             <div class="d-flex align-items-start ms-6 ">
-              <div ngbDropdown class="dropdown ms-6">
-                <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-expanded="false">
+              <div ngbDropdown class="dropdown ms-6" [container]="'body'">
+                <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-haspopup="true" aria-expanded="false">
                   <span class="icon-more_vert icon-18"></span>
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">

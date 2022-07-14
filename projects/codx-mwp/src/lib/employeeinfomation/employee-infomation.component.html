@@ -1,47 +1,74 @@
-<codx-views #view funcID="MWP002" entityName="HR_Employees" [views]="views">
+<codx-views #view funcID="MWP002"  service="HR" entityName="HR_Employees"   [views]="views">
 </codx-views>
 
 
 
 <ng-template #panelRightRef>
   <div class="page-pw">
-    <!-- header ở trên  -->
+
     <div class="pw-profile"
       style="background-image:url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');">
-      <!-- <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="'Admin'" [objectName]="'Admin'" [width]="60">
+      <div class="d-flex align-items-center avatar">
+        <codx-img #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
+          [objectName]="employeeInfo?.employeeName" objectType="HR_Employees">
         </codx-img>
-      </div> -->
+        <div class="d-flex flex-column">
+          <div class="text-center align-items-center">{{employeeInfo?.employeeName}}</div>
+          <div class="fs-6 fw-bold text-dark">{{employeeInfo?.positionName}}</div>
+          <div class="text-gray-700">{{employeeInfo?.organizationName}}</div>
+        </div>
+      </div>
     </div>
+
     <div class="d-flex w-100">
       <div class="w-300px min-w-300px">
-        <!-- thanh bên trái -->
-        <lib-info-left></lib-info-left>
+        <lib-info-left [formModel] ="view.formModel"></lib-info-left>
       </div>
-      <div class="w-100 ps-9 border-left">
+
+      <div class="w-100">
         <div class="employee-container">
           <div class="pw-menu d-flex">
-            <span><a href="/">Cá nhân</a></span>
-            <span><a href="/">Phúc lợi</a></span>
-            <span><a href="/">Quá trình nhân sự</a></span>
-            <span><a href="/">Kiến thức</a></span>
-            <span><a href="/">Sức khỏe</a></span>
+            <div ngbDropdown class="d-inline-block">
+              <codx-button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+                {{defautFunc.defaultName}}</codx-button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <ng-container *ngFor="let item of moreFunc">
+                  <codx-button ngbDropdownItem>
+                    <a href="{{'#' + item.functionID}}">{{item.defaultName}}</a>
+                  </codx-button>
+                </ng-container>
+              </div>
+            </div>
           </div>
+
           <div class="pw-content w-100 pw-lg">
-            <!-- content bên phải -->
-            <div class="user-content flex-row-fluid pb-6" scrollSpy (sectionChange)="onSectionChange($event)">
+            <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
               <ng-container>
                 <!-- thong tin chung -->
-                <div class="user-profile overview d-block mb-3" id="InfoPersonal">
-                  <!-- <codx-label class="fw-bold fs-5 text-primary mb-2 mt-6" name="lblInfoPersonal" formName="Employees"
+                <div class="user-profile overview d-block mb-3" id="MWP00201">
+
+                  <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblInfoPersonal" formName="Employees"
                     default="Thông tin nhân viên">
-                  </codx-label> -->
+                    <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
+                  </codx-label>
                   <div *ngIf="employeeInfo">
-                    <div class="d-flex align-items-center mt-3">
-                      <div class="fs-3 fw-bold text-dark">{{employeeInfo?.employeeName}}</div>
+                    <div class="d-flex justify-content-between">
+                      <div class="text-dark fw-bold text-uppercase mb-1" style="cursor: pointer;">
+                        <codx-label fiedName="employeeID" formName="Employees" gridViewName="grvEmployees"
+                          default="Mã nhân viên: #">
+                        </codx-label>
+                        <span class="text-dark">{{employeeInfo?.employeeID}}</span>
+                        <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                          <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                      <div class="fs-4 fw-bold text-dark">{{employeeInfo?.employeeName}}</div>
                       <div class="user-status text-primary ms-5">
                         <span class="icon-check text-primary icon-18 me-1"></span>
-                        <span>{{employeeInfo?.status}}</span>
+                        <span>{{employeeInfo?.status|vll:"L0225":"text"|async}}</span>
                       </div>
                     </div>
 
@@ -50,7 +77,8 @@
                       <span class="text-gray-500 mx-3" *ngIf="employeeInfo?.organizationName">|</span>
                       <span class="text-dark">{{employeeInfo?.organizationName}}</span>
                       <span class="text-gray-500 mx-3" *ngIf="employeeInfo?.divisionName">|</span>
-                      <span class="text-dark">{{employeeInfo?.divisionName}}</span>
+                      <span class="text-dark">{{employeeInfo?.divisionName != ""? employeeInfo?.divisionName :
+                        null}}</span>
                     </div>
                     <div class="text-dark fw-bold text-uppercase mt-9 mb-3">{{ 'Thông tin nhân viên' | lang:
                       'ProfileOverview':'txtInfoEmployee' | async}}
@@ -66,7 +94,7 @@
                       </div>
                       <div class="col">
                         <div class="d-flex">
-                          <codx-label class="text-gray-600 me-2" fiedName="payGroupName" formName="Employees"
+                          <codx-label class="text-gray-600 me-2" fiedName="PayGroupID" formName="Employees"
                             gridViewName="grvEmployees" default="Nhóm tính lương: ">
                           </codx-label>
                           <span class="text-dark">{{employeeInfo.payGroupID}}</span>
@@ -74,7 +102,7 @@
                       </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-2">
                       <div class="col">
                         <div class="d-flex">
                           <codx-label class="text-gray-600 me-2" fiedName="hiredOn" formName="Employees"
@@ -92,7 +120,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+
+                    <div class="row mb-2">
                       <div class="col">
                         <div class="d-flex">
                           <codx-label class="text-gray-600 me-2" fiedName="recruitedOn" formName="Employees"
@@ -136,7 +165,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="gender" formName="Employees"
                             gridViewName="grvEmployees" default="Giới tính: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.gender}}</span>
+                          <span class="text-dark">{{employeeInfo?.gender|vll:"L0068":"text"|async}}</span>
                         </div>
                       </div>
                       <div class="col">
@@ -144,17 +173,15 @@
                           <codx-label class="text-gray-600 me-2" fiedName="birthday" formName="Employees"
                             gridViewName="grvEmployees" default="Sinh ngày: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.birthday | date: "dd/mm/yyyy"}}</span>
+                          <span class="text-dark">{{employeeInfo.birthday | date: "dd/MM/yyyy"}}</span>
                         </div>
                       </div>
                       <div class="col">
                         <div class="d-flex">
-                          <!-- <span class="text-gray-600 me-2">{{ 'Tại' | lang:
-                          'ProfileOverview':'txtBirthPlace' | async}}:</span> -->
                           <codx-label class="text-gray-600 me-2" fiedName="birthPlaceName" formName="Employees"
                             default="Tại: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo?.birthPlaceName !="---"? employeeInfo?.birthPlaceName :
+                          <span class="text-dark">{{employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
                             null}}</span>
                         </div>
                       </div>
@@ -165,7 +192,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="idCardNo" formName="Employees"
                             gridViewName="grvEmployees" default="CMND/CCCD: ">
                           </codx-label>
-                          <span class="text-dark mr-15">{{employeeInfo?.idCardNo != "---"? employeeInfo?.idCardNo :
+                          <span class="text-dark mr-15">{{employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
                             null}}</span>
                         </div>
                       </div>
@@ -174,7 +201,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="issuedOn" formName="Employees"
                             gridViewName="grvEmployees" default="Cấp ngày: ">
                           </codx-label>
-                          <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "---" ? employeeInfo?.issuedOn :
+                          <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
                             null}}</span>
                         </div>
                       </div>
@@ -183,7 +210,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="issuedBy" formName="Employees"
                             gridViewName="grvEmployees" default="Tại: ">
                           </codx-label>
-                          <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "---" ? employeeInfo?.issuedOn :
+                          <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
                             null}}</span>
                         </div>
                       </div>
@@ -191,26 +218,26 @@
                     <div class="row">
                       <div class="col">
                         <div class="d-flex">
-                          <codx-label class="text-gray-600 me-2" fiedName="religionName" formName="Employees"
+                          <codx-label class="text-gray-600 me-2" fiedName="religion" formName="Employees"
                             gridViewName="grvEmployees" default="Tôn giáo: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.religionName}}</span>
+                          <span class="text-dark">{{employeeInfo.religion}}</span>
                         </div>
                       </div>
                       <div class="col">
                         <div class="d-flex">
-                          <codx-label class="text-gray-600 me-2" fiedName="ethnicGroupName" formName="Employees"
+                          <codx-label class="text-gray-600 me-2" fiedName="ethnicGroup" formName="Employees"
                             gridViewName="grvEmployees" default="Dân tộc: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.ethnicGroupName}}</span>
+                          <span class="text-dark">{{employeeInfo.ethnicGroup}}</span>
                         </div>
                       </div>
                       <div class="col">
                         <div class="d-flex">
-                          <codx-label class="text-gray-600 me-2" fiedName="nationalityName" formName="Employees"
+                          <codx-label class="text-gray-600 me-2" fiedName="nationality" formName="Employees"
                             gridViewName="grvEmployees" default="Quốc tịch: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.nationalityName}}</span>
+                          <span class="text-dark">{{employeeInfo.nationality}}</span>
                         </div>
                       </div>
                     </div>
@@ -239,7 +266,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="pITNumber" formName="Employees"
                             gridViewName="grvEmployees" default="Thuế TNCN số: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.pITNumber}}</span>
+                          <span class="text-dark">{{employeeInfo.pitNumber}}</span>
                         </div>
                       </div>
                       <div class="col">
@@ -247,7 +274,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="pITIssuedOn" formName="Employees"
                             gridViewName="grvEmployees" default="Cấp ngày: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.pITIssuedOn}}</span>
+                          <span class="text-dark">{{employeeInfo.pitIssuedOn}}</span>
                         </div>
                       </div>
                       <div class="col">
@@ -264,7 +291,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="sIRegisterNo" formName="Employees"
                             gridViewName="grvEmployees" default="BHXH số: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.sIRegisterNo}}</span>
+                          <span class="text-dark">{{employeeInfo.siRegisterNo}}</span>
                         </div>
                       </div>
                       <div class="col">
@@ -272,7 +299,7 @@
                           <codx-label class="text-gray-600 me-2" fiedName="sIRegisterOn" formName="Employees"
                             gridViewName="grvEmployees" default="Cấp ngày: ">
                           </codx-label>
-                          <span class="text-dark">{{employeeInfo.sIRegisterOn}}</span>
+                          <span class="text-dark">{{employeeInfo.siRegisterOn}}</span>
                         </div>
                       </div>
                       <div class="col">
@@ -286,12 +313,13 @@
                 </div>
               </ng-container>
               <!-- kinh nghiem -->
-              <div id="Experences" class="d-block mt-6">
+              <div id="MWP00202" class="d-block mt-6">
 
                 <div class="user-profile overview">
-                  <codx-label class="fw-bold fs-5 text-primary mb-2 mt-6" name="lblExperencies" formName="Employees"
+                  <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblExperencies" formName="Employees"
                     default="Kinh nghiệm trước đây">
                   </codx-label>
+                  <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="ExperencesCurrent">
                     <div class="user-process process-h">
                       <div *ngFor="let experences of ExperencesWorked">
@@ -306,6 +334,14 @@
                               <div class="d-flex justify-content-between cardExp">
                                 <div class="p"><a class="text-dark fs-6 ">{{experences.companyName}}</a></div>
                                 <div class="">
+                                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary margin-left"
+                                    *ngIf="editMode" (click)="editExperences(experences)">
+                                    <span class="icon-edit icon-18"></span>
+                                  </a>
+                                  <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
+                                    (click)="deleteExperences(experences)">
+                                    <span class="icon-close icon-18"></span>
+                                  </a>
                                 </div>
                               </div>
                             </div>
@@ -319,17 +355,17 @@
               </div>
 
               <!-- kỹ năng -->
-              <div id="Skill" class="d-block">
+              <div id="MWP00203" class="d-block">
                 <div class="user-profile overview">
                   <div class="d-flex justify-content-between mb-3">
-                    <codx-label class="fw-bold fs-5 text-primary mb-2 mt-6" name="lblSkill" formName="Employees"
+                    <codx-label class="fw-bold fs-4 text-primary" name="lblSkill" formName="Employees"
                       default="Kỹ năng ">
                     </codx-label>
                     <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="editSkill()">
                       <span class="icon-edit icon-18"></span>
                     </a>
                   </div>
-                  <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
+                  <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="skillEmployee">
                     <div class="row">
                       <div class="col-6 pe-9">
@@ -342,34 +378,42 @@
                                   <div class="wrap">
                                     <div class="sliderwrap">
                                       <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10"
-                                        [(ngModel)]="data.valueX">
+                                        [value]="data.valueX" [readonly]="true">
                                       </ejs-slider>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <!-- <div *ngIf="editSkillMode">
-                      <div class="d-flex align-items-center">
-value="setMyStyles(data)"
-                        <div class="wrap">
-                          <ejs-slider id='minrange' [(ngModel)]="data.valueX" (valueChange)="sliderChange($event,data)">
-                          </ejs-slider>
-                        </div>
-
-                      </div>
-                    </div> -->
+                              <div *ngIf="editSkillMode">
+                                <!-- <div class="d-flex align-items-center"> -->
+                                <div id='container'>
+                                  <div class="wrap">
+                                    <div class="sliderwrap">
+                                      <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10"
+                                        [value]="data.valueX" (valueChange)="sliderChange($event,data)">
+                                      </ejs-slider>
+                                    </div>
+                                  </div>
+                                  <div class="ml-3">
+                                    <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editSkillMode"
+                                      (click)="deleteSkill(data)">
+                                      <span class="icon-close icon-18"></span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
+                            <!-- </div> -->
                           </ng-container>
                         </div>
                       </div>
-                      <!-- *ngIf="skillChartEmployee && skillChartEmployee.length>0" -->
                       <div class="col-6">
-
                         <ejs-chart id='chartcontainer' [title]="" [primaryXAxis]='primaryXAxis'
                           [primaryYAxis]='primaryYAxis'>
                           <e-series-collection>
                             <e-series *ngIf="skillEmployee" [dataSource]='skillEmployee' name="Employee" type='Radar'
-                              xName='competenceName' yName='valueX'></e-series>
+                              xName='competenceName' yName='valueX'>
+                            </e-series>
                           </e-series-collection>
                         </ejs-chart>
                       </div>
@@ -379,35 +423,79 @@ value="setMyStyles(data)"
               </div>
 
               <!-- đào tạo -->
-              <div id="Training" class="d-block mb-3">
+              <div id="MWP00204" class="d-block mb-3">
                 <div class="user-profile overview">
-                  <codx-label class="fw-bold fs-5 text-primary mb-2 mt-6" name="lblTraining" formName="Employees"
+                  <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblTraining" formName="Employees"
                     default="Đào tạo cá nhân">
                   </codx-label>
+                  <ngx-skeleton-loader *ngIf="!trainingInterObl && !trainingInterUnObl && !trainingPersonal" count="5"
+                    animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="trainingInterObl || trainingInterUnObl || trainingPersonal">
 
                     <div *ngIf="trainingPersonal && trainingPersonal.length>0"
                       class="text-dark fw-bold text-uppercase mt-8 mb-4">
                       Bên ngoài</div>
-                    <div class="user-process process-v swiper-wrapper">
-
-                    </div>
+                      <div class="user-process process-v swiper-wrapper">
+                        <!-- <swiper [slidesPerView]="3" [navigation]="true" class="mySwiper"> -->
+                          <ng-template swiperSlide *ngIf="editMode">
+                            <ng-container>
+                              <div class="process-item swiper-slide" (click)="editDataEdu(null)">
+                                <div class="line"></div>
+                                <span class="yeartoyear btn btn-sm add-process">Thêm mới</span>
+                              </div>
+                            </ng-container>
+                          </ng-template>
+              
+                          <ng-template swiperSlide *ngFor="let item of trainingPersonal">
+                            <ng-container>
+                              <div class="process-item swiper-slide">
+                                <div class="line"></div>
+                                <span class="yeartoyear btn btn-sm">{{item.completeOn}}</span>
+                                <div class="d-flex flex-column mt-4">
+                                  <div class="text-dark mb-1">{{item.organizationName}}</div>
+                                  <div class="text-dark mt-1 d-flex align-items-start">
+                                    <span class="text-dark-50 icon-check_circle icon-16 mr-2"></span>
+                                    <span class="text-dark-50">{{item.certificateName}}</span>
+                                  </div>
+                                  <div class="text-dark mt-1 d-flex align-items-start">
+                                    <span class="text-dark-50 icon-class icon-16 mr-2"></span>
+                                    <span class="text-dark-50">{{item.memo}}</span>
+                                  </div>
+                                  <div class="d-flex mt-4">
+                                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary mr-2" *ngIf="editMode"
+                                      (click)="editDataEdu(item)">
+                                      <span class="icon-edit icon-18"></span>
+                                    </a>
+                                    <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
+                                      (click)="deleteEducation(item)">
+                                      <span class="icon-close icon-18"></span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-template>
+              
+                        <!-- </swiper> -->
+                      </div>
 
                   </div>
                 </div>
               </div>
 
               <!-- quan hệ gia đình -->
-              <div id="RelationShip" class="d-block mb-3">
+              <div id="MWP00205" class="d-block mb-3">
 
                 <div class="user-profile overview">
-                  <div class="fw-bold fs-5 text-primary mb-2 mt-6">
+                  <div class="fw-bold fs-4 text-primary mb-6">
                     <codx-label name="lblRelationShip" formName="Employees" default="Quan hệ gia đình">
                     </codx-label>
+                    <ngx-skeleton-loader *ngIf="!employeeRelationship" count="5" animation="progress">
+                    </ngx-skeleton-loader>
                   </div>
                   <div *ngIf="employeeRelationship">
                     <div class="row">
-                      <div *ngFor="let relationship of employeeRelationship">
+                      <ng-container *ngFor="let relationship of employeeRelationship">
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
                           <div class="d-flex flex-grow-1 user-item">
                             <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="relationship.recID"
@@ -419,30 +507,62 @@ value="setMyStyles(data)"
                                 <span class="text-muted">{{relationship.relationType}} | <span>Năm sinh:</span>
                                   {{relationship.birthday|date: "yyyy"}}</span>
                               </div>
+                              <div class="d-flex mt-3">
+                                <a class="btn btn-xs btn-icon btn-light btn-hover-primary mr-2" *ngIf="editMode"
+                                  (click)="editRelation(relationship)">
+                                  <span class="icon-edit icon-18"></span>
+                                </a>
+                                <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
+                                  (click)="deleteRelation(relationship)">
+                                  <span class="icon-close icon-18"></span>
+                                </a>
+                              </div>
                             </div>
                           </div>
+
                         </div>
                         <!-- <codx-card-center cardCss="border h-100" [imageId]="relationship.picture" [title]="relationship.RelationName"
                 [desc]="(relationship.RelationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')" >
               </codx-card-center> -->
-                      </div>
+                      </ng-container>
+                      <ng-container *ngIf="editMode">
+                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                          <div class="d-flex">
+                            <div class="d-flex align-items-center user-item add-process" (click)="editRelation(null)">
+                              <span class="icon-add icon-18"></span>
+                              <a class="text-primary">Thêm mới</a>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- sở thích -->
-              <div id="Hobbie" class="d-block">
+              <div id="MWP00206" class="d-block">
                 <div class="user-profile overview">
-                  <div class="fw-bold fs-5 text-primary mb-2 mt-6">
-                    <codx-label name="lblHobbie" formName="Employees" default="Sở thích"></codx-label>
-                  </div>
+                  <codx-label class="fw-bold fs-4 text-primary mb-6" name="lblHobbie" formName="Employees"
+                    default="Sở thích">
+                  </codx-label>
+                  <ngx-skeleton-loader *ngIf="!employeeHobbie" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="employeeHobbie">
-                    <div class="list-hoppy">
-                      <div *ngFor="let item of employeeHobbie" class="align-items-center user-item tagitem"
-                        [style.background]="item.color">
-                        <div [style.color]="getContrastYIQ(item)">
-                          {{item.hobbyName}}
+                    <div class="row">
+                      <div class="list-hoppy">
+                        <div *ngFor="let item of employeeHobbie" class="d-flex align-items-center user-item tagitem"
+                          [style.background]="item.color">
+                          <div [style.color]="getContrastYIQ(item)">
+                            {{item.hobbyName}}
+                          </div>
+                          <a class="text-white text-hover-danger mt-1 ml-2" *ngIf="editMode"
+                            (click)="deleteHobby(item)">
+                            <span class="icon-close icon-16"></span>
+                          </a>
+                        </div>
+                        <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process"
+                          (click)="editHobby(null)">
+                          <a class="text-primary">Thêm mới</a>
                         </div>
                       </div>
                     </div>

@@ -8,18 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  DataRequest,
-  ViewModel,
-  ViewType,
-  RequestOption,
-  ButtonModel,
-  ResourceModel,
-  SidebarModel,
-  DialogRef,
-  AuthStore,
-  UrlUtil,
-  NotificationsService,
-  UIComponent,
+  DataRequest, ViewModel, ViewType, RequestOption, ButtonModel, ResourceModel, SidebarModel, DialogRef, AuthStore, UrlUtil, NotificationsService, UIComponent,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -99,14 +88,17 @@ export class TasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT02015': // cái này xem lại , nên có biến gì đó để xét
+      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
-      case 'SYS001': // cái này xem lại , nên có biến gì đó để xét
+      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
         break;
-      case 'SYS002': // cái này xem lại , nên có biến gì đó để xét
+      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
+        break;
+      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
+        //???? chắc làm sau ??
         break;
       default:
         this.changeStatusTask(e, data);
@@ -153,8 +145,6 @@ export class TasksComponent extends UIComponent {
   }
 
   change() {
-    // this.view.dataService.dataValues = "1";
-    // this.view.dataService.load();
     this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
@@ -236,9 +226,7 @@ export class TasksComponent extends UIComponent {
         { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
       ],
     };
-    //reload data
-    // this.schedule.reloadDataSource();
-    // this.schedule.reloadResource();
+
   }
 
   getCellContent(evt: any) {
@@ -322,12 +310,17 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
 
   edit(data?) {
+    if (data && data.status >= 8) {
+      // this.notiService.notifyCode('cần code đoạn nay');
+      this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+      return;
+    }
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -344,11 +337,10 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          this.itemSelected = this.view.dataService.dataSelected
+          this.itemSelected = e?.event;
+          this.dt.detectChanges();
         });
-
       });
-
   }
 
   copy(data) {
@@ -363,7 +355,7 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0]
+        this.itemSelected = this.view.dataService.data[0];
       });
     });
   }
@@ -395,19 +387,19 @@ export class TasksComponent extends UIComponent {
             this.notiService.notifyCode('TM001');
           } else {
             this.view.dataService
-              .delete([this.view.dataService.dataSelected], (opt) =>
+              .delete([this.view.dataService.dataSelected], true, (opt) =>
                 this.beforeDel(opt)
               )
               .subscribe((res) => {
                 if (res[0]) {
                   this.itemSelected = this.view.dataService.data[0];
-                  this.notiService.notifyCode('TM004');
                 }
               });
           }
         }
       });
   }
+
   sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
@@ -418,13 +410,15 @@ export class TasksComponent extends UIComponent {
 
   assignTask(data) {
     this.view.dataService.dataSelected = data;
+    var vllControlShare = 'L1906' ;
+    var vllRose = 'TM001' ;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      this.view.dataService.dataSelected,
+      [this.view.dataService.dataSelected,vllControlShare,vllRose],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -435,7 +429,9 @@ export class TasksComponent extends UIComponent {
   changeView(evt: any) { }
 
   requestEnded(evt: any) {
-    //this.dialog && this.dialog.close(); sai vẫn bị đóng
+    if (evt.type == 'read') {
+      console.log(this.view.dataService.data);
+    }
     this.view.currentView;
   }
   onDragDrop(e: any) {
@@ -455,33 +451,31 @@ export class TasksComponent extends UIComponent {
   }
 
   changeStatusTask(moreFunc, taskAction) {
-    const fromName = 'TM_Parameters';
     const fieldName = 'UpdateControl';
-    //  this.view.dataService.dataSelected = taskAction;
     this.api
       .execSv<any>(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        [fromName, null, fieldName]
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'TM_Parameters'
       )
       .subscribe((res) => {
         if (res) {
-          var fieldValue = res.fieldValue;
+          var param = JSON.parse(res.dataValue);
+          var fieldValue = param[fieldName];
           if (fieldValue != '0') {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate)).toDate();
-            var estimated = moment(completedOn).diff(
-              moment(startDate),
-              'hours'
-            );
+            var startDate =  moment(new Date(taskAction.startDate?taskAction.startDate:taskAction.createdOn)).toDate();
+            var time = (((completedOn.getTime() -startDate.getTime())/3600000).toFixed(1));
+            var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
               .setStatusTask(
+                this.funcID,
                 taskAction.taskID,
                 status,
                 completedOn,
@@ -494,6 +488,11 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
+                  res.forEach(obj=>{
+                    this.view.dataService.update(obj).subscribe();
+                  })    
+                  this.itemSelected = res[0] ;      
+                  this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
                   this.notiService.notify(
@@ -519,7 +518,13 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    );
+    )
+    this.dialog.closed.subscribe(e=>{
+      if(e?.event){     
+          this.itemSelected =e?.event;
+          this.dt.detectChanges();
+      }
+    })
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);

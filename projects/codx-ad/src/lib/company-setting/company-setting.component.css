@@ -2,45 +2,65 @@
   font-size: 30px !important;
   padding-right: 10px;
 }
+
 .dropdown-toggle {
   font-size: 15px;
 }
-.title {
-  color: #342d2d;
 
+.title {
+  color: #8E8F90;
+  font-weight: 600;
 }
+
+.w-1000px {
+  width: 1200px !important;
+  height: 100%;
+}
+
 .menu-item {
   padding-top: -24px;
 }
+
 .menu {
   margin-top: -24px;
 }
+
 .accountinfo {
-  padding-top: 10px;
-  padding-bottom: 15px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
+
 .header_title {
-  padding-bottom: 30px;
+  font-size: 19px;
+  padding-bottom: 14px;
 }
+
 .header_detail {
   /* background: white;
   background-size: 5000px 1000px;
   background-repeat: no-repeat; */
   /* background-color: white; */
 }
+
 .body_title {
   padding-bottom: 30px;
 }
+
 .contact {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
+
 .body_detail {
   border: 1px solid #dbd8d9;
+  margin-top: 15px;
+  margin-bottom: 30px;
 }
+
 .footer_detail {
   border: 1px solid #dbd8d9;
 }
+
 .contact-map {
   display: -webkit-box;
   display: -webkit-flex;
@@ -49,16 +69,109 @@
 }
 
 .contact-map-size {
-  height: 250px;
+  height: 300px;
   width: 100%;
 }
-.button_edit{
+
+.button_edit {
   text-align: right;
 }
+
 .content {
-  padding: 10px 10px 10px 10px;
+  padding: 18px 18px 20px 18px;
 }
+
+button {
+  border: transparent;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: cornflowerblue;
+}
+
+.url {
+  padding-top: 18px;
+  margin-left: -15px;
+}
+
+.url-contact {
+  color: #47b5ff;
+}
+
+.title_mf {
+  color: #0055c5;
+}
+.font_size {
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
+  font-weight: 400;
+}
+
+i.fa {
+  color: #0055c5;
+  font-size: 30px;
+}
+
 .background_form {
+  width: 1280px;
+  border-radius: 1% 1% 1% 1%;
   background: white;
-  padding-bottom: 50px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 30px;
+  height: 100%;
+}
+.footer_content {
+  padding: 15px 15px 2px 15px;
+}
+
+.title_contact {
+  font-size: 14px;
+}
+.col-2 {
+  flex: 0 0 auto;
+  width: 8.666667%;
+}
+
+.img_logo {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img_logoFull {
+  width: 200px;
+  height:60px ;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.img_option {
+  width: 4.333333%;
+}
+.img_optionFull {
+  width: 17.333333%;
+}
+.contactName {
+  font-size: 120%;
+  padding-bottom: 5px;
+}
+.personal_option {
+  padding-bottom: 5px;
+}
+.col-3 {
+  width: 19%;
+}
+.img_avatar {
+  width: 100%;
+  height: 100%;
+}
+strong {
+  font-weight: 600;
 }

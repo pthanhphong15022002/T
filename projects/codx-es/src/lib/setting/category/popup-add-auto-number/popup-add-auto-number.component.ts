@@ -59,6 +59,11 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.initForm();
   }
 
+  getViewAutoNumber(dialog) {
+    this.setViewAutoNumber();
+    return this.viewAutoNumber;
+  }
+
   initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_AutoNumbers';
@@ -87,6 +92,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                   this.dialogAutoNum.patchValue(res.value);
                 }
               });
+              this.setViewAutoNumber();
               console.log(this.dialogAutoNum.value);
             }
           });
@@ -110,15 +116,14 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       });
   }
 
-  valueChange(event: any) {
-    if (event?.field) {
+  valueChange(event: any, field: string = '') {
+    if (!field) field = event?.field;
+    if (field && event.component) {
       if (event?.data === Object(event?.data))
         this.dialogAutoNum.patchValue({ [event['field']]: event.data.value });
       else this.dialogAutoNum.patchValue({ [event['field']]: event.data });
+      this.setViewAutoNumber();
     }
-
-    this.setViewAutoNumber();
-    this.cr.detectChanges();
   }
 
   onSaveForm() {

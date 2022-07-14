@@ -17,6 +17,8 @@ import { HomeComponent } from './home/home.component';
 import { CardComponent } from './views/card/card.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CreateFolderComponent } from './createFolder/createFolder.component';
+import { EditFileComponent } from './editFile/editFile.component';
+import { RolesComponent } from './roles/roles.component';
 
 export const routes: Routes = [
   {
@@ -48,7 +50,9 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   HomeComponent,
   CardComponent,
-  CreateFolderComponent
+  CreateFolderComponent,
+  EditFileComponent,
+  RolesComponent
 ]
 @NgModule({
   imports: [

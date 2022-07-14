@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -20,6 +20,7 @@ export class IncommingAddComponent implements OnInit {
   @ViewChild('myform') myForm :any;
   submitted = false;
   checkAgenciesErrors = false;
+  change = "ADMIN";
   data: any = {};
   dialog: any;
   activeAngecy      = 1;
@@ -34,11 +35,14 @@ export class IncommingAddComponent implements OnInit {
   fileCount : number = 0;
   files: any;
   hideThumb = false;
+  hidepb = true;
+  activeDiv: any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -52,28 +56,28 @@ export class IncommingAddComponent implements OnInit {
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
     this.dispatch.status = '1';
-    this.gridViewSetup = this.data["gridViewSetup"];
-    this.headerText = this.data["headerText"];
-    this.subHeaderText = this.data["subHeaderText"];
-    this.type = this.data["type"];
-    this.formModel = this.data["formModel"];
-    if(this.type == "add")
+    this.gridViewSetup = this.data?.gridViewSetup;
+    this.headerText = this.data?.headerText;
+    this.subHeaderText = this.data?.subHeaderText;
+    this.type = this.data?.type;
+    this.formModel = this.data?.formModel;
+    if(this.type == "add" || this.type == "copy")
     {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
       this.dispatch.owner = null;
+      if(this.type == "add")
+        this.dispatch.agencyName = null;
+      this.dispatch.createdOn = new Date();
     }
-   /*  else if(this.type == "edit")
+    else if(this.type == "edit")
     {
-      this.odService.getDetailDispatch(this.data.data.recID).subscribe(item=>{
-        this.files = item.files;
-      })
-    } */
+      this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    } 
   }
   fileAdded(event:any) { 
-    debugger;
-    if(event?.data) this.hideThumb = true  
+    if(event?.data) this.hideThumb = true ;
   }
 
  //Mở form thêm mới đơn vị / phòng ban
@@ -104,80 +108,90 @@ export class IncommingAddComponent implements OnInit {
   }
 
 
-  hideDept()
+  hideDept(action:any)
   {
-    this.showAgency = false;
+    this.activeDiv = action;
+    if(action == "dv")
+    {
+      //this.hidepb = true;
+      this.showAgency = false;
+    }
+    else if(action == "pb")
+    {
+      this.showAgency = true;
+    }
     //this.dispatchForm.value.deptID = '';
     //this.dispatch.controls.agencyID.setValue(null)
   }
 
   changeValueDept(event: any) {
-    this.dispatch.agencyID = event[0];
-  }
-  
-  //Ngày nhận
-  changeValueDispatchOn(event: any) {
-    this.dispatch.dispatchOn = event?.data?.fromDate
-  }
-  //Ngày đến hạn
-  changeValueDeadLine(event: any) {
-    this.dispatch.deadline = event?.data?.fromDate
+    this.dispatch.agencyID = event?.data;
   }
   
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
-    this.dispatch.owner = event.data[0]
+    this.dispatch.owner = event.data?.value[0]
   }
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.deptID = event.data.value[0];
-    /* this.dispatchForm.controls.deptID.setValue(event.data[0]);
-    if (event.data[0] != "" && event.data[0] != null) {
-     this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data[0], null, null]).subscribe((item: any) => {
-        if (item != null && item.length > 0) {
-          this.dispatchForm.patchValue({
-            owner : item[0].domainUser
-          })
-          //this.dispatchForm.controls.owner.setValue(item[0].domainUser)
-        }
-        else {
-          this.dispatchForm.controls.owner.setValue("");
-        }
-      })
-    }  */
+    if (event.data?.value[0]) {
+      this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data?.value[0], null, null]).subscribe((item: any) => {
+         if (item != null && item.length > 0) {
+           this.dispatch.owner = item[0].domainUser;
+           this.change = this.dispatch.owner;
+           this.ref.detectChanges();
+         }
+         else {
+           this.dispatch.owner = "";
+         }
+       })
+     } 
   }
   openFormUploadFile()
   {
-    // var obj = new dispatch;
-    // obj.DeptID = "1";
-    // this.odService.SaveAgency1(obj).subscribe(item => {
-    //   console.log(item);
-    // });
     this.attachment.uploadFile();
   }
    //Các hàm value change 
    changeValueAgency(event: any) 
    {
-    if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
+    //ktra nếu giá trị trả vô = giá trị trả ra return null
+    //if(this.dispatch.agencyName == event.data[0]) return;
+    if(!event.data) return
+
+    if(event.data.length == 0 )
     {
-      if(event.component.itemsSelected[0].AgencyID!= undefined)
+      this.hidepb = true;
+      this.dispatch.agencyID = null;
+      this.dispatch.agencyName = null;
+      this.activeDiv = null;
+    }
+    else if(event.component.itemsSelected!=null && event.component.itemsSelected.length >0)
+    {
+      if(event.component.itemsSelected[0].AgencyID)
       {
         var data = event.component.itemsSelected[0];
-        //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
+        this.dispatch.agencyID = data.AgencyID;
+        this.dispatch.agencyName = data.AgencyName;
         //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
       }
-      else if(event.component.itemsSelected[0][0].AgencyID!= undefined)
+      else if(event.component.itemsSelected[0][0].AgencyID)
       {
         var data = event.component.itemsSelected[0][0];
+        this.dispatch.agencyID = data.AgencyID;
+        this.dispatch.agencyName = data.AgencyName;
         //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
         //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
       }
-      /* if(this.dispatchForm.value.agencyID!= this.dispatchForm.value.agencyName) 
+      if(this.dispatch.agencyID!= this.dispatch.agencyName && this.dispatch.agencyName.length >0) 
       {
-        this.showAgency = true;
-        this.checkAgenciesErrors = false;
-      } */
+        this.hidepb = false;
+        this.activeDiv = 'dv';
+        //this.showAgency = true;
+        //this.checkAgenciesErrors = false;
+      }
     }
+    this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
 
   /////// lưu/câp nhật công văn
@@ -186,6 +200,7 @@ export class IncommingAddComponent implements OnInit {
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
+    this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if(this.type == "add" || this.type == "copy")
     {
       if(this.type == "copy")
@@ -196,17 +211,17 @@ export class IncommingAddComponent implements OnInit {
       }
       if(this.fileCount > 0)
       {
-        this.dispatch.RecID = this.dialog.dataService.dataSelected.recID;
-        this.dispatch.Status = "1",
-        this.dispatch.ApproveStatus = "1",
-        this.dispatch.DispatchType = "1";
+        if(this.type == "add")
+          this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+        this.dispatch.status = "1",
+        this.dispatch.approveStatus = "1",
+        this.dispatch.dispatchType = "1";
         this.odService.saveDispatch(this.dispatch).subscribe((item) => {
           if (item.status == 0) 
           {
             this.data = item;
             this.attachment.objectId = item.data.recID;
             this.attachment.saveFiles();
-
             this.dialog.close(item.data);
           }
           this.notifySvr.notify(item.message); 
@@ -231,7 +246,7 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e:any)
   {
-    this.fileCount = e;
+    this.fileCount = e.data.length;
   }
   changeFormAgency(val:any)
   {

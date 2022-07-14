@@ -1,6 +1,6 @@
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full 
+ <codx-temp-full 
     (clickMF)="openFormFuncID($event,data)" 
     (click)="click(data)"
     [typeMF]="'hover'" 
@@ -20,8 +20,9 @@
     [modeImgs]="false"
     [bookmark]="data.isBookmark"
     [titleLine]="2"
+    
   >
-  </codx-temp-full>
+  </codx-temp-full> 
 </ng-template>
 <ng-template #panelLeft>
   <div class="codx_e-main codx_left">

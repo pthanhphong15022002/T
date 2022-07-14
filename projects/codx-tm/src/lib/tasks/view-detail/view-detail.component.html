@@ -67,67 +67,100 @@
         </div>
         <div class="task-info mt-2">
           <div class="d-flex mt-1">
-            <div class="d-flex me-6">
-              <span class="fw-bold me-1">
+            <div class="float-left me-6">
+              <div class="fw-bold me-1">
                 <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn:">
                 </codx-label>
-              </span>
-              <span class="text-gray-700">{{
+              </div>
+              <div class="text-gray-700">{{
                 itemSelected.dueDate | date: "dd/MM/yyyy"
-                }}</span>
+                }}</div>
             </div>
-            <div class="d-flex align-items-center text-dark me-6">
-              <span class="me-1 fw-bold">
+            <div class="float-left align-items-center text-dark me-6">
+              <div class="me-1 fw-bold">
                 <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên:">
                 </codx-label>
-              </span>
-              <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
-                  itemSelected?.priority | vll: 'L0186':'textColor' | async
-                ">
-              </span>
-              <span class="text-gray-700">{{
-                itemSelected?.priority | vll: "L0186":"text" | async
-                }}</span>
+              </div>
+              <!--<span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
+              itemSelected?.priority | vll: 'L0186':'textColor' | async
+            ">
+          </span>
+          <span class="text-gray-700">{{
+            itemSelected?.priority | vll: "L0186":"text" | async
+            }}</span> -->
+              <div *ngIf="itemSelected?.priority">
+                <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
+                itemSelected?.priority | vll: 'L0186':'textColor' | async
+              ">
+                </span>
+                <span class="text-gray-700">{{
+                  itemSelected?.priority | vll: "L0186":"text" | async
+                  }}</span>
+              </div>
+              <div #priority *ngIf="!itemSelected?.priority">{{itemSelected?.priority| formatvalue :
+                formModel:"priority" : priority|async}}</div>
+
             </div>
-            <div class="d-flex">
-              <span class="fw-bold me-1">
+            <div class="float-left">
+              <div class="fw-bold me-1">
                 <codx-label name="lblTaskGroupName" formName="Tasks" default="Nhóm công việc:">
                 </codx-label>
-              </span>
-              <span class="text-gray-700">{{
+              </div>
+              <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">{{
                 itemSelected?.taskGroupName
-                }}</span>
+                }}</div>
+                <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>{{
+                  itemSelected?.taskGroupName|formatvalue :formModel : "taskGroupName" :taskGroupName :"TaskGroups":"grvTaskGroups"|async
+                  }}</div>
             </div>
           </div>
           <div class="d-flex mt-1">
-            <div class="d-flex me-6">
-              <span class="fw-bold me-1">
+            <div class="float-left me-6">
+              <div class="fw-bold me-1">
                 <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu:">
                 </codx-label>
-              </span>
-              <span [ngClass]="
+              </div>
+              <!-- <span [ngClass]="
                   itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
+                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
+
+              <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date:
+                "dd/MM/yyyy"}}</span>
+              <span #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue :
+                formModel:"startDate" : startDate|async}}</span>
             </div>
-            <div class="d-flex align-items-center text-dark me-6">
-              <span class="me-1 fw-bold">
+            <div class="float-left align-items-center text-dark me-6">
+              <div class="me-1 fw-bold">
                 <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc:">
                 </codx-label>
-              </span>
-              <span [ngClass]="
+              </div>
+              <!-- <span [ngClass]="
               itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
-            ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
-        </div>
-            <div class="d-flex">
-              <span class="fw-bold me-1">
+            ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
+              <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date:
+                "dd/MM/yyyy"}}</span>
+              <span #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate" :
+                endDate|async}}</span>
+            </div>
+            <div class="float-left">
+              <div class="fw-bold me-1">
                 <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày hoàn tất:">
                 </codx-label>
-              </span>
-              <span [ngClass]="
+              </div>
+              <!-- <span [ngClass]="
                   itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400'
-                "><span *ngIf="itemSelected?.completedOn">{{ itemSelected?.completedOn | date: "dd/MM/yyyy" }}
-                  {{ " | " + itemSelected?.completed +" h "}}</span></span>
+                ">{{ itemSelected?.completedOn ?(itemSelected?.completedOn| date: "dd/MM/yyyy"): "dd/mm/yyyy"}}
+                {{ " | " + (itemSelected?.completed?itemSelected?.completed : 0 ) +" h "}}</span>-->
+              <!-- <span #completedOn class="text-gray-700">{{itemSelected?.completedOn? (itemSelected?.completedOn| date:
+                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue :
+                formModel:"completedOn" : completedOn|async )}}</span> -->
+              <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
+                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h'
+                }}</span>
+              <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
+                formModel:"completedOn" : completedOn|async }}</span>
             </div>
+
           </div>
         </div>
         <div class="mt-2">
@@ -136,19 +169,25 @@
               <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label>
             </span>
-            <span class="text-gray-700">{{ itemSelected?.projectName }}</span>
+            <span #projectname >{{ itemSelected?.projectName| formatvalue : formModel:"projectName"
+              : projectname:"Projects":"grvProjects"|async }}</span>
           </div>
           <div class="d-flex">
             <span class="fw-bold me-2">
               <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm:">
               </codx-label>
             </span>
-            <span class="text-gray-700">{{ itemSelected?.location }}</span>
+            <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
+            <span *ngIf="itemSelected?.location" class="text-gray-700">{{itemSelected?.location}}</span>
+            <span #location *ngIf="!itemSelected?.location">{{itemSelected?.location| formatvalue :
+              formModel:"location" : location|async}}</span>
           </div>
         </div>
         <div class="mt-2">
-          <codx-tag [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
-            [value]="itemSelected.tags? itemSelected.tags : ''"></codx-tag>
+          <codx-tag *ngIf="!itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+            [value]="''"></codx-tag>
+          <codx-tag *ngIf="itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+            [value]="itemSelected.tags"></codx-tag>
         </div>
       </div>
     </ng-template>
@@ -159,17 +198,16 @@
       </div>
       <div class="">
         <div *ngIf="itemSelected.category == '3'" class="">
-          <codx-imgs  [objectId]="itemSelected?.assignTo" objectType="AD_Users" [i] [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [i] [numberImages]="4">
           </codx-imgs>
         </div>
-        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'"
-          class="">
-          <codx-imgs  [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="4">
+        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
+          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="4">
           </codx-imgs>
         </div>
       </div>
       <div class="codx_title_sub_primary mt-6 mb-3">
-        <codx-label  fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
+        <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
         </codx-label>
       </div>
       <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">

@@ -1,11 +1,14 @@
 import {
+  ApiHttpService,
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
   ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   ChangeDetectorRef,
@@ -42,37 +45,69 @@ export class AssignInfoComponent implements OnInit {
   disableAddToDo = true;
   grvSetup: any;
   param: any;
-  @Input() task = new TM_Tasks();
+  task: TM_Tasks = new TM_Tasks();
   functionID: string;
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  // actionAssign = new BehaviorSubject<any>(null);
-  // isActionAssign = this.actionAssign.asObservable();
-  // dataAddNew = new BehaviorSubject<any>(null);
-  // isAddNew = this.dataAddNew.asObservable();
-  // updateData = new BehaviorSubject<any>(null);
-  // isUpdate = this.updateData.asObservable();
+  vllShare = "L1906"
+  vllRole ='' 
+  listRoles
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
+    private cache : CacheService,
+    private api : ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.task = {
       ...this.task,
-      ...dt?.data,
+      ...dt?.data[0],
     };
+    this.vllShare = dt?.data[1]? dt?.data[1] : this.vllShare ;
+    this.vllRole = dt?.data[2]? dt?.data[2] : this.vllRole  ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    this.cache.valueList(this.vllRole).subscribe(res => {
+     if(res && res?.datas.length >0){
+      this.listRoles =res.datas
+     }
+     });
   }
 
   ngOnInit(): void {
+    if(!this.task.taskID)
+    this.setDefault();
+    else
     this.openInfo();
+  }
+
+  setDefault(){
+    this.api
+    .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      this.functionID,
+      'TM_Tasks',
+      'taskID',
+    ])
+    .subscribe(
+    (response: any) => {
+        if (response) {
+          response['_uuid'] = response['taskID'] ?? Util.uid();
+          response['idField'] = 'taskID';
+          response['isNew'] = function () {
+            return response[response.taskID] != response['_uuid'];
+          };
+          response['taskID'] = response['_uuid'];
+          this.task = response;
+        this.openInfo();
+        }
+      }
+    );
   }
 
   showPanel() {
@@ -133,9 +168,6 @@ export class AssignInfoComponent implements OnInit {
     });
   }
 
-  eventApply(e){
-
-  }
   saveAssign(id, isContinue) {
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notify('Phải thêm người được giao việc !');
@@ -221,11 +253,92 @@ export class AssignInfoComponent implements OnInit {
   }
 
   addFile(evt: any) {
-    //this.attachment.openPopup();
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    ///chỗ này không bắt được data
     console.log(e);
+  }
+  getfileCount(e){
+
+  }
+  eventApply(e: any) {
+    var assignTo = '';
+    var listDepartmentID = '';
+    var listUserID = '';
+
+    e?.data?.forEach((obj) => {
+     // if (obj?.data && obj?.data != '') {
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id+';';
+            break;
+          case 'D':
+            listDepartmentID += obj.id+";";
+            break;
+        }
+    //  }
+    });
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          assignTo += res;
+          if (listUserID != '') assignTo += ';' + listUserID;
+          this.valueSelectUser(assignTo);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
+  }
+
+  valueSelectUser(assignTo) {
+    if (assignTo != '') {
+      if (this.task.assignTo && this.task.assignTo != '') {
+        var arrAssign = assignTo.split(';');
+        var arrNew = [];
+        arrAssign.forEach((e) => {
+          if (!this.task.assignTo.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          assignTo = arrNew.join(';');
+          this.task.assignTo += ';' + assignTo;
+          this.getListUser(assignTo);
+        }
+      } else {
+        this.task.assignTo = assignTo;
+        this.getListUser(assignTo);
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+  getListUser(listUser) {
+    // this.listMemo2OfUser = [];
+    while (listUser.includes(' ')) {
+      listUser = listUser.replace(' ', '');
+    }
+    var arrUser = listUser.split(';');
+    this.listUser = this.listUser.concat(arrUser);
+    arrUser.forEach((u) => {
+      var obj = { userID: u.userID, memo2: null };
+      this.listMemo2OfUser.push(obj);
+    });
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListUserDetailAsync',
+        listUser
+      )
+      .subscribe((res) => {
+        this.listUserDetail = this.listUserDetail.concat(res);
+      });
   }
 }

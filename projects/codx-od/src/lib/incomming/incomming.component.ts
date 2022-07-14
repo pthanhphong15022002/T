@@ -30,8 +30,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 })
 export class IncommingComponent
   extends UIComponent
-  implements AfterViewInit, OnChanges
-{
+  implements AfterViewInit, OnChanges {
   @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('asideRight') asideRight: TemplateRef<any>;
@@ -43,7 +42,7 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
-  
+
   public lstDtDis: any;
   public lstUserID: any = '';
   public disEdit: any;
@@ -114,11 +113,11 @@ export class IncommingComponent
     this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
-    
+
   }
-  
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -135,8 +134,7 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-    if(this.view)
-    {
+    if (this.view) {
       this.view.dataService.predicates = "Status=@0"
       this.view.dataService.dataValues = "1"
     }
@@ -154,8 +152,7 @@ export class IncommingComponent
   }
 
   show() {
-    this.view.dataService.addNew(0).subscribe((res: any) => {
-      //this.detectorRef.detectChanges();
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
@@ -170,15 +167,9 @@ export class IncommingComponent
         option
       );
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-          this.view.dataService
-            .remove(this.view.dataService.data[0])
-            .subscribe();
-        else {
+        if (x.event) {
           delete x.event._uuid;
-          this.view.dataService.add(x.event,0).subscribe();
-          //this.view.dataService.data[0]=x.event;
-          this.view.dataService.setDataSelected(x.event);
+          this.view.dataService.add(x.event, 0).subscribe();
         }
       });
     });
@@ -245,10 +236,10 @@ export class IncommingComponent
     //formName: string, gridName: string
   }
 
- 
-  
- 
-  //Mở form 
+
+
+
+  //Mở form
   openFormUploadFile() {
     this.attachment.openPopup();
     // this.atSV.openForm.next(true);
@@ -276,7 +267,7 @@ export class IncommingComponent
     var dt = e.event;
     console.log(dt);
   }
- 
+
   groupDispatchData(data: any) {
     /*   var date = new Date();
     var firstweek = date.getDate() - date.getDay(); // First day is the day of the month - the day of the week
@@ -325,14 +316,15 @@ export class IncommingComponent
   clickChangeStatus(status: any) {
     this.view.dataService.predicates = 'Status=@0';
     this.view.dataService.dataValues = status;
-    this.view.dataService.load().subscribe();
-    this.activeDiv = status
+    this.view.dataService.load().subscribe((item)=>{
+      this.lstDtDis = this.view.dataService.data[0];
+    });
+    this.activeDiv = status;
   }
-  getIdUser(createdBy:any,owner:any)
-  {
+  getIdUser(createdBy: any, owner: any) {
     var arr = [];
-    if(createdBy) arr.push(createdBy);
-    if(owner && createdBy != owner) arr.push(owner);
+    if (createdBy) arr.push(createdBy);
+    if (owner && createdBy != owner) arr.push(owner);
     return arr.join(";");
   }
   selectFirst(dt: any) {
@@ -370,11 +362,10 @@ export class IncommingComponent
     //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
   }
-  convertHtmlAgency(agencyName:any)
-  {
+  convertHtmlAgency(agencyName: any) {
     var desc = '<div class="d-flex">';
-    if(agencyName)
-      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+    if (agencyName)
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + agencyName + '</span></div>';
     return desc + '</div>';
   }
 }

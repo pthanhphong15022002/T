@@ -1,5 +1,5 @@
 <!-- <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"> -->
-<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="range" [formModel]="dialog.formModel"
+<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="master" [formModel]="dialog.formModel"
   [dialog]="dialog">
   <ng-template #body>
     <!-- <div class="card-body" *ngIf="isAfterRender && gridViewSetup"> -->
@@ -7,16 +7,15 @@
       <div class="row">
         <div class="form-group">
           <div class="form-group mt-3">
-            <codx-label fiedName="rangeID" [formModel]="form.formModel" default="Mã danh mục">
+            <codx-label fiedName="RangeID" [formModel]="form.formModel" default="Mã danh mục">
             </codx-label>
-            <div style="width: 400px">
-              <codx-input field="rangeID" [formModel]="form.formModel" [Group]="form.formGroup"
-                [attr.disabled]="!range?.isNew() ? '' : null">
-              </codx-input>
-            </div>
+            <codx-input field="rangeID" [formModel]="form.formModel" [Group]="form.formGroup"
+              [attr.disabled]="!master?.isNew() ? '' : null">
+            </codx-input>
+
           </div>
           <div class="form-group mt-3">
-            <codx-label fiedName="rangeName" [formModel]="form.formModel" default="Mô tả">
+            <codx-label fiedName="RangeName" [formModel]="form.formModel" default="Mô tả">
             </codx-label>
             <codx-input field="rangeName" [formModel]="form.formModel" [Group]="form.formGroup">
             </codx-input>
@@ -33,7 +32,7 @@
                   default="Chi tiết khoảng thời gian"></codx-label>
               </div>
               <div class="d-flex mt-2">
-                <a class="btn btn-sm btn-outline-secondary" (click)="openPopup(template)">
+                <a class="btn btn-sm btn-outline-secondary" (click)="addLine(template)">
                   <i class="icon-add icon-16 text-dark-75"></i>
                   <codx-label name="btnAdd" formName="System" default="Thêm mới"></codx-label>
                 </a>
@@ -41,7 +40,7 @@
             </div>
           </div>
           <div class="form-group mt-3">
-            <table class="table bg-header" *ngIf="lstRangeLine.length">
+            <table class="table bg-header" *ngIf="lines.length">
               <thead>
                 <tr>
                   <th scope="col" class="w-50 text-left">Diễn giải</th>
@@ -50,7 +49,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of lstRangeLine; let index = index">
+                <tr *ngFor="let item of lines; let index = index">
                   <td class="text-left">
                     <label>{{ item.breakName }}</label>
                   </td>
@@ -60,11 +59,10 @@
                   <td>
                     <div class="d-flex align-items-center">
                       <div class="Box-tools pull-right" style="vertical-align: middle;">
-                        <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;"
-                          (click)="openPopup(template,item)">
+                        <a class="btn btn-xs btn-flat btn-info" style="margin: 10px;" (click)="addLine(template,item)">
                           <i class="fa fa-edit text-primary"></i>
                         </a>
-                        <a class="btn btn-xs btn-flat btn-danger" (click)="deletePopup(index)">
+                        <a class="btn btn-xs btn-flat btn-danger" (click)="removeLine(item,index)">
                           <i class="fa fa-remove "></i>
                         </a>
                       </div>
@@ -98,7 +96,7 @@
           </div>
           <div class="col-8">
             <codx-input name="BreakName" field="breakName" type="text" placeholder="Diễn giải"
-              [crrValue]="rangeLines.breakName" (valueChange)="valueChange($event)"></codx-input>
+              [crrValue]="line.breakName" (valueChange)="valueChange($event)"></codx-input>
           </div>
         </div>
         <div class="form-group row mt-3">
@@ -108,7 +106,7 @@
           </div>
           <div class="col-8 ">
             <codx-input name="BreakValue" field="breakValue" type="text" placeholder="Số ngày"
-              [crrValue]="rangeLines.breakValue" (valueChange)="valueChange($event)"></codx-input>
+              [crrValue]="line.breakValue" (valueChange)="valueChange($event)"></codx-input>
           </div>
         </div>
         <div class="text-muted mt-3">

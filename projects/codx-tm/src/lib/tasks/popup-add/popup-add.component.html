@@ -47,7 +47,7 @@
                 </codx-label>
               </div>
             </div> -->
-            <div class="nav-item  mb-2">
+            <div class="nav-item">
               <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-info icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
@@ -55,14 +55,12 @@
                     <codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
                     </codx-label>
                   </span>
-                  <span class="fs-7 text-gray-500  ">Description</span>
+                  <span class="fs-7">Description</span>
                 </span>
               </a>
             </div>
-
-
           </ng-template>
-          <ng-template #content class="ms-10">
+          <ng-template #content>
             <div class="form-group">
               <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
               </codx-label>
@@ -92,7 +90,7 @@
                   </codx-label>
                 </label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
-                  [crrValue]="task.dueDate" [disabled]="readOnly" (valueChange)="changeTime($event)">
+                  [crrValue]="task?.dueDate"  (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -126,8 +124,8 @@
                     <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="startDate"
-                    placeholder="datetime" [crrValue]="task.startDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime"  field="startDate"
+                    placeholder="datetime" [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -135,8 +133,8 @@
                     <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime" [disabled]="readOnly" field="endDate"
-                    placeholder="datetime" [crrValue]="task.endDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime"  field="endDate"
+                    placeholder="datetime" [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -161,13 +159,12 @@
                     </codx-label>
                   </div>
                 </div>
-                <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
                 <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
                   [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
               </div>
               <div class="">
                 <ng-container *ngFor="let item of listUser">
-                  <codx-img class=" flex symbol-40px "  [objectId]="item" objectType="AD_Users" >
+                  <codx-img class=" flex symbol-40px " [objectId]="item" objectType="AD_Users">
                   </codx-img>
                 </ng-container>
               </div>
@@ -185,13 +182,10 @@
               </button>
             </div>
 
-            <div class="d-flex align-items-center file-item mt-5">
-              <!-- <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
-                hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [functionID]="functionID"
-                (fileAdded)="fileAdded($event)"></codx-attachment> -->
+            <div >
               <codx-attachment #attachment [objectType]="dialog.formModel.entityName"
-                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel"
+                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1" 
+                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel" 
                 [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
                 displayThumb="full">
               </codx-attachment>
@@ -208,14 +202,14 @@
               </div>
             </div> -->
 
-            <div class="nav-item  mb-2">
-              <a class="nav-link  d-flex btn-active-light-primary px-0">
+            <div class="nav-item ">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-article icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
                     <codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>
                   </span>
-                  <span class="fs-7">Description</span>
+                  <span class="fs-7">Job Description</span>
                 </span>
               </a>
             </div>
@@ -251,15 +245,15 @@
                 </codx-label>
               </div>
             </div> -->
-            <div class="nav-item  mb-2">
-              <a class="nav-link  d-flex btn-active-light-primary px-0">
+            <div class="nav-item ">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-person_outline icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
                     <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
                     </codx-label>
                   </span>
-                  <span class="fs-7">Description</span>
+                  <span class="fs-7">Assign To</span>
                 </span>
               </a>
             </div>
@@ -282,8 +276,7 @@
               <ng-container *ngFor="let item of listUserDetail; index as i">
                 <div class="d-flex py-2 border-bottom justify-content-between list-title">
                   <div class="d-flex align-items-top">
-                    <codx-img class="" [objectId]="item?.userID"
-                      objectType="AD_Users">
+                    <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
                     </codx-img>
 
                     <div class="d-flex flex-column me-2 ">
@@ -342,15 +335,15 @@
                 <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm"></codx-label>
               </div>
             </div> -->
-            <div class="nav-item  mb-2">
-              <a class="nav-link  d-flex btn-active-light-primary px-0">
+            <div class="nav-item">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-check_box icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
                     <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm">
                     </codx-label>
                   </span>
-                  <span class="fs-7">Description</span>
+                  <span class="fs-7">List Task Board</span>
                 </span>
               </a>
             </div>
@@ -456,14 +449,14 @@
                
               </div>
             </div> -->
-            <div class="nav-item  mb-2">
-              <a class="nav-link  d-flex btn-active-light-primary px-0">
+            <div class="nav-item">
+              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-insert_link  icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
                     <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
                   </span>
-                  <span class="fs-7">Description</span>
+                  <span class="fs-7">Reference</span>
                 </span>
               </a>
             </div>
@@ -512,9 +505,6 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <!-- <button class="btn btn-light-primary" (click)="dialog.close()">
-        <codx-label name="Close" formName="TM_Tasks" default="Đóng"></codx-label>
-      </button> -->
       <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
         <i class="icon-cloud_upload fs-5"></i>Upload file
       </button>
