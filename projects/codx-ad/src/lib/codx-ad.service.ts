@@ -1,25 +1,36 @@
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
+import { lstat } from 'fs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CodxAdService {
 
-  constructor( private api: ApiHttpService ) { }
+  constructor(private api: ApiHttpService) { }
 
-  getListFunction(data){
-    return this.api.execSv<any>("SYS","SYS","FunctionListBusiness","GetByParentAsync",data)
+  private modules = new BehaviorSubject<any>(null);
+  loadModule = this.modules.asObservable();
+
+  private moduleGroups = new BehaviorSubject<any>(null);
+  loadModuleGroups = this.moduleGroups.asObservable();
+
+  lstRoleAfterchoose = new BehaviorSubject<any>(null);
+  loadListRoles = this.lstRoleAfterchoose.asObservable();
+
+  getListFunction(data) {
+    return this.api.execSv<any>("SYS", "SYS", "FunctionListBusiness", "GetByParentAsync", data)
   }
 
-  getListCompanySettings(){
-    return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","GetAsync")
+  getListCompanySettings() {
+    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "GetAsync")
   }
 
-  updateContactCompanySettings(data){
-    return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","UpdateBusinessContactAsync",data)
+  updateContactCompanySettings(data) {
+    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessContactAsync", data)
   }
-  updatePersonalCompanySettings(data){
-    return this.api.execSv<any>("SYS","AD","CompanySettingsBusiness","UpdateBusinessPersonalAsync",data)
+  updatePersonalCompanySettings(data) {
+    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessPersonalAsync", data)
   }
 }
