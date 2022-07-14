@@ -788,6 +788,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
   }
 }
