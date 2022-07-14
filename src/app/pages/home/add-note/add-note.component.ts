@@ -26,6 +26,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
+import { NoteService } from '@pages/services/note.services';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -73,6 +74,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
+    private noteService: NoteService, 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -213,6 +215,7 @@ export class AddNoteComponent implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
+          this.noteService.data.next(res);
           this.dialog.close()
           // this.data.push(res);
           this.dialog.dataService.add(res, 0).subscribe();
@@ -241,7 +244,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
-    debugger;
     if(this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;

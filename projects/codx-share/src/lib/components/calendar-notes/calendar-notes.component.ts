@@ -1,3 +1,4 @@
+import { NoteService } from './../../../../../../src/app/pages/services/note.services';
 import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
 import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -65,6 +66,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private auth: AuthStore,
+    private noteService: NoteService,
   ) {
     super(injector);
     this.dataValue1 = this.auth.get();
@@ -75,6 +77,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
   onInit(): void {
     this.getMaxPinNote();
+    this.noteService.data.subscribe((res) => {
+      debugger;
+      (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
+         this.changeDetectorRef.detectChanges();
+      });
+    })
   }
 
   ngAfterViewInit() {
