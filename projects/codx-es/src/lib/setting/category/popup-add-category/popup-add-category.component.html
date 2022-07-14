@@ -16,14 +16,14 @@
     </div>
     <div class="row mt-3">
       <div class="col-8">
-        <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
+        <codx-label class="fw-bolder" default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
         </codx-label>
         <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
           [Group]="dialogCategory" ControlName="categoryName">
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
+        <codx-label class="fw-bolder" default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
         </codx-label>
         <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
           [Group]="dialogCategory" ControlName="categoryID" disabled="true">
@@ -35,12 +35,12 @@
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
+        <codx-label class="fw-bolder" fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
       </label>
     </div>
     <div class="row mt-3">
       <div class="col-6">
-        <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
+        <codx-label class="fw-bolder" default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['SignatureType']"
           [crrValue]="dialogCategory.value.signatureType" field="signatureType" (valueChange)="valueChange($event)">
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <codx-label default="Ghi chú" fiedName="Note" [formModel]="form.formModel">
+      <codx-label class="fw-bolder" default="Ghi chú" fiedName="Note" [formModel]="form.formModel">
       </codx-label>
       <codx-input type="textarea" format="ed2" rows="3" class="test-textarea" field="note" ControlName="note"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.note??''">
