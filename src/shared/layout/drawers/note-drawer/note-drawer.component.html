@@ -34,9 +34,11 @@
         </div>
         <div class="d-flex flex-column">
             <br>
-            <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes" [groupBy]="'isPin'"
-                gridViewName="'grvNotes'" service="WP">
-            </codx-listview>
+            <div class="notes">
+                <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes"
+                    [groupBy]="'isPin'" gridViewName="'grvNotes'" service="WP" type="listView">
+                </codx-listview>
+            </div>
             <ng-template #template let-item>
                 <div class="pd-note">
                     <div class="p-3 note-content mb-3">
