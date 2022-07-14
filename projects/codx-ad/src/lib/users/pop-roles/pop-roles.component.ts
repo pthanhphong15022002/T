@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef, ApiHttpService } from 'codx-core';
+import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
   selector: 'lib-pop-roles',
@@ -7,7 +8,7 @@ import { DialogData, DialogRef, ApiHttpService } from 'codx-core';
   styleUrls: ['./pop-roles.component.css']
 })
 export class PopRolesComponent implements OnInit {
-
+  choose: any;
   data: any;
   dialog1: any;
   title='Phân quyền người dùng';
@@ -24,11 +25,10 @@ export class PopRolesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadApp();
-    this.loadEmp();
+    this.loadData();
   }
 
-  loadApp(){
+  loadData(){
     this.api.call('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync').subscribe((res)=>{
       if(res && res.msgBodyData[0]){
         this.lstFunc = res.msgBodyData[0];
@@ -36,11 +36,7 @@ export class PopRolesComponent implements OnInit {
     })
   }
 
-  loadEmp(){
-    this.api.call('ERM.Business.AD','UsersBusiness','GetListEmployeeByUserRolesAsync').subscribe((res)=>{
-      if(res && res.msgBodyData[0]){
-        this.lstEmp = res.msgBodyData[0];
-      }
-    })
+  onChange(event, index, item){
+    console.log(event);
   }
 }
