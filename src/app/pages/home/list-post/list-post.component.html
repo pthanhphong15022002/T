@@ -1,13 +1,5 @@
-<codx-views #codxViews 
-    funcID="WP" 
-    [service]="service" 
-    [assemblyName]="assemblyName" 
-    [className]="className"
-    [method]="method"
-    [predicate]="predicate"
-    [dataValue]="dataValue" 
-    [views]="views" 
-    entityName="WP_Comments" 
+<codx-views #codxViews funcID="WP" [service]="service" [assemblyName]="assemblyName" [className]="className"
+    [method]="method" [predicate]="predicate" [dataValue]="dataValue" [views]="views" entityName="WP_Comments"
     idField="recID">
 </codx-views>
 <ng-template #panelLeftRef>
@@ -22,8 +14,7 @@
                     </div>
                     <div class="d-flex flex-column flex-grow-1 share">
                         <span class="text-gray-500 feed-box box-new share-input" (click)="openModal()">
-                            <codx-label class="fw-normal" formName="Comments" name="lblThinks"
-                                [default]="headerText">
+                            <codx-label class="fw-normal" formName="Comments" name="lblThinks" [default]="headerText">
                             </codx-label>
                         </span>
                     </div>
@@ -75,7 +66,8 @@
                     </ng-container> -->
                     <span class="rounded-1 py-1 px-2 bg-secondary ms-2">
                         <span class="symbol symbol-circle ">
-                            <img class="h-20px w-20px" src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}"/>
+                            <img class="h-15px w-15px"
+                                src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}" />
                         </span>
                         <span class="font-size-sm">
                             {{item.shareControl | vll:'L1901' : 'text' | async}}
@@ -202,7 +194,8 @@
                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
             </ng-template>
         </div>
-        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)"></treeview-comment>
+        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)">
+        </treeview-comment>
     </div>
 </ng-template>
 
@@ -224,7 +217,8 @@
                         <!-- image -->
                         <ng-container *ngSwitchCase="lstExtensionIMG.includes(file.extension)?file.extension:''">
                             <div class="pic-feed-img">
-                                <codx-img imageType="square" [width]="200" [objectId]="item.recID"ctType="WP_Comments"></codx-img>
+                                <codx-img imageType="square" [width]="200" [objectId]="item.recID" ctType="WP_Comments">
+                                </codx-img>
                             </div>
                         </ng-container>
                         <!-- video -->
@@ -233,16 +227,9 @@
                         </ng-container>
                         <!-- file -->
                         <ng-container *ngSwitchDefault>
-                            <codx-attachment [objectId]="item.recID" 
-                                idBrowse="btn1"
-                                objectType="WP_Comments" 
-                                hideFolder="1" 
-                                hideUploadBtn="1"
-                                hideDes="1" 
-                                type="inline" 
-                                allowExtensions=".jpg,.png"
-                                [formModel]="codxViews.formModel"
-                                [functionID]="codxViews.formModel.funcID">
+                            <codx-attachment [objectId]="item.recID"   idBrowse="btn1" objectType="WP_Comments"
+                                hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png"
+                                [formModel]="codxViews.formModel" [functionID]="codxViews.formModel.funcID">
                             </codx-attachment>
                         </ng-container>
                     </ng-container>
@@ -252,7 +239,7 @@
                 </div>
             </ng-container>
         </ng-container>
-        
+
     </ng-container>
     <ng-template #category2>
         <ng-container *ngIf="item?.card?.cardType == '4' || item?.card?.cardType=='5';else haveBg">
