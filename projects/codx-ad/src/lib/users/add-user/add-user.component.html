@@ -20,10 +20,10 @@
           <ng-template #content>
             <div class="form-group">
               <div class="form-group row mt-3">
-                <codx-img #imageUpload [ngClass]="codxService.toolbarUserAvatarHeightClass" imageWidth="100"
+                <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage" [width]="120" funcId="AD006"
                   [objectId]="adUser.userID" [objectName]="adUser.userName" objectType="AD_Users"  [isAllowEdit]=true
                   data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-                  data-kt-menu-flip="bottom">
+                  data-kt-menu-flip="bottom" [updateDirect]="false">
                 </codx-img>
                 <!-- <codx-user-inner (onAvatarChanged)="reloadAvatar($event)"></codx-user-inner> -->
 
