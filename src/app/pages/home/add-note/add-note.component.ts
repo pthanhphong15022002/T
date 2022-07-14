@@ -61,6 +61,7 @@ export class AddNoteComponent implements OnInit {
   gridViewSetup: any;
   checkFile = false;
   checkPin = false;
+  empty = "";
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -92,6 +93,7 @@ export class AddNoteComponent implements OnInit {
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
+      console.log("check gridViewSetup", res);
     });
   }
 

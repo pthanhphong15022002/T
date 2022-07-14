@@ -78,7 +78,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   onInit(): void {
     this.getMaxPinNote();
     this.noteService.data.subscribe((res) => {
-      debugger;
       (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
          this.changeDetectorRef.detectChanges();
       });

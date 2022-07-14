@@ -36,11 +36,11 @@ export const routes: Routes = [
         component: ApproveComponent
       },
       {
-        path:':category/:funcID',
+        path:'news/:funcID/:category',
         component: NewsComponent
       },
       {
-        path:':category/view-detail/:recID/:funcID',
+        path:'news/:funcID/:category/:recID',
         component: ViewDetailComponent
       },
       
