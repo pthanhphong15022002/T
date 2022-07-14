@@ -85,7 +85,8 @@
         </ng-container>
     </div>
 </div>
-<codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime" [crrValue]="" dataformat="d">
+<codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="" format="F"
+    (valueChange)="valueChange($event)">
 </codx-input>
 <div class="mb-3">
     <div *ngIf="formType == 'edit'">
