@@ -44,13 +44,16 @@ export class ApprovalComponent implements OnInit {
   @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
   @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
   thumbnailEle!: Element;
+
   signerInfo: any = {};
   zoomValue: number = 75;
   holding: number = 0;
+
   tmpLstSigners: Array<Object> = [];
   lstSigners: Array<Object> = [];
-
   lstFiles: Array<Object> = [];
+  lstZoomValue: Array<number> = [];
+
   file: Object = { text: 'fileName', value: 'fileID' };
   person: Object = { text: 'authorName', value: 'authorID' };
 
@@ -58,6 +61,13 @@ export class ApprovalComponent implements OnInit {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
+  hideThumbnail: boolean = false;
+
+  saveAnnoQueue: Map<string, any>;
+
+  curSelectedAnno: any;
+
+  after_X_Second: number = 3000;
 
   public headerRightName = [
     { text: 'Công cụ' },
@@ -68,6 +78,7 @@ export class ApprovalComponent implements OnInit {
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
   ngOnInit() {
+    this.saveAnnoQueue = new Map();
     this.ajaxSetting = {
       ajaxHeaders: [
         {
@@ -92,6 +103,9 @@ export class ApprovalComponent implements OnInit {
         },
       ],
     };
+    for (let index = 0; index <= 100; index += 5) {
+      this.lstZoomValue.push(index);
+    }
     this.tmpLstSigners.push({
       authorSignature: signature,
       authorStamp: stamp,
@@ -203,7 +217,9 @@ export class ApprovalComponent implements OnInit {
       }
     }
   }
-
+  changeShowThumbnailState() {
+    this.hideThumbnail = !this.hideThumbnail;
+  }
   changeZoomValue(e: any) {
     this.zoomValue = e.zoomValue;
   }
@@ -531,8 +547,6 @@ export class ApprovalComponent implements OnInit {
     }
   }
 
-  addAnnotationQueue = [];
-
   setStampInfo(e: any) {
     this.holding = 0;
     let curID = e.annotationId;
@@ -548,25 +562,35 @@ export class ApprovalComponent implements OnInit {
       // justAddAnno.annotationId = this.signerInfo.authorID;
     }
     justAddAnno.author = this.signerInfo.authorID;
-    this.after_X_Second_Will_Save = setTimeout(this.apiSaveAnnoToDB, 3000);
-    let tmp = {};
-    tmp[curID] = this.after_X_Second_Will_Save;
-    this.addAnnotationQueue.push(tmp);
+    this.curSelectedAnno = justAddAnno;
+
+    this.saveAnnoQueue.set(
+      curID,
+      setTimeout(this.saveAnnoToDB, this.after_X_Second, justAddAnno.author)
+    );
   }
 
-  after_X_Second_Will_Save: any;
-
-  apiSaveAnnoToDB() {
-    console.log('da save');
+  saveAnnoToDB(anno) {
+    console.log('da save', anno);
   }
 
-  cancelapiSaveAnnoToDB(e: any) {
+  resetTime(e: any) {
     let curID = e.annotationId;
-    console.log(this.addAnnotationQueue);
+    clearTimeout(this.saveAnnoQueue.get(curID));
 
-    clearTimeout(this.addAnnotationQueue[curID]);
-    console.log('da xoa');
-    console.log(this.addAnnotationQueue[curID]);
+    let curIndex = this.pdfviewerControl.annotationCollection.findIndex(
+      (anno) => {
+        return anno.annotationId == curID;
+      }
+    );
+    this.curSelectedAnno.bounds = e.currentPosition;
+    console.log(e.currentPosition);
+
+    this.pdfviewerControl.annotationCollection[curIndex] = this.curSelectedAnno;
+    this.saveAnnoQueue.set(
+      curID,
+      setTimeout(this.saveAnnoToDB, this.after_X_Second, this.curSelectedAnno)
+    );
   }
 
   pageChange(e: any) {
@@ -583,8 +607,16 @@ export class ApprovalComponent implements OnInit {
   show(e: any) {
     console.log(this.pdfviewerControl);
   }
+  selectedAnnotation(e: any) {
+    this.curSelectedAnno = this.pdfviewerControl.annotationCollection.find(
+      (anno) => {
+        anno.annotationId === e.annotationId;
+      }
+    );
+    console.log('dang chon', this.curSelectedAnno);
+  }
 
-  clickZoom(type: string) {
+  clickZoom(type: string, e?: any) {
     switch (type) {
       case 'in':
         this.pdfviewerControl.magnificationModule.zoomIn();
@@ -592,6 +624,9 @@ export class ApprovalComponent implements OnInit {
 
       case 'out':
         this.pdfviewerControl.magnificationModule.zoomOut();
+        break;
+      case 'to':
+        this.pdfviewerControl.magnificationModule.zoomTo(e.itemData.value);
         break;
       default:
         break;

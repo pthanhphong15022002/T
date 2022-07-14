@@ -17,6 +17,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() changed: number = 0;
   @Input() images: Array<any> = [];
   @Input() objectID:string = "";
+  @Input() showBtnRemove: boolean = false;
   @Output() viewDetail = new EventEmitter();
 
   fileLength: number;
@@ -82,5 +83,10 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
 
   openDetail(data) {
     this.viewDetail.emit(data);
+  }
+
+
+  removeImg(){
+    
   }
 }

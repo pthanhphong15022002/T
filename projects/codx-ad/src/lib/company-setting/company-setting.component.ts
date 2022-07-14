@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
@@ -38,6 +38,12 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
   data: AD_CompanySettings;
  // data = new AD_CompanySettings();
   dialog!: DialogRef;
+
+  // image
+  check?: string
+  imageUpload: UploadFile = new UploadFile();
+  public imageSrc: string = '';
+
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -127,4 +133,41 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
   //   // console.log(this.data);
   //   console.log('test12334');
   // }
+
+  async handleInputChange(event) {
+    if (event.target.files.length > 0) {
+      var file: File = event.target.files[0];
+      this.data.Logo = file.name;
+      //  this.employee.path = File;sch
+      // this.url.avatar = file.name;
+
+      var pattern = /image-*/;
+      var reader = new FileReader();
+      if (!file.type.match(pattern)) {
+        alert('invalid format');
+        return;
+      }
+      reader.onload = this._handleReaderLoaded.bind(this);
+      //  this.url.path = this.imageSrc;
+      reader.readAsDataURL(file);
+      let data: ArrayBuffer;
+      data = await file.arrayBuffer();
+      this.check = file.name;
+      this.imageUpload.fileName = file.name;
+      this.imageUpload.fileBytes = Array.from(new Uint8Array(data));
+      // this.api.execSv<any>("Sample", "Sample", "EmployeeBusiness", "post", this.url ).subscribe(res => {
+      //   console.log(res);
+
+      // })
+
+      console.log(reader.readAsDataURL(file));
+    }
+  }
+  _handleReaderLoaded(e) {
+    let reader = e.target;
+    console.log(this.imageSrc);
+    this.imageSrc = reader.result;
+    console.log(this.data.Logo);
+  }
+
 }

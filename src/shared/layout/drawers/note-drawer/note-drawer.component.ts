@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector } from '@angular/core';
@@ -7,6 +7,7 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
+import { NoteService } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -43,16 +44,25 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
+  dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
+    private noteService: NoteService,
   ) {
     super(injector)
   }
 
   onInit(): void {
+    this.noteService.data.subscribe((res) => {
+      if (this.lstView) {
+        (this.lstView.dataService as CRUDService).add(res).subscribe(res => {
+          this.changeDetectorRef.detectChanges();
+        });
+      }
+    })
     this.getMaxPinNote();
   }
 
@@ -124,7 +134,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         that.countNotePin += 1;
       }
     })
-    debugger;
   }
 
   checkNumberNotePin(data) {
@@ -164,7 +173,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option);
   }
 
   onEditIsPin(data: Notes) {

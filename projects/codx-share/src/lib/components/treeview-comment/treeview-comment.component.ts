@@ -59,7 +59,7 @@ export class TreeviewCommentComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.dataComment)
+    console.log('post: ',this.dataComment)
   }
   
   votes:any;
