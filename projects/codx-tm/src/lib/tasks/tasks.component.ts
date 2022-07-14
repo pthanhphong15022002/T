@@ -333,6 +333,7 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if(e?.event)
           this.itemSelected = e?.event;
           this.dt.detectChanges();
         });
@@ -479,7 +480,7 @@ export class TasksComponent extends UIComponent {
                 ''
               )
               .subscribe((res) => {
-                if (res) {
+                if (res && res.length>0) {
                   taskAction.status = status;
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
