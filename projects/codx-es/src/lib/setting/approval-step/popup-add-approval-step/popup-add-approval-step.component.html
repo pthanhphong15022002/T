@@ -10,22 +10,23 @@
               <div id="rome" class="tabpanel p-5">
                 <div class="tab-content">
                   <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Mô tả" fiedName="Memo" [formModel]="formModel">
+                    <codx-label class="fw-bolder" default="Mô tả" fiedName="Memo" [formModel]="formModel">
                     </codx-label>
                     <codx-input type="text" name="text" ControlName="memo" [Group]="dialogApprovalStep" placeholder=""
                       class="form-control"></codx-input>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <div class=" row mt-3">
+                    <div class=" row">
                       <div class="col-6">
-                        <codx-label default="Hành động" fiedName="StepType" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Hành động" fiedName="StepType" [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['StepType']" field="stepType"
                           (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.stepType">
                         </codx-input>
                       </div>
                       <div class="col-4">
-                        <codx-label default="Thời gian xử lí (giờ)" fiedName="Leadtime" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Thời gian xử lí (giờ)" fiedName="Leadtime"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="text" ControlName="leadtime" placeholder="0" [Group]="dialogApprovalStep"
                           (valueChange)="valueChange($event)" [crrValue]="parseInt(dialogApprovalStep.value.leadtime)">
@@ -36,11 +37,11 @@
 
                   <div class="d-flex flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 ">
-                      <h5 class="fw-bolder d-block mb-2">
+                      <div class="fw-bolder d-block mb-2">
                         <codx-label class="text-primary" default="Người thực hiện" fiedName="Attendees"
                           [formModel]="formModel">
                         </codx-label>
-                      </h5>
+                      </div>
 
                       <!-- <span class=" icon-group_add text-primary fs-1">
 
@@ -62,7 +63,7 @@
                   </div>
 
                   <div class="d-flex flex-column mb-4">
-                    <div class=" row mt-3">
+                    <div class=" row">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <codx-input type="radio" [checked]="true" label="Duyệt đại diện"
@@ -89,15 +90,16 @@
                   </div>
 
                   <div class="d-flex flex-column mb-4">
-                    <h5 class="fw-bolder d-block mb-2">
+                    <div class="fw-bolder d-block mb-2">
                       <codx-label class="text-primary" default="Đóng góp ý kiến" fiedName="Attendees"
                         [formModel]="formModel">
                       </codx-label>
-                    </h5>
+                    </div>
 
-                    <div class=" row mt-3">
+                    <div class="row">
                       <div class="col-6">
-                        <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Cho ý kiến khi duyệt" fiedName="ApproveControl"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['ApproveControl']"
                           field="approveControl" (valueChange)="valueChange($event)"
@@ -105,7 +107,8 @@
                         </codx-input>
                       </div>
                       <div class="col-6">
-                        <codx-label default="Cho ý kiến khi từ chối" fiedName="RejectControl" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Cho ý kiến khi từ chối" fiedName="RejectControl"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['RejectControl']"
                           field="rejectControl" (valueChange)="valueChange($event)"
@@ -198,25 +201,25 @@
 
                   <ng-container *ngFor="let item of dialogApprovalStep.value.emailTemplates">
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '11'">
-                      <h5 class="fw-bolder d-block mb-2">
+                      <div class="fw-bolder d-block mb-4">
                         <codx-label class="text-primary" default="Thiết lập mẫu email duyệt" [formModel]="formModel"
                           fiedName="lblEmailSubmit">
                         </codx-label>
-                      </h5>
+                      </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '21'">
-                      <h5 class="fw-bolder d-block mb-2">
+                      <div class="fw-bolder d-block mb-4 mt-5">
                         <codx-label class="text-primary" default="Email yêu cầu hủy kết quả duyệt/yêu cầu"
                           [formModel]="formModel" fiedName="lblEmailReject">
                         </codx-label>
-                      </h5>
+                      </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center" *ngIf="item?.EmailType == '31'">
-                      <h5 class="fw-bolder d-block mb-2">
+                      <div class="fw-bolder d-block mb-4 mt-5">
                         <codx-label class="text-primary" default="Thiết email cảnh báo quá hạn duyệt"
                           [formModel]="formModel" fiedName="lblEmailAlert">
                         </codx-label>
-                      </h5>
+                      </div>
                     </div>
                     <div class="d-flex flex-column mb-4">
                       <div class="row">
@@ -224,24 +227,26 @@
                           <!-- <codx-label class=" fw-bold" default="Email gửi yêu cầu duyệt" fiedName="Category"
                             [formModel]="formModel">
                           </codx-label> -->
-                          <label>{{item?.EmailType|vll:'ES012':'text'|async}}</label>
+                          <div class="fw-bolder">{{item?.EmailType|vll:'ES012':'text'|async}}</div>
                         </div>
                         <div class="col-6">
                           <div class="row">
-                            <div class="col-4">
-                              <codx-input type="checkbox" label="Email" labelPosition="after" field="IsEmail"
-                                class="test-check" (valueChange)="valueEmailChange($event, item)"
-                                [crrValue]="item?.IsEmail == '1' ?? item?.isEmail == '1'">
-                              </codx-input>
-                            </div>
                             <div class="col-6">
                               <codx-input type="checkbox" label="Thông báo" labelPosition="after" field="IsAlert"
                                 class="test-check" (valueChange)="valueEmailChange($event, item)"
                                 [crrValue]="item?.IsAlert == '1' ?? item?.isAlert == '1'">
                               </codx-input>
                             </div>
+                            <div class="col-4">
+                              <codx-input type="checkbox" label="Email" labelPosition="after" field="IsEmail"
+                                class="test-check" (valueChange)="valueEmailChange($event, item)"
+                                [crrValue]="item?.IsEmail == '1' ?? item?.isEmail == '1'">
+                              </codx-input>
+                            </div>
                             <div class="col-2">
-                              <div class="icon-email text-hover-primary icon-24 ml-2" (click)="openSetupEmail(item)">
+                              <div class="icon-email icon-24 ml-2" aria-disabled="true"
+                                [ngClass]="item?.IsEmail == '1' || item?.isEmail == '1' ? 'text-hover-primary' : 'text-muted'"
+                                (click)="openSetupEmail(item)">
                               </div>
                             </div>
                           </div>
@@ -428,23 +433,25 @@
                     </div>
                   </div> -->
                   <div class="d-flex flex-column mb-4">
-                    <div class="row mt-3 ">
+                    <div class="row">
                       <div class="col-6">
-                        <codx-label default="Cảnh báo đến hạn" fiedName="OverdueControl" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Cảnh báo đến hạn" fiedName="OverdueControl"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['OverdueControl']"
                           field="overdueControl" (valueChange)="valueChange($event)">
                         </codx-input>
                       </div>
                       <div class="col-3">
-                        <codx-label default="Thời gian nhắc" fiedName="Reminder" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Thời gian nhắc" fiedName="Reminder"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['Reminder']" field="reminder"
                           (valueChange)="valueChange($event)">
                         </codx-input>
                       </div>
                       <div class="col-3">
-                        <codx-label default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
                         </codx-label>
                         <codx-input type="number" name="number" [min]="0" placeholder="0" field="loops"
                           (valueChange)="valueChange($event)">
@@ -453,23 +460,25 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <div class="row mt-3 ">
+                    <div class="row">
                       <div class="col-6">
-                        <codx-label default="Xử lí động khi quá hạn" fiedName="OverdueControl" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Xử lí động khi quá hạn" fiedName="OverdueControl"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['OverdueControl']"
                           field="overdueControl" (valueChange)="valueChange($event)">
                         </codx-input>
                       </div>
                       <div class="col-3">
-                        <codx-label default="Thời gian nhắc" fiedName="Reminder" [formModel]="formModel">
+                        <codx-label class="fw-bolder" class="fw-bolder" default="Thời gian nhắc" fiedName="Reminder"
+                          [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['Reminder']" field="reminder"
                           (valueChange)="valueChange($event)">
                         </codx-input>
                       </div>
                       <div class="col-3">
-                        <codx-label default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
                         </codx-label>
                         <codx-input type="number" name="number" [min]="0" placeholder="0" field="loops"
                           (valueChange)="valueChange($event)">
@@ -490,10 +499,10 @@
                     </div>
                   </div> -->
                   <div class="d-flex flex-column mb-4">
-                    <div class="row mt-3 ">
+                    <div class="row">
                       <div class="col-7">
-                        <codx-label default="Cho phép hủy yêu cầu khi đã duyệt" fiedName="CancelControl"
-                          [formModel]="formModel">
+                        <codx-label class="fw-bolder" default="Cho phép hủy yêu cầu khi đã duyệt"
+                          fiedName="CancelControl" [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['CancelControl']"
                           field="cancelControl" (valueChange)="valueChange($event)">
@@ -502,9 +511,10 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <div class="row mt-3 ">
+                    <div class="row">
                       <div class="col-7">
-                        <codx-label default="Thay thế vị trí trống" fiedName="CancelControl" [formModel]="formModel">
+                        <codx-label class="fw-bolder" class="fw-bolder" default="Thay thế vị trí trống"
+                          fiedName="CancelControl" [formModel]="formModel">
                         </codx-label>
                         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['CancelControl']"
                           field="cancelControl" (valueChange)="valueChange($event)">
