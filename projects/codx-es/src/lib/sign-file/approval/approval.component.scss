@@ -1,0 +1,100 @@
+::ng-deep {
+  .row {
+    position: relative;
+    .action {
+      height: 100px !important;
+      border: 1px solid black !important;
+      margin: 10px 10px 0 0 !important;
+      align-items: center !important;
+      display: flex !important;
+      justify-content: center !important;
+
+      &:hover {
+        cursor: pointer !important;
+        background-color: antiquewhite;
+        color: blue;
+      }
+    }
+
+    .active {
+      color: blue;
+      background-color: antiquewhite;
+    }
+  }
+
+  .main-content {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+  }
+  #thumbnailTab {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  label {
+    margin-left: 10px !important;
+    margin-top: 10px !important;
+  }
+
+  button {
+    outline: none !important;
+    border-radius: 3px !important;
+  }
+
+  .main-pane {
+    width: 100% !important;
+    height: 97% !important;
+    overflow-y: hidden;
+    position: absolute !important;
+  }
+
+  #signfilesDropdownList {
+    width: 30% !important;
+    text-align: center !important;
+    position: relative !important;
+  }
+
+  #signatureDropdownList {
+    width: 100% !important;
+    text-align: center !important;
+    position: relative !important;
+  }
+
+  .col-2 {
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+    height: 100% !important;
+    .e-tab-header {
+      position: fixed !important;
+      height: auto !important;
+      width: fit-content !important;
+      z-index: 10 !important;
+      background: white !important;
+    }
+  }
+
+  .col-7 {
+    .pdfviewer_Space {
+      #pdfViewer_viewerMainContainer {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+  .actions {
+    height: 100% !important;
+    position: inherit;
+    // ejs-tab {
+    //   height: 100% !important;
+    // }
+
+    label {
+      width: fit-content;
+    }
+    input {
+      width: fit-content !important;
+      display: inline;
+    }
+  }
+}
