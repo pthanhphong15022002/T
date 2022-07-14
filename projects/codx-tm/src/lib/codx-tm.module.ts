@@ -141,7 +141,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'null',
+        redirectTo: 'mydashboard/:funcID',
         // path: 'home/:funcID',
         // component: DashboardComponent,
       },

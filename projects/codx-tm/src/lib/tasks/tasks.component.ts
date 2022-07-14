@@ -35,8 +35,6 @@ export class TasksComponent extends UIComponent {
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   model?: DataRequest;
-  predicate = 'Owner=@0';
-  dataValue = 'ADMIN';
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   dialog!: DialogRef;
@@ -65,9 +63,7 @@ export class TasksComponent extends UIComponent {
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'TMT0203') this.isAssignTask = true; //cai này để phân biệt owner và assign mà chưa có field phân biệt cố định nên tạm làm vậy, càn xử lý !
   }
 
   clickMF(e: any, data?: any) {
@@ -466,8 +462,8 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate =  moment(new Date(taskAction.startDate?taskAction.startDate:taskAction.createdOn)).toDate();
-            var time = (((completedOn.getTime() -startDate.getTime())/3600000).toFixed(1));
+            var startDate = moment(new Date(taskAction.startDate ? taskAction.startDate : taskAction.createdOn)).toDate();
+            var time = (((completedOn.getTime() - startDate.getTime()) / 3600000).toFixed(1));
             var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
@@ -486,10 +482,10 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  res.forEach(obj=>{
+                  res.forEach(obj => {
                     this.view.dataService.update(obj).subscribe();
-                  })    
-                  this.itemSelected = res[0] ;      
+                  })
+                  this.itemSelected = res[0];
                   this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {
@@ -517,10 +513,10 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     )
-    this.dialog.closed.subscribe(e=>{
-      if(e?.event){     
-          this.itemSelected =e?.event;
-          this.dt.detectChanges();
+    this.dialog.closed.subscribe(e => {
+      if (e?.event) {
+        this.itemSelected = e?.event;
+        this.dt.detectChanges();
       }
     })
   }

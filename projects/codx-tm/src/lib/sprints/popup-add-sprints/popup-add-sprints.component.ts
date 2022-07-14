@@ -103,10 +103,9 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region Event Method
   beforeSave(op: any, isAdd) {
-    var data = [];
+    this.master = this.dialog.dataService.dataSelected;
     op.method = 'AddEditSprintAsync';
-    data = [this.dialog.dataService.dataSelected, isAdd];
-    op.data = data;
+    op.data = [this.master, isAdd];
     return true;
   }
 
