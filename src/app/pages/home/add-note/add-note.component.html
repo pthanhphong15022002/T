@@ -85,7 +85,8 @@
         <div class="mb-3">
             <div *ngIf="formType == 'edit'">
                 <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
+                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2"
+                    hideDes="1" allowExtensions=".jpg,.png" allowMultiFile="1">
                 </codx-attachment>
             </div>
             <div *ngIf="formType == 'add'">
