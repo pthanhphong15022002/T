@@ -1,13 +1,13 @@
 <div class="py-3 px-6 add-note">
     <div class="d-flex align-items-center justify-content-between note-header">
         <div class="note-pin">
-            <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
+            <div class="pw-pin" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
                 triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
                 <span class="icon-push_pin icon-20 btn btn-icon btn-active-light-primary position-relative"
                     type="button"></span>
             </div>
         </div>
-        <div class="dialog-title">
+        <div class="dialog-title fw-bold">
             Tạo ghi chú
         </div>
         <div class="d-flex align-items-center note-btn">
@@ -31,7 +31,7 @@
             </div>
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
-                    <div class="flex align-items-center mt-3">
+                    <div class="flex align-items-center">
                         <div class="me-2">
                             <ng-container *ngIf="type == 'check'; else list">
                                 <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
@@ -61,7 +61,7 @@
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
-                    <div class="flex align-items-center mt-6">
+                    <div class="flex align-items-center">
                         <div class="me-2">
                             <ng-container *ngIf="note?.noteType == 'check'; else list">
                                 <codx-input #noteAddText type="checkbox"
@@ -100,9 +100,7 @@
 
     </div>
     <div class="d-flex note-action border align-items-center justify-content-between">
-        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="" format="d"
-            (valueChange)="valueChange($event)">
-        </codx-input>
+
         <div class="d-flex">
             <div [class.active]="noteType.text">
                 <span (click)="onType('text')" class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>
@@ -116,6 +114,9 @@
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
         </div>
+        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="" format="d"
+            (valueChange)="valueChange($event)">
+        </codx-input>
     </div>
 
 

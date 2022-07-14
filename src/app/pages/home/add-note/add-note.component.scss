@@ -27,6 +27,11 @@
     overflow: auto;
 }
 
+.note-text .e-float-input {
+    box-sizing: border-box;
+    height: 30px;
+}
+
 .note-action {
     position: absolute;
     left: 20px;
@@ -35,6 +40,9 @@
     padding: 5px 10px;
 }
 
+.note-action .e-input-group {
+    border: 0 !important;
+}
 
 .note-footer {
     position: absolute;
