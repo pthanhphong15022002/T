@@ -410,13 +410,15 @@ export class TasksComponent extends UIComponent {
 
   assignTask(data) {
     this.view.dataService.dataSelected = data;
+    var vllControlShare = 'L1906' ;
+    var vllRose = 'TM001' ;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected,'L1906','TM001'],
+      [this.view.dataService.dataSelected,vllControlShare,vllRose],
       option
     );
     this.dialog.closed.subscribe((e) => {
