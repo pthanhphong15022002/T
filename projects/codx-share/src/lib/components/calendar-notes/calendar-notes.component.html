@@ -3,7 +3,7 @@
 
 <div class="cal-notes">
     <div class="more-btn">
-        <span class="icon-edit-one icon-22 icon-add btn btn-icon btn-active-light-primary position-relative"
+        <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
             (click)="openFormAddNote()"></span>
         <span class="icon-more_vert icon-20 icon-add btn btn-icon btn-active-light-primary position-relative"
             placement="start" [ngbPopover]="popContentTypeCalendar" [autoClose]="'outside'"></span>
@@ -21,17 +21,21 @@
             </div>
         </div>
     </div>
-    <codx-listview #listview service="SYS" assemblyName="ERM.Business.CM" className="ParametersBusiness"
-        method="GetDataByRecIDAsync" entityName="WP_Notes" [formModel]="view.formModel" [predicate]="predicate"
-        [dataValue]="dataValue" [itemTemplate]="dataPara" type="listView" [funcId]="view.formModel.funcID">
-    </codx-listview>
+
+    <div class="lstView">
+        <codx-listview #listview service="SYS" assemblyName="ERM.Business.CM" className="ParametersBusiness"
+            method="GetDataByDateAsync" entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue"
+            [itemTemplate]="dataPara" type="listView" [funcId]="view.formModel.funcID">
+        </codx-listview>
+    </div>
 
     <ng-template #dataPara let-item>
-        <div class="d-flex flex-column top-5">
-            <div *ngIf="item.type == 'WP_Notes'" class="pd-note">
-                <div *ngIf="item.showCalendar == true">
-                    <div *ngIf="compareDate(item.createdOn, daySelected)">
-                        <div class="note-content mb-3">
+        <div class="d-flex flex-column top-2">
+            <div *ngIf="checkWP_NotesParam == true">
+                <div *ngIf="item.type == 'WP_Notes' || item.noteType != null || item.noteType != undefined "
+                    class="pd-note">
+                    <div *ngIf="item.showCalendar == true">
+                        <div class="note-content">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
                                     <div class="has-action-menu">
@@ -77,58 +81,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
-                        <div class="note-content mb-3">
-                            <div class="checkbox-list">
-                                <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
-                                        </codx-mfunc>
-                                    </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
-                                    </div>
-                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                        <span [innerHTML]="item.memo"></span>
-                                    </div>
-                                </div>
-                                <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
-                                        </codx-mfunc>
-                                    </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
-                                    </div>
-                                    <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                                        <div *ngFor="let itemList of item.checkList">
-                                            <div *ngIf="itemList.status == null">
-                                                <div class="my-1">
-                                                    <div>.{{itemList.listNote}}</div>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}" [disabled]="true"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
-            <!-- <div *ngIf="item.note == 'TM_Tasks'" class="pd-note">
-                <div *ngIf="compareDate(item.createdOn, daySelected) && changeDateSelect == true">
-                    <div class="task-content mb-3">
+            <div *ngIf="checkTM_TasksParam == true">
+                <div *ngIf="item.type == 'TM_Tasks'" class="pd-note">
+                    <div class="task-content">
                         <div class="checkbox-list">
                             <div class="d-flex flex-column note-option">
                                 <span [innerHTML]="item.memo"></span>
@@ -136,16 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="getDataByToDay(item.createdOn, toDate) && changeDateSelect == false">
-                    <div class="task-content mb-3">
-                        <div class="checkbox-list">
-                            <div class="d-flex flex-column note-option">
-                                <span [innerHTML]="item.memo"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+            </div>
         </div>
     </ng-template>
 </div>

@@ -20,7 +20,7 @@ import {
 import { CodxEsService } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
-export class Approver {}
+export class Approver { }
 @Component({
   selector: 'app-approval-steps',
   templateUrl: './approval-step.component.html',
@@ -67,7 +67,7 @@ export class ApprovalStepComponent implements OnInit {
     this.initForm();
   }
 
-  close() {}
+  close() { }
 
   initForm() {
     this.esService.isSetupApprovalStep.subscribe((res) => {
@@ -118,7 +118,7 @@ export class ApprovalStepComponent implements OnInit {
     this.dialog && this.dialog.close();
   }
 
-  openFormFuncID(val: any, data: any) {}
+  openFormFuncID(val: any, data: any) { }
 
   clickMF(event: any, data) {
     switch (event.functionID) {
@@ -144,7 +144,7 @@ export class ApprovalStepComponent implements OnInit {
     this.cfService.openForm(
       PopupAddApprovalStepComponent,
       '',
-      750,
+      800,
       1500,
       'EST04',
       data
@@ -163,7 +163,7 @@ export class ApprovalStepComponent implements OnInit {
     this.cfService.openForm(
       PopupAddApprovalStepComponent,
       '',
-      750,
+      800,
       1500,
       'EST04',
       data

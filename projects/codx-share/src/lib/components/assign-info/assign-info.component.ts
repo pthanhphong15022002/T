@@ -5,9 +5,10 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
   ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   ChangeDetectorRef,
@@ -44,13 +45,14 @@ export class AssignInfoComponent implements OnInit {
   disableAddToDo = true;
   grvSetup: any;
   param: any;
-  @Input() task = new TM_Tasks();
+  task: TM_Tasks = new TM_Tasks();
   functionID: string;
   @Input('viewBase') viewBase: ViewsComponent;
   title = 'Giao việc';
   dialog: any;
-  @Input() vllShare = "L1906"
-   vllRole =''
+  vllShare = "TM003"
+  vllRole ='TM001' 
+  listRoles = []
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -71,17 +73,41 @@ export class AssignInfoComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-
-    this.cache.valueList(this.vllShare).subscribe(res => {
-     console.log(res)
-    });
     this.cache.valueList(this.vllRole).subscribe(res => {
-      console.log(res)
+     if(res && res?.datas.length >0){
+      this.listRoles =res.datas
+     }
      });
   }
 
   ngOnInit(): void {
+    if(!this.task.taskID)
+    this.setDefault();
+    else
     this.openInfo();
+  }
+
+  setDefault(){
+    this.api
+    .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      this.functionID,
+      'TM_Tasks',
+      'taskID',
+    ])
+    .subscribe(
+    (response: any) => {
+        if (response) {
+          response['_uuid'] = response['taskID'] ?? Util.uid();
+          response['idField'] = 'taskID';
+          response['isNew'] = function () {
+            return response[response.taskID] != response['_uuid'];
+          };
+          response['taskID'] = response['_uuid'];
+          this.task = response;
+        this.openInfo();
+        }
+      }
+    );
   }
 
   showPanel() {

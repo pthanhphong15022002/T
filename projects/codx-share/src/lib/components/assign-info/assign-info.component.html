@@ -1,5 +1,5 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <!-- <div class="card w-100 h-100 rounded-0 border-0" style="padding: 0px 10px;">
+  <!-- <div class="card w-100 h-100 rounded-0 border-0" style="padding: 0px 10px;">
         <div class="card-header pe-5">
             <div class="card-title">
                 <div class="d-flex flex-column">
@@ -7,34 +7,37 @@
                     <div class="text-gray-400 fs-7"></div>
                 </div>
             </div>
-            <div class="card-toolbar">         
+            <div class="card-toolbar">
                 <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
                     id="kt_engage_demos_close" (click)="closePanel()">
                     <span class="icon-close icon-18"></span>
                 </button>
             </div>
         </div> -->
-        <ng-template #body>
-        <!-- <div class="card-body">-->
-            <div> 
-                <div class="d-flex justify-content-between mb-2 p-2">
-                    <div class="d-flex align-items-center flex-grow-1">
-                        <div class="w-100px">
-                            <codx-label fiedName="CreatedBy" formName="Tasks" gridViewName="grvTasks" default="Người giao việc"></codx-label>     
-                        </div>
-                        <div class="d-flex align-items-center me-2 mail-user">
-                            <div class="symbol symbol-20px symbol-circle me-2">
-                                <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                            </div>
-                            <div class="text-dark-75">{{user.userName}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-between p-2">
-                    <div class="d-flex align-items-center justify-content-start flex-grow-1">
-                        <div class="w-100px fw-bold"> <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Giao cho"></codx-label></div>                        
-                        <div class="d-flex align-items-center w-100" >
-                            <!-- <codx-input
+  <ng-template #body>
+    <!-- <div class="card-body">-->
+    <div>
+      <div class="d-flex justify-content-between mb-2 p-2">
+        <div class="d-flex align-items-center flex-grow-1">
+          <div class="w-100px">
+            <codx-label fiedName="CreatedBy" formName="Tasks" gridViewName="grvTasks" default="Người giao việc">
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center me-2 mail-user">
+            <div class="symbol symbol-20px symbol-circle me-2">
+              <codx-img #image [objectId]="'ADMIN'"></codx-img>
+            </div>
+            <div class="text-dark-75">{{user.userName}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between p-2">
+        <div class="d-flex align-items-center justify-content-start flex-grow-1">
+          <div class="w-100px fw-bold">
+            <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Giao cho"></codx-label>
+          </div>
+          <div class="d-flex align-items-center w-100">
+            <!-- <codx-input
                                 [refValue]="'Users'"
                                 [crrValue]="task.assignTo"
                                 placeholder="Chọn tài khoản"
@@ -43,80 +46,63 @@
                                 (valueChange)="changeUser($event)"
                                 >
                         </codx-input>  -->
-                        <codx-input class="form-control"   style="width:100%" type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true" 
-                        (valueChange)="eventApply($event)"></codx-input>
-                        </div>  
-                    </div>
-                </div>             
-            </div>        
-            <div class="d-flex justify-content-end me-2">
-                <div class="d-flex align-items-center ms-4">
-                    <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9">A</span>
-                    <div class="fs-8 text-gray-500">Chịu trách nhiệm</div>
-                </div> 
-                <div class="d-flex align-items-center ms-4">
-                    <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9">R</span>
-                    <div class="fs-8 text-gray-500">Thực hiện</div>
-                </div>        
-                <!-- <codx-input type="valuelist" refValue="TM001"           
-                    placeholder="" style="width:100%">  
-                </codx-input> -->	       
-                <!-- <ng-container *ngIf="this.roles != null">
-                    <div  *ngFor="let item of this.roles">
-                        <div class="d-flex align-items-center ms-4" [style.backgroundColor]="item.color">
-                            <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9" [style.color]="item.textColor">{{item.value}}</span>
-                            <div class="fs-8 text-gray-500">{{item.text}}</div>
-                        </div>
-                    </div>               
-                </ng-container> -->
+            <codx-input class="form-control" style="width:100%" type="Share" [refValue]="vllShare" field="AssignTo"
+              [dataShared]="[]" multiple="true" [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end me-2">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center ms-4">
+          <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+          <div class="fs-8 text-gray-500">{{item.text}}</div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="d-flex justify-content-between mb-2 p-2">
+      <div class="d-flex align-items-center flex-grow-1">
+        <div class="w-100px">
+          <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
+          </codx-label>
+        </div>
+        <div class="d-flex align-items-center w-100">
+          <codx-input type="text" style="width:100%" name="taskName" field="taskName" [crrValue]="task.taskName"
+            (valueChange)="changText($event)"></codx-input>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle height" type="button"
+          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span>Chọn mẫu</span>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item">
+            <div class="d-flex flex-column">
+              <span class="text-dark">Cấp quyền xem tài liệu</span>
+              <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
             </div>
-            <div class="d-flex justify-content-between mb-2 p-2">
-                <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-100px"> <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
-                    </codx-label></div>
-                    <div class="d-flex align-items-center w-100">
-                        <codx-input 
-                            type="text"
-                            style="width:100%"  name="taskName" field="taskName" [crrValue]="task.taskName"  (valueChange)="changText($event)"
-                        ></codx-input>
-                        <!-- <input #taskNameInput style="width:100%" name="taskName" [(ngModel)]="task.taskName"
-                      [readonly]="readOnly" type="text" class="form-control" placeholder="Tên công việc"
-                       /> -->
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle height"
-                        type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <span>Chọn mẫu</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item">
-                            <div class="d-flex flex-column">
-                                <span class="text-dark">Cấp quyền xem tài liệu</span>
-                                <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
-                            </div>
-                        </a>
-                        <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400"></div>
-                        <a class="dropdown-item">
-                            <span class="text-primary">Thêm mẫu mail</span>
-                        </a>
-                    </div>
-                </div>
-                <!-- <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-110px fw-bold">Người giao việc:</div>                                        
+          </a>
+          <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400"></div>
+          <a class="dropdown-item">
+            <span class="text-primary">Thêm mẫu mail</span>
+          </a>
+        </div>
+      </div>
+      <!-- <div class="d-flex align-items-center flex-grow-1">
+                    <div class="w-110px fw-bold">Người giao việc:</div>
                     <codx-input
                         style="width:90%"
                         [refValue]="gridViewSetup['Owner']['referedValue']"
-                        type="combobox"                      
+                        type="combobox"
                         (valueChange)="changeValueChangeFrom($event)"
                         [multiple]="true"
                     >
-                    </codx-input>    
+                    </codx-input>
                 </div> -->
-            </div>
-            <div class="d-flex justify-content-between  mb-2 p-2">
-                <!-- <div class="fw-bold">Công việc:</div>
+    </div>
+    <div class="d-flex justify-content-between  mb-2 p-2">
+      <!-- <div class="fw-bold">Công việc:</div>
                 <div class="d-flex align-items-center flex-grow-1">
                     <input class="form-control borderless" type="text" placeholder="Nhập lý do" />
                 </div>
@@ -139,92 +125,88 @@
                         </a>
                     </div>
                 </div> -->
-            </div>
-            <!-- <div class="p-2">
-                <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>        
+    </div>
+    <!-- <div class="p-2">
+                <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>
             </div> -->
-            <div class="form-group mt-3 p-2">
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Nội dung chi tiết">
-                    </codx-label>
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle"
-                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                            <span>Chon trường dữ liệu</span>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item">
-                                <div class="d-flex flex-column">
-                                    <span class="text-dark">Cấp quyền xem tài liệu</span>
-                                    <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
-                                </div>
-                            </a>
-                            <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400">
-                            </div>
-                            <a class="dropdown-item">
-                                <span class="text-primary">Thêm mẫu mail</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <codx-input type="textarea" field="memo" [crrValue]="task.memo" 
-                class="form-control" (valueChange)="changeMemo($event)"></codx-input>
+    <div class="form-group mt-3 p-2">
+      <div class="d-flex align-items-center justify-content-between">
+        <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Nội dung chi tiết">
+        </codx-label>
+        <div class="dropdown">
+          <button class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle" type="button"
+            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>Chon trường dữ liệu</span>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item">
+              <div class="d-flex flex-column">
+                <span class="text-dark">Cấp quyền xem tài liệu</span>
+                <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
+              </div>
+            </a>
+            <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400">
             </div>
-            <div class="row p-4">            
-                <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-100px"><codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Thời hạn xử lý"> 
-                    </codx-label></div>
-                    <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
-                    [crrValue]="task.dueDate" format="F" (valueChange)="changeTime($event)">
-                  </codx-input>
-    
-                    <!-- <div class="col-6 d-flex align-items-center">    
+            <a class="dropdown-item">
+              <span class="text-primary">Thêm mẫu mail</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <codx-input type="textarea" field="memo" [crrValue]="task.memo" class="form-control"
+        (valueChange)="changeMemo($event)"></codx-input>
+    </div>
+    <div class="row p-4">
+      <div class="d-flex align-items-center flex-grow-1">
+        <div class="w-100px">
+          <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Thời hạn xử lý">
+          </codx-label>
+        </div>
+        <codx-input type="datetime" class="test-datetime" field="dueDate" placeholder="datetime"
+          [crrValue]="task.dueDate" format="F" (valueChange)="changeTime($event)">
+        </codx-input>
+
+        <div class="col-6 d-flex align-items-center">
                         <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #report type="switch" id="switch" [checked]="false" labelPosition="Before"
-                            [disabled]="false" class="test-switch"></codx-input>   
+                            [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Yêu cầu báo cáo</div>
-                        </div>    -->
-                        
-                        <!-- <div class="d-flex flex-stack l-30px ms-3">
+                        </div>   
+
+        <!-- <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #email type="switch" id="switch" [checked]="false" labelPosition="Before"
-                            [disabled]="false" class="test-switch"></codx-input>                               
+                            [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Gởi email thông báo</div>
                         </div>  -->
-                    <!-- </div>   -->
-                </div>
-            </div>
-            <div class="row ">
-                <codx-attachment #attachment [objectType]="dialog.formModel.entityName"
-                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel"
-                [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-                displayThumb="full">
-              </codx-attachment>
-            </div>
-        <!-- </div> -->
-    </ng-template>
-    <ng-template #footer >
-        <!-- <div class="card-footer pt-4"> -->
-            <div class="d-flex justify-content-between">
-                <div class="d-flex flex-stack">
-                    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
-                        <i class="icon-cloud_upload fs-5" ></i>Upload file
-                    </button>
-                    <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false" labelPosition="Before"></codx-input>
-                    <div class="ms-2">Lưu làm template</div>
-                </div>                        
-                <div class="d-flex">
-                    <button type="button" class="btn btn-primary me-3" (click)="saveAssign(task.taskID,true)">Lưu và tiếp tục</button>                                        
-                    <button type="button" class="btn btn-primary" (click)="saveAssign(task.taskID,false)">Lưu</button>
-                </div>
-            </div>
-        <!-- </div> -->
-    </ng-template>
+        </div>  
+      </div>
+    </div>
+    <div class="row ">
+      <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideFolder="1"
+        hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1" [formModel]="dialog.formModel"
+        [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+        displayThumb="full">
+      </codx-attachment>
+    </div>
+    <!-- </div> -->
+  </ng-template>
+  <ng-template #footer>
+    <!-- <div class="card-footer pt-4"> -->
+    <div class="d-flex justify-content-between">
+      <div class="d-flex flex-stack">
+        <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+          <i class="icon-cloud_upload fs-5"></i>Upload file
+        </button>
+        <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
+          labelPosition="Before"></codx-input>
+        <div class="ms-2">Lưu làm template</div>
+      </div>
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary me-3" (click)="saveAssign(task.taskID,true)">Lưu và tiếp
+          tục</button>
+        <button type="button" class="btn btn-primary" (click)="saveAssign(task.taskID,false)">Lưu</button>
+      </div>
+    </div>
+    <!-- </div> -->
+  </ng-template>
 </codx-form>
-
-
-    
-
-

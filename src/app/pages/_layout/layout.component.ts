@@ -2,8 +2,6 @@ import { DialogRef } from 'codx-core/public-api';
 import { Component, OnInit, Injector } from '@angular/core';
 import { NoteDrawerComponent } from '@shared/layout/drawers/note-drawer/note-drawer.component';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
-
-import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
