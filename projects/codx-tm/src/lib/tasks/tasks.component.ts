@@ -333,8 +333,8 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if(e?.event)
-          this.itemSelected = e?.event;
+          if (e?.event)
+            this.itemSelected = e?.event;
           this.dt.detectChanges();
         });
       });
@@ -407,15 +407,15 @@ export class TasksComponent extends UIComponent {
 
   assignTask(data) {
     this.view.dataService.dataSelected = data;
-    var vllControlShare = 'TM003' ;
-    var vllRose = 'TM001' ;
+    var vllControlShare = 'TM003';
+    var vllRose = 'TM001';
     let option = new SidebarModel();
-    option.DataService = this.view?.currentView?.dataService;
-    option.FormModel = this.view?.currentView?.formModel;
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected,vllControlShare,vllRose],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -480,7 +480,7 @@ export class TasksComponent extends UIComponent {
                 ''
               )
               .subscribe((res) => {
-                if (res && res.length>0) {
+                if (res && res.length > 0) {
                   taskAction.status = status;
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
