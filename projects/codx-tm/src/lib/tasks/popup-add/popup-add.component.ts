@@ -439,7 +439,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.close();
           this.notiService.notifyCode('TM005');
         }
-      }); //Xài cái này bị la á , đợi fix xong chỉnh lại=))
+      });
   }
 
   updateTask() {
@@ -788,6 +788,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
   }
 }

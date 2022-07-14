@@ -50,14 +50,17 @@
                 </div>             
             </div>        
             <div class="d-flex justify-content-end me-2">
-                <div class="d-flex align-items-center ms-4">
-                    <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9">A</span>
-                    <div class="fs-8 text-gray-500">Chịu trách nhiệm</div>
-                </div> 
+                <ng-container *ngFor="let item of listRoles">
+                    <div class="d-flex align-items-center ms-4">
+                        <span><img src="../assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+                        <div class="fs-8 text-gray-500">{{item.text}}</div>
+                    </div> 
+                </ng-container>
+<!--                
                 <div class="d-flex align-items-center ms-4">
                     <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9">R</span>
                     <div class="fs-8 text-gray-500">Thực hiện</div>
-                </div>        
+                </div>         -->
                 <!-- <codx-input type="valuelist" refValue="TM001"           
                     placeholder="" style="width:100%">  
                 </codx-input> -->	       

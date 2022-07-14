@@ -1,5 +1,4 @@
-import { Data_Line } from './../../../../../../codx-fd/src/lib/wallets/wallets.component';
-import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import {
   AuthStore,
   CacheService,
@@ -7,12 +6,8 @@ import {
   DialogRef,
   ApiHttpService,
   NotificationsService,
-  AuthService,
 } from 'codx-core';
-import { TM_Projects } from '../../../models/TM_Projects.model';
-import moment from 'moment';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-project',
@@ -20,12 +15,11 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./pop-add-project.component.css'],
 })
 export class PopAddProjectComponent implements OnInit {
-  @Input() projects = new TM_Projects();
-
+  project: any;
   titleAdd = 'Thêm mới dự án';
   titleUpdate = 'Chỉnh sửa dự án';
   title = '';
-  dialog: any;
+  dialog: DialogRef;
   user: any;
   functionID: string;
   gridViewSetup: any;
@@ -50,48 +44,32 @@ export class PopAddProjectComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dd?: DialogData
   ) {
-    this.projects = {
-      ...this.projects,
-      ...dd?.data[0],
-    };
-
-
+    this.project = dialog.dataService!.dataSelected;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
   }
 
   ngOnInit(): void {
-    this.cache.gridViewSetup('Projects', 'grvProjects').subscribe((res) => {
-      // if (res) this.gridView
 
-      // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
-      if (res) {
-        this.gridViewSetup = res;
-
-      }
-    });
-
-    // BaoLV 1.TM - Danh muc du an
-    this.initForm();
   }
 
   valueApp(data) {
-    this.projects.projectCategory = data.data;
+    this.project.projectCategory = data.data;
   }
 
   valueChange(data) {
     if (data.data) {
-      this.projects.projectName = data.data;
+      this.project.projectName = data.data;
     }
   }
 
   valueCus(data) {
-    this.projects.customerName = data.data;
+    this.project.customerName = data.data;
   }
 
   valueLocation(data) {
-    this.projects.location = data.data;
+    this.project.location = data.data;
   }
 
   cbxChangeProjectGroup(data) {
@@ -101,7 +79,7 @@ export class PopAddProjectComponent implements OnInit {
       //   this.loadTodoByGroup(this.projects.projectGroupID);
 
       // BaoLV 1.TM - Danh mục dự án - Lấy giá trị trong mảng của nhóm dự án
-      this.projects.projectGroupID = data.data.join(';');
+      this.project.projectGroupID = data.data.join(';');
 
     }
   }
@@ -111,49 +89,14 @@ export class PopAddProjectComponent implements OnInit {
       // this.projects.projectManeger = data.data;
 
       // BaoLV 1.TM - Danh mục dự án - Lấy giá trị trong mảng của dự án
-      this.projects.projectManeger = data.data.join(';');
-    }
-  }
-  changeTime(data) {
-    if (!data.field) return;
-    this.projects[data.field] = data.data.fromDate;
-    if (data.field == 'startDate') {
-      if (!this.projects.endDate)
-        this.projects.endDate = moment(new Date(data.data.fromDate))
-          .add(1, 'hours')
-          .toDate();
-    }
-    if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.projects.startDate && this.projects.endDate)
-        this.projects.estimated = moment(this.projects.endDate).diff(
-          moment(this.projects.startDate),
-          'hours'
-        );
+      this.project.projectManeger = data.data.join(';');
     }
   }
 
   changeMemo(event) {
     var field = event.field;
     var dt = event.data;
-    this.projects.memo = dt?.value ? dt.value : dt;
-  }
-
-  // BaoLV 1.TM - Danh mục dự án - Gọi hàm tự sinh ID khi thêm mới dự án
-  initForm() {
-    this.getFormGroup(this.formName, this.gridViewName).then((item) => {
-      this.isAfterRender = true;
-      if(this.projects.projectID == undefined) {
-        this.title = this.titleAdd;
-        this.getAutonumber('TMS031', 'TM_Projects', 'ProjectID').subscribe(
-          (key) => {
-                this.projects.projectID = key;
-            }
-        );
-      }
-      else {
-        this.title = this.titleUpdate;
-      }
-    });
+    this.project.memo = dt?.value ? dt.value : dt;
   }
 
   // BaoLV 1.TM - Danh mục dự án
@@ -204,25 +147,6 @@ export class PopAddProjectComponent implements OnInit {
     });
 
   }
-
-  // BaoLV 1.TM - Danh mục dự án - Hàm tự sinh ID khi chọn chức năng thêm mới
-  getAutonumber(functionID, entityName, fieldName): Observable<any> {
-    var subject = new Subject<any>();
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.AD',
-        'AutoNumbersBusiness',
-        'GenAutoNumberAsync',
-        [functionID, entityName, fieldName, null]
-      )
-      .subscribe((item) => {
-        if (item) subject.next(item);
-        else subject.next(null);
-      });
-    return subject.asObservable();
-  }
-
   // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
   onSaveOrEdit() {
     this.addOrUpdateData();
@@ -232,7 +156,7 @@ export class PopAddProjectComponent implements OnInit {
   beforeSaveOrEdit(op: any) {
     var data = [];
     op.method = 'AddEditProjectsAsync';
-    data = [this.projects];
+    data = [this.project];
     op.data = data;
     return true;
   }

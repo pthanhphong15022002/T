@@ -82,25 +82,23 @@ export class RangesKanbanComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
       this.dialog.closed.subscribe((x) => {
-    /*   if (x.event == null && this.view.dataService.hasSaved)
+        if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
             .subscribe(x => {
               this.dt.detectChanges();
-            });  */
+            });
       });
     });
   }
 
   edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
+    this.view.dataService.dataSelected = data;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;

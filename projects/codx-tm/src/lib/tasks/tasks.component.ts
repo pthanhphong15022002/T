@@ -410,13 +410,15 @@ export class TasksComponent extends UIComponent {
 
   assignTask(data) {
     this.view.dataService.dataSelected = data;
+    var vllControlShare = 'L1906' ;
+    var vllRose = 'TM001' ;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      this.view.dataService.dataSelected,
+      [this.view.dataService.dataSelected,vllControlShare,vllRose],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -466,11 +468,9 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate)).toDate();
-            var estimated = moment(completedOn).diff(
-              moment(startDate),
-              'hours'
-            );
+            var startDate =  moment(new Date(taskAction.startDate?taskAction.startDate:taskAction.createdOn)).toDate();
+            var time = (((completedOn.getTime() -startDate.getTime())/3600000).toFixed(1));
+            var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -490,7 +490,8 @@ export class TasksComponent extends UIComponent {
                   taskAction.completed = estimated;
                   res.forEach(obj=>{
                     this.view.dataService.update(obj).subscribe();
-                  })               
+                  })    
+                  this.itemSelected = res[0] ;      
                   this.dt.detectChanges();
                   this.notiService.notify('Cập nhật trạng thái thành công !');
                 } else {

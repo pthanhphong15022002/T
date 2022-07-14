@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService, RequestOption } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewType, CallFuncService, UIComponent } from 'codx-core';
 import { PopAddProjectComponent } from './pop-add-project/pop-add-project.component';
 
 @Component({
@@ -7,7 +7,7 @@ import { PopAddProjectComponent } from './pop-add-project/pop-add-project.compon
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent extends UIComponent {
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('itemManager', { static: true }) itemManager: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
@@ -17,7 +17,6 @@ export class ProjectComponent implements OnInit {
   @ViewChild('itemProjectCategoryVll', { static: true }) itemProjectCategoryVll: TemplateRef<any>;
   @ViewChild('itemStatusVll', { static: true }) itemStatusVll: TemplateRef<any>;
   @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
-  @ViewChild('view') view!: ViewsComponent;
   views: Array<ViewModel> = [];
   dialog!: DialogRef;
 
@@ -25,13 +24,17 @@ export class ProjectComponent implements OnInit {
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
 
 
-  constructor(private dt: ChangeDetectorRef, private callfunc: CallFuncService) { }
+  constructor(
+    private inject: Injector,
+    private dt: ChangeDetectorRef, private callfunc: CallFuncService) {
+    super(inject);
+  }
   itemSelected: any;
   columnsGrid = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
-
-  ngOnInit(): void {
+  //#region  init
+  onInit(): void {
     this.columnsGrid = [
       { field: 'projectID', headerText: 'Mã dự án', width: 100 },
       { field: 'projectName', headerText: 'Tên dự án', width: 200 },
@@ -69,14 +72,6 @@ export class ProjectComponent implements OnInit {
     ];
   }
 
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.show();
-        break;
-    }
-  }
-
   ngAfterViewInit(): void {
     this.views = [{
       type: ViewType.grid,
@@ -88,24 +83,72 @@ export class ProjectComponent implements OnInit {
       }
     }];
 
-    this.view.dataService.methodDelete = 'DeleteProjectAsync';
+    this.view.dataService.methodDelete = '';
   }
+  //#endregion
 
-
-  show() {
+  //#region CRUD method
+  add() {
     this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopAddProjectComponent, null, option);
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe(x => {
+              this.dt.detectChanges();
+            });
+      });
+    });
+  }
+  update(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddProjectComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-        this.dt.detectChanges();
-      })
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopAddProjectComponent, null, option);
     });
   }
 
+  // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+  };
+
+  //#endregion
+
+  //#region Func
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+  // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.update(data);
+        break;
+      case 'delete':
+        this.delete(data);
+        break;
+    }
+  }
+
+  //#endregion
+
+  //#region event method
   changeView(evt: any) {
     console.log('evt: ', evt);
     var t = this;
@@ -115,47 +158,13 @@ export class ProjectComponent implements OnInit {
     //   this.dialog.close();
     // }
   }
-  aaa(val: any) {
-    console.log(val);
-  }
+
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }
-
   // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'edit':
-        this.updateData(data);
-        break;
-      case 'delete':
-        this.deleteData(data);
-        break;
-    }
-  }
-
-  // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
-  updateData(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddProjectComponent, [this.view.dataService.dataSelected, 'edit'], option);
-    });
-  }
-
-  // BaoLV 2.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
-  deleteData(data: any) {
-    // this.view.dataService.dataSelected = data;
-    // this.view.dataService.delete([this.view.dataService.dataSelected],true,this.beforeDel).subscribe();
-  };
-
   beforeDel(opt: any) {
     var itemSelected = opt.data[0][0];
     opt.service = 'TM';
