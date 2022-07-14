@@ -15,7 +15,7 @@ import { TM_TaskGroups } from '../../../models/TM_TaskGroups.model';
 })
 export class PopAddTaskgroupComponent implements OnInit {
   @Input() taskGroups = new TM_TaskGroups();
- 
+
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('view') viewBase: ViewsComponent;
 
@@ -41,10 +41,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     private authStore: AuthStore,
     private cache: CacheService,
     private changDetec: ChangeDetectorRef,
-    private fb: FormBuilder,
-    private tmSv: CodxTMService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
 
@@ -60,12 +57,12 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
- //   this.initForm();
+    //   this.initForm();
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe(res => {
       if (res)
         this.gridViewSetup = res
     })
-    
+
     if (this.taskGroups.checkList) {
       for (let item of this.taskGroups.checkList.split(";")) {
         if (this.listTodo == null)
@@ -77,81 +74,8 @@ export class PopAddTaskgroupComponent implements OnInit {
       }
     }
     this.changDetec.detectChanges();
-      // this.openForm(this.taskGroups, false);
+    // this.openForm(this.taskGroups, false);
   }
-
-  // initForm() {
-  //   this.getFormGroup(this.formName, this.gridViewName).then((item) => {
-  //     this.isAfterRender = true;
-  //     if (this.isAddMode == true) {
-  //       this.getAutonumber("TMS032", "TM_TaskGroups", "TaskGroupID").subscribe(key => {
-
-  //         this.taskGroups.taskGroupID = key;
-  //         this.taskGroups.approvalControl = "0";
-  //         this.taskGroups.projectControl = "0";
-  //         this.taskGroups.attachmentControl = "0";
-  //         this.taskGroups.checkListControl = "0";
-  //         this.listTodo = [];
-  //       })
-  //     }
-  //   })
-  // }
-
-  // getFormGroup(formName, gridView): Promise<FormGroup> {
-  //   return new Promise<FormGroup>((resolve, reject) => {
-  //     this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
-  //       var model = {};
-  //       if (gv) {
-  //         const user = this.authStore.get();
-  //         for (const key in gv) {
-  //           var b = false;
-  //           if (Object.prototype.hasOwnProperty.call(gv, key)) {
-  //             const element = gv[key];
-  //             element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
-  //             model[element.fieldName] = [];
-
-  //             if (element.fieldName == "owner") {
-  //               model[element.fieldName].push(user.userID);
-  //             }
-  //             if (element.fieldName == "createdOn") {
-  //               model[element.fieldName].push(new Date());
-  //             }
-  //             else if (element.fieldName == "stop") {
-  //               model[element.fieldName].push(false);
-  //             }
-  //             else if (element.fieldName == "orgUnitID") {
-  //               model[element.fieldName].push(user['buid']);
-  //             }
-  //             else if (element.dataType == "Decimal" || element.dataType == "Int") {
-  //               model[element.fieldName].push(0);
-  //             }
-  //             else if (element.dataType == "Bool" || element.dataType == "Boolean")
-  //               model[element.fieldName].push(false);
-  //             else if (element.fieldName == "createdBy") {
-  //               model[element.fieldName].push(user.userID);
-  //             } else {
-  //               model[element.fieldName].push(null);
-  //             }
-  //           }
-  //         }
-  //       }
-  //       resolve(this.fb.group(model, { updateOn: 'blur' }));
-  //     });
-  //   });
-  // }
-
-  // getAutonumber(functionID, entityName, fieldName): Observable<any> {
-  //   var subject = new Subject<any>();
-  //   this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
-  //     "GenAutoNumberAsync", [functionID, entityName, fieldName, null])
-  //     .subscribe(item => {
-  //       if (item)
-  //         subject.next(item);
-  //       else
-  //         subject.next(null);
-  //     });
-  //   return subject.asObservable();
-  // }
 
   onDeleteTodo(index) {
     this.listTodo.splice(index, 1);//remove element from array
@@ -269,7 +193,7 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   addRow() {
     this.dialog.dataService
-      .save((option: any)=>this.beforeSave(option))
+      .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
           this.dialog.dataService.setDataSelected(res.save);

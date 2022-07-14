@@ -42,6 +42,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   countIsPin = 0;
   countNotPin = 0;
   typeList = "note-drawer";
+  header = 'Ghi chú';
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   constructor(private injector: Injector,
@@ -52,10 +53,19 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.getMaxPinNote();
   }
 
-  ngAfterViewInit(): void {
-    this.onCountNotePin();
+  ngAfterViewInit() {
+    // this.onCountNotePin();
+  }
+
+  getMaxPinNote() {
+    this.api
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
+      .subscribe((res) => {
+        this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+      });
   }
 
   valueChange(e, recID = null, item = null) {
@@ -88,7 +98,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     var obj = {
       data: this.lstView.dataService.data,
       dataUpdate: data,
-      formType: 'edit'
+      formType: 'edit',
+      maxPinNotes: this.maxPinNotes,
     };
     this.callfc.openForm(
       AddNoteComponent,
@@ -106,11 +117,14 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   getNumberNotePin() {
-    this.lstView.dataService.data.forEach((res) => {
+    var that = this;
+    var dt = that.lstView.dataService.data;
+    dt.forEach((res) => {
       if (res.isPin == true || res.isPin == '1') {
-        this.countNotePin++;
+        that.countNotePin += 1;
       }
     })
+    debugger;
   }
 
   checkNumberNotePin(data) {
@@ -148,6 +162,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
+    option.FormModel = this.lstView.formModel;
     this.callfc
       .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
   }

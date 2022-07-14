@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -27,6 +28,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
+import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
 
@@ -40,8 +42,7 @@ export class SprintsComponent extends UIComponent {
   gridView: any;
   // predicateViewBoards =
   //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
-    predicateViewBoards =
-    '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
+  predicateViewBoards = '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
   predicateProjectBoards =
     '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
   totalRowMyBoard: number = 6;
@@ -50,9 +51,12 @@ export class SprintsComponent extends UIComponent {
   totalProjectBoards: number = 0;
   boardAction: any;
   user: any;
-  @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
-  @ViewChild('lstProjectBoard') lstProjectBoard: CodxListviewComponent;
-  @ViewChild('itemViewBoard') itemViewBoard : TemplateRef<any>
+  sprintDefaut = new TM_Sprints();
+
+  // @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
+  // @ViewChild('lstProjectBoard') lstProjectBoard: CodxListviewComponent;
+  @ViewChild('itemViewBoard') itemViewBoard: TemplateRef<any>;
+  @ViewChild('templetSprints') templetSprints: TemplateRef<any>;
   urlShare = '';
   urlView = '';
   moreFunc: any[];
@@ -80,48 +84,14 @@ export class SprintsComponent extends UIComponent {
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.params['funcID'];
   }
+
+
+  //#region Init
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
   }
-
-  clickMF(e: any, data: any) {
-    this.itemSelected = data;
-    switch (e.functionID) {
-      case 'btnAdd':
-        this.add();
-        break;
-      case 'edit':
-        this.edit(data);
-        break;
-      case 'copy':
-        this.copy(data);
-        break;
-      case 'delete':
-        this.delete(data);
-        break;
-      case 'sendemail':
-        this.sendemail(data);
-        break;
-      case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        this.shareBoard(e, data);
-        break;
-      case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        this.viewBoard(e, data);
-        break;
-      default:
-        break;
-    }
-  }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
-
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -139,7 +109,9 @@ export class SprintsComponent extends UIComponent {
     this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
     this.changeDetectorRef.detectChanges();
   }
+  //#endregion
 
+  //#region CRUD Methods
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -154,8 +126,6 @@ export class SprintsComponent extends UIComponent {
       this.dialog.closed.subscribe((e) => {
         console.log(e);
       });
-
-      //dialog.close();
     });
   }
 
@@ -177,6 +147,7 @@ export class SprintsComponent extends UIComponent {
         );
       });
   }
+
   copy(data) {
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -194,30 +165,64 @@ export class SprintsComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    // this.itemSelected = data;
     this.view.dataService
-      .delete([this.lstViewBoard.dataService.dataSelected], (opt) =>
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
-      .subscribe((res) => {
-        if (res) {
-          // this.notiService.notifyCode('TM004');
-          (this.lstViewBoard.dataService as CRUDService)
-            .remove(this.itemSelected)
-            .subscribe();
-        }
-      });
+      .subscribe(res => {
+        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
+      })
   }
 
-  beforeDel(opt: any) {
-    opt.service = 'TM';
-    opt.assemblyName = 'ERM.Business.TM';
-    opt.className = 'SprintsBusiness';
-    opt.method = 'DeleteSprintsByIDAsync';
+  beforeDel(opt: RequestOption) {
+    opt.methodName = 'DeleteSprintsByIDAsync';
     opt.data = this.itemSelected.iterationID;
     return true;
   }
-  sendemail(data) {}
+  //#endregion
+  //#region More function
+  clickMF(e: any, data: any) {
+    this.itemSelected = data;
+    switch (e.functionID) {
+      case 'btnAdd':
+        this.add();
+        break;
+      case 'edit':
+        if (data.iterationID != this.user.userID)
+          this.edit(data);
+        break;
+      case 'copy':
+        if (data.iterationID != this.user.userID)
+          this.copy(data);
+        break;
+      case 'delete':
+        if (data.iterationID != this.user.userID)
+          this.delete(data);
+        break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
+      case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        if (data.iterationID != this.user.userID)
+          this.shareBoard(e, data);
+        break;
+      case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
+        this.viewBoard(e, data);
+        break;
+      default:
+        break;
+    }
+  }
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+  //#endregion
+  //#region Event
+  sendemail(data) { }
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -249,24 +254,14 @@ export class SprintsComponent extends UIComponent {
       '',
       obj
     );
-    // .subscribe((dt: any) => {
-    //   var that = this;
-    //   dt.close = function (e) {
-    //     return that.closePopup(e, that);
-    //   };
-    // });
   }
-
-  // closePopup(e,t:SprintsComponent){
-
-  // }
 
   viewBoard(e, data) {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-     this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
-     //this.codxService.navigate('',this.urlView)
+    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    //this.codxService.navigate('',this.urlView)
   }
 
   changeView(evt: any) {
@@ -279,8 +274,6 @@ export class SprintsComponent extends UIComponent {
     //   this.dialog.close();
     // }
   }
-  // selectedChange(val: any) {
-  //   this.itemSelected = val.data;
-  //   this.changeDetectorRef.detectChanges();
-  // }
+  //#endregion
+
 }

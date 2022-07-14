@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CacheService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
+import { EditExperenceComponent } from './edit-experence/edit-experence.component';
+import { EditInfoComponent } from './edit-info/edit-info.component';
+import { EditRelationComponent } from './edit-relation/edit-relation.component';
 
 @Component({
   selector: 'lib-employee-infomation',
@@ -12,6 +15,7 @@ import { CodxMwpService } from '../codx-mwp.service';
 })
 export class EmployeeInfomationComponent implements OnInit {
   views: Array<ViewModel> = [];
+  @ViewChild('view') view!: ViewsComponent;
 
   employeeInfo: any = null;
   employeeHobbie: any = null;
@@ -46,19 +50,20 @@ export class EmployeeInfomationComponent implements OnInit {
   dataSelcected = [];
   service = "BS";
 
-  // minValue: number = 100;
   minType= "MinRange";
   data: Object[];
   primaryXAxis: Object;
   primaryYAxis: Object;
-
-  // parentID: string = "WPT0321";
+  moreFunc = []
+  functionID: any;
+  defautFunc :any ;
   formName: string = "";
   gridViewName: string = "";
   user: any;
+  dialog!: DialogRef;
 
   @ViewChild('contentSkill') contentSkill;
-  @ViewChild('view') viewBase: ViewsComponent;
+  // @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('header') header: TemplateRef<any>;
@@ -71,8 +76,29 @@ export class EmployeeInfomationComponent implements OnInit {
     private api: ApiHttpService,
     private auth: AuthStore,
     private cachesv: CacheService,
+    private callfunc: CallFuncService,
   ) {
-    // this.user = this.auth.get();
+    this.user = this.auth.get();
+    this.functionID = this.routeActive.snapshot.params['funcID'] ;
+    // this.cachesv.moreFunction(this.functionID,null).subscribe(res=>{
+    //   if(res)this.moreFunc=res;
+    // })
+    // this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=>{
+    //     if(res)this.moreFunc=res;
+    // });
+    this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=> {
+      if (res) {
+        this.defautFunc =res[0]
+        this.formName = res.formName;
+        this.gridViewName = res.gridViewName;
+        this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
+          if(res)
+           this.moreFunc =res ;
+          this.dt.detectChanges();
+        });
+      }
+    });
+    console.log(this.view)
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
@@ -88,7 +114,7 @@ export class EmployeeInfomationComponent implements OnInit {
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
       this.editMode = res;
-      this.editSkillMode = false;
+       this.editSkillMode = false;
     })
     this.codxMwpService.empInfo.subscribe((res: string) => {
       if (res) {
@@ -256,18 +282,21 @@ export class EmployeeInfomationComponent implements OnInit {
   }
   sliderChange(e, data) {
     this.skillChartEmployee = [];
-    data.rating = data.valueX.toString();
-
-
+    data.rating = data.valueX = e.toString();
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
       .subscribe((o: any) => {
-
+        var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
+        this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
+        this.skillEmployee = [...this.skillEmployee, ...[]];
+        this.dt.detectChanges();
       });
-    for (let index = 0; index < this.skillEmployee.length; index++) {
-      const element = this.skillEmployee[index];
-      this.skillChartEmployee.push(element);
-    }
+    // for (let index = 0; index < this.skillEmployee.length; index++) {
+    //   const element = this.skillEmployee[index];
+    //   this.skillChartEmployee.push(element);
+    // }
+    // this.dt.detectChanges();
   }
+
   ngAfterViewInit() {
     this.views = [
       {
@@ -288,12 +317,14 @@ export class EmployeeInfomationComponent implements OnInit {
   ngOnChanges() {
 
   }
+
   onSectionChange(data: any) {
     //this.currentSection = sectionId;
     console.log(data);
     this.codxMwpService.currentSection = data.current;
     this.dt.detectChanges();
   }
+
   isCheck(data) {
     if (this.skillEmployee) {
       for (let index = 0; index < this.skillEmployee.length; index++) {
@@ -307,11 +338,83 @@ export class EmployeeInfomationComponent implements OnInit {
     return false;
   }
 
-  setMyStyles(data) {
+  editInfo(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
+    });
+  }
 
-    // let styles = {
-    //   'width': (data.valueX / 10 * 100) + "%",
-    // };
-    // return styles;
+  editExperences(data?) {
+    // this.allowexp = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // this.codxMwpService.experienceEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(EditExperenceComponent, 'edit', option);
+    });
+  }
+
+  editDataEdu(data) {
+    this.allowedu = true;
+    this.codxMwpService.EmployeeInfomation = this;
+    this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+  }
+
+  editRelation(data) {
+    // this.allowrela = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // this.codxMwpService.relationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
+    });
+  }
+
+  editHobby(data) {
+    this.allowhobby = true;
+    this.codxMwpService.EmployeeInfomation = this;
+    data = data || { employeeID: this.employeeInfo.employeeID };
+    data.list = this.employeeHobbie;
+    this.codxMwpService.hobbyEdit.next(data);
+  }
+
+
+  deleteSkill(data) {
+    
+  }
+
+  deleteHobby(data) {
+
+  }
+
+  deleteExperences(data) {
+
+  }
+
+  deleteRelation(data) {
+    
+  }
+
+  deleteEducation(data) {
+    
   }
 }

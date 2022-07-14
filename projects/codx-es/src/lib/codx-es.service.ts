@@ -569,6 +569,16 @@ export class CodxEsService {
       templateID
     );
   }
+
+  addEmailTemplate(data: any, sendTo: any): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'AddEmaiTemplateAsync',
+      [data, sendTo]
+    );
+  }
   //#endregion
 }
 export class LayoutModel {

@@ -55,9 +55,28 @@
     position: relative;
 }
 
-.emoji{
+.emoji {
     position: absolute;
     z-index: 99;
     bottom: 28px;
     right: -64px;
+}
+
+.symbol.symbol-12px>img {
+    width: 12px;
+    height: 12px;
+}
+
+.body-addpost {
+    height: 100%;
+    position: relative;
+}
+
+.addpost-scroll {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 50px;
+    overflow: auto;
 }

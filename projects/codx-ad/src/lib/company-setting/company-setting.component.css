@@ -8,7 +8,8 @@
 }
 
 .title {
-  color: #342d2d;
+  color: #8E8F90;
+  font-weight: 600;
 }
 
 .w-1000px {
@@ -25,13 +26,13 @@
 }
 
 .accountinfo {
-  padding-top: 10px;
-  padding-bottom: 15px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .header_title {
-  padding-bottom: 30px;
-
+  font-size: 19px;
+  padding-bottom: 14px;
 }
 
 .header_detail {
@@ -52,6 +53,8 @@
 
 .body_detail {
   border: 1px solid #dbd8d9;
+  margin-top: 15px;
+  margin-bottom: 30px;
 }
 
 .footer_detail {
@@ -66,22 +69,16 @@
 }
 
 .contact-map-size {
-  height: 250px;
+  height: 300px;
   width: 100%;
 }
 
 .button_edit {
   text-align: right;
-
 }
 
 .content {
-  padding: 10px 10px 10px 10px;
-}
-
-.background_form {
-  background: white;
-  padding-bottom: 50px;
+  padding: 18px 18px 20px 18px;
 }
 
 button {
@@ -94,35 +91,87 @@ button:hover {
 }
 
 .url {
-  padding-top: 5px;
+  padding-top: 18px;
   margin-left: -15px;
 }
 
 .url-contact {
-  color: #47B5FF;
+  color: #47b5ff;
 }
 
-.header_title {
-  font-size: 19px;
-}
-
-.title {
-  color: #8A8A8A;
-}
 .title_mf {
-    color: #0055C5;
+  color: #0055c5;
 }
 .font_size {
-  font-size: 14px;
+  font-size: 13px;
+  font-family: Roboto, Helvetica, "sans-serif" !important;
+  font-weight: 400;
 }
 
 i.fa {
-  color: #0055C5;
+  color: #0055c5;
   font-size: 30px;
 }
 
 .background_form {
-    height: 1000px;
-    width: 1245px;
-    border-radius: 1% 1% 1% 1%;
+  width: 1280px;
+  border-radius: 1% 1% 1% 1%;
+  background: white;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 30px;
+  height: 100%;
+}
+.footer_content {
+  padding: 15px 15px 2px 15px;
+}
+
+.title_contact {
+  font-size: 14px;
+}
+.col-2 {
+  flex: 0 0 auto;
+  width: 8.666667%;
+}
+
+.img_logo {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.img_logoFull {
+  width: 200px;
+  height:60px ;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.img_option {
+  width: 4.333333%;
+}
+.img_optionFull {
+  width: 17.333333%;
+}
+.contactName {
+  font-size: 120%;
+  padding-bottom: 5px;
+}
+.personal_option {
+  padding-bottom: 5px;
+}
+.col-3 {
+  width: 19%;
+}
+.img_avatar {
+  width: 100%;
+  height: 100%;
+}
+strong {
+  font-weight: 600;
 }

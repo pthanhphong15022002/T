@@ -1,9 +1,9 @@
 <codx-views #view entityName="TM_Projects" service="TM" assemblyName="ERM.Business.TM" className="ProjectsBusiness"
   method="GetListProjectsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="click($event)" (requestEnded)="requestEnded($event)"
-  (selectedChange)="selectedChange($event)" (onDragDrop)="aaa($event)" idField="ProjectID" [pageSize]="100"
-  [selectedFirst]="true">
+  (selectedChange)="selectedChange($event)" idField="projectID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
+
 <ng-template #grid let-data>
   <tr>
     <td>

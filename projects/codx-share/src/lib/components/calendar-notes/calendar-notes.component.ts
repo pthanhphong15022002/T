@@ -1,5 +1,7 @@
+import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
+import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -10,7 +12,7 @@ import {
   AfterViewInit,
   Injector,
 } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { Thickness, DateTime } from '@syncfusion/ej2-angular-charts';
 import { Notes } from '@shared/models/notes.model';
 import { StatusNote } from '@shared/models/enum/enum';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
@@ -45,17 +47,20 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   checkWP_NotesParam = true;
   param: any;
   daySelected: any;
-  toDate: any;
   changeDateSelect = false;
   checkWeek = true;
   typeList = 'notes-home';
-  dataValue = ['WP_Calendars', '', 'SettingShow'];
+  dataValue = 'WP_Calendars;SettingShow';
   predicate = '';
   dataValue1: any;
   predicate1 = 'CreatedBy=@0';
   userID = ''
+  data: any;
+  fromDate: any;
+  toDate: any;
+  arrDate: any = [];
 
-  @ViewChild('listview') lstView;
+  @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
   constructor(private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -65,14 +70,19 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.dataValue1 = this.auth.get();
     this.userID = this.dataValue1?.userID;
     this.messageParam = this.cache.message('WP003');
-    this.setEventWeek();
-  }
-  ngAfterViewInit() {
+    this.getParam();
   }
 
   onInit(): void {
-    this.getEvents();
     this.getMaxPinNote();
+  }
+
+  ngAfterViewInit() {
+  }
+
+  requestEnded(evt: any) {
+    this.view.currentView;
+    this.data = this.lstView.dataService.data;
   }
 
   getMaxPinNote() {
@@ -83,34 +93,51 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       });
   }
 
-  getEvents() {
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetDataByRecIDAsync',
-        ['WP_Calendars', '', 'SettingShow']
-      )
-      .subscribe((res) => {
-        if (res && res.msgBodyData) {
-          this.param = res.msgBodyData[0];
-          this.TM_Tasks = this.param[0];
-          this.WP_Notes = this.param[1];
-          this.TM_TasksParam = this.param[2].TM_Tasks;
-          this.WP_NotesParam = this.param[2].WP_Notes;
+  // getEvents() {
+  // this.api
+  //   .callSv(
+  //     'SYS',
+  //     'ERM.Business.CM',
+  //     'ParametersBusiness',
+  //     'GetDataByRecIDAsync',
+  //     ['WP_Calendars', '', 'SettingShow']
+  //   )
+  //   .subscribe((res) => {
+  //     if (res && res.msgBodyData) {
+  //       this.param = res.msgBodyData[0];
+  //       this.TM_Tasks = this.param[0];
+  //       this.WP_Notes = this.param[1];
+  //       this.TM_TasksParam = this.param[2].TM_Tasks;
+  //       this.WP_NotesParam = this.param[2].WP_Notes;
 
-          for (let i = 0; i < this.WP_Notes?.length; i++) {
-            var date = this.WP_Notes[i]?.createdOn;
-            var daq = new Date(Date.parse(date));
-            var d = daq.toLocaleDateString();
-          }
-          this.getNumberNotePin();
-        }
-      });
-  }
+  //       for (let i = 0; i < this.WP_Notes?.length; i++) {
+  //         var date = this.WP_Notes[i]?.createdOn;
+  //         var daq = new Date(Date.parse(date));
+  //         var d = daq.toLocaleDateString();
+  //       }
+  //       this.getNumberNotePin();
+  //     }
+  //   });
+  // }
+
+  // getNoteData() {
+  //   var dtWP_Notes = [];
+  //   var dtTM_Tasks = [];
+  //   this.data.forEach((res) => {
+  //     if (res?.type == 'WP_Notes') {
+  //       dtWP_Notes.push(res);
+  //     } else if (res?.type == 'TM_Tasks') {
+  //       dtTM_Tasks.push(res);
+  //     }
+  //   })
+  //   this.WP_Notes = dtWP_Notes;
+  //   this.TM_Tasks = dtTM_Tasks;
+  //   this.getNumberNotePin();
+  // }
 
   onLoad(args): void {
+    // var date = new Date(args.date).toLocaleDateString();
+    // this.arrDate.push(date);
     this.setEvent(args.element, args);
   }
 
@@ -149,11 +176,66 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       return null;
     }
   }
+
   onChangeValueSelectedWeek(e) {
     this.changeDateSelect = true;
     this.daySelected = e.daySelected;
     var daySelected = new Date(Date.parse(this.daySelected));
-    this.daySelected = daySelected.toLocaleDateString();
+    this.daySelected = daySelected.toISOString();
+    this.dataValue = '';
+    this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
+    this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+  }
+
+  valueChangeTyCalendar(e) {
+    if (e) {
+      if (e.data == true) {
+        this.typeCalendar = 'week';
+        this.checkWeek = true;
+      } else {
+        this.typeCalendar = 'month';
+        this.checkWeek = false;
+      }
+    }
+  }
+
+  // getMinMaxDate(calendar: any) {
+  //   if (calendar) {
+  //     var d = calendar.currentDate;
+  //     var localDate = new Date(d.getFullYear(), d.getMonth(), 0, d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+  //     var firstDayOfWeek = calendar?.firstDayOfWeek
+
+  //     const dayMilliSeconds: number = 86400000
+  //     while (localDate.getDay() !== firstDayOfWeek) {
+  //       calendar.setStartDate(localDate, -1 * dayMilliSeconds);
+  //     }
+  //     var fromDate = new Date(localDate);
+  //     this.fromDate = fromDate.toLocaleDateString();
+  //     var toDate = new Date(calendar.renderDayCellArgs.date);
+  //     this.toDate = toDate.toLocaleDateString();
+
+  //     this.getParam(this.fromDate, this.toDate);
+  //   }
+  // }
+
+  getParam() {
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetDataInCalendarAsync',
+        ['WP_Calendars', '', 'SettingShow']
+      )
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          var dt = res.msgBodyData[0];
+          this.TM_TasksParam = dt[2].TM_Tasks;
+          this.WP_NotesParam = dt[2].WP_Notes;
+          this.WP_Notes = dt[0];
+          this.TM_Tasks = dt[1];
+        }
+      });
   }
 
   setEvent(ele = null, args = null) {
@@ -171,9 +253,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             this.TM_TasksParam[i]?.fieldValue == '1'
           ) {
             for (let y = 0; y < this.TM_Tasks?.length; y++) {
-              var dateParse = new Date(Date.parse(this.TM_Tasks[y]?.createdOn));
-              if (date === dateParse.toLocaleDateString()) {
+              var dt = this.TM_Tasks[y];
+              var dateParse = new Date(this.TM_Tasks[y]?.createdOn);
+              // dateParse.setDate(dateParse.getDate() - 1);
+              var dataLocal = dt.toLocaleDateString();
+              if (date == dataLocal) {
                 calendarTM++;
+                break;
               }
             }
           }
@@ -188,13 +274,10 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
           ) {
             for (let y = 0; y < this.WP_Notes?.length; y++) {
               var dateParse = new Date(Date.parse(this.WP_Notes[y]?.createdOn));
-              if (date === dateParse.toLocaleDateString()) {
-                calendar++;
-
-                if (this.WP_Notes[y]?.showCalendar == false) {
-                  countShowCalendar += 1;
-                } else {
-                  countShowCalendar = 0;
+              if (date == dateParse.toLocaleDateString()) {
+                if (this.WP_Notes[y]?.showCalendar == true) {
+                  calendar++;
+                  break;
                 }
               }
             }
@@ -209,7 +292,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     flex.className = 'd-flex note-point';
     ele.append(flex);
 
-    if (calendar >= 1 && countShowCalendar < 1) {
+    if (calendar > 0 && calendarTM == 0) {
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
@@ -218,13 +301,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       } else {
         span.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
+          'width: 6px;height: 6px;background-color: orange;border-radius: 50%;'
         );
       }
       flex.append(span);
     }
 
-    if (calendarTM >= 1) {
+    if (calendarTM > 0 && calendar == 0) {
       if (this.typeCalendar == 'week') {
         span2.setAttribute(
           'style',
@@ -233,13 +316,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       } else {
         span2.setAttribute(
           'style',
-          'width: 6px;background-color: red;height: 6px;border-radius: 50%'
+          'width: 6px;background-color: red;height: 6px;border-radius: 50%;'
         );
       }
       flex.append(span2);
     }
 
-    if (calendar >= 1 && calendarTM >= 1 && countShowCalendar < 1) {
+    if (calendar > 0 && calendarTM > 0) {
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
@@ -265,6 +348,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onValueChange(args: any) {
+    console.log("check onValueChange", args);
     this.changeDateSelect = true;
     this.daySelected = args.value.toLocaleDateString();
     let title: string = '';
@@ -340,8 +424,11 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       typeLst: this.typeList,
       formType: 'add',
     };
+    let option = new DialogModel();
+    option.DataService = this.view.dataService as CRUDService;
+    option.FormModel = this.view.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
   }
 
   valueChange(e, recID = null, item = null) {
@@ -380,17 +467,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         this.message = '';
         item[field] = e.data.checked;
       }
-    }
-  }
-
-  valueChangeTyCalendar(e) {
-    if (e) {
-      if (e.data == true) {
-        this.typeCalendar = 'week';
-      } else {
-        this.typeCalendar = 'month';
-      }
-      this.changeDetectorRef.detectChanges();
     }
   }
 
