@@ -113,19 +113,19 @@
           (click)="clickChangeItemViewStatus('1', itemDetail?.recID)">
           <i class="icon-info icon-16"></i>
           <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
-            class="ms-2 fw-bold"></codx-label>
+            class="ms-1 fw-bold"></codx-label>
         </button>
         <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '2'"
           (click)="clickChangeItemViewStatus('2', itemDetail?.recID)">
           <i class="icon-format_list_numbered icon-16"></i>
           <codx-label name="lblBusiness" [formModel]="itemDetailTemplate.formModel" default="Công việc"
-            class="ms-2 fw-bold"></codx-label>
+            class="ms-1 fw-bold"></codx-label>
         </button>
         <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '3'"
           (click)="clickChangeItemViewStatus('3', itemDetail?.recID)">
           <i class="icon-people_alt icon-16"></i>
           <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Qui trình duyệt"
-            class="ms-2 fw-bold"></codx-label>
+            class="ms-1 fw-bold"></codx-label>
         </button>
       </div>
     </div>
