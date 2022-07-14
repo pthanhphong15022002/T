@@ -1,6 +1,6 @@
 import { AD_User } from './../../models/AD_User.models';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService, AuthStore } from 'codx-core';
+import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 
@@ -10,6 +10,9 @@ import { throws } from 'assert';
   styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
+  @ViewChild("imageUpload", { static: false }) imageUpload?: ImageViewerComponent;
+  @Output() loadData = new EventEmitter();
+
   title = 'Thêm người dùng';
   dialog: DialogRef;
   data: any;
@@ -22,6 +25,8 @@ export class AddUserComponent implements OnInit {
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
     private auth: AuthStore,
+    public codxService: CodxService,
+
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -33,8 +38,9 @@ export class AddUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.data1=='edit')
+    if (this.data1 == 'edit')
       this.title = 'Cập nhật người dùng';
+    this.isAddMode = false;
   }
 
   openPopup(item: any) {
@@ -46,7 +52,7 @@ export class AddUserComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    if (this.data1=='add') {
+    if (this.data1 == 'add') {
       this.isAddMode = true;
       op.method = 'AddUserAsync';
       data = [
@@ -54,7 +60,7 @@ export class AddUserComponent implements OnInit {
         this.isAddMode,
       ];
     };
-    if(this.data1 == 'edit'){
+    if (this.data1 == 'edit') {
       this.isAddMode = false;
       op.method = 'UpdateUserAsync';
       data = [
@@ -71,6 +77,14 @@ export class AddUserComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
+          this.imageUpload
+            .updateFileDirectReload(res.save.userID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+
+              }
+            });
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
           this.changDetec.detectChanges();
@@ -85,17 +99,30 @@ export class AddUserComponent implements OnInit {
       .save((option: any) => this.beforeSave)
       .subscribe((res) => {
         if (res.update) {
-          this.dialog.dataService.setDataSelected(res.update[0]);
+          this.imageUpload
+            .updateFileDirectReload(res.update.userID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+
+              }
+            });
+          this.dialog.dataService.setDataSelected(res.update);
+          this.changDetec.detectChanges();
         }
       })
-      this.closePanel();
+    this.closePanel();
 
   }
 
   onSave() {
-    if(this.isAddMode)
+    if (this.isAddMode)
       return this.onAdd();
     return this.onUpdate();
+  }
+
+  reloadAvatar(data: any): void {
+    this.imageUpload?.reloadImageWhenUpload();
   }
 
   closePanel() {

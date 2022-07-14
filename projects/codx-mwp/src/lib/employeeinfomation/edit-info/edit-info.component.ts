@@ -15,7 +15,6 @@ export class EditInfoComponent implements OnInit {
   isAfterRender = false;
   gridViewSetup: any;
   employee: HR_Employees = new HR_Employees();
-  dataBind: any = {};
   isDisable = false;
   isNew: false;
   
@@ -38,9 +37,9 @@ export class EditInfoComponent implements OnInit {
   dataChange(e: any, field: string) {
     if (e) {
       if (e?.length == undefined) {
-        this.dataBind[field] = e?.data;
+        this.employee[field] = e?.data;
       } else {
-        this.dataBind[field] = e[0];
+        this.employee[field] = e[0];
       }
     }
   }

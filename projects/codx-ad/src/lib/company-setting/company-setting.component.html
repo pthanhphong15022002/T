@@ -40,9 +40,10 @@
     <!-- Account Information -->
     <div class="header_detail" *ngIf="data">
       <div class="header_title">
-       <strong><codx-label fiedName="" class="header_title" formName="" gridViewName="" default="Thông tin tài khoản">
-        </codx-label>
-      </strong>
+        <strong>
+          <codx-label fiedName="" class="header_title" formName="" gridViewName="" default="Thông tin tài khoản">
+          </codx-label>
+        </strong>
       </div>
       <div class="header_content">
         <div class="accountinfo">
@@ -80,14 +81,35 @@
           <div class="row">
             <div class="col-1 img_option">
               <!-- change url image Main logo -->
-              <img alt="" class="img_logo" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
+              <img alt="" class="img_logo" style="width:50px; height:50px;" src="../../../assets/themes/ad/default/img/logo.png">
+                <!-- <div class="change_image">
+                  <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
+                    (change)="handleInputChange($event)" />
+                  <div class="image-upload">
+                    <div *ngIf="!imageSrc; then tre; else gia">
+                    </div>
+                    <ng-template #tre>
+                      <img alt="" class="img_logo" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
+                    </ng-template>
+                    <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar"></ng-template>
+                  </div>
+                  <button class="button-icon button_change" type="button" (click)="fileInput.click()">
+                    <i class="icon-create icon-18"></i>
+                  </button>
+              </div> -->
             </div>
             <div class="col-11">
               <div class="col-12">
-                <strong><codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label> </strong>
+                <strong>
+                  <codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label>
+                </strong>
               </div>
               <div class="col-12">
-                <i><codx-label fiedName="" formName="" gridViewName="" default="Recommended: 40x40px PNG with"></codx-label><br> <codx-label default="transparent background"></codx-label> </i>
+                <i>
+                  <codx-label fiedName="" formName="" gridViewName="" default="Recommended: 40x40px PNG with">
+                  </codx-label><br>
+                  <codx-label default="transparent background"></codx-label>
+                </i>
               </div>
             </div>
           </div>
@@ -96,14 +118,55 @@
           <div class="row">
             <div class="col-4 img_optionFull">
               <!-- change url image E-mail header -->
-              <img alt="" class="img_logoFull" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
+             
+
+                  <!-- <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
+                    (change)="handleInputChange($event)" />
+                <div class="image-upload"> 
+                    <div *ngIf="!imageSrc; then tre; else gia">
+                    </div>
+                    <ng-template #tre>
+                      <img alt="" class="img_logo" style="width:200px; height:60px;" src="../../../assets/themes/ad/default/img/logoFull_default.png">
+                    </ng-template>
+                    <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar" style="width:200px; height:60px;"></ng-template>
+                  </div>
+                  <button class="button-icon button_change" type="button" (click)="fileInput.click()">
+                    click nha
+                  </button> -->
+
+
+              <div class="container_img">
+                <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
+                (change)="handleInputChange($event)" />
+
+                <div *ngIf="!imageSrc; then tre; else gia">
+                </div>
+
+                <ng-template #tre>
+                  <img class="img_logoFull img_settings" src="../../../assets/themes/ad/default/img/logoFull_default.png">
+                </ng-template>
+                <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar" style="width:200px; height:60px;"></ng-template>
+
+                <div class="overlay"></div>
+                <div class="button_image">
+                  <button class="button-icon button_change_email" type="button" (click)="fileInput.click()" >
+                    <i class="icon-create icon-18"></i>
+                  </button>
+                </div>
+              </div>
+
             </div>
             <div class="col-8">
               <div class="col-12">
-                <strong> <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label> </strong>
+                <strong>
+                  <codx-label fiedName="" formName="" gridViewName="" default="E-mail header"></codx-label>
+                </strong>
               </div>
               <div class="col-12">
-                <i><codx-label fiedName="" formName="" gridViewName="" default="Recommended resolution"></codx-label><br> <codx-label default="580x80px"></codx-label> </i>
+                <i>
+                  <codx-label fiedName="" formName="" gridViewName="" default="Recommended resolution"></codx-label><br>
+                  <codx-label default="580x80px"></codx-label>
+                </i>
               </div>
             </div>
           </div>
@@ -121,13 +184,13 @@
         </div>
         <div class="col-6 pb-5">
           <div class="button_edit">
-            <button (click)="clickEditContact(data)"><i class="icon-edit_file icon-18"></i></button>
+            <button (click)="clickEditContact(data)"><i class="icon-create icon-18"></i></button>
           </div>
         </div>
         <div class="col-5">
           <div class="contact">
             <strong>
-              <codx-label formName="CompanySetting" gridViewName="" [default]="" >
+              <codx-label formName="CompanySetting" gridViewName="" [default]="">
               </codx-label>
               {{data.street}}
             </strong>
@@ -139,11 +202,11 @@
           </div>
           <div class="contact">
             <codx-label [default]="'Email: '"></codx-label>
-            <span class="url-contact" >{{data.email}}</span>
+            <span class="url-contact">{{data.email}}</span>
           </div>
           <div class="contact">
             <codx-label fiedName="" formName="" gridViewName="" [default]="'Website: '"></codx-label>
-            <span  class="url-contact"> {{data.webPage}}</span>
+            <span class="url-contact"> {{data.webPage}}</span>
           </div>
         </div>
         <div class="col-7">
@@ -167,7 +230,7 @@
         </div>
         <div class="col-6">
           <div class="button_edit">
-            <button (click)="clickEditPersonal(data)"> <i class="icon-edit_file icon-18"></i></button>
+            <button (click)="clickEditPersonal(data)"> <i class="icon-create icon-18"></i></button>
           </div>
         </div>
       </div>
@@ -176,10 +239,12 @@
           <div class="col-6">
             <div class="row">
               <div class="col-3">
-                <div *ngIf="data.Logo; else imgDefault">
+                <!-- <div *ngIf="data.Logo; else imgDefault">
                   <img class="img_avatar" src="../../../assets/img/{{data.Logo}}" />
                 </div>
-                  <ng-template #imgDefault> <img class="img_avatar" src="../../../assets/img/avatar.png" /></ng-template>
+                <ng-template #imgDefault> <img class="img_avatar" src="../../../assets/img/avatar.png" /></ng-template> -->
+
+
               </div>
               <div class="col-9">
                 <div class="col-12 contactName">
@@ -198,7 +263,7 @@
                 </div>
                 <div class="col-12 personal_option">
                   <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
-                  </codx-label>{{data.mobile}} <br>
+                  </codx-label>{{data.mobile}} <i class="icon-create"></i><br>
                 </div>
               </div>
             </div>
