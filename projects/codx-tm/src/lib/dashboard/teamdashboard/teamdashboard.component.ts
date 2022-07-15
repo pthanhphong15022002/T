@@ -1,11 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  GaugeTheme,
-  ILoadedEventArgs,
+  GradientService,
 } from '@syncfusion/ej2-angular-circulargauge';
-import { AnimationModel, RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
+import {
+  AnimationModel,
+  RangeColorModel,
+} from '@syncfusion/ej2-angular-progressbar';
+import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
 
@@ -13,8 +15,10 @@ import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
   selector: 'team-dashboard',
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
+  providers: [GradientService],
 })
-export class TeamDashboardComponent implements OnInit {
+export class TeamDashboardComponent extends UIComponent implements OnInit {
+  @ViewChild('tooltip') tooltip: TemplateRef<any>;
   formModel: string;
   funcID: string;
   model: DataRequest;
@@ -29,7 +33,7 @@ export class TeamDashboardComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
-  vlWork: any
+  vlWork: any;
 
   public rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -49,32 +53,77 @@ export class TeamDashboardComponent implements OnInit {
     size: '15px',
     color: '#fcde0b',
   };
-  // custom code start
-  public load(args: ILoadedEventArgs): void {
-    let selectedTheme: string = location.hash.split('/')[1];
-    selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.gauge.theme = <GaugeTheme>(
-      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
-        .replace(/-dark/i, 'Dark')
-        .replace(/contrast/i, 'Contrast')
-    );
-  }
+  public rangeLinearGradient1: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#5465FF', offset: '0%', opacity: 0.9 },
+      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
+    ],
+  };
 
-  public animation1: Object = { duration: 1500 };
-  public markerWidth: number = 28;
-  public markerHeight: number = 28;
-  public value: number = 12;
-  public markerWidth1: number = 90;
-  public markerHeight1: number = 90;
-  public lineStyle: Object = { width: 0, color: '#1d1d1d' };
-  public labelStyle: Object = { font: { size: '0px' } };
-  public majorTicks: Object = { interval: 20, width: 0 };
-  public minorTicks: Object = { width: 0 };
+  public rangeLinearGradient2: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#FF8008', offset: '0%', opacity: 0.9 },
+      { color: '#FFC837', offset: '90%', opacity: 0.9 },
+    ],
+  };
+
+  public minorTicks: Object = {
+    width: 0,
+  };
+
+  public majorTicks1: Object = {
+    position: 'Outside',
+    height: 1,
+    width: 1,
+    offset: 0,
+    interval: 30,
+  };
+  public majorTicks2: Object = {
+    height: 0,
+  };
+
+  public lineStyle: Object = {
+    width: 0,
+  };
+
+  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  //#endregion gauge
+
+  public legendSettings1: Object = {
+    position: 'Top',
+    visible: true,
+  };
+
+  public legendSettings2: Object = {
+    position: 'Right',
+    visible: true,
+  };
+ 
   //#endregion gauge
 
   public piedata1: Object[];
   public piedata2: Object[];
-  public legendSettings: Object;
+  public legendSettings: Object = {
+    position: 'Top',
+    visible: true,
+  };
+  public legendRateDoneSettings: Object = {
+    visible: true,
+  };
+
+  openTooltip() {
+    console.log('mouse enter');
+    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
+  }
+
+  closeTooltip() {
+    console.log('mouse leave');
+  }
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -148,13 +197,15 @@ export class TeamDashboardComponent implements OnInit {
   dbData: any;
 
   constructor(
-    private api: ApiHttpService,
+    private inject: Injector,
     private auth: AuthStore,
     private tmService: CodxTMService,
-    private activedRouter: ActivatedRoute
-  ) {}
+  ) {
+    super(inject);
+    this.funcID = this.router.snapshot.params['funcID'];
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
@@ -200,8 +251,6 @@ export class TeamDashboardComponent implements OnInit {
         this.vlWork = res.tasksbyEmp;
       });
 
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-
     this.piedata2 = [
       {
         x: 'Group 1',
@@ -212,14 +261,12 @@ export class TeamDashboardComponent implements OnInit {
         y: 5,
       },
     ];
-    this.legendSettings = {
-      visible: true,
-    };
+    this.getGeneralData();
   }
 
   private getGeneralData() {
     this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataMyDashboardAsync', [
+      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataTeamDashboardAsync', [
         this.model,
       ])
       .subscribe((res: any) => {

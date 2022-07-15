@@ -38,7 +38,8 @@ export class TaskGroupComponent implements OnInit {
   columnsGrid = [];
   dialog!: DialogRef;
   itemSelected: any;
-
+  popoverList: any;
+  popoverDetail: any;
   isAfterRender = false;
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -182,7 +183,16 @@ export class TaskGroupComponent implements OnInit {
 
   }
 
-
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp.checkList.split(";");
+      if (emp.checkList != null)
+        p.open();
+    }
+    else
+      p.close();
+  }
 
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -209,14 +219,14 @@ export class TaskGroupComponent implements OnInit {
   }
 
   delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt) =>
-      this.beforeDel(opt)).subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
-        }
-      }
-      );
+    // this.view.dataService.dataSelected = data;
+    // this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+    //   this.beforeDel(opt)).subscribe((res) => {
+    //     if (res[0]) {
+    //       this.itemSelected = this.view.dataService.data[0];
+    //     }
+    //   }
+    //   );
   };
 
 

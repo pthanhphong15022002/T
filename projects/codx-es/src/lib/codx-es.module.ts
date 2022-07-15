@@ -33,6 +33,22 @@ import { ViewDetailComponent } from './sign-file/view-detail/view-detail.compone
 import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
+import { ApprovalComponent } from './sign-file/approval/approval.component';
+import {
+  PdfViewerComponent,
+  LinkAnnotationService,
+  BookmarkViewService,
+  MagnificationService,
+  ThumbnailViewService,
+  ToolbarService,
+  NavigationService,
+  TextSearchService,
+  TextSelectionService,
+  PrintService,
+  AnnotationService,
+  FormFieldsService,
+  PdfViewerModule,
+} from '@syncfusion/ej2-angular-pdfviewer';
 
 const routes: Routes = [
   {
@@ -43,6 +59,12 @@ const routes: Routes = [
         path: 'signfiles/:funcID',
         component: SignFileComponent,
       },
+
+      {
+        path: 'approval/:funcID',
+        component: ApprovalComponent,
+      },
+
       {
         path: 'signatures/:funcID',
         component: SignatureComponent,
@@ -87,6 +109,7 @@ const routes: Routes = [
     ViewDetailComponent,
     SignFileComponent,
     PopupSignatureComponent,
+    ApprovalComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -99,6 +122,7 @@ const routes: Routes = [
     SharedModule,
     TabModule,
     CodxShareModule,
+    PdfViewerModule,
   ],
   exports: [CodxEsComponent],
   providers: [
@@ -112,6 +136,18 @@ const routes: Routes = [
     StackingColumnSeriesService,
     LegendService,
     TooltipService,
+    //pdfService (NQBuu)
+    LinkAnnotationService,
+    BookmarkViewService,
+    MagnificationService,
+    ThumbnailViewService,
+    ToolbarService,
+    NavigationService,
+    AnnotationService,
+    TextSearchService,
+    TextSelectionService,
+    PrintService,
+    FormFieldsService,
   ],
 })
 export class CodxEsModule {

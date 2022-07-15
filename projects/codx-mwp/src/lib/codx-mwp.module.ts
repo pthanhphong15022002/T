@@ -42,6 +42,12 @@ import {
   SplineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditInfoComponent } from './employeeinfomation/edit-info/edit-info.component';
+import { EditHobbyComponent } from './employeeinfomation/edit-hobby/edit-hobby.component';
+import { EditExperenceComponent } from './employeeinfomation/edit-experence/edit-experence.component';
+import { EditRelationComponent } from './employeeinfomation/edit-relation/edit-relation.component';
+import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.component';
+import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 
 export const routes: Routes = [
   {
@@ -86,6 +92,10 @@ const Component: Type<any>[] = [
   PopupAddUpdate,
   DetailNoteBooksComponent,
   PostsComponent,
+  EditInfoComponent, 
+  EditHobbyComponent, 
+  EditExperenceComponent, 
+  EditRelationComponent,
 ];
 
 @NgModule({
@@ -110,7 +120,7 @@ const Component: Type<any>[] = [
   exports: [
     RouterModule,
   ],
-  declarations: [Component],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

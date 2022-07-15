@@ -9,6 +9,8 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { ListViewModule } from '@syncfusion/ej2-angular-lists';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -51,13 +53,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
 
-  public headerText: Object = [
-    { text: 'Thông tin chung', iconCss: 'icon-info' },
-    { text: 'Điều kiện', iconCss: 'icon-person_add' },
-    { text: 'Email/thông báo', iconCss: 'icon-email' },
-    { text: 'Thông tin khác', iconCss: 'icon-tune' },
-  ];
-
   headerText1;
 
   constructor(
@@ -67,6 +62,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private cfService: CallFuncService,
     private cache: CacheService,
+    private callfc: CallFuncService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -191,6 +187,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     if (email?.IsEmail == '1' || email?.isEmail == '1') {
       let data = {
         dialog: this.dialog,
+        formGroup: this.dialogApprovalStep,
         dialogEmail: email,
         showIsTemplate: true,
         showIsPublish: true,
@@ -199,8 +196,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       this.cfService.openForm(
         PopupAddEmailTemplateComponent,
         '',
-        750,
-        1500,
+        800,
+        screen.height,
         '',
         data
       );
@@ -275,6 +272,29 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       this.dialogApprovalStep.patchValue({
         emailTemplates: this.dialogApprovalStep.value.emailTemplates,
       });
+    }
+  }
+
+  testdata(share) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(event) {
+    if (event[0].id) {
+      switch (event[0].objectType) {
+        case 'U':
+          let lstID = event[0].id.split(';');
+          let lstUserName = event[0].text.split(';');
+          let lst = this.dialogApprovalStep.value.approvers ?? [];
+          for (let i = 0; i < lstID?.length; i++) {
+            let appr = new Approvers();
+            appr.approverName = lstUserName[i];
+            appr.approver = lstID[i];
+            lst.push(appr);
+          }
+          this.dialogApprovalStep.patchValue({ approvers: lst });
+          break;
+      }
     }
   }
 }

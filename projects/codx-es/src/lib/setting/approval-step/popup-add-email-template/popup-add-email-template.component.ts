@@ -1,6 +1,17 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { resizeStart } from '@syncfusion/ej2-grids';
+import { Alert } from 'bootstrap';
+import { CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { elementAt } from 'rxjs';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -8,7 +19,8 @@ import { CodxEsService } from '../../../codx-es.service';
   templateUrl: './popup-add-email-template.component.html',
   styleUrls: ['./popup-add-email-template.component.scss'],
 })
-export class PopupAddEmailTemplateComponent implements OnInit {
+export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
+  @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -20,23 +32,30 @@ export class PopupAddEmailTemplateComponent implements OnInit {
   showIsTemplate = true;
   showIsPublish = true;
   showSendLater = true;
+  formGroup: FormGroup;
   showCC = false;
   showBCC = false;
 
   sendType = 'to';
-  lstSendTo = [];
+  lstFrom = [];
+  lstTo = [];
+  lstCc = [];
+  lstBcc = [];
 
   constructor(
     private esService: CodxEsService,
+    private callFunc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    this.formGroup = data?.data.formGroup;
     this.email = data?.data.dialogEmail;
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
   }
+  ngAfterViewInit(): void {}
 
   initForm() {
     this.esService
@@ -50,6 +69,29 @@ export class PopupAddEmailTemplateComponent implements OnInit {
             .subscribe((res1) => {
               if (res1 != null) {
                 this.dialogETemplate.patchValue(res1[0]);
+                this.dialogETemplate.addControl(
+                  'recID',
+                  new FormControl(res1[0].recID)
+                );
+                let lstUser = res1[1];
+                if (lstUser.length > 0) {
+                  lstUser.forEach((element) => {
+                    switch (element.sendType) {
+                      case '1':
+                        this.lstFrom.push(element);
+                        break;
+                      case '2':
+                        this.lstTo.push(element);
+                        break;
+                      case '3':
+                        this.lstCc.push(element);
+                        break;
+                      case '4':
+                        this.lstBcc.push(element);
+                        break;
+                    }
+                  });
+                }
                 console.log('data', this.dialogETemplate);
               }
             });
@@ -61,10 +103,45 @@ export class PopupAddEmailTemplateComponent implements OnInit {
     this.initForm();
   }
 
-  onSaveForm() {}
+  onSaveForm(dialog: DialogRef) {
+    if (this.dialogETemplate.value.isTemplate) {
+      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
+    } else {
+      this.onSaveForm1(dialog);
+    }
+  }
+
+  onSaveForm1(dialog1: DialogRef) {
+    let lstSento = [
+      ...this.lstFrom,
+      ...this.lstTo,
+      ...this.lstCc,
+      ...this.lstBcc,
+    ];
+    console.log(lstSento);
+
+    this.esService
+      .addEmailTemplate(this.dialogETemplate.value, lstSento)
+      .subscribe((res) => {
+        console.log(res);
+        if (res) {
+          console.log(res);
+          let emailTemplates = this.formGroup.value.emailTemplates;
+          let i = emailTemplates.findIndex(
+            (p) => p.EmailType == res.templateType
+          );
+          if (i >= 0) {
+            emailTemplates[i].TemplateID = res.recID;
+            this.formGroup.patchValue({ emailTemplates: emailTemplates });
+          }
+          dialog1.close();
+          this.dialog && this.dialog.close();
+        }
+      });
+  }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event.component) {
       if (event.field == 'sendTime') {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
@@ -79,11 +156,126 @@ export class PopupAddEmailTemplateComponent implements OnInit {
     }
   }
 
+  valueSentoChange(event, sendType) {
+    if (event?.field && event.component) {
+      switch (event.field) {
+        case 'from':
+          event.data?.forEach((element) => {
+            let index = this.lstFrom.findIndex((p) => p.objetID == element.id);
+
+            if (this.lstFrom.length == 0 || index < 0) {
+              let item = new EmailSendTo();
+              item.objetID = element.id;
+              item.objectType = element.objectType;
+              item.text = element.text;
+              item.sendType = sendType;
+              this.lstFrom.push(item);
+            }
+          });
+          console.log(this.lstFrom);
+
+          break;
+        case 'to':
+          event.data?.forEach((element) => {
+            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
+            if (this.lstTo.length == 0 || index < 0) {
+              let item = new EmailSendTo();
+              item.objetID = element.id;
+              item.objectType = element.objectType;
+              item.text = element.text;
+              item.sendType = sendType;
+              this.lstTo.push(item);
+            }
+          });
+          break;
+        case 'cc':
+          event.data?.forEach((element) => {
+            let index = this.lstCc.findIndex((p) => p.objetID == element.id);
+
+            if (this.lstCc.length == 0 || index < 0) {
+              let item = new EmailSendTo();
+              item.objetID = element.id;
+              item.objectType = element.objectType;
+              item.text = element.text;
+              item.sendType = sendType;
+              this.lstCc.push(item);
+            }
+          });
+          break;
+        case 'bcc':
+          event.data?.forEach((element) => {
+            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
+
+            if (this.lstCc.length == 0 || index < 0) {
+              let item = new EmailSendTo();
+              item.objetID = element.id;
+              item.objectType = element.objectType;
+              item.text = element.text;
+              item.sendType = sendType;
+              this.lstBcc.push(item);
+            }
+          });
+          break;
+      }
+    }
+  }
+
+  deleteItem(data, sendType) {
+    // var i = -1;
+    switch (sendType) {
+      case 1:
+        var index = this.lstFrom.indexOf(data);
+        if (index >= 0) {
+          this.lstFrom.splice(index, 1);
+        }
+        break;
+      case 2:
+        var index = this.lstTo.indexOf(data);
+        if (index >= 0) {
+          this.lstTo.splice(index, 1);
+        }
+        break;
+      case 3:
+        var index = this.lstCc.indexOf(data);
+        if (index >= 0) {
+          this.lstCc.splice(index, 1);
+        }
+        break;
+      case 4:
+        var index = this.lstBcc.indexOf(data);
+        if (index >= 0) {
+          this.lstBcc.splice(index, 1);
+        }
+        break;
+    }
+  }
+
   changeSendType(sendType) {
     if (sendType == 'cc') {
       this.showCC = !this.showCC;
     } else if (sendType == 'bcc') {
       this.showBCC = !this.showBCC;
+    }
+  }
+
+  close2(dialog: DialogRef) {
+    dialog.close();
+  }
+
+  testdata(share) {
+    this.callFunc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(event, sendType) {
+    if (event[0].id) {
+      switch (event[0].objectType) {
+        case 'U':
+          let lstID = event[0].id.split(';');
+          let lstUserName = event[0].text.split(';');
+
+          for (let i = 0; i < lstID?.length; i++) {}
+          break;
+      }
     }
   }
 }
@@ -92,9 +284,10 @@ export class EmailSendTo {
   transID: string;
   sendType: string;
   objectType: string;
-  objectID: string;
+  objetID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifuedBy: string;
+  text: string;
 }

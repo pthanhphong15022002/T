@@ -82,6 +82,7 @@ export class tmpTaskResource {
   recID: string;
   taskID: string;
   resourceID: string;
+  resourceName: string;
   roleType: string;
   memo: string;
   refID: string;
@@ -93,4 +94,5 @@ export class tmpTaskResource {
   delete: boolean;
   write: boolean;
   share: boolean;
+  position : string
 }

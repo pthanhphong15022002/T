@@ -10,14 +10,15 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
 import { LowerCasePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-company-setting',
@@ -25,22 +26,28 @@ import { LowerCasePipe } from '@angular/common';
   styleUrls: ['./company-setting.component.css'],
   providers: [LowerCasePipe]
 })
-export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
+export class CompanySettingComponent extends UIComponent implements OnInit, AfterViewInit {
   funcID: any;
   moreFunc = [];
+  @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
- // data = new AD_CompanySettings();
+  // data = new AD_CompanySettings();
   dialog!: DialogRef;
+
+  // image
+  check?: string
+  imageUpload: UploadFile = new UploadFile();
+  public imageSrc: string = '';
+
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private codxService: CodxService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
@@ -63,31 +70,34 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         active: true,
         sameData: false,
         model: {
+          // template: this.template,
+
           panelRightRef: this.paneleft,
         },
       },
-     ];
+    ];
 
 
   }
-  valueChange(e){
+  valueChange(e) {
 
   }
   clickEditContact(data) {
-  this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "",data);
-  this.changeDetectorRef.detectChanges();
+    this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "", data);
+    this.changeDetectorRef.detectChanges();
   }
 
   clickEditPersonal(data) {
-    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
+    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "", data);
     this.dialog.closed.subscribe(e => {
-      if(e?.event){
+      if (e?.event) {
         this.data = e?.event
-        this.detectorRef.detectChanges() ;
+        this.detectorRef.detectChanges();
       }
-    
-    })}
- 
+
+    })
+  }
+
   // clickEditPersonal(data: any) {
   //   var obj = {
   //     post: data,
@@ -105,7 +115,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
-       // this.data.companyCode.toString().toLowerCase();
+        // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
       }
       else {
@@ -123,4 +133,41 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
   //   // console.log(this.data);
   //   console.log('test12334');
   // }
+
+  async handleInputChange(event) {
+    if (event.target.files.length > 0) {
+      var file: File = event.target.files[0];
+      this.data.Logo = file.name;
+      //  this.employee.path = File;sch
+      // this.url.avatar = file.name;
+
+      var pattern = /image-*/;
+      var reader = new FileReader();
+      if (!file.type.match(pattern)) {
+        alert('invalid format');
+        return;
+      }
+      reader.onload = this._handleReaderLoaded.bind(this);
+      //  this.url.path = this.imageSrc;
+      reader.readAsDataURL(file);
+      let data: ArrayBuffer;
+      data = await file.arrayBuffer();
+      this.check = file.name;
+      this.imageUpload.fileName = file.name;
+      this.imageUpload.fileBytes = Array.from(new Uint8Array(data));
+      // this.api.execSv<any>("Sample", "Sample", "EmployeeBusiness", "post", this.url ).subscribe(res => {
+      //   console.log(res);
+
+      // })
+
+      console.log(reader.readAsDataURL(file));
+    }
+  }
+  _handleReaderLoaded(e) {
+    let reader = e.target;
+    console.log(this.imageSrc);
+    this.imageSrc = reader.result;
+    console.log(this.data.Logo);
+  }
+
 }

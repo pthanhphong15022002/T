@@ -44,7 +44,7 @@ export class PopupPersonalComponent implements OnInit {
       .updatePersonalCompanySettings(this.items)
       .subscribe((response) => {
         if (response[1]) {
-          this.notiService.notifyCode('thêm thành công');
+          // this.notiService.notifyCode('thêm thành công');
           this.dialog.close(response[0]);
         } else {
           this.notiService.notifyCode('thêm thất bại');

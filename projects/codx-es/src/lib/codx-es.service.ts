@@ -100,10 +100,6 @@ export class CodxEsService {
     private notificationsService: NotificationsService
   ) {}
 
-  getAutoNoCode(autoNo) {
-    this.autoNoCode.next(autoNo);
-  }
-
   //#region Get from FunctionList
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
@@ -320,6 +316,10 @@ export class CodxEsService {
   public setupAutoNumber = new BehaviorSubject<any>(null);
   isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
+  getAutoNoCode(autoNo) {
+    this.autoNoCode.next(autoNo);
+  }
+
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -382,10 +382,8 @@ export class CodxEsService {
         let dateFormat = '';
         if (indexStrF >= -1) {
           stringFormat = vllStringFormat[indexStrF].text;
-          console.log('1', stringFormat.length);
 
           stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
-          console.log('2', stringFormat.length);
         }
 
         // replace chuỗi và dấu phân cách
@@ -492,30 +490,33 @@ export class CodxEsService {
     );
   }
 
-  addNewApprovalStep(lstApprovalStep: any): Observable<any> {
+  addNewApprovalStep(id: string): Observable<any> {
+    let lstDataNew = null;
+    this.approvalStep.subscribe((res) => {
+      lstDataNew = res;
+    });
     return this.api.execSv(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstApprovalStep]
+      [lstDataNew, id]
     );
   }
 
-  editApprovalStep(lstApprovalStep: any): Observable<any> {
+  editApprovalStep(): Observable<any> {
     let lstDataEdit = null;
     this.approvalStep.subscribe((res) => {
       lstDataEdit = res;
     });
-    if (lstDataEdit != null)
-      return this.api.execSv(
-        'ES',
-        'ES',
-        'ApprovalStepsBusiness',
-        'UpdateApprovalStepsAsync',
-        [lstDataEdit]
-      );
-    else return null;
+
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'UpdateApprovalStepsAsync',
+      [lstDataEdit]
+    );
   }
 
   updateTransID(newTransID): Observable<any> {
@@ -532,20 +533,19 @@ export class CodxEsService {
     );
   }
 
-  deleteApprovalStep(lstApprovalStep: any): Observable<any> {
+  deleteApprovalStep(): Observable<any> {
     let lstData = null;
     this.lstDelete.subscribe((res) => {
       lstData = res;
     });
-    if (lstData != null) {
-      return this.api.execSv(
-        'ES',
-        'ES',
-        'ApprovalStepsBusiness',
-        'DeleteListApprovalStepAsync',
-        [lstData]
-      );
-    } else return null;
+
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListApprovalStepAsync',
+      [lstData]
+    );
   }
 
   getNewDefaultEmail() {
@@ -567,6 +567,26 @@ export class CodxEsService {
       'EmailTemplatesBusiness',
       'GetEmailTemplateAsync',
       templateID
+    );
+  }
+
+  addEmailTemplate(data: any, sendTo: any): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'AddEmaiTemplateAsync',
+      [data, sendTo]
+    );
+  }
+
+  addOrEditSignArea(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'AddOrEditAsync',
+      data
     );
   }
   //#endregion

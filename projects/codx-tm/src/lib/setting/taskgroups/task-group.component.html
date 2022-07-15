@@ -77,17 +77,17 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <ng-container *ngFor="let item of getCheckList(data.checkList); index as i;">
-          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4"
-            *ngIf=" (i<3 || data.disableReadmore) ">
-            <label class="checkbox checkbox-square checkbox-sm mb-0">
-              <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
-              </codx-input>
-            </label>
-          </div>
-        </ng-container>
-        <div *ngIf="getCheckList(data.checkList)?.length > 3"> <a class="text-35-italic" style="color: blue"
-            (click)="readMore(data)">{{ !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+        <div class="dropdown ml-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
+        [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)" (mouseleave)="PopoverDetail(empPopover, null)">
+          <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+              <div class="b" *ngIf="data.checkList">
+                {{data?.checkList}}
+              </div>
+              <span *ngIf="!data.checkList" class="b">Không có CheckList</span>
+          </button>
+        </div>
+       
       </div>
 
 
@@ -121,6 +121,16 @@
   </tr>
 </ng-template>
 
+<ng-template #popDetail let-data>
+  <ng-container *ngFor="let item of popoverDetail; index as i;">
+    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+      <label class="checkbox checkbox-square checkbox-sm mb-0">
+        <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
+        </codx-input>
+      </label>
+    </div>
+  </ng-container>
+</ng-template>
 
 
 <ng-template #itemTaskGroupID let-data>
