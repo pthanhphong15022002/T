@@ -3,7 +3,7 @@
   <ng-template #body>
     <div class="request-to">
       <div id="from">
-        <div class="d-flex justify-content-between border-bottom mt-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 p-2">
           <div class="d-flex align-items-end flex-grow-1">
             <div class="w-50px fw-bold">
               <codx-label name="lblTitleFrom" default="Từ:" formName="EmailTemplates" gridViewName="grvEmailTemplates">
@@ -24,20 +24,22 @@
               </div>
             </div>
           </div>
-          <span>
+          <!-- <span>
             <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="from"
               (valueChange)="valueSentoChange($event, 1)" crrValue="HPHOA">
             </codx-input>
-          </span>
+          </span> -->
+          <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
+            (click)="testdata(controlShare1)"></span>
         </div>
       </div>
-      <div class="d-flex justify-content-between border-bottom mt-1">
+      <div class="d-flex justify-content-between border-bottom mb-2 p-2">
         <div class="d-flex align-items-end flex-grow-1">
           <div class="w-50px fw-bold">
             <codx-label default="Đến:" name="lblTitleTo" formName="EmailTemplates" gridViewName="grvEmailTemplates">
             </codx-label>
           </div>
-          <div class="w-100 me-2" (onblur)="focusOutFunction()">
+          <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstTo">
                 <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
@@ -56,15 +58,17 @@
           <span class="btn btn-sm fw-bold align-items-end" *ngIf="!showCC && !showBCC"
             (click)="changeSendType('cc')">Cc</span>
           <span class="btn btn-sm fw-bold" *ngIf="!showCC && !showBCC" (click)="changeSendType('bcc')">Bcc</span>
-          <span>
+          <!-- <span>
             <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="to"
               (valueChange)="valueSentoChange($event, 2)">
             </codx-input>
-          </span>
+          </span> -->
+          <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
+            (click)="testdata(controlShare2)"></span>
         </div>
       </div>
       <div id="box_cc" *ngIf="showCC || lstCc.length >0">
-        <div class="d-flex justify-content-between border-bottom mt-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 p-2">
           <div class="d-flex align-items-end flex-grow-1">
             <div class="w-50px fw-bold">Cc:</div>
           </div>
@@ -84,18 +88,20 @@
           </div>
           <div class="d-flex align-items-end">
             <span class="btn btn-sm fw-bold" *ngIf="!showBCC" (click)="changeSendType('bcc')">Bcc</span>
-            <span>
+            <!-- <span>
               <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="cc"
                 (valueChange)="valueSentoChange($event, 3)">
               </codx-input>
-            </span>
+            </span> -->
+            <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
+              (click)="testdata(controlShare3)"></span>
           </div>
 
-          <!-- <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-18"></span> -->
+
         </div>
       </div>
       <div id="box_bcc" *ngIf="showBCC || lstBcc.length >0">
-        <div class="d-flex justify-content-between border-bottom mt-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 p-2">
           <div class="d-flex align-items-end flex-grow-1">
             <div class="w-50px fw-bold">Bcc:</div>
           </div>
@@ -115,11 +121,13 @@
           </div>
           <div class="d-flex align-items-end">
             <span class="btn btn-sm fw-bold" *ngIf="!showCC" (click)="changeSendType('cc')">Cc</span>
-            <span>
+            <!-- <span>
               <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="bcc"
                 (valueChange)="valueSentoChange($event, 4)">
               </codx-input>
-            </span>
+            </span> -->
+            <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
+              (click)="testdata(controlShare4)"></span>
           </div>
         </div>
       </div>
@@ -245,6 +253,28 @@
       </a>
     </div>
   </ng-template>
+
+  <ng-template #controlShare1 let-dialog>
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 1)">
+    </codx-share>
+  </ng-template>
+
+  <ng-template #controlShare2 let-dialog>
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 2)">
+    </codx-share>
+  </ng-template>
+
+  <ng-template #controlShare3 let-dialog>
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 3)">
+    </codx-share>
+  </ng-template>
+
+  <ng-template #controlShare4 let-dialog>
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 4)">
+    </codx-share>
+  </ng-template>
+
+
 </codx-form>
 
 <ng-template #addTemplateName let-dialog1>

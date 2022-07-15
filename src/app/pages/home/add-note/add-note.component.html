@@ -52,8 +52,8 @@
         </div>
         <div *ngIf="formType == 'edit'">
             <div *ngIf="note?.noteType == 'text'">
-                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
+                <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo" class="test-textarea">
                 </codx-input>
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
@@ -84,15 +84,23 @@
 
         <div class="mb-3">
             <div *ngIf="formType == 'edit'">
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                <codx-attachment #attachmentEdit objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
                     hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
-                    allowExtensions=".jpg,.png" allowMultiFile="1">
+                    allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                 </codx-attachment>
+                <div *ngIf="attachmentEdit?.data">
+                    <codx-image-grid [images]="attachmentEdit?.data" [showBtnRemove]='true'></codx-image-grid>
+                </div>
             </div>
             <div *ngIf="formType == 'add'">
-                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    functionID="WPT03941" type="inline">
-                </codx-attachment>
+                <div *ngIf="isUploadImg">
+                    <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+                </div>
+                <div class="attachment">
+                    <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                        functionID="WPT03941" type="inline" (fileCount)="getfileCount($event)">
+                    </codx-attachment>
+                </div>
             </div>
         </div>
 
@@ -112,8 +120,8 @@
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="" format="d"
-            (valueChange)="valueChange($event)">
+        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="currentDate" format="d"
+            (valueChange)="valueChangeDate($event)">
         </codx-input>
     </div>
 

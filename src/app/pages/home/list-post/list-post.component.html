@@ -47,7 +47,7 @@
             </div>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-1">
-                    <span class="text-gray-800 fs-6 fw-bold">{{item.createdName}}</span>
+                    <span class="text-dark fw-bold">{{item.createdName}}</span>
                     <span *ngIf="item.tag > 0" class="label label-inline label-light-primary ms-2" type="button"
                         class="btn me-2" placement="bottom" [autoClose]='"outside"' [popoverTitle]="popTitle"
                         [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
@@ -59,9 +59,9 @@
                 </div>
                 <div class="text-info-date">
                     <span class="text-muted font-size-sm mr-2">{{item.createdOn | timefrom}}</span>
-                    <span class="share-control ms-2">
+                    <span class="rounded-1 py-1 px-2 bg-gray-200 ms-2">
                         <span class="symbol symbol-circle ">
-                            <img class="h-15px w-15px"
+                            <img class="h-13px w-13px"
                                 src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}" />
                         </span>
                         <span class="font-size-sm">
@@ -178,7 +178,7 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-        <div class="text-feed">
+        <div class="text-feed mb-2">
             <read-more-v2 #readmore *ngIf="item.shortContent;else noMore" [content]="item.content"
                 [shortContent]="item.shortContent">
             </read-more-v2>
@@ -195,11 +195,8 @@
                 </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
                     <ng-container *ngFor="let file of item.files">
-                        <codx-temp-full  
-                            imageSrc="{{file.fileType | fileName}}" 
-                            imgCss="w-20px me-3 cursor-pointer" 
-                            title="{{file.fileName}}"        
-                            [descLine]="1">
+                        <codx-temp-full imageSrc="{{file.fileType | fileName}}" imgCss="w-20px me-3 cursor-pointer"
+                            title="{{file.fileName}}" [descLine]="1">
                         </codx-temp-full>
                     </ng-container>
                 </ng-container>
@@ -329,7 +326,7 @@
 
 </ng-template>
 <ng-template #popTitleOfShare>
-    <div class="text-dark mb-2" style="font-size: 14px;">
+    <div class="text-dark mb-2">
         <codx-label formName="Comments" name="lblShare" default="Danh sách người được chia sẻ"></codx-label>
     </div>
     <div>

@@ -1,25 +1,25 @@
-import { CodxTMService } from './../../codx-tm.service';
+import { CodxTMService } from '../../codx-tm.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import {
-  ApiHttpService,
-  AuthStore,
-  DataRequest,
-  CallFuncService,
-} from 'codx-core';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  GaugeTheme,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge';
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  Injector,
+} from '@angular/core';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
+import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
   selector: 'my-dashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
+  providers: [GradientService],
 })
-export class MyDashboardComponent implements OnInit {
+export class MyDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
+  @ViewChild('tooltip') tooltip: TemplateRef<any>;
   formModel: string;
   funcID: string;
   model: DataRequest;
@@ -33,45 +33,30 @@ export class MyDashboardComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
-  border: {
-    color: 'grey';
-    width: 0;
-  };
-  animation: {
-    enable: false;
-  };
 
   //#region gauge
-  public font1: Object = {
-    size: '15px',
-    color: '#00CC66',
-  };
-
-  public rangeLinearGradient: Object = {
+  public rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
-      { color: '#5465FF', offset: '0%', opacity: 1 },
-      { color: '#04DEB7', offset: '70%', opacity: 1 },
+      { color: '#5465FF', offset: '0%', opacity: 0.9 },
+      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
     ],
   };
-  
-  public animation1: Object = { duration: 1500 };
-  public markerWidth1: number = 90;
-  public markerHeight1: number = 90;
-  public lineStyle: Object = { width: 0, color: '#1d1d1d' };
-  public labelStyle1: Object = { position: 'Outside', font: { size: '10px' } };
-  public labelStyle2: Object = {
-    position: 'Outside',
-    offset: 5,
-    useRangeColor: true,
-    font: {
-      size: '0px',
-      color: 'white',
-      fontFamily: 'Roboto',
-      fontStyle: 'Regular',
-    },
+
+  public rangeLinearGradient2: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#FF8008', offset: '0%', opacity: 0.9 },
+      { color: '#FFC837', offset: '90%', opacity: 0.9 },
+    ],
   };
+
+  public minorTicks: Object = {
+    width: 0,
+  };
+
   public majorTicks1: Object = {
     position: 'Outside',
     color: 'green',
@@ -80,16 +65,25 @@ export class MyDashboardComponent implements OnInit {
     offset: 10,
     interval: 30,
   };
-  public minorTicks1: Object = { width: 0 };
   public majorTicks2: Object = {
-    height: 0,
+    height: 0
   };
-  public minorTicks2: Object = { width: 0 };
+
+
+  public lineStyle: Object = {
+    width: 0,
+  };
+
+  public labelStyle1: Object = { position: 'Outside', font: { size: '10px' } };
+  public labelStyle2: Object = {position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public piedata1: Object[];
-  public piedata2: Object[];
-  public legendSettings: Object;
+  public legendSettings: Object = {
+    position: 'Top',
+    visible: true,
+  };
+
+  public radius: Object = { topLeft: 10, topRight: 10 };
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -119,45 +113,21 @@ export class MyDashboardComponent implements OnInit {
       width: 0,
     },
   };
-
-  radius: Object = {
-    topLeft: 10,
-    topRight: 10,
-  };
   //#endregion chartcolumn
-
-  public ranges: Object[] = [
-    {
-      start: 0,
-      end: 100,
-      radius: '50%',
-      startWidth: 10,
-      endWidth: 10,
-      color: '#E0E0E0',
-      roundedCornerRadius: 10,
-    },
-  ];
-
-  public tail: Object = {
-    length: '18%',
-    color: '#757575',
-  };
-  public pointerCap: Object = {
-    radius: 7,
-    color: '#757575',
-  };
 
   dbData: any;
 
   constructor(
-    private api: ApiHttpService,
+    private inject: Injector,
     private auth: AuthStore,
     private tmService: CodxTMService,
-    private cf: CallFuncService,
     private activedRouter: ActivatedRoute
-  ) {}
+  ) {
+    super(inject);
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.model = new DataRequest();
     this.model.formName = 'TMDashBoard';
     this.model.gridViewName = 'grvTasks';
@@ -167,33 +137,6 @@ export class MyDashboardComponent implements OnInit {
     this.model.pageLoading = false;
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    this.piedata1 = [
-      {
-        x: 'Group 1',
-        y: 2,
-      },
-      {
-        x: 'Group 2',
-        y: 5,
-      },
-    ];
-
-    this.piedata2 = [
-      {
-        x: 'Group 1',
-        y: 2,
-      },
-      {
-        x: 'Group 2',
-        y: 5,
-      },
-    ];
-    this.legendSettings = {
-      visible: true,
-      position: 'Top'
-    };
-    
     this.getGeneralData();
   }
 
@@ -223,6 +166,15 @@ export class MyDashboardComponent implements OnInit {
         this.taskOfDay = res;
         console.log(this.taskOfDay);
       });
+  }
+
+  openTooltip() {
+    console.log('mouse enter');
+    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
+  }
+
+  closeTooltip() {
+    console.log('mouse leave');
   }
 
   onChangeValueSelectedWeek(data) {

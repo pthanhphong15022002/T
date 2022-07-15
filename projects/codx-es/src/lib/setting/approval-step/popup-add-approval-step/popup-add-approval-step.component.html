@@ -7,7 +7,7 @@
           <e-tabitem>
             <ng-template #headerText>
               <codx-temp-full cardCss="tab-temp" icoCss="icon-info icon-20  me-2" [title]="'Thông tin chung'"
-                [subTitle]="'Mô tả'">
+                [subTitle]="">
               </codx-temp-full>
             </ng-template>
             <ng-template #content>
@@ -50,9 +50,11 @@
                       <!-- <span class=" icon-group_add text-primary fs-1">
 
                       </span> -->
-                      <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="popup"
+                      <div class="icon-person_add_alt text-hover-primary icon-24 ml-2" (click)="testdata(controlShare)">
+                      </div>
+                      <!-- <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="popup"
                         (valueChange)="valueChange($event)">
-                      </codx-input>
+                      </codx-input> -->
 
                     </div>
                     <ng-container *ngFor="let item of dialogApprovalStep.value.approvers">
@@ -127,8 +129,7 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <codx-temp-full cardCss="tab-temp" icoCss="icon-person_add icon-20  me-2" [title]="'Điều kiện'"
-                [subTitle]="'Mô tả'">
+              <codx-temp-full cardCss="tab-temp" icoCss="icon-rule icon-20  me-2" [title]="'Điều kiện'" [subTitle]="">
               </codx-temp-full>
             </ng-template>
             <ng-template #content>
@@ -146,58 +147,6 @@
                     </span> -->
 
                   </div>
-
-                  <!-- <div class="d-flex align-items-center mb-4">
-                    <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
-                      data-bs-original-title="Trần Quốc Hoàn">
-                      <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
-                      <span
-                        class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
-                        Hoàn</div>
-                      <span class="text-muted font-weight-bold">Chủ trì cuộc họp</span>
-                    </div>
-
-                  </div>
-                  <div class="d-flex align-items-center mb-4">
-                    <div class="symbol symbol-35px symbol-circle me-4" data-bs-toggle="tooltip" title=""
-                      data-bs-original-title="Võ Văn Quang">
-                      <img class="empImg" alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg">
-                      <span class="symbol-badge badge badge-circle bg-dark top-100 start-100 text-white fs-8">0</span>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark fw-bold fs-6 font-weight-bolder">Trần Quốc
-                        Hoàn</div>
-                      <span class="text-muted font-weight-bold">Thành viên</span>
-                    </div>
-                    <div class="d-flex flex-column justify-content-end">
-                      <span class="badge badge-light-danger mb-1">Không tham gia</span>
-                      <span class="text-muted font-weight-bold text-center"> 1 giờ trước </span>
-                    </div>
-                  </div>
-                  <div class="text-center">
-                    <div class="Participants d-flex align-items-center w-275px mx-auto">
-                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                        <span
-                          class="badge badge-sm badge-circle btn-danger top-100 start-100 text-white fs-8 me-1">A</span>
-                        Chủ trì
-                      </a>
-                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                        <span
-                          class="badge badge-sm badge-circle btn-success top-100 start-100 text-white fs-8 me-1">S</span>
-                        Thư ký
-                      </a>
-                      <a href="#" class="d-flex align-items-center text-dark text-hover-primary me-5">
-                        <span
-                          class="badge badge-sm badge-circle btn-primary top-100 start-100 text-white fs-8 me-1">P</span>
-                        Tham dự
-                      </a>
-                    </div>
-                  </div> -->
-
                 </div>
               </div>
             </ng-template>
@@ -205,7 +154,7 @@
           <e-tabitem>
             <ng-template #headerText>
               <codx-temp-full cardCss="tab-temp" icoCss="icon-email icon-20  me-2" [title]="'Email/thông báo'"
-                [subTitle]="'Mô tả'">
+                [subTitle]="">
               </codx-temp-full>
             </ng-template>
             <ng-template #content>
@@ -258,7 +207,7 @@
                               </codx-input>
                             </div>
                             <div class="col-2">
-                              <div class="icon-email icon-24 ml-2" aria-disabled="true"
+                              <div class="icon-email icon-24 ml-2"
                                 [ngClass]="item?.IsEmail == '1' || item?.isEmail == '1' ? 'text-hover-primary' : 'text-muted'"
                                 (click)="openSetupEmail(item)">
                               </div>
@@ -269,163 +218,6 @@
                     </div>
                   </ng-container>
 
-                  <!-- <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email đồng thuận/duyệt" fiedName="Category"
-                      [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-
-                    </div>
-
-
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email từ chối" fiedName="Category" [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-
-                    </div>
-
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email trả làm lại" fiedName="Category"
-                      [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-
-                    </div>
-
-
-                  </div> -->
-
-                  <!-- <div class="d-flex justify-content-between align-items-center mb-4 ">
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label default="Thiết lập mẫu email yêu cầu hủy kết quả duyệt/thu hồi"
-                        [formModel]="formModel" name="lblTitleEmail1">
-                      </codx-label>
-                    </h4>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email yêu cầu hủy" name="lblEmail21" [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email chấp nhận yêu cầu hủy" fiedName="Category"
-                      [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email từ chối yêu cầu hủy" fiedName="Category"
-                      [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-                    </div>
-                  </div>
-
-                  <div class="d-flex justify-content-between align-items-center mb-4 ">
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label default="Thiết lập mẫu email cảnh báo quá hạn duyệt" [formModel]="formModel"
-                        fiedName="Attendees">
-                      </codx-label>
-                    </h4>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label class=" fw-bold" default="Email nhắc duyệt đến hạn" fiedName="Category"
-                      [formModel]="formModel">
-                    </codx-label>
-                    <div class="d-flex">
-                      <div class="w-100 me-2">
-                        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogApprovalStep.value.category"
-                          [refValue]="cbxName['Category']" field="category" (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                      <div class="icon-edit_file text-hover-primary icon-20 ml-2"></div>
-                    </div>
-                  </div>
-
-                  <div class="d-flex justify-content-between align-items-center mb-4 ">
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label default="Thiết lập thời gian gửi email" [formModel]="formModel" name="lblTime">
-                      </codx-label>
-                    </h4>
-                  </div> -->
-                  <!-- <div class="d-flex align-items-center mb-4">
-                    <span class="fw-bolder text-gray-800 d-block mb-2 text-primary">
-                      <codx-label default="Thời gian gửi" [formModel]="formModel" name="lblTime">
-                      </codx-label>
-                    </span>
-                  </div> -->
-                  <!-- <div class="d-flex flex-column mb-4">
-                    <div class=" row mt-1">
-                      <div class="col-3">
-                        <div class="d-flex align-items-center">
-                          <codx-input #checkbox type="switch" [checked]="dialogApprovalStep.value.eSign"
-                            labelPosition="After" field="eSign" [disabled]="false" class="test-switch"
-                            (valueChange)="valueChange($event)"></codx-input>
-                          <label class="ms-2 mt-1">
-                            <codx-label default="Gửi ngay" [formModel]="formModel" fiedName="Attendees">
-                            </codx-label>
-                          </label>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="d-flex align-items-center">
-                          <label class="ml-2 mt-1">
-                            <codx-label default="Gửi vào lúc" [formModel]="formModel" fiedName="Attendees">
-                            </codx-label>
-                          </label>
-                          <div class="col-6">
-                            <codx-input class="test-datetime" type="datetime" format="t" field="endTime"
-                              (valueChange)="valueChange($event)"></codx-input>
-
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="separator my-5"></div> -->
                 </div>
               </div>
             </ng-template>
@@ -433,24 +225,12 @@
           <e-tabitem>
             <ng-template #headerText>
               <codx-temp-full cardCss="tab-temp" icoCss="icon-tune icon-20  me-2" [title]="'Thông tin khác'"
-                [subTitle]="'Mô tả'">
+                [subTitle]="">
               </codx-temp-full>
             </ng-template>
             <ng-template #content>
               <div id="rome" class="tabpanel">
                 <div class="tab-content">
-                  <!-- <div class="d-flex justify-content-center mb-4">
-                    <div class="d-flex align-items-center w-auto extend-title">
-                      <span class="text-blue text-hover-primary_darker fw-bolder me-1">
-                        <codx-label name="lblOverdue" default="Thiết lập xử lí quá hạn" [formModel]="formModel">
-                        </codx-label>
-                      </span>
-                      <span *ngIf="showPlan"
-                        class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                      <span *ngIf="!showPlan"
-                        class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-                    </div>
-                  </div> -->
                   <div class="d-flex flex-column mb-4">
                     <div class="row">
                       <div class="col-6">
@@ -505,18 +285,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <div class="d-flex justify-content-center mb-4" (click)="extendShowPlan1()">
-                    <div class="d-flex align-items-center w-auto extend-title">
-                      <span class="text-blue text-hover-primary_darker fw-bolder me-1">
-                        <codx-label name="lblCancel" default="Thiết lập hủy/thu hồi" [formModel]="formModel">
-                        </codx-label>
-                      </span>
-                      <span *ngIf="showPlan1"
-                        class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-                      <span *ngIf="!showPlan1"
-                        class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-                    </div>
-                  </div> -->
                   <div class="d-flex flex-column mb-4">
                     <div class="row">
                       <div class="col-7">
@@ -555,6 +323,12 @@
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </a>
     </div>
+  </ng-template>
+
+
+  <ng-template #controlShare let-dialog>
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event)">
+    </codx-share>
   </ng-template>
 
 </codx-form>

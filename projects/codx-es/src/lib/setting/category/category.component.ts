@@ -245,22 +245,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.atSV.openForm.next(true);
   }
 
-  // edit(data) {
-  //   this.editCategory.dialogCategory.patchValue(data);
-  //   this.editCategory.dialogCategory.patchValue({ transID: data.categoryID });
-
-  //   this.editCategory.dialogCategory.addControl(
-  //     'recID',
-  //     new FormControl(data.id)
-  //   );
-  //   this.editCategory.dialogCategory.addControl(
-  //     'countStep',
-  //     new FormControl(data.countStep)
-  //   );
-
-  //   this.editCategory.isAdd = false;
-  // }
-
   deleteCategory(data) {}
 
   getCount(countStep) {
