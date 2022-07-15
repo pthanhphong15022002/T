@@ -164,18 +164,19 @@
 
           </div>
         </div>
-        <div class="mt-2">
-          <div class="d-flex mb-1">
+        <div class="mt-2" *ngIf="param.ProjectControl!='0' || param.LocationControl!='0'">
+          <div class="d-flex mb-1" *ngIf="param.ProjectControl!='0'">
             <span class="fw-bold me-2">
               <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label> -->
               <codx-label name="lblProjectName" formName="Tasks" default="Dự án:"></codx-label>
             </span>
             <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{ itemSelected?.projectName}}</span>
-            <span *ngIf="!itemSelected?.projectName" #projectname>{{ itemSelected?.projectName| formatvalue : formModel:"projectName"
+            <span *ngIf="!itemSelected?.projectName" #projectname>{{ itemSelected?.projectName| formatvalue :
+              formModel:"projectName"
               : projectname:"Projects":"grvProjects"|async }}</span>
           </div>
-          <div class="d-flex">
+          <div class="d-flex" *ngIf="param.LocationControl!='0'">
             <span class="fw-bold me-2">
               <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm:">
               </codx-label>
@@ -186,11 +187,9 @@
               formModel:"location" : location|async}}</span>
           </div>
         </div>
-        <div class="mt-2">
-          <codx-tag *ngIf="!itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-            [value]="''"></codx-tag>
-          <codx-tag *ngIf="itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-            [value]="itemSelected.tags"></codx-tag>
+        <div *ngIf="itemSelected.tags" class="mt-2">
+          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="itemSelected.tags">
+          </codx-tag>
         </div>
       </div>
     </ng-template>
