@@ -98,11 +98,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
-    this.taskCopy = dt?.data[3];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if(this.functionID =='TMT0203') this.showAssignTo = true ; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
   }
 
   ngOnInit(): void {
@@ -114,26 +113,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         ...this.task,
         ...this.taskCopy,
       };
-      this.getTaskCoppied(this.taskCopy.taskID);
+      // this.getTaskCoppied(this.taskCopy.taskID);
     } else this.openInfo(this.task.taskID, this.action);
   }
   ngAfterViewInit(): void { }
 
   getParam(callback = null) {
-    // this.api
-    //   .execSv<any>(
-    //     APICONSTANT.SERVICES.SYS,
-    //     APICONSTANT.ASSEMBLY.CM,
-    //     APICONSTANT.BUSINESS.CM.Parameters,
-    //     'GetDictionaryByPredicatedAsync',
-    //     'TM_Parameters'
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.param = res;
-    //       return callback && callback(true);
-    //     }
-    //   });
     this.api
       .execSv<any>(
         'SYS',
@@ -226,7 +211,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.readOnly = false;
     this.listTodo = [];
     this.task.status = '1';
-    // this.task.priority = '1';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -251,27 +235,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-  // openAssignSchedule(task): void {
-  //   this.task = task;
-  //   // this.task.estimated = 0;
-  //   this.readOnly = false;
-  //   this.listTodo = [];
-  //   this.task.status = '1';
-  //   this.task.priority = '1';
-  //   this.task.memo = '';
-  //   this.task.dueDate = moment(new Date())
-  //     .set({ hour: 23, minute: 59, second: 59 })
-  //     .toDate();
-  //   this.changeDetectorRef.detectChanges();
-  //   if (!this.param)
-  //     this.getParam(function (o) {
-  //       //if (o) t.showPanel();
-  //     });
-  //   else {
-  //     this.closePanel();
-  //   }
-  // }
 
   getTaskCoppied(id) {
     const t = this;
@@ -450,7 +413,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if (res.update) {
           // res.update.forEach(obj=>{
           //   this.dialog.dataService.update(obj).subscribe();
-          // }) 
+          // })
           this.dialog.close(res.update);
           // this.notiService.notifyCode('E0528');
         }
@@ -789,6 +752,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
+    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
   }
 }

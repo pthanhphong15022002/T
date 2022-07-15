@@ -360,7 +360,7 @@ export class TasksComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask],
         option
       );
       this.dialog.closed.subscribe((e) => {

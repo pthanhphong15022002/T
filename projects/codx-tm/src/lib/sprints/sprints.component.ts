@@ -72,7 +72,6 @@ export class SprintsComponent extends UIComponent {
   funcID = '';
   constructor(
     inject: Injector,
-    private tmSv: CodxTMService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
