@@ -89,12 +89,12 @@
                     allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                 </codx-attachment>
                 <div *ngIf="attachmentEdit?.data">
-                    <codx-image-grid [images]="attachmentEdit?.data" [showBtnRemove]='true'></codx-image-grid>
+                    <codx-file [images]="attachmentEdit?.data" [showBtnRemove]='true'></codx-file>
                 </div>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
-                    <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+                    <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file>
                 </div>
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
