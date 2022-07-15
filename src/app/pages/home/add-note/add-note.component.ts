@@ -68,7 +68,8 @@ export class AddNoteComponent implements OnInit {
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('attachment') attachment: AttachmentComponent
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentEdit') attachmentEdit: AttachmentComponent;
   @ViewChild("form", { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -113,7 +114,7 @@ export class AddNoteComponent implements OnInit {
 
   ngAfterViewInit() {
     if (this.formType == 'edit') {
-      console.log("check attachment", this.attachment);
+      console.log("check attachmentEdit", this.attachmentEdit);
       this.checkActiveFormEdit();
     }
   }
@@ -390,11 +391,10 @@ export class AddNoteComponent implements OnInit {
   }
 
   getfile(event: any) {
-    debugger;
     if (!event || event.data.length <= 0) {
       this.isUploadFile = false;
       this.listFileUpload = [];
-      this.dmSV.fileUploadList = []
+      this.dmSV.fileUploadList = [];
       return;
     }
     else {
