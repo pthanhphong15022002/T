@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
@@ -13,6 +13,8 @@ import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { threadId } from 'worker_threads';
 import { traceChildTaskBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
+import { AddUserComponent } from 'projects/codx-ad/src/lib/users/add-user/add-user.component';
+import { AddRoleComponent } from '../addrole/addrole.component';
 
 @Component({
   selector: 'roles',
@@ -29,12 +31,29 @@ export class RolesComponent implements OnInit {
   titleSave = 'Lưu';
   titleFunction = 'Chức năng';
   titleDescription = 'Mô tả';
-  titleAllow = 'Allow';
+  titleAllow = 'Cho phép';
   titleFullControl = 'Full control';
   titleRightDescription = 'Người dùng có tất cà quyền trên folder/file';
   titleCreateFolder = 'Tạo thư mục';
+  titleAllowCreateFolder = 'Cho phép tạo thư mục';
+  titleView = 'Xem';
+  titleViewDescription = 'Cho phép xem chi tiết folder/file';
+  titleUpdate = 'Sửa';
+  titleUpdateDescription = 'Cho phép chỉnh sửa thông tin của folder/file';
+  titleDelete = 'Xóa';
+  titleDeleteDesc = 'Cho phép xóa folder/file';
+  titleShare = 'Share';
+  titleShareDesc = 'Cho phép chia sẻ folder/file';
+  titleAssign = 'Chia sẻ quyền';
+  titleAssignDesc = 'Cho phép chia sẻ và chỉnh sửa quyền';
+  titleUpload = 'Upload';
+  titleUploadDesc = 'Cho phép upload file';
+  titleDownload = 'Download';
+  titleDownloadDesc = 'Cho phép download file';
+  titleFromDate = 'Ngày hiệu lực';
+  titleToDate = 'Ngày hết hạn';
   historyFile: HistoryFile;
-  propertiesFolder: boolean;
+  propertiesFolder = false;
   closeResult = '';
   id: string;
   listLevel: any;
@@ -75,7 +94,7 @@ export class RolesComponent implements OnInit {
   modePermission = false;
   readRight = false;
   createRight = false;
-  assignRight = false;
+  assignRight = true;
   updateRight = true;
   downloadRight = true;
   uploadRight = true;
@@ -162,6 +181,7 @@ export class RolesComponent implements OnInit {
   isShare: boolean;
   onRole = false;
   listPerm: Permission[];
+ // permissions: Permission[];
   toPermission: Permission[];
   byPermission: Permission[];
   ccPermission: Permission[];
@@ -215,6 +235,7 @@ export class RolesComponent implements OnInit {
     public dmSV: CodxDMService,
     private modalService: NgbModal,
     private auth: AuthStore,
+    private callfc: CallFuncService,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -222,18 +243,141 @@ export class RolesComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
+   //   this.read = true;
       this.data = data.data;
-      this.fileEditing = this.data[1];   
+      this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
       this.user = this.auth.get();
-      this.dialog = dialog;      
+      this.dialog = dialog;    
+      this.startDate = null;
+      this.endDate = null;        
   }
 
   ngOnInit(): void {      
+    this.changePermission(0);
+  }
+
+  onSaveRightChanged($event, ctrl) {
+    var value = $event.data
+    switch (ctrl) {
+      case 'checkFolder':
+        this.createSubFolder = value;
+        this.changeDetectorRef.detectChanges();
+        break;
+
+      case 'checkSecurity':
+        this.security = value;
+        break;
+      case "full":
+        //fileEditing.permissions[fileEditing.permissions]
+        this.full = value;
+        // if (this.createRight)  
+        this.create = value;
+        // if (this.readRight) 
+        this.read = value;
+        //   if (this.deleteRight) 
+        this.delete = value;
+        //   if (this.updateRight)   
+        this.update = value;
+        //   if (this.uploadRight)   
+        this.upload = value;
+        //   if (this.shareRight)   
+        this.share = value;
+        //  if (this.downloadRight) 
+        this.download = value;
+        this.assign = value;
+        break;
+      case "create":
+        //  if (this.uploadRight) 
+        this.create = value;
+        break;
+      case "read":
+        //  if (this.uploadRight) 
+        this.read = value;
+        break;
+      case "delete":
+        //   if (this.uploadRight)
+        this.delete = value;
+        break;
+      case "update":
+        //  if (this.updateRight)
+        this.update = value;
+        break;
+      case "upload":
+        //    if (this.uploadRight) 
+        this.upload = value;
+        break;
+      case "share":
+        //   if (this.uploadRight)
+        this.share = value;
+        break;
+      case "download":
+        //  if (this.uploadRight) 
+        this.download = value;
+        break;
+      case "approval":
+        this.approval = value;
+        //    if (!this.approval)
+        this.approvers = "";
+        break;
+      case "physical":
+        this.physical = value;
+        break;
+      case "revision":
+        this.revision = value;
+        break;
+      case "copyrightsControl":
+        this.copyrightsControl = value;
+        break;
+      case "sentemail":
+        this.sendEmail = value;
+        break;
+      case "postBlob":
+        this.postblog = value;
+        break;
+      case "assign":
+        this.assign = value;
+        break;
+      case "fromdate":
+        if (value != null)
+          this.startDate = value.fromDate;      
+        break;
+      case "todate":
+        if (value != null)
+          this.endDate = value.fromDate;      
+        break;
+    }
+
+    if (ctrl != 'full' && ctrl != 'copyrightsControl' && ctrl != 'revision' && ctrl != 'physical' && ctrl != 'approval' && value == false)
+      this.full = false;
+
+    if (this.assign && this.create && this.read && this.delete && this.update && this.upload && this.share && this.download)
+      this.full = true;
+
+     this.changeDetectorRef.detectChanges();
   }
 
   checkCurrentRightUpdate(owner = true) {
+
     if (!this.isSystem) {
       return !this.assignRight;//this.fileEditing.assign;
+    }
+    else {
+      // if (owner) {
+      //   if (this.objectType === "7")
+      //     return true;
+      //   else // objectType == 1
+      //     return true;
+      //   //return !this.assignRight && !this.userID == this.user.userID
+      //   // return !this.fileEditing.assign && !this.user.administrator;
+      // }
+      // else
+      return true;
+    }
+  }
+
+  checkCurrentRightUpdate1() {  
+    if (!this.fileEditing.permissions[this.currentPemission].isSystem) {
+      return !this.fileEditing.permissions[this.currentPemission].assign;//this.fileEditing.assign;
     }
     else {    
       return true;
@@ -321,16 +465,16 @@ export class RolesComponent implements OnInit {
   }
 
   setClassActive(id: string) {
-    if (id == this.permissonActiveId)
-      return 'd-flex justify-content-between user-nav-item user-nav-active mb-1 p-2';
+    if (id == this.currentPemission.toString())
+      return 'cursor-pointer d-flex justify-content-between user-nav-item user-nav-active mb-1 p-2';
     else
-      return "d-flex justify-content-between user-nav-item mb-1 p-2";
+      return "cursor-pointer d-flex justify-content-between user-nav-item mb-1 p-2";
   }
 
   checkItemRight(i) {
     //isSystem
     if (!this.fileEditing.permissions[i].isSystem)
-      return !this.fileEditing.assign;
+      return !this.assignRight;
     else
       return true;
   }
@@ -339,6 +483,8 @@ export class RolesComponent implements OnInit {
     // alert(index);
     // save old permission   
     // alert(1);
+   // this.currentPemission = index;
+
     let isSystem = false;
     let objectType = "";
     if (this.currentPemission > -1) {
@@ -358,7 +504,7 @@ export class RolesComponent implements OnInit {
         this.fileEditing.permissions[oldIndex].assign = this.assign;
       }
     }
-
+    
     // load new permission  
     if (this.fileEditing.permissions[index] != null) {
       this.create = this.fileEditing.permissions[index].create;
@@ -369,6 +515,8 @@ export class RolesComponent implements OnInit {
       this.share = this.fileEditing.permissions[index].share;
       this.upload = this.fileEditing.permissions[index].upload;
       this.assign = this.fileEditing.permissions[index].assign;
+      this.startDate = this.fileEditing.permissions[index].startDate;
+      this.endDate = this.fileEditing.permissions[index].endDate;
       this.full = this.create && this.read && this.update && this.delete && this.download && this.share && this.upload && this.assign;
       this.currentPemission = index;
       isSystem = this.fileEditing.permissions[index].isSystem;
@@ -412,40 +560,28 @@ export class RolesComponent implements OnInit {
     }
 
     if (this.type == "file") {
-      this.onSaveEditingFile(null);
+     // this.onSaveEditingFile(null);
     }
     else {
       this.fileEditing.folderName = this.folderName;
       this.fileEditing.folderId = this.dmSV.getFolderId();
       this.fileEditing.recID = this.id;
-      this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
-      });
+      // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
+      // });
     }
-  }
-
-  openRole() {
-    // if (this.update || this.assign) {
-    // $('#dms_share').css('z-index', '9999');
-    // $('#dms_properties').css('z-index', '9999');
-    // $('#dms_request-permission').css('z-index', '9999');
-    // this.cbxsv.dataSelcected = [];
-    // this.addnewIndex = 0;
-    // this.loadRole();
-    // this.openDialogFolder(this.contentRole, "xs", "role");
-    //  }
-  }
+  } 
 
   allowSetRight() {
     // this.fileEditing.assign
     var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.assignRight;
     //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.fileEditing.assign;
+    right = true;
     return right;
   }
 
   onSaveRight() {
     var that = this;
     if (this.endDate != null && this.endDate < this.startDate) {
-
     //  $('#endDateRole').addClass('form-control is-invalid');
       this.changeDetectorRef.detectChanges();
       return;
@@ -467,6 +603,7 @@ export class RolesComponent implements OnInit {
       this.fileEditing.permissions[this.currentPemission].assign = this.assign;
     }
 
+    this.dmSV.fileEditing.next(this.fileEditing);
     if (this.modePermission) {
       if (this.type == "file") {
     //    this.onSaveEditingFile(modal);
@@ -475,14 +612,266 @@ export class RolesComponent implements OnInit {
         // this.fileEditing.folderName = this.folderName;
         this.fileEditing.folderId = this.dmSV.getFolderId();
         this.fileEditing.recID = this.id;
-        this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
-        });
+        // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
+        // });
         // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
         // });
       }
     }
+    
     this.dialog.close();
     //this.modal
     //modal.dismiss('Cross click');// modal.close();
   }
+
+  getObjectName(item, index) {
+    // if (!item) return;
+    // let perm = new Permission();
+    // //perm.objectType = this.cbxsv.objectType;//item.userID; 
+    // // perm.objectType = this.cbxsv.arrType[index];  
+    // // var objectName = this.cbxsv.arrName[index];
+    // // var objCbx = this.cbxsv.arrSetting;
+    // var setting = null;
+    // switch (objectName.trim().toLowerCase()) {
+    //   case "owner":
+    //     perm.objectName = item.userName;
+    //     perm.objectID = item.userID;
+    //     break;
+    //   case "my group":
+    //     perm.objectName = objectName;
+    //     //perm.objectID = item.userGroup;
+    //     perm.objectID = item.groupID;
+    //     break;
+    //   case "my team":
+    //     perm.objectName = objectName;
+    //     perm.objectID = item.orgUnitID;
+    //     break;
+    //   case "my departments":
+    //     perm.objectName = objectName;
+    //     perm.objectID = item.departmentID;
+    //     break;
+    //   case "my division":
+    //     perm.objectName = objectName;
+    //     perm.objectID = item.divisionID;
+    //     break;
+    //   case "my company":
+    //     perm.objectName = objectName;
+    //     perm.objectID = item.companyID;
+    //     break;
+    //   case "administrator":
+    //   case "everyone":
+    //     perm.objectName = objectName;
+    //     break;
+    //   case "orgHierachy":
+    //     break;
+    //   case "departments":
+    //     setting = objCbx["HRDepartments"];
+    //     if (setting) {
+    //       var key = setting.viewMember;
+    //       var value = setting.valueMember;
+    //       perm.objectName = item[key];
+    //       perm.objectID = item[value];
+    //     }
+    //     break;
+    //   case "positions":
+    //     setting = objCbx["Positions"];
+    //     if (setting) {
+    //       var key = setting.viewMember;
+    //       var value = setting.valueMember;
+    //       perm.objectName = item[key];
+    //       perm.objectID = item[value];
+    //     }
+    //     break;
+    //   case "roles":
+    //     setting = objCbx["UserRoles"];
+    //     if (setting) {
+    //       var key = setting.viewMember;
+    //       var value = setting.valueMember;
+    //       perm.objectName = item[key];
+    //       perm.objectID = item[value];
+    //     }
+    //     break;
+    //   case "groups":
+    //     setting = objCbx["UserGroups"];
+    //     if (setting) {
+    //       var key = setting.viewMember;
+    //       var value = setting.valueMember;
+    //       perm.objectName = item[key];
+    //       perm.objectID = item[value];
+    //     }
+    //     break;
+    //   case "users":
+    //     setting = objCbx["Users"];
+    //     if (setting) {
+    //       var key = setting.viewMember;
+    //       var value = setting.valueMember;
+    //       perm.objectName = item[key];
+    //       perm.objectID = item[value];
+    //     }
+    //     // if (setting) {
+    //     //  // this.cbxsv.objectType = "U";
+    //     //   var key = setting.viewMember;
+    //     //   var value = setting.valueMember;
+    //     //   perm.objectName = item.userName;
+    //     //   perm.objectID = item.userID;
+    //     // }
+    //     break;
+    // }
+    // perm.read = true;
+    // return perm;
+  }
+
+  checkedValue(type) {
+    switch(type) {
+      case "full":
+        return this.fileEditing.permissions[this.currentPemission].full;
+      case "read":
+        return this.fileEditing.permissions[this.currentPemission].read;
+      case "create":
+        return this.fileEditing.permissions[this.currentPemission].create;
+      case "update":
+        return this.fileEditing.permissions[this.currentPemission].update;
+      case "delete":
+        return this.fileEditing.permissions[this.currentPemission].delete;
+      case "download":
+        return this.fileEditing.permissions[this.currentPemission].download;
+      case "share":
+        return this.fileEditing.permissions[this.currentPemission].share;
+      case "upload":
+        return this.fileEditing.permissions[this.currentPemission].upload;
+      case "assign":
+        return this.fileEditing.permissions[this.currentPemission].assign;
+    }
+    return false;
+  }
+
+  addRoleToList(list: Permission[], item: Permission) {
+    var index = -1;
+    if (list != null) {
+      if (item != null && list.length > 0) {
+        index = list.findIndex(d => (d.objectID != null && d.objectID.toString() === item.objectID) || (d.objectID == null && d.objectType == item.objectType));
+      }
+    }
+    else {
+      list = [];
+    }
+
+    if (index == -1) {
+      item.read = true;
+      item.download = false;
+      item.full = false;
+      item.share = false;
+      item.update = false;
+      item.create = false;
+      item.delete = false;
+      item.upload = false;
+      item.assign = false;
+
+      if (item.objectType.toLowerCase() == '9') {      
+        item.download = true;
+      }
+
+      if (item.objectType.toLowerCase() == '7') {       
+        item.download = true;
+        item.full = true;
+        item.share = true;
+        item.update = true;
+        item.create = true;
+        item.delete = true;
+        item.upload = true;       
+      }
+
+      list.push(Object.assign({}, item));
+      this.currentPemission = list.length - 1;
+    }
+
+    return list;
+  }
+
+  onSaveRole($event) {    
+    console.log($event);
+    if ($event.data != undefined) {
+      var data = $event.data;
+      for(var i=0; i<data.length; i++) {
+        var item = data[i];
+        var perm = new Permission;        
+       // if (this.startDate != undefined && this.startDate != null)
+        perm.startDate = this.startDate;
+       // if (this.endDate != undefined && this.endDate != null)
+        perm.endDate = this.endDate;
+        perm.isSystem = false;
+        perm.isActive = true;
+        perm.objectName = item.text;
+        perm.objectID = item.id;
+        perm.objectType = item.objectType;
+        perm.read = true;
+        this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
+      }
+      this.changePermission(this.currentPemission);
+      this.changeDetectorRef.detectChanges();
+      // data.forEach(item => {
+        
+      // });
+    }
+    
+    // this.onRole = false;        
+    // var data = $event;//this.cbxsv.dataSelcected;
+    // if ($event.data)
+    //   data = $event.data;
+    // // $('#dms_share').css('z-index', '9999');
+    // // $('#dms_properties').css('z-index', '9999');
+    // // $('#dms_request-permission').css('z-index', '9999');
+    // //  alert(1);
+    // // console.log(data);
+    // // let index = this.fileEditing.permission.findIndex(d => d.toString() === this.fileEditing.fileName.toString()); 
+    // let index = 0;
+    // data.forEach(item => {
+    //   let perm = this.getObjectName(item, index);
+    //   if (perm != null) {
+    //     perm.isSystem = false;
+    //     perm.isActive = true;
+    //     perm.isSharing = false;//this.modeSharing;
+    //     if (this.modeShare == "" && this.modeRequest == "") {
+    //       if (this.fileEditing != null) {
+    //         perm.startDate = this.startDate;
+    //         perm.endDate = this.endDate;
+    //         this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
+    //         this.permissonActiveId = (this.fileEditing.permissions.length - 1).toString();
+    //         this.changePermission(this.fileEditing.permissions.length - 1);
+    //       }
+    //     }
+    //     else {
+    //       if (this.modeRequest == "to" || this.modeShare == "to") {
+    //         this.toPermission = this.addRoleToList(this.toPermission, perm);
+    //         console.log(this.toPermission);
+    //       }
+    //       else if (this.modeRequest == "cc" || this.modeShare == "cc") {
+    //         this.ccPermission = this.addRoleToList(this.ccPermission, perm);
+    //       }
+    //       else if (this.modeRequest == "by" || this.modeShare == "by") {
+    //         this.byPermission = this.addRoleToList(this.byPermission, perm);
+    //       }
+    //       else {
+    //         this.bccPermission = this.addRoleToList(this.bccPermission, perm);
+    //       }
+    //     }
+    //   }
+    //   index += 1;
+
+    // });
+
+    // // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
+    // //   this.changePermission(0);
+    // // }
+    // console.log(this.toPermission);
+    // // this.cbxsv.dataSelcected = [];
+    // // this.cbxsv.arrType = [];
+    // // this.cbxsv.arrName = [];
+    // this.changeDetectorRef.detectChanges();
+    // modal.dismiss('Cross click');//modal.close();
+  }
+  
+  // changeUser(e){
+
+  // }
 }

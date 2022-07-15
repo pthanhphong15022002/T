@@ -99,7 +99,7 @@ export class AttachmentComponent implements OnInit {
     public modalService: NgbModal,
     private auth: AuthStore,
     private folderService: FolderService,
-    private dmSV: CodxDMService,
+    public dmSV: CodxDMService,
     private fileService: FileService,
     public atSV: AttachmentService,
     public cache: CacheService,

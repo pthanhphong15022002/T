@@ -53,15 +53,31 @@
                                         </a>
                                     </div>
 
+                                    <!-- <div>
+                                        <a (click)="removeUserRight(i)"
+                                            class="btn btn-icon btn-xs btn-light-danger user-nav-role">
+                                            <span class="icon-close icon-18"></span>
+                                        </a>
+                                    </div> -->
+
                                 </div>
                             </ng-container>
                         </ng-container>
                     </div>
                 </div>
                 <div *ngIf="allowSetRight()" class="add-user">
-                    <a (click)="openRole()" class="btn btn-icon btn-xs btn-light-primary">
+                    <codx-input 
+                        type="share"
+                        field="addUser" 
+                        refValue="L1901"
+                        [showInput]="false"
+                        (valueChange)="onSaveRole($event)" 
+                    > 
+                  </codx-input>
+
+                    <!-- <a (click)="openRole()" class="btn btn-icon btn-xs btn-light-primary">
                         <span class="icon-person_add_alt_1 icon-18"></span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
@@ -79,158 +95,160 @@
                                 <td class="font-size-lg text-dark">{{titleFullControl}}</td>
                                 <td>{{titleRightDescription}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkFullRight1 type="checkbox" [checked]="full" id="checkFullRight1"
-                                            [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkFullRight1.checked, 'full')"><span></span> -->
-                                    </label>
+                                    <!-- <codx-input
+                                    class="form-check-input w-35px h-20px"
+                                    type="switch"
+                                    id="googleswitch"
+                                    [checked]="item.isSelected"
+                                    (change)="checkedChange($event, item)"
+                                  ></codx-input> -->
+                                  
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"                                          
+                                        [checked]="full"
+                                        field="full"
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'full')"                                                             
+                                    ></codx-input>                                     
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-size-lg text-dark">{{titleCreateFolder}}</td>
-                                <td>Cho phép tạo thư mục</td>
+                                <td>{{titleAllowCreateFolder}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkCreateRight1 type="checkbox" [checked]="create"
-                                            id="checkCreateRight1" [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkCreateRight1.checked, 'create')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"   
+                                        [checked]="create"
+                                        field="create"
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'create')"                                                            
+                                    ></codx-input>                                           
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Xem</td>
-                                <td>Cho phép xem chi tiết folder/file</td>
-                                <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkReadRight1 type="checkbox" [checked]="read" id="checkReadRight1"
-                                            [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkReadRight1.checked, 'read')"><span></span> -->
-                                    </label>
+                                <td class="font-size-lg text-dark">{{titleView}}</td>
+                                <td>{{titleViewDescription}}</td>
+                                <td class="text-center">                                  
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"     
+                                        field="read"                                     
+                                        [checked]="read"                                                    
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'read')"
+                                    ></codx-input>   
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Sửa</td>
-                                <td>Cho phép chỉnh sửa thông tin của folder/file</td>
+                                <td class="font-size-lg text-dark">{{titleUpdate}}</td>
+                                <td>{{titleUpdateDescription}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkUpdateRight1 type="checkbox" [checked]="update"
-                                            id="checkUpdateRight1" [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkUpdateRight1.checked, 'update')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"    
+                                        field="update"       
+                                        [checked]="update"  
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'update')"                                                          
+                                    ></codx-input>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Xóa</td>
-                                <td>Cho phép xóa folder/file</td>
+                                <td class="font-size-lg text-dark">{{titleDelete}}</td>
+                                <td>{{titleDeleteDesc}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkDeleteRight type="checkbox" [checked]="delete"
-                                            id="checkDeleteRight" [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkDeleteRight.checked, 'delete')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"    
+                                        [checked]="delete"  
+                                        field="delete"        
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'delete')"                                                           
+                                    ></codx-input>  
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Share</td>
-                                <td>Cho phép chia sẻ folder/file</td>
+                                <td class="font-size-lg text-dark">{{titleShare}}</td>
+                                <td>{{titleShareDesc}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkShareRight type="checkbox" [checked]="share" id="checkShareRight"
-                                            [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkShareRight.checked, 'share')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"   
+                                        [checked]="share"  
+                                        field="share"         
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'share')"                                                            
+                                    ></codx-input>  
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Chia sẻ quyền</td>
-                                <td>Cho phép chia sẻ và chỉnh sửa quyền</td>
+                                <td class="font-size-lg text-dark">{{titleAssign}}</td>
+                                <td>{{titleAssignDesc}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkAssignRight type="checkbox" [checked]="assign"
-                                            id="checkAssignRight" [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkAssignRight.checked, 'assign')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"    
+                                        field="assign"    
+                                        [checked]="assign"  
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'assign')"                                                         
+                                    ></codx-input>  
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Upload</td>
-                                <td>Cho phép upload file</td>
+                                <td class="font-size-lg text-dark">{{titleUpload}}</td>
+                                <td>{{titleUploadDesc}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkUploadRight type="checkbox" [checked]="upload"
-                                            id="checkUploadRight" [disabled]="this.checkCurrentRightUpdate()"
-                                            (change)="onSaveRightChanged(checkUploadRight.checked, 'upload')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"  
+                                        [checked]="upload"  
+                                        field="upload"   
+                                        [disabled]="this.checkCurrentRightUpdate()"
+                                        (valueChange)="onSaveRightChanged($event, 'upload')"                                                             
+                                    ></codx-input> 
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">Download</td>
-                                <td>Cho phép download file</td>
+                                <td class="font-size-lg text-dark">{{titleDownload}}</td>
+                                <td>{{titleDownloadDesc}}</td>
                                 <td class="text-center">
-                                    <label class="checkbox">
-                                        <codx-input 
-                                            class="form-control"
-                                            type="switch" 
-                                            style="width:100%"                                                               
-                                        ></codx-input>   
-                                        <!-- <input #checkDownloadRight type="checkbox" [checked]="download"
-                                            [disabled]="this.checkCurrentRightUpdate()" id="checkDownloadRight"
-                                            (change)="onSaveRightChanged(checkDownloadRight.checked, 'download')"><span></span> -->
-                                    </label>
+                                    <codx-input 
+                                        class="test-check"
+                                        type="switch" 
+                                        style="width:100%"   
+                                        [checked]="download"  
+                                        field="download"   
+                                        [disabled]="this.checkCurrentRightUpdate()" 
+                                        (valueChange)="onSaveRightChanged($event, 'download')"                                                            
+                                    ></codx-input>   
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-xl-6 col-lg-6 col-md-6">
+                    <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="form-group row mb-0 pl-3">
-                            <label class="col-12 pr-0 col-form-label">Ngày hiệu lực</label>
+                            <label class="col-12 pr-0 col-form-label">{{titleFromDate}}</label>
                             <div class="col-12">
                                 <codx-input
                                     class="form-control test-datetime"
                                     type="dateTime" 
-                                    style="width:100%" format="d"                                                                      
+                                    style="width:100%" format="d"      
+                                    [crrValue]="startDate"      
+                                    [disabled]="this.checkCurrentRightUpdate()"
+                                    (valueChange)="onSaveRightChanged($event, 'fromdate')"                                                                  
                                 ></codx-input>  
                                 <!-- <lvInput [disabled]="this.checkCurrentRightUpdate() ? true : null" datatype="datetime"
                                     dataformat="d" (valueChange)="changeDate($event, 'startDate')" [value]="startDate">
@@ -238,14 +256,17 @@
                             </div>
                         </div>
                     </div>                        
-                    <div class="col-xl-6 col-lg-6 col-md-6">
+                    <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="form-group row mb-0">
-                            <label class="col-12 pr-0 col-form-label">Ngày hết hạn</label>
+                            <label class="col-12 pr-0 col-form-label">{{titleToDate}}</label>
                             <div class="col-12">
                                 <codx-input
                                     class="form-control test-datetime"
                                     type="dateTime" 
-                                    style="width:100%" format="d"                                                                      
+                                    style="width:100%" format="d"        
+                                    [crrValue]="endDate"       
+                                    [disabled]="this.checkCurrentRightUpdate()"                
+                                    (valueChange)="onSaveRightChanged($event, 'todate')"                                                                                                                
                                 ></codx-input>  
                                 <!-- <lvInput [disabled]="this.checkCurrentRightUpdate()" datatype="datetime" dataformat="d"
                                     (valueChange)="changeDate($event, 'endDate')" [value]="endDate">
@@ -259,7 +280,11 @@
     </ng-template>    
     <ng-template #footer>
         <button 
-        type="button"        
+        type="button"
+        [disabled]="checkCurrentRightUpdate()"
         (click)="onSaveRight()" class="btn btn-primary">{{titleSave}}</button>
+        <!-- <button 
+        type="button"        
+        (click)="onSaveRight()" class="btn btn-primary">{{titleSave}}</button> -->
     </ng-template>
 </codx-form>
