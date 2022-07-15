@@ -44,7 +44,7 @@
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                        <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <span [innerHTML]="item.memo"></span>
@@ -57,17 +57,19 @@
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                        <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
                                     <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                                         <div *ngFor="let itemList of item.checkList">
                                             <div *ngIf="itemList.status == null">
-                                                <div class="my-1">
-                                                    <div>.{{itemList.listNote}}</div>
+                                                <div class="my-1 note-list">
+                                                    <ul>
+                                                        <li>{{itemList.listNote}}</li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <div *ngIf="itemList.status != null">
-                                                <div class="my-1">
+                                                <div class="my-1 note-list">
                                                     <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
                                                         label="{{itemList.listNote}}" [disabled]="false"
                                                         [checked]="itemList?.status == 'true' || itemList?.status == '1'"

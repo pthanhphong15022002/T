@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="dialog-title fw-bold">
-            Tạo ghi chú
+            <codx-label name="lblNote" formName="WP_Notes" default="Tạo ghi chú"></codx-label>
         </div>
         <div class="d-flex align-items-center note-btn">
             <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
@@ -23,7 +23,7 @@
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">
                 <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="empty"
-                    placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)" ngDefaultControl>
+                    placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)" ngDefaultControl field="memo">
                 </codx-input>
             </div>
             <div *ngIf="type == 'check' || type =='list'">
@@ -52,9 +52,9 @@
         </div>
         <div *ngIf="formType == 'edit'">
             <div *ngIf="note?.noteType == 'text'">
-                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
-                </codx-input>
+                <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo" class="test-textarea">
+                </codx-input>                
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
@@ -85,14 +85,19 @@
         <div class="mb-3">
             <div *ngIf="formType == 'edit'">
                 <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2"
-                    hideDes="1" allowExtensions=".jpg,.png" allowMultiFile="1">
+                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
+                    allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                 </codx-attachment>
             </div>
             <div *ngIf="formType == 'add'">
-                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    functionID="WPT03941" type="inline">
-                </codx-attachment>
+                <div *ngIf="isUploadImg">
+                    <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+                </div>
+                <div class="attachment">
+                    <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                        functionID="WPT03941" type="inline" (fileCount)="getfileCount($event)">
+                    </codx-attachment>
+                </div>
             </div>
         </div>
 
@@ -112,8 +117,8 @@
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="" format="d"
-            (valueChange)="valueChange($event)">
+        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="currentDate" format="d"
+            (valueChange)="valueChangeDate($event)">
         </codx-input>
     </div>
 

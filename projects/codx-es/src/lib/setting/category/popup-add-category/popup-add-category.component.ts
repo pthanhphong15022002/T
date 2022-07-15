@@ -95,6 +95,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.esService.isSetupApprovalStep.subscribe((res) => {
+      this.lstStep = res;
+      console.log(this.lstStep);
+    });
+
     this.dialog.closed.subscribe((res) => {
       this.esService.setupAutoNumber.next(null);
       this.esService.setLstDeleteStep(null);
@@ -195,21 +200,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (this.dialogCategory.invalid == true) {
       return;
     }
-
     if (isClose) {
       this.dialog.dataService.dataSelected = this.dialogCategory.value;
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt))
         .subscribe((res) => {
-          if (res && res.save) {
-            // this.esService
-            //   .updateAutoNoCode(res.save.categoryID)
-            //   .subscribe((res1) => {
-            //     console.log('update AutoNo', res1);
-            //   });
-            this.esService.updateTransID(res.save.id).subscribe((res1) => {
-              console.log('update transid', res1);
-            });
+          if (res.update || res.save) {
+            this.isSaved = true;
+            this.updateAutonumber();
+            if (res.save) {
+              this.updateApprovalStep(res.save.id);
+            } else {
+              this.updateApprovalStep();
+            }
+
+            this.dialog && this.dialog.close();
           }
         });
     } else {
@@ -228,21 +233,31 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           }
         });
     }
+  }
 
-    this.esService.editApprovalStep(null).subscribe((res) => {
-      console.log('result edit appp', res);
-    });
+  updateAutonumber() {
     this.esService.isSetupAutoNumber.subscribe((res) => {
       if (res != null) {
-        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {
-          console.log('result autonumber', res);
-        });
+        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {});
       }
     });
+  }
 
-    this.esService.deleteApprovalStep(null).subscribe((res) => {
-      console.log('result delete aaappppp', res);
-    });
+  updateApprovalStep(id = null) {
+    if (id == null) {
+      this.esService.editApprovalStep().subscribe((res) => {
+        console.log('result edit appp', res);
+      });
+
+      this.esService.deleteApprovalStep().subscribe((res) => {
+        console.log('result delete aaappppp', res);
+      });
+    } else {
+      //Them moi
+      this.esService.addNewApprovalStep(id).subscribe((res) => {
+        console.log('result add new appp', res);
+      });
+    }
   }
 
   beforeSave(option: any) {
@@ -323,10 +338,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         let dateFormat = '';
         if (indexStrF >= -1) {
           stringFormat = vllStringFormat[indexStrF].text;
-          console.log('1', stringFormat.length);
-
           stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
-          console.log('2', stringFormat.length);
         }
 
         // replace chuỗi và dấu phân cách

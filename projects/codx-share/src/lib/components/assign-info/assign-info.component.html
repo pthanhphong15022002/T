@@ -37,6 +37,7 @@
             <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Giao cho"></codx-label>
           </div>
           <div class="d-flex align-items-center w-100">
+            <ng-container [ngTemplateOutlet]="templetUserDetail"></ng-container>
             <!-- <codx-input
                                 [refValue]="'Users'"
                                 [crrValue]="task.assignTo"
@@ -46,9 +47,10 @@
                                 (valueChange)="changeUser($event)"
                                 >
                         </codx-input>  -->
-            <codx-input class="form-control" style="width:100%" type="Share" [refValue]="vllShare" field="AssignTo"
-              [dataShared]="[]" multiple="true" [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
+          
           </div>
+          <codx-input  type="Share" [refValue]="vllShare" field="AssignTo"
+          [dataShared]="[]" multiple="true" [showInput]="false"  (valueChange)="eventApply($event)"></codx-input>
         </div>
       </div>
     </div>
@@ -166,19 +168,19 @@
           [crrValue]="task.dueDate" format="F" (valueChange)="changeTime($event)">
         </codx-input>
 
-        <div class="col-6 d-flex align-items-center">
+        <!-- <div class="col-6 d-flex align-items-center">
                         <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #report type="switch" id="switch" [checked]="false" labelPosition="Before"
                             [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Yêu cầu báo cáo</div>
-                        </div>   
+                        </div>    -->
 
         <!-- <div class="d-flex flex-stack l-30px ms-3">
                             <codx-input #email type="switch" id="switch" [checked]="false" labelPosition="Before"
                             [disabled]="false" class="test-switch"></codx-input>
                             <div class="ms-2">Gởi email thông báo</div>
                         </div>  -->
-        </div>  
+        <!-- </div>   -->
       </div>
     </div>
     <div class="row ">
@@ -210,3 +212,39 @@
     <!-- </div> -->
   </ng-template>
 </codx-form>
+
+
+<ng-template #templetUserDetail>
+  <ng-container *ngFor="let item of listUserDetail; index as i">
+    <div class="d-flex py-2 border-bottom justify-content-between list-title" popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom" #p="ngbPopover"
+     (mouseenter)="showPopover(p,item.userID)"  autoClose="outside">
+      <div class="d-flex align-items-top">
+        <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
+        </codx-img>
+
+        <div class="d-flex flex-column me-2 ">
+          <div class="text-dark fw-bold fs-6">
+            {{item?.userName}}
+          </div>
+          <div class="text-gray-700">{{item.positionName}}</div>
+        </div>
+      </div>
+      <div *ngIf="!readOnly">
+        <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+          <div class="d-flex align-item-center">
+            <span class="icon-close icon-16 text-danger me-2"></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #popContent >
+  <ng-container *ngFor="let item of listRoles">
+    <div class="d-flex align-items-center ms-4" (click)="selectRoseType(idUserSelected,item.value)" style="cursor: point;">
+      <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+      <div class="fs-8 text-gray-500">{{item.text}}</div>
+    </div>
+  </ng-container>
+</ng-template>

@@ -1,13 +1,5 @@
-<codx-views #codxViews 
-    funcID="WP" 
-    [service]="service" 
-    [assemblyName]="assemblyName" 
-    [className]="className"
-    [method]="method"
-    [predicate]="predicate"
-    [dataValue]="dataValue" 
-    [views]="views" 
-    entityName="WP_Comments" 
+<codx-views #codxViews funcID="WP" [service]="service" [assemblyName]="assemblyName" [className]="className"
+    [method]="method" [predicate]="predicate" [dataValue]="dataValue" [views]="views" entityName="WP_Comments"
     idField="recID">
 </codx-views>
 <ng-template #panelLeftRef>
@@ -21,9 +13,8 @@
                         </codx-img>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 share">
-                        <span class="text-gray-500 feed-box box-new share-input" (click)="openModal()">
-                            <codx-label class="fw-normal" formName="Comments" name="lblThinks"
-                                [default]="headerText">
+                        <span class="text-gray-500 feed-box box-new share-input" (click)="openCreateModal()">
+                            <codx-label class="fw-normal" formName="Comments" name="lblThinks" [default]="headerText">
                             </codx-label>
                         </span>
                     </div>
@@ -50,7 +41,7 @@
             </div>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-1">
-                    <span class="text-gray-800 fs-6 fw-bold">{{item.createdName}}</span>
+                    <span class="text-dark fw-bold">{{item.createdName}}</span>
                     <span *ngIf="item.tag > 0" class="label label-inline label-light-primary ms-2" type="button"
                         class="btn me-2" placement="bottom" [autoClose]='"outside"' [popoverTitle]="popTitle"
                         [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
@@ -61,46 +52,17 @@
                     </span>
                 </div>
                 <div class="text-info-date">
-                    <span class="text-muted font-size-sm mr-2" data-toggle="tooltip"
-                        title="{{item.createdOn | date:'dd/MM/yyyy HH:mm'}}">{{item.createdOn | timefrom}}</span>
-
-                    <!-- <ng-container *ngFor="let dtVll of dataVll">
-                        <span class="label label-xxs label-inline label-light-primary mx-2"
-                            *ngIf="dtVll.value == item.shareControl">
-                            <span class="{{dtVll.icon}}"></span>&nbsp;{{item.shareControl |
-                            sharedControl:'wp' | async}}
-                        </span>
-
-                        
-                    </ng-container> -->
-                    <span class="rounded-1 py-1 px-2 bg-secondary ms-2">
+                    <span class="text-muted font-size-sm mr-2">{{item.createdOn | timefrom}}</span>
+                    <span class="rounded-1 py-1 px-2 bg-gray-200 ms-2">
                         <span class="symbol symbol-circle ">
-                            <img class="h-20px w-20px" src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}"/>
+                            <img class="h-13px w-13px"
+                                src="assets/themes/sys/default/img/{{(item.shareControl | vll:'L1901' : 'icon' | async)}}" />
                         </span>
                         <span class="font-size-sm">
                             {{item.shareControl | vll:'L1901' : 'text' | async}}
                         </span>
                     </span>
-                    <!-- <span *ngIf="item.shareControl == 'D' ||
-                        item.shareControl == 'P' || item.shareControl == 'R' || item.shareControl == 'G' ||
-                        item.shareControl == 'U'" class="ml-1 cursor-pointer" placement="bottom"
-                        [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
-                        (click)="getShareUser(item.shareControl, item.id)">
-                        <span class="mr-2 text-primary text-underline" (click)="item.shared > 0 "
-                            href="javascript:void(0)">
-                            <ng-container *ngIf="item.shareControl == 'U'; else notU">
-                                <ng-container *ngIf="item.shared == 1;else multipleShared">
-                                    <span class="ms-2">{{item.shareName}}</span>
-                                </ng-container>
 
-                                <ng-template #multipleShared>
-                                </ng-template>
-                            </ng-container>
-                            <ng-template #notU>
-                                {{item.shareName}}
-                            </ng-template>
-                        </span>
-                    </span> -->
                     <span class="ms-2 me-2">{{item.shareName}}</span>
 
                 </div>
@@ -202,14 +164,15 @@
                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
             </ng-template>
         </div>
-        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)"></treeview-comment>
+        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)">
+        </treeview-comment>
     </div>
 </ng-template>
 
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-        <div class="text-feed">
+        <div class="text-feed mb-2">
             <read-more-v2 #readmore *ngIf="item.shortContent;else noMore" [content]="item.content"
                 [shortContent]="item.shortContent">
             </read-more-v2>
@@ -217,42 +180,22 @@
                 <div [innerHTML]="item.content"></div>
             </ng-template>
         </div>
-        <ng-container *ngIf="item.isUploadFile">
-            <ng-container *ngFor="let file of item.lstFile">
-                <div class="pic-feed">
-                    <ng-container [ngSwitch]="file.extension">
-                        <!-- image -->
-                        <ng-container *ngSwitchCase="lstExtensionIMG.includes(file.extension)?file.extension:''">
-                            <div class="pic-feed-img">
-                                <codx-img imageType="square" [width]="200" [objectId]="item.recID"ctType="WP_Comments"></codx-img>
-                            </div>
-                        </ng-container>
-                        <!-- video -->
-                        <ng-container *ngSwitchCase="lstExtensionVideo.includes(file.extension)?file.extension:''">
-                            <p>videos</p>
-                        </ng-container>
-                        <!-- file -->
-                        <ng-container *ngSwitchDefault>
-                            <codx-attachment [objectId]="item.recID" 
-                                idBrowse="btn1"
-                                objectType="WP_Comments" 
-                                hideFolder="1" 
-                                hideUploadBtn="1"
-                                hideDes="1" 
-                                type="inline" 
-                                allowExtensions=".jpg,.png"
-                                [formModel]="codxViews.formModel"
-                                [functionID]="codxViews.formModel.funcID">
-                            </codx-attachment>
-                        </ng-container>
+        <ng-container *ngIf="item.isUpload">
+            <div class="pic-feed">
+                <ng-container *ngIf="item.isUploadImg">
+                    <div class="pic-feed-img">
+                        <codx-image-grid [images]="item.images"></codx-image-grid>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="item.isUploadFile">
+                    <ng-container *ngFor="let file of item.files">
+                        <codx-temp-full imageSrc="{{file.fileType | fileName}}" imgCss="w-20px me-3 cursor-pointer"
+                            title="{{file.fileName}}" [descLine]="1">
+                        </codx-temp-full>
                     </ng-container>
-                    <!-- <codx-attachment [objectId]="item.recID" objectType="WP_Comments" hideFolder="1" hideUploadBtn="1"
-                        hideDes="1" type="inline" [functionID]="codxViews.formModel.funcID">
-                    </codx-attachment> -->
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
         </ng-container>
-        
     </ng-container>
     <ng-template #category2>
         <ng-container *ngIf="item?.card?.cardType == '4' || item?.card?.cardType=='5';else haveBg">
@@ -377,7 +320,7 @@
 
 </ng-template>
 <ng-template #popTitleOfShare>
-    <div class="text-dark mb-2" style="font-size: 14px;">
+    <div class="text-dark mb-2">
         <codx-label formName="Comments" name="lblShare" default="Danh sách người được chia sẻ"></codx-label>
     </div>
     <div>

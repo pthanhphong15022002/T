@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditInfoComponent } from './edit-info/edit-info.component';
 import { EditRelationComponent } from './edit-relation/edit-relation.component';
+import { EditSkillComponent } from './edit-skill/edit-skill.component';
 
 @Component({
   selector: 'lib-employee-infomation',
@@ -55,12 +56,13 @@ export class EmployeeInfomationComponent implements OnInit {
   primaryXAxis: Object;
   primaryYAxis: Object;
   moreFunc = []
-  functionID: any;
+  functionID: string;
   defautFunc :any ;
   formName: string = "";
   gridViewName: string = "";
   user: any;
   dialog!: DialogRef;
+  formModel : FormModel ;
 
   @ViewChild('contentSkill') contentSkill;
   // @ViewChild('view') viewBase: ViewsComponent;
@@ -77,6 +79,7 @@ export class EmployeeInfomationComponent implements OnInit {
     private auth: AuthStore,
     private cachesv: CacheService,
     private callfunc: CallFuncService,
+    private inject: Injector
   ) {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'] ;
@@ -94,11 +97,18 @@ export class EmployeeInfomationComponent implements OnInit {
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           if(res)
            this.moreFunc =res ;
+          //  this.formModel.funcID =this.functionID;
+          //  this.formModel.gridViewName = this.gridViewName;
+          //  this.formModel.formName = this.formName ;
+          //  this.formModel.userPermission = this.user ;
+          //  this.formModel.entityName = "HR_Employees"
           this.dt.detectChanges();
         });
       }
     });
-    console.log(this.view)
+
+  
+   
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
@@ -108,8 +118,14 @@ export class EmployeeInfomationComponent implements OnInit {
     var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
     return (yiq >= 128) ? 'black' : 'white';
   }
-  editSkill() {
+  editSkill(item: any) {
     this.editSkillMode = true;
+    var model = new DialogModel();
+    model.DataService = new CRUDService(this.inject); 
+    this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', [item],"", model);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
   }
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
@@ -188,6 +204,7 @@ export class EmployeeInfomationComponent implements OnInit {
     }
   }
   LoadData(employee) {
+    console.log(this.view)
     this.loadEmployee(employee, e => {
 
     });
@@ -338,6 +355,17 @@ export class EmployeeInfomationComponent implements OnInit {
     return false;
   }
 
+  clickMF(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
+        this.editRelation(data);
+        break;
+      case 'delete':
+        this.deleteRelation(data);
+        break;
+    }
+  }
+
   editInfo(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -389,12 +417,19 @@ export class EmployeeInfomationComponent implements OnInit {
     });
   }
 
-  editHobby(data) {
-    this.allowhobby = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    data = data || { employeeID: this.employeeInfo.employeeID };
-    data.list = this.employeeHobbie;
-    this.codxMwpService.hobbyEdit.next(data);
+  popupAddHobbi(data) {
+    // this.allowhobby = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // data = data || { employeeID: this.employeeInfo.employeeID };
+    // data.list = this.employeeHobbie;
+    // this.codxMwpService.hobbyEdit.next(data);
+
+    var model = new DialogModel();
+    model.DataService = new CRUDService(this.inject); 
+    this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data,"", model);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
   }
 
 

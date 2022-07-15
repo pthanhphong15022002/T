@@ -57,9 +57,27 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.noteService.data.subscribe((res) => {
-      (this.lstView.dataService as CRUDService).add(res).subscribe(res=>{
-        this.changeDetectorRef.detectChanges();
-     });
+      if (res) {
+        var data = res[0]?.data;
+        var type = res[0]?.type;
+        if (this.lstView) {
+          if (type == 'add') {
+            (this.lstView.dataService as CRUDService).add(data).subscribe();
+          } else if (type == 'delete') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            // this.setEventWeek();
+            var today: any = document.querySelector(
+              ".e-footer-container button[aria-label='Today']"
+            );
+            if (today) {
+              today.click();
+            }
+          } else {
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      }
     })
     this.getMaxPinNote();
   }
@@ -132,7 +150,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         that.countNotePin += 1;
       }
     })
-    debugger;
   }
 
   checkNumberNotePin(data) {
@@ -203,15 +220,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.lstView.dataService.data = this.lstView.dataService.data.filter(x => x.recID != res.recID)
-          // this.setEventWeek();
-          var today: any = document.querySelector(
-            ".e-footer-container button[aria-label='Today']"
-          );
-          if (today) {
-            today.click();
-          }
-          this.changeDetectorRef.detectChanges();
+          var object = [{ data: res, type: 'delete' }]
+          this.noteService.data.next(object);
         }
       });
   }
