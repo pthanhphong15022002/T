@@ -72,7 +72,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  public labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
   public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
