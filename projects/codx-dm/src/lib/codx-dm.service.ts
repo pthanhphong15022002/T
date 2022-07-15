@@ -59,6 +59,7 @@ export class CodxDMService {
     public loadedFile: boolean;
     public loadedFolder: boolean;
     public fileUploadList: FileUpload[];
+    public dataFileEditing: FileUpload;
     // public confirmationDialogService: ConfirmationDialogService;
 
     public HideTree = new BehaviorSubject<boolean>(null);
