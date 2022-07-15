@@ -26,7 +26,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./company-setting.component.css'],
   providers: [LowerCasePipe]
 })
-export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
+export class CompanySettingComponent extends UIComponent implements OnInit, AfterViewInit {
   funcID: any;
   moreFunc = [];
   @ViewChild('template') template: TemplateRef<any>;
@@ -36,7 +36,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
 
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
- // data = new AD_CompanySettings();
+  // data = new AD_CompanySettings();
   dialog!: DialogRef;
 
   // image
@@ -48,7 +48,6 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private codxService: CodxService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
@@ -71,32 +70,33 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         active: true,
         sameData: false,
         model: {
-         // template: this.template,
+          // template: this.template,
 
           panelRightRef: this.paneleft,
         },
       },
-     ];
+    ];
 
 
   }
-  valueChange(e){
+  valueChange(e) {
 
   }
   clickEditContact(data) {
-  this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "",data);
-  this.changeDetectorRef.detectChanges();
+    this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "", data);
+    this.changeDetectorRef.detectChanges();
   }
 
   clickEditPersonal(data) {
-    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
+    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "", data);
     this.dialog.closed.subscribe(e => {
-      if(e?.event){
+      if (e?.event) {
         this.data = e?.event
-        this.detectorRef.detectChanges() ;
+        this.detectorRef.detectChanges();
       }
 
-    })}
+    })
+  }
 
   // clickEditPersonal(data: any) {
   //   var obj = {
@@ -115,7 +115,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
-       // this.data.companyCode.toString().toLowerCase();
+        // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
       }
       else {

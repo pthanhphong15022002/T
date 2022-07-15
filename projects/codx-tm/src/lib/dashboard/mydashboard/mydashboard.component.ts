@@ -59,27 +59,30 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   public majorTicks1: Object = {
     position: 'Outside',
-    color: 'green',
-    height: 5,
-    width: 2,
-    offset: 10,
+    height: 1,
+    width: 1,
+    offset: 0,
     interval: 30,
   };
   public majorTicks2: Object = {
-    height: 0
+    height: 0,
   };
-
 
   public lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '10px' } };
-  public labelStyle2: Object = {position: 'Outside', font: { size: '0px' } };
+  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings: Object = {
+  public legendSettings1: Object = {
     position: 'Top',
+    visible: true,
+  };
+
+  public legendSettings2: Object = {
+    position: 'Right',
     visible: true,
   };
 

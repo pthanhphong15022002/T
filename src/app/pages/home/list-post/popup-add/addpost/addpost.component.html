@@ -117,17 +117,32 @@
             <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
                 placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
             </codx-input>
+       </div>
+        <div *ngIf="images">
+            <codx-file [images]="images" [showBtnRemove]='true'></codx-file>
         </div>
-        <div>
-            <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
-        </div>
-        <div>
-            <codx-attachment #atmCreate objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfileCount($event)"
-                idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
+        <div class="d-none">
+            <codx-attachment #atmCreate 
+                objectType="WP_Comments" 
+                hideFolder="1" hideUploadBtn="1"
+                hideDes="1" type="inline" 
+                allowExtensions=".jpg,.png" allowMultiFile="1"
+                (fileCount)="getfileCount($event)"
+                idBrowse="atmCreate"
+                [functionID]="dialogRef.formModel.funcID">
             </codx-attachment>
         </div>
-    </div>
+        <div *ngIf="files">
+            <ng-container *ngFor="let file of files">
+                <codx-temp-full  
+                    imageSrc="{{file.extension | fileName}}" 
+                    imgCss="w-20px me-3 cursor-pointer" 
+                    title="{{file.fileName}}"        
+                    [descLine]="1">
+                </codx-temp-full>
+            </ng-container>
+        </div>
+    </div>                  
 </ng-template>
 
 <ng-template #edit>
@@ -139,7 +154,7 @@
                 </codx-input>
             </div>
             <div *ngIf="dataEdit.isUploadImg">
-                <codx-image-grid [images]="dataEdit.images" [showBtnRemove]='true'></codx-image-grid>
+                <codx-file [images]="dataEdit.images" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="dataEdit.isUploadFile">
                 <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit.recID" hideFolder="1"
@@ -159,7 +174,7 @@
             </codx-input>
         </div>
         <div *ngIf="isUploadImg">
-            <codx-image-grid [images]="listFileUpload"></codx-image-grid>
+            <codx-file [images]="listFileUpload"></codx-file>
         </div>
         <div>
             <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit?.recID" hideFolder="1"
@@ -191,7 +206,7 @@
                         <div class="pic-feed">
                             <ng-container *ngIf="dataShare.isUploadImg">
                                 <div class="pic-feed-img">
-                                    <codx-image-grid [images]="dataShare.images"></codx-image-grid>
+                                    <codx-file [images]="dataShare.images"></codx-file>
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="dataShare.isUploadVideo">
@@ -280,7 +295,7 @@
             <div class="pic-feed">
                 <ng-container *ngIf="item.isUploadImg">
                     <div class="pic-feed-img">
-                        <codx-image-grid [images]="item.lstImage"></codx-image-grid>
+                        <codx-file [images]="item.lstImage"></codx-file>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadVideo">
@@ -291,16 +306,6 @@
                         hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png">
                     </codx-attachment>
                 </ng-container>
-                <!-- <codx-attachment 
-                    [objectId]="item.recID" 
-                    objectType="WP_Comments" hideFolder="1" 
-                    hideUploadBtn="1"
-                    hideDes="1" 
-                    type="inline" 
-                    idBrowse="btn2"
-                    allowExtensions=".jpg,.png" 
-                    [functionID]="codxViews.formModel.funcID">
-                </codx-attachment> -->
             </div>
         </ng-container>
     </ng-container>

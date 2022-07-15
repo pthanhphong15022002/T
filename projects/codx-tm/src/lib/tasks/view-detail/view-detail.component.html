@@ -167,8 +167,9 @@
         <div class="mt-2">
           <div class="d-flex mb-1">
             <span class="fw-bold me-2">
-              <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
-              </codx-label>
+              <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
+              </codx-label> -->
+              <codx-label name="lblProjectName" formName="Tasks" default="Dự án:"></codx-label>
             </span>
             <span #projectname>{{ itemSelected?.projectName| formatvalue : formModel:"projectName"
               : projectname:"Projects":"grvProjects"|async }}</span>
