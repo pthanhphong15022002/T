@@ -32,7 +32,7 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
-  @ViewChild('attachment') attachment:AttachmentComponent 
+  @ViewChild('attachment') attachment: AttachmentComponent
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -51,16 +51,15 @@ export class AssignInfoComponent implements OnInit {
   title = 'Giao việc';
   dialog: any;
   vllShare = "TM003"
-  vllRole ='TM001' 
+  vllRole = 'TM001'
   listRoles = []
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
-    private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private cache : CacheService,
-    private api : ApiHttpService,
+    private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -68,50 +67,50 @@ export class AssignInfoComponent implements OnInit {
       ...this.task,
       ...dt?.data[0],
     };
-    this.vllShare = dt?.data[1]? dt?.data[1] : this.vllShare ;
-    this.vllRole = dt?.data[2]? dt?.data[2] : this.vllRole  ;
+    this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
+    this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
     this.cache.valueList(this.vllRole).subscribe(res => {
-     if(res && res?.datas.length >0){
-      this.listRoles =res.datas
-     }
-     });
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas
+      }
+    });
   }
 
   ngOnInit(): void {
-    if(!this.task.taskID)
-    this.setDefault();
+    if (!this.task.taskID)
+      this.setDefault();
     else
-    this.openInfo();
+      this.openInfo();
   }
 
-  setDefault(){
+  setDefault() {
     this.api
-    .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      this.functionID,
-      'TM_Tasks',
-      'taskID',
-    ])
-    .subscribe(
-    (response: any) => {
-        if (response) {
-          response['_uuid'] = response['taskID'] ?? Util.uid();
-          response['idField'] = 'taskID';
-          response['isNew'] = function () {
-            return response[response.taskID] != response['_uuid'];
-          };
-          response['taskID'] = response['_uuid'];
-          this.task = response;
-        this.openInfo();
+      .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+        this.functionID,
+        'TM_Tasks',
+        'taskID',
+      ])
+      .subscribe(
+        (response: any) => {
+          if (response) {
+            response['_uuid'] = response['taskID'] ?? Util.uid();
+            response['idField'] = 'taskID';
+            response['isNew'] = function () {
+              return response[response.taskID] != response['_uuid'];
+            };
+            response['taskID'] = response['_uuid'];
+            this.task = response;
+            this.openInfo();
+          }
         }
-      }
-    );
+      );
   }
 
   showPanel() {
-  
+
   }
   closePanel() {
     this.dialog.close()
@@ -134,7 +133,7 @@ export class AssignInfoComponent implements OnInit {
     // }
     this.changeDetectorRef.detectChanges();
   }
-  openTask() {}
+  openTask() { }
 
   changText(e) {
     this.task.taskName = e.data;
@@ -156,7 +155,7 @@ export class AssignInfoComponent implements OnInit {
     var assignTo = e.data.join(';')
     if (e.data.length == 0) {
       this.task.assignTo = '';
-      return ;
+      return;
     } else if (this.task.assignTo != null && this.task.assignTo != '') {
       this.task.assignTo += ';' + assignTo;
     } else this.task.assignTo = assignTo;
@@ -175,7 +174,7 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     this.convertToListTaskResources();
-    this.attachment.saveFiles() ;
+    this.attachment.saveFiles();
     this.tmSv
       .saveAssign([
         this.task,
@@ -190,7 +189,7 @@ export class AssignInfoComponent implements OnInit {
           this.dialog.dataService.afterSave.next(res);
           this.changeDetectorRef.detectChanges();
           this.dialog.close();
-          this.notiService.notifyCode('TM006');    
+          this.notiService.notifyCode('TM006');
           if (!isContinue) {
             this.closePanel();
           }
@@ -258,7 +257,7 @@ export class AssignInfoComponent implements OnInit {
   fileAdded(e) {
     console.log(e);
   }
-  getfileCount(e){
+  getfileCount(e) {
 
   }
   eventApply(e: any) {
@@ -267,16 +266,16 @@ export class AssignInfoComponent implements OnInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-     // if (obj?.data && obj?.data != '') {
-        switch (obj.objectType) {
-          case 'U':
-            listUserID += obj.id+';';
-            break;
-          case 'D':
-            listDepartmentID += obj.id+";";
-            break;
-        }
-    //  }
+      // if (obj?.data && obj?.data != '') {
+      switch (obj.objectType) {
+        case 'U':
+          listUserID += obj.id + ';';
+          break;
+        case 'D':
+          listDepartmentID += obj.id + ";";
+          break;
+      }
+      //  }
     });
     if (listUserID != '')
       listUserID = listUserID.substring(0, listUserID.length - 1);

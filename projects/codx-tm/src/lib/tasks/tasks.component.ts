@@ -54,7 +54,7 @@ export class TasksComponent extends UIComponent {
   @Input() viewPreset: string = 'weekAndDay';
 
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -313,8 +313,7 @@ export class TasksComponent extends UIComponent {
 
   edit(data?) {
     if (data && data.status >= 8) {
-      // this.notiService.notifyCode('cần code đoạn nay');
-      this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+      this.notiService.notifyCode('tm007');
       return;
     }
     if (data) {
@@ -341,7 +340,7 @@ export class TasksComponent extends UIComponent {
   }
 
   copy(data) {
-    this.view.dataService.addNew().subscribe((res: any) => {
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
@@ -490,10 +489,10 @@ export class TasksComponent extends UIComponent {
                   })
                   this.itemSelected = res[0];
                   this.dt.detectChanges();
-                  this.notiService.notify('Cập nhật trạng thái thành công !');
+                  this.notiService.notifyCode('tm009');
                 } else {
-                  this.notiService.notify(
-                    'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
+                  this.notiService.notifyCode(
+                    'tm008'
                   );
                 }
               });
