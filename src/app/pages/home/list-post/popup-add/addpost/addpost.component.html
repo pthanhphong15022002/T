@@ -132,16 +132,6 @@
                 [functionID]="dialogRef.formModel.funcID">
             </codx-attachment>
         </div>
-        <!-- <div *ngIf="files">
-            <ng-container *ngFor="let file of files">
-                <codx-temp-full  
-                    imageSrc="{{file.extension | fileName}}" 
-                    imgCss="w-20px me-3 cursor-pointer" 
-                    title="{{file.fileName}}"        
-                    [descLine]="1">
-                </codx-temp-full>
-            </ng-container>
-        </div> -->
     </div>                  
 </ng-template>
 
@@ -293,11 +283,9 @@
 
         <ng-container *ngIf="item.isUpload">
             <div class="pic-feed">
-                <ng-container *ngIf="item.isUploadImg">
-                    <div class="pic-feed-img">
-                        <codx-file [objectID]="item.recID"></codx-file>
-                    </div>
-                </ng-container>
+                <div class="pic-feed-img">
+                    <codx-file [objectID]="item.recID"></codx-file>
+                </div>
                 <!-- <ng-container *ngIf="item.isUploadVideo">
                     <video src="#"></video>
                 </ng-container>

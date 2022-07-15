@@ -1,16 +1,17 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
 import 'lodash';
 import { FilesService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
+import { isBuffer } from 'util';
 @Component({
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
 })
-export class ImageGridComponent extends ErmComponent implements OnInit {
+export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges {
 
   @Input() objectID:string = "";
   @Input() showBtnRemove: boolean = false;
@@ -208,6 +209,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   ) {
     super(injector);
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.lstFile);
+    if(changes.lstFile){
+      let files = changes.lstFile.currentValue;
+      if(files && files.length >0 ){
+        this.lstFile = files;
+        this.converFile();
+      }
+    }
+    
+  }
 
   ngOnInit() {
     
@@ -247,7 +259,8 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   converFile(){
     if(this.lstFile){
       this.lstFile.forEach((f:any) => {
-        if(f.data.indexOf("data:image/") >= 0 || f.data.indexOf("data:video/") >= 0){
+        var minType = this.mineTypes[f.type];
+        if(minType.indexOf("image") >= 0 || minType.indexOf("video") >= 0){
           this.images.push(f);
         }
         else{

@@ -118,11 +118,11 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, this.dataComment.recID, type]
         )
         .subscribe((res) => {
           if (res) {
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             this.comments = "";
             this.repComment = "";
             post.showReply = false;
@@ -148,13 +148,13 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, this.dataComment.recID, type]
         )
         .subscribe((res) => {
           if (res) {
             this.comments = "";
             this.repComment = "";
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             post.showReply = false;
             this.crrId = "";
             this.dicDatas[res["recID"]] = res;

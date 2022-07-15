@@ -1,12 +1,12 @@
-<ng-container *ngIf="images">
+<ng-container *ngIf="images.length > 0">
   <div [ngSwitch]="images.length" class="position-relative">
-    <ng-container *ngIf="showBtnRemove">
+    <!-- <ng-container *ngIf="showBtnRemove">
       <label (click)="removeImg()"
         class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
         data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
         <span class="icon-close icon-14 "></span>
       </label>
-    </ng-container>
+    </ng-container> -->
     <ng-container *ngSwitchCase="1">
       <div class="feed-1pic">
         <ng-container *ngIf="images[0]">
@@ -184,7 +184,7 @@
 </ng-container>
 
 <ng-container *ngIf="files.length > 0">
-  <div *ngFor="let file of files">
+  <div class="my-3" *ngFor="let file of files">
       <codx-temp-full  
           imageSrc="{{file.extension | fileName}}" 
           imgCss="w-20px me-3 cursor-pointer" 
