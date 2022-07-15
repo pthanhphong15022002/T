@@ -186,22 +186,19 @@
                 <div [innerHTML]="item.content"></div>
             </ng-template>
         </div>
-        <ng-container *ngIf="item.isUpload">
             <div class="pic-feed">
-                <ng-container *ngIf="item.isUploadImg">
+
                     <div class="pic-feed-img">
-                        <codx-file [images]="item.images"></codx-file>
+                        <codx-file [objectID]="item.recID"></codx-file>
                     </div>
-                </ng-container>
-                <ng-container *ngIf="item.isUploadFile">
+                <!-- <ng-container *ngIf="item.isUploadFile">
                     <ng-container *ngFor="let file of item.files">
                         <codx-temp-full imageSrc="{{file.fileType | fileName}}" imgCss="w-20px me-3 cursor-pointer"
                             title="{{file.fileName}}" [descLine]="1">
                         </codx-temp-full>
                     </ng-container>
-                </ng-container>
+                </ng-container> -->
             </div>
-        </ng-container>
     </ng-container>
     <ng-template #category2>
         <ng-container *ngIf="item?.card?.cardType == '4' || item?.card?.cardType=='5';else haveBg">
