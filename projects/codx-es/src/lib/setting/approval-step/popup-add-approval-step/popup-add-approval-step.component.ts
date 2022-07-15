@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { ListViewModule } from '@syncfusion/ej2-angular-lists';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -61,6 +62,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private cfService: CallFuncService,
     private cache: CacheService,
+    private callfc: CallFuncService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -177,9 +179,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  popup(evt: any) { }
+  popup(evt: any) {}
 
-  checkedOnlineChange(event) { }
+  checkedOnlineChange(event) {}
 
   openSetupEmail(email) {
     if (email?.IsEmail == '1' || email?.isEmail == '1') {
@@ -270,6 +272,29 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       this.dialogApprovalStep.patchValue({
         emailTemplates: this.dialogApprovalStep.value.emailTemplates,
       });
+    }
+  }
+
+  testdata(share) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(event) {
+    if (event[0].id) {
+      switch (event[0].objectType) {
+        case 'U':
+          let lstID = event[0].id.split(';');
+          let lstUserName = event[0].text.split(';');
+          let lst = this.dialogApprovalStep.value.approvers ?? [];
+          for (let i = 0; i < lstID?.length; i++) {
+            let appr = new Approvers();
+            appr.approverName = lstUserName[i];
+            appr.approver = lstID[i];
+            lst.push(appr);
+          }
+          this.dialogApprovalStep.patchValue({ approvers: lst });
+          break;
+      }
     }
   }
 }

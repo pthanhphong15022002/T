@@ -20,6 +20,8 @@ import {
 } from './model/mode';
 import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore } from 'codx-core';
+import { tmpSignArea } from './model/tmpSignArea.model';
+import { CodxEsService } from '../../codx-es.service';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
@@ -35,7 +37,7 @@ export class ApprovalComponent implements OnInit {
 
   user?: any;
   url: string = '';
-  constructor(private authStore: AuthStore) {
+  constructor(private authStore: AuthStore, private esService: CodxEsService) {
     this.user = this.authStore.get();
   }
 
@@ -46,6 +48,7 @@ export class ApprovalComponent implements OnInit {
   thumbnailEle!: Element;
 
   signerInfo: any = {};
+  fileInfo: any = {};
   zoomValue: number = 75;
   holding: number = 0;
 
@@ -67,7 +70,7 @@ export class ApprovalComponent implements OnInit {
 
   curSelectedAnno: any;
 
-  after_X_Second: number = 3000;
+  after_X_Second: number = 300;
 
   public headerRightName = [
     { text: 'Công cụ' },
@@ -169,6 +172,7 @@ export class ApprovalComponent implements OnInit {
 
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
+    this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
   }
 
@@ -562,16 +566,48 @@ export class ApprovalComponent implements OnInit {
       // justAddAnno.annotationId = this.signerInfo.authorID;
     }
     justAddAnno.author = this.signerInfo.authorID;
+    justAddAnno.review.author = this.signerInfo.authorID;
     this.curSelectedAnno = justAddAnno;
 
     this.saveAnnoQueue.set(
       curID,
-      setTimeout(this.saveAnnoToDB, this.after_X_Second, justAddAnno.author)
+      setTimeout(
+        this.saveAnnoToDB,
+        this.after_X_Second,
+        this.esService,
+        justAddAnno,
+        this.fileInfo,
+        this.user
+      )
     );
   }
 
-  saveAnnoToDB(anno) {
-    console.log('da save', anno);
+  saveAnnoToDB(service, anno, fileInfo, user) {
+    let area: tmpSignArea = {
+      RecID: anno.annotationId,
+      TransID: '',
+      FileID: fileInfo.fileID,
+      Signer: anno.author,
+      LabelType: anno.customStampName,
+      LabelValue: '',
+      FixedWidth: true,
+      SignDate: new Date(),
+      DateFormat: new Date(),
+      Location: anno.bounds,
+      FontStyle: '',
+      FontFormat: '',
+      FontSize: 0,
+      SignatureType: 1,
+      Comment: '',
+      CreatedOn: new Date(),
+      CreatedBy: user.userID,
+      ModifiedOn: new Date(),
+      ModifiedBy: user.userID,
+    };
+
+    service.addOrEditSignArea(area).subscribe((res) => {
+      console.log('ket qua', res);
+    });
   }
 
   resetTime(e: any) {
@@ -583,13 +619,32 @@ export class ApprovalComponent implements OnInit {
         return anno.annotationId == curID;
       }
     );
-    this.curSelectedAnno.bounds = e.currentPosition;
-    console.log(e.currentPosition);
+    console.log(e);
+
+    switch (e.name) {
+      case 'annotationResize':
+        this.curSelectedAnno.bounds = e.annotationBound;
+        break;
+
+      case 'annotationMove':
+        this.curSelectedAnno.bounds = e.currentPosition;
+        break;
+
+      default:
+        break;
+    }
 
     this.pdfviewerControl.annotationCollection[curIndex] = this.curSelectedAnno;
     this.saveAnnoQueue.set(
       curID,
-      setTimeout(this.saveAnnoToDB, this.after_X_Second, this.curSelectedAnno)
+      setTimeout(
+        this.saveAnnoToDB,
+        this.after_X_Second,
+        this.esService,
+        this.curSelectedAnno,
+        this.fileInfo,
+        this.user
+      )
     );
   }
 
@@ -607,10 +662,13 @@ export class ApprovalComponent implements OnInit {
   show(e: any) {
     console.log(this.pdfviewerControl);
   }
+
   selectedAnnotation(e: any) {
+    console.log(e);
+
     this.curSelectedAnno = this.pdfviewerControl.annotationCollection.find(
       (anno) => {
-        anno.annotationId === e.annotationId;
+        return anno.annotationId === e.annotationId;
       }
     );
     console.log('dang chon', this.curSelectedAnno);

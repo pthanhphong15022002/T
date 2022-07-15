@@ -344,7 +344,7 @@ export class TasksComponent extends UIComponent {
         this.dialog.closed.subscribe((e) => {
           if (e?.event)
             e?.event.forEach((obj) => {
-              this.dialog.dataService.update(obj).subscribe();
+              this.view.dataService.update(obj).subscribe();
             });
           this.itemSelected = e?.event[0];
           this.dt.detectChanges();
@@ -431,7 +431,21 @@ export class TasksComponent extends UIComponent {
       option
     );
     this.dialog.closed.subscribe((e) => {
-      console.log(e);
+     if(e?.event){
+      let listTask = e?.event
+      let newTasks =[]
+      for(var i = 0; i<listTask.length ;i++){
+        if(listTask[i].taskID ==data.taskID){
+          this.view.dataService.update(listTask[i]).subscribe();
+          this.view.dataService.setDataSelected(e?.event[0]);
+        }else newTasks.push(listTask[i])
+      }
+      if(newTasks.length>0){
+        this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
+        this.view.dataService.afterSave.next(newTasks);
+      }
+      this.dt.detectChanges();
+     }
     });
   }
 

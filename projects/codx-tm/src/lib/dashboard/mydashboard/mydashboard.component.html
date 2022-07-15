@@ -1,13 +1,21 @@
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-75 m-2">
     <!-- <codx-input type="switch"></codx-input> -->
-    <div class="d-xl-flex justify-content-xl-between bg-body mb-2 p-4 rounded">
-      <div class="border rounded" style="background-color: rgb(4, 222, 183, 0.1);">
+    <div
+      class="d-xl-flex justify-content-xl-between bg-body mb-2 p-4 rounded"
+      style="height: 10%"
+    >
+      <div
+        class="border rounded"
+        style="background-color: rgb(4, 222, 183, 0.1)"
+      >
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="icon icon-access_time" style="color: rgb(4, 222, 183)">
-              </div>
+              <div
+                class="icon icon-access_time"
+                style="color: rgb(4, 222, 183)"
+              ></div>
               <div>
                 <div class="fw-bold text-gray-400">
                   <codx-label
@@ -31,11 +39,17 @@
           </div>
         </div>
       </div>
-      <div class="border rounded" style="background-color: rgb(0, 93, 199, 0.1);">
+      <div
+        class="border rounded"
+        style="background-color: rgb(0, 93, 199, 0.1)"
+      >
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="icon icon-access_time" style="color: rgb(0, 93, 199);"></div>
+              <div
+                class="icon icon-access_time"
+                style="color: rgb(0, 93, 199)"
+              ></div>
               <div>
                 <div class="fw-bold text-gray-400">
                   <codx-label
@@ -59,11 +73,17 @@
           </div>
         </div>
       </div>
-      <div class="border rounded" style="background-color: rgb(255, 128, 8, 0.1)">
+      <div
+        class="border rounded"
+        style="background-color: rgb(255, 128, 8, 0.1)"
+      >
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
-              <div class="icon icon-access_time" style="color:rgb(255, 128, 8)"></div>
+              <div
+                class="icon icon-access_time"
+                style="color: rgb(255, 128, 8)"
+              ></div>
               <div>
                 <div class="fw-bold text-gray-400">
                   <codx-label
@@ -88,8 +108,22 @@
         </div>
       </div>
     </div>
-    <div class="row bg-body mb-2">
-      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+    <div class="row bg-body mb-2" style="height: 30%">
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn align-self-end"
+          (mouseenter)="openTooltip()"
+          (mouseleave)="closeTooltip()"
+        >
+          <i class="icon-info text-dark"></i>
+        </button>
+      </div>
+
+      <div
+        class="col-xxl-3 col-xl-6 col-lg-6"
+        style="position: relative; height: 250px"
+      >
         <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
@@ -101,7 +135,7 @@
               maximum="150"
               [labelStyle]="labelStyle1"
               [majorTicks]="majorTicks1"
-              [minorTicks]="minorTicks1"
+              [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
@@ -109,7 +143,7 @@
                   end="150"
                   radius="115%"
                   roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient"
+                  [linearGradient]="rangeLinearGradient1"
                   startWidth="17"
                   endWidth="17"
                 >
@@ -124,7 +158,6 @@
                   radius="108%"
                   markerWidth="28"
                   markerHeight="28"
-                  [animation]="animation1"
                 >
                 </e-pointer>
               </e-pointers>
@@ -134,18 +167,24 @@
         <div
           style="
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center">Availability</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+          <p class="text-center" style="margin: 0px">Availability</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ dbData?.availability.toFixed(2) }}
           </p>
         </div>
       </div>
-      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+      <div
+        class="col-xxl-3 col-xl-6 col-lg-6"
+        style="position: relative; height: 250px"
+      >
         <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
@@ -157,7 +196,7 @@
               maximum="150"
               [labelStyle]="labelStyle1"
               [majorTicks]="majorTicks1"
-              [minorTicks]="minorTicks1"
+              [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
@@ -165,7 +204,7 @@
                   end="150"
                   radius="115%"
                   roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient"
+                  [linearGradient]="rangeLinearGradient1"
                   startWidth="17"
                   endWidth="17"
                 >
@@ -180,7 +219,6 @@
                   radius="108%"
                   markerWidth="28"
                   markerHeight="28"
-                  [animation]="animation1"
                 >
                 </e-pointer>
               </e-pointers>
@@ -190,18 +228,24 @@
         <div
           style="
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center">Performance</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+          <p class="text-center" style="margin: 0px">Performance</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ dbData?.performance.toFixed(2) }}
           </p>
         </div>
       </div>
-      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+      <div
+        class="col-xxl-3 col-xl-6 col-lg-6"
+        style="position: relative; height: 250px"
+      >
         <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
@@ -213,7 +257,7 @@
               maximum="150"
               [labelStyle]="labelStyle1"
               [majorTicks]="majorTicks1"
-              [minorTicks]="minorTicks1"
+              [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
@@ -221,7 +265,7 @@
                   end="150"
                   radius="115%"
                   roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient"
+                  [linearGradient]="rangeLinearGradient1"
                   startWidth="17"
                   endWidth="17"
                 >
@@ -236,7 +280,6 @@
                   radius="108%"
                   markerWidth="28"
                   markerHeight="28"
-                  [animation]="animation1"
                 >
                 </e-pointer>
               </e-pointers>
@@ -246,18 +289,24 @@
         <div
           style="
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center">Quality</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+          <p class="text-center" style="margin: 0px">Quality</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ dbData?.quality.toFixed(2) }}
           </p>
         </div>
       </div>
-      <div class="col-xxl-3 col-xl-6 col-lg-6" style="position: relative; height: 250px">
+      <div
+        class="col-xxl-3 col-xl-6 col-lg-6"
+        style="position: relative; height: 250px"
+      >
         <ejs-circulargauge style="display: block" centerY="40%" height="250">
           <e-axes>
             <e-axis
@@ -269,7 +318,7 @@
               maximum="150"
               [labelStyle]="labelStyle1"
               [majorTicks]="majorTicks1"
-              [minorTicks]="minorTicks1"
+              [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
@@ -277,22 +326,21 @@
                   end="150"
                   radius="115%"
                   roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient"
                   startWidth="17"
                   endWidth="17"
+                  [linearGradient]="rangeLinearGradient2"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.kpi"
+                  [value]="dbData?.performance"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="108%"
                   markerWidth="28"
                   markerHeight="28"
-                  [animation]="animation1"
                 >
                 </e-pointer>
               </e-pointers>
@@ -302,25 +350,28 @@
         <div
           style="
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center">KPI</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2 mb-2 mt-5">
+          <p class="text-center" style="margin: 0px">KPI</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ dbData?.kpi.toFixed(2) }}
           </p>
         </div>
       </div>
     </div>
-    <div class="row bg-body mb-2">
-      <div class="col-xl-6" style="position: relative; width: 450px; height: 200px">
+    <div class="d-flex justify-content-between mb-4" style="height: 30%">
+      <div class="row" style="position: relative; width: 50%; height: 100%">
         <ejs-accumulationchart
           id="chart-task-group"
           [legendSettings]="legendSettings"
-          width="450"
-          height="200"
+          width="100%"
+          height="100%"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -341,94 +392,109 @@
           </codx-label>
         </div>
       </div>
-      <div class="col-xl-6">
-        <div class="d-flex">
-          <div style="height: 250px; width: 200px">
-            <ejs-circulargauge
-              id="range-container"
-              width="200"
-              height="250"
-              centerX="50%"
-              centerY="50%"
+      <div class="row" style="position: relative; width: 50%; height: 100%">
+        <ejs-circulargauge
+          style="display: block"
+          centerY="40%"
+          width="100%"
+          height="100%"
+        >
+          <e-axes>
+            <e-axis
+              radius="100%"
+              startAngle="0"
+              endAngle="360"
+              minimum="0"
+              maximum="150"
+              [lineStyle]="lineStyle"
+              [labelStyle]="labelStyle2"
+              [majorTicks]="majorTicks2"
+              [minorTicks]="minorTicks"
             >
-              <e-axes>
-                <e-axis
-                  radius="150"
-                  minimum="0"
-                  maximum="100"
-                  startAngle="0"
-                  endAngle="360"
-                  [majorTicks]="majorTicks2"
-                  [labelStyle]="labelStyle2"
-                  [lineStyle]="lineStyle"
-                  [minorTicks]="minorTicks2"
-                  [ranges]="ranges"
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  startWidth="12"
+                  endWidth="12"
+                  color="#F0F0F0"
                 >
-                  <e-pointers>
-                    <e-pointer
-                      [value]="dbData?.rateDoneTask.toFixed(2)"
-                      roundedCornerRadius="20"
-                      pointerWidth="10"
-                      type="RangeBar"
-                      radius="50%"
-                      color="#357CD2"
-                      [border]="border"
-                      [animation]="animation"
-                    ></e-pointer>
-                  </e-pointers>
-                </e-axis>
-                <e-axis
-                  radius="120"
-                  minimum="0"
-                  maximum="100"
-                  startAngle="0"
-                  endAngle="360"
-                  [majorTicks]="majorTicks2"
-                  [labelStyle]="labelStyle2"
-                  [lineStyle]="lineStyle"
-                  [minorTicks]="minorTicks2"
-                  [ranges]="ranges"
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="RangeBar"
+                  roundedCornerRadius="10"
+                  radius="115%"
+                  color="#04DEB7"
+                  pointerWidth="12"
+                  [value]="dbData?.rateDoneTaskOnTime"
                 >
-                  <e-pointers>
-                    <e-pointer
-                      [value]="dbData?.rateDoneTaskOnTime.toFixed(2)"
-                      roundedCornerRadius="20"
-                      pointerWidth="10"
-                      type="RangeBar"
-                      radius="50%"
-                      color="#20BDAE"
-                      [border]="border"
-                      [animation]="animation"
-                    ></e-pointer>
-                  </e-pointers>
-                </e-axis>
-              </e-axes>
-            </ejs-circulargauge>
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+            <e-axis
+              radius="80%"
+              startAngle="0"
+              endAngle="360"
+              minimum="0"
+              maximum="150"
+              [lineStyle]="lineStyle"
+              [labelStyle]="labelStyle2"
+              [majorTicks]="majorTicks2"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="115%"
+                  startWidth="12"
+                  endWidth="12"
+                  color="#F0F0F0"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="RangeBar"
+                  roundedCornerRadius="10"
+                  radius="115%"
+                  color="#5465FF"
+                  markerWidth="12"
+                  pointerWidth="12"
+                  [value]="dbData?.rateDoneTask"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+
+        <!-- <div style="width: 200px; margin-top: 70px">
+          <div style="display: flex; justify-content: between">
+            <div class="label1" style="margin-left: 10px"></div>
+            <div>Tỷ lệ hoàn thành công việc</div>
           </div>
-          <div style="width: 200px; margin-top: 70px">
-            <div style="display: flex; justify-content: between">
-              <div class="label1" style="margin-left: 10px"></div>
-              <div>Tỷ lệ hoàn thành công việc</div>
-            </div>
-            <h3>{{ dbData?.rateDoneTask.toFixed(2) }}%</h3>
-            <div style="display: flex; justify-content: between">
-              <div class="label2"></div>
-              <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
-            </div>
-            <h3>{{ dbData?.rateDoneTaskOnTime.toFixed(2) }}%</h3>
+          <h3>{{ dbData?.rateDoneTask.toFixed(2) }}%</h3>
+          <div style="display: flex; justify-content: between">
+            <div class="label2"></div>
+            <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
           </div>
-        </div>
+          <h3>{{ dbData?.rateDoneTaskOnTime.toFixed(2) }}%</h3>
+        </div> -->
       </div>
     </div>
-    <div class="row bg-body mb-2">
+    <div class="row bg-body mb-2" style="height: 30%">
       <ejs-chart
         style="display: block"
         background="transparent"
-        align="center"
         id="chartbar"
         [primaryXAxis]="columnXAxis"
         [primaryYAxis]="columnYAxis"
         [legendSettings]="legendSettings"
+        height="100%"
         width="100%"
       >
         <e-axes>
@@ -468,13 +534,14 @@
       </ejs-chart>
     </div>
   </div>
+
   <div class="w-25 border bg-body m-2">
-    <div class="taskbox-user">
+    <div class="taskbox-user" style="height: 20%">
       <selectweek
         #selectweek
         (onChangeValue)="onChangeValueSelectedWeek($event)"
       ></selectweek>
-      <div class="taskbox-list">
+      <div class="taskbox-list" style="height: 80%">
         <div
           class="d-flex p-3 flex-grow-1 task-item"
           *ngFor="let task of taskOfDay"
@@ -515,3 +582,104 @@
     </div>
   </div>
 </div>
+
+<ng-template #tooltip let-dialog>
+  <div class="modal-header" style="border-bottom: none">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between">
+          <span style="margin-right: 20px">
+            <i class="icon-info" style="color: #005dc7"></i
+          ></span>
+          <h2 id="modal-basic-title">
+            <codx-label
+              name="lblEvaluateWorkEfficiency"
+              default="Đánh giá hiệu quả làm việc"
+              [formModel]="dialog.formModel"
+            ></codx-label>
+          </h2>
+        </div>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="dialog.close()"
+        >
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Availability (%)</p>
+      <p class="">Tỷ lệ thời gian làm việc = <strong>(1)/(2)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (1) Số giờ chấm công thực tế của nhân viên
+      </p>
+      <p
+        style="
+          font-style: italic;
+          font-size: 12px;
+          font-weight: 200;
+          margin: 0px 0px 0px 30px;
+          color: rgb(0, 0, 0, 0.5);
+        "
+      >
+        (* Nếu chưa tích hợp chấm công sẽ bằng giờ công chuẩn)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (2) Số giờ công chuẩn theo lịch làm việc của công ty
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Performance (%)</p>
+      <p>Hiệu suất làm việc = <strong>(3)/(4)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (3) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (4) Tổng giờ công thực tế có điều chỉnh
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Quality (%)</p>
+      <p>Chất lượng công việc = <strong>(5)/(6)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (5) Tổng số giờ hoàn thành công việc thực tế được duyệt
+      </p>
+      <p
+        style="
+          font-style: italic;
+          font-size: 12px;
+          font-weight: 200;
+          margin: 0px 0px 0px 30px;
+          color: rgb(0, 0, 0, 0.5);
+        "
+      >
+        (* Nếu không sử dụng quy trình xét duyệt thì số giờ sẽ bằng số giờ thực
+        tế)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (6) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">KPI (%)</p>
+      <p>Năng suất tương đương</p>
+      <p
+        style="
+          margin-left: 100px;
+          padding-bottom: 10px;
+          width: fit-content;
+          box-sizing: bor-box;
+          border-bottom: 1px solid #000;
+          text-align: center;
+        "
+      >
+        Availability (%) * Performance (%) * Quality (%)
+      </p>
+      <p style="text-align: center">1000</p>
+    </div>
+  </div>
+</ng-template>
