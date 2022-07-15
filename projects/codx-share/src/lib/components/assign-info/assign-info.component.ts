@@ -33,11 +33,7 @@ import { I } from '@angular/cdk/keycodes';
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
-<<<<<<< HEAD
-  @ViewChild('attachment') attachment: AttachmentComponent
-=======
   @ViewChild('attachment') attachment: AttachmentComponent;
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
@@ -55,17 +51,11 @@ export class AssignInfoComponent implements OnInit {
   popover: any;
   title = 'Giao việc';
   dialog: any;
-<<<<<<< HEAD
-  vllShare = "TM003"
-  vllRole = 'TM001'
-  listRoles = []
-=======
   vllShare = 'TM003';
   vllRole = 'TM001';
   listRoles = [];
-  isHaveFile= false;
+  isHaveFile = false;
 
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -85,29 +75,16 @@ export class AssignInfoComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-<<<<<<< HEAD
-    this.cache.valueList(this.vllRole).subscribe(res => {
-      if (res && res?.datas.length > 0) {
-        this.listRoles = res.datas
-=======
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
       }
     });
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
-    if (!this.task.taskID)
-      this.setDefault();
-    else
-      this.openInfo();
-=======
     if (!this.task.taskID) this.setDefault();
     else this.openInfo();
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   }
 
   setDefault() {
@@ -117,27 +94,6 @@ export class AssignInfoComponent implements OnInit {
         'TM_Tasks',
         'taskID',
       ])
-<<<<<<< HEAD
-      .subscribe(
-        (response: any) => {
-          if (response) {
-            response['_uuid'] = response['taskID'] ?? Util.uid();
-            response['idField'] = 'taskID';
-            response['isNew'] = function () {
-              return response[response.taskID] != response['_uuid'];
-            };
-            response['taskID'] = response['_uuid'];
-            this.task = response;
-            this.openInfo();
-          }
-        }
-      );
-  }
-
-  showPanel() {
-
-  }
-=======
       .subscribe((response: any) => {
         if (response) {
           response['_uuid'] = response['taskID'] ?? Util.uid();
@@ -152,8 +108,7 @@ export class AssignInfoComponent implements OnInit {
       });
   }
 
-  showPanel() {}
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
@@ -208,19 +163,6 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
-<<<<<<< HEAD
-  changeUser(e) {
-    this.listMemo2OfUser = [];
-    this.listUser = [];
-    var assignTo = e.data.join(';')
-    if (e.data.length == 0) {
-      this.task.assignTo = '';
-      return;
-    } else if (this.task.assignTo != null && this.task.assignTo != '') {
-      this.task.assignTo += ';' + assignTo;
-    } else this.task.assignTo = assignTo;
-=======
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
 
   // changeUser(e) {
   //   this.listTaskResources = [];
@@ -248,31 +190,18 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('T0001');
       return;
     }
-<<<<<<< HEAD
-    this.convertToListTaskResources();
-    this.attachment.saveFiles();
-=======
-    if(this.isHaveFile)
-    this.attachment.saveFiles();
+    if (this.isHaveFile)
+      this.attachment.saveFiles();
 
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
     this.tmSv
       .saveAssign([this.task, this.functionID, this.listTaskResources, null])
       .subscribe((res) => {
         if (res && res.length) {
-<<<<<<< HEAD
-          this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
-          this.dialog.dataService.setDataSelected(res[0]);
-          this.dialog.dataService.afterSave.next(res);
-          this.changeDetectorRef.detectChanges();
-          this.dialog.close();
-=======
           // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
           // this.dialog.dataService.setDataSelected(res[0]);
           // this.dialog.dataService.afterSave.next(res);
           // this.changeDetectorRef.detectChanges();
           this.dialog.close(res);
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
           this.notiService.notifyCode('TM006');
           if (!isContinue) {
             this.closePanel();
@@ -329,11 +258,7 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-<<<<<<< HEAD
-
-=======
-    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
+    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -347,11 +272,7 @@ export class AssignInfoComponent implements OnInit {
           listUserID += obj.id + ';';
           break;
         case 'D':
-<<<<<<< HEAD
-          listDepartmentID += obj.id + ";";
-=======
           listDepartmentID += obj.id + ';';
->>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
           break;
       }
       //  }
