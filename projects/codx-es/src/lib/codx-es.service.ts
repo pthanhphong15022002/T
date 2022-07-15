@@ -490,13 +490,17 @@ export class CodxEsService {
     );
   }
 
-  addNewApprovalStep(lstApprovalStep: any): Observable<any> {
+  addNewApprovalStep(id: string): Observable<any> {
+    let lstDataNew = null;
+    this.approvalStep.subscribe((res) => {
+      lstDataNew = res;
+    });
     return this.api.execSv(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstApprovalStep]
+      [lstDataNew, id]
     );
   }
 

@@ -208,7 +208,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (res.update || res.save) {
             this.isSaved = true;
             this.updateAutonumber();
-            this.updateApprovalStep();
+            if (res.save) {
+              this.updateApprovalStep(res.save.id);
+            } else {
+              this.updateApprovalStep();
+            }
+
             this.dialog && this.dialog.close();
           }
         });
@@ -238,14 +243,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateApprovalStep() {
-    this.esService.editApprovalStep().subscribe((res) => {
-      console.log('result edit appp', res);
-    });
+  updateApprovalStep(id = null) {
+    if (id == null) {
+      this.esService.editApprovalStep().subscribe((res) => {
+        console.log('result edit appp', res);
+      });
 
-    this.esService.deleteApprovalStep().subscribe((res) => {
-      console.log('result delete aaappppp', res);
-    });
+      this.esService.deleteApprovalStep().subscribe((res) => {
+        console.log('result delete aaappppp', res);
+      });
+    } else {
+      //Them moi
+      this.esService.addNewApprovalStep(id).subscribe((res) => {
+        console.log('result add new appp', res);
+      });
+    }
   }
 
   beforeSave(option: any) {
