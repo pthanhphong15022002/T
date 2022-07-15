@@ -579,6 +579,16 @@ export class CodxEsService {
       [data, sendTo]
     );
   }
+
+  addOrEditSignArea(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'AddOrEditAsync',
+      data
+    );
+  }
   //#endregion
 }
 export class LayoutModel {
