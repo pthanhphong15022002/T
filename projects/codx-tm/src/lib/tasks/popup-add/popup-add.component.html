@@ -75,7 +75,7 @@
             </div>
             <div class="form-group mt-3">
               <label>
-                <codx-label name="TaskGroups" formName="Tasks" default="Nhóm triển khai">
+                <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
                 </codx-label>
               </label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
@@ -169,7 +169,7 @@
                 </ng-container>
               </div>
             </ng-container>
-            <div class="d-flex align-items-center justify-content-between mt-6">
+            <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
               <div class="d-flex align-items-center mb-3">
                 <span class="icon-attach icon-24 me-2 text-primary"></span>
                 <div class="fw-bold fs-6 text-primary">
@@ -266,7 +266,6 @@
                   </codx-label>
                 </div>
               </div>
-              <!-- <codx-share (eventApply)="eventApply($event)" listName='L1906' multiple="true"> </codx-share> -->
               <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
                 [showInput]="false" (valueChange)="eventApply($event)">
               </codx-input>
@@ -439,15 +438,8 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem>
+        <e-tabitem *ngIf="param?.ProjectControl != '0'|| param?.LocationControl != '0' || param?.ReferenceControl != '0' || param?.ActivityControl != '0' || param?.ActivityControl == null  ">
           <ng-template #headerText>
-            <!-- <div class="d-flex align-items-center">
-              <span class="icon-insert_link icon-24 me-2"></span>
-              <div class="fw-bold">
-                <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
-
-              </div>
-            </div> -->
             <div class="nav-item">
               <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-insert_link  icon-24 me-2"></span>
@@ -471,7 +463,7 @@
                 [disabled]="readOnly" [crrValue]="task.projectID">
               </codx-input>
             </div>
-            <div class="form-group mt-3" *ngIf="param?.Location != '0'">
+            <div class="form-group mt-3" *ngIf="param?.LocationControl != '0'">
               <label>
                 <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm">
                 </codx-label>

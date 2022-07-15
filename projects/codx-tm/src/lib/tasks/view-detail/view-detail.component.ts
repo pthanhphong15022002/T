@@ -13,6 +13,7 @@ export class ViewDetailComponent implements OnInit {
   active = 1;
   @Input() formModel?: FormModel;
   @Input() itemSelected?: any
+  @Input() param?: any
   @Output() clickMoreFunction = new EventEmitter<any>();
   constructor(
     private api: ApiHttpService,
