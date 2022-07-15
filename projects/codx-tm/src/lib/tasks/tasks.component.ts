@@ -344,11 +344,12 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event)
+          if (e?.event){
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
           this.itemSelected = e?.event[0];
+          }
           this.dt.detectChanges();
         });
       });
@@ -397,15 +398,30 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.view.dataService
-              .delete([this.view.dataService.dataSelected], true, (opt) =>
-                this.beforeDel(opt)
-              )
-              .subscribe((res) => {
-                if (res[0]) {
-                  this.itemSelected = this.view.dataService.data[0];
-                }
-              });
+            // this.view.dataService
+            //   .delete([this.view.dataService.dataSelected], true, (opt) =>
+            //     this.beforeDel(opt)
+            //   )
+            //   .subscribe((res) => {
+            //     if (res[0]) {
+            //       this.itemSelected = this.view.dataService.data[0];
+            //     }
+            //   });
+            this.tmSv.deleteTask(data.taskID).subscribe(res=>{
+              if(res){
+                var listTaskDelete = res[0] ;
+                var parent = res[1] ;
+                 listTaskDelete.forEach(x=>{
+                  this.view.dataService.remove(x).subscribe();
+                  this.notiService.notify("Xóa thành công !")
+                 })
+                 if(parent){
+                  this.view.dataService.update(parent).subscribe();
+                 }
+                 this.itemSelected = this.view.dataService.data[0];
+                 this.detectorRef.detectChanges();
+              }
+            })
           }
         }
       });

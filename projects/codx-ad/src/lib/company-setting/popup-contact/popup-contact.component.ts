@@ -22,6 +22,7 @@ export class PopupContactComponent implements OnInit {
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Liên hệ';
+  option:any = 'contact';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -45,7 +46,7 @@ export class PopupContactComponent implements OnInit {
   UpdateData() {
     console.log(this.items);
     this.adService
-      .updateContactCompanySettings(this.items)
+      .updateInformationCompanySettings(this.items,this.option)
       .subscribe((response) => {
         if (response) {
           this.notiService.notifyCode('thêm thành công');
