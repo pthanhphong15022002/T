@@ -136,7 +136,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'mydashboard/:TMT0101',
+        redirectTo: 'mydashboard/TMT0101',
         // path: 'home/:funcID',
         // component: DashboardComponent,
       },
