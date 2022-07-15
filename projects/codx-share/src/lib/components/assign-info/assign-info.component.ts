@@ -54,13 +54,12 @@ export class AssignInfoComponent implements OnInit {
   vllShare = 'TM003';
   vllRole = 'TM001';
   listRoles = [];
-  isHaveFile= false;
+  isHaveFile = false;
 
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
-    private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
@@ -109,7 +108,7 @@ export class AssignInfoComponent implements OnInit {
       });
   }
 
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
@@ -148,7 +147,7 @@ export class AssignInfoComponent implements OnInit {
 
     this.changeDetectorRef.detectChanges();
   }
-  openTask() {}
+  openTask() { }
 
   changText(e) {
     this.task.taskName = e.data;
@@ -191,8 +190,8 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('T0001');
       return;
     }
-    if(this.isHaveFile)
-    this.attachment.saveFiles();
+    if (this.isHaveFile)
+      this.attachment.saveFiles();
 
     this.tmSv
       .saveAssign([this.task, this.functionID, this.listTaskResources, null])
@@ -259,7 +258,7 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
+    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
   }
   eventApply(e: any) {
     var assignTo = '';

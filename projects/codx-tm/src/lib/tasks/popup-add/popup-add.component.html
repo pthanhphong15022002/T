@@ -90,7 +90,7 @@
                   </codx-label>
                 </label>
                 <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
-                  [crrValue]="task?.dueDate"  (valueChange)="changeTime($event)">
+                  [crrValue]="task?.dueDate" (valueChange)="changeTime($event)">
                 </codx-input>
               </div>
               <div class="col-6">
@@ -124,8 +124,8 @@
                     <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime"  field="startDate"
-                    placeholder="datetime" [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime" field="startDate" placeholder="datetime"
+                    [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -133,8 +133,8 @@
                     <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
                     </codx-label>
                   </label>
-                  <codx-input type="datetime" class="test-datetime"  field="endDate"
-                    placeholder="datetime" [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
+                  <codx-input type="datetime" class="test-datetime" field="endDate" placeholder="datetime"
+                    [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-4">
@@ -159,7 +159,7 @@
                     </codx-label>
                   </div>
                 </div>
-                <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
+                <codx-input type="Share" refValue="TMT003" field="AssignTo" [dataShared]="[]" multiple="true"
                   [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
               </div>
               <div class="">
@@ -182,12 +182,11 @@
               </button> -->
             </div>
 
-            <div >
-              <codx-attachment #attachment [objectType]="dialog.formModel.entityName"
-                [objectId]="task.taskID" hideFolder="1" hideUploadBtn="1" hideDes="1" 
-                type="inline"  allowMultiFile="1" [formModel]="dialog.formModel" 
-                [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-                displayThumb="full">
+            <div>
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+                hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+                [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
+                (fileCount)="getfileCount($event)" displayThumb="full">
               </codx-attachment>
             </div>
           </ng-template>
@@ -424,7 +423,7 @@
                         height: 14px;
                         width: 14px;
                         margin-top: 5px" class="col-md-4"> -->
-                      <!-- <codx-input type="checkbox" 
+                      <!-- <codx-input type="checkbox"
                               ></codx-input> -->
                       <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
                         (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
@@ -446,7 +445,7 @@
               <span class="icon-insert_link icon-24 me-2"></span>
               <div class="fw-bold">
                 <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
-               
+
               </div>
             </div> -->
             <div class="nav-item">

@@ -41,11 +41,9 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
 
-  constructor(private inject: Injector,
+  constructor(inject: Injector,
     private authStore: AuthStore,
-    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private codxService: CodxService,
     private modalService: NgbModal,
   ) {
     super(inject);
@@ -134,7 +132,7 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       .subscribe((res) => {
         if (res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
-          this.changedt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -142,7 +140,7 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   openStorageDetail(e) {
     this.dataSort = [];
     this.checkFormComment = true;
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
 
     var arr = [];
     for (let i = 0; i < e?.details.length; i++) {
@@ -169,6 +167,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       var dateB = new Date(b.createdOn).toLocaleDateString();
       return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
     });
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 }
