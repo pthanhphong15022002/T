@@ -8,7 +8,18 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  DataRequest, ViewModel, ViewType, RequestOption, ButtonModel, ResourceModel, SidebarModel, DialogRef, AuthStore, UrlUtil, NotificationsService, UIComponent,
+  DataRequest,
+  ViewModel,
+  ViewType,
+  RequestOption,
+  ButtonModel,
+  ResourceModel,
+  SidebarModel,
+  DialogRef,
+  AuthStore,
+  UrlUtil,
+  NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -222,7 +233,6 @@ export class TasksComponent extends UIComponent {
         { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
       ],
     };
-
   }
 
   getCellContent(evt: any) {
@@ -313,7 +323,7 @@ export class TasksComponent extends UIComponent {
 
   edit(data?) {
     if (data && data.status >= 8) {
-      this.notiService.notifyCode('tm007');
+      this.notiService.notifyCode('TM007');
       return;
     }
     if (data) {
@@ -333,7 +343,10 @@ export class TasksComponent extends UIComponent {
         );
         this.dialog.closed.subscribe((e) => {
           if (e?.event)
-            this.itemSelected = e?.event;
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+          this.itemSelected = e?.event[0];
           this.dt.detectChanges();
         });
       });
@@ -418,7 +431,21 @@ export class TasksComponent extends UIComponent {
       option
     );
     this.dialog.closed.subscribe((e) => {
-      console.log(e);
+      if (e?.event) {
+        let listTask = e?.event
+        let newTasks = []
+        for (var i = 0; i < listTask.length; i++) {
+          if (listTask[i].taskID == data.taskID) {
+            this.view.dataService.update(listTask[i]).subscribe();
+            this.view.dataService.setDataSelected(e?.event[0]);
+          } else newTasks.push(listTask[i])
+        }
+        if (newTasks.length > 0) {
+          this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
+          this.view.dataService.afterSave.next(newTasks);
+        }
+        this.dt.detectChanges();
+      }
     });
   }
 
@@ -464,8 +491,17 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate ? taskAction.startDate : taskAction.createdOn)).toDate();
-            var time = (((completedOn.getTime() - startDate.getTime()) / 3600000).toFixed(1));
+            var startDate = moment(
+              new Date(
+                taskAction.startDate
+                  ? taskAction.startDate
+                  : taskAction.createdOn
+              )
+            ).toDate();
+            var time = (
+              (completedOn.getTime() - startDate.getTime()) /
+              3600000
+            ).toFixed(1);
             var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
@@ -484,9 +520,9 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  res.forEach(obj => {
+                  res.forEach((obj) => {
                     this.view.dataService.update(obj).subscribe();
-                  })
+                  });
                   this.itemSelected = res[0];
                   this.dt.detectChanges();
                   this.notiService.notifyCode('tm009');
@@ -514,13 +550,13 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    )
-    this.dialog.closed.subscribe(e => {
+    );
+    this.dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.itemSelected = e?.event;
         this.dt.detectChanges();
       }
-    })
+    });
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);

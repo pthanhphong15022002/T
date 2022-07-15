@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditInfoComponent } from './edit-info/edit-info.component';
@@ -56,12 +56,13 @@ export class EmployeeInfomationComponent implements OnInit {
   primaryXAxis: Object;
   primaryYAxis: Object;
   moreFunc = []
-  functionID: any;
+  functionID: string;
   defautFunc :any ;
   formName: string = "";
   gridViewName: string = "";
   user: any;
   dialog!: DialogRef;
+  formModel : FormModel ;
 
   @ViewChild('contentSkill') contentSkill;
   // @ViewChild('view') viewBase: ViewsComponent;
@@ -96,11 +97,18 @@ export class EmployeeInfomationComponent implements OnInit {
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           if(res)
            this.moreFunc =res ;
+          //  this.formModel.funcID =this.functionID;
+          //  this.formModel.gridViewName = this.gridViewName;
+          //  this.formModel.formName = this.formName ;
+          //  this.formModel.userPermission = this.user ;
+          //  this.formModel.entityName = "HR_Employees"
           this.dt.detectChanges();
         });
       }
     });
-    console.log(this.view)
+
+  
+   
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
@@ -196,6 +204,7 @@ export class EmployeeInfomationComponent implements OnInit {
     }
   }
   LoadData(employee) {
+    console.log(this.view)
     this.loadEmployee(employee, e => {
 
     });
@@ -349,10 +358,10 @@ export class EmployeeInfomationComponent implements OnInit {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
-        this.editExperences(data);
+        this.editRelation(data);
         break;
       case 'delete':
-        this.deleteExperences(data);
+        this.deleteRelation(data);
         break;
     }
   }
@@ -408,12 +417,19 @@ export class EmployeeInfomationComponent implements OnInit {
     });
   }
 
-  editHobby(data) {
-    this.allowhobby = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    data = data || { employeeID: this.employeeInfo.employeeID };
-    data.list = this.employeeHobbie;
-    this.codxMwpService.hobbyEdit.next(data);
+  popupAddHobbi(data) {
+    // this.allowhobby = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // data = data || { employeeID: this.employeeInfo.employeeID };
+    // data.list = this.employeeHobbie;
+    // this.codxMwpService.hobbyEdit.next(data);
+
+    var model = new DialogModel();
+    model.DataService = new CRUDService(this.inject); 
+    this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data,"", model);
+    this.dialog.closed.subscribe(e => {
+      console.log(e);
+    })
   }
 
 

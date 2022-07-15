@@ -490,13 +490,17 @@ export class CodxEsService {
     );
   }
 
-  addNewApprovalStep(lstApprovalStep: any): Observable<any> {
+  addNewApprovalStep(id: string): Observable<any> {
+    let lstDataNew = null;
+    this.approvalStep.subscribe((res) => {
+      lstDataNew = res;
+    });
     return this.api.execSv(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstApprovalStep]
+      [lstDataNew, id]
     );
   }
 
@@ -573,6 +577,16 @@ export class CodxEsService {
       'EmailTemplatesBusiness',
       'AddEmaiTemplateAsync',
       [data, sendTo]
+    );
+  }
+
+  addOrEditSignArea(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'AddOrEditAsync',
+      data
     );
   }
   //#endregion

@@ -26,19 +26,24 @@ import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
+import { I } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
 export class AssignInfoComponent implements OnInit {
+<<<<<<< HEAD
   @ViewChild('attachment') attachment: AttachmentComponent
+=======
+  @ViewChild('attachment') attachment: AttachmentComponent;
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
   readOnly = false;
   listUser: any[];
-  listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
-  listUserDetail: any[];
+  idUserSelected: string;
+  listUserDetail: any[] = [];
   listTodo: TaskGoal[];
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
@@ -47,12 +52,20 @@ export class AssignInfoComponent implements OnInit {
   param: any;
   task: TM_Tasks = new TM_Tasks();
   functionID: string;
-  @Input('viewBase') viewBase: ViewsComponent;
+  popover: any;
   title = 'Giao việc';
   dialog: any;
+<<<<<<< HEAD
   vllShare = "TM003"
   vllRole = 'TM001'
   listRoles = []
+=======
+  vllShare = 'TM003';
+  vllRole = 'TM001';
+  listRoles = [];
+  isHaveFile= false;
+
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -72,18 +85,29 @@ export class AssignInfoComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+<<<<<<< HEAD
     this.cache.valueList(this.vllRole).subscribe(res => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas
+=======
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
       }
     });
   }
 
   ngOnInit(): void {
+<<<<<<< HEAD
     if (!this.task.taskID)
       this.setDefault();
     else
       this.openInfo();
+=======
+    if (!this.task.taskID) this.setDefault();
+    else this.openInfo();
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   }
 
   setDefault() {
@@ -93,6 +117,7 @@ export class AssignInfoComponent implements OnInit {
         'TM_Tasks',
         'taskID',
       ])
+<<<<<<< HEAD
       .subscribe(
         (response: any) => {
           if (response) {
@@ -112,25 +137,59 @@ export class AssignInfoComponent implements OnInit {
   showPanel() {
 
   }
+=======
+      .subscribe((response: any) => {
+        if (response) {
+          response['_uuid'] = response['taskID'] ?? Util.uid();
+          response['idField'] = 'taskID';
+          response['isNew'] = function () {
+            return response[response.taskID] != response['_uuid'];
+          };
+          response['taskID'] = response['_uuid'];
+          this.task = response;
+          this.openInfo();
+        }
+      });
+  }
+
+  showPanel() {}
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   closePanel() {
-    this.dialog.close()
+    this.dialog.close();
   }
 
   openInfo() {
     this.listUser = [];
-    this.listMemo2OfUser = [];
-    this.listTodo = [];
-    // this.task = taskAction;
-    if (this.task.memo == null) this.task.memo = '';
     this.listTaskResources = [];
-    //this.functionID = "TMT02"
-    // if(this.task.assignTo !=null || this.task.assignTo !=""){
-    //   this.listUser =  this.task.assignTo.split(";");
-    //   this.listUser.forEach((u) => {
-    //     var obj = { userID: u.userID, memo2: null };
-    //     this.listMemo2OfUser.push(obj);
-    //   });
-    // }
+    if (this.task.memo == null) this.task.memo = '';
+    if (this.task.assignTo != null && this.task.assignTo != '') {
+      this.listUser = this.task.assignTo.split(';');
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskResourcesBusiness',
+          'GetListTaskResourcesByTaskIDAsync',
+          this.task.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.listTaskResources = res;
+          }
+        });
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListUserDetailAsync',
+          this.task.assignTo
+        )
+        .subscribe((res) => {
+          this.listUserDetail = this.listUserDetail.concat(res);
+        });
+    }
+
     this.changeDetectorRef.detectChanges();
   }
   openTask() { }
@@ -149,6 +208,7 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
+<<<<<<< HEAD
   changeUser(e) {
     this.listMemo2OfUser = [];
     this.listUser = [];
@@ -159,13 +219,28 @@ export class AssignInfoComponent implements OnInit {
     } else if (this.task.assignTo != null && this.task.assignTo != '') {
       this.task.assignTo += ';' + assignTo;
     } else this.task.assignTo = assignTo;
+=======
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
 
-    this.listUser = this.task.assignTo.split(';');
-    this.listUser.forEach((u) => {
-      var obj = { userID: u.userID, memo2: null };
-      this.listMemo2OfUser.push(obj);
-    });
-  }
+  // changeUser(e) {
+  //   this.listTaskResources = [];
+  //   this.listUser = [];
+  //   var assignTo = e.data.join(';')
+  //   if (e.data.length == 0) {
+  //     this.task.assignTo = '';
+  //     return ;
+  //   } else if (this.task.assignTo != null && this.task.assignTo != '') {
+  //     this.task.assignTo += ';' + assignTo;
+  //   } else this.task.assignTo = assignTo;
+
+  //   this.listUser = this.task.assignTo.split(';');
+  //   this.listUser.forEach((u) => {
+  //      var taskResource = new tmpTaskResource() ;
+  //      taskResource.resourceID = u;
+  //      taskResource.roleType ="R" ;
+  //     this.listTaskResources.push(taskResource);
+  //   });
+  // }
 
   saveAssign(id, isContinue) {
     if (this.task.assignTo == null || this.task.assignTo == '') {
@@ -173,22 +248,31 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('T0001');
       return;
     }
+<<<<<<< HEAD
     this.convertToListTaskResources();
     this.attachment.saveFiles();
+=======
+    if(this.isHaveFile)
+    this.attachment.saveFiles();
+
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
     this.tmSv
-      .saveAssign([
-        this.task,
-        this.functionID,
-        this.listTaskResources,
-        this.listTodo,
-      ])
+      .saveAssign([this.task, this.functionID, this.listTaskResources, null])
       .subscribe((res) => {
         if (res && res.length) {
+<<<<<<< HEAD
           this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
           this.dialog.dataService.setDataSelected(res[0]);
           this.dialog.dataService.afterSave.next(res);
           this.changeDetectorRef.detectChanges();
           this.dialog.close();
+=======
+          // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
+          // this.dialog.dataService.setDataSelected(res[0]);
+          // this.dialog.dataService.afterSave.next(res);
+          // this.changeDetectorRef.detectChanges();
+          this.dialog.close(res);
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
           this.notiService.notifyCode('TM006');
           if (!isContinue) {
             this.closePanel();
@@ -203,8 +287,8 @@ export class AssignInfoComponent implements OnInit {
 
   onDeleteUser(userID) {
     var listUser = [];
-    var listMemo2OfUser = [];
     var listUserDetail = [];
+    var listTaskResources = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
       if (this.listUser[i] != userID) {
         listUser.push(this.listUser[i]);
@@ -212,13 +296,13 @@ export class AssignInfoComponent implements OnInit {
       if (this.listUserDetail[i].userID != userID) {
         listUserDetail.push(this.listUserDetail[i]);
       }
-      if (this.listMemo2OfUser[i]?.userID != userID) {
-        listMemo2OfUser.push(this.listMemo2OfUser[i]);
+      if (this.listTaskResources[i]?.resourceID != userID) {
+        listTaskResources.push(this.listTaskResources[i]);
       }
     }
     this.listUser = listUser;
     this.listUserDetail = listUserDetail;
-    this.listMemo2OfUser = listMemo2OfUser;
+    this.listTaskResources = listTaskResources;
 
     var assignTo = '';
     if (listUser.length > 0) {
@@ -229,26 +313,13 @@ export class AssignInfoComponent implements OnInit {
       this.task.assignTo = assignTo;
     } else this.task.assignTo = '';
   }
-  convertToListTaskResources() {
-    var listTaskResources: tmpTaskResource[] = [];
-    this.listMemo2OfUser.forEach((obj) => {
-      var tmpTR = new tmpTaskResource();
-      tmpTR.resourceID = obj.userID;
-      tmpTR.memo = obj.memo2;
-      tmpTR.roleType = 'R';
-      listTaskResources.push(tmpTR);
-    });
-    this.listTaskResources = listTaskResources;
-  }
 
   resetForm() {
     this.listUser = [];
-    this.listMemo2OfUser = [];
     this.listUserDetail = [];
     this.listTaskResources = [];
-    this.listTodo = [];
-    this.task = new TM_Tasks();
-    this.task.status = '1';
+    this.setDefault();
+    // this.task.status = '1';
   }
 
   addFile(evt: any) {
@@ -258,7 +329,11 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
+<<<<<<< HEAD
 
+=======
+    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -272,7 +347,11 @@ export class AssignInfoComponent implements OnInit {
           listUserID += obj.id + ';';
           break;
         case 'D':
+<<<<<<< HEAD
           listDepartmentID += obj.id + ";";
+=======
+          listDepartmentID += obj.id + ';';
+>>>>>>> e744600e4e482087682c732f6cea9c22afc6a895
           break;
       }
       //  }
@@ -317,16 +396,18 @@ export class AssignInfoComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
+
   getListUser(listUser) {
-    // this.listMemo2OfUser = [];
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
     arrUser.forEach((u) => {
-      var obj = { userID: u.userID, memo2: null };
-      this.listMemo2OfUser.push(obj);
+      var taskResource = new tmpTaskResource();
+      taskResource.resourceID = u;
+      taskResource.roleType = 'R';
+      this.listTaskResources.push(taskResource);
     });
     this.api
       .execSv<any>(
@@ -339,5 +420,22 @@ export class AssignInfoComponent implements OnInit {
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
       });
+  }
+  showPopover(p, userID) {
+    this.idUserSelected = userID;
+    p.open();
+    this.popover = p;
+  }
+  hidePopover(p) {
+    p.close();
+  }
+
+  selectRoseType(idUserSelected, value) {
+    let index = this.listTaskResources.findIndex(
+      (u) => (u.resourceID = idUserSelected)
+    );
+    if (index != 1) {
+      this.listTaskResources[index].roleType = value;
+    }
   }
 }

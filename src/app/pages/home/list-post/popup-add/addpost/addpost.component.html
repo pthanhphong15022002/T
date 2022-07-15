@@ -8,7 +8,7 @@
                         </codx-img>
                     </div>
                     <div class="ms-2 ">
-                        <div class="float-left">
+                        <div class="d-flex flex-column">
                             <div class="user-name fw-bold">{{user.userName}}</div>
                             <div class="ms-2">
                                 <ng-container *ngIf="lstRecevier.length > 0">
@@ -42,7 +42,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start "
                             (click)="openFormShare(controlShare)">
-                            <div class="bg-secondary rounded-1 px-1 d-flex align-items-center">
+                            <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
                                 <span class="symbol symbol-12px symbol-circle">
                                     <img
                                         src="assets/themes/sys/default/img/{{(objectType | vll:'L1901' : 'icon' | async)}}" />
@@ -113,16 +113,15 @@
 </codx-form>
 <ng-template #create>
     <div class="my-3">
-       <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}"
-                (valueChange)="valueChange($event)">
+        <div>
+            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
             </codx-input>
        </div>
-        <div>
-            <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+        <div *ngIf="images">
+            <codx-file [images]="images" [showBtnRemove]='true'></codx-file>
         </div>
-        <div>
+        <div class="d-none">
             <codx-attachment #atmCreate 
                 objectType="WP_Comments" 
                 hideFolder="1" hideUploadBtn="1"
@@ -133,6 +132,16 @@
                 [functionID]="dialogRef.formModel.funcID">
             </codx-attachment>
         </div>
+        <div *ngIf="files">
+            <ng-container *ngFor="let file of files">
+                <codx-temp-full  
+                    imageSrc="{{file.extension | fileName}}" 
+                    imgCss="w-20px me-3 cursor-pointer" 
+                    title="{{file.fileName}}"        
+                    [descLine]="1">
+                </codx-temp-full>
+            </ng-container>
+        </div>
     </div>                  
 </ng-template>
 
@@ -140,51 +149,37 @@
     <ng-container *ngIf="dataEdit">
         <div class="my-3">
             <div>
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                    [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}"
-                    (valueChange)="valueChange($event)">
+                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
+                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
             <div *ngIf="dataEdit.isUploadImg">
-                <codx-image-grid [images]="dataEdit.images" [showBtnRemove]='true'></codx-image-grid>
+                <codx-file [images]="dataEdit.images" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="dataEdit.isUploadFile">
-                <codx-attachment #atmCreate 
-                    objectType="WP_Comments" 
-                    [objectId]="dataEdit.recID"
-                    hideFolder="1" hideUploadBtn="1"
-                    hideDes="1" type="inline" 
-                    allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getfileCount($event)"
-                    idBrowse="atmCreate"
-                    [functionID]="dialogRef.formModel.funcID">
+                <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit.recID" hideFolder="1"
+                    hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
+                    (fileCount)="getfileCount($event)" idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
                 </codx-attachment>
             </div>
-        </div>    
-    </ng-container>       
+        </div>
+    </ng-container>
 </ng-template>
 
 <ng-template #share>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                [crrValue]="message" placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}"
-                (valueChange)="valueChange($event)">
+            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
             </codx-input>
         </div>
         <div *ngIf="isUploadImg">
-            <codx-image-grid [images]="listFileUpload"></codx-image-grid>
+            <codx-file [images]="listFileUpload"></codx-file>
         </div>
         <div>
-            <codx-attachment #atmCreate 
-                objectType="WP_Comments" 
-                [objectId]="dataEdit?.recID"
-                hideFolder="1" hideUploadBtn="1"
-                hideDes="1" type="inline" 
-                allowExtensions=".jpg,.png" allowMultiFile="1"
-                (fileCount)="getfileCount($event)"
-                idBrowse="atmCreate"
-                [functionID]="dialogRef.formModel.funcID">
+            <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit?.recID" hideFolder="1"
+                hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
+                (fileCount)="getfileCount($event)" idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
             </codx-attachment>
         </div>
         <div class="border ndchiase p-4 mt-3">
@@ -206,28 +201,21 @@
                         <read-more #readmore [content]="dataShare?.content" [limit]="800" [completeWords]="true">
                         </read-more>
                     </div>
-            
+
                     <ng-container *ngIf="dataShare.isUpload">
                         <div class="pic-feed">
                             <ng-container *ngIf="dataShare.isUploadImg">
                                 <div class="pic-feed-img">
-                                    <codx-image-grid [images]="dataShare.images"></codx-image-grid>
+                                    <codx-file [images]="dataShare.images"></codx-file>
                                 </div>
                             </ng-container>
                             <ng-container *ngIf="dataShare.isUploadVideo">
                                 <video src="#"></video>
                             </ng-container>
                             <ng-container *ngIf="dataShare.isUploadFile">
-                                <codx-attachment 
-                                    [objectId]="dataShare.recID" 
-                                    idBrowse="atmView"
-                                    objectType="WP_Comments" 
-                                    hideFolder="1" 
-                                    hideUploadBtn="1"
-                                    hideDes="1" 
-                                    type="inline" 
-                                    allowExtensions=".jpg,.png"
-                                    >
+                                <codx-attachment [objectId]="dataShare.recID"   idBrowse="atmView"
+                                    objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
+                                    allowExtensions=".jpg,.png">
                                 </codx-attachment>
                             </ng-container>
                         </div>
@@ -242,20 +230,23 @@
                         style="background-size: 100% auto;">
                         <div class="card-body card-custom-img-body ">
                             <div color="bg-transparent" class="ion-margin-vertical padding-start-0">
-                                <h2 class="fw-bolder mb-6 mt-3" [ngStyle]="{'color':dataShare?.card?.pattern?.headerColor}">
+                                <h2 class="fw-bolder mb-6 mt-3"
+                                    [ngStyle]="{'color':dataShare?.card?.pattern?.headerColor}">
                                     {{dataShare?.card?.cardType | vll:'L1422':'text' | async}}
                                 </h2>
                             </div>
                             <div class="d-flex align-items-center ion-wrap mar-auto">
                                 <div *ngIf="dataShare?.card.senderID">
-                                    <codx-img [width]="40" [objectId]=" dataShare?.card?.senderID" objectType="AD_Users">
+                                    <codx-img [width]="40" [objectId]=" dataShare?.card?.senderID"
+                                        objectType="AD_Users">
                                     </codx-img>
                                 </div>
                                 <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
                                     <img src="../../../../assets/img/mail.png" class="icon-mail ion-margin-top-8" />
                                 </div>
                                 <div *ngIf="dataShare?.card?.receiverID">
-                                    <codx-img [width]="40" [objectId]="dataShare?.card?.receiverID" objectType="AD_Users">
+                                    <codx-img [width]="40" [objectId]="dataShare?.card?.receiverID"
+                                        objectType="AD_Users">
                                     </codx-img>
                                 </div>
                             </div>
@@ -264,10 +255,10 @@
                                     [completeWords]="true">
                                 </read-more>
                             </div>
-            
-            
+
+
                             <div class="d-flex align-items-center group-hasGift mt-6">
-            
+
                                 <div class="d-flex align-items-center ion-wrap me-2"
                                     *ngIf="dataShare?.card?.cardType=='2' || dataShare?.card?.cardType =='3'">
                                     <div class="me-2">
@@ -277,10 +268,11 @@
                                 </div>
                                 <div class="d-flex align-items-center ion-wrap mar-auto"
                                     *ngIf="dataShare?.card?.hasGift || dataShare?.card?.hasPoint">
-                                    <img src="../../../../assets/img/feedback/gift 1.png" *ngIf="dataShare?.card?.hasGift"
+                                    <img src="../../../../assets/img/feedback/gift 1.png"
+                                        *ngIf="dataShare?.card?.hasGift"
                                         class="symbol-image icon-surface1 h-30px me-1" />
-                                    <img src="../../../../assets/img/feedback/money-1.png" *ngIf="dataShare?.card?.hasPoint"
-                                        class="symbol-image icon-money-1 h-30px" />
+                                    <img src="../../../../assets/img/feedback/money-1.png"
+                                        *ngIf="dataShare?.card?.hasPoint" class="symbol-image icon-money-1 h-30px" />
                                 </div>
                             </div>
                         </div>
@@ -303,35 +295,17 @@
             <div class="pic-feed">
                 <ng-container *ngIf="item.isUploadImg">
                     <div class="pic-feed-img">
-                        <codx-image-grid [images]="item.lstImage"></codx-image-grid>
+                        <codx-file [images]="item.lstImage"></codx-file>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadVideo">
                     <video src="#"></video>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
-                    <codx-attachment 
-                        [objectId]="item.recID" 
-                        idBrowse="atmView"
-                        objectType="WP_Comments" 
-                        hideFolder="1" 
-                        hideUploadBtn="1"
-                        hideDes="1" 
-                        type="inline" 
-                        allowExtensions=".jpg,.png"
-                        >
+                    <codx-attachment [objectId]="item.recID"   idBrowse="atmView" objectType="WP_Comments"
+                        hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png">
                     </codx-attachment>
                 </ng-container>
-                <!-- <codx-attachment 
-                    [objectId]="item.recID" 
-                    objectType="WP_Comments" hideFolder="1" 
-                    hideUploadBtn="1"
-                    hideDes="1" 
-                    type="inline" 
-                    idBrowse="btn2"
-                    allowExtensions=".jpg,.png" 
-                    [functionID]="codxViews.formModel.funcID">
-                </codx-attachment> -->
             </div>
         </ng-container>
     </ng-container>
@@ -362,8 +336,7 @@
                     </div>
                 </div>
                 <div class="text-dark text-feed mt-6">
-                    <read-more #readmore2 [content]="item?.card?.situation" [limit]="800"
-                        [completeWords]="true">
+                    <read-more #readmore2 [content]="item?.card?.situation" [limit]="800" [completeWords]="true">
                     </read-more>
                 </div>
 

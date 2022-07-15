@@ -192,7 +192,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.recIDTodoDelete += this.listTodo[index].recID + ';';
     }
     this.listTodo.splice(index, 1); //remove element from array
-    if (this.listTodo.length == 0) this.isCheckCheckListControl = false;
+    if (this.listTodo.length == 0) this.isCheckCheckListTrue = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -361,7 +361,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.isCheckAttachmentTrue;
 
       if (!checkLogic) {
-        if (!this.isCheckCheckListTrue)
+        if (!this.isCheckAttachmentTrue)
           //  this.notiService.notifyCode('code nao vao day ??');
           this.notiService.notify('File tài liệu không được để trống');
         if (!this.isCheckProjectTrue)
@@ -448,10 +448,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          res.update.forEach(obj=>{
-            this.dialog.dataService.update(obj).subscribe();
-          }) 
-          this.dialog.close(res.update[0]);
+          // res.update.forEach(obj=>{
+          //   this.dialog.dataService.update(obj).subscribe();
+          // }) 
+          this.dialog.close(res.update);
           // this.notiService.notifyCode('E0528');
         }
       });

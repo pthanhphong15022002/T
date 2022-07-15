@@ -173,7 +173,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: "create",
       title: "Tạo bài viết",
     }
-    this.dt.detectChanges()
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
@@ -230,9 +229,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   getTagUser(id) {
     this.api
-      .exec<any>('ERM.Business.WP', 'CommentBusiness', 'GetTagUserListAsync', [
-        id,
-      ])
+      .execSv("WP","ERM.Business.WP", "CommentBusiness", "GetTagUserListAsync", id)
       .subscribe((res) => {
         if (res) this.tagUsers = res;
       });
