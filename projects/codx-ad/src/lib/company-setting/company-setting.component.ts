@@ -117,31 +117,12 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
 
     })
   }
-<<<<<<< HEAD
-=======
-
-  // clickEditPersonal(data: any) {
-  //   var obj = {
-  //     post: data,
-  //     title: "Chia sẻ bài viết"
-  //   }
-  //   this.changeDetectorRef.detectChanges()
-  //   let option = new DialogModel();
-  //   option.DataService = this.listview.dataService as CRUDService;
-  //   option.FormModel = this.listview.formModel;
-  //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
-  //   this.modal.closed.subscribe();
-  // }
->>>>>>> 5aa74bd75ef8ed85087e715b01181f2c60b811b3
 
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
-<<<<<<< HEAD
-=======
         // this.data.companyCode.toString().toLowerCase();
->>>>>>> 5aa74bd75ef8ed85087e715b01181f2c60b811b3
         this.detectorRef.detectChanges()
       }
     })
