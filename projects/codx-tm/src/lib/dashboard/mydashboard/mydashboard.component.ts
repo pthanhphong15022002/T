@@ -170,6 +170,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         this.taskOfDay = res;
         console.log(this.taskOfDay);
+        this.detectorRef.detectChanges();
       });
   }
 

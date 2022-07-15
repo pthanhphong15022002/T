@@ -28,7 +28,7 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { TreeMapModule, TreeMapTooltipService } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -210,6 +210,7 @@ const T_Component: Type<any>[] = [
   exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [TreeMapTooltipService]
 })
 export class TMModule {
   public static forRoot(
