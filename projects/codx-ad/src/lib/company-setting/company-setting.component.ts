@@ -84,23 +84,17 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
         active: true,
         sameData: false,
         model: {
-<<<<<<< HEAD
-=======
           // template: this.template,
 
->>>>>>> 5aa74bd75ef8ed85087e715b01181f2c60b811b3
           panelRightRef: this.paneleft,
         },
       },
     ];
-<<<<<<< HEAD
-=======
 
 
   }
   valueChange(e) {
 
->>>>>>> 5aa74bd75ef8ed85087e715b01181f2c60b811b3
   }
   clickEditContact(data) {
     this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "", data);
