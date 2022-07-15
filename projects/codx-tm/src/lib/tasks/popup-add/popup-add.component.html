@@ -75,7 +75,7 @@
             </div>
             <div class="form-group mt-3">
               <label>
-                <codx-label name="TaskGroups" formName="Tasks" default="Nhóm triển khai">
+                <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
                 </codx-label>
               </label>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
@@ -169,7 +169,7 @@
                 </ng-container>
               </div>
             </ng-container>
-            <div class="d-flex align-items-center justify-content-between mt-6">
+            <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
               <div class="d-flex align-items-center mb-3">
                 <span class="icon-attach icon-24 me-2 text-primary"></span>
                 <div class="fw-bold fs-6 text-primary">
@@ -177,9 +177,9 @@
                     default="Tài liệu đính kèm"></codx-label>
                 </div>
               </div>
-              <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">
+              <!-- <button (click)="addFile($event)" class="btn btn-sm btn-light-primary">
                 <codx-label name="AddFile" formName="Tasks" default="Thêm file"></codx-label>
-              </button>
+              </button> -->
             </div>
 
             <div>
