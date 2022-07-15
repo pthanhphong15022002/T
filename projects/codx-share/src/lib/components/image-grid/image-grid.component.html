@@ -1,5 +1,5 @@
-<ng-container *ngIf="images.length">
-  <div [ngSwitch]="images.length" class="position-relative">
+<ng-container *ngIf="images?.length">
+  <div [ngSwitch]="images?.length" class="position-relative">
     <ng-container *ngIf="showBtnRemove">
       <label (click)="removeImg()"
         class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -10,7 +10,7 @@
     <ng-container *ngSwitchCase="1">
       <div class="feed-1pic">
         <ng-container *ngIf="images[0]">
-          <img class="w-100 rounded min-h-250px" [src]="images[0].avatar" />
+          <img class="w-100 rounded min-h-250px" [src]="images[0]?.avatar" />
         </ng-container>
         <ng-template #else0>
           <video #video controls class="w-100">
@@ -23,7 +23,7 @@
       <div class="row row-custom feed-2pic m-0">
         <div class="col-7 pe-2 ps-0">
           <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-250px" [src]="images[0].avatar" />
+            <img class="w-100 rounded h-250px" [src]="images[0]?.avatar" />
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100" (click)="openDetail(0)">
@@ -33,7 +33,7 @@
         </div>
         <div class="col-5 px-0">
           <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-250px" [src]="images[1].avatar" />
+            <img class="w-100 rounded h-250px" [src]="images[1]?.avatar" />
           </ng-container>
           <ng-template #else1>
             <video #video controls class="w-100">
@@ -47,7 +47,7 @@
       <div class="row row-custom feed-3pic m-0">
         <div class="col-7 ps-0 pe-2">
           <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-320px" [src]="images[0].avatar" />
+            <img class="w-100 rounded h-320px" [src]="images[0]?.avatar" />
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100">
@@ -57,7 +57,7 @@
         </div>
         <div class="col-5 px-0">
           <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
+            <img class="w-100 rounded h-150px" [src]="images[1]?.avatar" />
           </ng-container>
           <ng-template #else1>
             <video #video controls class="w-100">
@@ -65,7 +65,7 @@
             </video>
           </ng-template>
           <ng-container *ngIf="images[2]">
-            <img class="w-100 rounded h-150px mt-2" [src]="images[2].avatar" />
+            <img class="w-100 rounded h-150px mt-2" [src]="images[2]?.avatar" />
           </ng-container>
           <ng-template #else2>
             <video #video controls class="w-100 mt-2">
@@ -79,7 +79,7 @@
       <div class="row row-custom feed-4pic m-0">
         <div class="col-5 pe-2">
           <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-320px" [src]="images[0].avatar" />
+            <img class="w-100 rounded h-320px" [src]="images[0]?.avatar" />
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100 h-320px">
@@ -89,7 +89,7 @@
         </div>
         <div class="col-7 px-0">
           <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
+            <img class="w-100 rounded h-150px" [src]="images[1]?.avatar" />
           </ng-container>
           <ng-template #else1>
             <video (click)="openDetail(1)" #video controls class="w-100 h-150px">
@@ -99,7 +99,7 @@
           <div class="row row-custom mt-2 mx-0">
             <div class="col-6 ps-0 pe-2">
               <ng-container *ngIf="images[2]">
-                <img class="w-100 rounded h-150px" [src]="images[2].avatar" />
+                <img class="w-100 rounded h-150px" [src]="images[2]?.avatar" />
               </ng-container>
               <ng-template #else2>
                 <video #video controls class="w-100 h-150px">
@@ -109,7 +109,7 @@
             </div>
             <div class="col-6 px-0">
               <ng-container *ngIf="images[3]">
-                <img class="w-100 rounded h-150px" [src]="images[3].avatar" />
+                <img class="w-100 rounded h-150px" [src]="images[3]?.avatar" />
               </ng-container>
               <ng-template #else3>
                 <video #video controls class="w-100 h-150px">
@@ -125,7 +125,7 @@
       <div class="row row-custom feed-5pic m-0">
         <div class="col-7 ps-0 pe-2">
           <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-150px" [src]="images[0].avatar" />
+            <img class="w-100 rounded h-150px" [src]="images[0]?.avatar" />
           </ng-container>
           <ng-template #else0>
             <video #video controls class="w-100 h-150px">
@@ -135,7 +135,7 @@
           <div class="row row-custom mt-2 mx-0">
             <div class="col-6 ps-0 pe-2">
               <ng-container *ngIf="images[1]">
-                <img class="w-100 rounded h-150px" [src]="images[1].avatar" />
+                <img class="w-100 rounded h-150px" [src]="images[1]?.avatar" />
               </ng-container>
               <ng-template #else1>
                 <video #video controls class="w-100 h-150px">
@@ -145,7 +145,7 @@
             </div>
             <div class="col-6 px-0">
               <ng-container *ngIf="images[2]">
-                <img class="w-100 rounded h-150px" [src]="images[2].avatar" />
+                <img class="w-100 rounded h-150px" [src]="images[2]?.avatar" />
               </ng-container>
               <ng-template #else2>
                 <video #video controls class="w-100 h-150px">
@@ -157,7 +157,7 @@
         </div>
         <div class="col-5 px-0">
           <ng-container *ngIf="images[3]">
-            <img class="w-100 rounded h-150px" [src]="images[3].avatar" />
+            <img class="w-100 rounded h-150px" [src]="images[3]?.avatar" />
           </ng-container>
           <ng-template #else3>
             <video #video controls class="w-100 h-150px">
@@ -165,16 +165,16 @@
             </video>
           </ng-template>
           <ng-container *ngIf="images[4]">
-            <img class="w-100 rounded h-150px mt-2" [src]="images[4].avatar" />
+            <img class="w-100 rounded h-150px mt-2" [src]="images[4]?.avatar" />
           </ng-container>
           <ng-template #else4>
             <video #video controls class="w-100 h-150px">
               <!-- <source [src]="images[4].avatar" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images.length - 5 > 0">
+          <ng-container *ngIf="images?.length - 5 > 0">
             <div class="overlay-wrapper-opacity rounded feed-img-more h-150px">
-              <span class="text-number">+ {{images.length - 5}}</span>
+              <span class="text-number">+ {{images?.length - 5}}</span>
             </div>
           </ng-container>
         </div>

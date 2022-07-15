@@ -109,7 +109,8 @@ export class IncommingComponent
     this.callfunc = inject.get(CallFuncService);
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
-    this.codxService = inject.get(CodxService);
+    // this.codxService = inject.get(CodxService);
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void { }
