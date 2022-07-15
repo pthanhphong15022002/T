@@ -54,7 +54,7 @@
             <div *ngIf="note?.noteType == 'text'">
                 <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
                     (valueChange)="valueChange($event)" [crrValue]="note?.memo" class="test-textarea">
-                </codx-input>                
+                </codx-input>
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
@@ -84,14 +84,17 @@
 
         <div class="mb-3">
             <div *ngIf="formType == 'edit'">
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                <codx-attachment #attachmentEdit objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
                     hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
                     allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                 </codx-attachment>
+                <div *ngIf="attachmentEdit?.data">
+                    <codx-file [images]="attachmentEdit?.data" [showBtnRemove]='true'></codx-file>
+                </div>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
-                    <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+                    <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file>
                 </div>
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"

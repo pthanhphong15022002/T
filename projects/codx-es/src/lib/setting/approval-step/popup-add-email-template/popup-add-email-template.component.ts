@@ -105,7 +105,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   onSaveForm(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
-      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 300);
+      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
     } else {
       this.onSaveForm1(dialog);
     }
@@ -258,12 +258,25 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  focusOutFunction() {
-    alert('event');
-  }
-
   close2(dialog: DialogRef) {
     dialog.close();
+  }
+
+  testdata(share) {
+    this.callFunc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(event, sendType) {
+    if (event[0].id) {
+      switch (event[0].objectType) {
+        case 'U':
+          let lstID = event[0].id.split(';');
+          let lstUserName = event[0].text.split(';');
+
+          for (let i = 0; i < lstID?.length; i++) {}
+          break;
+      }
+    }
   }
 }
 

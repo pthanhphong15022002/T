@@ -84,10 +84,9 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         var type = res[0]?.type;
         if (this.lstView) {
           if (type == 'add') {
-            (this.lstView.dataService as CRUDService).add(data).subscribe(dt => {
-              this.WP_Notes.push(data);
-              this.setEventWeek();
-            });
+            (this.lstView.dataService as CRUDService).load().subscribe();
+            this.WP_Notes.push(data);
+            this.setEventWeek();
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes = this.WP_Notes.filter(x => x.recID != data.recID);

@@ -3,8 +3,8 @@
     idField="recID">
 </codx-views>
 <ng-template #panelLeftRef>
-    <ng-container *ngIf="isShowCreate">
-        <div class="card card-custom post-new">
+    <ng-container *ngIf="isShowCreate" >
+        <div class="card card-custom post-new" id="postnew">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="me-3">
@@ -22,13 +22,19 @@
             </div>
         </div>
     </ng-container>
-    <div class="newfeed">
-        <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue"
-            [itemTemplate]="tmpPortal" #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP"
-            class="h-100" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
-            [itemTemplateLoading]="templateloading" [formModel]="codxViews.formModel">
-        </codx-listview>
-    </div>
+    <div class="hover-scroll-overlay-y mb-5" data-kt-scroll="true"
+        data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies="body"
+        data-kt-scroll-wrappers="#newfeed" data-kt-scroll-offset="0">
+            <div id="newfeed">
+                <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue"
+                    [itemTemplate]="tmpPortal" #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP"
+                    class="h-100" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
+                    [itemTemplateLoading]="templateloading" [formModel]="codxViews.formModel">
+                </codx-listview>
+            </div>
+    </div> 
+    
 </ng-template>
 
 <ng-template #tmpPortal let-item>
@@ -184,7 +190,7 @@
             <div class="pic-feed">
                 <ng-container *ngIf="item.isUploadImg">
                     <div class="pic-feed-img">
-                        <codx-image-grid [images]="item.images"></codx-image-grid>
+                        <codx-file [images]="item.images"></codx-file>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
@@ -269,7 +275,7 @@
 <!-- tooltip for tagUser -->
 <ng-template #popContent style="width: fit-content; height: fit-content;">
     <div *ngIf="show()">
-        <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
+        <div *ngFor="let tagUser of tagUsers">
             <div class="row" style="margin-top: 10px;margin-bottom: 10px;margin-left: -10px;">
                 <div class="col-md-2">
                     <codx-img class="symbol symbol-40px symbol-circle me-3" [objectId]="tagUser.objectID"
