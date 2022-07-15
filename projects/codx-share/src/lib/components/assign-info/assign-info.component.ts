@@ -132,17 +132,17 @@ export class AssignInfoComponent implements OnInit {
             this.listTaskResources = res;
           }
         });
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListUserDetailAsync',
-          this.task.assignTo
-        )
-        .subscribe((res) => {
-          this.listUserDetail = this.listUserDetail.concat(res);
-        });
+      // this.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'ERM.Business.TM',
+      //     'TaskBusiness',
+      //     'GetListUserDetailAsync',
+      //     this.task.assignTo
+      //   )
+      //   .subscribe((res) => {
+      //     this.listUserDetail = this.listUserDetail.concat(res);
+      //   });
     }
 
     this.changeDetectorRef.detectChanges();
@@ -324,12 +324,12 @@ export class AssignInfoComponent implements OnInit {
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
-    arrUser.forEach((u) => {
-      var taskResource = new tmpTaskResource();
-      taskResource.resourceID = u;
-      taskResource.roleType = 'R';
-      this.listTaskResources.push(taskResource);
-    });
+    // arrUser.forEach((u) => {
+    //   var taskResource = new tmpTaskResource();
+    //   taskResource.resourceID = u;
+    //   taskResource.roleType = 'R';
+    //   this.listTaskResources.push(taskResource);
+    // });
     this.api
       .execSv<any>(
         'TM',
@@ -339,24 +339,37 @@ export class AssignInfoComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
+        if(res&&res.length>0){
+         for(var i=0; i<res.length;i++){
+           let emp = res[i] ;
+            var taskResource = new tmpTaskResource();
+            taskResource.resourceID = emp.userID;
+            taskResource.resourceName = emp.userName;
+            taskResource.position = emp.positionName;
+            taskResource.roleType = 'R';
+            this.listTaskResources.push(taskResource);
+          };
+        }
+        // this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
   showPopover(p, userID) {
     this.idUserSelected = userID;
+    if(p.isOpen()) p.close()
     p.open();
-    this.popover = p;
+  
   }
   hidePopover(p) {
     p.close();
   }
 
-  selectRoseType(idUserSelected, value) {
+  selectRoseType(value) {
     let index = this.listTaskResources.findIndex(
-      (u) => (u.resourceID = idUserSelected)
+      (u) => (u.resourceID == this.idUserSelected)
     );
     if (index != 1) {
       this.listTaskResources[index].roleType = value;
     }
+    this.changeDetectorRef.detectChanges()
   }
 }
