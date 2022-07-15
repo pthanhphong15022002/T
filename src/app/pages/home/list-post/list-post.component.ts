@@ -173,9 +173,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: "create",
       title: "Tạo bài viết",
     }
-    this.dt.detectChanges()
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
     this.modal.closed.subscribe();
@@ -187,7 +186,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       title: "Chỉnh sửa bài viết"
     }
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 
@@ -230,9 +229,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   getTagUser(id) {
     this.api
-      .exec<any>('ERM.Business.WP', 'CommentBusiness', 'GetTagUserListAsync', [
-        id,
-      ])
+      .execSv("WP","ERM.Business.WP", "CommentBusiness", "GetTagUserListAsync", id)
       .subscribe((res) => {
         if (res) this.tagUsers = res;
       });

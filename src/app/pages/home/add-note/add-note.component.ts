@@ -65,10 +65,13 @@ export class AddNoteComponent implements OnInit {
   checkPin = false;
   empty = "";
   currentDate: any;
+  checkUpdate = false;
+  notePrior: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('attachment') attachment: AttachmentComponent
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentEdit') attachmentEdit: AttachmentComponent;
   @ViewChild("form", { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -93,6 +96,7 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
+      this.notePrior = dt.data?.dataUpdate;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
     }
@@ -113,7 +117,7 @@ export class AddNoteComponent implements OnInit {
 
   ngAfterViewInit() {
     if (this.formType == 'edit') {
-      console.log("check attachment", this.attachment);
+      this.getFileByObjectId();
       this.checkActiveFormEdit();
     }
   }
@@ -277,6 +281,7 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.checkUpdate = true;
           if (this.checkFile == true)
             this.attachment.saveFiles();
           var object = [{ data: res, type: 'edit' }]
@@ -367,7 +372,12 @@ export class AddNoteComponent implements OnInit {
   }
 
   close() {
-
+    var object = [];
+    if (this.checkUpdate == true)
+      object = [{ data: this.note, type: 'empty' }]
+    else
+      object = [{ data: this.notePrior, type: 'noEmpty' }]
+    this.noteService.data.next(object);
     this.dialog.close();
   }
 
@@ -390,11 +400,10 @@ export class AddNoteComponent implements OnInit {
   }
 
   getfile(event: any) {
-    debugger;
     if (!event || event.data.length <= 0) {
       this.isUploadFile = false;
       this.listFileUpload = [];
-      this.dmSV.fileUploadList = []
+      this.dmSV.fileUploadList = [];
       return;
     }
     else {
@@ -403,5 +412,16 @@ export class AddNoteComponent implements OnInit {
       this.listFileUpload = event.data;
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  getFileByObjectId() {
+    this.api.exec<any>(
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectIDImageAsync',
+      this.note.recID
+    ).subscribe((res) => {
+      console.log("check getFileByObjectId", res);
+    })
   }
 }

@@ -1,87 +1,39 @@
 <div class="page-content d-flex flex-row pt-4">
   <div class="w-75 m-2">
     <div class="row bg-body mb-2">
-      <h3>Đánh giá hiệu quả làm việc</h3>
-      <div class="col-lg-3" style="position: relative; height: 350px">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          height="350"
-          [titleStyle]="titleStyle"
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn align-self-end"
+          (mouseenter)="openTooltip()"
+          (mouseleave)="closeTooltip()"
         >
-          <e-axes>
-            <e-axis
-              [lineStyle]="lineStyle"
-              radius="80%"
-              startAngle="230"
-              endAngle="130"
-              minimum="0"
-              maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
-              [minorTicks]="minorTicks"
-            >
-              <e-ranges>
-                <e-range
-                  start="0"
-                  end="150"
-                  radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
-                >
-                </e-range>
-              </e-ranges>
-              <e-pointers>
-                <e-pointer
-                  type="Marker"
-                  [value]="dbData?.availability"
-                  markerShape="Image"
-                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
-                  radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
-                  [animation]="animation1"
-                >
-                </e-pointer>
-              </e-pointers>
-            </e-axis>
-          </e-axes>
-        </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Availability</div>
-          <div>{{ dbData?.availability }}</div>
-        </div>
+          <i class="icon-info text-dark"></i>
+        </button>
       </div>
-      <div class="col-lg-3" style="position: relative; height: 350px">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          height="350"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="100%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
               [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
-                  radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
                 >
                 </e-range>
               </e-ranges>
@@ -91,101 +43,171 @@
                   [value]="dbData?.performance"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
-                  radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
-                  [animation]="animation1"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
                 >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Performance</div>
-          <div>{{ dbData?.performance }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Availability</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.availability.toFixed(2) }}
+          </p>
         </div>
       </div>
-      <div class="col-lg-3" style="position: relative; height: 350px">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          height="350"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="100%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
               [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
-                  radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
                 >
                 </e-range>
               </e-ranges>
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.quality"
+                  [value]="dbData?.performance"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
-                  radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
-                  [animation]="animation1"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
                 >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>Quality</div>
-          <div>{{ dbData?.quality }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Performance</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.performance.toFixed(2) }}
+          </p>
         </div>
       </div>
-      <div class="col-lg-3" style="position: relative; height: 350px">
-        <ejs-circulargauge
-          (load)="load($event)"
-          style="display: block"
-          centerY="57%"
-          height="350"
-          [titleStyle]="titleStyle"
-        >
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
             <e-axis
               [lineStyle]="lineStyle"
-              radius="80%"
+              radius="100%"
               startAngle="230"
               endAngle="130"
               minimum="0"
               maximum="150"
-              [labelStyle]="labelStyle"
-              [majorTicks]="majorTicks"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
               [minorTicks]="minorTicks"
             >
               <e-ranges>
                 <e-range
                   start="0"
                   end="150"
-                  radius="115%"
-                  color="#01aebe"
-                  [startWidth]="rangeWidth"
-                  [endWidth]="rangeWidth"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.performance"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Quality</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.quality.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient2"
+                  startWidth="10"
+                  endWidth="10"
                 >
                 </e-range>
               </e-ranges>
@@ -195,19 +217,30 @@
                   [value]="dbData?.kpi"
                   markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
-                  radius="108%"
-                  [markerWidth]="markerWidth"
-                  [markerHeight]="markerHeight"
-                  [animation]="animation1"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
                 >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="position: absolute; top: 50%; left: 50%">
-          <div>KPI</div>
-          <div>{{ dbData?.kpi }}</div>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">KPI</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.kpi.toFixed(2) }}
+          </p>
         </div>
       </div>
     </div>
@@ -360,14 +393,28 @@
           [objectType]="'AD_Users'"
         ></codx-img>
       </div>
-      <ejs-progressbar
-        #linear
-        id="linear"
-        value="70"
-        [rangeColors]="rangeColors"
-        [isGradient]="isGradient"
-      >
-      </ejs-progressbar>
+      <div class="progress">
+        <div
+          class="progress-bar progress-bar-done"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-success"
+          role="progressbar"
+          style="width: 40%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-postpone"
+          role="progressbar"
+          style="width: 10%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-danger"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
     </div>
   </div>
 </ng-template>

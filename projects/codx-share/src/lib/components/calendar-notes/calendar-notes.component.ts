@@ -61,6 +61,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   toDate: any;
   arrDate: any = [];
   dialog: DialogRef;
+  checkUpdate = false;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -84,10 +85,9 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         var type = res[0]?.type;
         if (this.lstView) {
           if (type == 'add') {
-            (this.lstView.dataService as CRUDService).add(data).subscribe(dt => {
-              this.WP_Notes.push(data);
-              this.setEventWeek();
-            });
+            (this.lstView.dataService as CRUDService).load().subscribe();
+            this.WP_Notes.push(data);
+            this.setEventWeek();
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes = this.WP_Notes.filter(x => x.recID != data.recID);
@@ -98,7 +98,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             if (today) {
               today.click();
             }
-          } else {
+          } else if (type == 'edit') {
             var dt: any = this.lstView.dataService.data[0];
             for (let i = 0; i < this.WP_Notes.length; i++) {
               if (this.WP_Notes[i].recID == dt?.recID) {
@@ -113,7 +113,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
               today.click();
             }
 
-            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            (this.lstView.dataService as CRUDService).load().subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -229,6 +229,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.dataValue = '';
     this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   onValueChange(args: any) {
@@ -239,6 +240,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.dataValue = '';
     this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+    this.changeDetectorRef.detectChanges();
 
 
     let title: string = '';
@@ -394,7 +396,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-top: 6px;'
+          'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
         );
         span2.setAttribute(
           'style',

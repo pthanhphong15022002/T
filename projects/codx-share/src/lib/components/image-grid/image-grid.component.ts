@@ -6,7 +6,7 @@ import 'lodash';
 import { FilesService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
 @Component({
-  selector: 'codx-image-grid',
+  selector: 'codx-file',
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
 })

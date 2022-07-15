@@ -60,12 +60,13 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
+  param :any
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
 
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -200,6 +201,7 @@ export class TasksComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
+    this.getParam()
     this.dt.detectChanges();
   }
   //#region schedule
@@ -353,7 +355,7 @@ export class TasksComponent extends UIComponent {
   }
 
   copy(data) {
-    this.view.dataService.addNew().subscribe((res: any) => {
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
@@ -409,7 +411,7 @@ export class TasksComponent extends UIComponent {
       });
   }
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -431,25 +433,25 @@ export class TasksComponent extends UIComponent {
       option
     );
     this.dialog.closed.subscribe((e) => {
-     if(e?.event){
-      let listTask = e?.event
-      let newTasks =[]
-      for(var i = 0; i<listTask.length ;i++){
-        if(listTask[i].taskID ==data.taskID){
-          this.view.dataService.update(listTask[i]).subscribe();
-          this.view.dataService.setDataSelected(e?.event[0]);
-        }else newTasks.push(listTask[i])
+      if (e?.event) {
+        let listTask = e?.event
+        let newTasks = []
+        for (var i = 0; i < listTask.length; i++) {
+          if (listTask[i].taskID == data.taskID) {
+            this.view.dataService.update(listTask[i]).subscribe();
+            this.view.dataService.setDataSelected(e?.event[0]);
+          } else newTasks.push(listTask[i])
+        }
+        if (newTasks.length > 0) {
+          this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
+          this.view.dataService.afterSave.next(newTasks);
+        }
+        this.dt.detectChanges();
       }
-      if(newTasks.length>0){
-        this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
-        this.view.dataService.afterSave.next(newTasks);
-      }
-      this.dt.detectChanges();
-     }
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -525,10 +527,10 @@ export class TasksComponent extends UIComponent {
                   });
                   this.itemSelected = res[0];
                   this.dt.detectChanges();
-                  this.notiService.notify('Cập nhật trạng thái thành công !');
+                  this.notiService.notifyCode('tm009');
                 } else {
-                  this.notiService.notify(
-                    'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
+                  this.notiService.notifyCode(
+                    'tm008'
                   );
                 }
               });
@@ -560,5 +562,22 @@ export class TasksComponent extends UIComponent {
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
+  }
+
+  getParam(callback = null) {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'TM_Parameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.param = JSON.parse(res.dataValue);
+          return callback && callback(true);
+        }
+      });
   }
 }

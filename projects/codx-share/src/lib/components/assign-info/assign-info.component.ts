@@ -54,13 +54,12 @@ export class AssignInfoComponent implements OnInit {
   vllShare = 'TM003';
   vllRole = 'TM001';
   listRoles = [];
-  isHaveFile= false;
+  isHaveFile = false;
 
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
-    private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
@@ -109,7 +108,7 @@ export class AssignInfoComponent implements OnInit {
       });
   }
 
-  showPanel() {}
+  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
@@ -133,22 +132,22 @@ export class AssignInfoComponent implements OnInit {
             this.listTaskResources = res;
           }
         });
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskBusiness',
-          'GetListUserDetailAsync',
-          this.task.assignTo
-        )
-        .subscribe((res) => {
-          this.listUserDetail = this.listUserDetail.concat(res);
-        });
+      // this.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'ERM.Business.TM',
+      //     'TaskBusiness',
+      //     'GetListUserDetailAsync',
+      //     this.task.assignTo
+      //   )
+      //   .subscribe((res) => {
+      //     this.listUserDetail = this.listUserDetail.concat(res);
+      //   });
     }
 
     this.changeDetectorRef.detectChanges();
   }
-  openTask() {}
+  openTask() { }
 
   changText(e) {
     this.task.taskName = e.data;
@@ -191,8 +190,8 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('T0001');
       return;
     }
-    if(this.isHaveFile)
-    this.attachment.saveFiles();
+    if (this.isHaveFile)
+      this.attachment.saveFiles();
 
     this.tmSv
       .saveAssign([this.task, this.functionID, this.listTaskResources, null])
@@ -259,7 +258,7 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
+    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -325,12 +324,12 @@ export class AssignInfoComponent implements OnInit {
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
-    arrUser.forEach((u) => {
-      var taskResource = new tmpTaskResource();
-      taskResource.resourceID = u;
-      taskResource.roleType = 'R';
-      this.listTaskResources.push(taskResource);
-    });
+    // arrUser.forEach((u) => {
+    //   var taskResource = new tmpTaskResource();
+    //   taskResource.resourceID = u;
+    //   taskResource.roleType = 'R';
+    //   this.listTaskResources.push(taskResource);
+    // });
     this.api
       .execSv<any>(
         'TM',
@@ -340,24 +339,37 @@ export class AssignInfoComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
+        if(res&&res.length>0){
+         for(var i=0; i<res.length;i++){
+           let emp = res[i] ;
+            var taskResource = new tmpTaskResource();
+            taskResource.resourceID = emp.userID;
+            taskResource.resourceName = emp.userName;
+            taskResource.position = emp.positionName;
+            taskResource.roleType = 'R';
+            this.listTaskResources.push(taskResource);
+          };
+        }
+        // this.listUserDetail = this.listUserDetail.concat(res);
       });
   }
   showPopover(p, userID) {
     this.idUserSelected = userID;
+    if(p.isOpen()) p.close()
     p.open();
-    this.popover = p;
+  
   }
   hidePopover(p) {
     p.close();
   }
 
-  selectRoseType(idUserSelected, value) {
+  selectRoseType(value) {
     let index = this.listTaskResources.findIndex(
-      (u) => (u.resourceID = idUserSelected)
+      (u) => (u.resourceID == this.idUserSelected)
     );
     if (index != 1) {
       this.listTaskResources[index].roleType = value;
     }
+    this.changeDetectorRef.detectChanges()
   }
 }
