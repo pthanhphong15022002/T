@@ -1,8 +1,13 @@
-import { Component, OnInit, ViewChild, TemplateRef, Injector } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 import {
-  GradientService,
-} from '@syncfusion/ej2-angular-circulargauge';
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  Injector,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import {
   AnimationModel,
   RangeColorModel,
@@ -34,6 +39,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
   vlWork: any;
+  tasksByGroup: any;
 
   public rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -103,7 +109,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     position: 'Right',
     visible: true,
   };
- 
+
   //#endregion gauge
 
   public piedata1: Object[];
@@ -167,9 +173,15 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   public data: object[] = [];
   public leafItemSettings: object = {
+    gap: 10,
     labelPath: 'taskGroupName',
     labelPosition: 'Center',
     labelFormat: '${taskGroupName}<br>${percentage} %',
+    labelStyle: {
+      color: 'white',
+      length: '3',
+      size: '15'
+    },
     colorMapping: [
       {
         from: 50,
@@ -193,13 +205,17 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
       },
     ],
   };
+  public tooltipSettings: object = {
+    visible: true,
+    format: 'Name:${taskGroupName} - Percentage:${percentage}',
+  };
 
   dbData: any;
 
   constructor(
     private inject: Injector,
     private auth: AuthStore,
-    private tmService: CodxTMService,
+    private tmService: CodxTMService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -245,10 +261,14 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             y: res.canceledTasks,
           },
         ];
-        this.data = res.tasksByGroup;
+        res.tasksByGroup.map((group) => {
+          group.percentage = group.percentage.toFixed(2);
+        });
+        this.tasksByGroup = res.tasksByGroup;
         this.dataColumn = res.dataBarChart.barChart;
         this.dataLine = res.dataBarChart.lineChart;
         this.vlWork = res.tasksbyEmp;
+        this.detectorRef.detectChanges();
       });
 
     this.piedata2 = [
