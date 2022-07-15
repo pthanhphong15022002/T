@@ -344,11 +344,12 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event)
+          if (e?.event){
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
           this.itemSelected = e?.event[0];
+          }
           this.dt.detectChanges();
         });
       });
