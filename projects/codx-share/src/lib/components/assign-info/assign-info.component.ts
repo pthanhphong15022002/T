@@ -218,19 +218,19 @@ export class AssignInfoComponent implements OnInit {
     var listUser = [];
     var listUserDetail = [];
     var listTaskResources = [];
-    for (var i = 0; i < this.listUserDetail.length; i++) {
+    for (var i = 0; i < this.listTaskResources.length; i++) {
       if (this.listUser[i] != userID) {
         listUser.push(this.listUser[i]);
       }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
+      // if (this.listUserDetail[i].userID != userID) {
+      //   listUserDetail.push(this.listUserDetail[i]);
+      // }
       if (this.listTaskResources[i]?.resourceID != userID) {
         listTaskResources.push(this.listTaskResources[i]);
       }
     }
     this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
+    // this.listUserDetail = listUserDetail;
     this.listTaskResources = listTaskResources;
 
     var assignTo = '';
@@ -245,7 +245,7 @@ export class AssignInfoComponent implements OnInit {
 
   resetForm() {
     this.listUser = [];
-    this.listUserDetail = [];
+    // this.listUserDetail = [];
     this.listTaskResources = [];
     this.setDefault();
     // this.task.status = '1';
@@ -354,22 +354,26 @@ export class AssignInfoComponent implements OnInit {
       });
   }
   showPopover(p, userID) {
+    if(this.popover)
+    this.popover.close() ;
+    if(userID)
     this.idUserSelected = userID;
-    if(p.isOpen()) p.close()
     p.open();
+    this.popover = p ;
   
   }
   hidePopover(p) {
     p.close();
   }
 
-  selectRoseType(value) {
-    let index = this.listTaskResources.findIndex(
-      (u) => (u.resourceID == this.idUserSelected)
-    );
-    if (index != 1) {
-      this.listTaskResources[index].roleType = value;
+  selectRoseType(idUserSelected,value) {
+ 
+     this.listTaskResources.forEach(res=>{
+        if(res.resourceID ==idUserSelected)res.roleType=value;
+      })
+      this.changeDetectorRef.detectChanges()
+
+    this.popover.close() ;
     }
-    this.changeDetectorRef.detectChanges()
-  }
+   
 }
