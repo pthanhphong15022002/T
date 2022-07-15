@@ -114,7 +114,7 @@ export class AddNoteComponent implements OnInit {
 
   ngAfterViewInit() {
     if (this.formType == 'edit') {
-      console.log("check attachmentEdit", this.attachmentEdit);
+      this.getFileByObjectId();
       this.checkActiveFormEdit();
     }
   }
@@ -403,5 +403,16 @@ export class AddNoteComponent implements OnInit {
       this.listFileUpload = event.data;
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  getFileByObjectId() {
+    this.api.exec<any>(
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectIDImageAsync',
+      this.note.recID
+    ).subscribe((res) => {
+      console.log("check getFileByObjectId", res);
+    })
   }
 }

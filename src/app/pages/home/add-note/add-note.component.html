@@ -89,6 +89,9 @@
                     allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                 </codx-attachment>
                 <div *ngIf="attachmentEdit?.data">
+                    <div *ngFor="let item of attachmentEdit?.data">
+                        <h1>{{item?.fileName}}</h1>
+                    </div>
                     <codx-image-grid [images]="attachmentEdit?.data" [showBtnRemove]='true'></codx-image-grid>
                 </div>
             </div>
