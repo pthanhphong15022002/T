@@ -101,7 +101,6 @@ export class IncommingComponent
   callfunc: CallFuncService;
   notifySvr: NotificationsService;
   atSV: AttachmentService;
-  codxService: CodxService;
   fileService: FileService;
   constructor(inject: Injector) {
     super(inject);
@@ -316,7 +315,7 @@ export class IncommingComponent
   clickChangeStatus(status: any) {
     this.view.dataService.predicates = 'Status=@0';
     this.view.dataService.dataValues = status;
-    this.view.dataService.load().subscribe((item)=>{
+    this.view.dataService.load().subscribe((item) => {
       this.lstDtDis = this.view.dataService.data[0];
     });
     this.activeDiv = status;

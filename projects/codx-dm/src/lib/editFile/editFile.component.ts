@@ -40,7 +40,7 @@ export class EditFileComponent implements OnInit {
   titleCate = 'Phân loại';
   titleLanguage = 'Ngôn ngữ';
   titleExcerpts = 'Trích lục';
-  tieleRelation = 'Mối quan hệ';
+  titleRelation = 'Mối quan hệ';
   titleSource = 'Nguồn';
   titleCopyright  = 'Bản quyền';
   titleAuthor = 'Tên tác giả';
@@ -90,7 +90,7 @@ export class EditFileComponent implements OnInit {
   modePermission = false;
   readRight = false;
   createRight = false;
-  assignRight = false;
+  assignRight = true;
   updateRight = true;
   downloadRight = true;
   uploadRight = true;
@@ -241,9 +241,17 @@ export class EditFileComponent implements OnInit {
     @Optional() dialog?: DialogRef
     ) {
       this.data = data.data;
-      this.fileEditing = this.data[1];   
+      //this.fileEditing = this.data[1];   
+      this.fileEditing =  JSON.parse(JSON.stringify( this.data[1]));   
       this.user = this.auth.get();
       this.dialog = dialog;     
+      this.id = this.fileEditing.recID;
+      this.dmSV.isFileEditing.subscribe(item => {
+        if (item != undefined) {
+          this.fileEditing = item;
+          this.changeDetectorRef.detectChanges();
+        }          
+      });
     //  this.changeDetectorRef.detectChanges();
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
@@ -268,17 +276,21 @@ export class EditFileComponent implements OnInit {
       this.fileService.updateFile(this.fileEditing).subscribe(item => {
         if (item.status == 0) {
           let res = item.data;
+          this.dmSV.fileEditing.next(item.data);
           if (res != null) {
             var files = this.dmSV.listFiles.getValue();
-            let index = files.findIndex(d => d.recID.toString() === this.id);
-            if (index != -1) {
-              files[index].fileName = res.fileName;
+            if (files != null) {
+              let index = files.findIndex(d => d.recID.toString() === this.id);
+              if (index != -1) {
+                files[index].fileName = res.fileName;
+              }
+              this.dmSV.listFiles.next(files);
+              this.changeDetectorRef.detectChanges();
             }
-            this.dmSV.listFiles.next(files);
-            this.changeDetectorRef.detectChanges();
             // if (modal != null)
             //   this.modalService.dismissAll();
           }
+          this.dialog.close();
         }
         else {
           // $('#fileName').addClass('form-control is-invalid');
@@ -298,15 +310,18 @@ export class EditFileComponent implements OnInit {
                 this.fileEditing.fileName = item.data.fileName;
                 this.fileService.updateFile(this.fileEditing).subscribe(async res => {
                   if (res.status == 0) {
+                    this.dmSV.fileEditing.next(item.data);
                     var files = this.dmSV.listFiles.getValue();
-                    let index = files.findIndex(d => d.recID.toString() === this.id);
-                    if (index != -1) {
-                      files[index].fileName = res.data.fileName;
+                    if (files != null) {
+                      let index = files.findIndex(d => d.recID.toString() === this.id);
+                      if (index != -1) {
+                        files[index].fileName = res.data.fileName;
+                      }
+                      this.dmSV.listFiles.next(files);                    
+                      // if (modal != null)
+                      //   this.modalService.dismissAll();
+                      this.changeDetectorRef.detectChanges();
                     }
-                    this.dmSV.listFiles.next(files);                    
-                    // if (modal != null)
-                    //   this.modalService.dismissAll();
-                    this.changeDetectorRef.detectChanges();
                     this.dialog.close();
                   }
                   this.notificationsService.notify(res.message);
@@ -344,6 +359,7 @@ export class EditFileComponent implements OnInit {
 
     }
     else {
+      //  this.dmSV.fileEditing.next(this.fileEditing);
       let index = this.dmSV.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
       if (index > -1) {
         this.dmSV.fileUploadList.splice(index, 1);//remove element from array
@@ -366,8 +382,31 @@ export class EditFileComponent implements OnInit {
 
   }
 
-  removeUserRight(index) {
+  removeUserRight(index, list: Permission[] = null) {
+    if (list == null) {
+      if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
+        this.fileEditing.permissions.splice(index, 1);//remove element from array  
+        this.changeDetectorRef.detectChanges();
+       // this.changePermission(0);
+      }
+    }
+    else {
+      if (list != null && list.length > 0) {
+        list.splice(index, 1);//remove element from array  
+        this.changeDetectorRef.detectChanges();
+      }
+    }
 
+    if (this.type == "file") {
+   //   this.onSaveEditingFile();
+    }
+    else {
+      this.fileEditing.folderName = this.folderName;
+      this.fileEditing.folderId = this.dmSV.getFolderId();
+      this.fileEditing.recID = this.id;
+      // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
+      // });
+    }
   }
 
   getSizeByte(size: any) {
@@ -387,7 +426,8 @@ export class EditFileComponent implements OnInit {
   }  
 
   openRight(mode = 1, type = true) {
-    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 800, 650, "", [this.functionID, this.fileEditing], "");
+    this.dmSV.dataFileEditing = this.fileEditing;
+    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
     // if (this.fileEditing != null)
     //   this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
     // if (mode == 2) {
@@ -455,6 +495,9 @@ export class EditFileComponent implements OnInit {
   txtValue($event, type) {
     if ($event.data != null) {
       switch(type) {
+        case 'tag':
+          this.fileEditing.tags = $event.data;
+          break;  
         case 'filename':
           this.fileEditing.fileName = $event.data;
           break;
@@ -492,8 +535,7 @@ export class EditFileComponent implements OnInit {
           if ($event.data.length > 0)
             this.fileEditing.publisher = $event.data[0];
           else
-            this.fileEditing.publisher = "";
-         // this.fileEditing.publisher = $event.data;
+            this.fileEditing.publisher = "";         
           break;
         case 'publishyear':
           this.fileEditing.publishYear = $event.data.fromDate;

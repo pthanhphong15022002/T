@@ -174,7 +174,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       title: "Tạo bài viết",
     }
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
     this.modal.closed.subscribe();
@@ -186,7 +186,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       title: "Chỉnh sửa bài viết"
     }
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 

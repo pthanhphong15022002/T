@@ -1,11 +1,9 @@
 <ng-container *ngIf="images">
   <div [ngSwitch]="images.length" class="position-relative">
     <ng-container *ngIf="showBtnRemove">
-      <label  (click)="removeImg()" class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-        data-kt-image-input-action="remove"
-        data-bs-toggle="tooltip"
-        data-bs-dismiss="click"
-        title="Remove avatar">
+      <label (click)="removeImg()"
+        class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+        data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
         <span class="icon-close icon-14 "></span>
       </label>
     </ng-container>
@@ -47,7 +45,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="3">
       <div class="row row-custom feed-3pic m-0">
-        <div class="col-7 pe-2">
+        <div class="col-7 ps-0 pe-2">
           <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-320px" [src]="images[0].thumbnail" />
           </ng-container>
@@ -125,7 +123,7 @@
     </ng-container>
     <ng-container *ngSwitchDefault>
       <div class="row row-custom feed-5pic m-0">
-        <div class="col-7 pe-2">
+        <div class="col-7 ps-0 pe-2">
           <ng-container *ngIf="images[0]">
             <img class="w-100 rounded h-150px" [src]="images[0].thumbnail" />
           </ng-container>
