@@ -55,6 +55,8 @@ import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
+import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
+import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 export const routes: Routes = [
   {
     path: '',
@@ -77,6 +79,10 @@ export const routes: Routes = [
             component: SprintsTasksComponent,
           },
         ],
+      },
+      {
+        path: 'meeting/:funcID',
+        component: TMMeetingsComponent,
       },
       {
         path: 'mydashboard/:funcID',
@@ -181,10 +187,9 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  // MwpComponent,
-  // MwpViewDetailComponent,
-  // MwpPopupAddComponent,
   ViewListComponent,
+  TMMeetingsComponent,
+  PopupAddMeetingComponent,
 
 ];
 @NgModule({

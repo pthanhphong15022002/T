@@ -84,9 +84,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private tmSv: CodxTMService,
-    private cache: CacheService,
     private notiService: NotificationsService,
-    private callfc: CallFuncService,
     public atSV: AttachmentService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
