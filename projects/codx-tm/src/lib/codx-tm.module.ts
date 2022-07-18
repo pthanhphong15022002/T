@@ -114,7 +114,7 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'reports/:funcID',
+        path: 'reports',
         component: ReportsComponent,
         children: [
           {
