@@ -35,9 +35,6 @@
                 <div *ngIf="item.type == 'WP_Notes' || item.noteType != null || item.noteType != undefined "
                     class="pd-note">
                     <div *ngIf="item.showCalendar == true">
-                        <div>
-                            <codx-file [images]="item?.images" [showBtnRemove]='true'></codx-file>
-                        </div>
                         <div class="note-content">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">

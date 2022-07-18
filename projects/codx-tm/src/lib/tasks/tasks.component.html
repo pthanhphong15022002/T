@@ -13,20 +13,20 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
-    [iconCss]="'icon-notifications'" [iconColorCss]="data.isTimeOut? 'noticationTimeOutTrue':'noticationTimeOutFalse'"
-    [iconCss2]="data.priority | vll:'L0186':'icon'|async"
-    [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.createdBy" imageObjType="AD_Users"
-    [title]="data.userName" [subTitle]="data.positionName" [content]="data.taskName" [status]="data.status"
-    statusVll="L0614" [date]="data.dueDate" [resources]="(data.category=='3'||data.isAssign)?data.assignTo :''"
-    resourceObjType="AD_Users" [formModel]="view.formModel">
+    [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
+    [desc]="data.positionNameCreate" [desc2]="data.taskName" [status]="data.status" statusVll="L0614"
+    [date]="data.dueDate" [resources]="(data.category=='3'||data.isAssign)?data.assignTo :''" resourceObjType="AD_Users"
+    [formModel]="view.formModel">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
-    [content]="data.taskName" [status]="data.status" statusVll="L0614" [date]="data.dueDate" [resources]="data.assignTo"
-    [rootData]="data" [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
+    [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614" [date]="data.dueDate"
+    [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
+    [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
 
 </ng-template>

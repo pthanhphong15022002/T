@@ -157,3 +157,16 @@ ngb-popover-window[role="tooltip"] {
 .mg-5 img {
     margin-right: 5px !important;
 }
+
+.card {
+    box-shadow: none;
+}
+
+// css trễ hạn công việc - chưa có vll nên tạm dùng vậy
+.unexpired {
+    color: #C9C9D4;
+}
+
+.expired {
+    color: #F64E60;
+}
