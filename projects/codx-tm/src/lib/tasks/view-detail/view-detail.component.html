@@ -217,11 +217,10 @@
       <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div class="text-gray-700" [innerHTML]="itemSelected?.memo"></div>
-      <div class="text-gray-400" [innerHTML]="itemSelected?.memo2"></div>
+      <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected?.memo"></div>
+      <!-- <div class="text-gray-400"  *ngIf="itemSelected?.memo2"  [innerHTML]="itemSelected?.memo2"></div> -->
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
         <div class="text-primary fw-bold">
-          <!-- <codx-label fiedName="ListTaskGoals" formName="Tasks" gridViewName="grvTasks" default="Danh sách việc cần làm: "></codx-label> -->
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
         </div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
