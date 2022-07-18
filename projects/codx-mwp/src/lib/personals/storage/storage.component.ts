@@ -45,7 +45,7 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private codxService: CodxService,
+    override codxService: CodxService,
     private modalService: NgbModal,
   ) {
     super(inject);

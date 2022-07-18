@@ -76,7 +76,7 @@ export class SprintsComponent extends UIComponent {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-    private codxService: CodxService,
+    override codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);

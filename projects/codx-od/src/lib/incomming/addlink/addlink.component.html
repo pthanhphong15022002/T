@@ -1,23 +1,14 @@
-<div class="card w-100 h-100 rounded-0 border-0">
-    <div class="card-toolbars d-flex justify-content-end" *ngIf="isFilter">         
-        <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px "
-            id="kt_engage_demos_close" (click)="close()">
-            <span class="icon-close icon-18"></span>
-        </button>
-    </div>
-    <div class="card-body">
-        <div class="card-title w-100 px-10 py-2">
-            <div class="d-flex justify-content-center input-group-od w-100">
-                <codx-input type="text" placeholder="Nhập thông tin văn bản muốn tìm" [class]="'w-100'" style="width:100%"></codx-input>
-                <span class="input-group-text-od btn btn-white text-center" id="basic-addon2" (click)="searchText()">
-                    <i class="icon-search fs-1 text-primary"></i>
-                </span>
-            </div>
-            <codx-searchbar
-                (searchEvent)="aaa($event)"
+<codx-form [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template #subHeader>
+        <codx-searchbar
+                (searchEvent)="searchText($event)"
             ></codx-searchbar>
+    </ng-template>
+    <ng-template popup adde #body>
+        <div class="card-title w-100 px-10 py-2">
+           
             <div class="d-flex justify-content-center mt-2" *ngIf="isFilter">
-                <codx-combobox
+                <!-- <codx-combobox
                     refValue="Agencies"
                     placeholder="Đơn vị"
                     ngDefaultControl
@@ -34,100 +25,38 @@
                     [placeholder]="'nguồn'" 
                     [name]="gridViewSetup['Source']['referedValue']" 
                     style="width:100px">
-                </codx-valuelist>
+                </codx-valuelist> -->
             </div>
         </div>
         
         <div class="pb-2">
-            <span class="fs-6 text-muted">Khoảng 20 kết quả được tìm thấy</span>
+            <span class="fs-6 text-muted">Khoảng {{count}} kết quả được tìm thấy</span>
         </div>
-        <div class="d-flex flex-grow-1 p-4 vmd-items">
-            <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex align-items-top justify-content-between">
-                <div class="text-dark fs-5 flex-grow-1 work-break">Sở y tế</div>
-                <div class="d-flex ms-5" *ngIf="isFilter">
-                    <codx-input type="checkbox" class="test-check" ></codx-input>
-                </div>
-                </div>
-
-                <div class="text-gray-600"><span class="icon-business icon-16"></span><span
-                    class="ms-1">Công ty Lạc Việt</span></div>
-                <div class="d-flex align-items-center justify-content-between mt-1">
-                <div class="me-2">
-                    <div class="symbol symbol-30px symbol-circle me-1"
-                    >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                    <div class="symbol symbol-30px symbol-circle me-1" >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <i class="icon-warning_amber me-3 text-danger"></i>
-                    <div class="text-gray-600 fs-7 me-3">22/12/2020</div>
-                    <div class="badge badge-light-success">Đang thực hiện</div>
-                </div>
-                </div>
-            </div>
-        </div> 
-        <div class="d-flex flex-grow-1 p-4 vmd-items">
-            <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex align-items-top justify-content-between">
-                <div class="text-dark fs-5 flex-grow-1 work-break">Sở y tế</div>
-                <div class="d-flex ms-5" *ngIf="isFilter">
-                    <codx-input type="checkbox" class="test-check" ></codx-input>
-                </div>
-                </div>
-
-                <div class="text-gray-600"><span class="icon-business icon-16"></span><span
-                    class="ms-1">Công ty Lạc Việt</span></div>
-                <div class="d-flex align-items-center justify-content-between mt-1">
-                <div class="me-2">
-                    <div class="symbol symbol-30px symbol-circle me-1"
-                    >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                    <div class="symbol symbol-30px symbol-circle me-1" >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <i class="icon-warning_amber me-3 text-danger"></i>
-                    <div class="text-gray-600 fs-7 me-3">22/12/2020</div>
-                    <div class="badge badge-light-success">Đang thực hiện</div>
-                </div>
-                </div>
-            </div>
-        </div> 
-        <div class="d-flex flex-grow-1 p-4 vmd-items">
-            <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex align-items-top justify-content-between">
-                <div class="text-dark fs-5 flex-grow-1 work-break">Sở y tế</div>
-                <div class="d-flex ms-5" *ngIf="isFilter">
-                    <codx-input type="checkbox" class="test-check" ></codx-input>
-                </div>
-                </div>
-
-                <div class="text-gray-600"><span class="icon-business icon-16"></span><span
-                    class="ms-1">Công ty Lạc Việt</span></div>
-                <div class="d-flex align-items-center justify-content-between mt-1">
-                <div class="me-2">
-                    <div class="symbol symbol-30px symbol-circle me-1"
-                    >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                    <div class="symbol symbol-30px symbol-circle me-1" >
-                    <codx-img #image [objectId]="'ADMIN'"></codx-img>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <i class="icon-warning_amber me-3 text-danger"></i>
-                    <div class="text-gray-600 fs-7 me-3">22/12/2020</div>
-                    <div class="badge badge-light-success">Đang thực hiện</div>
-                </div>
-                </div>
-            </div>
-        </div> 
+        <ng-container *ngIf="data && data[0]">
+            <ng-container *ngFor="let data of data[0]">
+                <codx-temp-full 
+                    [content]="extractContent(data.title)" 
+                    [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
+                    [status]="data.status" 
+                    [statusVll]="gridViewSetup['Status']['referedValue']" 
+                    [date]="data.createdOn" 
+                    cardCss="card-template border-bottom px-2 py-3" 
+                    [resources]="getIdUser(data.createdBy,data.owner)"
+                    [resourceObjType]="'AD_Users'"
+                    [icoStatus]="data?.urgency"
+                    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
+                    [icoStatus2]="data?.security"
+                    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+                    [icoDateCss]="'icon-access_alarm'"
+                    [modeImgs]="false"
+                    [bookmark]="data.isBookmark"
+                    [titleLine]="2"
+                    [baseHeaderRightTmp]="headerRight"
+                    [dataItem]="data"
+                >
+                </codx-temp-full>
+            </ng-container>
+        </ng-container>
         <div *ngIf="!isFilter"  class="d-flex flex-wrap py-2" style="position:absolute; bottom:0">
             <a   class="btn btn-icon btn-xs btn-light mr-2 my-1">
                 <i  class="icon-keyboard_arrow_left icon-18"></i>
@@ -141,10 +70,22 @@
                 <i  class="icon-keyboard_arrow_right icon-18"></i>
             </a>
         </div>
-    </div>
-    <div class="card-footer d-flex justify-content-end pt-4" *ngIf="isFilter">
-        <div class="d-flex">                                          
-            <button type="button" class="btn btn-primary">Apply</button>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" type="submit" (click)="onSave()">
+                Gửi
+            </button>
         </div>
-    </div>
-</div>
+    </ng-template>
+</codx-form>
+<ng-template #headerRight let-data>
+    <codx-input
+        type="radio"
+        [crrValue]="data.recID"
+        name="rddispatch"  
+        [Group]="addLinkForm"
+        ControlName="recID"         
+    >
+    </codx-input>
+</ng-template>

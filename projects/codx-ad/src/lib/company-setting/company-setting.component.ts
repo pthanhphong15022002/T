@@ -42,7 +42,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private codxService: CodxService,
+    override codxService: CodxService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);

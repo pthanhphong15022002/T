@@ -40,7 +40,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    public codxService: CodxService,
+    override codxService: CodxService,
     private modalService: NgbModal,
   ) {
     super(inject);

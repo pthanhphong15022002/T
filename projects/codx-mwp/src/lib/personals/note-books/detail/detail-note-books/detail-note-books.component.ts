@@ -37,7 +37,6 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
   constructor(private injector: Injector,
     private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private codxService: CodxService,
   ) {
     super(injector);
     this.route.params.subscribe(params => {
