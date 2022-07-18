@@ -34,10 +34,8 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
   @ViewChild('createdOn', { static: true }) createdOn;
   @ViewChild('modifiedOn', { static: true }) modifiedOn;
 
-  constructor(private injector: Injector,
-    private changedt: ChangeDetectorRef,
+  constructor(injector: Injector,
     private route: ActivatedRoute,
-    private codxService: CodxService,
   ) {
     super(injector);
     this.route.params.subscribe(params => {
@@ -186,7 +184,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID)
-          this.changedt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -194,7 +192,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
 
   onSearch(e) {
     this.lstGrid.onSearch(e);
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
 }

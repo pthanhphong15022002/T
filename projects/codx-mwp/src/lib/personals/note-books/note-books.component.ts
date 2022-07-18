@@ -36,11 +36,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   @ViewChild('inputSearch') inputSearch: CodxSearchBarComponent;
   @Output() loadData = new EventEmitter();
 
-  constructor(private inject: Injector,
+  constructor(inject: Injector,
     private authStore: AuthStore,
-    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    public codxService: CodxService,
     private modalService: NgbModal,
   ) {
     super(inject);
@@ -87,7 +85,8 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   openDetailPage(item) {
-    this.codxService.navigate('', this.urlDetailNoteBook, {recID: item.recID})
+    // this.codxService.navigate('', this.urlDetailNoteBook, { recID: item.recID })
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
   }
 
   openFormMoreFunc(data: any) {
@@ -111,9 +110,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.api
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
-        if(res) {
+        if (res) {
           this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
-          this.changedt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -146,7 +145,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
         .subscribe((result) => {
           if (result) {
             this.loadData.emit();
-            this.changedt.detectChanges();
+            this.detectorRef.detectChanges();
           }
         });
     }
@@ -172,13 +171,13 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       var dateB = new Date(b.createdOn).toLocaleDateString();
       return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
     });
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
     this.view.onSearch(e);
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
 }

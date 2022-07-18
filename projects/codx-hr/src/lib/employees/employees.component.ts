@@ -42,7 +42,7 @@ export class EmployeesComponent implements OnInit {
       id: 'btnAdd',
     };
     this.columnsGrid = [
-      // { field: '', headerText: '', width: 20, template: this.itemAction },
+      { field: '', headerText: '', width: 20, template: this.itemAction },
       { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
       { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
@@ -56,7 +56,7 @@ export class EmployeesComponent implements OnInit {
       {
         id: '1',
         type: ViewType.grid,
-        active: true,
+        active: false  ,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -123,17 +123,28 @@ export class EmployeesComponent implements OnInit {
   }
 
   copy(data) {
-    this.view.dataService.copy().subscribe((res: any) => {
+    // this.view.dataService.copy().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '800px';
+    //   this.view.dataService.dataSelected = data;
+    //   this.dialog = this.callfunc.openSide(
+    //     PopupAddEmployeesComponent,
+    //     [this.view.dataService.dataSelected, 'copy'],
+    //     option
+    //   );
+    // });
+
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(
-        PopupAddEmployeesComponent,
-        [this.view.dataService.dataSelected, 'copy'],
-        option
-      );
+      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
     });
   }
 

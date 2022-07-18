@@ -1,5 +1,5 @@
 import { CodxFormComponent, NotificationsService } from 'codx-core';
-import { NoteType } from './../../../../shared/models/notes.model';
+import { NoteType, NoteFile } from './../../../../shared/models/notes.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SaveNoteComponent } from './save-note/save-note.component';
@@ -28,6 +28,9 @@ import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
 import { NoteService } from '@pages/services/note.services';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { DatePipe } from '@angular/common';
+import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -38,6 +41,7 @@ export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
   note: any = new Notes();
+  noteFile: NoteFile = new NoteFile();
   noteType: NoteType = new NoteType();
   tempNote: TempNote = new TempNote();
   message: any;
@@ -45,7 +49,7 @@ export class AddNoteComponent implements OnInit {
   type = 'text';
   label = 'Hiển thị trên lịch';
   showCalendar = false;
-  pin = false;
+  pin: any = false;
   formType = '';
   data: any;
   predicate = 'CreatedBy=@0';
@@ -62,10 +66,16 @@ export class AddNoteComponent implements OnInit {
   checkFile = false;
   checkPin = false;
   empty = "";
+  currentDate: any;
+  checkUpdate = false;
+  notePrior: any;
+  maxPinNotes = 0;
+  countNotePin = 0;
+  component: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('attachment') attachment: AttachmentComponent
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild("form", { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -78,6 +88,7 @@ export class AddNoteComponent implements OnInit {
     private cache: CacheService,
     private notificationsService: NotificationsService,
     private noteService: NoteService,
+    private dmSV: CodxDMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -85,16 +96,32 @@ export class AddNoteComponent implements OnInit {
     this.data = dt.data?.data;
     this.formType = dt.data?.formType;
     this.dataListView = dt.data?.ngForLstview;
+    this.currentDate = dt.data?.currentDate;
+    this.maxPinNotes = dt.data?.maxPinNotes;
+    this.component = dt.data?.component;
+    if (this.component == 'note-drawer')
+      this.currentDate = new Date(Date.now());
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
+      this.listFileUploadEdit = this.note.images;
+      this.notePrior = dt.data?.dataUpdate;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
+      this.getNumberNotePin();
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
       console.log("check gridViewSetup", res);
     });
+  }
+
+  getNumberNotePin() {
+    this.data.forEach((res) => {
+      if (res.isPin == true || res.isPin == '1') {
+        this.countNotePin++;
+      }
+    })
   }
 
   addFirstObjectInArray() {
@@ -107,8 +134,10 @@ export class AddNoteComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.formType == 'edit')
+    if (this.formType == 'edit') {
+      this.getFileByObjectId();
       this.checkActiveFormEdit();
+    }
   }
 
   ngOnInit(): void {
@@ -169,6 +198,20 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  valueChangeDate(e) {
+    if (e.data.fromDate == null || e.data.fromDate == undefined) {
+      this.currentDate = "";
+      var date = new Date(e.data);
+      var crr = date.toLocaleDateString();
+      this.currentDate = crr;
+    } else {
+      var date = new Date(e.data.fromDate);
+      var crr = date.toLocaleDateString();
+      this.currentDate = "";
+      this.currentDate = crr;
+    }
+  }
+
   valueChange(e, item = null) {
     if (e) {
       var field = e.field;
@@ -190,6 +233,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   onCreateNote() {
+    this.note.createdOn = this.currentDate;
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
     if (this.type == 'check' || this.type == 'list') {
@@ -219,9 +263,9 @@ export class AddNoteComponent implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
-          this.noteService.data.next(res);
+          var object = [{ data: res, type: 'add' }]
+          this.noteService.data.next(object);
           this.dialog.close()
-          // this.dialog.dataService.add(res, 0).subscribe();
           if (this.note?.showCalendar == true) {
             var today: any = document.querySelector(
               ".e-footer-container button[aria-label='Today']"
@@ -246,7 +290,33 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
+  openFormUpdateIsPin(data) {
+    var obj = {
+      data: this.data,
+      itemUpdate: data,
+    }
+    this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj)
+  }
+
   onEditNote() {
+    debugger;
+    if (this.countNotePin >= this.maxPinNotes) {
+      if (this.pin == '1' || this.pin == true) {
+        this.openFormUpdateIsPin(this.note);
+      } else {
+        this.countNotePin -= 1;
+        this.onEdit();
+      }
+    } else {
+      if (this.pin == '1' || this.pin == true)
+        this.countNotePin += 1;
+      else this.countNotePin -= 1;
+      this.onEdit();
+    }
+  }
+
+  onEdit() {
+    this.note.createdOn = this.currentDate;
     if (this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
@@ -254,22 +324,17 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.checkUpdate = true;
           if (this.checkFile == true)
             this.attachment.saveFiles();
-
-          debugger;
-          this.dialog.dataService.update(res).subscribe();
+          var object = [{ data: res, type: 'edit' }]
+          this.noteService.data.next(object);
           this.dialog.close();
-          for (let i = 0; i < this.data.length; i++) {
-            if (this.data[i].recID == this.note?.recID) {
-              this.data[i].checkList = res.checkList;
-              this.data[i].memo = res.memo;
-            }
-          }
           this.changeDetectorRef.detectChanges();
         }
       });
   }
+
 
   keyUpEnter(e: any) {
     if (e) {
@@ -351,6 +416,62 @@ export class AddNoteComponent implements OnInit {
   }
 
   close() {
+    var object = [];
+    if (this.checkUpdate == true)
+      object = [{ data: this.note, type: 'notEmpty' }]
+    else
+      object = [{ data: this.notePrior, type: 'empty' }]
+    this.noteService.data.next(object);
     this.dialog.close();
+  }
+
+  listFileUpload: any[] = []
+  listFileUploadEdit: any[] = []
+  isUploadImg = false;
+  isUploadFile = false;
+  getfileCount(event: any) {
+    if (!event || event.data.length <= 0) {
+      this.isUploadFile = false;
+      this.listFileUpload = [];
+      this.dmSV.fileUploadList = []
+      return;
+    }
+    else {
+      this.isUploadImg = true;
+      this.isUploadFile = true;
+      this.listFileUpload = event.data;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  getfile(event: any) {
+    if (!event || event.data.length <= 0) {
+      this.isUploadFile = false;
+      this.listFileUploadEdit = [];
+      this.dmSV.fileUploadList = [];
+      return;
+    }
+    else {
+      this.isUploadImg = true;
+      this.isUploadFile = true;
+      // this.listFileUploadEdit = event.data;
+      var lstFile = event.data;
+      // debugger;
+      // lstFile.forEch((res) => {
+      //   this.noteFile.
+      // })
+      this.listFileUpload.push(lstFile)
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  getFileByObjectId() {
+    this.api.exec<any>(
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectIDImageAsync',
+      this.note.recID
+    ).subscribe((res) => {
+    })
   }
 }

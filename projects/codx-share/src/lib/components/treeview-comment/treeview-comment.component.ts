@@ -64,6 +64,7 @@ export class TreeviewCommentComponent implements OnInit {
   
   votes:any;
   lstUserVote:any;
+  dataSelected:any[];
   
   showVotes(content:any, postID:string) {
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",postID)
@@ -77,7 +78,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     })
   }
-
 
   getUserVotes(postID:string,voteType:String){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetUserVotesAsync",[postID,voteType])
@@ -118,11 +118,11 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, this.dataComment.recID, type]
         )
         .subscribe((res) => {
           if (res) {
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             this.comments = "";
             this.repComment = "";
             post.showReply = false;
@@ -148,13 +148,13 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, post.recID, type]
         )
         .subscribe((res) => {
           if (res) {
             this.comments = "";
             this.repComment = "";
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             post.showReply = false;
             this.crrId = "";
             this.dicDatas[res["recID"]] = res;
@@ -395,7 +395,7 @@ export class TreeviewCommentComponent implements OnInit {
       this.addNode(parent, newNode, id);
       // parent[this.fieldCheck] = true;
     } else {
-      this.addNode(this.rootData, newNode, id);
+      this.addNode(this.dataComment, newNode, id);
     }
 
     this.dt.detectChanges();
@@ -445,7 +445,7 @@ export class TreeviewCommentComponent implements OnInit {
         });
       } else {
         if (!this.rootData) return;
-        this.rootData = this.rootData.filter(function (element: any, index: any) {
+        this.dataComment = this.dataComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       }

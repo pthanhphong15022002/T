@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { AlertConfirmInputConfig, CallFuncService, NotificationsService } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
+import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -13,6 +16,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
+  titleEditFileDialog = "Cập nhật file";
+  titleUpdateFile = "Cập nhật file";
+  titleUpdateShare = "Chia sẻ";
+  titleRolesDialog = 'Cập nhật quyền';
+  titleUpdateProperties = "Properties";
+  titleUpdateBookmark = "Bookmark";
+  titleUpdateUnBookmark = "UnBookmark";
+  titlePermission = "Permission";
  // files: any;  
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
@@ -21,6 +32,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
     private fileService: FileService,
+    public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
   ) {
 
@@ -28,7 +40,36 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   ngOnInit(): void {    
    // this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
+    this.dmSV.isFileEditing.subscribe(item => {
+      if (item != undefined) {
+        if (this.files.length > 0) {
+          var index = -1;
+          if (this.files[0].data != null) {            
+            index = this.files.findIndex(d => d.data.recID == item.recID);
+            if (index > -1) {
+              this.files[index].data = item; 
+            }
+          }
+          else  {
+            index = this.files.findIndex(d => d.recID == item.recID);
+            if (index > -1) {
+              this.files[index] = item; 
+            }
+          }          
+          this.changeDetectorRef.detectChanges();          
+        }        
+      }          
+    });
+  }
 
+  openPermission(data) {    
+    this.dmSV.dataFileEditing = data;
+  //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
+    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [""], "");
+  }
+
+  hideMore() {
+    document.getElementById('drop').setAttribute("style", "display: none;");
   }
 
   checkDownloadRight(file) {
@@ -136,6 +177,35 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     // changes.prop contains the old and the new value...
  //   this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
+  }
+
+
+  properties() {
+
+  }
+
+  setBookmark() {
+
+  }
+
+  setShare() {
+
+  }
+
+  checkShareRight() {
+    return true;
+  }
+
+  checkBookmark() {
+    return true;
+  }
+
+  checkReadRight() {
+    return true;
+  }
+
+  editfile(file, multi = false, index = 0) {    
+    this.callfc.openForm(EditFileComponent, this.titleEditFileDialog, 800, 800, "", ["", file], "");
   }
 
   formatBytes(bytes, decimals = 2) {

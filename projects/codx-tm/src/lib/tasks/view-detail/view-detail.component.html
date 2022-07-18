@@ -89,7 +89,7 @@
             itemSelected?.priority | vll: "L0186":"text" | async
             }}</span> -->
               <div *ngIf="itemSelected?.priority">
-                <span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
+                <span class="icon-14 me-1" [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
                 itemSelected?.priority | vll: 'L0186':'textColor' | async
               ">
                 </span>
@@ -109,9 +109,10 @@
               <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">{{
                 itemSelected?.taskGroupName
                 }}</div>
-                <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>{{
-                  itemSelected?.taskGroupName|formatvalue :formModel : "taskGroupName" :taskGroupName :"TaskGroups":"grvTaskGroups"|async
-                  }}</div>
+              <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>{{
+                itemSelected?.taskGroupName|formatvalue :formModel : "taskGroupName" :taskGroupName
+                :"TaskGroups":"grvTaskGroups"|async
+                }}</div>
             </div>
           </div>
           <div class="d-flex mt-1">
@@ -163,16 +164,19 @@
 
           </div>
         </div>
-        <div class="mt-2">
-          <div class="d-flex mb-1">
+        <div class="mt-2" *ngIf="param.ProjectControl!='0' || param.LocationControl!='0'">
+          <div class="d-flex mb-1" *ngIf="param.ProjectControl!='0'">
             <span class="fw-bold me-2">
-              <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
-              </codx-label>
+              <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
+              </codx-label> -->
+              <codx-label name="lblProjectName" formName="Tasks" default="Dự án:"></codx-label>
             </span>
-            <span #projectname >{{ itemSelected?.projectName| formatvalue : formModel:"projectName"
+            <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{ itemSelected?.projectName}}</span>
+            <span *ngIf="!itemSelected?.projectName" #projectname>{{ itemSelected?.projectName| formatvalue :
+              formModel:"projectName"
               : projectname:"Projects":"grvProjects"|async }}</span>
           </div>
-          <div class="d-flex">
+          <div class="d-flex" *ngIf="param.LocationControl!='0'">
             <span class="fw-bold me-2">
               <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm:">
               </codx-label>
@@ -183,16 +187,14 @@
               formModel:"location" : location|async}}</span>
           </div>
         </div>
-        <div class="mt-2">
-          <codx-tag *ngIf="!itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-            [value]="''"></codx-tag>
-          <codx-tag *ngIf="itemSelected.tags" [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-            [value]="itemSelected.tags"></codx-tag>
+        <div *ngIf="itemSelected.tags" class="mt-2">
+          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="itemSelected.tags">
+          </codx-tag>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="mt-6 mb-3 text-primary fw-bold">
         <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện: ">
         </codx-label>
       </div>
@@ -206,17 +208,19 @@
           </codx-imgs>
         </div>
       </div>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="mt-6 mb-3 text-primary fw-bold">
         <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
         </codx-label>
+        <!-- <codx-label name="lblTaskName" formName="Tasks" default="Công việc: ">
+        </codx-label> -->
       </div>
       <div class="task-name fw-bold fs-5 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
       <div class="text-gray-700" [innerHTML]="itemSelected?.memo"></div>
       <div class="text-gray-400" [innerHTML]="itemSelected?.memo2"></div>
-      <div class="codx_title_sub_primary mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
-        <div class="text-primary fw-bold mt-4 mb-2">
+      <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
+        <div class="text-primary fw-bold">
           <!-- <codx-label fiedName="ListTaskGoals" formName="Tasks" gridViewName="grvTasks" default="Danh sách việc cần làm: "></codx-label> -->
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm:"></codx-label>
         </div>
@@ -226,10 +230,6 @@
               <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
                 [crrValue]="item.status == '9'" [disabled]="true"></codx-input>
             </div>
-            <!-- <div>
-              <input type="checkbox" name="Checkboxes1" [checked]="item.status == '9'" disabled />
-              <span>{{ " " + item.memo }}</span>
-             </div> -->
           </ng-container>
         </div>
       </div>

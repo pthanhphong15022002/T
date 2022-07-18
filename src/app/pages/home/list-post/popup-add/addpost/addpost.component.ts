@@ -15,12 +15,14 @@ import {
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import * as mime from 'mime-types'
+
 @Component({
   selector: 'app-addpost',
   templateUrl: './addpost.component.html',
@@ -28,6 +30,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 
 })
 export class AddPostComponent implements OnInit, AfterViewInit {
+  
   @Input() dataRef = new Post();
   data: any;
   message: string = '';
@@ -91,6 +94,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
 
   ) {
+    
     this.dialogRef = dialog;
     this.status = dd.data.status;
     this.title = dd.data.title;
@@ -104,7 +108,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.user = authStore.userValue;
 
   }
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit() {
     this.myPermission = new Permission();
@@ -124,6 +129,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
     this.shareControl = "9";
+    this.objectType = "1";
   }
 
 
@@ -167,9 +173,33 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
         per.memberType = "3";
-        per.objectType = item.objectType;
-        per.objectID = item.id;
-        per.objectName = item.text;
+        switch(this.objectType){
+          case "U":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "P":
+            per.objectID = item.PositionID;
+            per.objectName = item.PositionName;
+            per.objectType = this.objectType;
+            break
+          case "D":
+            per.objectID = item.OrgUnitID;
+            per.objectName = item.OrgUnitName;
+            per.objectType = this.objectType;
+            break;
+          case "G":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "R":
+            per.objectID = item.RoleID;
+            per.objectName = item.RoleName;
+            per.objectType = this.objectType;
+            break
+        }
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -185,12 +215,17 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
-          this.dialogRef.dataService.add(res, 0).subscribe();
-        this.notifySvr.notifyCode('E0026');
-        this.atmCreate.objectId = res.recID;
-        this.atmCreate.saveFiles();
+          this.dialogRef.DataService  as CRUDService;
+          this.dialogRef.dataService.add(res,0).subscribe();
+
+        if(this.dmSV.fileUploadList.length > 0){
+          this.atmCreate.objectId = res.recID;
+          this.atmCreate.saveFiles();
+        }
         this.dialogRef.close();
         this.dt.detectChanges();
+        this.notifySvr.notifyCode('E0026');
+
         }
         
       });
@@ -228,6 +263,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         lstPermission.push(per);
       })
     }
+    
     this.api
       .execSv<any>(
         'WP',
@@ -246,6 +282,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.notifySvr.notifyCode('E0026');
+          this.dialogRef.close();
         }
       });
   }
@@ -292,26 +329,54 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.category = this.CATEGORY.SHARE;
     post.approveControl = "0";
     post.refID = this.dataShare.recID;
+    post.refType = this.entityName;
+    post.shares = this.dataShare;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
-    this.lstRecevier.map((item) => {
-      var per = new Permission();
-      per.memberType = "3";
-      per.objectType = item.objectType;
-      per.objectID = item.id;
-      per.objectName = item.text;
-      per.read = true;
-      per.isActive = true;
-      per.createdBy = this.user.userID;
-      per.createdOn = new Date();
-      lstPermissions.push(per);
-    })
+    if(this.lstRecevier.length > 0){
+      this.lstRecevier.forEach((item) => {
+        var per = new Permission();
+        per.memberType = "3";
+        switch(this.objectType){
+          case "U":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "P":
+            per.objectID = item.PositionID;
+            per.objectName = item.PositionName;
+            per.objectType = this.objectType;
+            break
+          case "D":
+            per.objectID = item.OrgUnitID;
+            per.objectName = item.OrgUnitName;
+            per.objectType = this.objectType;
+            break;
+          case "G":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "R":
+            per.objectID = item.RoleID;
+            per.objectName = item.RoleName;
+            per.objectType = this.objectType;
+            break
+        }
+        per.read = true;
+        per.isActive = true;
+        per.createdBy = this.user.userID;
+        per.createdOn = new Date();
+        post.permissions.push(per);
+      })
+    }
     post.permissions = lstPermissions;
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
+          this.dialogRef.DataService as CRUDService;
           this.dialogRef.dataService.add(res, 0).subscribe();
-          this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
         }
       });
@@ -366,20 +431,19 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   openFile() {
+    this.dmSV.fileUploadList = [];
     this.atmCreate.uploadFile();
   }
   listFileUpload:any[] = []
-  isUploadImg = false;
-  isUploadFile = false;
+
   getfileCount(event: any) {
     if (!event || event.data.length <= 0) {
-      this.isUploadFile = false;
       this.listFileUpload = [];
       this.dmSV.fileUploadList = []
       return;
     }
-    else{
-      this.isUploadFile = true;
+    else
+    {
       this.listFileUpload = event.data;
     }
     this.dt.detectChanges();

@@ -1,4 +1,4 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" [views]="views">
+<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID"   [views]="views">
 </codx-views>
 
 
@@ -345,12 +345,12 @@
                                   </a>
                                 </div>
                               </div> -->
-                              <codx-temp-full [content]="experences.companyName" [desc]="experences.roleName"
-                              (clickMF)="clickMF($event, data)">
+                              <codx-temp-full [formModel]="view.formModel" [content]="experences.companyName"
+                                [desc]="experences.roleName" (clickMF)="clickMF($event, experences)">
                               </codx-temp-full>
                             </div>
                             <!-- <div class="text-primary">{{experences.roleName}}</div> -->
-                          </div>                      
+                          </div>
 
                         </div>
                       </div>
@@ -502,8 +502,8 @@
                     <div class="row">
                       <ng-container *ngFor="let relationship of employeeRelationship">
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                          <div class="d-flex flex-grow-1 user-item">
-                            <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="relationship.recID"
+                          <!-- <div class="d-flex flex-grow-1 user-item"> -->
+                          <!-- <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="relationship.recID"
                               objectType="HR_EmployeeRelations">
                             </codx-img>
                             <div class="d-flex flex-column full">
@@ -522,13 +522,17 @@
                                   <span class="icon-close icon-18"></span>
                                 </a>
                               </div>
-                            </div>
-                          </div>
+                            </div> -->
+
+                          <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
+                            [formModel]="view.formModel" [title]="relationship.relationName"
+                            (clickMF)="clickMF($event, data)" [typeMF]="'hover'"
+                            [desc]="(relationship.relationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
+                          </codx-card-center>
+                          <!-- </div> -->
 
                         </div>
-                        <!-- <codx-card-center cardCss="border h-100" [imageId]="relationship.picture" [title]="relationship.RelationName"
-                [desc]="(relationship.RelationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')" >
-              </codx-card-center> -->
+
                       </ng-container>
                       <ng-container *ngIf="editMode">
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
@@ -565,9 +569,8 @@
                             <span class="icon-close icon-16"></span>
                           </a>
                         </div>
-                        <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process"
-                          (click)="editHobby(null)">
-                          <a class="text-primary">Thêm mới</a>
+                        <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
+                          <a class="text-primary" (click)="popupAddHobbi(data)">Thêm mới</a>
                         </div>
                       </div>
                     </div>
@@ -581,6 +584,5 @@
     </div>
 
   </div>
-
 
 </ng-template>
