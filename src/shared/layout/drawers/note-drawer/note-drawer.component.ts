@@ -61,7 +61,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         var data = res[0]?.data;
         var type = res[0]?.type;
         if (this.lstView) {
-          if (type == 'add') {
+          if (type == 'add-currentDate' || type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).add(data).subscribe();
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
@@ -73,7 +73,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).load().subscribe();
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -127,6 +127,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       dataUpdate: data,
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
+      component: 'note-drawer',
     };
     this.callfc.openForm(
       AddNoteComponent,
