@@ -291,8 +291,21 @@
     <div class="taskbox-user">
       <selectweek #selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>
       <div class="taskbox-list">
+<<<<<<< HEAD
         <codx-listview #listview service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
           method="GetTasksOfDayAsync" entityName="TM_Tasks" [itemTemplate]="TemplateList" [height]="200">
+=======
+        <codx-listview
+          #listview
+          service="TM"
+          assemblyName="ERM.Business.TM"
+          className="TaskBusiness"
+          method="GetTasksOfDayAsync"
+          entityName="TM_Tasks"
+          [itemTemplate]="TemplateList"
+          [height]="200"
+        >
+>>>>>>> 593887e1d752fdfdae73540c38e524055b76f81e
         </codx-listview>
       </div>
     </div>

@@ -123,6 +123,7 @@
             </div>
           </div>
         </div>
+
         <div class="accountinfo">
           <div class="row">
             <div class="col-4 img_optionFull">
@@ -131,9 +132,9 @@
                 <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
                   (change)="handleInputChange($event)" />
 
-                <div *ngIf="!imageSrc; then imageDefault; else imageUpdate">
+                <div *ngIf="!image; then imageDefault; else imageUpdate">
                 </div>
-
+               
                 <ng-template #imageDefault>
                   <img class="img_logoFull img_settings"
                     src="../../../assets/themes/ad/default/img/logoFull_default.png">
@@ -145,7 +146,8 @@
                   </div>
                 </ng-template>
                 <ng-template #imageUpdate>
-                  <img [src]="imageSrc" class="img_logoFull img_settings">
+                  <img [src]="image" class="img_logoFull img_settings">
+                  <!-- <img [src]="imageSrc" class="img_logoFull img_settings"> -->
                   <div class="overlay img_logoFull"></div>
                   <div class="button_image">
                     <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
@@ -240,8 +242,8 @@
           <div class="col-6">
             <div class="row">
               <div class="col-3">
-                <div *ngIf="data.Logo; else imgDefault_personal">
-                  <img class="img_avatar" src="../../../{{data.Logo}}}" alt="" />
+                <div *ngIf="data.logo; else imgDefault_personal">
+                  <img class="img_avatar" src="../../../{{data.logo}}}" alt="" />
                 </div>
                 <ng-template #imgDefault_personal> <img class="img_avatar" src="../../../assets/img/avatar.png" />
                 </ng-template>
