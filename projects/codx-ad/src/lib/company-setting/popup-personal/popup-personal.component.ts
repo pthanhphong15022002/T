@@ -13,6 +13,7 @@ import { CompanySettingComponent } from '../company-setting.component';
 })
 export class PopupPersonalComponent implements OnInit {
   data: any;
+  option:any = 'personal';
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Người đại diện';
@@ -41,18 +42,19 @@ export class PopupPersonalComponent implements OnInit {
   UpdateData() {
     console.log(this.items);
     this.adService
-      .updatePersonalCompanySettings(this.items)
+      .updateInformationCompanySettings(this.items,this.option)
       .subscribe((response) => {
         if (response[1]) {
           // this.notiService.notifyCode('thêm thành công');
-          this.dialog.close(response[0]);
+      //    this.dialog.close(response[0]);
         } else {
           this.notiService.notifyCode('thêm thất bại');
           this.dialog.close();
         }
 
       });
-
+      this.dialog.close();
+      this.changeDetectorRef.detectChanges();
 
   }
 

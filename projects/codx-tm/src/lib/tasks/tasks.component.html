@@ -1,6 +1,7 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected"
+    (clickMoreFunction)="receiveMF($event)">
   </app-view-detail>
 </ng-template>
 
@@ -12,7 +13,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
-    [iconCss]="data.isTimeOut?'icon-access_alarm':''" iconColorCss="read"
+    [iconCss]="'icon-notifications'" [iconColorCss]="data.isTimeOut? 'noticationTimeOutTrue':'noticationTimeOutFalse'"
     [iconCss2]="data.priority | vll:'L0186':'icon'|async"
     [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.createdBy" imageObjType="AD_Users"
     [title]="data.userName" [subTitle]="data.positionName" [content]="data.taskName" [status]="data.status"

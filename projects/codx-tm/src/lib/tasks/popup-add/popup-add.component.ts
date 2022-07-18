@@ -231,6 +231,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
+        this.api.execSv<any[]>("DM","DM", "FileBussiness", "GetFilesByObjectIDAsync", [this.task.taskID]).subscribe(res=>{
+            if(res && res.length > 0)this.isHaveFile = true;else this.isHaveFile = false;
+        })
         this.changeDetectorRef.detectChanges();
       }
     });

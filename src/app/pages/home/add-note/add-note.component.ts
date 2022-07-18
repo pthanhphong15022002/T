@@ -65,6 +65,8 @@ export class AddNoteComponent implements OnInit {
   checkPin = false;
   empty = "";
   currentDate: any;
+  checkUpdate = false;
+  notePrior: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -94,6 +96,7 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = dt.data?.dataUpdate;
+      this.notePrior = dt.data?.dataUpdate;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
     }
@@ -278,6 +281,7 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.checkUpdate = true;
           if (this.checkFile == true)
             this.attachment.saveFiles();
           var object = [{ data: res, type: 'edit' }]
@@ -368,7 +372,12 @@ export class AddNoteComponent implements OnInit {
   }
 
   close() {
-
+    var object = [];
+    if (this.checkUpdate == true)
+      object = [{ data: this.note, type: 'empty' }]
+    else
+      object = [{ data: this.notePrior, type: 'noEmpty' }]
+    this.noteService.data.next(object);
     this.dialog.close();
   }
 

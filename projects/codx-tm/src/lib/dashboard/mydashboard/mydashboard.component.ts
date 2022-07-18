@@ -7,6 +7,7 @@ import {
   ViewChild,
   TemplateRef,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
@@ -15,6 +16,7 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
   selector: 'my-dashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
@@ -72,7 +74,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  public labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
   public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 

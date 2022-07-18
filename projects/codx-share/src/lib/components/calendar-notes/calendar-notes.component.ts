@@ -1,8 +1,5 @@
 import { NoteService } from './../../../../../../src/app/pages/services/note.services';
-import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
-import { type } from 'os';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent, RequestOption } from 'codx-core';
+import { UIComponent, DialogRef, DialogModel, AuthStore, CRUDService, CodxListviewComponent } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -13,12 +10,9 @@ import {
   AfterViewInit,
   Injector,
 } from '@angular/core';
-import { Thickness, DateTime } from '@syncfusion/ej2-angular-charts';
 import { Notes } from '@shared/models/notes.model';
-import { StatusNote } from '@shared/models/enum/enum';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
-import { ActivatedRoute } from '@angular/router';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 @Component({
   selector: 'app-calendar-notes',
@@ -61,6 +55,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   toDate: any;
   arrDate: any = [];
   dialog: DialogRef;
+  checkUpdate = false;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -97,7 +92,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             if (today) {
               today.click();
             }
-          } else {
+          } else if (type == 'edit') {
             var dt: any = this.lstView.dataService.data[0];
             for (let i = 0; i < this.WP_Notes.length; i++) {
               if (this.WP_Notes[i].recID == dt?.recID) {
@@ -112,7 +107,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
               today.click();
             }
 
-            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            (this.lstView.dataService as CRUDService).load().subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -228,6 +223,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.dataValue = '';
     this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   onValueChange(args: any) {
@@ -238,6 +234,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.dataValue = '';
     this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+    this.changeDetectorRef.detectChanges();
 
 
     let title: string = '';
@@ -393,7 +390,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (this.typeCalendar == 'week') {
         span.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-top: 6px;'
+          'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
         );
         span2.setAttribute(
           'style',
