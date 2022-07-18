@@ -1,12 +1,10 @@
 <codx-form [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template #subHeader>
-        <codx-searchbar
-                (searchEvent)="searchText($event)"
-            ></codx-searchbar>
+        <codx-searchbar (searchEvent)="searchText($event)"></codx-searchbar>
     </ng-template>
     <ng-template popup adde #body>
         <div class="card-title w-100 px-10 py-2">
-           
+
             <div class="d-flex justify-content-center mt-2" *ngIf="isFilter">
                 <!-- <codx-combobox
                     refValue="Agencies"
@@ -28,46 +26,37 @@
                 </codx-valuelist> -->
             </div>
         </div>
-        
+
         <div class="pb-2">
             <span class="fs-6 text-muted">Khoảng {{count}} kết quả được tìm thấy</span>
         </div>
         <ng-container *ngIf="data && data[0]">
             <ng-container *ngFor="let data of data[0]">
-                <codx-temp-full 
-                    [content]="extractContent(data.title)" 
+                <codx-temp-full [content]="extractContent(data.title)"
                     [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
-                    [status]="data.status" 
-                    [statusVll]="gridViewSetup['Status']['referedValue']" 
-                    [date]="data.createdOn" 
-                    cardCss="card-template border-bottom px-2 py-3" 
-                    [resources]="getIdUser(data.createdBy,data.owner)"
-                    [resourceObjType]="'AD_Users'"
-                    [icoStatus]="data?.urgency"
-                    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
-                    [icoStatus2]="data?.security"
-                    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
-                    [icoDateCss]="'icon-access_alarm'"
-                    [modeImgs]="false"
-                    [bookmark]="data.isBookmark"
-                    [titleLine]="2"
-                    [baseHeaderRightTmp]="headerRight"
-                    [dataItem]="data"
-                >
+                    [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+                    cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
+                    [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+                    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
+                    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+                    [bookmark]="data.isBookmark" [titleLine]="2" [baseHeaderRightTmp]="headerRight" [dataItem]="data">
                 </codx-temp-full>
+                <!-- [icoDateCss]="'icon-access_alarm'" -->
+                <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
+
             </ng-container>
         </ng-container>
-        <div *ngIf="!isFilter"  class="d-flex flex-wrap py-2" style="position:absolute; bottom:0">
-            <a   class="btn btn-icon btn-xs btn-light mr-2 my-1">
-                <i  class="icon-keyboard_arrow_left icon-18"></i>
+        <div *ngIf="!isFilter" class="d-flex flex-wrap py-2" style="position:absolute; bottom:0">
+            <a class="btn btn-icon btn-xs btn-light mr-2 my-1">
+                <i class="icon-keyboard_arrow_left icon-18"></i>
             </a>
-            <a   class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1 active">1</a>
-            <a   class="btn btn-icon btn-xs border-0 btn-light btn-hover-primary mr-2 my-1">2</a>
-            <a   class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">3</a>
-            <a   class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">4</a>
-            <a   class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">5</a>
-            <a   class="btn btn-icon btn-xs btn-light mr-2 my-1">
-                <i  class="icon-keyboard_arrow_right icon-18"></i>
+            <a class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1 active">1</a>
+            <a class="btn btn-icon btn-xs border-0 btn-light btn-hover-primary mr-2 my-1">2</a>
+            <a class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">3</a>
+            <a class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">4</a>
+            <a class="btn btn-icon btn-xs border-0 btn-light mr-2 my-1">5</a>
+            <a class="btn btn-icon btn-xs btn-light mr-2 my-1">
+                <i class="icon-keyboard_arrow_right icon-18"></i>
             </a>
         </div>
     </ng-template>
@@ -80,12 +69,6 @@
     </ng-template>
 </codx-form>
 <ng-template #headerRight let-data>
-    <codx-input
-        type="radio"
-        [crrValue]="data.recID"
-        name="rddispatch"  
-        [Group]="addLinkForm"
-        ControlName="recID"         
-    >
+    <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" [Group]="addLinkForm" ControlName="recID">
     </codx-input>
 </ng-template>

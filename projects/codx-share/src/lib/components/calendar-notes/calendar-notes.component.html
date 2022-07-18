@@ -38,7 +38,7 @@
                         <div class="note-content">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu"> 
+                                    <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)">
                                         </codx-mfunc>
@@ -108,39 +108,38 @@
         </codx-input>
     </div>
     <div class="separator my-3"></div>
-    <div *ngIf="this.WP_NotesParam != null">
-        <div *ngFor="let item of WP_NotesParam">
-            <div class="flex">
-                <div *ngIf="item.fieldName == 'ShowColor'" class="w-5px">
-                    <li [style.background-color]="item.fieldValue" [style.color]="item.fieldValue"></li>
-                </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class="show-event">
-                    {{item.description}}
-                </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class="show-event-check">
-                    <codx-input type="checkbox" field="WP_Notes_ShowEvent"
-                        [checked]="item?.fieldValue == 'true' || item?.fieldValue == '1'" labelPosition="Before"
-                        [disabled]="false" class="test-check" (valueChange)="valueChange($event)"></codx-input>
-                </div>
+    <div *ngIf="WP_NotesParam != null">
+        <div class="flex">
+            <div class="w-5px">
+                <li [style.background-color]="WP_NotesParam?.ShowColor" [style.color]="WP_NotesParam?.ShowColor"></li>
+            </div>
+            <div class="show-event">
+                <!-- {{item.description}} -->
+                <codx-label name="lblNote" formName="WP_Notes" default="Ghi chú"></codx-label>
+            </div>
+            <div class="show-event-check">
+                <codx-input type="checkbox" field="WP_Notes_ShowEvent"
+                    [checked]="WP_NotesParam?.ShowEvent == 'true' || WP_NotesParam?.ShowEvent == '1'"
+                    labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                </codx-input>
             </div>
         </div>
     </div>
     <br>
-    <div *ngIf="this.TM_TasksParam != null">
-        <div *ngFor="let item of TM_TasksParam">
-            <div class="flex">
-                <div *ngIf="item.fieldName == 'ShowColor'" class="" style="width: 5px;">
-                    <li [style.background-color]="item.fieldValue" [style.color]="item.fieldValue"></li>
-                </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class=""
-                    style="margin-left: 10px; margin-top: -20px;width: 130px;">
-                    {{item.description}}
-                </div>
-                <div *ngIf="item.fieldName == 'ShowEvent'" class="" style="margin-left: 10px; margin-top: -20px;">
-                    <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
-                        [checked]="item?.fieldValue == 'true' || item?.fieldValue == '1'" labelPosition="Before"
-                        [disabled]="false" class="test-check" (valueChange)="valueChange($event)"></codx-input>
-                </div>
+    <div *ngIf="TM_TasksParam != null">
+        <div class="flex">
+            <div class="w-5px">
+                <li [style.background-color]="TM_TasksParam?.ShowColor" [style.color]="TM_TasksParam?.ShowColor"></li>
+            </div>
+            <div class="show-event">
+                <!-- {{item.description}} -->
+                <codx-label name="lblTask" formName="WP_Task" default="Công việc cá nhân"></codx-label>
+            </div>
+            <div class="show-event-check">
+                <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
+                    [checked]="TM_TasksParam?.ShowEvent == 'true' || TM_TasksParam?.ShowEvent == '1'"
+                    labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                </codx-input>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-update-note-pin',
@@ -24,7 +24,7 @@ export class UpdateNotePinComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private noteService: NoteService,
+    private noteService: NoteServices,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef,
   ) {

@@ -63,6 +63,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isAdd = false;
   crrEstimated: any;
   isHaveFile = false;
+  index :number
+  popover: any;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -153,7 +155,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   onAddToDo(evt: any) {
-    if (!this.todoAddText) return;
+    if (!this.todoAddText || this.todoAddText.trim()=='' ) {
+       this.todoAddText = '';
+      // evt.focus();
+      return;
+    }
+   
     if (this.listTodo == null) this.listTodo = [];
     var todo = new TaskGoal();
     todo.status = this.STATUS_TASK_GOAL.NotChecked;
@@ -184,6 +191,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   updateTodoList(content: string) {
+    if(content == null || content.trim() == ''){
+      return
+    }  ;
     if (this.indexEditTodo >= 0) {
       this.listTodo[this.indexEditTodo].text = content;
     }
@@ -288,7 +298,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
-      // this.notiService.notifyCode('TM002');
       return;
     }
     if (this.task.startDate == null && this.task.endDate == null) {
@@ -424,6 +433,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         case 'U':
           listUserID += obj.id + ';';
           break;
+        case 'O':
         case 'D':
           listDepartmentID += obj.id + ';';
           break;
@@ -732,5 +742,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
+  }
+  showPoppoverDelete(p, i){
+    if(this.popover)
+    this.popover.close() ;
+    if(i)
+    this.index = i;
+    p.open();
+    this.popover = p ;
   }
 }
