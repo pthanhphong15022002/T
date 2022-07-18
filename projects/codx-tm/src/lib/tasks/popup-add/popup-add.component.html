@@ -1,7 +1,7 @@
 <codx-form headerText="{{title}}" [subHeader]="subHeader" subHeaderText="" [body]="body" [footer]="footer"
   [formModel]="dialog.formModel" [dialog]="dialog" #form>
   <ng-template #subHeader>
-        <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags || ''"
+        <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task?.tags || ''"
         (valueChange)="valueChangeTags($event)"></codx-tag>
         <!-- chua làm dc nhờ chi Vân Css -->
       <!-- <div>
@@ -18,13 +18,6 @@
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText class="">
-            <!-- <div class="d-flex align-items-center mb-2 navi-item">
-              <span class="icon-info icon-24 me-2"></span>
-              <div class="fw-bold">
-                <codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
-                </codx-label>
-              </div>
-            </div> -->
             <div class="nav-item">
               <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-info icon-24 me-2"></span>
@@ -49,7 +42,7 @@
               <!-- <codx-input field="taskName" [formModel]="form.formModel" [Group]="form.formGroup"
                 >
               </codx-input> -->
-              <codx-input field="taskName" type="text" [crrValue]="task.taskName" placeholder="Tên công việc"
+              <codx-input field="taskName" type="text" [crrValue]="task?.taskName" placeholder="Tên công việc"
                 (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -60,7 +53,7 @@
               </div>
               <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox"
                 placeholder="Nhóm công việc" refValue="TaskGroups" loadFull="true" field="taskGroupID"
-                (valueChange)="cbxChange($event)" [multiple]="false" [crrValue]="task.taskGroupID">
+                (valueChange)="cbxChange($event)" [multiple]="false" [crrValue]="task?.taskGroupID">
               </codx-input>
             </div>
             <div class="form-group row mt-3">
@@ -78,9 +71,12 @@
                   <codx-label fiedName="Priority" [formModel]="form.formModel" default="Ưu tiên">
                   </codx-label>
                 </div>
-                <codx-input type="valuelist" field="priority" [crrValue]="task.priority" refValue="L0186"
+                <codx-input type="valuelist" field="priority" [crrValue]="task?.priority" refValue="L0186"
                   [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
+                <!-- <codx-valuelist type="valuelist" field="priority" [crrValue]="task?.priority" [name]="'L0186'"
+                [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+              </codx-valuelist> -->
               </div>
             </div>
             <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
@@ -123,10 +119,30 @@
                     </codx-label>
                   </div>
                   <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
-                    [crrValue]="task.estimated" (valueChange)="valueChangeEstimated($event)">
+                    [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)">
                   </codx-input>
 
                 </div>
+              </div>
+            </ng-container>
+            <ng-container >
+              <div class="form-group mt-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
+                  </codx-label>
+                  <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
+                </div>
+                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" 
+                  (valueChange)="changeMemo($event)"></codx-input>
+                <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
+                  type="text" [readOnly]="readOnly" class="col-md-8" style="
+                    border-width: thin;
+                    border-style: none;
+                    margin-top: 3px;
+                    outline: none;" /> -->
+                <!-- <codx-input *ngIf="openMemo2" type="text" field="memo2" [crrValue]="task?.memo2"
+                  (valueChange)="valueChange($event)" placeholder="Ghi chú phân công..." [readOnly]="readOnly">
+                </codx-input> -->
               </div>
             </ng-container>
             <ng-container *ngIf="showAssignTo">
@@ -142,9 +158,13 @@
                   [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
               </div>
               <div class="">
-                <ng-container *ngFor="let item of listUser">
+                <!-- <ng-container *ngFor="let item of listUser">
                   <codx-img class=" flex symbol-40px " [objectId]="item" objectType="AD_Users">
                   </codx-img>
+                </ng-container> -->
+                <ng-container *ngIf="listUser.length > 0">
+                  <codx-imgs class=" flex symbol-40px " [objectId]="listUser.join(';')" objectType="AD_Users" [numberImages]="5">
+                  </codx-imgs>
                 </ng-container>
               </div>
             </ng-container>
@@ -162,7 +182,7 @@
             </div>
 
             <div>
-              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID"
+              <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task?.taskID"
                 hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
                 [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
                 (fileCount)="getfileCount($event)" displayThumb="full">
@@ -173,13 +193,6 @@
 
         <e-tabitem>
           <ng-template #headerText>
-            <!-- <div class="d-flex align-items-center">
-              <span class="icon-article icon-24 me-2"></span>
-              <div class="fw-bold">
-                <codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>
-              </div>
-            </div> -->
-
             <div class="nav-item ">
               <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-article icon-24 me-2"></span>
@@ -199,15 +212,15 @@
                 </codx-label>
                 <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
               </div>
-              <codx-input type="textarea" field="memo" [crrValue]="task.memo" [disabled]="readOnly" class="form-control"
+              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" 
                 (valueChange)="changeMemo($event)"></codx-input>
-              <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task.memo2" placeholder="Ghi chú phân công..."
+              <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                 type="text" [readOnly]="readOnly" class="col-md-8" style="
                   border-width: thin;
                   border-style: none;
                   margin-top: 3px;
                   outline: none;" /> -->
-              <!-- <codx-input *ngIf="openMemo2" type="text" field="memo2" [crrValue]="task.memo2"
+              <!-- <codx-input *ngIf="openMemo2" type="text" field="memo2" [crrValue]="task?.memo2"
                 (valueChange)="valueChange($event)" placeholder="Ghi chú phân công..." [readOnly]="readOnly">
               </codx-input> -->
             </div>
@@ -216,13 +229,6 @@
 
         <e-tabitem *ngIf="showAssignTo">
           <ng-template #headerText class="">
-            <!-- <div class="d-flex align-items-center">
-              <span class="icon-person_outline icon-24 me-2"></span>
-              <div class="fw-bold">
-                <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Phân công cho">
-                </codx-label>
-              </div>
-            </div> -->
             <div class="nav-item ">
               <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
                 <span class="icon-person_outline icon-24 me-2"></span>
@@ -264,23 +270,10 @@
                           {{item.departmentName}}</span></div>
 
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 == null">
-                        <!-- <input name="txtTaskMemo2" placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-                        (keydown.enter)="changeMemo2OfUser($event.target.value,item?.userID)" style="
-                            border-width: thin;
-                            border-style: none;
-                            margin-top: 3px;
-                            outline: none;" /> -->
                         <codx-input type="text" field="memo2" (valueChange)="changeMemo2($event,item?.userID)"
                           placeholder="Ghi chú phân công..." [readOnly]="readOnly"></codx-input>
                       </div>
                       <div class="text-dark" *ngIf="listMemo2OfUser[i]?.memo2 != null">
-                        <!-- <input name="txtTaskMemo2" value={{listMemo2OfUser[i]?.memo2}}
-                          placeholder="Ghi chú phân công..." type="text" [readonly]="readOnly"
-                          (keydown.enter)="changeMemo2OfUser($event.target.value,item?.userID)" style="
-                            border-width: thin;
-                            border-style: none;
-                            margin-top: 3px;
-                            outline: none;" /> -->
                         <codx-input type="text" field="memo2" [crrValue]="listMemo2OfUser[i]?.memo2"
                           (valueChange)="changeMemo2($event,item?.userID)" placeholder="Ghi chú phân công..."
                           [readOnly]="readOnly"></codx-input>
@@ -333,7 +326,8 @@
             </div>
             <div>
               <ng-container *ngFor="let item of listTodo; index as i">
-                <div class="d-flex justify-content-between align-items-center checkbox-item row">
+                <div class="d-flex justify-content-between align-items-center checkbox-item row" popoverClass="userPopoverClass" [ngbPopover]="deleteToDo" placement="bottom" #p="ngbPopover"
+                (mouseenter)="showPoppoverDelete(p,i)"  autoClose="outside">
                   <div class="checkbox-list col-10">
                     <div class="d-flex flex-column flex-grow-1 ">
                       <div class="flex" *ngIf="i != indexEditTodo">
@@ -433,7 +427,7 @@
               </div>
               <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"
                 ngDefaultControl refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
-                [disabled]="readOnly" [crrValue]="task.projectID">
+                [disabled]="readOnly" [crrValue]="task?.projectID">
               </codx-input>
             </div>
             <div class="form-group mt-3" *ngIf="param?.LocationControl != '0'">
@@ -441,7 +435,9 @@
                 <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
                 </codx-label>
               </div>
-              <input type="text" class="form-control" [readonly]="readOnly" [(ngModel)]="task.location" />
+              <codx-input field="location" type="text" [crrValue]="task?.location" placeholder="Địa điểm"
+                (valueChange)="valueChange($event)">
+              </codx-input>
             </div>
             <div class="form-group mt-3" *ngIf="param?.ReferenceControl != '0'">
               <div>
@@ -472,9 +468,20 @@
       <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
         <i class="icon-cloud_upload fs-5"></i>Upload file
       </button>
-      <button type="button" class="btn btn-primary ms-1" (click)="saveData(task.taskID)" *ngIf="!readOnly">
+      <button type="button" class="btn btn-primary ms-1" (click)="saveData(task?.taskID)" *ngIf="!readOnly">
         <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
       </button>
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #deleteToDo>
+  <a (click)="onDeleteTodo(index)" style="cursor: pointer">
+    <div>
+      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+      <span>
+        <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
+      </span>
+    </div>
+  </a>
+</ng-template>

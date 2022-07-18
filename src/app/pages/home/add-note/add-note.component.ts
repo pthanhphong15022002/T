@@ -27,7 +27,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
@@ -68,7 +68,6 @@ export class AddNoteComponent implements OnInit {
   empty = "";
   currentDate: any;
   checkUpdate = false;
-  notePrior: any;
   maxPinNotes = 0;
   countNotePin = 0;
   component: any;
@@ -87,7 +86,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private noteService: NoteService,
+    private noteService: NoteServices,
     private dmSV: CodxDMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
@@ -103,9 +102,8 @@ export class AddNoteComponent implements OnInit {
       this.currentDate = new Date(Date.now());
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
-      this.note = dt.data?.dataUpdate;
+      this.note = JSON.parse(JSON.stringify(dt.data?.dataUpdate));
       this.listFileUploadEdit = this.note.images;
-      this.notePrior = dt.data?.dataUpdate;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
       this.getNumberNotePin();
@@ -299,7 +297,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
-    debugger;
     if (this.countNotePin >= this.maxPinNotes) {
       if (this.pin == '1' || this.pin == true) {
         this.openFormUpdateIsPin(this.note);
@@ -416,12 +413,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   close() {
-    var object = [];
-    if (this.checkUpdate == true)
-      object = [{ data: this.note, type: 'notEmpty' }]
-    else
-      object = [{ data: this.notePrior, type: 'empty' }]
-    this.noteService.data.next(object);
     this.dialog.close();
   }
 
@@ -454,13 +445,8 @@ export class AddNoteComponent implements OnInit {
     else {
       this.isUploadImg = true;
       this.isUploadFile = true;
-      // this.listFileUploadEdit = event.data;
       var lstFile = event.data;
-      // debugger;
-      // lstFile.forEch((res) => {
-      //   this.noteFile.
-      // })
-      this.listFileUpload.push(lstFile)
+      this.listFileUploadEdit.push(lstFile)
     }
     this.changeDetectorRef.detectChanges();
   }

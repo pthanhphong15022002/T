@@ -7,7 +7,7 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private noteService: NoteService,
+    private noteService: NoteServices,
   ) {
     super(injector)
   }

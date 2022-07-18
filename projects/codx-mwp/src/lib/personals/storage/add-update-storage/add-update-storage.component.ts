@@ -1,8 +1,7 @@
-import { FormGroup, FormControl } from '@angular/forms';
 import { Storages } from './../../../model/Storages.model';
-import { ActivatedRoute } from '@angular/router';
 import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService } from 'codx-core';
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, Optional } from '@angular/core';
+import { StorageServices } from '../../../services/storage.services';
 
 @Component({
   selector: 'app-add-update-storage',
@@ -11,31 +10,25 @@ import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetect
 })
 export class AddUpdateStorageComponent implements OnInit {
 
-  title: any;
-  memo: any;
-  objectID: any;
-  lstStorage: any = [];
-  details: any = [];
-  formAddStorage: FormGroup;
-  dialog: any;
+  dialog: DialogRef;
   readOnly = false;
   formType = '';
   data: any = [];
   funcID = '';
-  dataEdit: Storages = new Storages();
   header = 'Thêm mới kho lưu trữ'
 
   storage: Storages = new Storages();
+
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
   constructor(private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
-    private codxService: CodxService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
+    private storageService: StorageServices,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
+    debugger;
     this.funcID = dialog?.formModel?.funcID;
     this.dialog = dialog;
     this.formType = dt?.data[1];
@@ -47,22 +40,6 @@ export class AddUpdateStorageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initFormGroup();
-  }
-
-  initFormGroup() {
-    this.formAddStorage = new FormGroup({
-      title: new FormControl(''),
-      memo: new FormControl(''),
-    });
-    this.changedt.detectChanges();
-  }
-
-  clearForm() {
-    this.formAddStorage.controls['title'].setValue(null);
-    this.formAddStorage.controls['memo'].setValue(null);
-
-    this.changedt.detectChanges();
   }
 
   valueChange(e) {
@@ -81,8 +58,6 @@ export class AddUpdateStorageComponent implements OnInit {
 
   addStorage() {
     this.storage.storageType = "WP_Comments";
-    // this.dataAdd.title = this.title;
-    // this.dataAdd.memo = this.memo;
 
     // this.details = [{ recID: null, refID: '62ac2c92bb0da65669b5f476', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
     // { recID: null, refID: '62ac2cb1bb0da65669b5f47e', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
@@ -101,10 +76,13 @@ export class AddUpdateStorageComponent implements OnInit {
           .subscribe((result) => {
             if (result) {
               this.loadData.emit();
-              this.dialog.dataService.data.push(res);
+              this.dialog.dataService.add(res).subscribe();
               this.dialog.close();
             }
           });
+        this.dialog.dataService.add(res).subscribe();
+        this.dialog.close();
+        this.changedt.detectChanges();
       }
     })
   }
@@ -128,9 +106,6 @@ export class AddUpdateStorageComponent implements OnInit {
                   ? (p = this.storage)
                   : p
               );
-              console.log("check data refresh ", this.dialog.dataService.data)
-              // this.changedt.detectChanges();
-
             }
           });
         this.changedt.detectChanges();

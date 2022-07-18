@@ -36,8 +36,6 @@ export class AssignTaskComponent implements OnInit {
   formatBytes = formatBytes;
   constructor(  
     private odService: DispatchService , 
-    private cr: ChangeDetectorRef , 
-    private formBuilder: FormBuilder,
     private cache: CacheService,
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
@@ -54,8 +52,8 @@ export class AssignTaskComponent implements OnInit {
       //console.log(1);
       if (item) {
         this.roles = item.datas;
-        this.odService.Roles.next(this.getJSONString(this.roles));
-        this.cr.detectChanges();
+        //this.odService.Roles.next(this.getJSONString(this.roles));
+        //this.cr.detectChanges();
       }
     })
   }
