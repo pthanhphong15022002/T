@@ -73,7 +73,7 @@
                 <!-- change url image Main logo -->
                 <div class="container_img_logo img_logo me-3">
                   <input name="imageUrlMain" hidden #fileInput_main type="file" accept="image/*"
-                    (change)="handleInputChangeMain($event)" />
+                    (change)="changeMainLogo($event)" />
                   <div *ngIf="!imageSrcMain; then imageDefaultMain; else imageUpdateMain">
                   </div>
                   <ng-template #imageDefaultMain>
@@ -116,7 +116,7 @@
 
                 <div class="container_img img_logoFull">
                   <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
-                    (change)="changeMainLogo($event)" />
+                    (change)="changeMainHeader($event)" />
 
                   <div *ngIf="!image; then imageDefault; else imageUpdate">
                   </div>
