@@ -67,7 +67,6 @@
             </div>
             <codx-input type="text" class="form-control" field="" [crrValue]="data.taxCode"></codx-input>
           </div>
-<<<<<<< HEAD
           <div class="form-group">
             <div class="d-flex">
               <div class="img_option">
@@ -97,52 +96,6 @@
                   </ng-template>
                 </div>
 
-=======
-        </div>
-        <div class="accountinfo">
-          <codx-label fiedName="" class="title" formName="" gridViewName="" default="Mã số thuế"></codx-label>
-          <div class="row">
-            <div class="col-3 mt-1">
-              <codx-input type="text" field="" [crrValue]="data.taxCode"></codx-input>
-            </div>
-          </div>
-        </div>
-        <div class="accountinfo">
-          <div class="row">
-            <div class="col-1 img_option">
-              <!-- change url image Main logo -->
-              <div class="container_img_logo img_logo">
-                <input name="imageUrlMain" hidden #fileInput_main type="file" accept="themes/ad/images/*"
-                  (change)="changeMainLogo($event)" />
-                <div *ngIf="!imageLogo; then imageDefaultMain; else imageUpdateMain">
-                </div>
-                <ng-template #imageDefaultMain>
-                  <img class="img_logo img_settings_logo" src="../../../assets/themes/ad/default/img/logo.png">
-                  <div class="overlay_main img_logo"></div>
-                  <div class="button_image_main">
-                    <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
-                      <i class="icon-create icon-18"></i>
-                    </button>
-                  </div>
-                </ng-template>
-                <ng-template #imageUpdateMain>
-                  <img [src]="imageLogo" class="img_logo img_settings_logo">
-                  <div class="overlay_main img_logo"></div>
-                  <div class="button_image_main">
-                    <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
-                      <i class="icon-create icon-18"></i>
-                    </button>
-                  </div>
-                </ng-template>
-              </div>
-              
-            </div>
-            <div class="col-11">
-              <div class="col-12">
-                <strong>
-                  <codx-label fiedName="" formName="" gridViewName="" default="Main Logo"></codx-label>
-                </strong>
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
               </div>
               <div class="d-flex flex-column">
                 <codx-label fiedName="" class="fw-bold" formName="" gridViewName="" default="Main Logo"></codx-label>
@@ -163,7 +116,6 @@
                   <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
                     (change)="handleInputChange($event)" />
 
-<<<<<<< HEAD
                   <div *ngIf="!image; then imageDefault; else imageUpdate">
                   </div>
 
@@ -187,38 +139,8 @@
                       </button>
                     </div>
                   </ng-template>
-=======
-              <div class="container_img img_logoFull">
-                <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
-                  (change)="changeMainHeader($event)" />
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
 
                 </div>
-<<<<<<< HEAD
-
-=======
-               
-                <ng-template #imageDefault>
-                  <img class="img_logoFull img_settings"
-                    src="../../../assets/themes/ad/default/img/logoFull_default.png">
-                  <div class="overlay img_logoFull"></div>
-                  <div class="button_image">
-                    <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
-                      <i class="icon-create icon-18"></i>
-                    </button>
-                  </div>
-                </ng-template>
-                <ng-template #imageUpdate>
-                  <img [src]="image" class="img_logoFull img_settings">
-                  <!-- <img [src]="imageSrc" class="img_logoFull img_settings"> -->
-                  <div class="overlay img_logoFull"></div>
-                  <div class="button_image">
-                    <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
-                      <i class="icon-create icon-18"></i>
-                    </button>
-                  </div>
-                </ng-template>
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
               </div>
               <div class="d-flex flex-column">
                 <div class="col-12">
