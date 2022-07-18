@@ -49,11 +49,14 @@ export class SharingComponent implements OnInit {
     this.files = this.data?.files;
   }
 
-  close()
+  changeValueTo(e:any)
   {
-    //this.viewbase.currentView.closeSidebarRight();
+    this.shareForm.controls['to'].setValue(e.data.value);
   }
-
+  changeValueCC(e:any)
+  {
+    this.shareForm.controls['cc'].setValue(e.data.value);
+  }
   getJSONString(data) {
     return JSON.stringify(data);    
   }

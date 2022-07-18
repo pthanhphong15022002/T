@@ -83,7 +83,7 @@
             </span>
         </div>
     </div>
-    <ng-container *ngFor="let cm of rootData">
+    <ng-container *ngFor="let cm of dataComment.listComment">
         <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: cm }">
         </ng-container>
     </ng-container>

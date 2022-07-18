@@ -7,14 +7,9 @@ import {
   ElementRef,
   AfterViewInit,
 } from '@angular/core';
-import { APICONSTANT } from '@shared/constant/api-const';
-import { TagsComponent } from '@shared/layout/tags/tags.component';
 import {
   ApiHttpService,
   AuthStore,
-  CacheService,
-  CallFuncService,
-  CodxTagComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -96,11 +91,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
-    this.taskCopy = dt?.data[3];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if(this.functionID =='TMT0203') this.showAssignTo = true ; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
   }
 
   ngOnInit(): void {
@@ -112,7 +106,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         ...this.task,
         ...this.taskCopy,
       };
-      this.getTaskCoppied(this.taskCopy.taskID);
+      // this.getTaskCoppied(this.taskCopy.taskID);
     } else this.openInfo(this.task.taskID, this.action);
   }
   ngAfterViewInit(): void { }
@@ -210,7 +204,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.readOnly = false;
     this.listTodo = [];
     this.task.status = '1';
-    // this.task.priority = '1';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -230,8 +223,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        this.api.execSv<any[]>("DM","DM", "FileBussiness", "GetFilesByObjectIDAsync", [this.task.taskID]).subscribe(res=>{
-            if(res && res.length > 0)this.isHaveFile = true;else this.isHaveFile = false;
+        this.api.execSv<any[]>("DM", "DM", "FileBussiness", "GetFilesByObjectIDAsync", [this.task.taskID]).subscribe(res => {
+          if (res && res.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
         })
         this.changeDetectorRef.detectChanges();
       }
@@ -738,6 +731,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;else this.isHaveFile = false ;
+    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
   }
 }
