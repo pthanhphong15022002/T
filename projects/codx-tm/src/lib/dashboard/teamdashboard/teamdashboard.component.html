@@ -1,0 +1,538 @@
+<div class="page-content d-flex flex-row pt-4">
+  <div class="w-75 m-2">
+    <div class="row bg-body mb-2">
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn align-self-end"
+          (mouseenter)="openTooltip()"
+          (mouseleave)="closeTooltip()"
+        >
+          <i class="icon-info text-dark"></i>
+        </button>
+      </div>
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.performance"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Availability</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.availability.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.performance"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Performance</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.performance.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.performance"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">Quality</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.quality.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+      <div class="col-3" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient2"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.kpi"
+                  markerShape="Image"
+                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  radius="90%"
+                  markerWidth="12"
+                  markerHeight="12"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p class="text-center" style="margin: 0px">KPI</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.kpi.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row bg-body mb-2">
+      <h3>Thống kê theo nhóm công việc</h3>
+      <div class="col-lg-6" style="height: 350px">
+        <ejs-treemap
+          id="container"
+          style="display: block"
+          weightValuePath="percentage"
+          rangeColorValuePath="percentage"
+          height="350"
+          [dataSource]="tasksByGroup"
+          [leafItemSettings]="leafItemSettings"
+          [tooltipSettings]='tooltipSettings'
+        >
+        </ejs-treemap>
+      </div>
+      <div class="col-lg-6" style="position: relative; height: 350px">
+        <ejs-accumulationchart
+          id="chart-rate-done"
+          width="400"
+          height="350"
+          [legendSettings]="legendRateDoneSettings"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="piedata1"
+              xName="x"
+              yName="y"
+              innerRadius="80%"
+            ></e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+        <div
+          style="
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.tasks }}
+          </p>
+          <p class="text-center" style="margin: 0px">Đánh giá</p>
+        </div>
+      </div>
+    </div>
+    <div class="row bg-body mb-2">
+      <h3>Thống kê công việc hoàn thành và số giờ thực hiện</h3>
+      <ejs-chart
+        style="display: block"
+        background="transparent"
+        [chartArea]="chartArea"
+        width="100%"
+        [align]="'center'"
+        id="chartbar"
+        [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis"
+        [legendSettings]="legendSettings"
+      >
+        <e-axes>
+          <e-axis
+            rowIndex="0"
+            name="WorkHours"
+            opposedPosition="true"
+            title=""
+            labelFormat=""
+            [minimum]="0"
+            [maximum]="100"
+            [interval]="4"
+          >
+          </e-axis>
+        </e-axes>
+        <e-series-collection>
+          <e-series
+            fill="#005DC7"
+            [dataSource]="dataColumn"
+            type="Column"
+            name="Tasks"
+            xName="label"
+            yName="value"
+            [cornerRadius]="radius"
+          >
+          </e-series>
+          <e-series
+            fill="#F9D923"
+            [dataSource]="dataLine"
+            type="Line"
+            name="WorkHours"
+            yName="value"
+            xName="label"
+            yAxisName="WorkHours"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+  <div class="w-25 border bg-body m-2">
+    <div class="h-25 bg-body mb-2">
+      <div class="d-flex justify-content-start" style="border-bottom: 1px solid rgb(0, 0, 0, 0.1); padding: 20px;">
+        <span class="icon-check-correct w-25"></span>
+        <div class="w-75">
+          <p style="font-size: 28px; font-weight: 900">{{ dbData?.doneTasks }}</p>
+          <div>Công việc đã hoàn tất</div>
+        </div>
+      </div>
+      <div class="p-4 d-flex">
+        <div class="w-50" style="border-right: 1px solid rgb(0, 0, 0, 0.1);  padding: 20px;">
+          <div>Tỷ lệ hoàn thành đúng hạn</div>
+          <div style="font-size: 28px; font-weight: 900; color: blue;">{{ dbData?.rateDoneTaskOnTime.toFixed(2) }} %</div>
+        </div>
+        <div class="w-50" style="padding: 20px;">
+          <div>Công việc trễ hạn</div>
+          <div class="text-center" style="font-size: 28px; font-weight: 900; color: blue;">{{ dbData?.overdueTasks }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="h-75 m-4">
+      <div class="text-right icon-sort_Z-A"></div>
+      <div class="text-right icon-sort_A-Z"></div>
+      <ejs-tab id="element">
+        <e-tabitems>
+          <e-tabitem
+            [header]="headerText[0]"
+            [content]="volumeWork"
+          ></e-tabitem>
+          <e-tabitem [header]="headerText[1]" [content]="workHours"></e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</div>
+
+<!-- Khối lượng công việc -->
+<ng-template #volumeWork>
+  <div class="d-flex flex-column">
+    <div
+      class="d-flex flex-row justify-content-end"
+      *ngFor="let item of vlWork"
+    >
+      <span>{{ item.id }}</span>
+      <codx-img
+        [objectId]="item.id"
+        [objectName]="'Lê Phạm Hoài Thương'"
+        [objectType]="'AD_Users'"
+      ></codx-img>
+      <div>{{ item.qtyTasks }}</div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Thời gian thực hiện -->
+<ng-template #workHours>
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>Lê Phạm Hoài Thương</span>
+        <codx-img
+          [objectId]="'ADMIN'"
+          [objectName]="'Lê Phạm Hoài Thương'"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar progress-bar-done"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-postpone"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-cancel"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
+          class="progress-bar progress-bar-new"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tooltip let-dialog>
+  <div class="modal-header" style="border-bottom: none">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between">
+          <span style="margin-right: 20px">
+            <i class="icon-info" style="color: #005dc7"></i
+          ></span>
+          <h2 id="modal-basic-title">
+            <codx-label
+              name="lblEvaluateWorkEfficiency"
+              default="Đánh giá hiệu quả làm việc"
+              [formModel]="dialog.formModel"
+            ></codx-label>
+          </h2>
+        </div>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="dialog.close()"
+        >
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Availability (%)</p>
+      <p class="">Tỷ lệ thời gian làm việc = <strong>(1)/(2)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (1) Số giờ chấm công thực tế của nhân viên
+      </p>
+      <p
+        style="
+          font-style: italic;
+          font-size: 12px;
+          font-weight: 200;
+          margin: 0px 0px 0px 30px;
+          color: rgb(0, 0, 0, 0.5);
+        "
+      >
+        (* Nếu chưa tích hợp chấm công sẽ bằng giờ công chuẩn)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (2) Số giờ công chuẩn theo lịch làm việc của công ty
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Performance (%)</p>
+      <p>Hiệu suất làm việc = <strong>(3)/(4)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (3) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (4) Tổng giờ công thực tế có điều chỉnh
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Quality (%)</p>
+      <p>Chất lượng công việc = <strong>(5)/(6)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (5) Tổng số giờ hoàn thành công việc thực tế được duyệt
+      </p>
+      <p
+        style="
+          font-style: italic;
+          font-size: 12px;
+          font-weight: 200;
+          margin: 0px 0px 0px 30px;
+          color: rgb(0, 0, 0, 0.5);
+        "
+      >
+        (* Nếu không sử dụng quy trình xét duyệt thì số giờ sẽ bằng số giờ thực
+        tế)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (6) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">KPI (%)</p>
+      <p>Năng suất tương đương</p>
+      <p
+        style="
+          margin-left: 100px;
+          padding-bottom: 10px;
+          width: fit-content;
+          box-sizing: bor-box;
+          border-bottom: 1px solid #000;
+          text-align: center;
+        "
+      >
+        Availability (%) * Performance (%) * Quality (%)
+      </p>
+      <p style="text-align: center">1000</p>
+    </div>
+  </div>
+</ng-template>

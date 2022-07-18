@@ -6,7 +6,7 @@
                 <div class="fw-bold text-dark mb-1">{{data.category}}</div>
                 <!-- <div *ngIf="editSkillMode"> -->
                 <!-- <div id='container'> -->
-                <div class="d-flex w-100">
+                <!-- <div class="d-flex w-100"> -->
                     <div class="sliderwrap flex-grow-1">
                         <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10" width="380"  [value]="data.valueX"
                             (valueChange)="sliderChange($event,data)">
@@ -14,8 +14,8 @@
                     </div>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-danger">
                         <span class="icon-close icon-18"></span>
-                    </a>
-                </div>
+                    </a>    
+                <!-- </div> -->
 
             </ng-container>
             
@@ -33,8 +33,7 @@
                     [multiple]="true"
                     [width]="width"
                     [height]="height"
-                    (clickSave)="saveAddUser($event)"
-                  >
+                    (clickSave)="saveAddUser($event)">
                   </codx-combobox-popup>
                 </ng-container>             
             </div>

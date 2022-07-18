@@ -64,6 +64,7 @@ export class TreeviewCommentComponent implements OnInit {
   
   votes:any;
   lstUserVote:any;
+  dataSelected:any[];
   
   showVotes(content:any, postID:string) {
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",postID)
@@ -77,7 +78,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     })
   }
-
 
   getUserVotes(postID:string,voteType:String){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetUserVotesAsync",[postID,voteType])

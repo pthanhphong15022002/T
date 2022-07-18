@@ -40,6 +40,7 @@
                 <div class="d-flex mb-4">
                     <codx-tag entityName="DM_FileInfo" [isEdit]="true"
                         [value]="''"
+                        (valueChange)="txtValue($event, 'tag')" 
                     ></codx-tag>
 
                     <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"
@@ -60,7 +61,7 @@
                 </div>
                 <div class="d-flex mb-2">
                     <span class="text-dark-75 mr-2">{{titleCreaton}}: </span>                    
-                    <span class="text-dark font-weight-bold">{{fileEditing.createdOn  | date: 'dd/MM/yyyy'}}</span>
+                    <span class="text-dark font-weight-bold">{{fileEditing.createdOn}}</span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
                     <ul class="nav nav-tabs nav-tabs-line">
@@ -117,7 +118,8 @@
                                         </div>
                                         <!-- <div class="text-dark-75">{{perm.objectName}}</div> -->
                                         <span *ngIf="perm.isSystem == false && this.assignRight"
-                                            (click)="removeUserRight(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+                                            (click)="removeUserRight(i)" class="icon-close icon-16 ml-2 text-danger">
+                                        </span>
                                     </div>
                                 </div>
                             </ng-container>
@@ -151,8 +153,8 @@
                                 class="form-control"
                                 type="text"
                                 style="width:100%"                              
-                                field="fileEditing.category"                           
-                                (valueChange)="txtValue($event, 'Subject')" 
+                                [crrValue]="fileEditing.subject"                           
+                                (valueChange)="txtValue($event, 'subject')" 
                             ></codx-input>                             
                         </div>
                     </div>
@@ -195,9 +197,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-3 col-form-label">{{tieleRelation}}</div>
+                        <div class="col-3 col-form-label">{{titleRelation}}</div>
                         <div class="col-9">
-                            <codx-input placeholder="{{tieleRelation}}..."                               
+                            <codx-input placeholder="{{titleRelation}}..."                               
                                 class="form-control"
                                 type="text"
                                 style="width:100%"

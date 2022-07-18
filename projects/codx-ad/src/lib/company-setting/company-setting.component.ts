@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   Input,
   OnInit,
@@ -26,29 +27,41 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./company-setting.component.css'],
   providers: [LowerCasePipe]
 })
-export class CompanySettingComponent extends UIComponent implements OnInit,AfterViewInit {
+export class CompanySettingComponent extends UIComponent implements OnInit, AfterViewInit {
   funcID: any;
   moreFunc = [];
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
-
+  items:any;
+  option:any;
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
- // data = new AD_CompanySettings();
+  // data = new AD_CompanySettings();
   dialog!: DialogRef;
 
-  // image
+  // image main logo
   check?: string
   imageUpload: UploadFile = new UploadFile();
   public imageSrc: string = '';
+  optionMainLogo:any = 'mainlogo';
+
+  // image mail header
+  checkMain?: string
+  imageUploadMain: UploadFile = new UploadFile();
+  public imageSrcMain: string = '';
+  @ViewChild('input') redel: ElementRef;
+  @Input() childProperty: any[];
+  optionMailHeader:any = 'mailheader';
+
+
+
 
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private codxService: CodxService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
@@ -71,55 +84,40 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         active: true,
         sameData: false,
         model: {
-         // template: this.template,
+          // template: this.template,
 
           panelRightRef: this.paneleft,
         },
       },
-     ];
+    ];
 
 
   }
-  valueChange(e){
+  valueChange(e) {
 
   }
   clickEditContact(data) {
-  this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "",data);
-  this.changeDetectorRef.detectChanges();
+    this.dialog = this.callfc.openForm(PopupContactComponent, "", 800, 800, "", data);
+    this.changeDetectorRef.detectChanges();
   }
 
   clickEditPersonal(data) {
-    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "",data);
+    this.dialog = this.callfc.openForm(PopupPersonalComponent, "", 800, 600, "", data);
     this.dialog.closed.subscribe(e => {
-      if(e?.event){
+      if (e?.event) {
         this.data = e?.event
-        this.detectorRef.detectChanges() ;
+        this.detectorRef.detectChanges();
       }
 
-    })}
-
-  // clickEditPersonal(data: any) {
-  //   var obj = {
-  //     post: data,
-  //     title: "Chia sẻ bài viết"
-  //   }
-  //   this.changeDetectorRef.detectChanges()
-  //   let option = new DialogModel();
-  //   option.DataService = this.listview.dataService as CRUDService;
-  //   option.FormModel = this.listview.formModel;
-  //   this.modal = this.callfc.openForm(PopupPersonalComponent, "", 600, 600, "", obj, '', option);
-  //   this.modal.closed.subscribe();
-  // }
+    })
+  }
 
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
         this.data = response;
-       // this.data.companyCode.toString().toLowerCase();
+        // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
-      }
-      else {
-        console.log('khong duoc');
       }
     })
   }
@@ -127,14 +125,46 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
     this.data.companyCode = this.data.companyCode.toLowerCase();
   }
 
-  // loadData(dataItem?) {
-  //   // console.log(dataItem);
-  //   // this.data = dataItem;
-  //   // console.log(this.data);
-  //   console.log('test12334');
-  // }
 
   async handleInputChange(event) {
+    if (event.target.files.length > 0) {
+      var file: File = event.target.files[0];
+      this.data.Logo = file.name;
+      var pattern = /image-*/;
+
+
+      var reader = new FileReader();
+      if (!file.type.match(pattern)) {
+        alert('invalid format');
+        return;
+      }
+      reader.onload = this._handleReaderLoaded.bind(this);
+      reader.readAsDataURL(file);
+      let dataTest: ArrayBuffer;
+      dataTest = await file.arrayBuffer();
+      this.check = file.name;
+      this.imageUpload.fileName = file.name;
+      this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+
+      // Save image main logo
+      // this.adService
+      // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
+      // .subscribe((response) => {
+      // });
+
+      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data,this.optionMailHeader,this.imageUpload])
+
+      this.changeDetectorRef.detectChanges();
+
+    }
+  }
+  _handleReaderLoaded(e) {
+    let reader = e.target;
+    this.imageSrc = reader.result;
+  }
+
+
+  async handleInputChangeMain(event) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
       this.data.Logo = file.name;
@@ -147,27 +177,19 @@ export class CompanySettingComponent extends UIComponent implements OnInit,After
         alert('invalid format');
         return;
       }
-      reader.onload = this._handleReaderLoaded.bind(this);
-      //  this.url.path = this.imageSrc;
+      reader.onload = this._handleReaderLoadedMain.bind(this);
       reader.readAsDataURL(file);
       let data: ArrayBuffer;
       data = await file.arrayBuffer();
       this.check = file.name;
-      this.imageUpload.fileName = file.name;
-      this.imageUpload.fileBytes = Array.from(new Uint8Array(data));
-      // this.api.execSv<any>("Sample", "Sample", "EmployeeBusiness", "post", this.url ).subscribe(res => {
-      //   console.log(res);
-
-      // })
-
-      console.log(reader.readAsDataURL(file));
+      this.imageUploadMain.fileName = file.name;
+      this.imageUploadMain.fileBytes = Array.from(new Uint8Array(data));
+      this.changeDetectorRef.detectChanges();
     }
   }
-  _handleReaderLoaded(e) {
+  _handleReaderLoadedMain(e) {
     let reader = e.target;
-    console.log(this.imageSrc);
-    this.imageSrc = reader.result;
-    console.log(this.data.Logo);
+    this.imageSrcMain = reader.result;
   }
 
 }

@@ -54,7 +54,7 @@
             <div *ngIf="note?.noteType == 'text'">
                 <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
                     (valueChange)="valueChange($event)" [crrValue]="note?.memo" class="test-textarea">
-                </codx-input>                
+                </codx-input>
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
@@ -84,14 +84,17 @@
 
         <div class="mb-3">
             <div *ngIf="formType == 'edit'">
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
-                    allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
-                </codx-attachment>
+                <div class="attachment">
+                    <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                        hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
+                        allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
+                    </codx-attachment>
+                </div>  
+                <codx-file [images]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
-                    <codx-image-grid [images]="listFileUpload" [showBtnRemove]='true'></codx-image-grid>
+                    <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file>
                 </div>
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
@@ -103,7 +106,6 @@
 
     </div>
     <div class="d-flex note-action border align-items-center justify-content-between">
-
         <div class="d-flex">
             <div [class.active]="noteType.text">
                 <span (click)="onType('text')" class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>

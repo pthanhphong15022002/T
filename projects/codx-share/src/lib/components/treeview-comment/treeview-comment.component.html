@@ -377,7 +377,7 @@
                         </a>
                     </li>
                     
-                    <li *ngFor="let vote of votes" class="nav-item" (click)="getUserVotes(dataComment.recID,vote)">
+                    <li *ngFor="let vote of votes" class="nav-item" (click)="getUserVotes(dataComment.recID,vote.voteType)">
                         <a class="nav-link" data-toggle="tab">
                             <div class="flex">
                                 <div class="">
@@ -396,7 +396,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="tab-content mt-2">
+                <div class="mt-2">
                     <div class="tab-pane">
                         <div *ngFor="let item of lstUserVote" class="d-flex align-items-center user-card py-4">
                             <div class="me-4">

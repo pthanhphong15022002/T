@@ -27,10 +27,7 @@ export class CodxAdService {
     return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "GetAsync")
   }
 
-  updateContactCompanySettings(data) {
-    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessContactAsync", data)
-  }
-  updatePersonalCompanySettings(data) {
-    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessPersonalAsync", data)
+  updateInformationCompanySettings(data, option?:any,imageUpload?:any) {
+    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [data,option,imageUpload])
   }
 }

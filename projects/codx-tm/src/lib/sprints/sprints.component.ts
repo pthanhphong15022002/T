@@ -71,12 +71,10 @@ export class SprintsComponent extends UIComponent {
   itemSelected: any;
   funcID = '';
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
-    private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-    private codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -107,7 +105,7 @@ export class SprintsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddEditSprintAsync';
     this.view.dataService.methodUpdate = 'AddEditSprintAsync';
     this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -260,7 +258,9 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
+    
     //this.codxService.navigate('',this.urlView)
   }
 

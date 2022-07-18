@@ -19,6 +19,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CreateFolderComponent } from './createFolder/createFolder.component';
 import { EditFileComponent } from './editFile/editFile.component';
 import { RolesComponent } from './roles/roles.component';
+import { AddRoleComponent } from './addrole/addrole.component';
 
 export const routes: Routes = [
   {
@@ -52,7 +53,8 @@ const T_Component: Type<any>[] = [
   CardComponent,
   CreateFolderComponent,
   EditFileComponent,
-  RolesComponent
+  RolesComponent,
+  AddRoleComponent
 ]
 @NgModule({
   imports: [

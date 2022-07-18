@@ -81,22 +81,31 @@
           <div class="row">
             <div class="col-1 img_option">
               <!-- change url image Main logo -->
-              <img alt="" class="img_logo" style="width:50px; height:50px;" src="../../../assets/themes/ad/default/img/logo.png">
-                <!-- <div class="change_image">
-                  <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
-                    (change)="handleInputChange($event)" />
-                  <div class="image-upload">
-                    <div *ngIf="!imageSrc; then tre; else gia">
-                    </div>
-                    <ng-template #tre>
-                      <img alt="" class="img_logo" src="https://d33wubrfki0l68.cloudfront.net/75dae7aa2c4990235428b3f9b98bcc74cb808e83/04e17/images/overlay-somethings-not-right.jpg">
-                    </ng-template>
-                    <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar"></ng-template>
+              <div class="container_img_logo img_logo">
+                <input name="imageUrlMain" hidden #fileInput_main type="file" accept="image/*"
+                  (change)="handleInputChangeMain($event)" />
+                <div *ngIf="!imageSrcMain; then imageDefaultMain; else imageUpdateMain">
+                </div>
+                <ng-template #imageDefaultMain>
+                  <img class="img_logo img_settings_logo" src="../../../assets/themes/ad/default/img/logo.png">
+                  <div class="overlay_main img_logo"></div>
+                  <div class="button_image_main">
+                    <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
+                      <i class="icon-create icon-18"></i>
+                    </button>
                   </div>
-                  <button class="button-icon button_change" type="button" (click)="fileInput.click()">
-                    <i class="icon-create icon-18"></i>
-                  </button>
-              </div> -->
+                </ng-template>
+                <ng-template #imageUpdateMain>
+                  <img [src]="imageSrcMain" class="img_logo img_settings_logo">
+                  <div class="overlay_main img_logo"></div>
+                  <div class="button_image_main">
+                    <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
+                      <i class="icon-create icon-18"></i>
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+
             </div>
             <div class="col-11">
               <div class="col-12">
@@ -106,7 +115,7 @@
               </div>
               <div class="col-12">
                 <i>
-                  <codx-label fiedName="" formName="" gridViewName="" default="Recommended: 40x40px PNG with">
+                  <codx-label fiedName="" formName="" gridViewName="" default="Recommended: 50x50px PNG with">
                   </codx-label><br>
                   <codx-label default="transparent background"></codx-label>
                 </i>
@@ -117,42 +126,34 @@
         <div class="accountinfo">
           <div class="row">
             <div class="col-4 img_optionFull">
-              <!-- change url image E-mail header -->
-             
 
-                  <!-- <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
-                    (change)="handleInputChange($event)" />
-                <div class="image-upload"> 
-                    <div *ngIf="!imageSrc; then tre; else gia">
-                    </div>
-                    <ng-template #tre>
-                      <img alt="" class="img_logo" style="width:200px; height:60px;" src="../../../assets/themes/ad/default/img/logoFull_default.png">
-                    </ng-template>
-                    <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar" style="width:200px; height:60px;"></ng-template>
+              <div class="container_img img_logoFull">
+                <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
+                  (change)="handleInputChange($event)" />
+
+                <div *ngIf="!imageSrc; then imageDefault; else imageUpdate">
+                </div>
+
+                <ng-template #imageDefault>
+                  <img class="img_logoFull img_settings"
+                    src="../../../assets/themes/ad/default/img/logoFull_default.png">
+                  <div class="overlay img_logoFull"></div>
+                  <div class="button_image">
+                    <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
+                      <i class="icon-create icon-18"></i>
+                    </button>
                   </div>
-                  <button class="button-icon button_change" type="button" (click)="fileInput.click()">
-                    click nha
-                  </button> -->
-
-
-              <div class="container_img">
-                <input name="imageUrl" hidden #fileInput type="file" accept="image/*"
-                (change)="handleInputChange($event)" />
-
-                <div *ngIf="!imageSrc; then tre; else gia">
-                </div>
-
-                <ng-template #tre>
-                  <img class="img_logoFull img_settings" src="../../../assets/themes/ad/default/img/logoFull_default.png">
                 </ng-template>
-                <ng-template #gia><img [src]="imageSrc" class="avatar" class="avatar" style="width:200px; height:60px;"></ng-template>
+                <ng-template #imageUpdate>
+                  <img [src]="imageSrc" class="img_logoFull img_settings">
+                  <div class="overlay img_logoFull"></div>
+                  <div class="button_image">
+                    <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
+                      <i class="icon-create icon-18"></i>
+                    </button>
+                  </div>
+                </ng-template>
 
-                <div class="overlay"></div>
-                <div class="button_image">
-                  <button class="button-icon button_change_email" type="button" (click)="fileInput.click()" >
-                    <i class="icon-create icon-18"></i>
-                  </button>
-                </div>
               </div>
 
             </div>
@@ -165,7 +166,7 @@
               <div class="col-12">
                 <i>
                   <codx-label fiedName="" formName="" gridViewName="" default="Recommended resolution"></codx-label><br>
-                  <codx-label default="580x80px"></codx-label>
+                  <codx-label default="200x60px"></codx-label>
                 </i>
               </div>
             </div>
@@ -239,12 +240,11 @@
           <div class="col-6">
             <div class="row">
               <div class="col-3">
-                <!-- <div *ngIf="data.Logo; else imgDefault">
-                  <img class="img_avatar" src="../../../assets/img/{{data.Logo}}" />
+                <div *ngIf="data.Logo; else imgDefault_personal">
+                  <img class="img_avatar" src="../../../{{data.Logo}}}" alt="" />
                 </div>
-                <ng-template #imgDefault> <img class="img_avatar" src="../../../assets/img/avatar.png" /></ng-template> -->
-
-
+                <ng-template #imgDefault_personal> <img class="img_avatar" src="../../../assets/img/avatar.png" />
+                </ng-template>
               </div>
               <div class="col-9">
                 <div class="col-12 contactName">
@@ -263,7 +263,7 @@
                 </div>
                 <div class="col-12 personal_option">
                   <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
-                  </codx-label>{{data.mobile}} <i class="icon-create"></i><br>
+                  </codx-label>{{data.mobile}}<br>
                 </div>
               </div>
             </div>
