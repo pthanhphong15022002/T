@@ -401,18 +401,38 @@
 
 <!-- Khối lượng công việc -->
 <ng-template #volumeWork>
-  <div class="d-flex flex-column">
-    <div
-      class="d-flex flex-row justify-content-end"
-      *ngFor="let item of vlWork"
-    >
-      <span>{{ item.id }}</span>
-      <codx-img
-        [objectId]="item.id"
-        [objectName]="'Lê Phạm Hoài Thương'"
-        [objectType]="'AD_Users'"
-      ></codx-img>
-      <div>{{ item.qtyTasks }}</div>
+  <div class="d-flex flex-column" *ngFor="let item of vlWork">
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-row justify-content-end">
+        <span>{{ item?.id }}</span>
+        <codx-img
+          [objectId]="item?.id"
+          [objectName]="item?.id"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar progress-bar-done"
+          role="progressbar"
+          [style.width.%]="item?.status.done"
+        ></div>
+        <div
+          class="progress-bar progress-bar-processing"
+          role="progressbar"
+          [style.width.%]="item?.status.processing"
+        ></div>
+        <div
+          class="progress-bar progress-bar-postpone"
+          role="progressbar"
+          [style.width.%]="item?.status.postpone"
+        ></div>
+        <div
+          class="progress-bar progress-bar-cancel"
+          role="progressbar"
+          [style.width.%]="item?.status.cancel"
+        ></div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -436,17 +456,17 @@
           style="width: 20%"
         ></div>
         <div
+          class="progress-bar progress-bar-processing"
+          role="progressbar"
+          style="width: 20%"
+        ></div>
+        <div
           class="progress-bar progress-bar-postpone"
           role="progressbar"
           style="width: 20%"
         ></div>
         <div
           class="progress-bar progress-bar-cancel"
-          role="progressbar"
-          style="width: 20%"
-        ></div>
-        <div
-          class="progress-bar progress-bar-new"
           role="progressbar"
           style="width: 20%"
         ></div>

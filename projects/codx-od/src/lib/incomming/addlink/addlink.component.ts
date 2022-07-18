@@ -34,6 +34,7 @@ export class AddLinkComponent implements OnInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
+    this.searchText("");
   }
  
   searchText(val:any)
