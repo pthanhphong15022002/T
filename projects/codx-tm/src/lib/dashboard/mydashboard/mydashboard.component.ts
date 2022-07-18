@@ -7,6 +7,7 @@ import {
   ViewChild,
   TemplateRef,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
@@ -15,6 +16,7 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
   selector: 'my-dashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
@@ -116,6 +118,8 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
       width: 0,
     },
   };
+
+  options = new DataRequest();
   //#endregion chartcolumn
 
   dbData: any;
@@ -139,6 +143,13 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.model.dataValue = this.auth.get().userID;
     this.model.pageLoading = false;
 
+    this.options.pageLoading = false;
+    this.options.entityName = "FD_KudosTrans";
+    this.options.entityPermission = "FD_KudosTrans";
+    this.options.gridViewName = "grvKudosTrans";
+    this.options.formName = "KudosTrans";
+    this.options.funcID = this.funcID;
+
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.getGeneralData();
   }
@@ -159,16 +170,17 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
         console.log('MyDB', this.dbData);
       });
 
-    this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
-        this.model,
-        this.fromDate,
-        this.toDate,
-      ])
-      .subscribe((res: any) => {
-        this.taskOfDay = res;
-        console.log(this.taskOfDay);
-      });
+    // this.api
+    //   .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
+    //     this.model,
+    //     this.fromDate,
+    //     this.toDate,
+    //   ])
+    //   .subscribe((res: any) => {
+    //     this.taskOfDay = res;
+    //     console.log(this.taskOfDay);
+    //     this.detectorRef.detectChanges();
+    //   });
   }
 
   openTooltip() {

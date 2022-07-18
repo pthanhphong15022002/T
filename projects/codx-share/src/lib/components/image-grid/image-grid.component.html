@@ -172,9 +172,9 @@
               <!-- <source [src]="images[4].thumbnail" type="video/mp4"> -->
             </video>
           </ng-template>
-          <ng-container *ngIf="images.length - 5 > 0">
+          <ng-container *ngIf="images?.length - 5 > 0">
             <div class="overlay-wrapper-opacity rounded feed-img-more h-150px">
-              <span class="text-number">+ {{images.length - 5}}</span>
+              <span class="text-number">+ {{images?.length - 5}}</span>
             </div>
           </ng-container>
         </div>

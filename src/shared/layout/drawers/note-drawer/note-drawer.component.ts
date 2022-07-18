@@ -73,7 +73,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).update(data).subscribe();
+            (this.lstView.dataService as CRUDService).load().subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -84,6 +84,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     // this.onCountNotePin();
+    this.getNumberNotePin();
   }
 
   getMaxPinNote() {
@@ -164,6 +165,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.checkUpdateNotePin = true;
       }
     }
+    var object = [{ data: data, type: 'edit' }]
+    this.noteService.data.next(object);
     this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
   }
 
@@ -184,6 +187,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       data: this.lstView.dataService.data,
       typeLst: this.typeList,
       formType: 'add',
+      component: 'note-drawer',
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;

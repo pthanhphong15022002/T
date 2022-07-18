@@ -28,7 +28,7 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { TreeMapModule, TreeMapTooltipService } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -55,6 +55,8 @@ import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
+import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
+import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 export const routes: Routes = [
   {
     path: '',
@@ -77,6 +79,10 @@ export const routes: Routes = [
             component: SprintsTasksComponent,
           },
         ],
+      },
+      {
+        path: 'meeting/:funcID',
+        component: TMMeetingsComponent,
       },
       {
         path: 'mydashboard/:funcID',
@@ -181,10 +187,9 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  // MwpComponent,
-  // MwpViewDetailComponent,
-  // MwpPopupAddComponent,
   ViewListComponent,
+  TMMeetingsComponent,
+  PopupAddMeetingComponent,
 
 ];
 @NgModule({
@@ -210,6 +215,7 @@ const T_Component: Type<any>[] = [
   exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [TreeMapTooltipService]
 })
 export class TMModule {
   public static forRoot(
