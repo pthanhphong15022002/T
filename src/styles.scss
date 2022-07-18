@@ -160,12 +160,13 @@ ngb-popover-window[role="tooltip"] {
 
 .card {
     box-shadow: none;
+}
 
-    // css trễ hạn công việc - chưa có vll nên tạm dùng vậy
-    .unexpired {
-        color: #C9C9D4;
-    }
+// css trễ hạn công việc - chưa có vll nên tạm dùng vậy
+.unexpired {
+    color: #C9C9D4;
+}
 
-    .expired {
-        color: #F64E60;
-    }
+.expired {
+    color: #F64E60;
+}
