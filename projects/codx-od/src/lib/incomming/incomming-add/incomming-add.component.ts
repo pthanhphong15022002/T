@@ -1,6 +1,6 @@
 
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -37,6 +37,7 @@ export class IncommingAddComponent implements OnInit {
   hideThumb = false;
   hidepb = true;
   activeDiv: any;
+  dataRq = new DataRequest;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -55,12 +56,19 @@ export class IncommingAddComponent implements OnInit {
   {
     if(this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
+
+
     this.dispatch.status = '1';
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
     this.type = this.data?.type;
     this.formModel = this.data?.formModel;
+    
+    this.dataRq.entityName = this.formModel?.entityName;
+    this.dataRq.formName = this.formModel?.formName;
+    this.dataRq.funcID =   this.formModel?.funcID;
+
     if(this.type == "add" || this.type == "copy")
     {
       this.dispatch.copies = 1;
@@ -98,15 +106,6 @@ export class IncommingAddComponent implements OnInit {
      }); */
    }
  }
-
-  valueChange(evt: any) {
-    this.data[evt.field] = evt.data;
-  }
-
-  saveForm() {
-    this.dialog.dataService.save().subscribe();
-  }
-
 
   hideDept(action:any)
   {
@@ -216,7 +215,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.status = "1",
         this.dispatch.approveStatus = "1",
         this.dispatch.dispatchType = "1";
-        this.odService.saveDispatch(this.dispatch).subscribe((item) => {
+        this.odService.saveDispatch(this.dataRq,this.dispatch).subscribe((item) => {
           if (item.status == 0) 
           {
             this.data = item;

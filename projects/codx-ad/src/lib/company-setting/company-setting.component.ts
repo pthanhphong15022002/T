@@ -20,6 +20,7 @@ import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
 import { LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-company-setting',
@@ -44,13 +45,15 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   // image main logo
   check?: string
   imageUpload: UploadFile = new UploadFile();
-  public imageSrc: string = '';
+  imageLogo:any;
+  //image: string = '';
   optionMainLogo:any = 'mainlogo';
 
   // image mail header
   checkMain?: string
   imageUploadMain: UploadFile = new UploadFile();
   public imageSrcMain: string = '';
+  image:any;
   @ViewChild('input') redel: ElementRef;
   @Input() childProperty: any[];
   optionMailHeader:any = 'mailheader';
@@ -62,7 +65,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sanitizer:DomSanitizer,
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -84,14 +88,10 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
         active: true,
         sameData: false,
         model: {
-          // template: this.template,
-
           panelRightRef: this.paneleft,
         },
       },
     ];
-
-
   }
   valueChange(e) {
 
@@ -108,16 +108,33 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
         this.data = e?.event
         this.detectorRef.detectChanges();
       }
-
     })
   }
 
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
+        if(response){
         this.data = response;
+        if(this.data.logoFull){
+          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+          let blob = new Blob([bytes], { type:  "image/jpeg" });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.image = image;
+        }
+
+        if(this.data.logo){
+          var bytes = this.base64ToArrayBuffer(this.data.logo);
+          let blob = new Blob([bytes], { type:  "image/jpeg" });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.imageLogo = image;
+        }
+
         // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
+        }
       }
     })
   }
@@ -125,71 +142,96 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     this.data.companyCode = this.data.companyCode.toLowerCase();
   }
 
+  changeMainLogo(event) {
+    this.handleInputChange(event,this.optionMainLogo)
+  }
+  changeMainHeader(event) {
+    this.handleInputChange(event,this.optionMailHeader)
+  }
 
-  async handleInputChange(event) {
+  async handleInputChange(event, optionCheck?:any) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
-      this.data.Logo = file.name;
+      this.data.logoFull = file.name;
       var pattern = /image-*/;
-
 
       var reader = new FileReader();
       if (!file.type.match(pattern)) {
         alert('invalid format');
         return;
       }
-      reader.onload = this._handleReaderLoaded.bind(this);
+      
+      //  Save image main logo
+      if(optionCheck == this.optionMainLogo) {  
+      reader.onload = this._handleReaderLoadedMainLogo.bind(this);
       reader.readAsDataURL(file);
       let dataTest: ArrayBuffer;
       dataTest = await file.arrayBuffer();
-      this.check = file.name;
       this.imageUpload.fileName = file.name;
       this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
-
-      // Save image main logo
-      // this.adService
-      // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
-      // .subscribe((response) => {
-      // });
-
-      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data,this.optionMailHeader,this.imageUpload])
-
-      this.changeDetectorRef.detectChanges();
-
-    }
-  }
-  _handleReaderLoaded(e) {
-    let reader = e.target;
-    this.imageSrc = reader.result;
-  }
-
-
-  async handleInputChangeMain(event) {
-    if (event.target.files.length > 0) {
-      var file: File = event.target.files[0];
-      this.data.Logo = file.name;
-      //  this.employee.path = File;sch
-      // this.url.avatar = file.name;
-
-      var pattern = /image-*/;
-      var reader = new FileReader();
-      if (!file.type.match(pattern)) {
-        alert('invalid format');
-        return;
+        this.data.logo = ''; // main logo
+        this.adService
+        .updateInformationCompanySettings(this.data,this.optionMainLogo,this.imageUpload)
+        .subscribe();
       }
-      reader.onload = this._handleReaderLoadedMain.bind(this);
-      reader.readAsDataURL(file);
-      let data: ArrayBuffer;
-      data = await file.arrayBuffer();
-      this.check = file.name;
-      this.imageUploadMain.fileName = file.name;
-      this.imageUploadMain.fileBytes = Array.from(new Uint8Array(data));
+
+      //  Save image main logo
+      // if(optionCheck == this.optionMailHeader) {
+      //   reader.onload = this._handleReaderLoadedMailHeader.bind(this);
+      //   this.data.logoFull = ''; // header logo
+      //   this.adService
+      //   .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
+      //   .subscribe();
+      // }
       this.changeDetectorRef.detectChanges();
     }
   }
-  _handleReaderLoadedMain(e) {
+  _handleReaderLoadedMailHeader(e) {
     let reader = e.target;
-    this.imageSrcMain = reader.result;
+    this.image = reader.result;
+  }
+
+  _handleReaderLoadedMainLogo(e) {
+    let reader = e.target;
+    this.imageLogo = reader.result;
+  }
+  // async handleInputChangeMain(event) {
+  //   if (event.target.files.length > 0) {
+  //     var file: File = event.target.files[0];
+  //     this.data.logo = file.name;
+  //     //  this.employee.path = File;sch
+  //     // this.url.avatar = file.name;
+
+  //     var pattern = /image-*/;
+  //     var reader = new FileReader();
+  //     if (!file.type.match(pattern)) {
+  //       alert('invalid format');
+  //       return;
+  //     }
+  //     reader.onload = this._handleReaderLoadedMain.bind(this);
+  //     reader.readAsDataURL(file);
+  //     let data: ArrayBuffer;
+  //     data = await file.arrayBuffer();
+  //     this.check = file.name;
+  //     this.imageUploadMain.fileName = file.name;
+  //     this.imageUploadMain.fileBytes = Array.from(new Uint8Array(data));
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
+  // _handleReaderLoadedMain(e) {
+  //   let reader = e.target;
+  //   this.imageSrcMain = reader.result;
+  // }
+
+  base64ToArrayBuffer(base64: string) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
   }
 
 }

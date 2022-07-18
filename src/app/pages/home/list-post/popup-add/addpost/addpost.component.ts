@@ -108,7 +108,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.user = authStore.userValue;
 
   }
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit() {
     this.myPermission = new Permission();
@@ -155,12 +156,39 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
+  eventApply(event:any){
+    if(!event){
+      return;
+    }
+    var data = event[0];
+    var objectType = data.objectType;
+    this.objectType = objectType;
+    this.shareControl = objectType;
+
+    if(isNaN(Number(objectType))){
+      this.lstRecevier = data.dataSelected;
+      if(objectType == 'U')
+      {
+        this.recevierID = data.id;
+        this.recevierName = data.text;
+      }
+      else{
+        this.recevierName = data.objectName + " " + data.text;
+      }
+    }
+    else
+    {
+        this.recevierName = data.objectName;
+    }
+    
+    this.dt.detectChanges();
+  }
   publishPost() {
     if (!this.message) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    let post = new WP_Comments();
+    let post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
     post.category = this.CATEGORY.POST;
@@ -207,27 +235,24 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       })
     }
     // upload file
-    if (this.dmSV.fileUploadList.length > 0) {
+    if (this.listFileUpload.length > 0) {
         post.isUpload = true;
-        post.files = this.dmSV.fileUploadList;
+        post.files = this.listFileUpload;
     }
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
-          this.dialogRef.dataService  as CRUDService;
-          this.dialogRef.dataService.add(res).subscribe((res2) =>
-            {
-              if(res2){
-                 this.notifySvr.notifyCode('E0026');
-              }
-            }
-          )
-        if(res.isUpload){
+          this.dialogRef.DataService  as CRUDService;
+          this.dialogRef.dataService.add(res,0).subscribe();
+
+        if(this.listFileUpload.length > 0){
           this.atmCreate.objectId = res.recID;
           this.atmCreate.saveFiles();
         }
         this.dialogRef.close();
         this.dt.detectChanges();
+        this.notifySvr.notifyCode('E0026');
+
         }
         
       });
@@ -283,40 +308,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.notifySvr.notifyCode('E0026');
+          this.dialogRef.close();
         }
       });
-  }
-
-  openFormShare(content: any) {
-    this.callFunc.openForm(content, '', 420, window.innerHeight);
-  }
-  
-  eventApply(event:any){
-    if(!event){
-      return;
-    }
-    var data = event[0];
-    var objectType = data.objectType;
-    this.objectType = objectType;
-    this.shareControl = objectType;
-
-    if(isNaN(Number(objectType))){
-      this.lstRecevier = data.dataSelected;
-      if(objectType == 'U')
-      {
-        this.recevierID = data.id;
-        this.recevierName = data.text;
-      }
-      else{
-        this.recevierName = data.objectName + " " + data.text;
-      }
-    }
-    else
-    {
-        this.recevierName = data.objectName;
-    }
-    
-    this.dt.detectChanges();
   }
   sharePost() {
     if (!this.message) {
@@ -329,31 +323,66 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.category = this.CATEGORY.SHARE;
     post.approveControl = "0";
     post.refID = this.dataShare.recID;
+    post.refType = this.entityName;
+    post.shares = this.dataShare;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
-    this.lstRecevier.map((item) => {
-      var per = new Permission();
-      per.memberType = "3";
-      per.objectType = item.objectType;
-      per.objectID = item.id;
-      per.objectName = item.text;
-      per.read = true;
-      per.isActive = true;
-      per.createdBy = this.user.userID;
-      per.createdOn = new Date();
-      lstPermissions.push(per);
-    })
+    if(this.lstRecevier.length > 0){
+      this.lstRecevier.forEach((item) => {
+        var per = new Permission();
+        per.memberType = "3";
+        switch(this.objectType){
+          case "U":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "P":
+            per.objectID = item.PositionID;
+            per.objectName = item.PositionName;
+            per.objectType = this.objectType;
+            break
+          case "D":
+            per.objectID = item.OrgUnitID;
+            per.objectName = item.OrgUnitName;
+            per.objectType = this.objectType;
+            break;
+          case "G":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "R":
+            per.objectID = item.RoleID;
+            per.objectName = item.RoleName;
+            per.objectType = this.objectType;
+            break
+        }
+        per.read = true;
+        per.isActive = true;
+        per.createdBy = this.user.userID;
+        per.createdOn = new Date();
+        post.permissions.push(per);
+      });
+    }
     post.permissions = lstPermissions;
+    // upload file
+    if (this.listFileUpload.length > 0) {
+      post.isUpload = true;
+      post.files = this.listFileUpload;
+  }
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
+          this.dialogRef.DataService as CRUDService;
           this.dialogRef.dataService.add(res, 0).subscribe();
-          this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
         }
       });
   }
-
+  openFormShare(content: any) {
+    this.callFunc.openForm(content, '', 420, window.innerHeight);
+  }
   getShareOfComment(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -407,30 +436,16 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.atmCreate.uploadFile();
   }
   listFileUpload:any[] = []
-  isUploadImg = false;
-  isUploadFile = false;
-  images:any[] = [];
-  files:any[] = [];
 
   getfileCount(event: any) {
     if (!event || event.data.length <= 0) {
-      this.isUploadFile = false;
       this.listFileUpload = [];
       this.dmSV.fileUploadList = []
       return;
     }
     else
     {
-      this.isUploadFile = true;
       this.listFileUpload = event.data;
-      this.listFileUpload.forEach((f:any) => {
-        if(f.data.indexOf("data:image/") >= 0 || f.data.indexOf("data:video/") >= 0){
-          this.images.push(f);
-        }
-        else{
-          this.files.push(f);
-        }
-      })
     }
     this.dt.detectChanges();
   }

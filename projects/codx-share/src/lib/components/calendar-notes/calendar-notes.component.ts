@@ -13,12 +13,9 @@ import {
   AfterViewInit,
   Injector,
 } from '@angular/core';
-import { Thickness, DateTime } from '@syncfusion/ej2-angular-charts';
 import { Notes } from '@shared/models/notes.model';
-import { StatusNote } from '@shared/models/enum/enum';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
-import { ActivatedRoute } from '@angular/router';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 @Component({
   selector: 'app-calendar-notes',

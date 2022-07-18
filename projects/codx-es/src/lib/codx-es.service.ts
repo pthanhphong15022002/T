@@ -589,6 +589,16 @@ export class CodxEsService {
       data
     );
   }
+
+  getSignAreas(data): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'GetSignAreasAsync',
+      data
+    );
+  }
   //#endregion
 }
 export class LayoutModel {
