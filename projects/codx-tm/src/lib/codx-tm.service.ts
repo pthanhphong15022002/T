@@ -284,32 +284,6 @@ export class CodxTMService {
     );
   }
 
-  getChartData(
-    model: Object,
-    daySelectedFrom: Date,
-    daySelectedTo: Date,
-    fromDate: Date,
-    toDate: Date,
-    beginMonth: Date,
-    endMonth: Date
-  ) {
-    return this.api.execSv<any>(
-      'TM',
-      'TM',
-      'TaskBusiness',
-      'GetGeneralDataAsync',
-      [
-        model,
-        daySelectedFrom,
-        daySelectedTo,
-        fromDate,
-        toDate,
-        beginMonth,
-        endMonth,
-      ]
-    );
-  }
-
   convertListToObject(
     list: Array<object>,
     fieldName: string,
@@ -331,7 +305,7 @@ export class CodxTMService {
     return this.api.execSv(
       'TM',
       'TM',
-      'ReportBusiness',
+      'TaskBusiness',
       'GetDataMyDashboardAsync',
       [model, beginMonth, endMonth]
     );
@@ -349,7 +323,7 @@ export class CodxTMService {
     return this.api.execSv(
       'TM',
       'TM',
-      'ReportBusiness',
+      'TaskBusiness',
       'GetDataTeamDashboardAsync',
       [model, beginMonth, endMonth]
     );

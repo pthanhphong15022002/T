@@ -89,12 +89,12 @@
                         hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
                         allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                     </codx-attachment>
-                </div>  
-                <codx-file [images]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
+                </div>
+                <codx-file [lstFile]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
-                    <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file>
+                    <!-- <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file> -->
                 </div>
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
@@ -129,7 +129,7 @@
     <div class="d-flex justify-content-between note-footer">
         <div class="d-flex align-items-center">
             <codx-label name="lblShowCalendar" formName="Notes" default="Hiển thị trên lịch"></codx-label>
-            <div class="ms-2">
+            <div class="ms-2 pt-1">
                 <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label" class="test-check"
                     (valueChange)="valueChange($event)" [crrValue]="note?.showCalendar" [checked]="note?.showCalendar">
                 </codx-input>
