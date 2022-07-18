@@ -82,9 +82,9 @@
             <div class="col-1 img_option">
               <!-- change url image Main logo -->
               <div class="container_img_logo img_logo">
-                <input name="imageUrlMain" hidden #fileInput_main type="file" accept="image/*"
-                  (change)="handleInputChangeMain($event)" />
-                <div *ngIf="!imageSrcMain; then imageDefaultMain; else imageUpdateMain">
+                <input name="imageUrlMain" hidden #fileInput_main type="file" accept="themes/ad/images/*"
+                  (change)="changeMainLogo($event)" />
+                <div *ngIf="!imageLogo; then imageDefaultMain; else imageUpdateMain">
                 </div>
                 <ng-template #imageDefaultMain>
                   <img class="img_logo img_settings_logo" src="../../../assets/themes/ad/default/img/logo.png">
@@ -96,7 +96,7 @@
                   </div>
                 </ng-template>
                 <ng-template #imageUpdateMain>
-                  <img [src]="imageSrcMain" class="img_logo img_settings_logo">
+                  <img [src]="imageLogo" class="img_logo img_settings_logo">
                   <div class="overlay_main img_logo"></div>
                   <div class="button_image_main">
                     <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
@@ -105,7 +105,7 @@
                   </div>
                 </ng-template>
               </div>
-
+              
             </div>
             <div class="col-11">
               <div class="col-12">
@@ -130,7 +130,7 @@
 
               <div class="container_img img_logoFull">
                 <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
-                  (change)="handleInputChange($event)" />
+                  (change)="changeMainHeader($event)" />
 
                 <div *ngIf="!image; then imageDefault; else imageUpdate">
                 </div>
@@ -155,7 +155,6 @@
                     </button>
                   </div>
                 </ng-template>
-
               </div>
 
             </div>
