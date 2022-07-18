@@ -232,6 +232,8 @@ export class AddNoteComponent implements OnInit {
 
   onCreateNote() {
     this.note.createdOn = this.currentDate;
+    var dateNow = new Date(Date.now());
+
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
     if (this.type == 'check' || this.type == 'list') {
@@ -261,7 +263,11 @@ export class AddNoteComponent implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
-          var object = [{ data: res, type: 'add' }]
+          var object = [];
+          if (this.note.createdOn != dateNow.toLocaleDateString())
+            object = [{ data: res, type: 'add-otherDate' }]
+          else
+            object = [{ data: res, type: 'add-currentDate' }]
           this.noteService.data.next(object);
           this.dialog.close()
           if (this.note?.showCalendar == true) {
@@ -297,7 +303,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
-    if (this.countNotePin >= this.maxPinNotes) {
+    if (this.countNotePin + 1 > this.maxPinNotes) {
       if (this.pin == '1' || this.pin == true) {
         this.openFormUpdateIsPin(this.note);
       } else {
@@ -313,7 +319,10 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEdit() {
+    debugger;
+    var dateNow = new Date(this.note.createdOn);
     this.note.createdOn = this.currentDate;
+
     if (this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
@@ -324,7 +333,12 @@ export class AddNoteComponent implements OnInit {
           this.checkUpdate = true;
           if (this.checkFile == true)
             this.attachment.saveFiles();
-          var object = [{ data: res, type: 'edit' }]
+          var object = [];
+          debugger;
+          if (dateNow.toLocaleDateString() == this.currentDate)
+            object = [{ data: res, type: 'edit-currentDate' }]
+          else
+            object = [{ data: res, type: 'edit-otherDate' }]
           this.noteService.data.next(object);
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
