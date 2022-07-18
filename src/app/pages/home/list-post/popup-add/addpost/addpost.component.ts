@@ -108,7 +108,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.user = authStore.userValue;
 
   }
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit() {
     this.myPermission = new Permission();
@@ -214,20 +215,17 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
-          this.dialogRef.dataService  as CRUDService;
-          this.dialogRef.dataService.add(res).subscribe((res2) =>
-            {
-              if(res2){
-                 this.notifySvr.notifyCode('E0026');
-              }
-            }
-          )
-        if(res.isUpload){
+          this.dialogRef.DataService  as CRUDService;
+          this.dialogRef.dataService.add(res,0).subscribe();
+
+        if(this.dmSV.fileUploadList.length > 0){
           this.atmCreate.objectId = res.recID;
           this.atmCreate.saveFiles();
         }
         this.dialogRef.close();
         this.dt.detectChanges();
+        this.notifySvr.notifyCode('E0026');
+
         }
         
       });
@@ -284,6 +282,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.notifySvr.notifyCode('E0026');
+          this.dialogRef.close();
         }
       });
   }
@@ -330,6 +329,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.category = this.CATEGORY.SHARE;
     post.approveControl = "0";
     post.refID = this.dataShare.recID;
+    post.refType = this.entityName;
+    post.shares = this.dataShare;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
     if(this.lstRecevier.length > 0){
@@ -376,7 +377,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if(res){
           this.dialogRef.DataService as CRUDService;
           this.dialogRef.dataService.add(res, 0).subscribe();
-          this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
         }
       });
@@ -435,18 +435,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.atmCreate.uploadFile();
   }
   listFileUpload:any[] = []
-  isUploadFile = false;
 
   getfileCount(event: any) {
     if (!event || event.data.length <= 0) {
-      this.isUploadFile = false;
       this.listFileUpload = [];
       this.dmSV.fileUploadList = []
       return;
     }
     else
     {
-      this.isUploadFile = true;
       this.listFileUpload = event.data;
     }
     this.dt.detectChanges();

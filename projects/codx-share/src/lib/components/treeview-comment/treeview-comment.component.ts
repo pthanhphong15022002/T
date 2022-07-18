@@ -148,7 +148,7 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.dataComment.recID, type]
+          [post.recID, value, post.recID, type]
         )
         .subscribe((res) => {
           if (res) {
@@ -395,7 +395,7 @@ export class TreeviewCommentComponent implements OnInit {
       this.addNode(parent, newNode, id);
       // parent[this.fieldCheck] = true;
     } else {
-      this.addNode(this.rootData, newNode, id);
+      this.addNode(this.dataComment, newNode, id);
     }
 
     this.dt.detectChanges();
@@ -445,7 +445,7 @@ export class TreeviewCommentComponent implements OnInit {
         });
       } else {
         if (!this.rootData) return;
-        this.rootData = this.rootData.filter(function (element: any, index: any) {
+        this.dataComment = this.dataComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       }

@@ -210,7 +210,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     super(injector);
   }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.lstFile);
     if(changes.lstFile){
       let files = changes.lstFile.currentValue;
       if(files && files.length >0 ){

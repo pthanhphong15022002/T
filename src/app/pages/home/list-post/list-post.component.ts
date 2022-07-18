@@ -102,6 +102,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     }]
     this.getGridViewSetUp();
+    this.codxViews.dataService.methodSave = "PublishPostAsync";
     this.codxViews.dataService.methodDelete = "DeletePostAsync";
     console.log(this.codxViews.dataService);
   }
@@ -132,8 +133,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.codxViews.dataService as CRUDService;
     this.codxViews.dataService.delete([data]).subscribe((res) => {
       if (res) {
-        this.notifySvr.notifyCode('E0026');
-        this.api.execSv("DM",
+          this.api.execSv("DM",
           "ERM.Business.DM",
           "FileBussiness",
           "DeleteByObjectIDAsync",

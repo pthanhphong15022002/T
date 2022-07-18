@@ -143,15 +143,10 @@
                     placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
-            <div *ngIf="dataEdit.isUploadImg">
+            <div >
                 <codx-file [objectID]="dataEdit.recID" [showBtnRemove]='true'></codx-file>
             </div>
-            <div *ngIf="dataEdit.isUploadFile">
-                <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit.recID" hideFolder="1"
-                    hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getfileCount($event)" idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
-                </codx-attachment>
-            </div>
+            
         </div>
     </ng-container>
 </ng-template>
@@ -191,25 +186,11 @@
                         <read-more #readmore [content]="dataShare?.content" [limit]="800" [completeWords]="true">
                         </read-more>
                     </div>
-
-                    <ng-container *ngIf="dataShare.isUpload">
-                        <div class="pic-feed">
-                            <ng-container *ngIf="dataShare.isUploadImg">
-                                <div class="pic-feed-img">
-                                    <codx-file [objectID]="dataShare.recID"></codx-file>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="dataShare.isUploadVideo">
-                                <video src="#"></video>
-                            </ng-container>
-                            <ng-container *ngIf="dataShare.isUploadFile">
-                                <codx-attachment [objectId]="dataShare.recID"   idBrowse="atmView"
-                                    objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
-                                    allowExtensions=".jpg,.png">
-                                </codx-attachment>
-                            </ng-container>
+                    <div class="pic-feed">
+                        <div class="pic-feed-img">
+                            <codx-file [objectID]="dataShare.recID"></codx-file>
                         </div>
-                    </ng-container>
+                    </div>
                 </ng-container>
                 <ng-template #category2>
                     <div class="p-0 m-0">
