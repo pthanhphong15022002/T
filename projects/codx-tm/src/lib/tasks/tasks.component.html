@@ -1,6 +1,6 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" (clickMoreFunction)="receiveMF($event)">
   </app-view-detail>
 </ng-template>
 
@@ -12,9 +12,8 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
-    [iconCss]="'icon-notifications'" [iconColorCss]="data.isTimeOut?' #F64E60':'#C9C9D4'"
-    [iconCss2]="data.priority | vll:'L0186':'icon'|async"
-    [iconColorCss2]="data.priority | vll: 'L0186':'textColor'|async" [imageId]="data.createdBy" imageObjType="AD_Users"
+    [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')"  [icoStatus2]="data?.priority" [icoStatusVll2]="'L0186'"
+    [imageId]="data.createdBy" imageObjType="AD_Users"
     [title]="data.userNameCreate" [desc]="data.positionNameCreate" [desc2]="data.taskName" [status]="data.status" statusVll="L0614" [date]="data.dueDate"
     [resources]="(data.category=='3'||data.isAssign)?data.assignTo :''" resourceObjType="AD_Users"
     [formModel]="view.formModel">
