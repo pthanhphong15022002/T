@@ -27,8 +27,8 @@
         data-kt-scroll-offset="0">
         <div id="newfeed">
             <codx-listview [emptyTemplate]="empty" [predicates]="predicate" [dataValues]="dataValue"
-                [itemTemplate]="tmpPortal" #listview [funcId]="'WP'" service="WP" assemblyName="ERM.Business.WP"
-                class="h-100" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
+                [itemTemplate]="tmpPortal" #listview [funcId]="codxViews.formModel.funcID" [service]="service" [assemblyName]="assemblyName"
+                class="h-100" [className]="className" [method]="method" entityName="WP_Comments"
                 [itemTemplateLoading]="templateloading" [formModel]="codxViews.formModel">
             </codx-listview>
         </div>
@@ -46,7 +46,7 @@
             </div>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-2">
-                    <span class="text-dark fw-bold">{{item.createdName}}</span>
+                    <span class="text-dark fw-bolder">{{item.createdName}}</span>
                     <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]='"outside"'
                         [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
                         <span class="tag me-2">
@@ -67,7 +67,7 @@
                         </span>
                     </span>
 
-                    <span class="ms-2 me-2">{{item.shareName}}</span>
+                    <span class="ms-2 me-2 fw-bolder">{{item.shareName}}</span>
 
                 </div>
             </div>
@@ -104,13 +104,7 @@
         <!--begin::Bottom-->
         <div class="pt-3">
             <ng-container *ngIf="item.category == '4'; else shareTemplate">
-                <ng-container *ngIf="item.shortContent;else noMore2">
-                    <read-more-v2 #readmore [content]="item.content" [shortContent]="item.shortContent">
-                    </read-more-v2>
-                </ng-container>
-                <ng-template #noMore2>
-                    <div [innerHTML]="item.content"></div>
-                </ng-template>
+                <div [innerHTML]="item.content"></div>
                 <!-- start share -->
                 <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
                     <div class="post mt-3" (click)="naviagte(item.shares)">
@@ -120,26 +114,32 @@
                 </ng-container>
                 <ng-template #templateShare>
                     <ng-container *ngIf="item.shares; else postShareDeleted">
-                        <div class="card card-custom card-border border mt-3">
-                            <div class="card-body p-5">
-                                <div class="d-flex">
-                                    <div class="me-3">
-                                        <codx-img slot="start" class="symbol symbol-30px symbol-circle"
-                                            [objectId]="item.shares.createdBy" objectType="AD_Users" [width]="30">
-                                        </codx-img>
-                                    </div>
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <div class="d-flex align-items-center">
-                                            <span class="text-gray-800 fs-6 fw-bold">{{item.shares.createdName}}</span>
-                                        </div>
-                                        <div class="text-info-date">
-                                            <span class="text-gray-400 fs-7 me-2">{{item.shares.createdOn |
-                                                timefrom}}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="card card-custom mt-3">
+                            <div class="">
                                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item.shares }">
                                 </ng-container>
+
+                                <div class="border-start border-bottom border-end rounded-3 mty-3 p-4">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <codx-img slot="start" class="symbol symbol-30px symbol-circle"
+                                                [objectId]="item.shares.createdBy" objectType="AD_Users" [width]="30">
+                                            </codx-img>
+                                        </div>
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <span class="text-gray-800 fs-6 fw-bolder">{{item.shares.createdName}}</span>
+                                            </div>
+                                            <div class="text-info-date">
+                                                <span class="text-gray-400 fs-7 me-2">{{item.shares.createdOn |timefrom}}</span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="text-feed mt-2 ">
+                                        <div [innerHTML]="item.shares.content"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </ng-container>
@@ -154,7 +154,8 @@
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <codx-label formModel="" name="lblPostDeleted"
-                                            default="Bài viết không còn tồn tại"></codx-label>
+                                            default="Bài viết không còn tồn tại">
+                                        </codx-label>
                                     </div>
                                 </div>
                             </div>
@@ -176,30 +177,11 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-        <div class="text-feed mb-2">
-            <read-more-v2 #readmore *ngIf="item.shortContent;else noMore" [content]="item.content"
-                [shortContent]="item.shortContent">
-            </read-more-v2>
-            <ng-template #noMore>
-                <div [innerHTML]="item.content"></div>
-            </ng-template>
-        </div>
-        <ng-container *ngIf="item.isUpload">
-            <div class="pic-feed">
-                <ng-container *ngIf="item.isUploadImg">
-                    <div class="pic-feed-img mb-3">
-                        <codx-file [images]="item.images"></codx-file>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="item.isUploadFile">
-                    <ng-container *ngFor="let file of item.files">
-                        <codx-temp-full imageSrc="{{file.fileType | fileName}}" imgCss="w-20px me-3 cursor-pointer"
-                            title="{{file.fileName}}" [descLine]="1">
-                        </codx-temp-full>
-                    </ng-container>
-                </ng-container>
+        <div class="pic-feed">
+            <div class="pic-feed-img">
+                <codx-file [objectID]="item.recID"></codx-file>
             </div>
-        </ng-container>
+        </div>
     </ng-container>
     <ng-template #category2>
         <ng-container *ngIf="item?.card?.cardType == '4' || item?.card?.cardType=='5';else haveBg">

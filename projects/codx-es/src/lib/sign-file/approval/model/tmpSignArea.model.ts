@@ -7,7 +7,7 @@ export class tmpSignArea {
   LabelType: string;
   LabelValue: string;
   FixedWidth: boolean;
-  SignDate: Date;
+  SignDate: boolean;
   DateFormat: Date;
   Location: object;
   FontStyle: string;

@@ -37,6 +37,7 @@ export class Post {
   pageSize: number = 10;
   tag: number = 0;
   tags: string;
+  shares:any;
   shared: number = 0;
   card: any;
   shareMode: any[];

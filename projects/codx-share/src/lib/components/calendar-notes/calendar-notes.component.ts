@@ -114,6 +114,10 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             }
 
             (this.lstView.dataService as CRUDService).load().subscribe();
+          } else if (type == 'empty') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            // (this.lstView.dataService as CRUDService).add(data).subscribe();
+
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -125,6 +129,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   requestEnded(evt: any) {
+    console.log("check requestEnded", evt)
     this.view.currentView;
     this.data = this.lstView.dataService.data;
   }
@@ -300,8 +305,15 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
           this.WP_NotesParam = dt[2].WP_Notes;
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
+
+          this.WP_Notes.forEach((res) => {
+            if (res.isPin == true || res.isPin == '1') {
+              this.countNotePin++;
+            }
+          })
         }
       });
+    // this.getNumberNotePin(this.WP_Notes);
   }
 
   setEvent(ele = null, args = null) {
@@ -451,13 +463,14 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.recID = data?.recID;
   }
 
-  getNumberNotePin() {
-    this.WP_Notes.forEach((res) => {
-      if (res.isPin == true || res.isPin == '1') {
-        this.countNotePin++;
-      }
-    })
-  }
+  // getNumberNotePin(WP_Notes) {
+  //   debugger;
+  //   WP_Notes.forEach((res) => {
+  //     if (res.isPin == true || res.isPin == '1') {
+  //       this.countNotePin++;
+  //     }
+  //   })
+  // }
 
   checkNumberNotePin(data) {
     if (data?.isPin == '1' || data?.isPin == true) {
@@ -471,6 +484,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         this.checkUpdateNotePin = true;
       }
     }
+    var object = [{ data: data, type: 'edit' }]
+    this.noteService.data.next(object);
     this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
   }
 
@@ -492,6 +507,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       typeLst: this.typeList,
       formType: 'add',
       currentDate: this.daySelected,
+      component: 'calendar-notes',
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;

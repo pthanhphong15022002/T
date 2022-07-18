@@ -118,8 +118,8 @@
                 placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
             </codx-input>
        </div>
-        <div *ngIf="images">
-            <codx-file [images]="images" [showBtnRemove]='true'></codx-file>
+        <div>
+            <codx-file [lstFile]="listFileUpload" [showBtnRemove]='true'></codx-file>
         </div>
         <div class="d-none">
             <codx-attachment #atmCreate 
@@ -132,16 +132,6 @@
                 [functionID]="dialogRef.formModel.funcID">
             </codx-attachment>
         </div>
-        <div *ngIf="files">
-            <ng-container *ngFor="let file of files">
-                <codx-temp-full  
-                    imageSrc="{{file.extension | fileName}}" 
-                    imgCss="w-20px me-3 cursor-pointer" 
-                    title="{{file.fileName}}"        
-                    [descLine]="1">
-                </codx-temp-full>
-            </ng-container>
-        </div>
     </div>                  
 </ng-template>
 
@@ -153,15 +143,10 @@
                     placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
-            <div *ngIf="dataEdit.isUploadImg">
-                <codx-file [images]="dataEdit.images" [showBtnRemove]='true'></codx-file>
+            <div >
+                <codx-file [objectID]="dataEdit.recID" [showBtnRemove]='true'></codx-file>
             </div>
-            <div *ngIf="dataEdit.isUploadFile">
-                <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit.recID" hideFolder="1"
-                    hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getfileCount($event)" idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
-                </codx-attachment>
-            </div>
+            
         </div>
     </ng-container>
 </ng-template>
@@ -173,8 +158,8 @@
                 placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
             </codx-input>
         </div>
-        <div *ngIf="isUploadImg">
-            <codx-file [images]="listFileUpload"></codx-file>
+        <div>
+            <codx-file [lstFile]="listFileUpload"></codx-file>
         </div>
         <div>
             <codx-attachment #atmCreate objectType="WP_Comments" [objectId]="dataEdit?.recID" hideFolder="1"
@@ -201,25 +186,11 @@
                         <read-more #readmore [content]="dataShare?.content" [limit]="800" [completeWords]="true">
                         </read-more>
                     </div>
-
-                    <ng-container *ngIf="dataShare.isUpload">
-                        <div class="pic-feed">
-                            <ng-container *ngIf="dataShare.isUploadImg">
-                                <div class="pic-feed-img">
-                                    <codx-file [images]="dataShare.images"></codx-file>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="dataShare.isUploadVideo">
-                                <video src="#"></video>
-                            </ng-container>
-                            <ng-container *ngIf="dataShare.isUploadFile">
-                                <codx-attachment [objectId]="dataShare.recID"   idBrowse="atmView"
-                                    objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
-                                    allowExtensions=".jpg,.png">
-                                </codx-attachment>
-                            </ng-container>
+                    <div class="pic-feed">
+                        <div class="pic-feed-img">
+                            <codx-file [objectID]="dataShare.recID"></codx-file>
                         </div>
-                    </ng-container>
+                    </div>
                 </ng-container>
                 <ng-template #category2>
                     <div class="p-0 m-0">
@@ -293,19 +264,17 @@
 
         <ng-container *ngIf="item.isUpload">
             <div class="pic-feed">
-                <ng-container *ngIf="item.isUploadImg">
-                    <div class="pic-feed-img">
-                        <codx-file [images]="item.lstImage"></codx-file>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="item.isUploadVideo">
+                <div class="pic-feed-img">
+                    <codx-file [objectID]="item.recID"></codx-file>
+                </div>
+                <!-- <ng-container *ngIf="item.isUploadVideo">
                     <video src="#"></video>
                 </ng-container>
                 <ng-container *ngIf="item.isUploadFile">
                     <codx-attachment [objectId]="item.recID"   idBrowse="atmView" objectType="WP_Comments"
                         hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png">
                     </codx-attachment>
-                </ng-container>
+                </ng-container> -->
             </div>
         </ng-container>
     </ng-container>

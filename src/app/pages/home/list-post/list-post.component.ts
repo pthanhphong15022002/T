@@ -102,6 +102,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     }]
     this.getGridViewSetUp();
+    this.codxViews.dataService.methodSave = "PublishPostAsync";
     this.codxViews.dataService.methodDelete = "DeletePostAsync";
     console.log(this.codxViews.dataService);
   }
@@ -129,18 +130,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return option;
   }
   removePost(data: any) {
+    this.codxViews.dataService as CRUDService;
     this.codxViews.dataService.delete([data]).subscribe((res) => {
       if (res) {
-        if (data.lstFile) {
           this.api.execSv("DM",
-            "ERM.Business.DM",
-            "FileBussiness",
-            "DeleteByObjectIDAsync",
-            [data.recID, 'WP_Comments', true]
-          ).subscribe();
-        }
+          "ERM.Business.DM",
+          "FileBussiness",
+          "DeleteByObjectIDAsync",
+          [data.recID, 'WP_Comments', true]
+        ).subscribe();
       }
-      this.notifySvr.notifyCode('E0026');
       this.dt.detectChanges();
     });
 
