@@ -20,6 +20,7 @@ import { PopupContactComponent } from './popup-contact/popup-contact.component';
 import { PopupPersonalComponent } from './popup-personal/popup-personal.component';
 import { LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-company-setting',
@@ -46,7 +47,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   imageUpload: UploadFile = new UploadFile();
   public imageSrc: string = '';
   optionMainLogo:any = 'mainlogo';
-
+  image:any;
   // image mail header
   checkMain?: string
   imageUploadMain: UploadFile = new UploadFile();
@@ -62,7 +63,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sanitizer:DomSanitizer,
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -115,9 +117,18 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
+        if(response){
         this.data = response;
+        if(this.data.logoFull){
+          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+          let blob = new Blob([bytes], { type:  "image/jpeg" });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.image = image;
+        }
         // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
+        }
       }
     })
   }
@@ -129,7 +140,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   async handleInputChange(event) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
-      this.data.Logo = file.name;
+      this.data.logo = file.name;
       var pattern = /image-*/;
 
 
@@ -151,8 +162,9 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
       // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
       // .subscribe((response) => {
       // });
-
-      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data,this.optionMailHeader,this.imageUpload])
+this.data.logo = '';
+this.data.logoFull = '';
+      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data,this.optionMainLogo,this.imageUpload]).subscribe();
 
       this.changeDetectorRef.detectChanges();
 
@@ -167,7 +179,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   async handleInputChangeMain(event) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
-      this.data.Logo = file.name;
+      this.data.logo = file.name;
       //  this.employee.path = File;sch
       // this.url.avatar = file.name;
 
@@ -190,6 +202,17 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   _handleReaderLoadedMain(e) {
     let reader = e.target;
     this.imageSrcMain = reader.result;
+  }
+
+  base64ToArrayBuffer(base64: string) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
   }
 
 }
