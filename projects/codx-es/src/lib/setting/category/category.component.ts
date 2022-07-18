@@ -97,6 +97,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         headerText: 'Mã phân loại',
         template: '',
         width: 70,
+        textAlign: 'Center',
       },
       {
         field: 'categoryName',
@@ -121,6 +122,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         headerText: 'Color',
         template: '',
         width: 60,
+        textAlign: 'Center',
       },
       {
         field: 'note',
@@ -236,28 +238,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   closeEditForm(event) {
-    this.dialog && this.dialog.close();
+    //this.dialog && this.dialog.close();
   }
 
   popup(evt: any) {
     this.atSV.openForm.next(true);
   }
-
-  // edit(data) {
-  //   this.editCategory.dialogCategory.patchValue(data);
-  //   this.editCategory.dialogCategory.patchValue({ transID: data.categoryID });
-
-  //   this.editCategory.dialogCategory.addControl(
-  //     'recID',
-  //     new FormControl(data.id)
-  //   );
-  //   this.editCategory.dialogCategory.addControl(
-  //     'countStep',
-  //     new FormControl(data.countStep)
-  //   );
-
-  //   this.editCategory.isAdd = false;
-  // }
 
   deleteCategory(data) {}
 

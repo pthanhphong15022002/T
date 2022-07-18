@@ -39,6 +39,7 @@ export class ApprovalStepComponent implements OnInit {
   approvers = [];
   lstStep: any;
   lstDeleteStep = [];
+  isDeleteAll = false;
 
   model: any;
 
@@ -144,7 +145,7 @@ export class ApprovalStepComponent implements OnInit {
     this.cfService.openForm(
       PopupAddApprovalStepComponent,
       '',
-      750,
+      800,
       1500,
       'EST04',
       data
@@ -163,7 +164,7 @@ export class ApprovalStepComponent implements OnInit {
     this.cfService.openForm(
       PopupAddApprovalStepComponent,
       '',
-      750,
+      800,
       1500,
       'EST04',
       data
@@ -182,7 +183,6 @@ export class ApprovalStepComponent implements OnInit {
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           let i = this.lstStep.indexOf(approvalStep);
-          console.log(i);
 
           if (i != -1) {
             this.lstStep.splice(i, 1);
@@ -193,24 +193,15 @@ export class ApprovalStepComponent implements OnInit {
           for (let i = 0; i < this.lstStep.length; i++) {
             this.lstStep[i].stepNo = i + 1;
           }
+
+          if (this.lstStep.length == 0) {
+            this.isDeleteAll = true;
+          }
         }
       });
-
-    // let i = this.lstStep.indexOf(approvalStep);
-    // console.log(i);
-
-    // if (i != -1) {
-    //   this.lstStep.splice(i, 1);
-    // }
-    // if (approvalStep.recID && approvalStep.recID != null) {
-    //   this.lstDeleteStep.push(approvalStep);
-    // }
-    // for (let i = 0; i < this.lstStep.length; i++) {
-    //   this.lstStep[i].stepNo = i + 1;
-    // }
   }
 
   getLeadTime(event) {
-    return '';
+    return '<div>1 giờ</div>';
   }
 }

@@ -1,14 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 import {
-  GaugeTheme,
-  ILoadedEventArgs,
-} from '@syncfusion/ej2-angular-circulargauge';
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  Injector,
+} from '@angular/core';
+import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import {
   AnimationModel,
   RangeColorModel,
 } from '@syncfusion/ej2-angular-progressbar';
-import { ApiHttpService, AuthStore, DataRequest } from 'codx-core';
+import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
 
@@ -16,8 +19,10 @@ import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
   selector: 'team-dashboard',
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
+  providers: [GradientService],
 })
-export class TeamDashboardComponent implements OnInit {
+export class TeamDashboardComponent extends UIComponent implements OnInit {
+  @ViewChild('tooltip') tooltip: TemplateRef<any>;
   formModel: string;
   funcID: string;
   model: DataRequest;
@@ -52,36 +57,60 @@ export class TeamDashboardComponent implements OnInit {
     size: '15px',
     color: '#fcde0b',
   };
-  // custom code start
-  public load(args: ILoadedEventArgs): void {
-    let selectedTheme: string = location.hash.split('/')[1];
-    selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.gauge.theme = <GaugeTheme>(
-      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
-        .replace(/-dark/i, 'Dark')
-        .replace(/contrast/i, 'Contrast')
-    );
-  }
+  public rangeLinearGradient1: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#5465FF', offset: '0%', opacity: 0.9 },
+      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
+    ],
+  };
 
-  public animation1: Object = { duration: 1500 };
-  public markerWidth: number = 28;
-  public markerHeight: number = 28;
-  public markerWidth1: number = 90;
-  public markerHeight1: number = 90;
-  public lineStyle: Object = { width: 0, color: '#1d1d1d' };
-  public labelStyle: Object = { position: 'Outside', font: { size: '10px' } };
-  public majorTicks: Object = {
+  public rangeLinearGradient2: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#FF8008', offset: '0%', opacity: 0.9 },
+      { color: '#FFC837', offset: '90%', opacity: 0.9 },
+    ],
+  };
+
+  public minorTicks: Object = {
+    width: 0,
+  };
+
+  public majorTicks1: Object = {
     position: 'Outside',
-    color: 'green',
-    height: 5,
-    width: 2,
-    offset: 10,
+    height: 1,
+    width: 1,
+    offset: 0,
     interval: 30,
   };
-  public minorTicks: Object = { width: 0 };
+  public majorTicks2: Object = {
+    height: 0,
+  };
+
+  public lineStyle: Object = {
+    width: 0,
+  };
+
+  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public piedata1: Object[];
+  public legendSettings1: Object = {
+    position: 'Top',
+    visible: true,
+  };
+
+  public legendSettings2: Object = {
+    position: 'Right',
+    visible: true,
+  };
+
+  //#endregion gauge
+
+  public piedata1: any;
   public piedata2: Object[];
   public legendSettings: Object = {
     position: 'Top',
@@ -90,6 +119,15 @@ export class TeamDashboardComponent implements OnInit {
   public legendRateDoneSettings: Object = {
     visible: true,
   };
+
+  openTooltip() {
+    console.log('mouse enter');
+    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
+  }
+
+  closeTooltip() {
+    console.log('mouse leave');
+  }
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -132,44 +170,19 @@ export class TeamDashboardComponent implements OnInit {
   ];
 
   public data: object[] = [];
-  public leafItemSettings: object = {
-    labelPath: 'taskGroupName',
-    labelPosition: 'Center',
-    labelFormat: '${taskGroupName}<br>${percentage} %',
-    colorMapping: [
-      {
-        from: 50,
-        to: 100,
-        color: '#0062ff',
-      },
-      {
-        from: 20,
-        to: 50,
-        color: '#4a8af0',
-      },
-      {
-        from: 10,
-        to: 20,
-        color: '#7aaaf5',
-      },
-      {
-        from: 0,
-        to: 10,
-        color: '#c6d9f7',
-      },
-    ],
-  };
 
   dbData: any;
 
   constructor(
-    private api: ApiHttpService,
+    private inject: Injector,
     private auth: AuthStore,
-    private tmService: CodxTMService,
-    private activedRouter: ActivatedRoute
-  ) {}
+    private tmService: CodxTMService
+  ) {
+    super(inject);
+    this.funcID = this.router.snapshot.params['funcID'];
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
@@ -180,14 +193,15 @@ export class TeamDashboardComponent implements OnInit {
       .execSv(
         'TM',
         'TM',
-        'ReportBusiness',
+        'TaskBusiness',
         'GetDataTeamDashboardAsync',
         this.model
       )
       .subscribe((res: any) => {
         console.log('Team Dashboard', res);
         this.dbData = res;
-        this.piedata1 = [
+        this.piedata1 = res.tasksByGroup;
+        this.piedata2 = [
           {
             x: 'Chưa thực hiện',
             y: res.newTasks,
@@ -209,29 +223,18 @@ export class TeamDashboardComponent implements OnInit {
             y: res.canceledTasks,
           },
         ];
-        this.data = res.tasksByGroup;
         this.dataColumn = res.dataBarChart.barChart;
         this.dataLine = res.dataBarChart.lineChart;
         this.vlWork = res.tasksbyEmp;
+        this.detectorRef.detectChanges();
       });
 
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    this.piedata2 = [
-      {
-        x: 'Group 1',
-        y: 2,
-      },
-      {
-        x: 'Group 2',
-        y: 5,
-      },
-    ];
+    this.getGeneralData();
   }
 
   private getGeneralData() {
     this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataMyDashboardAsync', [
+      .execSv('TM', 'TM', 'TaskBusiness', 'GetDataTeamDashboardAsync', [
         this.model,
       ])
       .subscribe((res: any) => {
@@ -240,7 +243,7 @@ export class TeamDashboardComponent implements OnInit {
       });
 
     this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
+      .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [
         this.model,
         this.fromDate,
         this.toDate,

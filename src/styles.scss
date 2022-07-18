@@ -26,14 +26,15 @@
 //////////////tbchung custom css///////////////////
 .is-invalid-a,
 .is-invalid .e-date-wrapper,
-.is-invalid .ng-invalid  {
+.is-invalid .ng-invalid {
     border: solid 1px #F3416C !important;
     border-radius: 5px;
 }
-.is-invalid .ng-invalid+label::before
-{
+
+.is-invalid .ng-invalid+label::before {
     border: solid 1px #F3416C !important;
 }
+
 .div-active {
     border-bottom: solid 2px #187DE4;
     //border-radius: 5px;
@@ -68,13 +69,15 @@ body {
 
 .file-item input.form-control {
     height: 18px;
-    padding: 0!important;
-    background-color: transparent!important;
+    padding: 0 !important;
+    background-color: transparent !important;
     border: 0;
-    color: #818689!important;
+    color: #818689 !important;
 }
 
-.text-error, codx-input.text-error, .file-item input.text-error {
+.text-error,
+codx-input.text-error,
+.file-item input.text-error {
     border: 1px solid red !important;
     height: 38px !important;
 }
@@ -83,10 +86,13 @@ ngb-popover-window[role="tooltip"] {
     z-index: 10000;
 }
 
-.text-error, codx-input.text-error, .file-item input.text-error {
+.text-error,
+codx-input.text-error,
+.file-item input.text-error {
     border: 1px solid red !important;
     height: 38px !important;
 }
+
 // role="tooltip"
 ngb-popover-window[role="tooltip"] {
     z-index: 10000;
@@ -95,6 +101,7 @@ ngb-popover-window[role="tooltip"] {
 .user-mini-group {
     padding-bottom: 0;
 }
+
 .user-mini-group {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
@@ -116,12 +123,9 @@ ngb-popover-window[role="tooltip"] {
 }
 
 .align-items-center {
-    align-items: center!important;
+    align-items: center !important;
 }
 
-.d-flex {
-    display: flex!important;
-}
 
 .user-mini-item div.text-dark-75 {
     max-width: 165px;
@@ -130,14 +134,18 @@ ngb-popover-window[role="tooltip"] {
 }
 
 .text-dark-75 {
-    color: #3e4347!important;
+    color: #3e4347 !important;
 }
 
-.symbol.symbol-circle, .symbol.symbol-circle .symbol-label, .symbol.symbol-circle>img {
+.symbol.symbol-circle,
+.symbol.symbol-circle .symbol-label,
+.symbol.symbol-circle>img {
     border-radius: 50%;
 }
 
-.symbol.symbol-circle, .symbol.symbol-circle .symbol-label, .symbol.symbol-circle>img {
+.symbol.symbol-circle,
+.symbol.symbol-circle .symbol-label,
+.symbol.symbol-circle>img {
     border-radius: 50%;
 }
 
@@ -145,6 +153,20 @@ ngb-popover-window[role="tooltip"] {
     margin-right: 0.75rem !important;
 }
 
-.mg-5, .mg-5 img  {
+.mg-5,
+.mg-5 img {
     margin-right: 5px !important;
+}
+
+.card {
+    box-shadow: none;
+}
+
+// css trễ hạn công việc - chưa có vll nên tạm dùng vậy
+.unexpired {
+    color: #C9C9D4;
+}
+
+.expired {
+    color: #F64E60;
 }

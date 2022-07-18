@@ -111,6 +111,8 @@ export class IncommingComponent
     this.callfunc = inject.get(CallFuncService);
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
+    // this.codxService = inject.get(CodxService);
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void { }
@@ -316,7 +318,7 @@ export class IncommingComponent
   clickChangeStatus(status: any) {
     this.view.dataService.predicates = 'Status=@0';
     this.view.dataService.dataValues = status;
-    this.view.dataService.load().subscribe((item)=>{
+    this.view.dataService.load().subscribe((item) => {
       this.lstDtDis = this.view.dataService.data[0];
     });
     this.activeDiv = status;

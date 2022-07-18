@@ -1,56 +1,34 @@
-<codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [data]="note"
-    [formModel]="dialog.formModel">
-    <ng-template popup add #body>
-        <div class="flex position-relative">
-            <div [class.active]="noteType.text">
-                <span (click)="onType('text')"
-                    class="icon-font_download icon-22 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
-            </div>
-            <div [class.active]="noteType.list">
-                <span (click)="onType('list')"
-                    class="icon-list_alt icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
-            </div>
-            <div [class.active]="noteType.check">
-                <span (click)="onType('check')"
-                    class="icon-check_box icon-24 me-1 btn btn-icon btn-active-light-primary position-relative"></span>
-            </div>
-            <span class="icon-image icon-24 btn btn-icon btn-active-light-primary position-relative"
-                (click)="popupFile()">
-            </span>
-            <div class="d-flex align-items-center pw-menu">
-                <div class="pw-pin ms-2" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
-                    triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                    <span class="icon-push_pin1 icon-20 btn btn-icon btn-active-light-primary position-relative"
-                        type="button"></span>
-                </div>
-                <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
-                    triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                    <span class="icon-download icon-20 btn btn-icon btn-active-light-primary position-relative"
-                        type="button"></span>
-                </div>
+<div class="py-3 px-6 add-note">
+    <div class="d-flex align-items-center justify-content-between note-header">
+        <div class="note-pin">
+            <div class="pw-pin" [class.active]="pin" (click)="isPin()" ngbPopover="Ghim ghi chú"
+                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
+                <span class="icon-push_pin icon-20 btn btn-icon btn-active-light-primary position-relative"
+                    type="button"></span>
             </div>
         </div>
-        <div class="mb-3">
-            <div *ngIf="formType == 'edit'">
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
-                </codx-attachment>
-            </div>
-            <div *ngIf="formType == 'add'">
-                <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline">
-                </codx-attachment>
-            </div>
+        <div class="dialog-title fw-bold">
+            <codx-label name="lblNote" formName="WP_Notes" default="Tạo ghi chú"></codx-label>
         </div>
+        <div class="d-flex align-items-center note-btn">
+            <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
+                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
+                <span class="icon-download icon-20 btn btn-icon btn-active-light-primary position-relative"
+                    type="button"></span>
+            </div>
+            <span class="icon-close icon-20 btn btn-icon" (click)="close()"></span>
+        </div>
+    </div>
+    <div class="note-text">
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">
-                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)">
+                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="empty"
+                    placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)" ngDefaultControl field="memo">
                 </codx-input>
             </div>
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
-                    <div class="flex align-items-center mt-3">
+                    <div class="flex align-items-center">
                         <div class="me-2">
                             <ng-container *ngIf="type == 'check'; else list">
                                 <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
@@ -74,13 +52,13 @@
         </div>
         <div *ngIf="formType == 'edit'">
             <div *ngIf="note?.noteType == 'text'">
-                <codx-input type="textarea" field="memo" placeholder="textarea" crrValue=""
-                    (valueChange)="valueChange($event)" [crrValue]="note?.memo">
+                <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo" class="test-textarea">
                 </codx-input>
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
-                    <div class="flex align-items-center mt-6">
+                    <div class="flex align-items-center">
                         <div class="me-2">
                             <ng-container *ngIf="note?.noteType == 'check'; else list">
                                 <codx-input #noteAddText type="checkbox"
@@ -103,24 +81,63 @@
                 </ng-container>
             </div>
         </div>
-    </ng-template>
 
-    <ng-template #footer>
-        <div class="d-flex justify-content-between">
-            <div class="flex" style="margin-top: 10px;">
-                <div class="">
-                    <codx-label name="lblShowCalendar" formName="Notes" default="Hiển thị trên lịch"></codx-label>
+        <div class="mb-3">
+            <div *ngIf="formType == 'edit'">
+                <div class="attachment">
+                    <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                        hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
+                        allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
+                    </codx-attachment>
                 </div>
-                <div class="" style="margin-left: 6px;">
-                    <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label"
-                        class="test-check" (valueChange)="valueChange($event)" [crrValue]="note?.showCalendar"
-                        [checked]="note?.showCalendar">
-                    </codx-input>
+                <codx-file [lstFile]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
+            </div>
+            <div *ngIf="formType == 'add'">
+                <div *ngIf="isUploadImg">
+                    <!-- <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file> -->
+                </div>
+                <div class="attachment">
+                    <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                        functionID="WPT03941" type="inline" (fileCount)="getfileCount($event)">
+                    </codx-attachment>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
-                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
-            </button>
         </div>
-    </ng-template>
-</codx-form>
+
+    </div>
+    <div class="d-flex note-action border align-items-center justify-content-between">
+        <div class="d-flex">
+            <div [class.active]="noteType.text">
+                <span (click)="onType('text')" class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>
+            </div>
+            <div [class.active]="noteType.list">
+                <span (click)="onType('list')" class="icon-list_alt icon-20 me-1 btn btn-icon btn-white"></span>
+            </div>
+            <div [class.active]="noteType.check">
+                <span (click)="onType('check')" class="icon-check_box icon-20 me-1 btn btn-icon btn-white"></span>
+            </div>
+            <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
+            </span>
+        </div>
+        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="currentDate" format="d"
+            (valueChange)="valueChangeDate($event)">
+        </codx-input>
+    </div>
+
+
+
+    <div class="d-flex justify-content-between note-footer">
+        <div class="d-flex align-items-center">
+            <codx-label name="lblShowCalendar" formName="Notes" default="Hiển thị trên lịch"></codx-label>
+            <div class="ms-2 pt-1">
+                <codx-input type="switch" field="showCalendar" labelPosition="Before" [label]="label" class="test-check"
+                    (valueChange)="valueChange($event)" [crrValue]="note?.showCalendar" [checked]="note?.showCalendar">
+                </codx-input>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
+            <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+        </button>
+    </div>
+
+</div>

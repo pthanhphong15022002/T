@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector } from '@angular/core';
@@ -7,6 +7,7 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
+import { NoteService } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -43,21 +44,47 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
+  dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
+    private noteService: NoteService,
   ) {
     super(injector)
   }
 
   onInit(): void {
+    this.noteService.data.subscribe((res) => {
+      if (res) {
+        var data = res[0]?.data;
+        var type = res[0]?.type;
+        if (this.lstView) {
+          if (type == 'add') {
+            (this.lstView.dataService as CRUDService).add(data).subscribe();
+          } else if (type == 'delete') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            // this.setEventWeek();
+            var today: any = document.querySelector(
+              ".e-footer-container button[aria-label='Today']"
+            );
+            if (today) {
+              today.click();
+            }
+          } else {
+            (this.lstView.dataService as CRUDService).load().subscribe();
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      }
+    })
     this.getMaxPinNote();
   }
 
   ngAfterViewInit() {
     // this.onCountNotePin();
+    this.getNumberNotePin();
   }
 
   getMaxPinNote() {
@@ -124,7 +151,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         that.countNotePin += 1;
       }
     })
-    debugger;
   }
 
   checkNumberNotePin(data) {
@@ -139,6 +165,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.checkUpdateNotePin = true;
       }
     }
+    var object = [{ data: data, type: 'edit' }]
+    this.noteService.data.next(object);
     this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
   }
 
@@ -159,12 +187,13 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       data: this.lstView.dataService.data,
       typeLst: this.typeList,
       formType: 'add',
+      component: 'note-drawer',
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
     this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option)
+      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option);
   }
 
   onEditIsPin(data: Notes) {
@@ -195,15 +224,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.lstView.dataService.data = this.lstView.dataService.data.filter(x => x.recID != res.recID)
-          // this.setEventWeek();
-          var today: any = document.querySelector(
-            ".e-footer-container button[aria-label='Today']"
-          );
-          if (today) {
-            today.click();
-          }
-          this.changeDetectorRef.detectChanges();
+          var object = [{ data: res, type: 'delete' }]
+          this.noteService.data.next(object);
         }
       });
   }

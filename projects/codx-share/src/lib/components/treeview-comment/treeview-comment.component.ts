@@ -59,11 +59,12 @@ export class TreeviewCommentComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.dataComment)
+    console.log('post: ',this.dataComment)
   }
   
   votes:any;
   lstUserVote:any;
+  dataSelected:any[];
   
   showVotes(content:any, postID:string) {
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",postID)
@@ -77,7 +78,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     })
   }
-
 
   getUserVotes(postID:string,voteType:String){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetUserVotesAsync",[postID,voteType])
@@ -118,11 +118,11 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, this.dataComment.recID, type]
         )
         .subscribe((res) => {
           if (res) {
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             this.comments = "";
             this.repComment = "";
             post.showReply = false;
@@ -148,13 +148,13 @@ export class TreeviewCommentComponent implements OnInit {
           'ERM.Business.WP',
           'CommentBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.rootData.recID, type]
+          [post.recID, value, post.recID, type]
         )
         .subscribe((res) => {
           if (res) {
             this.comments = "";
             this.repComment = "";
-            this.rootData.totalComment += 1;
+            this.dataComment.totalComment += 1;
             post.showReply = false;
             this.crrId = "";
             this.dicDatas[res["recID"]] = res;
@@ -236,8 +236,6 @@ export class TreeviewCommentComponent implements OnInit {
       });
   }
 
-
-  //#region handle data from serve
   updateVote(obj) {
     const t = this;
     if (this.rootData.id == obj.id) {
@@ -266,26 +264,6 @@ export class TreeviewCommentComponent implements OnInit {
 
   loadSubComment(data) {
     data.isShowComment = !data.isShowComment;
-    // // const t = this;
-    // // if (data.totalComment < data.totalRecord) {
-    // //   if (data.totalComment == 0) {
-    // //     data.pageIndex = 0;
-    // //     data.listComment = [];
-    // //   } else data.pageIndex++;
-    // // }
-    // // this.dt.detectChanges;
-
-    // this.signalRApi.loadSubComment(data.recID, data.pageIndex).subscribe((res) => {
-    //   if (res) {
-    //     _.filter(t.rootData.listComment, function (o) {
-    //       if (o.id == data.id) {
-    //         o.pageIndex = data.pageIndex;
-    //         o.listComment = o.listComment.concat(res);
-    //         o.totalComment = o.listComment.length;
-    //       } else t.recursiveLoadComment(o.listComment, data, res);
-    //     });
-    //   }
-    // });
     this.api.execSv(
       'WP',
       'ERM.Business.WP',
@@ -395,7 +373,7 @@ export class TreeviewCommentComponent implements OnInit {
       this.addNode(parent, newNode, id);
       // parent[this.fieldCheck] = true;
     } else {
-      this.addNode(this.rootData, newNode, id);
+      this.addNode(this.dataComment, newNode, id);
     }
 
     this.dt.detectChanges();
@@ -445,7 +423,7 @@ export class TreeviewCommentComponent implements OnInit {
         });
       } else {
         if (!this.rootData) return;
-        this.rootData = this.rootData.filter(function (element: any, index: any) {
+        this.dataComment = this.dataComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       }

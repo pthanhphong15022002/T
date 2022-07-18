@@ -71,12 +71,13 @@ export class SprintsComponent extends UIComponent {
   itemSelected: any;
   funcID = '';
   constructor(
-    private inject: Injector,
-    private tmSv: CodxTMService,
+    inject: Injector,
     private notiService: NotificationsService,
-    private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
+<<<<<<< HEAD
     override codxService: CodxService,
+=======
+>>>>>>> d1a69fcc08c02c0bd19545dba5faa03cdef1f4ea
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -107,7 +108,7 @@ export class SprintsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddEditSprintAsync';
     this.view.dataService.methodUpdate = 'AddEditSprintAsync';
     this.view.dataService.methodDelete = 'DeleteSprintsByIDAsync';
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -170,7 +171,7 @@ export class SprintsComponent extends UIComponent {
         this.beforeDel(opt)
       )
       .subscribe(res => {
-        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
+        if (res) this.notiService.notifyCode('TM004');
       })
   }
 
@@ -260,7 +261,9 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
+    
     //this.codxService.navigate('',this.urlView)
   }
 

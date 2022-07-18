@@ -8,7 +8,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewDetailComponent } from './tasks/view-detail/view-detail.component';
 import { PopupAddComponent } from './tasks/popup-add/popup-add.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -29,7 +28,6 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -51,20 +49,18 @@ import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-proj
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { MyDashboardComponent } from './reports/mydashboard/mydashboard.component';
-import { TeamDashboardComponent } from './reports/teamdashboard/teamdashboard.component';
+import { MyDashboardComponent } from './dashboard/mydashboard/mydashboard.component';
+import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
+import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
+import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: ':funcID',
-        component: DashboardComponent
-      },
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
@@ -82,6 +78,18 @@ export const routes: Routes = [
             component: SprintsTasksComponent,
           },
         ],
+      },
+      {
+        path: 'meeting/:funcID',
+        component: TMMeetingsComponent,
+      },
+      {
+        path: 'mydashboard/:funcID',
+        component: MyDashboardComponent,
+      },
+      {
+        path: 'teamdashboard/:funcID',
+        component: TeamDashboardComponent,
       },
       {
         path: 'setting',
@@ -122,14 +130,6 @@ export const routes: Routes = [
             component: HomeReportComponent,
           },
           {
-            path: 'mydashboard/:funcID',
-            component: MyDashboardComponent,
-          },
-          {
-            path: 'teamdashboard/:funcID',
-            component: TeamDashboardComponent,
-          },
-          {
             path: 'taskdaily/:funcID',
             component: TaskDailyComponent,
           },
@@ -138,12 +138,6 @@ export const routes: Routes = [
             component: TaskByProjectsComponent,
           },
         ],
-      },
-      {
-        path: '',
-        redirectTo: 'null',
-        // path: 'home/:funcID',
-        // component: DashboardComponent,
       },
       {
         path: '**',
@@ -157,7 +151,6 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   PopupAddComponent,
   ViewDetailComponent,
-  DashboardComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
   SprintsTasksComponent,
@@ -187,11 +180,9 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  // MwpComponent,
-  // MwpViewDetailComponent,
-  // MwpPopupAddComponent,
   ViewListComponent,
-
+  TMMeetingsComponent,
+  PopupAddMeetingComponent,
 ];
 @NgModule({
   imports: [
@@ -207,7 +198,6 @@ const T_Component: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarModule,
     CircularGaugeModule,
-    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
