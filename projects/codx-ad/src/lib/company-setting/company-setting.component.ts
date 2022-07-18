@@ -176,13 +176,18 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
       }
 
       //  Save image main logo
-      // if(optionCheck == this.optionMailHeader) {
-      //   reader.onload = this._handleReaderLoadedMailHeader.bind(this);
-      //   this.data.logoFull = ''; // header logo
-      //   this.adService
-      //   .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
-      //   .subscribe();
-      // }
+      if(optionCheck == this.optionMailHeader) {
+        reader.onload = this._handleReaderLoadedMailHeader.bind(this);
+        reader.readAsDataURL(file);
+        let dataTest: ArrayBuffer;
+        dataTest = await file.arrayBuffer();
+        this.imageUpload.fileName = file.name;
+        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+        this.data.logoFull = ''; // header logo
+        this.adService
+        .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
+        .subscribe();
+      }
       this.changeDetectorRef.detectChanges();
     }
   }
