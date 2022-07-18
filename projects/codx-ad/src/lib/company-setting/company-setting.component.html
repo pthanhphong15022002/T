@@ -116,7 +116,7 @@
 
                 <div class="container_img img_logoFull">
                   <input name="imageUrl" hidden #fileInput type="file" accept="themes/ad/images/*"
-                    (change)="handleInputChange($event)" />
+                    (change)="changeMainLogo($event)" />
 
                   <div *ngIf="!image; then imageDefault; else imageUpdate">
                   </div>
