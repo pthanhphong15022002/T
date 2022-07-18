@@ -197,33 +197,33 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     let reader = e.target;
     this.imageLogo = reader.result;
   }
-  // async handleInputChangeMain(event) {
-  //   if (event.target.files.length > 0) {
-  //     var file: File = event.target.files[0];
-  //     this.data.logo = file.name;
-  //     //  this.employee.path = File;sch
-  //     // this.url.avatar = file.name;
+  async handleInputChangeMain(event) {
+    if (event.target.files.length > 0) {
+      var file: File = event.target.files[0];
+      this.data.logo = file.name;
+      //  this.employee.path = File;sch
+      // this.url.avatar = file.name;
 
-  //     var pattern = /image-*/;
-  //     var reader = new FileReader();
-  //     if (!file.type.match(pattern)) {
-  //       alert('invalid format');
-  //       return;
-  //     }
-  //     reader.onload = this._handleReaderLoadedMain.bind(this);
-  //     reader.readAsDataURL(file);
-  //     let data: ArrayBuffer;
-  //     data = await file.arrayBuffer();
-  //     this.check = file.name;
-  //     this.imageUploadMain.fileName = file.name;
-  //     this.imageUploadMain.fileBytes = Array.from(new Uint8Array(data));
-  //     this.changeDetectorRef.detectChanges();
-  //   }
-  // }
-  // _handleReaderLoadedMain(e) {
-  //   let reader = e.target;
-  //   this.imageSrcMain = reader.result;
-  // }
+      var pattern = /image-*/;
+      var reader = new FileReader();
+      if (!file.type.match(pattern)) {
+        alert('invalid format');
+        return;
+      }
+      reader.onload = this._handleReaderLoadedMain.bind(this);
+      reader.readAsDataURL(file);
+      let data: ArrayBuffer;
+      data = await file.arrayBuffer();
+      this.check = file.name;
+      this.imageUploadMain.fileName = file.name;
+      this.imageUploadMain.fileBytes = Array.from(new Uint8Array(data));
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  _handleReaderLoadedMain(e) {
+    let reader = e.target;
+    this.imageSrcMain = reader.result;
+  }
 
   base64ToArrayBuffer(base64: string) {
     var binaryString = window.atob(base64);

@@ -26,23 +26,6 @@
   width: 100%;
 }
 
-.button_edit {
-  text-align: right;
-}
-
-.content {
-  padding: 18px 18px 20px 18px;
-}
-
-button {
-  border: transparent;
-}
-
-button:hover {
-  cursor: pointer;
-  background-color: #f9f9f9;
-}
-
 .footer_content {
   padding: 15px 15px 2px 15px;
 }

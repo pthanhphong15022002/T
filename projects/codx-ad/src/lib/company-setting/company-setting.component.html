@@ -80,7 +80,8 @@
                     <img class="img_logo img_settings_logo" src="../../../assets/themes/ad/default/img/logo.png">
                     <div class="overlay_main img_logo"></div>
                     <div class="button_image_main">
-                      <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
+                      <button class="btn btn-icon btn-white button_change_main" type="button"
+                        (click)="fileInput_main.click()">
                         <i class="icon-create icon-18"></i>
                       </button>
                     </div>
@@ -89,7 +90,8 @@
                     <img [src]="imageSrcMain" class="img_logo img_settings_logo">
                     <div class="overlay_main img_logo"></div>
                     <div class="button_image_main">
-                      <button class="button-icon button_change_main" type="button" (click)="fileInput_main.click()">
+                      <button class="btn btn-icon btn-white button_change_main" type="button"
+                        (click)="fileInput_main.click()">
                         <i class="icon-create icon-18"></i>
                       </button>
                     </div>
@@ -124,7 +126,8 @@
                       src="../../../assets/themes/ad/default/img/logoFull_default.png">
                     <div class="overlay img_logoFull"></div>
                     <div class="button_image">
-                      <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
+                      <button class="btn btn-icon btn-white button_change_email" type="button"
+                        (click)="fileInput.click()">
                         <i class="icon-create icon-18"></i>
                       </button>
                     </div>
@@ -134,7 +137,8 @@
                     <!-- <img [src]="imageSrc" class="img_logoFull img_settings"> -->
                     <div class="overlay img_logoFull"></div>
                     <div class="button_image">
-                      <button class="button-icon button_change_email" type="button" (click)="fileInput.click()">
+                      <button class="btn btn-icon btn-white button_change_email" type="button"
+                        (click)="fileInput.click()">
                         <i class="icon-create icon-18"></i>
                       </button>
                     </div>
@@ -164,9 +168,8 @@
     <div class="body_detail p-6" *ngIf="data">
       <div class="d-flex justify-content-between mb-3">
         <codx-label fiedName="" class="fw-bold text-dark" formName="" gridViewName="" default="Liên hệ"></codx-label>
-        <div class="button_edit">
-          <button (click)="clickEditContact(data)"><i class="icon-create icon-18"></i></button>
-        </div>
+        <button class="btn btn-icon btn-white" (click)="clickEditContact(data)"><i
+            class="icon-create icon-18"></i></button>
       </div>
       <div class="row">
         <div class="col-5">
@@ -201,18 +204,13 @@
 
     <!-- Personal Information -->
     <div class="body_detail p-6" *ngIf="data">
-      <div class="row">
-        <div class="col-6">
-          <div class="fw-bold mb-3">
-            <codx-label fiedName="" class="title_contact" formName="" gridViewName="" default="Người đại diện">
-            </codx-label>
-          </div>
+      <div class="d-flex justify-content-between mb-3">
+        <div class="fw-bold text-dark">
+          <codx-label fiedName="" class="title_contact" formName="" gridViewName="" default="Người đại diện">
+          </codx-label>
         </div>
-        <div class="col-6">
-          <div class="button_edit">
-            <button (click)="clickEditPersonal(data)"> <i class="icon-create icon-18"></i></button>
-          </div>
-        </div>
+        <button class="btn btn-icon btn-white" (click)="clickEditPersonal(data)">
+          <i class="icon-create icon-18"></i></button>
       </div>
       <div class="footer_content">
         <div class="row pb-5">
@@ -226,19 +224,20 @@
                 </ng-template>
               </div>
               <div class="d-flex flex-column">
-                <div class="fw-bold text-dark">
+                <div class="fw-bold text-dark fs-5">
                   <span>{{data.contactName}}</span>
                 </div>
                 <div class="text-italic text-gray-500">
                   {{data.jobTitle}}
                 </div>
-                <div>
-                  <codx-label fiedName="" formName="" gridViewName="" default="Email">
+                <div class="d-flex">
+                  <codx-label fiedName="" class="me-2" formName="" gridViewName="" default="Email">
                   </codx-label><span>{{data.personalEmail}}</span>
                 </div>
-                <codx-label fiedName="" formName="" gridViewName="" default="Phone: ">
-                </codx-label><span>{{data.mobile}}</span>
-
+                <div class="d-flex">
+                  <codx-label fiedName="" class="me-2" formName="" gridViewName="" default="Phone: ">
+                  </codx-label><span>{{data.mobile}}</span>
+                </div>
               </div>
             </div>
           </div>
