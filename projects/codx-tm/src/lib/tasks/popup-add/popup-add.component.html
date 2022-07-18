@@ -1,41 +1,19 @@
 <codx-form headerText="{{title}}" [subHeader]="subHeader" subHeaderText="" [body]="body" [footer]="footer"
   [formModel]="dialog.formModel" [dialog]="dialog" #form>
   <ng-template #subHeader>
-    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags || ''"
-      (valueChange)="valueChangeTags($event)"></codx-tag>
-  </ng-template>
-  <ng-template #body>
-
-    <!-- <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex mb-5">
-        <span class="btn btn-sm btn-primary btn-pill me-2">Project</span>
-        <span class="btn btn-sm btn-light-primary btn-pill me-2">Customize</span>
-        <div class="dropdown" id="tag_toggle">
-          <div class="topbar-item" data-toggle="dropdown">
-            <span class="btn btn-sm btn-secondary btn-pill btn-dropdown">Tag +</span>
-          </div>
-          <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
-            <div class="quick-search quick-search-dropdown" id="tag_dropdown">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Tag..." />
-                <div class="input-group-append">
-                  <button class="btn btn-secondary" type="button">Lưu</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="btn-extand d-flex justify-content-end">
-        <a class="text-dark-75 text-hover-primary d-flex align-items-center" style="cursor:pointer;"
-          (click)="extendShow()">
+        <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task.tags || ''"
+        (valueChange)="valueChangeTags($event)"></codx-tag>
+        <!-- chua làm dc nhờ chi Vân Css -->
+      <!-- <div>
+        <a class="text-dark-75 text-hover-primary d-flex align-items-center " style="cursor:pointer;">
           <span class="me-2 text-dark">
             <codx-label name="lblExtend" formName="Tasks" default="Mở rộng"></codx-label>
           </span>
           <span class="icon-login icon-20 ms-1"></span>
         </a>
-      </div>
-    </div> -->
+      </div> -->
+  </ng-template>
+  <ng-template #body>
     <ejs-tab headerPlacement="Left">
       <e-tabitems>
         <e-tabitem>
@@ -63,7 +41,9 @@
           <ng-template #content>
             <div class="form-group">
               <div>
-                <codx-label fiedName="TaskName" [formModel]="form.formModel" default="Tên công việc">
+                <!-- <codx-label fiedName="TaskName" [formModel]="form.formModel" default="Tên công việc">
+                </codx-label> -->
+                <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
                 </codx-label>
               </div>
               <!-- <codx-input field="taskName" [formModel]="form.formModel" [Group]="form.formGroup"
@@ -353,8 +333,7 @@
             </div>
             <div>
               <ng-container *ngFor="let item of listTodo; index as i">
-                <div
-                  class="d-flex justify-content-between align-items-center checkbox-item row">
+                <div class="d-flex justify-content-between align-items-center checkbox-item row">
                   <div class="checkbox-list col-10">
                     <div class="d-flex flex-column flex-grow-1 ">
                       <div class="flex" *ngIf="i != indexEditTodo">
