@@ -10,6 +10,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -26,6 +27,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'lib-company-setting',
   templateUrl: './company-setting.component.html',
   styleUrls: ['./company-setting.component.css'],
+  encapsulation: ViewEncapsulation.None,
   providers: [LowerCasePipe]
 })
 export class CompanySettingComponent extends UIComponent implements OnInit, AfterViewInit {
@@ -35,8 +37,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
-  items:any;
-  option:any;
+  items: any;
+  option: any;
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
   // data = new AD_CompanySettings();
@@ -46,15 +48,15 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   check?: string
   imageUpload: UploadFile = new UploadFile();
   public imageSrc: string = '';
-  optionMainLogo:any = 'mainlogo';
-  image:any;
+  optionMainLogo: any = 'mainlogo';
+  image: any;
   // image mail header
   checkMain?: string
   imageUploadMain: UploadFile = new UploadFile();
   public imageSrcMain: string = '';
   @ViewChild('input') redel: ElementRef;
   @Input() childProperty: any[];
-  optionMailHeader:any = 'mailheader';
+  optionMailHeader: any = 'mailheader';
 
 
 
@@ -64,7 +66,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
     private changeDetectorRef: ChangeDetectorRef,
-    private sanitizer:DomSanitizer,
+    private sanitizer: DomSanitizer,
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -117,17 +119,17 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
-        if(response){
-        this.data = response;
-        if(this.data.logoFull){
-          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
-          let blob = new Blob([bytes], { type:  "image/jpeg" });
-          let url = window.URL.createObjectURL(blob);
-          let image = this.sanitizer.bypassSecurityTrustUrl(url);
-          this.image = image;
-        }
-        // this.data.companyCode.toString().toLowerCase();
-        this.detectorRef.detectChanges()
+        if (response) {
+          this.data = response;
+          if (this.data.logoFull) {
+            var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+            let blob = new Blob([bytes], { type: "image/jpeg" });
+            let url = window.URL.createObjectURL(blob);
+            let image = this.sanitizer.bypassSecurityTrustUrl(url);
+            this.image = image;
+          }
+          // this.data.companyCode.toString().toLowerCase();
+          this.detectorRef.detectChanges()
         }
       }
     })
@@ -162,9 +164,9 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
       // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
       // .subscribe((response) => {
       // });
-this.data.logo = '';
-this.data.logoFull = '';
-      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data,this.optionMainLogo,this.imageUpload]).subscribe();
+      this.data.logo = '';
+      this.data.logoFull = '';
+      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data, this.optionMainLogo, this.imageUpload]).subscribe();
 
       this.changeDetectorRef.detectChanges();
 
