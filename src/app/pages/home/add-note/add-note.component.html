@@ -90,7 +90,7 @@
                         allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                     </codx-attachment>
                 </div>  
-                <codx-file [images]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
+                <codx-file [lstFile]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
