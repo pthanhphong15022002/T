@@ -1,195 +1,198 @@
-<ng-container *ngIf="images.length > 0">
-  <div [ngSwitch]="images.length" class="position-relative">
-    <!-- <ng-container *ngIf="showBtnRemove">
-      <label (click)="removeImg()"
-        class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-        data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
-        <span class="icon-close icon-14 "></span>
-      </label>
-    </ng-container> -->
-    <ng-container *ngSwitchCase="1">
-      <div class="feed-1pic">
-        <ng-container *ngIf="images[0]">
-          <img class="w-100 rounded min-h-250px" [src]="images[0].thumbnail || images[0].avatar" />
-        </ng-container>
-        <ng-template #else0>
-          <video #video controls class="w-100">
-            <!-- <source [src]="images[0].thumbnail" type="video/mp4"> -->
-          </video>
-        </ng-template>
-      </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="2">
-      <div class="row row-custom feed-2pic m-0">
-        <div class="col-7 pe-2 ps-0">
-          <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-250px" [src]="images[0].thumbnail || images[0].avatar" />
+<div class="mt-3">
+  <ng-container *ngIf="file_img_video.length > 0">
+    <div [ngSwitch]="file_img_video.length" class="position-relative">
+      <!-- <ng-container *ngIf="showBtnRemove">
+        <label (click)="removeImg()"
+          class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+          data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
+          <span class="icon-close icon-14 "></span>
+        </label>
+      </ng-container> -->
+      <ng-container *ngSwitchCase="1">
+        <div class="feed-1pic">
+          <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_1_0">
+            <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
           </ng-container>
-          <ng-template #else0>
-            <video #video controls class="w-100" (click)="openDetail(0)">
-              <!-- <source [src]="images[0].thumbnail"> -->
+          <ng-template #video_1_0>
+            <video #video controls class="w-100 rounded min-h-250px" controls>
+              <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
             </video>
           </ng-template>
         </div>
-        <div class="col-5 px-0">
-          <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-250px" [src]="images[1].thumbnail || images[1].avatar" />
-          </ng-container>
-          <ng-template #else1>
-            <video #video controls class="w-100">
-              <source>
-            </video>
-          </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="2">
+        <div class="row row-custom feed-2pic m-0">
+          <div class="col-7 pe-2 ps-0">
+            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_2_0">
+              <img class="w-100 rounded h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
+            </ng-container>
+            <ng-template #video_2_0>
+              <video #video controls class="w-100 rounded h-250px">
+                <source [src]="file_img_video[0].srcVideo || file_img_video[0].data">
+              </video>
+            </ng-template>
+          </div>
+          <div class="col-5 px-0 h-250px bg-secondary d-flex algin-items-center">
+            <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_2_1">
+              <img class="w-100 rounded h-250px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
+            </ng-container>
+            <ng-template #video_2_1>
+              <video #video controls class="w-100">
+                <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+              </video>
+            </ng-template>
+          </div>
         </div>
-      </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="3">
-      <div class="row row-custom feed-3pic m-0">
-        <div class="col-7 ps-0 pe-2">
-          <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-320px" [src]="images[0].thumbnail || images[0].avatar" />
-          </ng-container>
-          <ng-template #else0>
-            <video #video controls class="w-100">
-              <!-- <source [src]="images[0].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="3">
+        <div class="row row-custom feed-3pic m-0">
+          <div class="col-7 ps-0 pe-2">
+            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_3_0">
+              <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
+            </ng-container>
+            <ng-template #video_3_0>
+              <video #video controls class="w-100">
+                <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+              </video>
+            </ng-template>
+          </div>
+          <div class="col-5 px-0">
+            <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_3_1">
+              <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
+            </ng-container>
+            <ng-template #video_3_1>
+              <video #video controls class="w-100">
+                <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+              </video>
+            </ng-template>
+            <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_3_2">
+              <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
+            </ng-container>
+            <ng-template #video_3_2>
+              <video #video controls class="w-100 mt-2">
+                <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
+              </video>
+            </ng-template>
+          </div>
         </div>
-        <div class="col-5 px-0">
-          <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-150px" [src]="images[1].thumbnail || images[1].avatar" />
-          </ng-container>
-          <ng-template #else1>
-            <video #video controls class="w-100">
-              <!-- <source [src]="images[1].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-          <ng-container *ngIf="images[2]">
-            <img class="w-100 rounded h-150px mt-2" [src]="images[2].thumbnail || images[2].avatar" />
-          </ng-container>
-          <ng-template #else2>
-            <video #video controls class="w-100 mt-2">
-              <!-- <source [src]="images[2].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="4">
-      <div class="row row-custom feed-4pic m-0">
-        <div class="col-5 pe-2">
-          <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-320px" [src]="images[0].thumbnail || images[0].avatar" />
-          </ng-container>
-          <ng-template #else0>
-            <video #video controls class="w-100 h-320px">
-              <!-- <source [src]="images[0].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-        </div>
-        <div class="col-7 px-0">
-          <ng-container *ngIf="images[1]">
-            <img class="w-100 rounded h-150px" [src]="images[1].thumbnail || images[1].avatar" />
-          </ng-container>
-          <ng-template #else1>
-            <video (click)="openDetail(1)" #video controls class="w-100 h-150px">
-              <!-- <source [src]="images[1].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-          <div class="row row-custom mt-2 mx-0">
-            <div class="col-6 ps-0 pe-2">
-              <ng-container *ngIf="images[2]">
-                <img class="w-100 rounded h-150px" [src]="images[2].thumbnail || images[2].avatar" />
-              </ng-container>
-              <ng-template #else2>
-                <video #video controls class="w-100 h-150px">
-                  <!-- <source [src]="images[2].thumbnail" type="video/mp4"> -->
-                </video>
-              </ng-template>
-            </div>
-            <div class="col-6 px-0">
-              <ng-container *ngIf="images[3]">
-                <img class="w-100 rounded h-150px" [src]="images[3].thumbnail || images[3].avatar" />
-              </ng-container>
-              <ng-template #else3>
-                <video #video controls class="w-100 h-150px">
-                  <!-- <source [src]="images[3].thumbnail" type="video/mp4"> -->
-                </video>
-              </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="4">
+        <div class="row row-custom feed-4pic m-0">
+          <div class="col-5 pe-2">
+            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_4_0">
+              <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
+            </ng-container>
+            <ng-template #video_4_0>
+              <video #video controls class="w-100 h-320px">
+                <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+              </video>
+            </ng-template>
+          </div>
+          <div class="col-7 px-0">
+            <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_4_1">
+              <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
+            </ng-container>
+            <ng-template #video_4_1>
+              <video #video controls class="w-100 h-150px">
+                <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+              </video>
+            </ng-template>
+            <div class="row row-custom mt-2 mx-0">
+              <div class="col-6 ps-0 pe-2">
+                <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_4_2">
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
+                </ng-container>
+                <ng-template #video_4_2>
+                  <video #video controls class="w-100 h-150px">
+                    <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
+                  </video>
+                </ng-template>
+              </div>
+              <div class="col-6 px-0">
+                <ng-container *ngIf="file_img_video[3].category == FILE_CATEGORY.IMAGE; else video_4_3">
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
+                </ng-container>
+                <ng-template #video_4_3>
+                  <video #video controls class="w-100 h-150px">
+                    <source [src]="file_img_video[3].srcVideo|| file_img_video[3].data" type="video/mp4">
+                  </video>
+                </ng-template>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <div class="row row-custom feed-5pic m-0">
-        <div class="col-7 ps-0 pe-2">
-          <ng-container *ngIf="images[0]">
-            <img class="w-100 rounded h-150px" [src]="images[0].thumbnail || images[0].avatar" />
-          </ng-container>
-          <ng-template #else0>
-            <video #video controls class="w-100 h-150px">
-              <!-- <source [src]="images[0].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-          <div class="row row-custom mt-2 mx-0">
-            <div class="col-6 ps-0 pe-2">
-              <ng-container *ngIf="images[1]">
-                <img class="w-100 rounded h-150px" [src]="images[1].thumbnail || images[1].avatar" />
-              </ng-container>
-              <ng-template #else1>
-                <video #video controls class="w-100 h-150px">
-                  <!-- <source [src]="images[1].thumbnail" type="video/mp4"> -->
-                </video>
-              </ng-template>
-            </div>
-            <div class="col-6 px-0">
-              <ng-container *ngIf="images[2]">
-                <img class="w-100 rounded h-150px" [src]="images[2].thumbnail || images[2].avatar " />
-              </ng-container>
-              <ng-template #else2>
-                <video #video controls class="w-100 h-150px">
-                  <!-- <source [src]="images[2].thumbnail" type="video/mp4"> -->
-                </video>
-              </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div class="row row-custom feed-5pic m-0">
+          <div class="col-7 ps-0 pe-2">
+            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_n_0">
+              <img class="w-100 rounded h-150px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
+            </ng-container>
+            <ng-template #video_n_0>
+              <video #video controls class="w-100 h-150px">
+                <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+              </video>
+            </ng-template>
+            <div class="row row-custom mt-2 mx-0">
+              <div class="col-6 ps-0 pe-2">
+                <ng-container  *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_n_1">
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
+                </ng-container>
+                <ng-template #video_n_1>
+                  <video #video controls class="w-100 h-150px">
+                    <source [src]="file_img_video[1].srcVideo || file_img_video[1].data " type="video/mp4">
+                  </video>
+                </ng-template>
+              </div>
+              <div class="col-6 px-0">
+                <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_n_2">
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
+                </ng-container>
+                <ng-template #video_n_2>
+                  <video #video controls class="w-100 h-150px">
+                    <source [src]="file_img_video[2].srcVideo || file_img_video[2].data"type="video/mp4">
+                  </video>
+                </ng-template>
+              </div>
             </div>
           </div>
+          <div class="col-5 px-0">
+            <ng-container *ngIf="file_img_video[3].category == FILE_CATEGORY.IMAGE; else video_n_3">
+              <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail ||file_img_video[3].data " />
+            </ng-container>
+            <ng-template #video_n_3>
+              <video #video controls class="w-100 h-150px">
+                <source [src]="file_img_video[3].srcVideo || file_img_video[3].data" type="video/mp4">
+              </video>
+            </ng-template>
+            <ng-container *ngIf="file_img_video[4].category == FILE_CATEGORY.IMAGE; else video_n_4">
+              <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
+            </ng-container>
+            <ng-template #video_n_4>
+              <video #video controls class="w-100 h-150px">
+                <source [src]="file_img_video[4].srcVideo || file_img_video[4].data" type="video/mp4">
+              </video>
+            </ng-template>
+            <ng-container *ngIf="file_img_video.length > 5">
+              <div class="overlay-wrapper-opacity rounded feed-img-more h-150px">
+                <span class="text-number">+ {{file_img_video.length - 5}}</span>
+              </div>
+            </ng-container>
+          </div>
         </div>
-        <div class="col-5 px-0">
-          <ng-container *ngIf="images[3]">
-            <img class="w-100 rounded h-150px" [src]="images[3].thumbnail ||images[3].avatar " />
-          </ng-container>
-          <ng-template #else3>
-            <video #video controls class="w-100 h-150px">
-              <!-- <source [src]="images[3].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-          <ng-container *ngIf="images[4]">
-            <img class="w-100 rounded h-150px mt-2" [src]="images[4].thumbnail || images[4].avatar" />
-          </ng-container>
-          <ng-template #else4>
-            <video #video controls class="w-100 h-150px">
-              <!-- <source [src]="images[4].thumbnail" type="video/mp4"> -->
-            </video>
-          </ng-template>
-          <ng-container *ngIf="images?.length - 5 > 0">
-            <div class="overlay-wrapper-opacity rounded feed-img-more h-150px">
-              <span class="text-number">+ {{images?.length - 5}}</span>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-</ng-container>
-
-<ng-container *ngIf="files.length > 0">
-  <div class="my-3" *ngFor="let file of files">
-      <codx-temp-full  
-          imageSrc="{{file.extension | fileName}}" 
-          imgCss="w-20px me-3 cursor-pointer" 
-          title="{{file.fileName}}"        
-          [descLine]="1">
-      </codx-temp-full>
-  </div>
-</ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+<div class="mt-3">
+  <ng-container *ngIf="files.length > 0">
+    <div class="my-3" *ngFor="let file of files">
+        <codx-temp-full  
+            imageSrc="{{file.extension | fileName}}" 
+            imgCss="w-20px me-3 cursor-pointer" 
+            title="{{file.fileName}}"        
+            [descLine]="1">
+        </codx-temp-full>
+    </div>
+  </ng-container>
+</div>

@@ -7,85 +7,80 @@
             [title]="extractContent(data?.title)"  
             [desc]="convertHtmlAgency(data?.agencyName,data?.txtLstAgency)"
             [bookmark]="false"
+            [titleLine]="2"
           >
           </codx-temp-full>
         </div>
-        <div class="d-flex mt-2">
-          <div class="float-left me-6">
-            <div>
-              <codx-label [default]="gridViewSetup?.Category?.headerText"></codx-label>
-            </div>
-            <div>
-              <codx-vll
-                [name]="this.gridViewSetup?.Category?.referedValue"
-                [value]="data['category']"
-                [showText]="true"
-                textCss="text-gray-600"
-              >
-              </codx-vll>
-            </div>
-          </div>
-          <div class="d-flex align-items-center text-dark me-6">
-            <codx-label [default]="gridViewSetup?.Urgency?.headerText" [ngClass]="'me-1'"></codx-label>
+        <div class="d-flex flex-wrap mt-2">
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.Category?.headerText +' : '" class="me-2"></codx-label>
             <codx-vll
-              [name]="this.gridViewSetup?.Urgency?.referedValue"
+              [formModel]="formModel"
+              [field]="'Category'"
+              [value]="data['category']"
+              [showText]="true"
+              class="text-gray-600"
+            >
+            </codx-vll>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.Urgency?.headerText +' : '" [ngClass]="'me-1'"></codx-label>
+            <codx-vll
+              [formModel]="formModel"
+              [field]="'Urgency'"
               [value]="data['urgency']"
               [showText]="true"
               [showIcon]="true"
-              textCss="text-gray-600"
+              class="text-gray-600 d-flex"
             >
             </codx-vll>
             <!-- icon-flag -->
           </div>
-          <div class="d-flex align-items-center">
-            <codx-label [default]="gridViewSetup?.Security?.headerText" [ngClass]="'me-1'"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.Security?.headerText +' : '" [ngClass]="'me-1'"></codx-label>
             <codx-vll
-              [name]="this.gridViewSetup?.Security?.referedValue"
+              [formModel]="formModel"
+              [field]="'Security'"
               [value]="data['security']"
               [showText]="true"
               [showIcon]="true"
-              textCss="text-gray-600"
+              class="text-gray-600 d-flex"
             >
             </codx-vll>
           </div>
-        </div>
-        <div class="d-flex mt-2">
-          <div class="d-flex me-6">
-            <codx-label [default]="gridViewSetup?.CreatedOn?.headerText" ngClass="me-2"></codx-label>
-            <codx-label [default]="data?.createdOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.CreatedOn?.headerText +' : '" ngClass="me-2"></codx-label>
+            <span class="text-gray-600">{{data?.createdOn ? (data?.createdOn | date:'dd/MM/yyyy') : gridViewSetup?.CreatedOn?.headerText}}</span>
           </div>
-          <div class="d-flex align-items-center text-dark me-6">
-            <codx-label [default]="gridViewSetup?.DispatchOn?.headerText" ngClass="me-2"></codx-label>
-            <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.DispatchOn?.headerText +' : '" ngClass="me-2"></codx-label>
+            <span class="text-gray-600">{{data?.dispatchOn ? (data?.dispatchOn | date:'dd/MM/yyyy') : gridViewSetup?.DispatchOn?.headerText}}</span>
+            <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label> -->
           </div>
-          <div class="d-flex">
-            <codx-label [default]="gridViewSetup?.Deadline?.headerText" ngClass="me-2"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.Deadline?.headerText +' : '" ngClass="me-2"></codx-label>
             <codx-label [default]="data?.deadline ? (data?.deadline | date:'dd/MM/yyyy') : gridViewSetup?.Deadline?.headerText" ngClass="text-gray-600"></codx-label>
           </div>
-        </div>
-        <div class="d-flex mt-2">
-          <div class="d-flex me-6">
-            <codx-label [default]="gridViewSetup?.RefNo?.headerText" ngClass="me-2"></codx-label>
-            <codx-label [default]="data?.refNo" ngClass="text-gray-600"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.RefNo?.headerText +' : '" ngClass="me-2"></codx-label>
+            <span class="text-gray-600">{{data?.refNo | formatvalue:formModel:'refNo':'headerText' | async}}</span>
           </div>
-          <div class="d-flex align-items-center text-dark me-6">
-            <codx-label [default]="gridViewSetup?.RefDate?.headerText" ngClass="me-2"></codx-label>
-            <codx-label [default]="data?.refDate ? (data?.refDate | date:'dd/MM/yyyy') : gridViewSetup?.RefDate?.headerText" ngClass="text-gray-600"></codx-label>
+          <div class="d-flex align-items-center me-5 mb-2">
+            <codx-label [default]="gridViewSetup?.RefDate?.headerText +' : '" ngClass="me-2"></codx-label>
+<!--             <span class="text-gray-600">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+            <span class="text-gray-600">{{data?.refDate ? (data?.refDate | date:'dd/MM/yyyy') : gridViewSetup?.RefDate?.headerText}}</span>
           </div>
-        </div>
-        <div class="d-flex mt-1">
-          
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
         <div class="d-flex justify-content-end">
-          <span 
-            class="badge badge-light badge-square badge-md fs-7 " 
-              [style.color]="getTextColor(data?.status,'3')" 
-              [style.backgroundColor]="getBgColor(data?.status,'3')"
-          >
-            {{fmTextValuelist(data?.status,"3")}}
-          </span>
+          <codx-vll 
+            [showText]="true" 
+            [formModel]="formModel" 
+            [field]="'Status'" 
+            [value]="data['status']" 
+            class="badge badge-light badge-square badge-md fs-7">
+          </codx-vll>
         </div>
         <div class="d-flex justify-content-end mt-2">
           <codx-imgs [objectId]="data?.lstUserID" [numberImages]="3" [width]="30" [mode]="false" ></codx-imgs>
@@ -105,14 +100,6 @@
     <div class="tab-horizone">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>Công việc</a>
-          <ng-template ngbNavContent>
-           <!--  <ng-container *ngIf="data?.tasks[0].length>0">
-              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container> -->
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
           <a ngbNavLink>Nơi nhận</a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
@@ -146,6 +133,20 @@
                     </codx-temp-full>
                   </div>
                   <div class="ms-2">
+                  <!--   <codx-vll
+                      [name]="'OD009'"
+                      [value]="item['status']"
+                      [showText]="true"
+                      class="badge badge-light-primary"
+                    >
+                    </codx-vll>
+                    <codx-vll
+                    [name]="'L0614'"
+                    [value]="item['reCall']"
+                    [showText]="true"
+                    class="badge badge-light"
+                  >
+                  </codx-vll> -->
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
@@ -160,6 +161,22 @@
                
               </div>
             </ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>Công việc</a>
+          <ng-template ngbNavContent>
+         <!--    <ng-container *ngIf="data?.tasks[0].length>0">
+              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
+            </ng-container> -->
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>Chi tiết</a>
+          <ng-template ngbNavContent>
+         <!--    <ng-container *ngIf="data?.tasks[0].length>0">
+              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
+            </ng-container> -->
           </ng-template>
         </li>
       </ul>

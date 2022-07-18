@@ -236,8 +236,6 @@ export class TreeviewCommentComponent implements OnInit {
       });
   }
 
-
-  //#region handle data from serve
   updateVote(obj) {
     const t = this;
     if (this.rootData.id == obj.id) {
@@ -266,26 +264,6 @@ export class TreeviewCommentComponent implements OnInit {
 
   loadSubComment(data) {
     data.isShowComment = !data.isShowComment;
-    // // const t = this;
-    // // if (data.totalComment < data.totalRecord) {
-    // //   if (data.totalComment == 0) {
-    // //     data.pageIndex = 0;
-    // //     data.listComment = [];
-    // //   } else data.pageIndex++;
-    // // }
-    // // this.dt.detectChanges;
-
-    // this.signalRApi.loadSubComment(data.recID, data.pageIndex).subscribe((res) => {
-    //   if (res) {
-    //     _.filter(t.rootData.listComment, function (o) {
-    //       if (o.id == data.id) {
-    //         o.pageIndex = data.pageIndex;
-    //         o.listComment = o.listComment.concat(res);
-    //         o.totalComment = o.listComment.length;
-    //       } else t.recursiveLoadComment(o.listComment, data, res);
-    //     });
-    //   }
-    // });
     this.api.execSv(
       'WP',
       'ERM.Business.WP',

@@ -5,7 +5,7 @@
     (click)="click(data)"
     [typeMF]="'hover'" 
     [content]="extractContent(data.title)" 
-    [desc]="convertHtmlAgency(data.agencyName)"
+    [desc]="convertHtmlAgency(data.agencyName , this.gridViewSetup?.AgencyName?.headerText)"
     [status]="data.status" 
     [statusVll]="gridViewSetup['Status']['referedValue']" 
     [date]="data.createdOn" 
@@ -17,10 +17,11 @@
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
     [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [icoDateCss]="'icon-access_alarm'"
     [modeImgs]="false"
     [bookmark]="data.isBookmark"
     [titleLine]="2"
-    
+    [height]="300"
   >
   </codx-temp-full> 
 </ng-template>

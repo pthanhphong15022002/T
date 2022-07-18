@@ -10,6 +10,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -26,6 +27,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'lib-company-setting',
   templateUrl: './company-setting.component.html',
   styleUrls: ['./company-setting.component.css'],
+  encapsulation: ViewEncapsulation.None,
   providers: [LowerCasePipe]
 })
 export class CompanySettingComponent extends UIComponent implements OnInit, AfterViewInit {
@@ -35,8 +37,8 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
-  items:any;
-  option:any;
+  items: any;
+  option: any;
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
   // data = new AD_CompanySettings();
@@ -45,10 +47,16 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   // image main logo
   check?: string
   imageUpload: UploadFile = new UploadFile();
+<<<<<<< HEAD
+  public imageSrc: string = '';
+  optionMainLogo: any = 'mainlogo';
+  image: any;
+=======
   imageLogo:any;
   //image: string = '';
   optionMainLogo:any = 'mainlogo';
 
+>>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
   // image mail header
   checkMain?: string
   imageUploadMain: UploadFile = new UploadFile();
@@ -56,7 +64,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   image:any;
   @ViewChild('input') redel: ElementRef;
   @Input() childProperty: any[];
-  optionMailHeader:any = 'mailheader';
+  optionMailHeader: any = 'mailheader';
 
 
 
@@ -66,7 +74,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
     private activedRouter: ActivatedRoute,
     private adService: CodxAdService,
     private changeDetectorRef: ChangeDetectorRef,
-    private sanitizer:DomSanitizer,
+    private sanitizer: DomSanitizer,
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -114,6 +122,19 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
+<<<<<<< HEAD
+        if (response) {
+          this.data = response;
+          if (this.data.logoFull) {
+            var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+            let blob = new Blob([bytes], { type: "image/jpeg" });
+            let url = window.URL.createObjectURL(blob);
+            let image = this.sanitizer.bypassSecurityTrustUrl(url);
+            this.image = image;
+          }
+          // this.data.companyCode.toString().toLowerCase();
+          this.detectorRef.detectChanges()
+=======
         if(response){
         this.data = response;
         if(this.data.logoFull){
@@ -134,6 +155,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
 
         // this.data.companyCode.toString().toLowerCase();
         this.detectorRef.detectChanges()
+>>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
         }
       }
     })
@@ -169,10 +191,45 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
       dataTest = await file.arrayBuffer();
       this.imageUpload.fileName = file.name;
       this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+<<<<<<< HEAD
+
+      // Save image main logo
+      // this.adService
+      // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
+      // .subscribe((response) => {
+      // });
+      this.data.logo = '';
+      this.data.logoFull = '';
+      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data, this.optionMainLogo, this.imageUpload]).subscribe();
+
+      this.changeDetectorRef.detectChanges();
+
+    }
+  }
+  _handleReaderLoaded(e) {
+    let reader = e.target;
+    this.imageSrc = reader.result;
+  }
+
+
+  async handleInputChangeMain(event) {
+    if (event.target.files.length > 0) {
+      var file: File = event.target.files[0];
+      this.data.logo = file.name;
+      //  this.employee.path = File;sch
+      // this.url.avatar = file.name;
+
+      var pattern = /image-*/;
+      var reader = new FileReader();
+      if (!file.type.match(pattern)) {
+        alert('invalid format');
+        return;
+=======
         this.data.logo = ''; // main logo
         this.adService
         .updateInformationCompanySettings(this.data,this.optionMainLogo,this.imageUpload)
         .subscribe();
+>>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
       }
 
       //  Save image main logo

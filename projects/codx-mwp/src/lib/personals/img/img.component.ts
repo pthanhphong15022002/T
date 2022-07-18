@@ -12,17 +12,16 @@ export class ImgComponent implements OnInit, AfterViewInit {
   predicate = '';
   dataValue = '';
   dataSort: any;
-  check = "62b62dba7f17190b724a1799";
   data: any = [];
   checkPredicate = '';
 
-  @ViewChild('listview') listview : CodxListviewComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
     private codxService: CodxService,
     private api: ApiHttpService,
-    ) {
+  ) {
     this.user = this.authStore.get();
     this.predicate = 'CreatedBy=@0';
     this.dataValue = this.user?.userID;
@@ -32,6 +31,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log("check data", this.listview.dataService.data);
+    console.log("check data", this.listview.dataService.data)
+    this.data = this.listview.dataService.data;
   }
 }
