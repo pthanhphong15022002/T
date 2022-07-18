@@ -47,21 +47,15 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   // image main logo
   check?: string
   imageUpload: UploadFile = new UploadFile();
-<<<<<<< HEAD
-  public imageSrc: string = '';
-  optionMainLogo: any = 'mainlogo';
-  image: any;
-=======
-  imageLogo:any;
+  imageLogo: any;
   //image: string = '';
-  optionMainLogo:any = 'mainlogo';
+  optionMainLogo: any = 'mainlogo';
 
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
   // image mail header
   checkMain?: string
   imageUploadMain: UploadFile = new UploadFile();
   public imageSrcMain: string = '';
-  image:any;
+  image: any;
   @ViewChild('input') redel: ElementRef;
   @Input() childProperty: any[];
   optionMailHeader: any = 'mailheader';
@@ -122,7 +116,6 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
-<<<<<<< HEAD
         if (response) {
           this.data = response;
           if (this.data.logoFull) {
@@ -132,30 +125,17 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
             let image = this.sanitizer.bypassSecurityTrustUrl(url);
             this.image = image;
           }
+
+          if (this.data.logo) {
+            var bytes = this.base64ToArrayBuffer(this.data.logo);
+            let blob = new Blob([bytes], { type: "image/jpeg" });
+            let url = window.URL.createObjectURL(blob);
+            let image = this.sanitizer.bypassSecurityTrustUrl(url);
+            this.imageLogo = image;
+          }
+
           // this.data.companyCode.toString().toLowerCase();
           this.detectorRef.detectChanges()
-=======
-        if(response){
-        this.data = response;
-        if(this.data.logoFull){
-          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
-          let blob = new Blob([bytes], { type:  "image/jpeg" });
-          let url = window.URL.createObjectURL(blob);
-          let image = this.sanitizer.bypassSecurityTrustUrl(url);
-          this.image = image;
-        }
-
-        if(this.data.logo){
-          var bytes = this.base64ToArrayBuffer(this.data.logo);
-          let blob = new Blob([bytes], { type:  "image/jpeg" });
-          let url = window.URL.createObjectURL(blob);
-          let image = this.sanitizer.bypassSecurityTrustUrl(url);
-          this.imageLogo = image;
-        }
-
-        // this.data.companyCode.toString().toLowerCase();
-        this.detectorRef.detectChanges()
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
         }
       }
     })
@@ -165,13 +145,13 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   }
 
   changeMainLogo(event) {
-    this.handleInputChange(event,this.optionMainLogo)
+    this.handleInputChange(event, this.optionMainLogo)
   }
   changeMainHeader(event) {
-    this.handleInputChange(event,this.optionMailHeader)
+    this.handleInputChange(event, this.optionMailHeader)
   }
 
-  async handleInputChange(event, optionCheck?:any) {
+  async handleInputChange(event, optionCheck?: any) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
       this.data.logoFull = file.name;
@@ -182,54 +162,19 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
         alert('invalid format');
         return;
       }
-      
+
       //  Save image main logo
-      if(optionCheck == this.optionMainLogo) {  
-      reader.onload = this._handleReaderLoadedMainLogo.bind(this);
-      reader.readAsDataURL(file);
-      let dataTest: ArrayBuffer;
-      dataTest = await file.arrayBuffer();
-      this.imageUpload.fileName = file.name;
-      this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
-<<<<<<< HEAD
-
-      // Save image main logo
-      // this.adService
-      // .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
-      // .subscribe((response) => {
-      // });
-      this.data.logo = '';
-      this.data.logoFull = '';
-      this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [this.data, this.optionMainLogo, this.imageUpload]).subscribe();
-
-      this.changeDetectorRef.detectChanges();
-
-    }
-  }
-  _handleReaderLoaded(e) {
-    let reader = e.target;
-    this.imageSrc = reader.result;
-  }
-
-
-  async handleInputChangeMain(event) {
-    if (event.target.files.length > 0) {
-      var file: File = event.target.files[0];
-      this.data.logo = file.name;
-      //  this.employee.path = File;sch
-      // this.url.avatar = file.name;
-
-      var pattern = /image-*/;
-      var reader = new FileReader();
-      if (!file.type.match(pattern)) {
-        alert('invalid format');
-        return;
-=======
+      if (optionCheck == this.optionMainLogo) {
+        reader.onload = this._handleReaderLoadedMainLogo.bind(this);
+        reader.readAsDataURL(file);
+        let dataTest: ArrayBuffer;
+        dataTest = await file.arrayBuffer();
+        this.imageUpload.fileName = file.name;
+        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
         this.data.logo = ''; // main logo
         this.adService
-        .updateInformationCompanySettings(this.data,this.optionMainLogo,this.imageUpload)
-        .subscribe();
->>>>>>> 0280161127663a52304c2e90beea27294e03f2ca
+          .updateInformationCompanySettings(this.data, this.optionMainLogo, this.imageUpload)
+          .subscribe();
       }
 
       //  Save image main logo
