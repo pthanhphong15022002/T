@@ -263,7 +263,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             }
           });
           this.vlWork.push({
-            id: data.id,
+            name: data.name,
             qtyTasks: data.qtyTasks,
             status: {
               new: newTasks / data.qtyTasks * 100,

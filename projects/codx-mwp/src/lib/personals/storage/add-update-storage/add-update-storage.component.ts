@@ -28,7 +28,6 @@ export class AddUpdateStorageComponent implements OnInit {
     private storageService: StorageServices,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
-    debugger;
     this.funcID = dialog?.formModel?.funcID;
     this.dialog = dialog;
     this.formType = dt?.data[1];
