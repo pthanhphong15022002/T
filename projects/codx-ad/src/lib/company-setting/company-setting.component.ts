@@ -154,23 +154,26 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   async handleInputChange(event, optionCheck?: any) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
-      this.data.logoFull = file.name;
-      var pattern = /image-*/;
-
-      var reader = new FileReader();
-      if (!file.type.match(pattern)) {
-        alert('invalid format');
-        return;
+      if (optionCheck == this.optionMainLogo) {
+        this.data.logo = file.name;
+        var reader = new FileReader();
+        reader.onload = this._handleReaderLoadedMainLogo.bind(this);
       }
-
+      if (optionCheck == this.optionMailHeader) {
+        this.data.logoFull = file.name;
+        var reader = new FileReader();
+        reader.onload = this._handleReaderLoadedMailHeader.bind(this);
+      }
+            
+      reader.readAsDataURL(file);
+      let dataTest: ArrayBuffer;
+      dataTest = await file.arrayBuffer();
+      this.imageUpload.fileName = file.name;
+      this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+      
       //  Save image main logo
       if (optionCheck == this.optionMainLogo) {
-        reader.onload = this._handleReaderLoadedMainLogo.bind(this);
-        reader.readAsDataURL(file);
-        let dataTest: ArrayBuffer;
-        dataTest = await file.arrayBuffer();
-        this.imageUpload.fileName = file.name;
-        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+        
         this.data.logo = ''; // main logo
         this.adService
           .updateInformationCompanySettings(this.data, this.optionMainLogo, this.imageUpload)
@@ -179,12 +182,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
 
       //  Save image main logo
       if(optionCheck == this.optionMailHeader) {
-        reader.onload = this._handleReaderLoadedMailHeader.bind(this);
-        reader.readAsDataURL(file);
-        let dataTest: ArrayBuffer;
-        dataTest = await file.arrayBuffer();
-        this.imageUpload.fileName = file.name;
-        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+       
         this.data.logoFull = ''; // header logo
         this.adService
         .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)

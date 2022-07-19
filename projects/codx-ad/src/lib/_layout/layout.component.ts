@@ -7,10 +7,10 @@ import { LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  override aside = false;
-  override asideFixed = false;
+  override aside = true;
+  override asideFixed = true;
   override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
+  override toolbar = true;
   module = 'AD';
   constructor(inject: Injector,) {
     super(inject);
