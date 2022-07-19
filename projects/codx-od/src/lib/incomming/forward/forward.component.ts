@@ -46,7 +46,7 @@ export class ForwardComponent implements OnInit {
   }
   changeValueUserID(event: any)
   {
-    this.forwardForm.controls['userID'].setValue(event.data.value);
+    this.forwardForm.controls['userID'].setValue(event.data?.value);
   }
   onSave()
   {
