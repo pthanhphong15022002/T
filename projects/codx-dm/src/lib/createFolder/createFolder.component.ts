@@ -498,6 +498,10 @@ export class CreateFolderComponent implements OnInit {
     this.dialog.close();
   }
   
+  disableSubItemAdd() {
+    return (this.listSubFolder.length >= 5 || this.subitem.level == "" || this.subitem.type == "" || this.subitem.format == "")
+  }
+    
   openSubFolder() {
     this.callfc.openForm(SubFolderComponent, this.titleDialogPHysical, 450, 400, "", [this.functionID, -1, this.listSubFolder], "");
   }
