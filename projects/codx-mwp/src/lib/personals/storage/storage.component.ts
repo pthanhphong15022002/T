@@ -1,4 +1,4 @@
-import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel, ButtonModel, SidebarModel, DialogRef, CallFuncService, UIComponent, CodxListviewComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel, ButtonModel, SidebarModel, DialogRef, CallFuncService, UIComponent, CodxListviewComponent, CRUDService } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, TemplateRef, Input, Injector, AfterViewInit } from '@angular/core';
@@ -7,6 +7,7 @@ import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
 import { sort } from '@syncfusion/ej2-angular-charts';
 import { ListPostComponent } from '@pages/home/list-post/list-post.component';
+import { StorageServices } from '../../services/storage.services';
 
 @Component({
   selector: 'app-storage',
@@ -41,12 +42,11 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
 
-  constructor(private inject: Injector,
+  constructor(inject: Injector,
     private authStore: AuthStore,
-    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private codxService: CodxService,
     private modalService: NgbModal,
+    private storageService: StorageServices,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -57,6 +57,17 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   }
 
   onInit(): void {
+    // this.storageService.data.subscribe((res) => {
+    //   if (res) {
+    //     var data = res[0]?.data;
+    //     var type = res[0]?.type;
+
+    //     if (type == 'add') {
+    //       debugger;
+    //       this.view.dataService.add(data).subscribe();
+    //     }
+    //   }
+    // })
   }
 
   ngAfterViewInit() {
@@ -88,17 +99,16 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     this.dataSort = [];
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
+      option.DataService = this.view.dataService as CRUDService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.data.pop();
       this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.data, 'add'], option);
-      this.dialog.closed.subscribe(x => {
-        if (x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
-        else {
-          this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-        }
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   if (x.event == null) this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
+      //   else {
+      //     this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      //   }
+      // });
     });
   }
 
@@ -133,8 +143,9 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       .exec<any>('ERM.Business.WP', 'StoragesBusiness', 'DeleteStorageAsync', data.recID)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
-          this.changedt.detectChanges();
+          this.view.dataService.remove(data).subscribe();
+          // this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -142,7 +153,7 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   openStorageDetail(e) {
     this.dataSort = [];
     this.checkFormComment = true;
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
 
     var arr = [];
     for (let i = 0; i < e?.details.length; i++) {
@@ -152,7 +163,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
     a.instance.dataValue = `[${arr.join(';')}]`;
     a.instance.isShowCreate = false;
-    debugger;
   }
 
   onUpdateBackground(e) {
@@ -169,6 +179,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       var dateB = new Date(b.createdOn).toLocaleDateString();
       return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
     });
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 }

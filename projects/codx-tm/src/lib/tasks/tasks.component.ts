@@ -8,7 +8,18 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  DataRequest, ViewModel, ViewType, RequestOption, ButtonModel, ResourceModel, SidebarModel, DialogRef, AuthStore, UrlUtil, NotificationsService, UIComponent,
+  DataRequest,
+  ViewModel,
+  ViewType,
+  RequestOption,
+  ButtonModel,
+  ResourceModel,
+  SidebarModel,
+  DialogRef,
+  AuthStore,
+  UrlUtil,
+  NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -49,13 +60,13 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
+  param: any;
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
 
   constructor(
-    private inject: Injector,
-    private dt: ChangeDetectorRef,
+    inject: Injector,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
@@ -189,7 +200,8 @@ export class TasksComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    this.dt.detectChanges();
+    this.getParam();
+    this.detectorRef.detectChanges();
   }
   //#region schedule
 
@@ -222,7 +234,6 @@ export class TasksComponent extends UIComponent {
         { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
       ],
     };
-
   }
 
   getCellContent(evt: any) {
@@ -306,15 +317,28 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0];
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          this.view.dataService.data = e?.event.concat(
+            this.view.dataService.data
+          );
+          this.view.dataService.setDataSelected(res[0]);
+          this.view.dataService.afterSave.next(res);
+          this.notiService.notifyCode('TM005');
+          this.itemSelected = this.view.dataService.data[0];
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
 
   edit(data?) {
     if (data && data.status >= 8) {
-      // this.notiService.notifyCode('cần code đoạn nay');
-      this.notiService.notify('Không cho phép chỉnh sửa ! Công việc đang làm đã bị "Hủy" hoặc đã "Hoàn Thành"');
+      this.notiService.notifyCode('TM007');
       return;
     }
     if (data) {
@@ -333,15 +357,20 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event)
-            this.itemSelected = e?.event;
-          this.dt.detectChanges();
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
         });
       });
   }
 
   copy(data) {
-    this.view.dataService.addNew().subscribe((res: any) => {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
@@ -352,7 +381,22 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0];
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          this.view.dataService.data = e?.event.concat(
+            this.view.dataService.data
+          );
+          this.view.dataService.setDataSelected(res[0]);
+          this.view.dataService.afterSave.next(res);
+          this.notiService.notifyCode('TM005');
+
+          this.itemSelected = this.view.dataService.data[0];
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -383,15 +427,36 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.view.dataService
-              .delete([this.view.dataService.dataSelected], true, (opt) =>
-                this.beforeDel(opt)
-              )
-              .subscribe((res) => {
-                if (res[0]) {
-                  this.itemSelected = this.view.dataService.data[0];
-                }
-              });
+            // this.view.dataService
+            //   .delete([this.view.dataService.dataSelected], true, (opt) =>
+            //     this.beforeDel(opt)
+            //   )
+            //   .subscribe((res) => {
+            //     if (res[0]) {
+            //       this.itemSelected = this.view.dataService.data[0];
+            //     }
+            //   });
+
+            this.notiService.alertCode('TM003').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+                  if (res) {
+                    var listTaskDelete = res[0];
+                    var parent = res[1];
+                    listTaskDelete.forEach((x) => {
+                      this.view.dataService.remove(x).subscribe();
+                      this.notiService.notify('Xóa thành công !');
+                      //  this.notiService.notifyCode('cần code');
+                    });
+                    if (parent) {
+                      this.view.dataService.update(parent).subscribe();
+                    }
+                    this.itemSelected = this.view.dataService.data[0];
+                    this.detectorRef.detectChanges();
+                  }
+                });
+              }
+            });
           }
         }
       });
@@ -419,7 +484,28 @@ export class TasksComponent extends UIComponent {
       option
     );
     this.dialog.closed.subscribe((e) => {
-      console.log(e);
+      if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
+      if (e?.event && e?.event != null) {
+        let listTask = e?.event;
+        let newTasks = [];
+        for (var i = 0; i < listTask.length; i++) {
+          if (listTask[i].taskID == data.taskID) {
+            this.view.dataService.update(listTask[i]).subscribe();
+            this.view.dataService.setDataSelected(e?.event[0]);
+          } else newTasks.push(listTask[i]);
+        }
+        if (newTasks.length > 0) {
+          this.view.dataService.data = newTasks.concat(
+            this.dialog.dataService.data
+          );
+          this.view.dataService.afterSave.next(newTasks);
+        }
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
@@ -444,7 +530,7 @@ export class TasksComponent extends UIComponent {
   }
   selectedChange(val: any) {
     this.itemSelected = val.data;
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   changeStatusTask(moreFunc, taskAction) {
@@ -465,8 +551,17 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(new Date(taskAction.startDate ? taskAction.startDate : taskAction.createdOn)).toDate();
-            var time = (((completedOn.getTime() - startDate.getTime()) / 3600000).toFixed(1));
+            var startDate = moment(
+              new Date(
+                taskAction.startDate
+                  ? taskAction.startDate
+                  : taskAction.createdOn
+              )
+            ).toDate();
+            var time = (
+              (completedOn.getTime() - startDate.getTime()) /
+              3600000
+            ).toFixed(1);
             var estimated = Number.parseFloat(time);
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
@@ -485,16 +580,14 @@ export class TasksComponent extends UIComponent {
                   taskAction.completedOn = completedOn;
                   taskAction.comment = '';
                   taskAction.completed = estimated;
-                  res.forEach(obj => {
+                  res.forEach((obj) => {
                     this.view.dataService.update(obj).subscribe();
-                  })
+                  });
                   this.itemSelected = res[0];
-                  this.dt.detectChanges();
-                  this.notiService.notify('Cập nhật trạng thái thành công !');
+                  this.detectorRef.detectChanges();
+                  this.notiService.notifyCode('tm009');
                 } else {
-                  this.notiService.notify(
-                    'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
-                  );
+                  this.notiService.notifyCode('tm008');
                 }
               });
           }
@@ -515,15 +608,32 @@ export class TasksComponent extends UIComponent {
       350,
       '',
       obj
-    )
-    this.dialog.closed.subscribe(e => {
+    );
+    this.dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.itemSelected = e?.event;
-        this.dt.detectChanges();
+        this.detectorRef.detectChanges();
       }
-    })
+    });
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
+  }
+
+  getParam(callback = null) {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'TM_Parameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.param = JSON.parse(res.dataValue);
+          return callback && callback(true);
+        }
+      });
   }
 }

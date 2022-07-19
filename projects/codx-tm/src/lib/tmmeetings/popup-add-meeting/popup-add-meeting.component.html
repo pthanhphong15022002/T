@@ -1,0 +1,17 @@
+<codx-form headerText="{{title}}" [subHeader]="subHeader" subHeaderText="" [body]="body" [footer]="footer"
+    [formModel]="dialog.formModel" [dialog]="dialog" #form></codx-form>
+<ng-template #subHeader>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="''"
+        (valueChange)="valueChangeTags($event)"></codx-tag>
+</ng-template>
+<ng-template #body></ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-between">
+        <!-- <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+          <i class="icon-cloud_upload fs-5"></i>Upload file
+        </button> -->
+        <button type="button" class="btn btn-primary ms-1">
+            <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+        </button>
+    </div>
+</ng-template>

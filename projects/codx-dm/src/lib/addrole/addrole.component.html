@@ -1,0 +1,10 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">               
+    <ng-template #body>      
+        <codx-share 
+            [multiple]="true" 
+            (eventApply)="allpyShare($event)"> 
+        </codx-share>
+    </ng-template>    
+    <ng-template #footer>       
+    </ng-template>
+</codx-form>

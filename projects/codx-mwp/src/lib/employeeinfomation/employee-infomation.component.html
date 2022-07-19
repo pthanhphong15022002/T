@@ -1,4 +1,4 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" [views]="views">
+<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID"   [views]="views">
 </codx-views>
 
 
@@ -322,7 +322,7 @@
                   <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="ExperencesCurrent">
                     <div class="user-process process-h">
-                      <div *ngFor="let experences of ExperencesWorked">
+                      <ng-container *ngFor="let experences of ExperencesWorked">
                         <div class="process-item d-flex mb-4">
 
                           <div class="yeartoyear mt-3">{{experences.fromDate}} - {{experences.toDate}}
@@ -345,15 +345,29 @@
                                   </a>
                                 </div>
                               </div> -->
-                              <codx-temp-full [content]="experences.companyName" [desc]="experences.roleName"
-                              (clickMF)="clickMF($event, data)">
+                              <codx-temp-full [formModel]="view.formModel" [content]="experences.companyName"
+                                [desc]="experences.roleName" (clickMF)="clickMF($event, experences)">
                               </codx-temp-full>
                             </div>
                             <!-- <div class="text-primary">{{experences.roleName}}</div> -->
-                          </div>                      
+                          </div>
 
                         </div>
-                      </div>
+                      </ng-container>
+                      <ng-container *ngIf="editMode">
+                        <div class="process-item d-flex mb-4">
+                          <div class="yeartoyear mt-3">
+                          </div>
+                          <div class="mx-3 mt-4 process-line">
+                            <span class="icon-add_circle_outline icon-16 text-success"></span>
+                          </div>
+                          <div (click)="editExperences(data)"
+                            class="d-flex align-items-center py-3 pl-4 pr-6 process-r add-process">
+                            <span class="icon-add icon-18"></span>
+                            <a class="text-primary">Thêm mới</a>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
@@ -480,10 +494,8 @@
                           </div>
                         </ng-container>
                       </ng-template>
-
                       <!-- </swiper> -->
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -502,8 +514,8 @@
                     <div class="row">
                       <ng-container *ngFor="let relationship of employeeRelationship">
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                          <div class="d-flex flex-grow-1 user-item">
-                            <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="relationship.recID"
+                          <!-- <div class="d-flex flex-grow-1 user-item"> -->
+                          <!-- <codx-img class="symbol symbol-40px symbol-circle me-4" [objectId]="relationship.recID"
                               objectType="HR_EmployeeRelations">
                             </codx-img>
                             <div class="d-flex flex-column full">
@@ -522,13 +534,16 @@
                                   <span class="icon-close icon-18"></span>
                                 </a>
                               </div>
-                            </div>
-                          </div>
+                            </div> -->
 
+                          <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
+                            [formModel]="view.formModel" [title]="relationship.relationName"
+                            (clickMF)="clickMF($event, data)" 
+                            [desc]="(relationship.relationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
+                          </codx-card-center>
+                          <!-- </div> -->
                         </div>
-                        <!-- <codx-card-center cardCss="border h-100" [imageId]="relationship.picture" [title]="relationship.RelationName"
-                [desc]="(relationship.RelationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')" >
-              </codx-card-center> -->
+
                       </ng-container>
                       <ng-container *ngIf="editMode">
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
@@ -565,9 +580,9 @@
                             <span class="icon-close icon-16"></span>
                           </a>
                         </div>
-                        <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process"
-                          (click)="editHobby(null)">
-                          <a class="text-primary">Thêm mới</a>
+                        <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
+                          <span class="icon-add icon-18"></span>
+                          <a (click)="popupAddHobbi()" class="text-primary" >Thêm mới</a>
                         </div>
                       </div>
                     </div>
@@ -579,8 +594,6 @@
         </div>
       </div>
     </div>
-
   </div>
-
 
 </ng-template>

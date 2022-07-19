@@ -102,6 +102,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     }]
     this.getGridViewSetUp();
+    this.codxViews.dataService.methodSave = "PublishPostAsync";
     this.codxViews.dataService.methodDelete = "DeletePostAsync";
     console.log(this.codxViews.dataService);
   }
@@ -129,18 +130,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return option;
   }
   removePost(data: any) {
+    this.codxViews.dataService as CRUDService;
     this.codxViews.dataService.delete([data]).subscribe((res) => {
       if (res) {
-        if (data.lstFile) {
           this.api.execSv("DM",
-            "ERM.Business.DM",
-            "FileBussiness",
-            "DeleteByObjectIDAsync",
-            [data.recID, 'WP_Comments', true]
-          ).subscribe();
-        }
+          "ERM.Business.DM",
+          "FileBussiness",
+          "DeleteByObjectIDAsync",
+          [data.recID, 'WP_Comments', true]
+        ).subscribe();
       }
-      this.notifySvr.notifyCode('E0026');
       this.dt.detectChanges();
     });
 
@@ -173,9 +172,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: "create",
       title: "Tạo bài viết",
     }
-    this.dt.detectChanges()
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
     this.modal.closed.subscribe();
@@ -187,7 +185,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       title: "Chỉnh sửa bài viết"
     }
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService as CRUDService;
+    option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 
@@ -230,9 +228,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   getTagUser(id) {
     this.api
-      .exec<any>('ERM.Business.WP', 'CommentBusiness', 'GetTagUserListAsync', [
-        id,
-      ])
+      .execSv("WP","ERM.Business.WP", "CommentBusiness", "GetTagUserListAsync", id)
       .subscribe((res) => {
         if (res) this.tagUsers = res;
       });

@@ -30,7 +30,7 @@
 <!-- [icoDescCss]="'icon-phone_android icon-16 mr-2'" [desc]="data.phone || 'Số điện thoại'"
     [icoDesc2Css]="'icon-email icon-16 mr-2'" [desc2]="data.email || 'Email'" -->
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border h-100" [imageId]="data.employeeID" [title]="data.employeeName"
+  <codx-card-center cardCss="border w-250px h-100" [imageId]="data.employeeID" [title]="data.employeeName"
     [subTitle]="(data.positionName || 'Bộ phận')" [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/mm/yyyy'"
     [footer]="footer">
   </codx-card-center>

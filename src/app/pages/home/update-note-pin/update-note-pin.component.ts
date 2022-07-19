@@ -1,6 +1,7 @@
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
+import { NoteServices } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-update-note-pin',
@@ -23,6 +24,7 @@ export class UpdateNotePinComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private noteService: NoteServices,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef,
   ) {
@@ -53,6 +55,8 @@ export class UpdateNotePinComponent implements OnInit {
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.dataOld.recID, this.dataOld])
       .subscribe((res) => {
+        var object = [{ data: res, type: 'edit' }]
+        this.noteService.data.next(object);
         for (let i = 0; i < this.data.length; i++) {
           if (this.data[i].recID == this.dataOld?.recID) {
             this.data[i].isPin = res?.isPin;
@@ -70,6 +74,8 @@ export class UpdateNotePinComponent implements OnInit {
       this.api
         .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.itemUpdate?.recID, this.itemUpdate])
         .subscribe((res) => {
+          var object = [{ data: res, type: 'edit' }]
+          this.noteService.data.next(object);
           this.dialog.close();
           this.notificationsService.notify(
             'Thực thi thành công',

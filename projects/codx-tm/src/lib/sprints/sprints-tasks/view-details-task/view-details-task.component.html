@@ -116,7 +116,7 @@
               <span [ngClass]="
               itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
             ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span>
-        </div>
+            </div>
             <div class="d-flex">
               <span class="fw-bold me-1">
                 <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày hoàn tất:">
@@ -146,15 +146,15 @@
           </div>
         </div>
         <div class="mt-2">
-          <codx-tag *ngIf="!itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
-          [value]="''"></codx-tag>
-          <codx-tag *ngIf="itemSelected.tags"  [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
-          [value]="itemSelected.tags"></codx-tag>    
+          <codx-tag *ngIf="!itemSelected.tags" [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
+            [value]="''"></codx-tag>
+          <codx-tag *ngIf="itemSelected.tags" [entityName]="formModel.entityName" [disabled]="false" [isEdit]="false"
+            [value]="itemSelected.tags"></codx-tag>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class="mt-6 mb-3 text-primary">
         <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện: ">
         </codx-label>
       </div>
@@ -169,7 +169,7 @@
           </codx-imgs>
         </div>
       </div>
-      <div class="codx_title_sub_primary mt-6 mb-3">
+      <div class=" mt-6 mb-3 text-primary">
         <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc: ">
         </codx-label>
       </div>
@@ -177,7 +177,7 @@
         {{ itemSelected?.taskName }}
       </div>
       <div class="text-gray-700" [innerHTML]="itemSelected?.memo"></div>
-      <div class="codx_title_sub_primary mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
+      <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
         <div class="text-primary fw-bold mt-4 mb-2">
           <!-- <codx-label fiedName="ListTaskGoals" formName="Tasks" gridViewName="grvTasks" default="Danh sách việc cần làm: "></codx-label> -->
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm:"></codx-label>

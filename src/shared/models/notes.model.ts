@@ -24,3 +24,15 @@ export class NoteType {
     check: boolean;
     list: boolean;
 }
+export class NoteFile {
+    avatar: string;
+    createdBy: string;
+    createdOn: string;
+    fileName: string;
+    fileSize: string;
+    fileType: string;
+    objectID: string;
+    objectType: string;
+    recID: string;
+    thumbnail: string;
+}
