@@ -71,3 +71,7 @@ td {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.w-20 {
+  width: 20% !important;
+}
