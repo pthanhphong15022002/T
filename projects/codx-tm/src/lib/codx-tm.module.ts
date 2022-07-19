@@ -28,7 +28,6 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule, TreeMapTooltipService } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -90,7 +89,7 @@ export const routes: Routes = [
       },
       {
         path: 'teamdashboard/:funcID',
-        component: TeamDashboardComponent
+        component: TeamDashboardComponent,
       },
       {
         path: 'setting',
@@ -141,12 +140,6 @@ export const routes: Routes = [
         ],
       },
       {
-        path: '',
-        redirectTo: 'mydashboard/TMT0101',
-        // path: 'home/:funcID',
-        // component: DashboardComponent,
-      },
-      {
         path: '**',
         redirectTo: 'error/404',
       },
@@ -190,7 +183,6 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
-
 ];
 @NgModule({
   imports: [
@@ -206,7 +198,6 @@ const T_Component: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarModule,
     CircularGaugeModule,
-    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
@@ -215,7 +206,6 @@ const T_Component: Type<any>[] = [
   exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [TreeMapTooltipService]
 })
 export class TMModule {
   public static forRoot(

@@ -3,9 +3,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
 import 'lodash';
-import { FilesService } from 'codx-core';
+import { AuthService, FilesService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
 import { isBuffer } from 'util';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
@@ -17,9 +18,14 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   @Input() showBtnRemove: boolean = false;
   @Input() lstFile:any[] = [];
   @ViewChild('video') video: ElementRef;
-  
-  images:any[] = [];
+  FILE_CATEGORY = {
+    IMAGE: "image",
+    VIDEO: "video"
+  }
+  file_img_video:any[] = [];
   files:any[] = [];
+  videos:any[] = [];
+
 
   mineTypes = {
     //   File Extension   MIME Type
@@ -205,6 +211,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   private subscription: Subscription = new Subscription();
   constructor(
     private injector: Injector,
+    private auth:AuthService,
     private df: ChangeDetectorRef
   ) {
     super(injector);
@@ -241,12 +248,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
       if(files){
         this.lstFile = files;
         this.lstFile.forEach((f:any) => {
-          var minType = this.mineTypes[f.topics];
-          if(minType.indexOf("image") >= 0 || minType.indexOf("video") >= 0){
-            this.images.push(f);
+          let file = f;
+          var minType = this.mineTypes[file.topics];
+          if(minType.indexOf("image") >= 0 ){
+            this.file_img_video.push(file);
+          }
+          else if(minType.indexOf("video") >= 0){
+            file['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${file.recID}?access_token=${this.auth.userValue.token}`;
+            this.file_img_video.push(file);
           }
           else{
-            this.files.push(f);
+            this.files.push(file);
           }
         });
         this.df.detectChanges();
@@ -258,9 +270,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   converFile(){
     if(this.lstFile){
       this.lstFile.forEach((f:any) => {
-        var minType = this.mineTypes[f.type];
-        if(minType.indexOf("image") >= 0 || minType.indexOf("video") >= 0){
-          this.images.push(f);
+        let minType = this.mineTypes[f.type];
+        if(minType.indexOf("image") >= 0 ){
+          f['category'] = 'image';
+          this.file_img_video.push(f);
+        }
+        else if(minType.indexOf("video") >= 0)
+        {
+          f['category'] = 'video';
+          this.file_img_video.push(f);
         }
         else{
           this.files.push(f);

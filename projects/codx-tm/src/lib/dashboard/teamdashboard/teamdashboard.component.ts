@@ -5,16 +5,14 @@ import {
   ViewChild,
   TemplateRef,
   Injector,
+  inject,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
-import {
-  AnimationModel,
-  RangeColorModel,
-} from '@syncfusion/ej2-angular-progressbar';
+import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'team-dashboard',
@@ -38,8 +36,10 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
-  vlWork: any;
-  tasksByGroup: any;
+  vlWork =  [];
+  hrWork = [];
+  user: any;
+  tasksByEmp: any;
 
   public rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -112,7 +112,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   //#endregion gauge
 
-  public piedata1: Object[];
+  public piedata1: any;
   public piedata2: Object[];
   public legendSettings: Object = {
     position: 'Top',
@@ -172,43 +172,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   ];
 
   public data: object[] = [];
-  public leafItemSettings: object = {
-    gap: 10,
-    labelPath: 'taskGroupName',
-    labelPosition: 'Center',
-    labelFormat: '${taskGroupName}<br>${percentage} %',
-    labelStyle: {
-      color: 'white',
-      length: '3',
-      size: '15'
-    },
-    colorMapping: [
-      {
-        from: 50,
-        to: 100,
-        color: '#0062ff',
-      },
-      {
-        from: 20,
-        to: 50,
-        color: '#4a8af0',
-      },
-      {
-        from: 10,
-        to: 20,
-        color: '#7aaaf5',
-      },
-      {
-        from: 0,
-        to: 10,
-        color: '#c6d9f7',
-      },
-    ],
-  };
-  public tooltipSettings: object = {
-    visible: true,
-    format: 'Name:${taskGroupName} - Percentage:${percentage}',
-  };
 
   dbData: any;
 
@@ -223,85 +186,95 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.model = new DataRequest();
+    this.user = this.auth.get();
+    this.model.predicate = 'OrgUnitID = @0';
+    this.model.dataValue = this.user.buid;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
 
-    this.api
-      .execSv(
-        'TM',
-        'TM',
-        'ReportBusiness',
-        'GetDataTeamDashboardAsync',
-        this.model
-      )
-      .subscribe((res: any) => {
-        console.log('Team Dashboard', res);
-        this.dbData = res;
-        this.piedata1 = [
-          {
-            x: 'Chưa thực hiện',
-            y: res.newTasks,
-          },
-          {
-            x: 'Đang thực hiên',
-            y: res.processingTasks,
-          },
-          {
-            x: 'Hoàn tất',
-            y: res.doneTasks,
-          },
-          {
-            x: 'Hoãn lại',
-            y: res.postponeTasks,
-          },
-          {
-            x: 'Bị huỷ',
-            y: res.canceledTasks,
-          },
-        ];
-        res.tasksByGroup.map((group) => {
-          group.percentage = group.percentage.toFixed(2);
-        });
-        this.tasksByGroup = res.tasksByGroup;
-        this.dataColumn = res.dataBarChart.barChart;
-        this.dataLine = res.dataBarChart.lineChart;
-        this.vlWork = res.tasksbyEmp;
-        this.detectorRef.detectChanges();
-      });
-
-    this.piedata2 = [
-      {
-        x: 'Group 1',
-        y: 2,
-      },
-      {
-        x: 'Group 2',
-        y: 5,
-      },
-    ];
     this.getGeneralData();
   }
 
   private getGeneralData() {
-    this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetDataTeamDashboardAsync', [
+    this.tmService
+      .getTeamDBData(
         this.model,
-      ])
-      .subscribe((res: any) => {
-        this.dbData = res;
-        this.data = res.tasksByGroup;
-      });
-
-    this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
-        this.model,
+        this.daySelectedFrom,
+        this.daySelectedTo,
         this.fromDate,
         this.toDate,
-      ])
+        this.beginMonth,
+        this.endMonth
+      )
       .subscribe((res: any) => {
-        console.log(res);
+        console.log('TeamDB', res);
+        this.dbData = res;
+        this.piedata1 = res?.tasksByGroup;
+        this.piedata2 = [
+          {
+            x: 'Chưa thực hiện',
+            y: res?.newTasks,
+          },
+          {
+            x: 'Đang thực hiên',
+            y: res?.processingTasks,
+          },
+          {
+            x: 'Hoàn tất',
+            y: res?.doneTasks,
+          },
+          {
+            x: 'Hoãn lại',
+            y: res?.postponeTasks,
+          },
+          {
+            x: 'Bị huỷ',
+            y: res?.canceledTasks,
+          },
+        ];
+        this.dataColumn = res?.dataBarChart.barChart;
+        this.dataLine = res?.dataBarChart.lineChart;
+        this.data = res?.tasksByGroup;
+        res.tasksByEmp.map((data) => {
+          let newTasks = 0;
+          let processingTasks = 0;
+          let doneTasks = 0;
+          let postponeTasks = 0;
+          let cancelTasks = 0;
+          data.tasks.map((task) => {
+            switch (task.status) {
+              case '1':
+                newTasks = newTasks + 1;
+                break;
+              case '2':
+                processingTasks = processingTasks + 1;
+                break;
+              case '9':
+                doneTasks = doneTasks + 1;
+                break;
+              case '5':
+                postponeTasks = postponeTasks + 1;
+                break;
+              case '8':
+                cancelTasks = cancelTasks + 1;
+                break;
+            }
+          });
+          this.vlWork.push({
+            name: data.name,
+            qtyTasks: data.qtyTasks,
+            status: {
+              new: newTasks / data.qtyTasks * 100,
+              processing: processingTasks / data.qtyTasks * 100,
+              done: doneTasks / data.qtyTasks * 100,
+              postpone: postponeTasks / data.qtyTasks * 100,
+              cancel: cancelTasks /data.qtyTasks * 100
+            }
+          })
+        });
+        this.detectorRef.detectChanges();
       });
   }
 }

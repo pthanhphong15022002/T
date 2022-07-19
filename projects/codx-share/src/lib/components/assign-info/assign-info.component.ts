@@ -271,6 +271,7 @@ export class AssignInfoComponent implements OnInit {
         case 'U':
           listUserID += obj.id + ';';
           break;
+        case 'O':
         case 'D':
           listDepartmentID += obj.id + ';';
           break;
@@ -360,7 +361,6 @@ export class AssignInfoComponent implements OnInit {
     this.idUserSelected = userID;
     p.open();
     this.popover = p ;
-  
   }
   hidePopover(p) {
     p.close();

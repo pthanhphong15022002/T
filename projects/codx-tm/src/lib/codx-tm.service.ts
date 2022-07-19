@@ -284,32 +284,6 @@ export class CodxTMService {
     );
   }
 
-  getChartData(
-    model: Object,
-    daySelectedFrom: Date,
-    daySelectedTo: Date,
-    fromDate: Date,
-    toDate: Date,
-    beginMonth: Date,
-    endMonth: Date
-  ) {
-    return this.api.execSv<any>(
-      'TM',
-      'TM',
-      'TaskBusiness',
-      'GetGeneralDataAsync',
-      [
-        model,
-        daySelectedFrom,
-        daySelectedTo,
-        fromDate,
-        toDate,
-        beginMonth,
-        endMonth,
-      ]
-    );
-  }
-
   convertListToObject(
     list: Array<object>,
     fieldName: string,
@@ -331,7 +305,7 @@ export class CodxTMService {
     return this.api.execSv(
       'TM',
       'TM',
-      'ReportBusiness',
+      'TaskBusiness',
       'GetDataMyDashboardAsync',
       [model, beginMonth, endMonth]
     );
@@ -349,101 +323,10 @@ export class CodxTMService {
     return this.api.execSv(
       'TM',
       'TM',
-      'ReportBusiness',
+      'TaskBusiness',
       'GetDataTeamDashboardAsync',
       [model, beginMonth, endMonth]
     );
-  }
-
-  getFormModel(functionID): Promise<FormModel> {
-    return new Promise<FormModel>((resolve, rejects) => {
-      this.cache.functionList(functionID).subscribe((funcList) => {
-        var formModel = new FormModel();
-        if (funcList) {
-          formModel.entityName = funcList?.entityName;
-          formModel.formName = funcList?.formName;
-          formModel.gridViewName = funcList?.gridViewName;
-          formModel.funcID = funcList?.functionID;
-          formModel.entityPer = funcList?.entityPer;
-        }
-        resolve(formModel);
-      });
-    });
-  }
-
-  getFormGroup(formName, gridView): Promise<FormGroup> {
-    return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
-        var model = {};
-        if (gv) {
-          const user = this.authStore.get();
-          for (const key in gv) {
-            var b = false;
-            if (Object.prototype.hasOwnProperty.call(gv, key)) {
-              const element = gv[key];
-              element.fieldName =
-                element.fieldName.charAt(0).toLowerCase() +
-                element.fieldName.slice(1);
-              model[element.fieldName] = [];
-
-              if (element.fieldName == 'owner') {
-                model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
-                model[element.fieldName].push(new Date());
-              } else if (element.fieldName == 'stop') {
-                model[element.fieldName].push(false);
-              } else if (element.fieldName == 'orgUnitID') {
-                model[element.fieldName].push(user['buid']);
-              } else if (
-                element.dataType == 'Decimal' ||
-                element.dataType == 'Int'
-              ) {
-                model[element.fieldName].push(0);
-              } else if (
-                element.dataType == 'Bool' ||
-                element.dataType == 'Boolean'
-              )
-                model[element.fieldName].push(false);
-              else if (element.fieldName == 'createdBy') {
-                model[element.fieldName].push(user.userID);
-              } else {
-                model[element.fieldName].push(null);
-              }
-
-              // if (element.isRequire) {
-              //   model[element.fieldName].push(
-              //     Validators.compose([Validators.required])
-              //   );
-              // } else {
-              //   model[element.fieldName].push(Validators.compose([]));
-              // }
-            }
-          }
-        }
-
-        resolve(this.fb.group(model, { updateOn: 'blur' }));
-      });
-    });
-  }
-
-  getComboboxName(formName, gridView): Promise<object> {
-    return new Promise<object>((resolve, reject) => {
-      var obj: { [key: string]: any } = {};
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
-        if (gv) {
-          for (const key in gv) {
-            if (Object.prototype.hasOwnProperty.call(gv, key)) {
-              const element = gv[key];
-              if (element.referedValue != null) {
-                obj[key] = element.referedValue;
-              }
-            }
-          }
-        }
-      });
-      resolve(obj as Object);
-    });
   }
 }
 

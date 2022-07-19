@@ -28,8 +28,8 @@
     </div>
     <div class="col-7">
       <div class="row">
-        <div class="d-flex w-100 justify-content-between">
-          <div class="left_Toolbar d-flex">
+        <div class="d-flex w-100">
+          <div class="left_Toolbar w-100 d-flex justify-content-start">
             <ejs-toolbar>
               <e-items>
                 <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')">
@@ -49,19 +49,40 @@
                 </e-item>
               </e-items>
             </ejs-toolbar>
+
+            <ejs-toolbar>
+              <e-items>
+                <e-item
+                  prefixIcon="e-chevron-up-double"
+                  (click)="pdfviewerControl?.navigation?.goToFirstPage()"
+                ></e-item>
+                <e-item
+                  [text]="pdfviewerControl?.currentPageNumber"
+                  [disabled]="true"
+                ></e-item>
+                <e-item
+                  prefixIcon="e-chevron-down-double"
+                  (click)="pdfviewerControl?.navigation?.goToLastPage()"
+                ></e-item>
+              </e-items>
+            </ejs-toolbar>
           </div>
 
-          <ejs-dropdownlist
-            id="signfilesDropdownList"
-            [dataSource]="lstFiles"
-            [fields]="file"
-            (change)="changeSignFile($event)"
-          ></ejs-dropdownlist>
-          <ejs-toolbar>
-            <e-items>
-              <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
-            </e-items>
-          </ejs-toolbar>
+          <div class="chooseSignFile w-100 d-flex justify-content-center">
+            <ejs-dropdownlist
+              id="signfilesDropdownList"
+              [dataSource]="lstFiles"
+              [fields]="file"
+              (change)="changeSignFile($event)"
+            ></ejs-dropdownlist>
+          </div>
+          <div class="right_Toolbar d-flex justify-content-end">
+            <ejs-toolbar>
+              <e-items>
+                <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
+              </e-items>
+            </ejs-toolbar>
+          </div>
         </div>
       </div>
       <div class="row h-100 pdfviewer_Space">
@@ -84,6 +105,7 @@
           (pageChange)="pageChange($event)"
           [zoomValue]="zoomValue"
           (zoomChange)="changeZoomValue($event)"
+          (extractTextCompleted)="show($event)"
           [ajaxRequestSettings]="ajaxSetting"
           style="
             height: 100% !important;
@@ -137,46 +159,57 @@
               </div>
 
               <div
-                class="row d-flex d-flex align-items-center justify-content-between"
-                style="width: 150px"
+                class="autoSign_Space d-flex d-flex align-items-center justify-content-between"
+                style="width: 160px"
               >
-                <label for="">Gợi ý vị trí kí</label>
-                <input
-                  type="checkbox"
-                  name="suggest"
-                  (change)="changeSuggestState()"
-                />
+                <codx-label
+                  name="lblSuggestSignArea"
+                  default="Gợi ý vị trí ký"
+                  class="ms-1 fw-bold"
+                ></codx-label>
+                <codx-input
+                  type="switch"
+                  field=""
+                  [crrValue]="needSuggest"
+                  (valueChange)="changeSuggestState($event)"
+                ></codx-input>
               </div>
 
               <div
-                class="row d-flex align-items-center justify-content-between"
-                style="width: 100%"
+                class="autoSign_Space d-flex align-items-center justify-content-between"
+                style="width: 160px"
               >
-                <div
-                  class="autoSign_Space d-flex align-items-center justify-content-between"
-                  style="width: 160px"
-                >
-                  <label for="">Ký dòng cuối cùng</label>
-                  <input
-                    type="checkbox"
-                    name="autoSign"
-                    (change)="changeAutoSignState(0)"
-                  />
-                </div>
-                <div
-                  class="autoSign_Space d-flex align-items-center justify-content-between"
-                  style="width: 135px"
-                >
-                  <label for="">Ký cuối trang</label>
-                  <input
-                    type="checkbox"
-                    name="autoSign"
-                    (change)="changeAutoSignState(1)"
-                  />
-                </div>
+                <codx-label
+                  name="lblSignLastLine"
+                  default="Ký dòng cuối cùng"
+                  class="ms-1 fw-bold"
+                ></codx-label>
+                <codx-input
+                  type="switch"
+                  field=""
+                  [crrValue]="autoSignState"
+                  (valueChange)="changeAutoSignState(0)"
+                ></codx-input>
               </div>
 
-              <div class="row w-100 position-relative">
+              <div
+                class="autoSign_Space d-flex align-items-center justify-content-between"
+                style="width: 160px"
+              >
+                <codx-label
+                  name="lblSignEndPage"
+                  default="Ký cuối trang"
+                  class="ms-1 fw-bold"
+                ></codx-label>
+                <codx-input
+                  type="switch"
+                  field=""
+                  [crrValue]="autoSignState"
+                  (valueChange)="changeAutoSignState(1)"
+                ></codx-input>
+              </div>
+
+              <div class="row w-100 position-relative mt-4">
                 <button (click)="show($event)">Show</button>
               </div>
             </ng-template>

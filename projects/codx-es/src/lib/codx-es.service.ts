@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -18,6 +19,7 @@ import {
   finalize,
   of,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { debug } from 'util';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 
@@ -97,7 +99,8 @@ export class CodxEsService {
     private auth: AuthStore,
     private fb: FormBuilder,
     private api: ApiHttpService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private http: HttpClient
   ) {}
 
   //#region Get from FunctionList
@@ -597,6 +600,22 @@ export class CodxEsService {
       'SignAreasBusiness',
       'GetSignAreasAsync',
       data
+    );
+  }
+
+  getLastTextLine(data: number): Observable<number> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.post<any>(
+      environment.pdfUrl + '/TextOnPage',
+      {
+        action: 'TextOnPage',
+        pageIndex: data - 1,
+      },
+      httpOptions
     );
   }
   //#endregion
