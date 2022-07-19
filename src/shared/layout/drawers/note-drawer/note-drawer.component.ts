@@ -7,7 +7,7 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private noteService: NoteService,
+    private noteService: NoteServices,
   ) {
     super(injector)
   }
@@ -61,7 +61,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         var data = res[0]?.data;
         var type = res[0]?.type;
         if (this.lstView) {
-          if (type == 'add') {
+          if (type == 'add-currentDate' || type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).add(data).subscribe();
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
@@ -73,7 +73,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).load().subscribe();
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -127,6 +127,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       dataUpdate: data,
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
+      component: 'note-drawer',
     };
     this.callfc.openForm(
       AddNoteComponent,

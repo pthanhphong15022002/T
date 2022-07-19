@@ -65,8 +65,8 @@ export class UserComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddUserAsync';
-    this.view.dataService.methodUpdate = 'UpdateUserAsync';
+    this.view.dataService.methodSave = '';
+    this.view.dataService.methodUpdate = '';
     this.changeDetectorRef.detectChanges();
   }
 

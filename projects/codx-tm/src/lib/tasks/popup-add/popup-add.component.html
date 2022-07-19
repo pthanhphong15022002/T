@@ -1,10 +1,10 @@
 <codx-form headerText="{{title}}" [subHeader]="subHeader" subHeaderText="" [body]="body" [footer]="footer"
   [formModel]="dialog.formModel" [dialog]="dialog" #form>
   <ng-template #subHeader>
-        <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task?.tags || ''"
-        (valueChange)="valueChangeTags($event)"></codx-tag>
-        <!-- chua làm dc nhờ chi Vân Css -->
-      <!-- <div>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task?.tags || ''"
+      (valueChange)="valueChangeTags($event)"></codx-tag>
+    <!-- chua làm dc nhờ chi Vân Css -->
+    <!-- <div>
         <a class="text-dark-75 text-hover-primary d-flex align-items-center " style="cursor:pointer;">
           <span class="me-2 text-dark">
             <codx-label name="lblExtend" formName="Tasks" default="Mở rộng"></codx-label>
@@ -74,6 +74,9 @@
                 <codx-input type="valuelist" field="priority" [crrValue]="task?.priority" refValue="L0186"
                   [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
+                <!-- <codx-valuelist type="valuelist" field="priority" [crrValue]="task?.priority" [name]="'L0186'"
+                [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+              </codx-valuelist> -->
               </div>
             </div>
             <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
@@ -122,14 +125,14 @@
                 </div>
               </div>
             </ng-container>
-            <ng-container >
+            <ng-container>
               <div class="form-group mt-3">
                 <div class="d-flex align-items-center justify-content-between">
                   <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
                   </codx-label>
                   <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
                 </div>
-                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" 
+                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
                   (valueChange)="changeMemo($event)"></codx-input>
                 <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                   type="text" [readOnly]="readOnly" class="col-md-8" style="
@@ -160,7 +163,8 @@
                   </codx-img>
                 </ng-container> -->
                 <ng-container *ngIf="listUser.length > 0">
-                  <codx-imgs class=" flex symbol-40px " [objectId]="listUser.join(';')" objectType="AD_Users" [numberImages]="5">
+                  <codx-imgs class=" flex symbol-40px " [objectId]="listUser.join(';')" objectType="AD_Users"
+                    [numberImages]="5">
                   </codx-imgs>
                 </ng-container>
               </div>
@@ -209,7 +213,7 @@
                 </codx-label>
                 <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
               </div>
-              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" 
+              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
                 (valueChange)="changeMemo($event)"></codx-input>
               <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                 type="text" [readOnly]="readOnly" class="col-md-8" style="
@@ -322,8 +326,9 @@
             <div>
             </div>
             <div>
-              <ng-container *ngFor="let item of listTodo; index as i">
-                <div class="d-flex justify-content-between align-items-center checkbox-item row">
+              <ng-container *ngFor="let item of listTodo; index as i;">
+                <div class="d-flex justify-content-between align-items-center checkbox-item row"
+                  style="margin-bottom: 5px; cursor: pointer;">
                   <div class="checkbox-list col-10">
                     <div class="d-flex flex-column flex-grow-1 ">
                       <div class="flex" *ngIf="i != indexEditTodo">
@@ -335,8 +340,10 @@
                             <!-- <codx-input type="checkbox" [crrValue]="item.status"
                             (valueChange)="updateStatusTodoList(i)"></codx-input> -->
                           </span>
-                          <span class="" (click)="editTodo(i, item.text)" style="
-                          margin-top: 4px; margin-left: 12px;">
+                          <span class="text-hover-primary" (click)="editTodo(i, item.text)" style="
+                          margin-top: 4px; margin-left: 12px;" popoverClass="userPopoverClass"
+                            [ngbPopover]="deleteToDo" placement="left" #p="ngbPopover"
+                            (mouseenter)="showPoppoverDelete(p,i)" autoClose="outside" placement="right">
                             {{ item.text }}
                           </span>
                         </div>
@@ -345,11 +352,7 @@
                         <div class="flex">
                           <div class="">
                             <span>
-                              <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1"
-                                style="margin-left: -8px;
-                              height: 14px;
-                              width: 14px;
-                              margin-top: 5px" class="col-md-4">
+                              <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
                               <!-- <codx-input type="checkbox"></codx-input> -->
                             </span>
                             <span class="">
@@ -364,7 +367,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-2" *ngIf="!readOnly">
+                  <!-- <div class="col-2" *ngIf="!readOnly">
                     <a (click)="onDeleteTodo(i)" style="cursor: pointer">
                       <div>
                         <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
@@ -373,19 +376,13 @@
                         </span>
                       </div>
                     </a>
-                  </div>
+                  </div> -->
                 </div>
               </ng-container>
               <div class="d-flex justify-content-between align-items-center checkbox-item " *ngIf="!readOnly">
                 <div class="checkbox-list">
                   <div class="d-flex flex-column flex-grow-1 w-100">
                     <div class="row">
-                      <!-- <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1" style="margin-left: -8px;
-                        height: 14px;
-                        width: 14px;
-                        margin-top: 5px" class="col-md-4"> -->
-                      <!-- <codx-input type="checkbox"
-                              ></codx-input> -->
                       <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
                         (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
                         (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" style="
@@ -470,3 +467,15 @@
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #deleteToDo>
+  <ng-container>
+    <a class="" (click)="onDeleteTodo(crrIndex)" style="cursor: pointer">
+        <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
+        <span>
+          <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
+        </span>
+    </a>
+  </ng-container>
+
+</ng-template>

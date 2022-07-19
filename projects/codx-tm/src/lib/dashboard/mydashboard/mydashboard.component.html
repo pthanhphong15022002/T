@@ -11,12 +11,12 @@
                 <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
               </div>
               <div class="text-dark fw-bold">
-                <codx-label name="lblOverdueTask" default="Chưa thực hiên" [formModel]="formModel"></codx-label>
+                <codx-label name="lblOverdueTask" default="Đã quá hạn" [formModel]="formModel"></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.newTasks }}
+            {{ dbData?.overDueTasks }}
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
     </div>
     <div class="row m-0 bg-body mb-2">
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn align-self-end" (mouseenter)="openTooltip()" (mouseleave)="closeTooltip()">
+        <button type="button" class="btn align-self-end" (click)="openTooltip()">
           <i class="icon-info text-dark"></i>
         </button>
       </div>
@@ -190,7 +190,7 @@
       </div>
     </div>
     <div class="d-flex mb-4">
-      <div class="me-2" style="position: relative; width: 50%">
+      <div style="position: relative; width: 50%">
         <ejs-accumulationchart id="chart-task-group" [legendSettings]="legendSettings2">
           <e-accumulation-series-collection>
             <e-accumulation-series [dataSource]="dbData?.tasksByGroup" xName="taskGroupName" yName="qty" radius="70%"
@@ -204,7 +204,7 @@
             transform: translate(-50%, -50%);
           ">
           <div class="text-center">
-            <p class="text-gray-900 fw-bolder fs-2">{{ dbData?.tasks }}</p>
+            <p class="text-gray-900 fw-bolder fs-2">{{ dbData?.qtyTasks }}</p>
             <codx-label name="lblTasks" default="Công việc" [formModel]="formModel">
             </codx-label>
           </div>
@@ -291,9 +291,19 @@
     <div class="taskbox-user">
       <selectweek #selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>
       <div class="taskbox-list">
-        <codx-listview #listview service="TM" assemblyName="ERM.Business.TM" className="TaskBusiness"
-          method="GetTasksOfDayAsync" entityName="TM_Tasks" [itemTemplate]="TemplateList" [height]="200">
-        </codx-listview>
+        <!-- <codx-listview
+          #listview
+          service="TM"
+          assemblyName="ERM.Business.TM"
+          className="TaskBusiness"
+          method="GetTasksOfDayAsync"
+          entityName="TM_Tasks"
+          predicate="DueDate=@0"
+          [dataValue]='daySelected'
+          [itemTemplate]="TemplateList"
+          [height]="200"
+        >
+        </codx-listview> -->
       </div>
     </div>
   </div>

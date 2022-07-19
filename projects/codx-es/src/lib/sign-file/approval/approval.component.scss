@@ -50,7 +50,7 @@
   }
 
   #signfilesDropdownList {
-    width: 30% !important;
+    width: 75% !important;
     text-align: center !important;
     position: relative !important;
   }
@@ -100,16 +100,8 @@
   .actions {
     height: 100% !important;
     position: inherit;
-    // ejs-tab {
-    //   height: 100% !important;
-    // }
-
-    label {
-      width: fit-content;
-    }
-    input {
-      width: fit-content !important;
-      display: inline;
+    .autoSign_Space {
+      margin-top: 15px;
     }
   }
 }
