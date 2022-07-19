@@ -313,6 +313,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('TM002');
       this.notiService.notify('Tên công việc không được để trống !');
+      return ;
     }
     if (
       this.showAssignTo &&
