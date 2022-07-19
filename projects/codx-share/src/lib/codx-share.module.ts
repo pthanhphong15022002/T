@@ -45,7 +45,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
-  CalendarDateComponent  
+  CalendarDateComponent,
 ];
 
 
