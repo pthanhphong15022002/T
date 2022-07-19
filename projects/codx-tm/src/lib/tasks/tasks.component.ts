@@ -60,7 +60,7 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param :any
+  param: any
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -317,18 +317,18 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if(e?.event && e?.event!=null){
+        if (e?.event && e?.event != null) {
           this.view.dataService.data = e?.event.concat(
             this.view.dataService.data
           );
           this.view.dataService.setDataSelected(res[0]);
           this.view.dataService.afterSave.next(res);
           this.notiService.notifyCode('TM005');
-         
+
           this.itemSelected = this.view.dataService.data[0];
           this.detectorRef.detectChanges();
         }
-     
+
       });
     });
   }
@@ -354,11 +354,11 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event && e?.event!=null){
+          if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
-          this.itemSelected = e?.event[0];
+            this.itemSelected = e?.event[0];
           }
           this.detectorRef.detectChanges();
         });
@@ -366,7 +366,7 @@ export class TasksComponent extends UIComponent {
   }
 
   copy(data) {
-    if(data)this.view.dataService.dataSelected= data;
+    if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -374,18 +374,18 @@ export class TasksComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if(e?.event && e?.event!=null){
+        if (e?.event && e?.event != null) {
           this.view.dataService.data = e?.event.concat(
             this.view.dataService.data
           );
           this.view.dataService.setDataSelected(res[0]);
           this.view.dataService.afterSave.next(res);
           this.notiService.notifyCode('TM005');
-         
+
           this.itemSelected = this.view.dataService.data[0];
           this.detectorRef.detectChanges();
         }
@@ -428,19 +428,19 @@ export class TasksComponent extends UIComponent {
             //       this.itemSelected = this.view.dataService.data[0];
             //     }
             //   });
-            this.tmSv.deleteTask(data.taskID).subscribe(res=>{
-              if(res){
-                var listTaskDelete = res[0] ;
-                var parent = res[1] ;
-                 listTaskDelete.forEach(x=>{
+            this.tmSv.deleteTask(data.taskID).subscribe(res => {
+              if (res) {
+                var listTaskDelete = res[0];
+                var parent = res[1];
+                listTaskDelete.forEach(x => {
                   this.view.dataService.remove(x).subscribe();
                   this.notiService.notify("Xóa thành công !")
-                 })
-                 if(parent){
+                })
+                if (parent) {
                   this.view.dataService.update(parent).subscribe();
-                 }
-                 this.itemSelected = this.view.dataService.data[0];
-                 this.detectorRef.detectChanges();
+                }
+                this.itemSelected = this.view.dataService.data[0];
+                this.detectorRef.detectChanges();
               }
             })
           }
