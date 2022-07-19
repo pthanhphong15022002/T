@@ -1598,7 +1598,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
         //fileUpload. = files[i].type;
-        fileUpload.mimeType = files[i].type;
+        fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
         fileUpload.objectId = this.objectId;
