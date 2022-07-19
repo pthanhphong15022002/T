@@ -17,7 +17,7 @@
             <codx-vll
               [formModel]="formModel"
               [field]="'Category'"
-              [value]="data['category']"
+              [value]="data?.category"
               [showText]="true"
               class="text-gray-600"
             >
@@ -28,7 +28,7 @@
             <codx-vll
               [formModel]="formModel"
               [field]="'Urgency'"
-              [value]="data['urgency']"
+              [value]="data?.urgency"
               [showText]="true"
               [showIcon]="true"
               class="text-gray-600 d-flex"
@@ -41,7 +41,7 @@
             <codx-vll
               [formModel]="formModel"
               [field]="'Security'"
-              [value]="data['security']"
+              [value]="data?.security"
               [showText]="true"
               [showIcon]="true"
               class="text-gray-600 d-flex"
@@ -78,7 +78,7 @@
             [showText]="true" 
             [formModel]="formModel" 
             [field]="'Status'" 
-            [value]="data['status']" 
+            [value]="data?.status" 
             class="badge badge-light badge-square badge-md fs-7">
           </codx-vll>
         </div>

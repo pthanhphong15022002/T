@@ -76,41 +76,42 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
   onInit(): void {
     this.getMaxPinNote();
+    this.loadData();
+  }
+
+  loadData() {
     this.noteService.data.subscribe((res) => {
       if (res) {
         var data = res[0]?.data;
         var type = res[0]?.type;
         if (this.lstView) {
-          if (type == 'add') {
+          if (type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
-            this.setEventWeek();
+          } else if (type == 'add-currentDate') {
+            (this.lstView.dataService as CRUDService).add(data).subscribe();
+            this.WP_Notes.push(data);
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes = this.WP_Notes.filter(x => x.recID != data.recID);
-            this.setEventWeek();
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
-            }
-          } else if (type == 'edit') {
-            var dt: any = this.lstView.dataService.data[0];
+          } else if (type == 'edit-otherDate') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            var dt: any = this.lstView.dataService.data;
             for (let i = 0; i < this.WP_Notes.length; i++) {
-              if (this.WP_Notes[i].recID == dt?.recID) {
-                this.WP_Notes[i].createdOn = dt.createdOn;
+              if (this.WP_Notes[i].recID == data?.recID) {
+                this.WP_Notes[i].createdOn = data.createdOn;
               }
             }
-            this.setEventWeek();
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
-            }
-
-            (this.lstView.dataService as CRUDService).load().subscribe();
+            this.changeDetectorRef.detectChanges();
+          } else if (type == 'edit-currentDate') {
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
+          }
+          this.setEventWeek();
+          var today: any = document.querySelector(
+            ".e-footer-container button[aria-label='Today']"
+          );
+          if (today) {
+            today.click();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -181,7 +182,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     var daySelected = new Date(Date.parse(this.daySelected));
     this.daySelected = daySelected.toISOString();
     this.dataValue = '';
-    this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
+    this.dataValue = `WP_Calendars;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
     this.changeDetectorRef.detectChanges();
   }
@@ -192,7 +193,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     var daySelected = new Date(Date.parse(this.daySelected));
     this.daySelected = daySelected.toISOString();
     this.dataValue = '';
-    this.dataValue = `WP_Calendars;SettingShow;${this.daySelected}`;
+    this.dataValue = `WP_Calendars;${this.daySelected}`;
     this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
     this.changeDetectorRef.detectChanges();
 

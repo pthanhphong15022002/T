@@ -67,7 +67,6 @@ export class TasksComponent extends UIComponent {
 
   constructor(
     inject: Injector,
-    private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
@@ -197,12 +196,12 @@ export class TasksComponent extends UIComponent {
         },
       },
     ];
-
-    this.view.dataService.methodSave = 'AddTaskAsync';
-    this.view.dataService.methodUpdate = 'UpdateTaskAsync';
-    this.view.dataService.methodDelete = 'DeleteTaskAsync';
+    //nếu có core mới dùng- task là đặc thù nên không dùng
+    // this.view.dataService.methodSave = 'AddTaskAsync';
+    // this.view.dataService.methodUpdate = 'UpdateTaskAsync';
+    //this.view.dataService.methodDelete = 'DeleteTaskAsync';
     this.getParam()
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   //#region schedule
 
@@ -318,7 +317,18 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0];
+        if(e?.event && e?.event!=null){
+          this.view.dataService.data = e?.event.concat(
+            this.view.dataService.data
+          );
+          this.view.dataService.setDataSelected(res[0]);
+          this.view.dataService.afterSave.next(res);
+          this.notiService.notifyCode('TM005');
+         
+          this.itemSelected = this.view.dataService.data[0];
+          this.detectorRef.detectChanges();
+        }
+     
       });
     });
   }
@@ -344,18 +354,19 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event){
+          if (e?.event && e?.event!=null){
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
           this.itemSelected = e?.event[0];
           }
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         });
       });
   }
 
   copy(data) {
+    if(data)this.view.dataService.dataSelected= data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -363,11 +374,21 @@ export class TasksComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,data],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        this.itemSelected = this.view.dataService.data[0];
+        if(e?.event && e?.event!=null){
+          this.view.dataService.data = e?.event.concat(
+            this.view.dataService.data
+          );
+          this.view.dataService.setDataSelected(res[0]);
+          this.view.dataService.afterSave.next(res);
+          this.notiService.notifyCode('TM005');
+         
+          this.itemSelected = this.view.dataService.data[0];
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -462,7 +483,7 @@ export class TasksComponent extends UIComponent {
           this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
           this.view.dataService.afterSave.next(newTasks);
         }
-        this.dt.detectChanges();
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -488,7 +509,7 @@ export class TasksComponent extends UIComponent {
   }
   selectedChange(val: any) {
     this.itemSelected = val.data;
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   changeStatusTask(moreFunc, taskAction) {
@@ -542,7 +563,7 @@ export class TasksComponent extends UIComponent {
                     this.view.dataService.update(obj).subscribe();
                   });
                   this.itemSelected = res[0];
-                  this.dt.detectChanges();
+                  this.detectorRef.detectChanges();
                   this.notiService.notifyCode('tm009');
                 } else {
                   this.notiService.notifyCode(
@@ -572,7 +593,7 @@ export class TasksComponent extends UIComponent {
     this.dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.itemSelected = e?.event;
-        this.dt.detectChanges();
+        this.detectorRef.detectChanges();
       }
     });
   }

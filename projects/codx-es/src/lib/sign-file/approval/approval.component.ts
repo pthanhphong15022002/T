@@ -23,13 +23,14 @@ import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, CacheService, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
   styleUrls: ['./approval.component.scss'],
 })
 export class ApprovalComponent extends UIComponent {
-  public service: string = 'http://localhost:8015/api/pdf';
+  public service: string = environment.pdfUrl;
   @Input() recID = '';
   @Input() isApprover = false;
   // service =
@@ -245,13 +246,13 @@ export class ApprovalComponent extends UIComponent {
 
   changeSigner(e: any) {
     this.signerInfo = e.itemData;
-    console.log(this.signerInfo);
   }
 
-  changeSuggestState() {
-    this.needSuggest = !this.needSuggest;
+  changeSuggestState(e: any) {
+    this.needSuggest = e.data;
     if (this.needSuggest) {
       this.pdfviewerControl.navigation.goToLastPage();
+      this.pdfviewerControl.scrollSettings.delayPageRequestTimeOnScroll = 300;
       let lastPage = this.pdfviewerControl.pageCount - 1;
     }
   }
@@ -261,6 +262,48 @@ export class ApprovalComponent extends UIComponent {
     if (this.autoSignState) {
       switch (mode) {
         case 0: {
+          let textDatas;
+          this.esService
+            .getLastTextLine(this.pdfviewerControl.currentPageNumber)
+            .subscribe((res: any) => {
+              textDatas = {
+                textBounds: res.textBounds,
+                textContent: res.textContent,
+              };
+
+              let anno = {
+                allowedInteractions: [],
+                annotationSettings: {
+                  minWidth: 100,
+                  maxWidth: 500,
+                  minHeight: 100,
+                  maxHeight: 200,
+                  isLock: false,
+                },
+                stampAnnotationPath: signature,
+                annotationId: Guid.newGuid(),
+                customStampName: 'main',
+                comments: [],
+                isPrint: true,
+                modifiedDate: Date(),
+                opacity: 1,
+                pageNumber: this.pdfviewerControl.currentPageNumber - 1,
+                shapeAnnotationType: 'stamp',
+                stampAnnotationType: 'image',
+              } as any;
+              let len = textDatas.textBounds.length;
+              let lastLine = textDatas.textBounds[len - 1];
+              console.log(lastLine);
+
+              anno.bounds = {
+                top: lastLine.Y + 10,
+                left: lastLine.X + 10,
+                width: 100,
+                height: 100,
+              };
+
+              this.pdfviewerControl.addAnnotation(anno);
+            });
           break;
         }
 
@@ -602,8 +645,6 @@ export class ApprovalComponent extends UIComponent {
     );
 
     if (!signed) {
-      // this.pdfviewerControl.navigation.goToLastPage();
-
       if ([1, 2, 8].includes(type)) {
         let stamp = {
           customStampName: type.toString(),
@@ -718,9 +759,9 @@ export class ApprovalComponent extends UIComponent {
       area.FontSize = anno.fontSize;
     }
 
-    service.addOrEditSignArea(area).subscribe((res) => {
-      console.log('ket qua', res);
-    });
+    // service.addOrEditSignArea(area).subscribe((res) => {
+    //   console.log('ket qua', res);
+    // });
   }
 
   resetTime(e: any) {
@@ -779,6 +820,7 @@ export class ApprovalComponent extends UIComponent {
 
   show(e: any) {
     console.log(this.pdfviewerControl);
+    console.log(e);
   }
 
   selectedAnnotation(e: any) {
