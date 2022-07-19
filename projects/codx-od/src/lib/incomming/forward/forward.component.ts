@@ -1,12 +1,9 @@
-import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Input, Output, EventEmitter, Optional } from '@angular/core';
-import { agency } from '../../models/agency.model';
-import { permissionDis, updateDis , dispatch, inforSentEMail, extendDeadline, forwarDis } from '../../models/dispatch.model';
-import { AgencyService } from '../../services/agency.service';
+import { Component, OnInit, Input, Output, EventEmitter, Optional } from '@angular/core';
 import { DispatchService } from '../../services/dispatch.service';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
-import { IncommingComponent } from '../incomming.component';
-import { extractContent, formatBytes, getJSONString } from '../../function/default.function';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { formatBytes, getJSONString } from '../../function/default.function';
+import { forwarDis } from '../../models/dispatch.model';
 @Component({
   selector: 'app-od-forward',
   templateUrl: './forward.component.html',
@@ -49,7 +46,7 @@ export class ForwardComponent implements OnInit {
   }
   changeValueUserID(event: any)
   {
-    this.forwardForm.controls['userID'].setValue(event.data.value);
+    this.forwardForm.controls['userID'].setValue(event.data?.value);
   }
   onSave()
   {

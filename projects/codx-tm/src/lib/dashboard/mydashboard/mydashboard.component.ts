@@ -1,5 +1,4 @@
 import { CodxTMService } from '../../codx-tm.service';
-import { ActivatedRoute } from '@angular/router';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import {
   Component,
@@ -7,24 +6,18 @@ import {
   ViewChild,
   TemplateRef,
   Injector,
-  ViewEncapsulation,
 } from '@angular/core';
-import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
-  selector: 'my-dashboard',
+  selector: 'mydashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
-  formModel: string;
   funcID: string;
-  model: DataRequest;
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -35,6 +28,8 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
+  user: any;
+  model: DataRequest;
 
   //#region gauge
   public rangeLinearGradient1: Object = {
@@ -119,7 +114,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     },
   };
 
-  options = new DataRequest();
   //#endregion chartcolumn
 
   dbData: any;
@@ -127,30 +121,21 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   constructor(
     private inject: Injector,
     private auth: AuthStore,
-    private tmService: CodxTMService,
-    private activedRouter: ActivatedRoute
+    private tmService: CodxTMService
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.user = this.auth.get();
+    this.model = new DataRequest();
+    this.model.formName = 'Tasks';
+    this.model.gridViewName = 'grvTasks';
+    this.model.entityName = 'TM_Tasks';
+    this.model.pageLoading = false;
+    this.model.predicate = 'Owner = @0';
+    this.model.dataValue = this.user.userID;
   }
 
   onInit(): void {
-    this.model = new DataRequest();
-    this.model.formName = 'TMDashBoard';
-    this.model.gridViewName = 'grvTasks';
-    this.model.entityName = 'TM_Tasks';
-    this.model.predicate = 'Owner=@0';
-    this.model.dataValue = this.auth.get().userID;
-    this.model.pageLoading = false;
-
-    this.options.pageLoading = false;
-    this.options.entityName = "FD_KudosTrans";
-    this.options.entityPermission = "FD_KudosTrans";
-    this.options.gridViewName = "grvKudosTrans";
-    this.options.formName = "KudosTrans";
-    this.options.funcID = this.funcID;
-
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.getGeneralData();
   }
 
@@ -203,13 +188,5 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.beginMonth = data.beginMonth;
     this.endMonth = data.endMonth;
     this.getGeneralData();
-    if (this.week != data.week) {
-      this.week = data.week;
-      this.getGeneralData();
-    }
-    if (this.month != data.month + 1) {
-      this.month = data.month + 1;
-      this.getGeneralData();
-    }
   }
 }

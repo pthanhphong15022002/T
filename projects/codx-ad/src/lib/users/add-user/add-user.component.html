@@ -19,14 +19,13 @@
           </ng-template>
           <ng-template #content>
             <div class="form-group">
-              <div class="form-group row mt-3">
-                <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage" [width]="120" funcId="AD006"
+              <div class="form-group row mt-3 pb-5">
+                <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage" [width]="150" funcId="AD006"
                   [objectId]="adUser.userID" [objectName]="adUser.userName" objectType="AD_Users"  [isAllowEdit]=true
                   data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
                   data-kt-menu-flip="bottom" [updateDirect]="false">
                 </codx-img>
                 <!-- <codx-user-inner (onAvatarChanged)="reloadAvatar($event)"></codx-user-inner> -->
-
               </div>
               <div class="form-group row mt-3">
                 <div class="form-group col-6">
@@ -60,7 +59,7 @@
                 </codx-input>
               </div>
               <div class="form-group row mt-3">
-                <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Đơn vị">
+                <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
                 </codx-label>
                 <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
                   (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
@@ -111,7 +110,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <div class="d-flex justify-content-lg-start">
+    <div class="d-flex justify-content-lg-start pl-3">
       <span>
         <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
       </span>

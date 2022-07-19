@@ -5,7 +5,7 @@ import { BehaviorSubject } from "rxjs";
 @Injectable({
     providedIn: 'root'
 })
-export class NoteService {
+export class NoteServices {
 
     data = new BehaviorSubject<any>(null);
 

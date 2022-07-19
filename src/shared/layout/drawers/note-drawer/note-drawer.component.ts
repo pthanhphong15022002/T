@@ -7,7 +7,7 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -32,7 +32,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   recIdOld: any;
   isPin: any;
   isPinOld: any;
-  countNotePin: any;
+  countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
   TM_Tasks: any;
@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   constructor(private injector: Injector,
     private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
-    private noteService: NoteService,
+    private noteService: NoteServices,
   ) {
     super(injector)
   }
@@ -61,11 +61,10 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         var data = res[0]?.data;
         var type = res[0]?.type;
         if (this.lstView) {
-          if (type == 'add') {
+          if (type == 'add-currentDate' || type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).add(data).subscribe();
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
-            // this.setEventWeek();
             var today: any = document.querySelector(
               ".e-footer-container button[aria-label='Today']"
             );
@@ -73,7 +72,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).load().subscribe();
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -127,6 +126,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       dataUpdate: data,
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
+      component: 'note-drawer',
     };
     this.callfc.openForm(
       AddNoteComponent,
@@ -146,11 +146,13 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   getNumberNotePin() {
     var that = this;
     var dt = that.lstView.dataService.data;
-    dt.forEach((res) => {
-      if (res.isPin == true || res.isPin == '1') {
-        that.countNotePin += 1;
-      }
-    })
+    if (dt?.length != 0) {
+      dt.forEach((res) => {
+        if (res?.isPin == true || res?.isPin == '1') {
+          that.countNotePin += 1;
+        }
+      })
+    }
   }
 
   checkNumberNotePin(data) {
@@ -165,8 +167,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.checkUpdateNotePin = true;
       }
     }
-    var object = [{ data: data, type: 'edit' }]
-    this.noteService.data.next(object);
     this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
   }
 
@@ -205,11 +205,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         data
       ])
       .subscribe((res) => {
-        for (let i = 0; i < this.lstView.dataService.data.length; i++) {
-          if (this.lstView.dataService.data[i].recID == data?.recID) {
-            this.lstView.dataService.data[i].isPin = res.isPin;
-          }
-        }
+        var object = [{ data: data, type: 'edit' }]
+        this.noteService.data.next(object);
         this.changeDetectorRef.detectChanges();
       });
   }

@@ -1,6 +1,4 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -8,7 +6,7 @@ import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
-import { FolderComponent } from '../folder/folder.component';
+import { AddLinkComponent } from '../addlink/addlink.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
@@ -43,6 +41,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   dvlStatusTM:any;
   formModel:any;
   dialog!: DialogRef;
+  name:any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -55,17 +54,20 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.active = 1;
-    if(changes.data != null && changes.data != undefined) {
+    if(changes.data) {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
+        if(!this.data )
+          this.data ={};
         this.getDataValuelist();
         this.getPermission(this.data.recID);
 
       }
     }
   }
+  n
   ngOnInit(): void {
     this.active = 1;
     this.formModel = this.view.formModel;
@@ -77,7 +79,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   {
     var desc = '<div class="d-flex">';
     if(agencyName)
-      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
     if(txtLstAgency)
       desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
     return desc + '</div>';
@@ -141,7 +143,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   getDataValuelist()
   {
-    console.log(this.gridViewSetup);
     if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;
@@ -283,7 +284,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     switch (funcID) {
       case "edit":
         {
-
+          var a = this.formModel;
           this.view.dataService.edit(datas).subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view?.currentView?.dataService;
@@ -322,7 +323,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               this.odService.getDetailDispatch(this.view.dataService.data[0].recID).subscribe(item => {
                 this.data = formatDtDis(item);
                 this.view.dataService.setDataSelected(this.data);
-                this.data.lstUserID = getListImg(this.data.relations)
+                this.data.lstUserID = getListImg(this.data.relations);
               });
             }
           });
@@ -346,7 +347,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
               this.view.dataService.remove(this.view.dataService.dataSelected).subscribe();
             }
-            else  this.view.dataService.update(x.event).subscribe();
+            else  this.view.dataService.add(x.event,0).subscribe();
           });
         });
         break;
@@ -372,7 +373,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               this.data.owner = x.event[0].owner
               this.data.lstUserID = getListImg(x.event[0].relations);
               this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
-              this.view.dataService.update(x.event[0]).subscribe();
+              //this.view.dataService.update(x.event[0]).subscribe();
             }
           });
           break;
@@ -460,10 +461,25 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT106":
       case "ODT205":
         {
-          if(this.checkOpenForm(funcID))
+          /* if(this.checkOpenForm(funcID))
           {
           
-          }
+          } */
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = "550px"
+          this.dialog = this.callfunc.openSide(AddLinkComponent, {
+            gridViewSetup: this.gridViewSetup,
+            option: option
+          }, option);
+          this.dialog.closed.subscribe(x=>{
+            if(x.event) 
+            {
+             /*  this.data.lstUserID = getListImg(x.event[0].relations);
+              this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1]); */
+            }
+          });
           break;
         }
       //Gia hạn
@@ -539,7 +555,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             {
               this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
                 if (item.status == 0) {
-                  this.data = item.data[0];
+                  //this.data = item.data[0];
                   this.data.lstUserID = getListImg(item.data[0].relations);
                   this.data.listInformationRel = item.data[1]
                 }
@@ -601,7 +617,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
    recall(id:any) {
     this.odService.recallRelation(id).subscribe((item) => {
       if (item.status == 0) {
-        this.data = item.data[0];
+        //this.data = item.data[0];
         this.data.lstUserID = getListImg(item.data[0].relations);
         this.data.listInformationRel = item.data[1]
       }

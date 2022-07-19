@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'MWP';
   override aside = true;
-  override asideFixed = false;
+  override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   override toolbar = false;
   constructor(inject: Injector) {
