@@ -13,7 +13,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   memo: any;
   formAdd: FormGroup;
   readOnly = false;
-  dialog: any;
+  dialog: DialogRef;
   formType = '';
   formModel: any;
   data: any;
@@ -96,30 +96,32 @@ export class AddUpdateNoteBookComponent implements OnInit {
   }
 
   updateNoteBook() {
-    this.dialog.dataService.save().subscribe(res => {
-      this.dialog.dataService.setDataSelected(res);
-      this.loadData.emit();
-      this.dialog.close();
-    })
-    // this.api.exec<any>(
-    //   'ERM.Business.WP',
-    //   'NoteBooksBusiness',
-    //   'UpdateNoteBookAsync',
-    //   [this.data?.recID, this.noteBooks]
-    // ).subscribe((res) => {
-    //   if (res) {
-    //     this.imageUpload
-    //       .updateFileDirectReload(this.data?.recID)
-    //       .subscribe((result) => {
-    //         if (result) {
-    //           this.loadData.emit();
-    //           this.dialog.close();
-    //           this.changeDetectorRef.detectChanges();
-    //         }
-    //       });
-    //     this.dialog.close();
-    //     this.changeDetectorRef.detectChanges();
-    //   }
+    // this.dialog.dataService.save().subscribe(res => {
+    //   this.dialog.dataService.setDataSelected(res);
+    //   this.loadData.emit();
+    //   this.dialog.close();
     // })
+    this.api.exec<any>(
+      'ERM.Business.WP',
+      'NoteBooksBusiness',
+      'UpdateNoteBookAsync',
+      [this.data?.recID, this.noteBooks]
+    ).subscribe((res) => {
+      if (res) {
+        this.imageUpload
+          .updateFileDirectReload(this.data?.recID)
+          .subscribe((result) => {
+            if (result) {
+              this.dialog.dataService.setDataSelected(result);
+              this.dialog.dataService.update(result);
+              this.loadData.emit();
+              this.dialog.close();
+              this.changeDetectorRef.detectChanges();
+            }
+          });
+        this.dialog.close();
+        this.changeDetectorRef.detectChanges();
+      }
+    })
   }
 }
