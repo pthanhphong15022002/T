@@ -15,7 +15,7 @@
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
-    [desc]="data.positionNameCreate" [desc2]="data.taskName" [status]="data.status" statusVll="L0614"
+    [subTitle]="data.positionNameCreate" [content]="data.taskName"  [status]="data.status" statusVll="L0614"
     [date]="data.dueDate" [resources]="(data.category=='3'||data.isAssign)?data.assignTo :''" resourceObjType="AD_Users"
     [formModel]="view.formModel">
   </codx-temp-full>

@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
+import { CodxService, DialogModel, DialogRef, ImageViewerComponent, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
@@ -37,6 +37,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
+  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   items: any;
   option: any;
   views: Array<ViewModel> = [];
@@ -154,23 +155,26 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   async handleInputChange(event, optionCheck?: any) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
-      this.data.logoFull = file.name;
-      var pattern = /image-*/;
-
-      var reader = new FileReader();
-      if (!file.type.match(pattern)) {
-        alert('invalid format');
-        return;
+      if (optionCheck == this.optionMainLogo) {
+        this.data.logo = file.name;
+        var reader = new FileReader();
+        reader.onload = this._handleReaderLoadedMainLogo.bind(this);
       }
-
+      if (optionCheck == this.optionMailHeader) {
+        this.data.logoFull = file.name;
+        var reader = new FileReader();
+        reader.onload = this._handleReaderLoadedMailHeader.bind(this);
+      }
+            
+      reader.readAsDataURL(file);
+      let dataTest: ArrayBuffer;
+      dataTest = await file.arrayBuffer();
+      this.imageUpload.fileName = file.name;
+      this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+      
       //  Save image main logo
       if (optionCheck == this.optionMainLogo) {
-        reader.onload = this._handleReaderLoadedMainLogo.bind(this);
-        reader.readAsDataURL(file);
-        let dataTest: ArrayBuffer;
-        dataTest = await file.arrayBuffer();
-        this.imageUpload.fileName = file.name;
-        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+        
         this.data.logo = ''; // main logo
         this.adService
           .updateInformationCompanySettings(this.data, this.optionMainLogo, this.imageUpload)
@@ -179,12 +183,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
 
       //  Save image main logo
       if(optionCheck == this.optionMailHeader) {
-        reader.onload = this._handleReaderLoadedMailHeader.bind(this);
-        reader.readAsDataURL(file);
-        let dataTest: ArrayBuffer;
-        dataTest = await file.arrayBuffer();
-        this.imageUpload.fileName = file.name;
-        this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
+       
         this.data.logoFull = ''; // header logo
         this.adService
         .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)

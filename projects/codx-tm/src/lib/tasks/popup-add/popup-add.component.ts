@@ -13,6 +13,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
@@ -63,7 +64,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isAdd = false;
   crrEstimated: any;
   isHaveFile = false;
-  index :number
+  crrIndex :number
   popover: any;
 
   @ViewChild('contentAddUser') contentAddUser;
@@ -93,6 +94,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
+    this.taskCopy = dt?.data[3];  
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -103,14 +105,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.action == 'add') {
       this.openTask();
     } else if (this.action == 'copy') {
-      this.newID = this.task.taskID;
-      this.task = {
-        ...this.task,
-        ...this.taskCopy,
-      };
-      // this.getTaskCoppied(this.taskCopy.taskID);
+      // this.title="Copy công việc"  // cái này sau Quang làm
+      this.getTaskCoppied(this.taskCopy.taskID)   //nếu alowCopy = false thì bật cái này lên 
     } else this.openInfo(this.task.taskID, this.action);
   }
+
   ngAfterViewInit(): void { }
 
   getParam(callback = null) {
@@ -150,14 +149,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   changeMemo(event: any) {
     var field = event.field;
-    var dt = event.data;
-    this.task.memo = dt?.value ? dt.value : dt;
+    if(event?.data){
+      this.task[field] = event?.data 
+    }
+   
   }
 
   onAddToDo(evt: any) {
     if (!this.todoAddText || this.todoAddText.trim()=='' ) {
        this.todoAddText = '';
-      // evt.focus();
       return;
     }
    
@@ -173,11 +173,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteTodo(index) {
-    if (this.listTodo[index].recID) {
+    if (this.listTodo[index]?.recID) {
       this.recIDTodoDelete += this.listTodo[index].recID + ';';
     }
     this.listTodo.splice(index, 1); //remove element from array
-    if (this.listTodo.length == 0) this.isCheckCheckListTrue = false;
+    if (this.listTodo.length == 0) {
+      if(this.task.taskGroupID)this.isCheckCheckListTrue= this.isCheckCheckListControl;
+    };
     this.changeDetectorRef.detectChanges();
   }
 
@@ -191,7 +193,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   updateTodoList(content: string) {
-    if(content == null || content.trim() == ''){
+    if(content != "" || content.trim() == ''){
+      this.indexEditTodo = -1;
       return
     }  ;
     if (this.indexEditTodo >= 0) {
@@ -243,9 +246,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   getTaskCoppied(id) {
     const t = this;
     this.title = 'Copy công việc ';
+    this.listUser = [];
+    this.listUserDetail = [];
+    this.listMemo2OfUser = [];
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        this.beforeCopy(res[0]);
+      //  this.beforeCopy(res[0]);
         this.copyListTodo(res[2]);
       }
     });
@@ -266,8 +272,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   beforeCopy(data) {
     const t = this;
-    t.task = data as TM_Tasks;
-    t.task.taskID = this.newID;
+    // t.task = data as TM_Tasks;
+   // t.task.taskID = this.newID;
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
@@ -284,8 +290,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   saveData(id) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('TM002');
+      // this.notiService.notifyCode('???code');
       this.notiService.notify('Tên công việc không được để trống !');
+      return ;
     }
     if (
       this.showAssignTo &&
@@ -396,15 +403,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo,
       ])
       .subscribe((res) => {
-        if (res && res.length) {
-          this.dialog.dataService.data = res.concat(
-            this.dialog.dataService.data
-          );
-          this.dialog.dataService.setDataSelected(res[0]);
-          this.dialog.dataService.afterSave.next(res);
-          this.changeDetectorRef.detectChanges();
-          this.dialog.close();
-          this.notiService.notifyCode('TM005');
+        if (res && res.length>0) {
+          // this.dialog.dataService.data = res.concat(
+          //   this.dialog.dataService.data
+          // );
+          // this.dialog.dataService.setDataSelected(res[0]);
+          // this.dialog.dataService.afterSave.next(res);
+          // this.notiService.notifyCode('TM005');
+          this.dialog.close(res);
         }
       });
   }
@@ -746,8 +752,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   showPoppoverDelete(p, i){
     if(this.popover)
     this.popover.close() ;
-    if(i)
-    this.index = i;
+    this.crrIndex = i;
     p.open();
     this.popover = p ;
   }

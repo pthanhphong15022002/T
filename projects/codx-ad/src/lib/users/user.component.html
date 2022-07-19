@@ -22,18 +22,6 @@
       </div>
     </div>
   </div>
-
-  <div class="rowphoto" *ngIf="data.chooseRoles.length > 5">
-    <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
-      <span class="symbol-label fs-4" (click)="openPopup(data)">
-        <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
-      </span>
-    </ng-container>
-
-    <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
-    [numberImages]="5" (click)="openPopup(data)">
-  </codx-imgs> -->
-  </div>
 </ng-template>
 <ng-template #footer let-data>
   <div class="d-flex flex-wrap  ms-17">
