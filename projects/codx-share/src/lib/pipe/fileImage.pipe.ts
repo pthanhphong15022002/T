@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'fileName'
+  name: 'avtFile'
 })
 export class FileImage implements PipeTransform {
 

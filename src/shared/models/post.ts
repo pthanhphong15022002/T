@@ -2,6 +2,7 @@ import { Permission } from "./file.model";
 
 export class Post {
   id: string;
+  recID:string;
   connectId: string;
   userID: string;
   userName: string;
@@ -44,15 +45,21 @@ export class Post {
   isUpload:boolean;
   files: any[];
   isPortTal: boolean
+  isPortal:boolean;
   tmp: any;
   share: any;
   shareName: string;
   shortConent: string;
+  createdBy:string;
+  createdName:string;
 
   constructor(){
+    this.recID = null;
     this.createdOn = new Date();
-    this.files = [];
+    this.permissions = [];
     this.isUpload = false;
+    this.files = [];
+
 }
 
 }
