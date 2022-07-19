@@ -72,12 +72,12 @@
                   <codx-label fiedName="Priority" [formModel]="form.formModel" default="Ưu tiên">
                   </codx-label>
                 </div>
-                <codx-input type="valuelist" field="priority" [crrValue]="task?.priority" refValue="L0186"
-                  [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+                <codx-input type="valuelist" field="priority" [crrValue]="task?.priority" refValue="L0186" placeholder="aaaaaaaaaaaaaa"
+                   (valueChange)="changeVLL($event)">
                 </codx-input>
-                <!-- <codx-valuelist type="valuelist" field="priority" [crrValue]="task?.priority" [name]="'L0186'"
-                [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
-              </codx-valuelist> -->
+                <codx-valuelist type="valuelist" [name]="'L0186'"
+               (valueChange)="changeVLL($event)">
+              </codx-valuelist>
               </div>
             </div>
             <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
@@ -133,7 +133,7 @@
                   </codx-label>
                   <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
                 </div>
-                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
+                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" 
                   (valueChange)="changeMemo($event)"></codx-input>
                 <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                   type="text" [readOnly]="readOnly" class="col-md-8" style="
@@ -214,7 +214,7 @@
                 </codx-label>
                 <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
               </div>
-              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
+              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"  height="650"
                 (valueChange)="changeMemo($event)"></codx-input>
               <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                 type="text" [readOnly]="readOnly" class="col-md-8" style="

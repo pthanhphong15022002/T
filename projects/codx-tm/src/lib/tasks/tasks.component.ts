@@ -445,9 +445,9 @@ export class TasksComponent extends UIComponent {
                     var parent = res[1];
                     listTaskDelete.forEach((x) => {
                       this.view.dataService.remove(x).subscribe();
-                      this.notiService.notify('Xóa thành công !');
-                      //  this.notiService.notifyCode('cần code');
                     });
+                    this.notiService.notify('Xóa công việc thành công !');
+                    //  this.notiService.notifyCode('cần code');
                     if (parent) {
                       this.view.dataService.update(parent).subscribe();
                     }
