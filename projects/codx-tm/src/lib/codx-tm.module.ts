@@ -28,7 +28,6 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
-import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
@@ -55,6 +54,11 @@ import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
+import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
+import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
+import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -79,12 +83,24 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'meeting/:funcID',
+        component: TMMeetingsComponent,
+      },
+      {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,
       },
       {
         path: 'teamdashboard/:funcID',
-        component: TeamDashboardComponent
+        component: TeamDashboardComponent,
+      },
+      {
+        path: 'deptdashboard/:funcID',
+        component: DeptDashboardComponent,
+      },
+      {
+        path: 'compdashboard/:funcID',
+        component: CompDashboardComponent,
       },
       {
         path: 'setting',
@@ -117,7 +133,7 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'reports/:funcID',
+        path: 'reports',
         component: ReportsComponent,
         children: [
           {
@@ -133,12 +149,6 @@ export const routes: Routes = [
             component: TaskByProjectsComponent,
           },
         ],
-      },
-      {
-        path: '',
-        redirectTo: 'mydashboard/TMT0101',
-        // path: 'home/:funcID',
-        // component: DashboardComponent,
       },
       {
         path: '**',
@@ -181,11 +191,11 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  // MwpComponent,
-  // MwpViewDetailComponent,
-  // MwpPopupAddComponent,
+  DeptDashboardComponent,
+  CompDashboardComponent,
   ViewListComponent,
-
+  TMMeetingsComponent,
+  PopupAddMeetingComponent,
 ];
 @NgModule({
   imports: [
@@ -201,7 +211,6 @@ const T_Component: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarModule,
     CircularGaugeModule,
-    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,

@@ -9,7 +9,7 @@ import {
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'ODT';
+  module = 'OD';
   // override aside = true;
   // override asideFixed = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';

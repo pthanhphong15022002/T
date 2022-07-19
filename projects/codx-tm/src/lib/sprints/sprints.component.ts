@@ -72,9 +72,9 @@ export class SprintsComponent extends UIComponent {
   funcID = '';
   constructor(
     inject: Injector,
-    private tmSv: CodxTMService,
     private notiService: NotificationsService,
     private authStore: AuthStore,
+    override codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -168,7 +168,7 @@ export class SprintsComponent extends UIComponent {
         this.beforeDel(opt)
       )
       .subscribe(res => {
-        if (res) this.notiService.notifyCode('TM004'); else this.notiService.notify('Xóa không thành công ! Vui lòng....');//cần code để gọi mes
+        if (res) this.notiService.notifyCode('TM004');
       })
   }
 
@@ -258,7 +258,9 @@ export class SprintsComponent extends UIComponent {
     this.urlView = e?.url;
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
-    this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
+    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
+    
     //this.codxService.navigate('',this.urlView)
   }
 

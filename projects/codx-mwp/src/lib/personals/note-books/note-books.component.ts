@@ -7,6 +7,8 @@ import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
 import { A, I } from '@angular/cdk/keycodes';
+import { NoteServices } from '@pages/services/note.services';
+import { NoteBookServices } from '../../services/notebook.services';
 
 @Component({
   selector: 'app-note-books',
@@ -40,6 +42,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private noteBookService: NoteBookServices,
   ) {
     super(inject);
     this.route.params.subscribe(params => {
@@ -67,6 +70,17 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
         text: 'more 2',
       },
     ];
+
+    this.noteBookService.data.subscribe((res) => {
+      if (res) {
+        var data = res[0]?.data;
+        var type = res[0]?.type;
+
+        if(type == 'edit') {
+          this.view.dataService.update(data).subscribe();
+        }
+      }
+    })
   }
 
   ngAfterViewInit() {
@@ -156,7 +170,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.data.pop();
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
       this.dialog.closed.subscribe(x => {
         this.view.dataService.update(this.view.dataService.dataSelected).subscribe();

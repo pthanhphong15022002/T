@@ -1,115 +1,111 @@
-<codx-views #viewBase funcID="TM001" entityName="AD_Users" [views]="views">
-</codx-views>
-<ng-template #panelLeftRef>
-  <div class="home-container h-100 w-100 row">
-    <div class="col-3 mt-75px px-7">
+<div class="home-container h-100 w-100 row">
+  <div class="col-3 mt-75px px-7">
+    <div>
       <div>
-        <div>
-          <span class="fs-5 fw-bolder">Cơ quan/Đơn vị</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">UBND TPHCM</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Sở tài nguyên và môi trường</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Sở công thương</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Cục thuế</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Khác</span>
-        </div>
+        <span class="fs-5 fw-bolder">Cơ quan/Đơn vị</span>
       </div>
-      <div>
-        <div>
-          <span class="fs-5 fw-bolder">Loại văn bản</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Công văn</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Văn bản pháp luật</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Thông báo</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Biên bản</span>
-        </div>
-        <div class="d-flex align-items-center my-2">
-          <codx-input type="checkbox" class="text-check me-3"></codx-input>
-          <span class="mt-1 fs-6">Khác</span>
-        </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">UBND TPHCM</span>
       </div>
-      <div>
-        <div>
-          <span class="fs-5 fw-bolder">Nguồn văn bản</span>
-        </div>
-        <div class="d-flex align-items-center mtminus-5px">
-          <codx-input type="radio" [name]="'aaaa'" class="checkbox me-8"></codx-input>
-          <span class="mt-5 fs-6">Cơ quan nhà nước</span>
-        </div>
-        <div class="d-flex align-items-center mtminus-5px">
-          <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
-          <span class="mt-5 fs-6">Đảng</span>
-        </div>
-        <div class="d-flex align-items-center mtminus-5px">
-          <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
-          <span class="mt-5 fs-6">Doanh nghiệp</span>
-        </div>
-        <div class="d-flex align-items-center mtminus-5px">
-          <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
-          <span class="mt-5 fs-6">tất cả</span>
-        </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Sở tài nguyên và môi trường</span>
       </div>
-      <div>
-        <div class="mt-2">
-          <span class="fs-5 fw-bolder">Ngày</span>
-        </div>
-        <div class="d-flex align-items-center justify-content-between my-2">
-          <div class="me-3">
-            <codx-input type="datetime" field="datetime" dataformat="d" placeholder="Từ ngày" ></codx-input>
-          </div>
-          <codx-input type="datetime" field="datetime" dataformat="d" placeholder="Đến ngày"></codx-input>
-        </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Sở công thương</span>
       </div>
-      <div>
-        <div>
-          <span class="fs-5 fw-bolder">Số trang</span>
-        </div>
-        <div class="d-flex align-items-center justify-content-between my-2">
-          <div class="me-3">
-            <codx-input type="number" [min]="0"  [placeholder]="'Lớn hơn'"></codx-input>
-          </div>
-          <codx-input type="number" [min]="0" [placeholder]="'Nhỏ hơn'"></codx-input>
-        </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Cục thuế</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Khác</span>
       </div>
     </div>
-    <div class="col-6">
-      <app-od-addlink [isFilter]="false"></app-od-addlink>
-    </div>
-    <div class="col-3 mt-75px px-7">
+    <div>
       <div>
-        <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
-        <div class="mt-2">
-          <span class="text-muted">Công văn về việc</span>
+        <span class="fs-5 fw-bolder">Loại văn bản</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Công văn</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Văn bản pháp luật</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Thông báo</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Biên bản</span>
+      </div>
+      <div class="d-flex align-items-center my-2">
+        <codx-input type="checkbox" class="text-check me-3"></codx-input>
+        <span class="mt-1 fs-6">Khác</span>
+      </div>
+    </div>
+    <div>
+      <div>
+        <span class="fs-5 fw-bolder">Nguồn văn bản</span>
+      </div>
+      <div class="d-flex align-items-center mtminus-5px">
+        <codx-input type="radio" [name]="'aaaa'" class="checkbox me-8"></codx-input>
+        <span class="mt-5 fs-6">Cơ quan nhà nước</span>
+      </div>
+      <div class="d-flex align-items-center mtminus-5px">
+        <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
+        <span class="mt-5 fs-6">Đảng</span>
+      </div>
+      <div class="d-flex align-items-center mtminus-5px">
+        <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
+        <span class="mt-5 fs-6">Doanh nghiệp</span>
+      </div>
+      <div class="d-flex align-items-center mtminus-5px">
+        <codx-input type="radio" [name]="'aaaa'" class="me-8"></codx-input>
+        <span class="mt-5 fs-6">tất cả</span>
+      </div>
+    </div>
+    <div>
+      <div class="mt-2">
+        <span class="fs-5 fw-bolder">Ngày</span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between my-2">
+        <div class="me-3">
+          <codx-input type="datetime" field="datetime" dataformat="d" placeholder="Từ ngày" ></codx-input>
         </div>
-        <div class="mt-2 pt-8">
-          <span>Kéo thả liên kết vào vùng này</span>
+        <codx-input type="datetime" field="datetime" dataformat="d" placeholder="Đến ngày"></codx-input>
+      </div>
+    </div>
+    <div>
+      <div>
+        <span class="fs-5 fw-bolder">Số trang</span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between my-2">
+        <div class="me-3">
+          <codx-input type="number" [min]="0"  [placeholder]="'Lớn hơn'"></codx-input>
         </div>
+        <codx-input type="number" [min]="0" [placeholder]="'Nhỏ hơn'"></codx-input>
       </div>
     </div>
   </div>
-</ng-template>
+  <div class="col-6">
+    <app-od-addlink [isFilter]="false"></app-od-addlink>
+  </div>
+  <div class="col-3 mt-75px px-7">
+    <div>
+      <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
+      <div class="mt-2">
+        <span class="text-muted">Công văn về việc</span>
+      </div>
+      <div class="mt-2 pt-8">
+        <span>Kéo thả liên kết vào vùng này</span>
+      </div>
+    </div>
+  </div>
+</div>

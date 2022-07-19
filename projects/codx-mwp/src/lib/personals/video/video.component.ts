@@ -1,5 +1,5 @@
-import { AuthStore, CodxService, ApiHttpService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent } from 'codx-core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-video',
@@ -12,9 +12,9 @@ export class VideoComponent implements OnInit {
   predicate = '';
   dataValue = '';
   dataSort: any;
-  check = "62908918ad16643a2ff34a43";
   data: any = [];
-  checkPredicate = '';
+
+  @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(private authStore: AuthStore,
     private changedt: ChangeDetectorRef,
@@ -29,10 +29,6 @@ export class VideoComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-
-  }
-
-  valueProperty(event) {
-    this.data = event?.datas;
+    this.data = this.listview.dataService.data;
   }
 }

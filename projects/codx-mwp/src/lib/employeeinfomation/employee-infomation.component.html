@@ -322,7 +322,7 @@
                   <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
                   <div *ngIf="ExperencesCurrent">
                     <div class="user-process process-h">
-                      <div *ngFor="let experences of ExperencesWorked">
+                      <ng-container *ngFor="let experences of ExperencesWorked">
                         <div class="process-item d-flex mb-4">
 
                           <div class="yeartoyear mt-3">{{experences.fromDate}} - {{experences.toDate}}
@@ -353,7 +353,21 @@
                           </div>
 
                         </div>
-                      </div>
+                      </ng-container>
+                      <ng-container *ngIf="editMode">
+                        <div class="process-item d-flex mb-4">
+                          <div class="yeartoyear mt-3">
+                          </div>
+                          <div class="mx-3 mt-4 process-line">
+                            <span class="icon-add_circle_outline icon-16 text-success"></span>
+                          </div>
+                          <div (click)="editExperences(data)"
+                            class="d-flex align-items-center py-3 pl-4 pr-6 process-r add-process">
+                            <span class="icon-add icon-18"></span>
+                            <a class="text-primary">Thêm mới</a>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
@@ -480,10 +494,8 @@
                           </div>
                         </ng-container>
                       </ng-template>
-
                       <!-- </swiper> -->
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -526,11 +538,10 @@
 
                           <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
                             [formModel]="view.formModel" [title]="relationship.relationName"
-                            (clickMF)="clickMF($event, data)" [typeMF]="'hover'"
+                            (clickMF)="clickMF($event, data)" 
                             [desc]="(relationship.relationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
                           </codx-card-center>
                           <!-- </div> -->
-
                         </div>
 
                       </ng-container>
@@ -570,7 +581,8 @@
                           </a>
                         </div>
                         <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
-                          <a class="text-primary" (click)="popupAddHobbi(data)">Thêm mới</a>
+                          <span class="icon-add icon-18"></span>
+                          <a (click)="popupAddHobbi()" class="text-primary" >Thêm mới</a>
                         </div>
                       </div>
                     </div>
@@ -582,8 +594,6 @@
         </div>
       </div>
     </div>
-
   </div>
-
 
 </ng-template>

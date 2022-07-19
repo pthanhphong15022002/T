@@ -1,5 +1,4 @@
 import { CodxTMService } from '../../codx-tm.service';
-import { ActivatedRoute } from '@angular/router';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import {
   Component,
@@ -8,21 +7,17 @@ import {
   TemplateRef,
   Injector,
 } from '@angular/core';
-import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
-  selector: 'my-dashboard',
+  selector: 'mydashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
   providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
-  formModel: string;
   funcID: string;
-  model: DataRequest;
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -33,6 +28,8 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
+  user: any;
+  model: DataRequest;
 
   //#region gauge
   public rangeLinearGradient1: Object = {
@@ -116,6 +113,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
       width: 0,
     },
   };
+
   //#endregion chartcolumn
 
   dbData: any;
@@ -123,23 +121,21 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   constructor(
     private inject: Injector,
     private auth: AuthStore,
-    private tmService: CodxTMService,
-    private activedRouter: ActivatedRoute
+    private tmService: CodxTMService
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.user = this.auth.get();
+    this.model = new DataRequest();
+    this.model.formName = 'Tasks';
+    this.model.gridViewName = 'grvTasks';
+    this.model.entityName = 'TM_Tasks';
+    this.model.pageLoading = false;
+    this.model.predicate = 'Owner = @0';
+    this.model.dataValue = this.user.userID;
   }
 
   onInit(): void {
-    this.model = new DataRequest();
-    this.model.formName = 'TMDashBoard';
-    this.model.gridViewName = 'grvTasks';
-    this.model.entityName = 'TM_Tasks';
-    this.model.predicate = 'Owner=@0';
-    this.model.dataValue = this.auth.get().userID;
-    this.model.pageLoading = false;
-
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.getGeneralData();
   }
 
@@ -159,16 +155,17 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
         console.log('MyDB', this.dbData);
       });
 
-    this.api
-      .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
-        this.model,
-        this.fromDate,
-        this.toDate,
-      ])
-      .subscribe((res: any) => {
-        this.taskOfDay = res;
-        console.log(this.taskOfDay);
-      });
+    // this.api
+    //   .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [
+    //     this.model,
+    //     this.fromDate,
+    //     this.toDate,
+    //   ])
+    //   .subscribe((res: any) => {
+    //     this.taskOfDay = res;
+    //     console.log(this.taskOfDay);
+    //     this.detectorRef.detectChanges();
+    //   });
   }
 
   openTooltip() {
@@ -191,13 +188,5 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.beginMonth = data.beginMonth;
     this.endMonth = data.endMonth;
     this.getGeneralData();
-    if (this.week != data.week) {
-      this.week = data.week;
-      this.getGeneralData();
-    }
-    if (this.month != data.month + 1) {
-      this.month = data.month + 1;
-      this.getGeneralData();
-    }
   }
 }

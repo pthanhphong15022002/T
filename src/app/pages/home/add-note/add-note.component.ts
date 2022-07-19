@@ -1,5 +1,5 @@
 import { CodxFormComponent, NotificationsService } from 'codx-core';
-import { NoteType } from './../../../../shared/models/notes.model';
+import { NoteType, NoteFile } from './../../../../shared/models/notes.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SaveNoteComponent } from './save-note/save-note.component';
@@ -27,9 +27,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
-import { NoteService } from '@pages/services/note.services';
+import { NoteServices } from '@pages/services/note.services';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
+import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -40,6 +41,7 @@ export class AddNoteComponent implements OnInit {
   dataAdd = new Notes();
   dataUpdate = new Notes();
   note: any = new Notes();
+  noteFile: NoteFile = new NoteFile();
   noteType: NoteType = new NoteType();
   tempNote: TempNote = new TempNote();
   message: any;
@@ -47,7 +49,7 @@ export class AddNoteComponent implements OnInit {
   type = 'text';
   label = 'Hiển thị trên lịch';
   showCalendar = false;
-  pin = false;
+  pin: any = false;
   formType = '';
   data: any;
   predicate = 'CreatedBy=@0';
@@ -65,11 +67,14 @@ export class AddNoteComponent implements OnInit {
   checkPin = false;
   empty = "";
   currentDate: any;
+  checkUpdate = false;
+  maxPinNotes = 0;
+  countNotePin = 0;
+  component: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('attachmentEdit') attachmentEdit: AttachmentComponent;
   @ViewChild("form", { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -81,7 +86,7 @@ export class AddNoteComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private noteService: NoteService,
+    private noteService: NoteServices,
     private dmSV: CodxDMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
@@ -91,16 +96,30 @@ export class AddNoteComponent implements OnInit {
     this.formType = dt.data?.formType;
     this.dataListView = dt.data?.ngForLstview;
     this.currentDate = dt.data?.currentDate;
+    this.maxPinNotes = dt.data?.maxPinNotes;
+    this.component = dt.data?.component;
+    if (this.component == 'note-drawer')
+      this.currentDate = new Date(Date.now());
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
-      this.note = dt.data?.dataUpdate;
+      this.note = JSON.parse(JSON.stringify(dt.data?.dataUpdate));
+      this.listFileUploadEdit = this.note.images;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
+      this.getNumberNotePin();
     }
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
       console.log("check gridViewSetup", res);
     });
+  }
+
+  getNumberNotePin() {
+    this.data.forEach((res) => {
+      if (res.isPin == true || res.isPin == '1') {
+        this.countNotePin++;
+      }
+    })
   }
 
   addFirstObjectInArray() {
@@ -213,6 +232,8 @@ export class AddNoteComponent implements OnInit {
 
   onCreateNote() {
     this.note.createdOn = this.currentDate;
+    var dateNow = new Date(Date.now());
+
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
     if (this.type == 'check' || this.type == 'list') {
@@ -242,7 +263,11 @@ export class AddNoteComponent implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
-          var object = [{ data: res, type: 'add' }]
+          var object = [];
+          if (this.note.createdOn != dateNow.toLocaleDateString())
+            object = [{ data: res, type: 'add-otherDate' }]
+          else
+            object = [{ data: res, type: 'add-currentDate' }]
           this.noteService.data.next(object);
           this.dialog.close()
           if (this.note?.showCalendar == true) {
@@ -269,8 +294,35 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
+  openFormUpdateIsPin(data) {
+    var obj = {
+      data: this.data,
+      itemUpdate: data,
+    }
+    this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj)
+  }
+
   onEditNote() {
+    if (this.countNotePin + 1 > this.maxPinNotes) {
+      if (this.pin == '1' || this.pin == true) {
+        this.openFormUpdateIsPin(this.note);
+      } else {
+        this.countNotePin -= 1;
+        this.onEdit();
+      }
+    } else {
+      if (this.pin == '1' || this.pin == true)
+        this.countNotePin += 1;
+      else this.countNotePin -= 1;
+      this.onEdit();
+    }
+  }
+
+  onEdit() {
+    debugger;
+    var dateNow = new Date(this.note.createdOn);
     this.note.createdOn = this.currentDate;
+
     if (this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
@@ -278,15 +330,21 @@ export class AddNoteComponent implements OnInit {
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
         if (res) {
+          this.checkUpdate = true;
           if (this.checkFile == true)
             this.attachment.saveFiles();
-          var object = [{ data: res, type: 'edit' }]
+          var object = [];
+          if (dateNow.toLocaleDateString() == this.currentDate)
+            object = [{ data: res, type: 'edit-currentDate' }]
+          else
+            object = [{ data: res, type: 'edit-otherDate' }]
           this.noteService.data.next(object);
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
         }
       });
   }
+
 
   keyUpEnter(e: any) {
     if (e) {
@@ -368,11 +426,11 @@ export class AddNoteComponent implements OnInit {
   }
 
   close() {
-
     this.dialog.close();
   }
 
   listFileUpload: any[] = []
+  listFileUploadEdit: any[] = []
   isUploadImg = false;
   isUploadFile = false;
   getfileCount(event: any) {
@@ -393,14 +451,15 @@ export class AddNoteComponent implements OnInit {
   getfile(event: any) {
     if (!event || event.data.length <= 0) {
       this.isUploadFile = false;
-      this.listFileUpload = [];
+      this.listFileUploadEdit = [];
       this.dmSV.fileUploadList = [];
       return;
     }
     else {
       this.isUploadImg = true;
       this.isUploadFile = true;
-      this.listFileUpload = event.data;
+      var lstFile = event.data;
+      this.listFileUploadEdit.push(lstFile)
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -412,7 +471,6 @@ export class AddNoteComponent implements OnInit {
       'GetFilesByObjectIDImageAsync',
       this.note.recID
     ).subscribe((res) => {
-      console.log("check getFileByObjectId", res);
     })
   }
 }

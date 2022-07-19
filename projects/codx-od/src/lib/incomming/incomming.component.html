@@ -1,42 +1,31 @@
-
 <ng-template #itemTemplate let-data>
- <codx-temp-full 
-    (clickMF)="openFormFuncID($event,data)" 
-    (click)="click(data)"
-    [typeMF]="'hover'" 
-    [content]="extractContent(data.title)" 
-    [desc]="convertHtmlAgency(data.agencyName)"
-    [status]="data.status" 
-    [statusVll]="gridViewSetup['Status']['referedValue']" 
-    [date]="data.createdOn" 
-    cardCss="card-template border-bottom px-2 py-3" 
-    [formModel]="view.formModel"
-    [resources]="getIdUser(data.createdBy,data.owner)"
-    [resourceObjType]="'AD_Users'"
-    [icoStatus]="data?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
-    [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
-    [modeImgs]="false"
-    [bookmark]="data.isBookmark"
-    [titleLine]="2"
-    
-  >
-  </codx-temp-full> 
+  <codx-temp-full (clickMF)="openFormFuncID($event,data)" (click)="click(data)" [typeMF]="'hover'"
+    [content]="extractContent(data.title)"
+    [desc]="convertHtmlAgency(data.agencyName , this.gridViewSetup?.AgencyName?.headerText)" [status]="data.status"
+    [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+    cardCss="card-template border-bottom px-2 py-3" [formModel]="view.formModel"
+    [resources]="getIdUser(data.createdBy,data.owner)" [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
+    [titleLine]="2"  [icoDateCss]="'icon-access_alarm'">
+  </codx-temp-full>
 </ng-template>
 <ng-template #panelLeft>
   <div class="codx_e-main codx_left">
     <div class="codx_e-header">
       <div class="d-flex align-items-center btn-tabs ">
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='1'" [class.text-primary]="activeDiv=='1'" (click)="clickChangeStatus('1')">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='1'"
+          [class.text-primary]="activeDiv=='1'" (click)="clickChangeStatus('1')">
           <i class="icon-format_list_numbered icon-16 text-warning"></i>
           <span class="ms-2 fw-bold fs-7">Chờ xử lý</span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='3'" [class.text-primary]="activeDiv=='3'" (click)="clickChangeStatus('3')">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='3'"
+          [class.text-primary]="activeDiv=='3'" (click)="clickChangeStatus('3')">
           <i class="icon-construction icon-16"></i>
           <span class="ms-2 fw-bold fs-7">Đang xử lý</span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='7'" [class.text-primary]="activeDiv=='7'" (click)="clickChangeStatus('7')">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv=='7'"
+          [class.text-primary]="activeDiv=='7'" (click)="clickChangeStatus('7')">
           <i class="icon-check icon-16 text-success"></i>
           <span class="ms-2 fw-bold fs-7">Chờ duyệt</span>
         </div>
@@ -45,28 +34,11 @@
   </div>
 </ng-template>
 <ng-template #panelRightRef>
-  <app-view-detail 
-    #viewdetail
-    [data]="lstDtDis" 
-    [gridViewSetup]="gridViewSetup"
-    [view]="view"
-    (uploaded)="getDtDis($event)"
-  >
+  <app-view-detail #viewdetail [data]="lstDtDis" [gridViewSetup]="gridViewSetup" [view]="view"
+    (uploaded)="getDtDis($event)">
   </app-view-detail>
 </ng-template>
-<codx-views 
-  #view 
-  [views]="views" 
-  (buttonClick)="click($event)" 
-  [button]="button"
-  [entityName]="'OD_Dispatches'"
-  [method]="'GetListByStatusAsync'" 
-  [assemblyName]="'OD'"
-  [service]="'OD'" 
-  [className]="'DispatchesBusiness'"
-  (selectedChange)="selectFirst($event)"
-  [selectedFirst]="true"  
-  idField="recID"
-  (requestEnded)="requestEnded($event)"
->
+<codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
+  [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
+  (selectedChange)="selectFirst($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)">
 </codx-views>
