@@ -301,14 +301,18 @@ export class IncommingComponent
 
   //Hàm lấy thông tin chi tiết của công văn
   getDtDis(id: any) {
-    this.lstUserID = '';
-    this.odService.getDetailDispatch(id).subscribe((item) => {
-      //this.getChildTask(id);
-      if (item) {
-        this.lstDtDis = formatDtDis(item);
-        //this.view.dataService.setDataSelected(this.lstDtDis);
-      }
-    });
+    this.lstDtDis = null;
+    if(id)
+    {
+      this.lstUserID = '';
+      this.odService.getDetailDispatch(id).subscribe((item) => {
+        //this.getChildTask(id);
+        if (item) {
+          this.lstDtDis = formatDtDis(item);
+          //this.view.dataService.setDataSelected(this.lstDtDis);
+        }
+      });
+    }
   }
 
   //hàm render lại list view theo status công văn
@@ -320,9 +324,9 @@ export class IncommingComponent
   }
  
   selectFirst(dt: any) {
-    var recID;
-    if (dt.data) recID = dt.data.recID;
-    else recID = dt.recID;
+    var recID = null;
+    if (dt?.data) recID = dt.data.recID;
+    else if(dt?.recID) recID = dt.recID;
     this.getDtDis(recID);
     this.detectorRef.detectChanges();
   }
