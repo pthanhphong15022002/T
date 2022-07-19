@@ -317,22 +317,18 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-<<<<<<< HEAD
-        this.view.dataService.delete(this.view.dataService.dataSelected, false);
-=======
-        if(e?.event && e?.event!=null){
+        if (e?.event && e?.event != null) {
           this.view.dataService.data = e?.event.concat(
             this.view.dataService.data
           );
           this.view.dataService.setDataSelected(res[0]);
           this.view.dataService.afterSave.next(res);
           this.notiService.notifyCode('TM005');
-         
+
           this.itemSelected = this.view.dataService.data[0];
           this.detectorRef.detectChanges();
         }
-     
->>>>>>> 6576738ee83db969c35ec304a2209980c9ddb2f6
+
       });
     });
   }
@@ -358,11 +354,7 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-<<<<<<< HEAD
-          if (e?.event) {
-=======
-          if (e?.event && e?.event!=null){
->>>>>>> 6576738ee83db969c35ec304a2209980c9ddb2f6
+          if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
@@ -374,7 +366,7 @@ export class TasksComponent extends UIComponent {
   }
 
   copy(data) {
-    if(data)this.view.dataService.dataSelected= data;
+    if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -382,18 +374,18 @@ export class TasksComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if(e?.event && e?.event!=null){
+        if (e?.event && e?.event != null) {
           this.view.dataService.data = e?.event.concat(
             this.view.dataService.data
           );
           this.view.dataService.setDataSelected(res[0]);
           this.view.dataService.afterSave.next(res);
           this.notiService.notifyCode('TM005');
-         
+
           this.itemSelected = this.view.dataService.data[0];
           this.detectorRef.detectChanges();
         }
