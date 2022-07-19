@@ -407,10 +407,11 @@
         <span>{{ item?.id }}</span>
         <codx-img
           [objectId]="item?.id"
-          [objectName]="item?.id"
+          [objectName]=""
           [objectType]="'AD_Users'"
         ></codx-img>
       </div>
+      <span>{{item?.qtyTasks}}</span>
       <div class="progress">
         <div
           class="progress-bar progress-bar-done"

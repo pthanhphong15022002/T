@@ -193,7 +193,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
-
     this.getGeneralData();
   }
 
@@ -263,7 +262,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             }
           });
           this.vlWork.push({
-            name: data.name,
+            id: data.id,
             qtyTasks: data.qtyTasks,
             status: {
               new: newTasks / data.qtyTasks * 100,
