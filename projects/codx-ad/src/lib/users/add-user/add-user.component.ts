@@ -44,7 +44,7 @@ export class AddUserComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1500, 800, '', item);
+    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
