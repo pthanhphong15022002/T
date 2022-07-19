@@ -149,7 +149,7 @@ export class AddUserComponent implements OnInit {
   }
   valueBU(data) {
     if (data.data) {
-      this.adUser.buid = data.data[0];
+      this.adUser[data.field] = data.data[0];
     }
   }
 }
