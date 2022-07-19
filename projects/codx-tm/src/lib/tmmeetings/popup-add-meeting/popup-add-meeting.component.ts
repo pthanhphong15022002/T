@@ -28,7 +28,7 @@ export class PopupAddMeetingComponent implements OnInit {
    }
 
   ngOnInit(): void {
-   this.openFormMeeting()
+ //  this.openFormMeeting()
    
   }
   getParam(callback = null) {
@@ -47,6 +47,7 @@ export class PopupAddMeetingComponent implements OnInit {
         }
       });
   }
+
   openFormMeeting(){
    this.title= 'Thêm họp định kì';
    this.changeDetectorRef.detectChanges();
