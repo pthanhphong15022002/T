@@ -1002,15 +1002,15 @@ export class AttachmentComponent implements OnInit {
     return permissions;
   }
 
-  GetMimeType(extension)
+  GetMimeType(extension: string)
   {
       if (extension == null)
           return "";
 
-      if (extension.StartsWith("."))
-          extension = extension.Substring(1);
+      if (extension.startsWith("."))
+          extension = extension.substring(1);
 
-      switch (extension.ToLower())
+      switch (extension.toLowerCase())
       {         
           case "323": return "text/h323";
           case "3g2": return "video/3gpp2";
