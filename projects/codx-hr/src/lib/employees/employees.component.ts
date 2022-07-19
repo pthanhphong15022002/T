@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { HR_Employees } from '../model/HR_Employees.model';
@@ -20,7 +20,8 @@ export class EmployeesComponent implements OnInit {
   functionID: string;
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
-
+  
+  @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
@@ -103,22 +104,33 @@ export class EmployeesComponent implements OnInit {
   requestEnded(evt: any) {
   }
 
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+  edit(data) {
+    // if (data) {
+    //   this.view.dataService.dataSelected = data;
+    // }
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.currentView?.dataService;
+    //     option.FormModel = this.view?.currentView?.formModel;
+    //     option.Width = '800px';
+    //     this.dialog = this.callfunc.openSide(
+    //       PopupAddEmployeesComponent,
+    //       [this.view.dataService.dataSelected, 'edit'],
+    //       option
+    //     );
+    //   });
+
+      if (data) {
+        this.view.dataService.dataSelected = data;
+      }
+      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddEmployeesComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
       });
   }
 
@@ -174,9 +186,9 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'add':
-        this.add();
-        break;
+      // case 'add':
+      //   this.add();
+      //   break;
       case 'edit':
         this.edit(data);
         break;
