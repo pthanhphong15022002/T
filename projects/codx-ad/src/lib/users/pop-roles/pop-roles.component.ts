@@ -17,6 +17,7 @@ export class PopRolesComponent implements OnInit {
   count: number = 0;
   lstFunc = [];
   lstEmp = [];
+  idtest:any;
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
@@ -41,13 +42,12 @@ export class PopRolesComponent implements OnInit {
             this.lstFunc[i].recIDofRole = null;
           }
         }
-        console.log(this.lstFunc);
         this.changeDec.detectChanges();
       }
     })
   }
 
-  onChange(event) {
+  onChange(event,item?:any) {
     console.log(event);
     if (event.target.checked === false) {
       this.choose.recIDofRole = null;
@@ -58,7 +58,7 @@ export class PopRolesComponent implements OnInit {
     }
     if (event.target.checked === true) {
       this.count = this.count + 1;
-
+      this.idtest = event.target.value;
     }
   }
 
