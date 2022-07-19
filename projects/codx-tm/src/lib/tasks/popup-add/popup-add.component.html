@@ -23,10 +23,11 @@
                 <span class="icon-info icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
-                    <codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
+                    <codx-label name="Description" formName="Tasks" default="Thông tin chung">
                     </codx-label>
                   </span>
-                  <span class="fs-7">Description</span>
+                  <span class="fs-7"><codx-label name="Description" formName="Tasks" default="Description">
+                  </codx-label></span>
                 </span>
               </a>
             </div>
@@ -201,7 +202,7 @@
                   <span class="fw-bolder">
                     <codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>
                   </span>
-                  <span class="fs-7">Job Description</span>
+                  <span class="fs-7"><codx-label name="JobDescription" formName="Tasks" default="Job Description"></codx-label></span>
                 </span>
               </a>
             </div>
@@ -238,7 +239,8 @@
                     <codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Phân công cho">
                     </codx-label>
                   </span>
-                  <span class="fs-7">Assign To</span>
+                  <span class="fs-7"><codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Assign To">
+                  </codx-label></span>
                 </span>
               </a>
             </div>
@@ -308,7 +310,8 @@
                     <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm">
                     </codx-label>
                   </span>
-                  <span class="fs-7">List Task Board</span>
+                  <span class="fs-7"><codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="List Task Board">
+                  </codx-label></span>
                 </span>
               </a>
             </div>
@@ -407,7 +410,7 @@
                   <span class="fw-bolder">
                     <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
                   </span>
-                  <span class="fs-7">Reference</span>
+                  <span class="fs-7"><codx-label name="Reference" formName="Tasks" default="Reference"></codx-label></span>
                 </span>
               </a>
             </div>

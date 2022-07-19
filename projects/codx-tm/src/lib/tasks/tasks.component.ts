@@ -60,7 +60,7 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: any
+  param: any;
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -196,11 +196,11 @@ export class TasksComponent extends UIComponent {
         },
       },
     ];
-    //nếu có core mới dùng- task là đặc thù nên không dùng
-    // this.view.dataService.methodSave = 'AddTaskAsync';
-    // this.view.dataService.methodUpdate = 'UpdateTaskAsync';
-    //this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    this.getParam()
+
+    this.view.dataService.methodSave = 'AddTaskAsync';
+    this.view.dataService.methodUpdate = 'UpdateTaskAsync';
+    this.view.dataService.methodDelete = 'DeleteTaskAsync';
+    this.getParam();
     this.detectorRef.detectChanges();
   }
   //#region schedule
@@ -317,8 +317,20 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if (e?.event == null) {
-          this.view.dataService.delete([this.view.dataService.dataSelected], false).subscribe();
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          this.view.dataService.data = e?.event.concat(
+            this.view.dataService.data
+          );
+          this.view.dataService.setDataSelected(res[0]);
+          this.view.dataService.afterSave.next(res);
+          this.notiService.notifyCode('TM005');
+          this.itemSelected = this.view.dataService.data[0];
+          this.detectorRef.detectChanges();
         }
       });
     });
@@ -369,6 +381,11 @@ export class TasksComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
         if (e?.event && e?.event != null) {
           this.view.dataService.data = e?.event.concat(
             this.view.dataService.data
@@ -419,22 +436,27 @@ export class TasksComponent extends UIComponent {
             //       this.itemSelected = this.view.dataService.data[0];
             //     }
             //   });
-            this.tmSv.deleteTask(data.taskID).subscribe(res => {
-              if (res) {
-                var listTaskDelete = res[0];
-                var parent = res[1];
-                listTaskDelete.forEach(x => {
-                  this.view.dataService.remove(x).subscribe();
-                  this.notiService.notify("Xóa thành công !")
-                })
-                if (parent) {
-                  this.view.dataService.update(parent).subscribe();
-                }
-                this.itemSelected = this.view.dataService.data[0];
-                this.view.dataService.setDataSelected(this.itemSelected);
-                this.detectorRef.detectChanges();
+
+            this.notiService.alertCode('TM003').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+                  if (res) {
+                    var listTaskDelete = res[0];
+                    var parent = res[1];
+                    listTaskDelete.forEach((x) => {
+                      this.view.dataService.remove(x).subscribe();
+                      this.notiService.notify('Xóa thành công !');
+                      //  this.notiService.notifyCode('cần code');
+                    });
+                    if (parent) {
+                      this.view.dataService.update(parent).subscribe();
+                    }
+                    this.itemSelected = this.view.dataService.data[0];
+                    this.detectorRef.detectChanges();
+                  }
+                });
               }
-            })
+            });
           }
         }
       });
@@ -462,17 +484,24 @@ export class TasksComponent extends UIComponent {
       option
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        let listTask = e?.event
-        let newTasks = []
+      if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
+      if (e?.event && e?.event != null) {
+        let listTask = e?.event;
+        let newTasks = [];
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
             this.view.dataService.setDataSelected(e?.event[0]);
-          } else newTasks.push(listTask[i])
+          } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
-          this.view.dataService.data = newTasks.concat(this.dialog.dataService.data);
+          this.view.dataService.data = newTasks.concat(
+            this.dialog.dataService.data
+          );
           this.view.dataService.afterSave.next(newTasks);
         }
         this.detectorRef.detectChanges();
@@ -558,9 +587,7 @@ export class TasksComponent extends UIComponent {
                   this.detectorRef.detectChanges();
                   this.notiService.notifyCode('tm009');
                 } else {
-                  this.notiService.notifyCode(
-                    'tm008'
-                  );
+                  this.notiService.notifyCode('tm008');
                 }
               });
           }
