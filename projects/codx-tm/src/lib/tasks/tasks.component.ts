@@ -439,30 +439,30 @@ export class TasksComponent extends UIComponent {
 
             this.notiService.alertCode('TM003').subscribe((confirm) => {
               if (confirm?.event && confirm?.event?.status == 'Y') {
-                  this.tmSv.deleteTask(data.taskID).subscribe((res) => {
-                    if (res) {
-                      var listTaskDelete = res[0];
-                      var parent = res[1];
-                      listTaskDelete.forEach((x) => {
-                        this.view.dataService.remove(x).subscribe();
-                        this.notiService.notify('Xóa thành công !');
+                this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+                  if (res) {
+                    var listTaskDelete = res[0];
+                    var parent = res[1];
+                    listTaskDelete.forEach((x) => {
+                      this.view.dataService.remove(x).subscribe();
+                      this.notiService.notify('Xóa thành công !');
                       //  this.notiService.notifyCode('cần code');
-                      });
-                      if (parent) {
-                        this.view.dataService.update(parent).subscribe();
-                      }
-                      this.itemSelected = this.view.dataService.data[0];
-                      this.detectorRef.detectChanges();
+                    });
+                    if (parent) {
+                      this.view.dataService.update(parent).subscribe();
                     }
-                  });
-                }
-              });
+                    this.itemSelected = this.view.dataService.data[0];
+                    this.detectorRef.detectChanges();
+                  }
+                });
+              }
+            });
           }
         }
       });
   }
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -509,7 +509,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {

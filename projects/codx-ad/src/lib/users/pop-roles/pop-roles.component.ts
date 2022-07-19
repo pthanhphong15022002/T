@@ -41,6 +41,7 @@ export class PopRolesComponent implements OnInit {
             this.lstFunc[i].recIDofRole = null;
           }
         }
+        console.log(this.lstFunc);
         this.changeDec.detectChanges();
       }
     })
