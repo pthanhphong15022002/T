@@ -9,7 +9,6 @@ import {
   Injector,
   ViewEncapsulation,
 } from '@angular/core';
-import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 
 @Component({
@@ -20,11 +19,9 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
   providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('selectweek') selectweekComponent: SelectweekComponent;
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   formModel: string;
   funcID: string;
-  model: DataRequest;
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -35,6 +32,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   taskOfDay: any;
+  model = new DataRequest();
 
   //#region gauge
   public rangeLinearGradient1: Object = {
@@ -119,7 +117,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     },
   };
 
-  options = new DataRequest();
   //#endregion chartcolumn
 
   dbData: any;
@@ -128,29 +125,18 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     private inject: Injector,
     private auth: AuthStore,
     private tmService: CodxTMService,
-    private activedRouter: ActivatedRoute
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    this.model = new DataRequest();
-    this.model.formName = 'TMDashBoard';
+    this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
-    this.model.predicate = 'Owner=@0';
-    this.model.dataValue = this.auth.get().userID;
     this.model.pageLoading = false;
-
-    this.options.pageLoading = false;
-    this.options.entityName = "FD_KudosTrans";
-    this.options.entityPermission = "FD_KudosTrans";
-    this.options.gridViewName = "grvKudosTrans";
-    this.options.formName = "KudosTrans";
-    this.options.funcID = this.funcID;
-
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.model.predicate = "Owner = @0";
+    this.model.dataValue = this.auth.get().userID;
     this.getGeneralData();
   }
 
@@ -171,7 +157,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
       });
 
     // this.api
-    //   .execSv('TM', 'TM', 'ReportBusiness', 'GetTasksOfDayAsync', [
+    //   .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [
     //     this.model,
     //     this.fromDate,
     //     this.toDate,
@@ -203,13 +189,5 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.beginMonth = data.beginMonth;
     this.endMonth = data.endMonth;
     this.getGeneralData();
-    if (this.week != data.week) {
-      this.week = data.week;
-      this.getGeneralData();
-    }
-    if (this.month != data.month + 1) {
-      this.month = data.month + 1;
-      this.getGeneralData();
-    }
   }
 }

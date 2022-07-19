@@ -219,9 +219,9 @@ export class DispatchService implements OnDestroy {
   }
 
    //Thêm mới công văn
-   saveDispatch(obj: dispatch)
+   saveDispatch(dataRq : DataRequest ,obj: dispatch)
    {
-     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', obj);
+     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveDispatchAsync', [dataRq , obj]);
    }
     //cập nhật công văn
     updateDispatch(obj: dispatch , isDlFile: boolean)
@@ -230,9 +230,9 @@ export class DispatchService implements OnDestroy {
     }
 
    //Add link
-   addLink(recID : string , url: string , note: string)
+   addLink(recID : string , refID : string , url: string , note: string)
    {
-     return this.api.exec<any>('OD', 'DispatchesBusiness', 'SaveAsync', [recID, url, note]);
+     return this.api.exec<any>('OD', 'DispatchesBusiness', 'AddLinkAsync', [recID , refID, url, note]);
    }
 
    countDispatchOverDate(cate: any)

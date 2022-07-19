@@ -4,13 +4,15 @@ var api: ApiHttpService;
 
 //Hàm chuyển đổi html thành text
 function extractContent(s:any) {
+  var span = document.createElement('span');
   if(s)
-  {
-    var span = document.createElement('span');
     span.innerHTML = s;
-    return span.textContent || span.innerText;
-  }
-  return ""
+  else
+  {
+    span.classList.add("text-gray-600")
+    span.innerHTML = 'Chưa có dữ liệu'
+  } 
+  return span.textContent || span.innerText;
 };
 
 //Hàm so sánh với ngày hiện tại
@@ -69,11 +71,31 @@ function formatDtDis(item:any)
   if(item.relations != null) item.lstUserID = getListImg(item.relations)
   return item;
 }
+function convertHtmlAgency(agencyName: any , headerText: any) {
+  var divE = document.createElement('div');
+  divE.classList.add("d-flex");
+  if(agencyName)
+    divE.innerHTML = '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' + agencyName + '</span></div>';
+  else
+  {
+    divE.classList.add("text-gray-600")
+    divE.innerHTML = headerText;  
+  } 
+  return divE.outerHTML  || divE.innerText;
+}
+function getIdUser(createdBy: any, owner: any) {
+  var arr = [];
+  if (createdBy) arr.push(createdBy);
+  if (owner && createdBy != owner) arr.push(owner);
+  return arr.join(";");
+}
 export{
   extractContent,
   compareDate,
   formatBytes,
   getListImg,
   getJSONString,
-  formatDtDis
+  formatDtDis,
+  getIdUser,
+  convertHtmlAgency
 }

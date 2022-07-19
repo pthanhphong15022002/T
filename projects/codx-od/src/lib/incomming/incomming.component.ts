@@ -12,7 +12,7 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CacheService, CallFuncService, CodxListviewComponent, CodxService, CodxTreeviewComponent, DataRequest, DialogModel, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { compareDate, extractContent, formatBytes, formatDtDis, getListImg } from '../function/default.function';
+import { compareDate, convertHtmlAgency, extractContent, formatBytes, formatDtDis, getIdUser, getListImg } from '../function/default.function';
 import { permissionDis, updateDis, dispatch, inforSentEMail, extendDeadline, gridModels } from '../models/dispatch.model';
 import { AgencyService } from '../services/agency.service';
 import { DispatchService } from '../services/dispatch.service';
@@ -65,6 +65,8 @@ export class IncommingComponent
   compareDate = compareDate;
   formatBytes = formatBytes;
   extractContent = extractContent;
+  convertHtmlAgency = convertHtmlAgency;
+  getIdUser = getIdUser;
   crrDate = new Date().getTime();
   gridViewSetup: any;
   dispatch = new dispatch();
@@ -321,17 +323,13 @@ export class IncommingComponent
     });
     this.activeDiv = status;
   }
-  getIdUser(createdBy: any, owner: any) {
-    var arr = [];
-    if (createdBy) arr.push(createdBy);
-    if (owner && createdBy != owner) arr.push(owner);
-    return arr.join(";");
-  }
+ 
   selectFirst(dt: any) {
     var recID;
     if (dt.data) recID = dt.data.recID;
     else recID = dt.recID;
     this.getDtDis(recID);
+    this.detectorRef.detectChanges();
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;
@@ -362,10 +360,5 @@ export class IncommingComponent
     //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
   }
-  convertHtmlAgency(agencyName: any) {
-    var desc = '<div class="d-flex">';
-    if (agencyName)
-      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment1 icon-20"></span><span class="ms-1">' + agencyName + '</span></div>';
-    return desc + '</div>';
-  }
+
 }
