@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { NotificationsService } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Positions } from '../../model/HR_Positions.module';
 
 @Component({
@@ -11,14 +11,33 @@ export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
   dialog: any;
   isNew: false;
+  user: any;
+  functionID: string;
+  action = '';
+
   // dataBind: any = {};
   position: HR_Positions = new HR_Positions();
   constructor(
-    private dt: ChangeDetectorRef,
+    private df: ChangeDetectorRef,
     private notiService: NotificationsService,
-  ) { }
+    private authStore: AuthStore,
+    @Optional() dialog?: DialogRef,
+    @Optional() dt?: DialogData,
+  ) {
+    this.action = dt.data[1];
+    this.dialog = dialog;
+    this.user = this.authStore.get();
+    this.functionID = this.dialog.formModel.funcID;
+   }
 
   ngOnInit(): void {
+
+    if(this.action==='edit'){
+      this.title = 'Chỉnh sửa';
+    }
+    if(this.action==='copy'){
+      this.title = 'Sao chép';
+    }
   }
 
   valueChange(e) {
@@ -27,7 +46,7 @@ export class PopupAddPositionsComponent implements OnInit {
         var value = e.data?.OrgUnitID;
         this.position[e.field] = value;
         this.position["departmentID"] = e.data?.OrgUnitType;
-        this.dt.detectChanges();
+        this.df.detectChanges();
         break;
       case "departmentID":
         value = e.data?.DepartmentID;
