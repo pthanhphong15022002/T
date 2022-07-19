@@ -119,13 +119,13 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     this.dataSort = [];
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
+      option.DataService = this.view?.dataService as CRUDService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
@@ -144,7 +144,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       .subscribe((res) => {
         if (res) {
           this.view.dataService.remove(data).subscribe();
-          // this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
           this.detectorRef.detectChanges();
         }
       });
