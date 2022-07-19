@@ -6,10 +6,7 @@
                 <div class="d-flex align-items-center flex-grow-1 mb-2">
                     <div class="w-50px">From:</div>
                     <div class="d-flex align-items-center me-2 mail-user">
-                        <div class="symbol symbol-20px symbol-circle me-2">
-                            <codx-img #image [objectId]="user?.userID" [width]="35"></codx-img>
-                        </div>
-                        <div class="text-dark-75">{{user?.userName}}</div>
+                        <codx-temp-full [imageId]="user?.userID" [imageWidth]="25" [content]="user?.userName" [imgCss]="'me-2'"></codx-temp-full>
                     </div>
                 </div>
                 <div class="d-flex align-items-center flex-grow-1">

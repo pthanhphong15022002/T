@@ -1,19 +1,16 @@
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
   OnChanges,
   SimpleChanges,
   Injector,
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CacheService, CallFuncService, CodxListviewComponent, CodxService, CodxTreeviewComponent, DataRequest, DialogModel, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { AlertConfirmInputConfig, ButtonModel, CallFuncService, CodxListviewComponent, CodxService, CodxTreeviewComponent, DataRequest, DialogModel, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { compareDate, convertHtmlAgency, extractContent, formatBytes, formatDtDis, getIdUser, getListImg } from '../function/default.function';
-import { permissionDis, updateDis, dispatch, inforSentEMail, extendDeadline, gridModels } from '../models/dispatch.model';
+import { dispatch } from '../models/dispatch.model';
 import { AgencyService } from '../services/agency.service';
 import { DispatchService } from '../services/dispatch.service';
 import { FileService } from '@shared/services/file.service';
@@ -21,7 +18,6 @@ import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'app-incomming',
@@ -172,6 +168,7 @@ export class IncommingComponent
         if (x.event) {
           delete x.event._uuid;
           this.view.dataService.add(x.event, 0).subscribe();
+          this.getDtDis(x.event?.recID)
         }
       });
     });
@@ -304,30 +301,32 @@ export class IncommingComponent
 
   //Hàm lấy thông tin chi tiết của công văn
   getDtDis(id: any) {
-    this.lstUserID = '';
-    this.odService.getDetailDispatch(id).subscribe((item) => {
-      //this.getChildTask(id);
-      if (item) {
-        this.lstDtDis = formatDtDis(item);
-        //this.view.dataService.setDataSelected(this.lstDtDis);
-      }
-    });
+    this.lstDtDis = null;
+    if(id)
+    {
+      this.lstUserID = '';
+      this.odService.getDetailDispatch(id).subscribe((item) => {
+        //this.getChildTask(id);
+        if (item) {
+          this.lstDtDis = formatDtDis(item);
+          //this.view.dataService.setDataSelected(this.lstDtDis);
+        }
+      });
+    }
   }
 
   //hàm render lại list view theo status công văn
   clickChangeStatus(status: any) {
-    this.view.dataService.predicates = 'Status=@0';
-    this.view.dataService.dataValues = status;
-    this.view.dataService.load().subscribe((item) => {
-      this.lstDtDis = this.view.dataService.data[0];
+    this.view.dataService.setPredicates(['Status=@0'],[status]).subscribe(item=>{
+      this.lstDtDis = item[0];
     });
     this.activeDiv = status;
   }
  
   selectFirst(dt: any) {
-    var recID;
-    if (dt.data) recID = dt.data.recID;
-    else recID = dt.recID;
+    var recID = null;
+    if (dt?.data) recID = dt.data.recID;
+    else if(dt?.recID) recID = dt.recID;
     this.getDtDis(recID);
     this.detectorRef.detectChanges();
   }

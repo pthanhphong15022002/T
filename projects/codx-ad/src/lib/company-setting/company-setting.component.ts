@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CodxService, DialogModel, DialogRef, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
+import { CodxService, DialogModel, DialogRef, ImageViewerComponent, SidebarModel, UIComponent, UploadFile, ViewModel, ViewType } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
 import { PopupContactComponent } from './popup-contact/popup-contact.component';
@@ -37,6 +37,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   @ViewChild('paneleft') paneleft: TemplateRef<any>;
+  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   items: any;
   option: any;
   views: Array<ViewModel> = [];
