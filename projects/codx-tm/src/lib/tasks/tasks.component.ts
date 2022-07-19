@@ -167,7 +167,7 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.listdetail,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -176,7 +176,7 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.kanban,
-        active: false,
+        active: true,
         sameData: true,
         request2: this.resourceKanban,
         model: {
