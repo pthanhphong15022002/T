@@ -79,18 +79,11 @@ body {
 codx-input.text-error,
 .file-item input.text-error {
     border: 1px solid red !important;
-    height: 38px !important;
+    height: 32px !important;
 }
 
 ngb-popover-window[role="tooltip"] {
     z-index: 10000;
-}
-
-.text-error,
-codx-input.text-error,
-.file-item input.text-error {
-    border: 1px solid red !important;
-    height: 38px !important;
 }
 
 // role="tooltip"

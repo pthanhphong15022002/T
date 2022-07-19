@@ -1,0 +1,144 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
+    <ng-template #body>      
+        <form name="frm_subitem">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{titleLevel}}</label>
+                        <codx-input placeholder="{{titleLevel}}..."
+                            class="form-control test-datetime"
+                            type="valuelist" 
+                            style="width:100%"          
+                            refValue="L1488"                        
+                            [crrValue]="subitem.level"    
+                            (valueChange)="txtValue($event, 'level')" 
+                        ></codx-input>    
+
+                        <!-- <select [disabled]="true" #sub_level name="sub_level"
+                            (change)="getSelectText(sub_level, 'level')" class="form-control" placeholder="Level"
+                            [(ngModel)]="subitem.level">
+                            <option *ngFor="let itemlevel of listLevel" [value]="itemlevel.value">
+                                {{itemlevel.text}}
+                            </option>                               
+                        </select> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{titleLevelFor}}</label>
+                        <codx-input placeholder="{{titleLevelFor}}..."
+                            class="form-control test-datetime"
+                            type="valuelist" 
+                            style="width:100%"          
+                            refValue="L1484"                        
+                            [crrValue]="subitem.type"    
+                            (valueChange)="txtValue($event, 'type')" 
+                        ></codx-input>    
+
+                        <!-- <select #sub_type name="sub_type" (change)="getSelectText(sub_type, 'type')"
+                            class="form-control" placeholder="Level" [(ngModel)]="subitem.type">
+                            <option *ngFor="let itemType of listType" [value]="itemType.value">
+                                {{itemType.text}}
+                            </option>                              
+                        </select> -->
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>{{titleFormat}}</label>
+                        <container-element [ngSwitch]="subitem.type">
+                            <!-- the same view can be shown in more than one case -->
+                            <some-element *ngSwitchCase="1">
+                                <codx-input placeholder="{{titleLevelFor}}..."
+                                    class="form-control test-datetime"
+                                    type="valuelist" 
+                                    style="width:100%"          
+                                    refValue="L1485"                        
+                                    [crrValue]="subitem.type"    
+                                    (valueChange)="txtValue($event, 'format')" 
+                                ></codx-input> 
+                                <!-- <select class="form-control" #sub_format (change)="getSelectText(sub_format, 'format')"
+                                    placeholder="Level" name="sub_format" [(ngModel)]="subitem.format">
+                                    <option *ngFor="let itemFormat1 of listFormat1" [value]="itemFormat1.value">
+                                        {{itemFormat1.text}}
+                                    </option>                                      
+                                </select> -->
+                            </some-element>
+                            <some-element *ngSwitchCase="2">
+                                <codx-input placeholder="{{titleLevelFor}}..."
+                                    class="form-control test-datetime"
+                                    type="valuelist" 
+                                    style="width:100%"          
+                                    refValue="L1486"                        
+                                    [crrValue]="subitem.format"    
+                                    (valueChange)="txtValue($event, 'format')" 
+                                ></codx-input> 
+                                <!-- <select #sub_format class="form-control" placeholder="Level" name="sub_format"
+                                    (change)="getSelectText(sub_format, 'format')" [(ngModel)]="subitem.format">
+                                    <option *ngFor="let itemFormat2 of listFormat2" [value]="itemFormat2.value">
+                                        {{itemFormat2.text}}
+                                    </option>                                      
+                                </select> -->
+                            </some-element>
+                            <some-other-element *ngSwitchCase="3">
+                                <codx-input placeholder="{{titleLevelFor}}..."
+                                    class="form-control test-datetime"
+                                    type="valuelist" 
+                                    style="width:100%"          
+                                    refValue="L1487"                        
+                                    [crrValue]="subitem.format"    
+                                    (valueChange)="txtValue($event, 'format')" 
+                                ></codx-input> 
+                                <!-- <select #sub_format class="form-control" placeholder="Level" name="sub_format"
+                                    (change)="getSelectText(sub_format, 'format')" [(ngModel)]="subitem.format">
+                                    <option *ngFor="let itemFormat3 of listFormat3" [value]="itemFormat3.value">
+                                        {{itemFormat3.text}}
+                                    </option>                                      
+                                </select> -->
+                            </some-other-element>
+                            <some-element *ngSwitchDefault>
+                                <codx-input placeholder="{{titleLevelFor}}..."
+                                    class="form-control test-datetime"
+                                    type="valuelist" 
+                                    style="width:100%"          
+                                    refValue="L1489"                        
+                                    [crrValue]="subitem.format"    
+                                    (valueChange)="txtValue($event, 'format')" 
+                                ></codx-input> 
+                                <!-- <select #sub_format class="form-control" placeholder="Level" name="sub_format"
+                                    (change)="getSelectText(sub_format, 'format')" [(ngModel)]="subitem.format">
+                                    <option *ngFor="let itemFormat4 of listFormat4" [value]="itemFormat4.value">
+                                        {{itemFormat4.text}}
+                                    </option>                                        
+                                </select> -->
+                            </some-element>
+                        </container-element>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>{{titleDesc}}</label>
+                        <codx-input placeholder="{{titleDesc}}..."
+                            class="form-control test-datetime"
+                            type="textarea" 
+                            style="width:100%"      
+                            format="ed3"                      
+                            [crrValue]="subitem.description"    
+                            (valueChange)="txtValue($event, 'description')" 
+                        ></codx-input> 
+                        <!-- <textarea name="sub_desc" class="form-control" (change)="doSubItemValueChange($event)"
+                            [(ngModel)]="subitem.description" rows="2"></textarea> -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>    
+    <ng-template #footer>
+        <button [disabled]="disableSubItemAdd()" type="button" (click)="SaveSubFolder()"
+        class="btn btn-primary">{{titleSave}}</button>
+    </ng-template>
+</codx-form>
