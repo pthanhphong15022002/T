@@ -1,13 +1,13 @@
 <div class="page-content d-flex flex-row">
   <div class="w-100 me-4">
     <!-- <codx-input type="switch"></codx-input> -->
-    <div class="row m-0 bg-body mb-2 p-3">
+    <div class="row m-0 bg-body rounded-2 mb-3 p-3">
       <div class="col-4 px-0">
-        <div class="d-flex justify-content-between h-50px p-3" style="background-color: #d8fffd">
+        <div class="d-flex justify-content-between p-3" style="background-color: #d8fffd">
           <div class="d-flex justify-content-between">
             <div class="icon-28 icon-access_time me-2" style="color: rgb(6, 221, 184)"></div>
             <div>
-              <div class="fw-bold text-gray-400">
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
               </div>
               <div class="text-dark fw-bold">
@@ -22,11 +22,11 @@
       </div>
 
       <div class="col-4 pe-0">
-        <div class="d-flex justify-content-between rounded h-50px p-3" style="background-color: #daecff">
+        <div class="d-flex justify-content-between rounded p-3" style="background-color: #daecff">
           <div class="d-flex justify-content-between">
             <div class="icon-28 icon-access_time me-2" style="color: rgb(0, 93, 199)"></div>
             <div>
-              <div class="fw-bold text-gray-400">
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
               </div>
               <div class="text-dark fw-bold">
@@ -40,11 +40,11 @@
         </div>
       </div>
       <div class="col-4 pe-0">
-        <div class="d-flex justify-content-between rounded h-50px p-3" style="background-color: #fff8e6">
+        <div class="d-flex justify-content-between rounded p-3" style="background-color: #fff8e6">
           <div class="d-flex align-items-center">
             <div class="icon-28 icon-access_time me-2" style="color: rgb(255, 128, 8)"></div>
             <div class="d-flex flex-column">
-              <div class="text-gray-400">
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
               </div>
               <div class="fw-bold text-dark">
@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div class="row m-0 bg-body mb-2">
+    <div class="row m-0 bg-body rounded-2 mb-3">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn align-self-end" (click)="openTooltip()">
           <i class="icon-info text-dark"></i>
@@ -189,7 +189,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex mb-4">
+    <div class="rounded-2 d-flex mb-3">
       <div style="position: relative; width: 50%">
         <ejs-accumulationchart id="chart-task-group" [legendSettings]="legendSettings2">
           <e-accumulation-series-collection>
@@ -210,7 +210,7 @@
           </div>
         </div>
       </div>
-      <div class="ms-2 bg-body" style="position: relative; width: 50%">
+      <div class="ms-3 bg-body" style="position: relative; width: 50%">
         <div class="row">
           <div class="col-5">
             <ejs-circulargauge style="display: block" centerY="40%" width="100%" height="100%">
@@ -242,8 +242,8 @@
               </e-axes>
             </ejs-circulargauge>
           </div>
-          <div class="col-7" style="margin-top: 100px">
-            <div class="ps-9 pt-12">
+          <div class="col-7">
+            <div class="pt-12">
               <div class="d-flex align-items-top">
                 <div class="label1"></div>
                 <div class="d-flex flex-column">
@@ -267,7 +267,7 @@
         </div>
       </div>
     </div>
-    <div class="row bg-body mb-2">
+    <div class="bg-body rounded-2 mb-3">
       <ejs-chart style="display: block" background="transparent" id="chartbar" [primaryXAxis]="columnXAxis"
         [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings1" height="100%" width="100%">
         <e-axes>
@@ -287,7 +287,7 @@
     </div>
   </div>
 
-  <div class="w-350px min-w-350p bg-body">
+  <div class="w-300px min-w-300px bg-body rounded-2">
     <div class="taskbox-user">
       <selectweek #selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>
       <div class="taskbox-list">
