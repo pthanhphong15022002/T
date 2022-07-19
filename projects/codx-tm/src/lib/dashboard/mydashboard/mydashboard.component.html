@@ -82,7 +82,10 @@
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="dbData?.performance" markerShape="Image"
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.efficiency.performance"
+                  markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="90%" markerWidth="20" markerHeight="20">
                 </e-pointer>
@@ -97,8 +100,11 @@
             transform: translate(-50%, -50%);
           ">
           <p class="text-center" style="margin: 0px">Availability</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2" style="margin: 0px">
-            {{ dbData?.availability.toFixed(2) }}
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.efficiency.availability.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -113,7 +119,10 @@
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="dbData?.performance" markerShape="Image"
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.efficiency.performance"
+                  markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="90%" markerWidth="20" markerHeight="20">
                 </e-pointer>
@@ -128,8 +137,11 @@
             transform: translate(-50%, -50%);
           ">
           <p class="text-center" style="margin: 0px">Performance</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2" style="margin: 0px">
-            {{ dbData?.performance.toFixed(2) }}
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.efficiency.performance.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -159,8 +171,11 @@
             transform: translate(-50%, -50%);
           ">
           <p class="text-center" style="margin: 0px">Quality</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2" style="margin: 0px">
-            {{ dbData?.quality.toFixed(2) }}
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.efficiency.quality.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -175,7 +190,10 @@
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="dbData?.kpi" markerShape="Image"
+                <e-pointer
+                  type="Marker"
+                  [value]="dbData?.efficiency.kpi"
+                  markerShape="Image"
                   imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
                   radius="90%" markerWidth="20" markerHeight="20">
                 </e-pointer>
@@ -190,8 +208,11 @@
             transform: translate(-50%, -50%);
           ">
           <p class="text-center" style="margin: 0px">KPI</p>
-          <p class="text-center text-gray-900 fw-bolder fs-2" style="margin: 0px">
-            {{ dbData?.kpi.toFixed(2) }}
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
+            {{ dbData?.efficiency.kpi.toFixed(2) }}
           </p>
         </div>
       </div>

@@ -330,9 +330,25 @@ export class CodxTMService {
     );
   }
 
-  getDeptDBData() {}
+  getDeptDBData(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataDeptDashboardAsync',
+      [model]
+    );
+  }
 
-  getCompDBData() {}
+  getCompDBData(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataCompDashboardAsync',
+      [model]
+    );
+  }
 }
 
 export class LayoutModel {
