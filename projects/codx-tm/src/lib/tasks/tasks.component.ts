@@ -196,7 +196,7 @@ export class TasksComponent extends UIComponent {
         },
       },
     ];
-  
+
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
@@ -436,21 +436,27 @@ export class TasksComponent extends UIComponent {
             //       this.itemSelected = this.view.dataService.data[0];
             //     }
             //   });
-            this.tmSv.deleteTask(data.taskID).subscribe((res) => {
-              if (res) {
-                var listTaskDelete = res[0];
-                var parent = res[1];
-                listTaskDelete.forEach((x) => {
-                  this.view.dataService.remove(x).subscribe();
-                  this.notiService.notify('Xóa thành công !');
-                });
-                if (parent) {
-                  this.view.dataService.update(parent).subscribe();
+
+            this.notiService.alertCode('TM003').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                  this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+                    if (res) {
+                      var listTaskDelete = res[0];
+                      var parent = res[1];
+                      listTaskDelete.forEach((x) => {
+                        this.view.dataService.remove(x).subscribe();
+                        this.notiService.notify('Xóa thành công !');
+                      //  this.notiService.notifyCode('cần code');
+                      });
+                      if (parent) {
+                        this.view.dataService.update(parent).subscribe();
+                      }
+                      this.itemSelected = this.view.dataService.data[0];
+                      this.detectorRef.detectChanges();
+                    }
+                  });
                 }
-                this.itemSelected = this.view.dataService.data[0];
-                this.detectorRef.detectChanges();
-              }
-            });
+              });
           }
         }
       });
@@ -479,10 +485,10 @@ export class TasksComponent extends UIComponent {
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event == null)
-      this.view.dataService.delete(
-        [this.view.dataService.dataSelected],
-        false
-      );
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
       if (e?.event && e?.event != null) {
         let listTask = e?.event;
         let newTasks = [];
