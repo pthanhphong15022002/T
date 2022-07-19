@@ -24,24 +24,35 @@
                 </div>
               </div>
               <div class="form-group row mt-3">
-                <div class="col-4" *ngFor="let item of lstFunc; let i= index">
+
+                <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc; let i= index">
+                  <div class="row">
                   <div class="col-2">
                     <input type="checkbox" [(ngModel)]="item.ischeck"
-                     class="check-{{i}}" name="Checkboxes4" (change)="onChange($event)">
-                    <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
+                     class="check-{{i}} checkbox-round" name="Checkboxes4" (change)="onChange($event)">
+  
                   </div>
-                  <div class="col-4">
-                    <div class="d-flex flex-column flex-grow-1 row">
-                      <div class="font-weight-bold" style="font-weight: bold; margin-left: 20px;">
-                        {{item.customName}}
+                  <div class="col-10 column_second">
+
+                    <div class="row">
+                      <div class="col-2">
+                        <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
                       </div>
-                      <div style="margin-left: 20px;">
-                        <codx-input type="combobox" field="userID" refValue="UserRoles" (valueChange)="onCbx($event)">
-                        </codx-input>
+                      <div class="col-10">
+                         <div class="col-12 pb-2">
+                          <div class="font-weight-bold" style="font-weight: bold">
+                            {{item.customName}}
+                          </div>
+                         </div>
+                         <div class="col-12">
+                          <codx-input type="combobox" field="userID" [crrValue]="" refValue="UserRoles" (valueChange)="onCbx($event)" [multiple]="false" loadFull="true" >
+                          </codx-input>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </ng-template>
@@ -68,23 +79,37 @@
                 </div>
               </div>
               <div class="form-group row mt-3">
-                <div class="col-4" *ngFor="let item of lstFunc">
-                  <div class="col-2">
-                    <input type="checkbox">
-                    <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
-                  </div>
-                  <div class="col-4">
-                    <div class="d-flex flex-column flex-grow-1 row">
-                      <div class="font-weight-bold" style="font-weight: bold; margin-left: 20px;">
-                        {{item.customName}}
-                      </div>
-                      <div style="margin-left: 20px;">
-                        <codx-input type="combobox" field="userID" refValue="UserRoles">
-                        </codx-input>
-                      </div>
+
+                <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc">
+                  <div class="row">
+
+                    <div class="col-2">
+                      <input type="checkbox" class="checkbox-round">
                     </div>
+
+                    <div class="col-10 column_second">
+                      <div class="row">
+                        <div class="col-2">
+                          <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                        </div>
+                        <div class="col-10">
+                           <div class="col-12 pb-2">
+                            <div class="font-weight-bold" style="font-weight: bold">
+                              {{item.customName}}
+                            </div>
+                           </div>
+                           <div class="col-12">
+                            <codx-input type="combobox" field="userID" refValue="UserRoles">
+                            </codx-input>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
                   </div>
                 </div>
+
               </div>
             </div>
           </ng-template>

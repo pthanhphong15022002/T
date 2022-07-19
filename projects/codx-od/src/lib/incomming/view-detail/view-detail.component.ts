@@ -1,16 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
-import { ODSearchComponent } from '../../searching/searching.component';
 import { DispatchService } from '../../services/dispatch.service';
 import { AddLinkComponent } from '../addlink/addlink.component';
-import { FolderComponent } from '../folder/folder.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
@@ -327,7 +323,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               this.odService.getDetailDispatch(this.view.dataService.data[0].recID).subscribe(item => {
                 this.data = formatDtDis(item);
                 this.view.dataService.setDataSelected(this.data);
-                this.data.lstUserID = getListImg(this.data.relations)
+                this.data.lstUserID = getListImg(this.data.relations);
               });
             }
           });

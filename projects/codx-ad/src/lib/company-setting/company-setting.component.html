@@ -217,13 +217,18 @@
           <div class="col-6 ps-0">
             <div class="d-flex align-items-top">
               <div class="w-60px me-3">
-                <div *ngIf="data.logo; else imgDefault_personal">
-                  <img class="img_avatar" src="../../../{{data.logo}}}" alt="" />
+
+                <div *ngIf="data.recID; else imgDefault_personal">
+                  <codx-img [objectId]="data.recID" [objectName]="data.contactName"
+                  objectType="AD_CompanySettings"  [width]="100" [height]="100"
+                    >
+                  </codx-img>
                 </div>
-                <ng-template #imgDefault_personal> <img class="img_avatar" src="../../../assets/img/avatar.png" />
+                <ng-template #imgDefault_personal> <img class="img_avatar" 
+              src="../../../assets/img/avatar.png" />
                 </ng-template>
               </div>
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-column space_personal">
                 <div class="fw-bold text-dark fs-5">
                   <span>{{data.contactName}}</span>
                 </div>
