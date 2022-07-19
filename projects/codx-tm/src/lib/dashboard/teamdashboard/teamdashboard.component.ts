@@ -1,28 +1,24 @@
-import { map } from 'rxjs';
 import {
   Component,
   OnInit,
   ViewChild,
   TemplateRef,
   Injector,
-  inject,
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'team-dashboard',
+  selector: 'teamdashboard',
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
   providers: [GradientService],
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
-  formModel: string;
   funcID: string;
   model: DataRequest;
   taskRemind: TaskRemind = new TaskRemind();
@@ -36,7 +32,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   remiderOnDay: RemiderOnDay[] = [];
-  vlWork =  [];
+  vlWork = [];
   hrWork = [];
   user: any;
   tasksByEmp: any;
@@ -182,18 +178,17 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
-  }
-
-  onInit(): void {
-    this.model = new DataRequest();
     this.user = this.auth.get();
-    this.model.predicate = 'OrgUnitID = @0';
-    this.model.dataValue = this.user.buid;
+    this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
+    this.model.predicate = 'OrgUnitID = @0';
+    this.model.dataValue = this.user.buid;
+  }
 
+  onInit(): void {
     this.getGeneralData();
   }
 
@@ -263,16 +258,16 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             }
           });
           this.vlWork.push({
-            name: data.name,
+            id: data.id,
             qtyTasks: data.qtyTasks,
             status: {
-              new: newTasks / data.qtyTasks * 100,
-              processing: processingTasks / data.qtyTasks * 100,
-              done: doneTasks / data.qtyTasks * 100,
-              postpone: postponeTasks / data.qtyTasks * 100,
-              cancel: cancelTasks /data.qtyTasks * 100
-            }
-          })
+              new: (newTasks / data.qtyTasks) * 100,
+              processing: (processingTasks / data.qtyTasks) * 100,
+              done: (doneTasks / data.qtyTasks) * 100,
+              postpone: (postponeTasks / data.qtyTasks) * 100,
+              cancel: (cancelTasks / data.qtyTasks) * 100,
+            },
+          });
         });
         this.detectorRef.detectChanges();
       });

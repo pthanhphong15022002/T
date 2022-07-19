@@ -176,9 +176,9 @@ export class PopupAddEmployeesComponent implements OnInit {
   dataChange(e: any, field: string) {
     if (e) {
       if (e?.length == undefined) {
-        this.dataBind[field] = e?.data;
+        this.employee[field] = e?.data;
       } else {
-        this.dataBind[field] = e[0];
+        this.employee[field] = e[0];
       }
     }
   }

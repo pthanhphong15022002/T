@@ -94,8 +94,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
-    this.taskCopy = dt?.data[0];
-    //this.taskCopy = dt?.data[3];  //nếu alowCopy = false thì bật cái này lên
+    this.taskCopy = dt?.data[3];  
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -107,30 +106,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.openTask();
     } else if (this.action == 'copy') {
       // this.title="Copy công việc"  // cái này sau Quang làm
-      //this.getTaskCoppied(this.taskCopy.taskID)   //nếu alowCopy = false thì bật cái này lên 
-      this.setDefaultCopy()
+      this.getTaskCoppied(this.taskCopy.taskID)   //nếu alowCopy = false thì bật cái này lên 
     } else this.openInfo(this.task.taskID, this.action);
   }
-  setDefaultCopy() {
-    this.api
-      .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-        this.functionID,
-        'TM_Tasks',
-        'taskID',
-      ])
-      .subscribe((response: any) => {
-        if (response) {
-          response['_uuid'] = response['taskID'] ?? Util.uid();
-          // response['idField'] = 'taskID';
-          // response['isNew'] = function () {
-          //   return response[response.taskID] != response['_uuid'];
-          // };
-          response['taskID'] = response['_uuid'];
-          this.task.taskID = response.taskID;
-          this.getTaskCoppied(this.taskCopy.taskID)
-        }
-      });
-  }
+
   ngAfterViewInit(): void { }
 
   getParam(callback = null) {
@@ -311,8 +290,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   saveData(id) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('TM002');
+      // this.notiService.notifyCode('???code');
       this.notiService.notify('Tên công việc không được để trống !');
+      return ;
     }
     if (
       this.showAssignTo &&

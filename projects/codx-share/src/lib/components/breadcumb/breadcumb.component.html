@@ -24,7 +24,8 @@
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= start && i < 2">
                     <span *ngIf="start > 0 || i > start" class="icon-keyboard_arrow_right icon-20"></span>
-                    <!-- <span class="text-dark-50">{{item.toString()}}</span> -->
+                    <!-- <span class="text-dark-50">{{item.toString()}}</span> icon-edit , icon-close 
+ -->
                     <div *ngIf="link; then jump2 else nojump2"></div>
                     <ng-template #jump2>
                         <a (click)="onJump(i)">

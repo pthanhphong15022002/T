@@ -8,10 +8,10 @@
             <div class="icon-28 icon-access_time me-2" style="color: rgb(6, 221, 184)"></div>
             <div>
               <div class="text-gray-600">
-                <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
+                <codx-label name="lblTask" default="Công việc"></codx-label>
               </div>
               <div class="text-dark fw-bold">
-                <codx-label name="lblOverdueTask" default="Đã quá hạn" [formModel]="formModel"></codx-label>
+                <codx-label name="lblOverdueTask" default="Đã quá hạn"></codx-label>
               </div>
             </div>
           </div>
@@ -23,19 +23,23 @@
 
       <div class="col-4 pe-0">
         <div class="d-flex justify-content-between rounded p-3" style="background-color: #daecff">
+
           <div class="d-flex justify-content-between">
             <div class="icon-28 icon-access_time me-2" style="color: rgb(0, 93, 199)"></div>
             <div>
               <div class="text-gray-600">
-                <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
-              </div>
-              <div class="text-dark fw-bold">
-                <codx-label name="lblOverdueTask" default="Chưa thực hiên" [formModel]="formModel"></codx-label>
+                <div class="fw-bold text-gray-400">
+                  <codx-label name="lblTask" default="Công việc"></codx-label>
+
+                </div>
+                <div class="text-dark fw-bold">
+                  <codx-label name="lblOverdueTask" default="Chưa thực hiên"></codx-label>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.newTasks }}
+            <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+              {{ dbData?.newTasks }}
+            </div>
           </div>
         </div>
       </div>
@@ -45,15 +49,18 @@
             <div class="icon-28 icon-access_time me-2" style="color: rgb(255, 128, 8)"></div>
             <div class="d-flex flex-column">
               <div class="text-gray-600">
-                <codx-label name="lblTask" default="Công việc" [formModel]="formModel"></codx-label>
+                <div class="text-gray-400">
+                  <codx-label name="lblTask" default="Công việc"></codx-label>
+
+                  <div class="fw-bold text-dark">
+                    <codx-label name="lblOverdueTask" default="Hoãn lại"></codx-label>
+                  </div>
+                </div>
               </div>
-              <div class="fw-bold text-dark">
-                <codx-label name="lblOverdueTask" default="Hoãn lại" [formModel]="formModel"></codx-label>
+              <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+                {{ dbData?.postponeTasks }}
               </div>
             </div>
-          </div>
-          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.postponeTasks }}
           </div>
         </div>
       </div>
@@ -205,8 +212,7 @@
           ">
           <div class="text-center">
             <p class="text-gray-900 fw-bolder fs-2">{{ dbData?.qtyTasks }}</p>
-            <codx-label name="lblTasks" default="Công việc" [formModel]="formModel">
-            </codx-label>
+            <codx-label name="lblTasks" default="Công việc"> </codx-label>
           </div>
         </div>
       </div>
@@ -270,6 +276,14 @@
     <div class="bg-body rounded-2 mb-3">
       <ejs-chart style="display: block" background="transparent" id="chartbar" [primaryXAxis]="columnXAxis"
         [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings1" height="100%" width="100%">
+
+      </ejs-chart>
+
+    </div>
+    <div class="row bg-body mb-3">
+      <ejs-chart style="display: block" background="transparent" id="chartbar" [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings1" height="100%" width="100%">
+
         <e-axes>
           <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" labelFormat="" [minimum]="0" [maximum]="100"
             [interval]="4">
@@ -286,7 +300,6 @@
       </ejs-chart>
     </div>
   </div>
-
   <div class="w-300px min-w-300px bg-body rounded-2">
     <div class="taskbox-user">
       <selectweek #selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>

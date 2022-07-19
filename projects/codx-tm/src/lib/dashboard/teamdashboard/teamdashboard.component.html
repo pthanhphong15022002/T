@@ -228,6 +228,7 @@
         <span class="me-3">{{ item?.id }}</span>
         <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
       </div>
+      <span>{{item?.qtyTasks}}</span>
       <div class="progress">
         <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.status.done"></div>
         <div class="progress-bar progress-bar-processing" role="progressbar" [style.width.%]="item?.status.processing">
