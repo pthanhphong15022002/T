@@ -210,23 +210,23 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
         this.piedata2 = [
           {
             x: 'Chưa thực hiện',
-            y: res?.newTasks,
+            y: res?.status.newTasks,
           },
           {
             x: 'Đang thực hiên',
-            y: res?.processingTasks,
+            y: res?.status.processingTasks,
           },
           {
             x: 'Hoàn tất',
-            y: res?.doneTasks,
+            y: res?.status.doneTasks,
           },
           {
             x: 'Hoãn lại',
-            y: res?.postponeTasks,
+            y: res?.status.postponeTasks,
           },
           {
             x: 'Bị huỷ',
-            y: res?.canceledTasks,
+            y: res?.status.canceledTasks,
           },
         ];
         this.dataColumn = res?.dataBarChart.barChart;
