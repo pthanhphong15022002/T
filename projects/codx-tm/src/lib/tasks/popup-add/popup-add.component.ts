@@ -501,13 +501,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (num < 0) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào phải lớn hơn hoặc bằng 0 !');
-      this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (num < 0) {
+    //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
+    //   this.notiService.notify('Giá trị nhập vào phải lớn hơn hoặc bằng 0 !');
+    //   this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
     if (data.data && num) {
       this.task[data.field] = data.data;
       var estimated = num * 3600000;
