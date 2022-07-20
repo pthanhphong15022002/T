@@ -9,8 +9,8 @@
   <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
-<ng-template #treeView let-data>
-  <lib-tree-view [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
+<ng-template #treeView >
+  <lib-tree-view [formModel]="view.formModel" [data]="view.dataService.data" (clickMoreFunction)="receiveMF($event)">
   </lib-tree-view>
 </ng-template>
 

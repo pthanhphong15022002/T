@@ -359,6 +359,11 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
           if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
@@ -553,18 +558,25 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(
-              new Date(
-                taskAction.startDate
-                  ? taskAction.startDate
-                  : taskAction.createdOn
-              )
-            ).toDate();
-            var time = (
-              (completedOn.getTime() - startDate.getTime()) /
-              3600000
-            ).toFixed(1);
-            var estimated = Number.parseFloat(time);
+            var completed = "0";
+            if(taskAction.estimated > 0){
+              completed=taskAction.estimated
+            }else{
+              var timeStart = moment(
+                new Date(
+                  taskAction.startOn
+                    ? taskAction.startOn
+                    : (taskAction.startDate
+                      ? taskAction.startDate : taskAction.createdOn)
+                )
+              ).toDate();
+              var time = (
+                (completedOn.getTime() - timeStart.getTime()) /
+                3600000
+              ).toFixed(2);
+              completed = Number.parseFloat(time).toFixed(2);
+            }
+           
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -573,15 +585,11 @@ export class TasksComponent extends UIComponent {
                 taskAction.taskID,
                 status,
                 completedOn,
-                estimated.toString(),
+                completed,
                 ''
               )
               .subscribe((res) => {
                 if (res && res.length > 0) {
-                  taskAction.status = status;
-                  taskAction.completedOn = completedOn;
-                  taskAction.comment = '';
-                  taskAction.completed = estimated;
                   res.forEach((obj) => {
                     this.view.dataService.update(obj).subscribe();
                   });
@@ -602,6 +610,7 @@ export class TasksComponent extends UIComponent {
       fieldValue: fieldValue,
       moreFunc: moreFunc,
       taskAction: taskAction,
+      funcID: this.funcID
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
@@ -612,10 +621,13 @@ export class TasksComponent extends UIComponent {
       obj
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        this.itemSelected = e?.event;
-        this.detectorRef.detectChanges();
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
       }
+      this.detectorRef.detectChanges();
     });
   }
   receiveMF(e: any) {
