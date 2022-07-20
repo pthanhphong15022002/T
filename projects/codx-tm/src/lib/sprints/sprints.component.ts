@@ -261,7 +261,7 @@ export class SprintsComponent extends UIComponent {
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
     
-    //this.codxService.navigate('',this.urlView)
+    this.codxService.navigate('',this.urlView)
   }
 
   changeView(evt: any) {

@@ -39,6 +39,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('treeView') treeView: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -60,6 +61,8 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
+  dataObj:any
+  iterationID: string =''
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -74,6 +77,11 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
+    this.dataObj = JSON.stringify(dataObj);
   }
 
   clickMF(e: any, data?: any) {
@@ -179,6 +187,14 @@ export class TasksComponent extends UIComponent {
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+        },
+      },
+      {
+        type: ViewType.treedetail,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.treeView,
         },
       },
     ];

@@ -9,6 +9,10 @@
   <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
+<ng-template #treeView let-data>
+  <lib-tree-view [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
+  </lib-tree-view>
+</ng-template>
 
 
 <ng-template #itemTemplate let-data>
@@ -83,6 +87,6 @@
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" [dataObj]="dataObj"
   (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true" [autoLoad]="false">
 </codx-views>
