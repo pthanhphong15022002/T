@@ -197,8 +197,8 @@ export class TaskGroupComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, null, option);
 

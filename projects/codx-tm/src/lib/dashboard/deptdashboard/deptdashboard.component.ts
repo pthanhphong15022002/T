@@ -26,7 +26,9 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.user = this.auth.get();
     this.model = new DataRequest();
     this.model.predicate = 'DepartmentID = @0';
-    this.model.dataValue = this.user.buid;
+    this.model.dataValue = this.user.employee?.departmentID;
+    this.model.predicates = 'OrgUnitID = @0';
+    this.model.dataValues = this.user.buid;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -37,5 +39,9 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.getGeneralData();
   }
 
-  private getGeneralData() {}
+  private getGeneralData() {
+    this.tmService.getDeptDBData(this.model).subscribe((res) => {
+      console.log(res);
+    });
+  }
 }
