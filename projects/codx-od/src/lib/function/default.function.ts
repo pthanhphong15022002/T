@@ -12,7 +12,7 @@ function extractContent(s:any) {
     span.classList.add("text-gray-600")
     span.innerHTML = 'Chưa có dữ liệu'
   } 
-  return span.textContent || span.innerText;
+  return span.outerHTML || span.innerText;
 };
 
 //Hàm so sánh với ngày hiện tại
@@ -78,7 +78,7 @@ function convertHtmlAgency(agencyName: any , headerText: any) {
     divE.innerHTML = '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' + agencyName + '</span></div>';
   else
   {
-    divE.classList.add("text-gray-600")
+    divE.classList.add("text-gray-400")
     divE.innerHTML = headerText;  
   } 
   return divE.outerHTML  || divE.innerText;

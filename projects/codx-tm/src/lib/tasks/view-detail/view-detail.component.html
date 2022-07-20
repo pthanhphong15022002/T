@@ -72,9 +72,10 @@
                 <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
                 </codx-label>: 
               </div>
-              <div class="text-gray-700">{{
+              <span *ngIf="itemSelected.dueDate " class="text-gray-700">{{
                 itemSelected.dueDate | date: "dd/MM/yyyy"
-                }}</div>
+                }}</span>
+                <span #dueDate *ngIf="!itemSelected?.dueDate " >{{ itemSelected.dueDate | formatvalue: formModel:"dueDate":dueDate | async }}</span>
             </div>
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
@@ -156,12 +157,10 @@
                 "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue :
                 formModel:"completedOn" : completedOn|async )}}</span> -->
               <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
-                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h'
-                }}</span>
+                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h'}}</span>
               <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
                 formModel:"completedOn" : completedOn|async }}</span>
             </div>
-
           </div>
         </div>
         <div class="mt-2" *ngIf="param.ProjectControl!='0' || param.LocationControl!='0'">

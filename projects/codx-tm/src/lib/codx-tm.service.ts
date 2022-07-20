@@ -11,6 +11,7 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,10 +21,10 @@ export class CodxTMService {
   moment = moment().locale('en');
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
-
   user: UserModel;
   myTaskComponent = false;
   taskGroupComponent = false;
+
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -188,7 +189,7 @@ export class CodxTMService {
   }
 
   setStatusTask(
-    funcID:string,
+    funcID: string,
     id: string,
     status: string,
     datacomplete: Date,
@@ -200,7 +201,7 @@ export class CodxTMService {
       'TM',
       'TaskBusiness',
       'SetStatusTaskAsync',
-      [funcID,id, status, datacomplete, hour, comment]
+      [funcID, id, status, datacomplete, hour, comment]
     );
   }
 
@@ -326,6 +327,26 @@ export class CodxTMService {
       'TaskBusiness',
       'GetDataTeamDashboardAsync',
       [model, beginMonth, endMonth]
+    );
+  }
+
+  getDeptDBData(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataDeptDashboardAsync',
+      [model]
+    );
+  }
+
+  getCompDBData(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataCompDashboardAsync',
+      [model]
     );
   }
 }

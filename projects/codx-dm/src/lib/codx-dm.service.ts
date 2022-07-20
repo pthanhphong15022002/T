@@ -5,7 +5,7 @@ import { DataItem, FolderInfo, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { AuthService, FormModel, NotificationsService } from "codx-core";
-import { FileInfo, FileUpload, Permission } from "@shared/models/file.model";
+import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
 
 @Injectable({
     providedIn: 'root'
@@ -61,6 +61,9 @@ export class CodxDMService {
     public fileUploadList: FileUpload[];
     public dataFileEditing: FileUpload;
     // public confirmationDialogService: ConfirmationDialogService;
+    
+    public ListSubFolder = new BehaviorSubject<SubFolder[]>(null);
+    isListSubFolder = this.ListSubFolder.asObservable();
 
     public HideTree = new BehaviorSubject<boolean>(null);
     isHideTree = this.HideTree.asObservable();
