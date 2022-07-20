@@ -8,6 +8,8 @@
             [dataValue]="" type="listView" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles">
         </codx-listview>
         <ng-template #template let-data>
+            
+
             <div class="list-item list-action-menu d-flex border-1 hover-more-block">
                 <!-- <div class="div-action-menu">
                     <div class="action-menu d-flex">
@@ -67,7 +69,7 @@
                     </div>
 
                 </div> -->
-                <codx-mfunc type="hover" [formModel]="view?.formModel" (clickMF)="clickMF($event, data)">
+                <codx-mfunc type="hover" [formModel]="view?.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
                 </codx-mfunc>
                 <div (click)="LinkDetail(data.recID, data.roleName, data.isSystem)" class="d-flex flex-grow-1">
                     <div class="mr-4 ml-4">
@@ -100,5 +102,7 @@
                 </div>
             </div>
         </ng-template>
+
+
     </div>
 </div>
