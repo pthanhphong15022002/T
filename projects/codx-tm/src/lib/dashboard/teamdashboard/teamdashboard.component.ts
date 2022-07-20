@@ -9,7 +9,6 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
-import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
 
 @Component({
   selector: 'teamdashboard',
@@ -21,7 +20,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   funcID: string;
   model: DataRequest;
-  taskRemind: TaskRemind = new TaskRemind();
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -31,11 +29,14 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  remiderOnDay: RemiderOnDay[] = [];
   vlWork = [];
   hrWork = [];
   user: any;
   tasksByEmp: any;
+  isDesc: boolean = true;
+  public data: object[] = [];
+
+  dbData: any;
 
   public rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -167,10 +168,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     { text: 'Thời gian thực hiện' },
   ];
 
-  public data: object[] = [];
-
-  dbData: any;
-
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -193,83 +190,77 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   }
 
   private getGeneralData() {
-    this.tmService
-      .getTeamDBData(
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.beginMonth,
-        this.endMonth
-      )
-      .subscribe((res: any) => {
-        console.log('TeamDB', res);
-        this.dbData = res;
-        this.piedata1 = res?.tasksByGroup;
-        this.piedata2 = [
-          {
-            x: 'Chưa thực hiện',
-            y: res?.status.newTasks,
-          },
-          {
-            x: 'Đang thực hiên',
-            y: res?.status.processingTasks,
-          },
-          {
-            x: 'Hoàn tất',
-            y: res?.status.doneTasks,
-          },
-          {
-            x: 'Hoãn lại',
-            y: res?.status.postponeTasks,
-          },
-          {
-            x: 'Bị huỷ',
-            y: res?.status.canceledTasks,
-          },
-        ];
-        this.dataColumn = res?.dataBarChart.barChart;
-        this.dataLine = res?.dataBarChart.lineChart;
-        this.data = res?.tasksByGroup;
-        res.tasksByEmp.map((data) => {
-          let newTasks = 0;
-          let processingTasks = 0;
-          let doneTasks = 0;
-          let postponeTasks = 0;
-          let cancelTasks = 0;
-          data.tasks.map((task) => {
-            switch (task.status) {
-              case '1':
-                newTasks = newTasks + 1;
-                break;
-              case '2':
-                processingTasks = processingTasks + 1;
-                break;
-              case '9':
-                doneTasks = doneTasks + 1;
-                break;
-              case '5':
-                postponeTasks = postponeTasks + 1;
-                break;
-              case '8':
-                cancelTasks = cancelTasks + 1;
-                break;
-            }
-          });
-          this.vlWork.push({
-            id: data.id,
-            qtyTasks: data.qtyTasks,
-            status: {
-              new: (newTasks / data.qtyTasks) * 100,
-              processing: (processingTasks / data.qtyTasks) * 100,
-              done: (doneTasks / data.qtyTasks) * 100,
-              postpone: (postponeTasks / data.qtyTasks) * 100,
-              cancel: (cancelTasks / data.qtyTasks) * 100,
-            },
-          });
-        });
-        this.detectorRef.detectChanges();
-      });
+    this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
+      console.log('Team DB', res);
+      this.dbData = res;
+      this.piedata1 = res?.tasksByGroup;
+      this.piedata2 = [
+        {
+          x: 'Chưa thực hiện',
+          y: res?.status.newTasks,
+        },
+        {
+          x: 'Đang thực hiên',
+          y: res?.status.processingTasks,
+        },
+        {
+          x: 'Hoàn tất',
+          y: res?.status.doneTasks,
+        },
+        {
+          x: 'Hoãn lại',
+          y: res?.status.postponeTasks,
+        },
+        {
+          x: 'Bị huỷ',
+          y: res?.status.canceledTasks,
+        },
+      ];
+      this.dataColumn = res?.dataBarChart.barChart;
+      this.dataLine = res?.dataBarChart.lineChart;
+      this.data = res?.tasksByGroup;
+      // res.tasksByEmp.map((data) => {
+      //   let newTasks = 0;
+      //   let processingTasks = 0;
+      //   let doneTasks = 0;
+      //   let postponeTasks = 0;
+      //   let cancelTasks = 0;
+      //   data.tasks.map((task) => {
+      //     switch (task.status) {
+      //       case '1':
+      //         newTasks = newTasks + 1;
+      //         break;
+      //       case '2':
+      //         processingTasks = processingTasks + 1;
+      //         break;
+      //       case '9':
+      //         doneTasks = doneTasks + 1;
+      //         break;
+      //       case '5':
+      //         postponeTasks = postponeTasks + 1;
+      //         break;
+      //       case '8':
+      //         cancelTasks = cancelTasks + 1;
+      //         break;
+      //     }
+      //   });
+      //   this.vlWork.push({
+      //     id: data.id,
+      //     qtyTasks: data.qtyTasks,
+      //     status: {
+      //       new: (newTasks / data.qtyTasks) * 100,
+      //       processing: (processingTasks / data.qtyTasks) * 100,
+      //       done: (doneTasks / data.qtyTasks) * 100,
+      //       postpone: (postponeTasks / data.qtyTasks) * 100,
+      //       cancel: (cancelTasks / data.qtyTasks) * 100,
+      //     },
+      //   });
+      // });
+      this.detectorRef.detectChanges();
+    });
+  }
+
+  sort() {
+    this.isDesc = !this.isDesc;
   }
 }
