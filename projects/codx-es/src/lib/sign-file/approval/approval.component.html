@@ -102,6 +102,8 @@
           (annotationRemove)="resetTime($event)"
           (annotationSelect)="selectedAnnotation($event)"
           (annotationPropertiesChange)="resetTime($event)"
+          (documentLoad)="loadingAnnotation($event)"
+          (importSuccess)="success()"
           (pageChange)="pageChange($event)"
           [zoomValue]="zoomValue"
           (zoomChange)="changeZoomValue($event)"
@@ -186,9 +188,9 @@
                 ></codx-label>
                 <codx-input
                   type="switch"
-                  field=""
+                  field="autoSignLastLine"
                   [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState(0)"
+                  (valueChange)="changeAutoSignState($event, 0)"
                 ></codx-input>
               </div>
 
@@ -203,9 +205,9 @@
                 ></codx-label>
                 <codx-input
                   type="switch"
-                  field=""
+                  field="autoSignEndPage"
                   [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState(1)"
+                  (valueChange)="changeAutoSignState($event, 1)"
                 ></codx-input>
               </div>
 
@@ -219,14 +221,14 @@
             <ng-template #headerText>
               {{ headerRightName[1].text }}
             </ng-template>
-            <ng-template #content> History </ng-template>
+            <ng-template #content></ng-template>
           </e-tabitem>
 
           <e-tabitem>
             <ng-template #headerText>
               {{ headerRightName[2].text }}
             </ng-template>
-            <ng-template #content> Comment </ng-template>
+            <ng-template #content></ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
