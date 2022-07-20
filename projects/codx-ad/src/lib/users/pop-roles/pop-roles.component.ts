@@ -14,6 +14,7 @@ export class PopRolesComponent implements OnInit {
   choose = new tmpformChooseRole();
   data: any;
   dialog1: any;
+  dataView:any;
   title = 'Phân quyền người dùng';
   count: number = 0;
   lstFunc = [];
@@ -25,9 +26,11 @@ export class PopRolesComponent implements OnInit {
     private changeDec: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog1?: DialogRef,
+    @Optional() dataView?: DialogRef,
   ) {
     this.dialog1 = dialog1;
     this.data = dt?.data;
+    this.dataView = dataView;
   }
 
   ngOnInit(): void {
@@ -58,11 +61,12 @@ export class PopRolesComponent implements OnInit {
         this.count = 0;
         this.listChooseRole = [];
       }
+
       for(var i=0; i<this.listChooseRole.length; i++)
       {
-        if(item.functionID === this.listChooseRole[i].functionID) 
+        if(item === this.listChooseRole[i]) 
         {
-          this.listChooseRole.splice(item,i);
+          this.listChooseRole.splice(i,1);
         }
      //   item[i].idChooseRole= i;
      }
@@ -71,7 +75,7 @@ export class PopRolesComponent implements OnInit {
   
       
      for(var i=1; i<= this.listChooseRole.length; i++) {
-        item[i].idChooseRole= i;
+      this.listChooseRole[i].idChooseRole= i;
      }
     }
     if (event.target.checked === true) {
