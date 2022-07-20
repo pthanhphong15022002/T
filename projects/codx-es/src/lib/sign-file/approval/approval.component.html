@@ -55,7 +55,8 @@
                 <e-item
                   prefixIcon="e-chevron-up-double"
                   (click)="pdfviewerControl?.navigation?.goToFirstPage()"
-                ></e-item>
+                >
+                </e-item>
                 <e-item
                   [text]="pdfviewerControl?.currentPageNumber"
                   [disabled]="true"
@@ -63,7 +64,8 @@
                 <e-item
                   prefixIcon="e-chevron-down-double"
                   (click)="pdfviewerControl?.navigation?.goToLastPage()"
-                ></e-item>
+                >
+                </e-item>
               </e-items>
             </ejs-toolbar>
           </div>
@@ -141,22 +143,31 @@
               </div>
 
               <div>Kéo thả</div>
-              <div class="row d-flex">
+              <!-- <div class="row d-flex">
+                <div *ngFor="let action of actionsButton; let index = index" class="col-5 action"
+                  [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
+                  <div class="icon {{ index + 1 | vll: 'ES015':'icon' | async }}"></div>
+                  <codx-label name="lbl + {{ index + 1 | vll: 'ES015':'text' | async }}" [formModel]=""
+                    default="{{ index + 1 | vll: 'ES015':'text' | async }}" class="ms-2 fw-bold"></codx-label>
+                </div>
+              </div> -->
+              <div class="card-group">
                 <div
+                  class="card-item me-5 mb-5"
                   *ngFor="let action of actionsButton; let index = index"
-                  class="col-5 action"
                   [class.active]="holding == index + 1"
                   (click)="changeAnnotationItem(index + 1)"
                 >
-                  <div
-                    class="icon {{ index + 1 | vll: 'ES015':'icon' | async }}"
-                  ></div>
-                  <codx-label
-                    name="lbl + {{ index + 1 | vll: 'ES015':'text' | async }}"
-                    [formModel]=""
-                    default="{{ index + 1 | vll: 'ES015':'text' | async }}"
-                    class="ms-2 fw-bold"
-                  ></codx-label>
+                  <codx-card-center
+                    cardCss="border h-100 min-w-125px w-125px"
+                    icoCss="icon-20  {{
+                      index + 1 | vll: 'ES015':'icon' | async
+                    }}"
+                    content="lbl + {{
+                      index + 1 | vll: 'ES015':'text' | async
+                    }}"
+                  >
+                  </codx-card-center>
                 </div>
               </div>
 
@@ -174,7 +185,8 @@
                   field=""
                   [crrValue]="needSuggest"
                   (valueChange)="changeSuggestState($event)"
-                ></codx-input>
+                >
+                </codx-input>
               </div>
 
               <div

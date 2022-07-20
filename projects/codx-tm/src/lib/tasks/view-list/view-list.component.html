@@ -4,7 +4,9 @@
       {{ data?.taskName }}</div>
   </td>
   <td class=" w-5">
-    <div class="align-items-center text-dark">
+  
+    <div class="align-items-center">
+      <span [ngClass]="'icon-notifications' +' ' + (data?.isTimeOut?'expired':'unexpired')" ></span>
       <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
                   data?.priority | vll: 'L0186':'textColor' | async
                     ">
@@ -22,7 +24,7 @@
                   data?.status | vll: 'L0614':'textColor' | async
                   " style="border: none">
       {{ data?.status | vll: "L0614":"text" | async }}
-    </div>
+  </div>
   </td>
   <td class=" w-20">
     <div class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"

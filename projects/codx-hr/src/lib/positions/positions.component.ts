@@ -16,10 +16,12 @@ export class PositionsComponent implements OnInit {
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
-
+  posInfo: any = {};
+  employees: any = [];
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('p') public popover: NgbPopover;
 
 
   constructor(
@@ -71,9 +73,6 @@ export class PositionsComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
-        this.add();
-        break;
       case 'edit':
         this.edit(data);
         break;
@@ -96,38 +95,60 @@ export class PositionsComponent implements OnInit {
   }
 
   add() {
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '550px';
+    //   this.dialog = this.callfunc.openSide(
+    //     PopupAddPositionsComponent,
+    //     [this.view.dataService.dataSelected, 'add'],
+    //     option
+    //   );
+    //   this.dialog.closed.subscribe((e) => {
+    //     console.log(e);
+    //   });
+    // });
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(
-        PopupAddPositionsComponent,
-        [this.view.dataService.dataSelected, 'add'],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
         console.log(e);
-      });
+      })
     });
   }
 
   edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+    // if (data) {
+    //   this.view.dataService.dataSelected = data;
+    // }
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.currentView?.dataService;
+    //     option.FormModel = this.view?.currentView?.formModel;
+    //     option.Width = '800px';
+    //     this.dialog = this.callfunc.openSide(
+    //       PopupAddPositionsComponent,
+    //       [this.view.dataService.dataSelected, 'edit'],
+    //       option
+    //     );
+    //   });
+
+      if (data) {
+        this.view.dataService.dataSelected = data;
+      }
+      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddPositionsComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
       });
   }
 
@@ -149,6 +170,23 @@ export class PositionsComponent implements OnInit {
   delete(data: any) {
 
   }
+
+loadEmployByCountStatus(el, posID, status) {
+        var stt = status.split(';');
+        this.popover["_elementRef"] = new ElementRef(el);
+        if (this.popover.isOpen()) {
+            this.popover.close();
+        }
+        this.posInfo = {};
+        this.employees = [];
+        this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+            .subscribe(response => {
+
+                this.employees = response || [];
+                this.popover.open();
+
+            });
+    }
 
   requestEnded(evt: any) {
     this.view.currentView;

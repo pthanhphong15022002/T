@@ -63,6 +63,7 @@ export class EmployeeInfomationComponent implements OnInit {
   user: any;
   dialog!: DialogRef;
   formModel : FormModel ;
+  showCBB = false;
 
   @ViewChild('contentSkill') contentSkill;
   // @ViewChild('view') viewBase: ViewsComponent;
@@ -417,19 +418,21 @@ export class EmployeeInfomationComponent implements OnInit {
     });
   }
 
-  popupAddHobbi(data) {
+  popupAddHobbi() {
     // this.allowhobby = true;
     // this.codxMwpService.EmployeeInfomation = this;
     // data = data || { employeeID: this.employeeInfo.employeeID };
     // data.list = this.employeeHobbie;
     // this.codxMwpService.hobbyEdit.next(data);
+    this.showCBB = true;
+    this.dt.detectChanges();
 
-    var model = new DialogModel();
-    model.DataService = new CRUDService(this.inject); 
-    this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data,"", model);
-    this.dialog.closed.subscribe(e => {
-      console.log(e);
-    })
+    // var model = new DialogModel();
+    // model.DataService = new CRUDService(this.inject); 
+    // this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data,"", model);
+    // this.dialog.closed.subscribe(e => {
+    //   console.log(e);
+    // })
   }
 
 

@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { CO_Meetings } from './../../models/CO_Meetings.model';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, AuthStore, DialogData, DialogRef } from 'codx-core';
 
 @Component({
@@ -7,12 +8,15 @@ import { ApiHttpService, AuthStore, DialogData, DialogRef } from 'codx-core';
   styleUrls: ['./popup-add-meeting.component.css']
 })
 export class PopupAddMeetingComponent implements OnInit {
+  @Input() meeting = new CO_Meetings();
+
   dialog: any;
   user:any ;
   param: any;
   functionID: string;
   title = 'Thêm họp định kì'
-
+  showPlan = true;
+  data: any;
   constructor(
     private changeDetectorRef : ChangeDetectorRef ,
     private api :ApiHttpService,
@@ -21,14 +25,15 @@ export class PopupAddMeetingComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.getParam() ;
-
+    this.data = dialog.dataService!.dataSelected;
+    this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
    }
 
   ngOnInit(): void {
-   this.openFormMeeting()
+ //  this.openFormMeeting()
    
   }
   getParam(callback = null) {
@@ -47,11 +52,6 @@ export class PopupAddMeetingComponent implements OnInit {
         }
       });
   }
-  openFormMeeting(){
-   this.title= 'Thêm họp định kì';
-   this.changeDetectorRef.detectChanges();
-  }
-
 
   valueChangeTags(e){
 

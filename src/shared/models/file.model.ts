@@ -97,6 +97,7 @@ export class FileUpload {
     category: string;
     fileSize: any;
     type: any;
+    mimeType: any;
     folderName: string;
     hasSubFolder: any;
     tags: any;
