@@ -48,6 +48,7 @@ export class TasksComponent extends UIComponent {
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
+  resourceTree:ResourceModel;
   dialog!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
@@ -139,6 +140,13 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.assemblyName = 'TM';
     this.resourceKanban.className = 'TaskBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    // this.resourceTree = new ResourceModel();
+    // this.resourceTree.assemblyName = 'TM';
+    // this.resourceTree.className = 'TaskBusiness';
+    // this.resourceTree.service = 'TM';
+    // this.resourceTree.method = 'GetListTasksTreeAsync';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -193,6 +201,7 @@ export class TasksComponent extends UIComponent {
         type: ViewType.treedetail,
         active: false,
         sameData: true,
+        // request2: this.resourceTree,
         model: {
           template: this.treeView,
         },
