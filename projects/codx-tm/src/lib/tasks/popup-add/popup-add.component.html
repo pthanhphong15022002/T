@@ -23,11 +23,10 @@
                 <span class="icon-info icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
-                    <codx-label name="Description" formName="Tasks" default="Thông tin chung">
+                    <codx-label name="GeneralInformation" formName="Tasks" default="Thông tin chung">
                     </codx-label>
                   </span>
-                  <span class="fs-7"><codx-label name="Description" formName="Tasks" default="Description">
-                  </codx-label></span>
+                  <span class="fs-7">Description</span>
                 </span>
               </a>
             </div>
@@ -72,18 +71,12 @@
                   <codx-label fiedName="Priority" [formModel]="form.formModel" default="Ưu tiên">
                   </codx-label>
                 </div>
-                <codx-input type="valuelist" ngDefaultControl field="priority" [crrValue]="task?.priority" refValue="L0186" placeholder="Độ ưu tiên"
-                   (valueChange)="changeVLL($event)">
+                <codx-input type="valuelist" field="priority" [crrValue]="task?.priority" refValue="L0186"
+                  [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
                 </codx-input>
-                <!-- <codx-valuelist 
-                    type="valuelist" 
-                    [placeholder]="'Độ ưu tiên'" 
-                    [name]="'L0186'" 
-                    field="priority" [crrValue]="task?.priority"
-                    (valueChange)="changeVLL($event)"
-                   >
-                </codx-valuelist> -->
-                
+                <!-- <codx-valuelist type="valuelist" field="priority" [crrValue]="task?.priority" [name]="'L0186'"
+                [placeholder]="'Chọn độ ưu tiên'" (valueChange)="changeVLL($event)">
+              </codx-valuelist> -->
               </div>
             </div>
             <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
@@ -139,7 +132,7 @@
                   </codx-label>
                   <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
                 </div>
-                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" 
+                <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
                   (valueChange)="changeMemo($event)"></codx-input>
                 <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                   type="text" [readOnly]="readOnly" class="col-md-8" style="
@@ -208,7 +201,7 @@
                   <span class="fw-bolder">
                     <codx-label name="JobDescription" formName="Tasks" default="Mô tả công việc"></codx-label>
                   </span>
-                  <span class="fs-7"><codx-label name="JobDescription" formName="Tasks" default="Job Description"></codx-label></span>
+                  <span class="fs-7">Job Description</span>
                 </span>
               </a>
             </div>
@@ -220,7 +213,7 @@
                 </codx-label>
                 <!-- <span class="icon-open_in_new icon-20 text-gray-500" (click)="openInputMemo2()"></span> -->
               </div>
-              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"  height="650"
+              <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed"
                 (valueChange)="changeMemo($event)"></codx-input>
               <!-- <input *ngIf="openMemo2" name="txtMemo2" [(ngModel)]="task?.memo2" placeholder="Ghi chú phân công..."
                 type="text" [readOnly]="readOnly" class="col-md-8" style="
@@ -245,8 +238,7 @@
                     <codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Phân công cho">
                     </codx-label>
                   </span>
-                  <span class="fs-7"><codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Assign To">
-                  </codx-label></span>
+                  <span class="fs-7">Assign To</span>
                 </span>
               </a>
             </div>
@@ -316,8 +308,7 @@
                     <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm">
                     </codx-label>
                   </span>
-                  <span class="fs-7"><codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="List Task Board">
-                  </codx-label></span>
+                  <span class="fs-7">List Task Board</span>
                 </span>
               </a>
             </div>
@@ -416,7 +407,7 @@
                   <span class="fw-bolder">
                     <codx-label name="Reference" formName="Tasks" default="Tham chiếu"></codx-label>
                   </span>
-                  <span class="fs-7"><codx-label name="Reference" formName="Tasks" default="Reference"></codx-label></span>
+                  <span class="fs-7">Reference</span>
                 </span>
               </a>
             </div>

@@ -15,10 +15,11 @@
 
             <div class="card-toolbar">
                 <div class="me-2">
-                    <button class="btn btn-sm btn-icon btn-active-light-primary" data-kt-menu-trigger="click"
-                        data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                        <i class="bi bi-three-dots fs-3"></i>
-                    </button>
+                    <div class="btn-add">
+                        <span
+                            class="icon-edit-one icon-16 icon-add btn btn-icon btn-active-light-primary position-relative"
+                            (click)="openFormAddNote()"></span>
+                    </div>
                 </div>
                 <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_note_close">
                     <span class="svg-icon svg-icon-2"></span>
@@ -28,10 +29,6 @@
             </div>
         </div>
         <br>
-        <div class="btn-add">
-            <span class="icon-edit-one icon-22 icon-add btn btn-icon btn-active-light-primary position-relative"
-                (click)="openFormAddNote()"></span>
-        </div>
         <div class="d-flex flex-column">
             <br>
             <div class="notes">
