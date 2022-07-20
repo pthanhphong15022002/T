@@ -114,12 +114,21 @@
 <ng-template #create>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" 
+                type="textarea" 
+                [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                (valueChange)="valueChange($event)">
             </codx-input>
        </div>
         <div>
-            <codx-file [lstFile]="listFileUpload" [funcID]="dialogRef.formModel.funcID" [edit]='true'></codx-file>
+            <codx-file 
+                [lstFile]="listFileUpload" 
+                [funcID]="dialogRef.formModel.funcID" 
+                [edit]='true'>
+            </codx-file>
         </div>
         <div class="d-none">
             <codx-attachment #atmCreate 
@@ -139,8 +148,13 @@
     <ng-container *ngIf="dataEdit">
         <div class="my-3">
             <div>
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+                <codx-input 
+                    format="ed3" 
+                    [class]="'border-none'" 
+                    type="textarea" 
+                    [crrValue]="message"
+                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                    (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
             <div >
@@ -165,8 +179,12 @@
 <ng-template #share>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" type="textarea"
+                [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                (valueChange)="valueChange($event)">
             </codx-input>
         </div>
         <div>

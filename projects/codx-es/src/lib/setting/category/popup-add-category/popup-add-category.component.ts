@@ -21,6 +21,7 @@ import {
   CodxFormComponent,
   CodxService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -79,13 +80,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    console.log(this.dialog);
-
     this.data = data?.data[0];
     this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
-
-    console.log(this.form);
   }
   ngAfterViewInit(): void {
     this.esService.isSetupAutoNumber.subscribe((res) => {
@@ -97,7 +94,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
     this.esService.isSetupApprovalStep.subscribe((res) => {
       this.lstStep = res;
-      console.log(this.lstStep);
     });
 
     this.dialog.closed.subscribe((res) => {
@@ -148,7 +144,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               .callSv(
                 'ES',
                 'ES',
-                'CategoriesBusiness',
+                'ApprovalStepsBusiness',
                 'GetListApprovalStepAsync',
                 [this.data.id]
               )
@@ -262,13 +258,20 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   beforeSave(option: any) {
     let itemData = this.dialogCategory.value;
+    let countStep = 0;
     if (this.isAdd) {
       option.method = 'AddNewAsync';
     } else {
       option.method = 'EditCategoryAsync';
     }
 
-    option.data = [itemData, this.isAdd, this.lstApproval];
+    this.esService.approvalStep.subscribe((res) => {
+      if (res) {
+        countStep = res.length;
+      }
+    });
+
+    option.data = [itemData, this.isAdd, this.lstApproval, countStep];
     return true;
   }
 
@@ -298,13 +301,18 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       model: this.dialogCategory,
     };
 
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
     this.cfService.openForm(
       ApprovalStepComponent,
       '',
       screen.width,
       screen.height,
       '',
-      data
+      data,
+      '',
+      dialogModel
     );
   }
 

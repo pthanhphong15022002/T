@@ -5,12 +5,14 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Optional,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { NotificationsService, TenantStore, UIComponent } from "codx-core";
+import { DialogData, DialogRef, NotificationsService, TenantStore, UIComponent } from "codx-core";
 import { CodxAdService } from "../../codx-ad.service";
+import { AD_Roles } from "../model/AD_Roles.model";
 import { RolesService } from "../services/roles.service";
 import { TempService } from "../services/temp.service";
 
@@ -29,25 +31,32 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
   saveas: string;
   isNew: true;
   date = new Date();
+  header = 'Thêm mới';
+  dialog: DialogRef;
+  readOnly = false;
+  roles: AD_Roles = new AD_Roles();
+  formType = '';
+  dataUpdate: AD_Roles = new AD_Roles();
+
   @Input() modelPage: any;
+
   constructor(private injector: Injector,
     private tenantStore: TenantStore,
     private notificationsService: NotificationsService,
     private tempService: TempService,
     private changedr: ChangeDetectorRef,
     private roleService: RolesService,
-    private adsv: CodxAdService
+    private adsv: CodxAdService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
-    // super({
-    //   title: "",
-    //   formName: "Roles",
-    //   gridViewName: "grvRoles",
-    //   entity: "AD_Roles",
-    //   functionID: 'AD004',
-
-    // } as ModelPage, injector);
     super(injector);
+    this.dialog = dialog;
     this.tenant = this.tenantStore.get()?.tenant;
+    this.roles = dt.data[0]?.data;
+    this.formType = dt.data[0]?.formType;
+    if (this.formType == 'edit')
+      this.dataUpdate = dt.data[0]?.dataUpdate;
   }
 
   ngOnDestroy(): void { }
@@ -105,21 +114,29 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
   // }
   //TEMP
   clickBtnSave() {
-    if (this.saveas == "2") {
-      // Copy
-      //TEMP
-      // this.confirmAfterSave("AD002", false);
-      //TEMP
-    } else {
+    // if (this.saveas == "2") {
+    //   // Copy
+    //   this.confirmAfterSave("AD002", false);
+    // } else {
+    //   this.SaveRole(true, false, false);
+    // }
+
+    if(this.formType == 'edit' || this.formType == 'add') 
       this.SaveRole(true, false, false);
+    else {
+
     }
+
   }
   SaveRole(
     isLoadDetail = false,
     isCopyPermision: boolean,
     isRedirectPage: boolean = true
   ) {
-    var isNew = this.tempService.isNew;
+    var isNew;
+    if (this.formType == 'add')
+      isNew = true;
+    else isNew = false;
     var listview = this.adsv.listview;
     this.api
       .call("ERM.Business.AD", "RolesBusiness", "SaveRoleAsync", [

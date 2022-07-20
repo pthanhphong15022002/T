@@ -1,15 +1,15 @@
+<codx-views #view [funcID]="funcID" [views]="views" [button]="button" (buttonClick)="openFormAdd($event)"
+    idField="recID" entityName="AD_Roles">
+</codx-views>
+
 <div class="adroles-group qtht border-top-erm">
     <div class="content-center">
-        <erm-listview [itemTemplate]="template" [itemTemplateLoading]="templateloading" funcId="AD004" service="SYS"
-            #listRoles [gridViewName]="" [predicate]="" [dataValue]="" type="listView" entityName="AD_Roles"
-            formName="Roles" gridViewName="grvRoles">
-        </erm-listview>
-        <ng-template #templateloading let-data>
-            <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-        </ng-template>
+        <codx-listview [itemTemplate]="template" [funcId]="funcID" service="SYS" #listRoles [predicate]=""
+            [dataValue]="" type="listView" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles">
+        </codx-listview>
         <ng-template #template let-data>
             <div class="list-item list-action-menu d-flex border-1 hover-more-block">
-                <div class="div-action-menu">
+                <!-- <div class="div-action-menu">
                     <div class="action-menu d-flex">
                         <div class="action-content d-flex align-items-center">
                             <a class="action-item" *ngIf="data.write" (click)="openEdit(data.recID, false)">
@@ -66,15 +66,17 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
+                <codx-mfunc type="hover" [formModel]="view?.formModel" (clickMF)="clickMF($event, data)">
+                </codx-mfunc>
                 <div (click)="LinkDetail(data.recID, data.roleName, data.isSystem)" class="d-flex flex-grow-1">
                     <div class="mr-4 ml-4">
                         <!-- <span class="symbol-text" #elm [ngStyle]="styleObject(elm)">{{data.roleName
                             |
                             split:['']:0}}</span> -->
-                        <lv-image-viewer class="symbol symbol-35 symbol-circle" [objectId]="data.recID"
+                        <codx-img class="symbol symbol-35 symbol-circle" [objectId]="data.recID"
                             [objectName]="data.roleName" objectType="AD_Roles" [width]="90">
-                        </lv-image-viewer>
+                        </codx-img>
                     </div>
                     <div class="d-flex flex-column flex-grow-1">
                         <div class="d-flex align-items-center justify-content-between mb-1">
@@ -100,4 +102,3 @@
         </ng-template>
     </div>
 </div>
-<app-role-edit ></app-role-edit>
