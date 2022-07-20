@@ -75,6 +75,15 @@
                 <codx-input type="valuelist" ngDefaultControl field="priority" [crrValue]="task?.priority" refValue="L0186" placeholder="Độ ưu tiên"
                    (valueChange)="changeVLL($event)">
                 </codx-input>
+                <!-- <codx-valuelist 
+                    type="valuelist" 
+                    [placeholder]="'Độ ưu tiên'" 
+                    [name]="'L0186'" 
+                    field="priority" [crrValue]="task?.priority"
+                    (valueChange)="changeVLL($event)"
+                   >
+                </codx-valuelist> -->
+                
               </div>
             </div>
             <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
