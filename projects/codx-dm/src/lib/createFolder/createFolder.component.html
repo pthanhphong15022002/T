@@ -314,12 +314,14 @@
                                                 <td></td>
                                             </tr>                                                
                                             <tr>
-                                                <td class="cursor-pointer" (click)="openSubFolder()" colspan="4">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="icon-add icon-18 mr-1"></span>
-                                                        <span class="text-dark">{{titletitleCreateSubFolder}}</span>
-                                                    </div>
-                                                </td>
+                                                <ng-container *ngIf="disableSubItemAdd()">
+                                                    <td class="cursor-pointer" (click)="openSubFolder()" colspan="4">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-add icon-18 mr-1"></span>
+                                                            <span class="text-dark">{{titletitleCreateSubFolder}}</span>
+                                                        </div>
+                                                    </td>
+                                                </ng-container>
                                             </tr>
                                         </tbody>
                                     </table>

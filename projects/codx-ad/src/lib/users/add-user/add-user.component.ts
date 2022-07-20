@@ -82,7 +82,6 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.save);
@@ -104,7 +103,6 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.update);
@@ -112,7 +110,6 @@ export class AddUserComponent implements OnInit {
         }
       })
     this.closePanel();
-
   }
 
   onSave() {
