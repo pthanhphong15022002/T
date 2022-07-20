@@ -17,6 +17,7 @@ export class PopupAddMeetingComponent implements OnInit {
   title = 'Thêm họp định kì'
   showPlan = true;
   data: any;
+  action: any;
   constructor(
     private changeDetectorRef : ChangeDetectorRef ,
     private api :ApiHttpService,
@@ -29,6 +30,7 @@ export class PopupAddMeetingComponent implements OnInit {
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.action = dt.data;
     this.functionID = this.dialog.formModel.funcID;
    }
 
@@ -51,6 +53,33 @@ export class PopupAddMeetingComponent implements OnInit {
           return callback && callback(true);
         }
       });
+  }
+
+  beforeSave(op){
+    var data = [];
+    if(this.action === 'add'){
+      op.method = 'AddMeetingsAsync';
+      data = [
+        this.meeting,
+        this.functionID,    
+      ];
+    }
+
+    op.data = data;
+  }
+
+  onSave(){
+    
+  }
+
+  valueChange(e){
+    if(e.data){
+      this.meeting[e.field] = e.data;
+    }
+  }
+
+  valueTime(e){
+    console.log(e);
   }
 
   valueChangeTags(e){
