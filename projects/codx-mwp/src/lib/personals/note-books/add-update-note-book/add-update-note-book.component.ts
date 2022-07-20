@@ -96,11 +96,11 @@ export class AddUpdateNoteBookComponent implements OnInit {
           this.imageUpload
             .updateFileDirectReload(this.data?.recID)
             .subscribe((result) => {
-              (this.dialog.dataService as CRUDService).update(res).subscribe();
               this.loadData.emit();
+              this.dialog.dataService.update(res).subscribe();
             });
         } else {
-          (this.dialog.dataService as CRUDService).update(res).subscribe();
+          this.dialog.dataService.update(res).subscribe();
         }
         this.dialog.close();
       }

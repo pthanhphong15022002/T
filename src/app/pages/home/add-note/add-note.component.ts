@@ -319,7 +319,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEdit() {
-    debugger;
     var dateNow = new Date(this.note.createdOn);
     this.note.createdOn = this.currentDate;
 
