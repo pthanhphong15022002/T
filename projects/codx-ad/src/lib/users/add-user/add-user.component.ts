@@ -88,15 +88,16 @@ export class AddUserComponent implements OnInit {
             });
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
-          this.dialog.closed.subscribe(e => {
-            if (e?.event) {
-              this.viewChooseRole = e?.event
-            }
-          })
+          // this.dialog.closed.subscribe(e => {
+          //   if (e?.event) {
+          //     this.viewChooseRole = e?.event
+          //   }
+          // })
           this.changDetec.detectChanges();
         }
       });
     this.closePanel();
+    this.dialog.close();
     console.log(this.viewChooseRole);
   }
 
