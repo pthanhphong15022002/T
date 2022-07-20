@@ -129,7 +129,7 @@ export class EmployeesComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
       });
   }
@@ -171,13 +171,30 @@ export class EmployeesComponent implements OnInit {
     //     }
     //   });
     /* Core em bị lỗi mấy đoạn delete nên em rem lại để code, khi nào merge bỏ rem giúp em với*/
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
   }
 
-  beforeDel(opt: RequestOption) {
-    opt.methodName = 'DeleteAsync';
-    opt.data = this.itemSelected.taskID;
-    return true;
-  }
+  // beforeDel(opt: RequestOption) {
+  //   opt.methodName = 'DeleteAsync';
+  //   opt.data = this.itemSelected.taskID;
+  //   return true;
+
+    beforeDel(opt: RequestOption) {
+      var itemSelected = opt.data[0];
+      opt.methodName = 'DeleteAsync';
+  
+      opt.data = itemSelected.taskGroupID;
+      return true;
+    }
+  
 
   selectedChange(val: any) {
     this.itemSelected = val.data;
@@ -196,7 +213,7 @@ export class EmployeesComponent implements OnInit {
         this.copy(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }
