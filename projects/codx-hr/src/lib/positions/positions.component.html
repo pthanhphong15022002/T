@@ -5,19 +5,98 @@
 </codx-views> -->
 
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
-    assemblyName="ERM.Business.HR" className="PositionsBusiness" method="GetModelFormPositionsAsync"
-   [views]="views" [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs"
-    (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-    [selectedFirst]="true">
+    assemblyName="ERM.Business.HR" className="PositionsBusiness" method="GetModelFormPositionsAsync" [views]="views"
+    [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (requestEnded)="requestEnded($event)"
+    (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #itemTemplate let-data>
-    <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-        [title]="data.positionName" [titleLine]="data.orgUnitID" [contentLine]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '')
-        + (data.divisionID ? ' | ' + data.divisionID: '')" [desc]="'Báo cáo trực tiếp: ' + data.reportTo"
-        [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" [subTitle]="'Nhóm chức danh: ' + data.jobID"
-        [content]="'Chức vụ: ' + data.jobGroupID">
-    </codx-temp-full>
+    <div class="px-5">
+        <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-3">
+            <div class="justify-content-start">
+                <codx-temp-full cardCss="card-template"
+                    [subTitle]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '') + (data.divisionID ? ' | ' + data.divisionID: '')"
+                    [title]="data.positionName" [titleLine]="data.orgUnitID"
+                    [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel" 
+                    [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
+                </codx-temp-full>
+                <!-- -->
+            </div>
+
+            <div>
+                <codx-temp-full cardCss="card-template"
+                    [desc]="'Nhóm chức danh: ' + data.jobID" [desc2]="'Chức vụ: ' + data.jobGroupID">
+                </codx-temp-full> 
+            </div>
+
+            <div class="d-flex flex-wrap">
+                <div class="d-flex pos-group">
+                    <div class="d-flex flex-column align-items-center pos-item mx-6" #h
+                        (click)="loadEmployByCountStatus(h,data.positionID,'')">
+                        <div class="pos-number pos-gray">{{data.headcounts}}</div>
+                        <div class="text-dark-50 mt-1">
+                            <codx-label name="lblHeadcounts" formName="Positions" default="Định biên">
+                            </codx-label>
+                        </div>
+
+                    </div>
+                    <div class="d-flex flex-column align-items-center pos-item mx-6" #c
+                        (click)="loadEmployByCountStatus(c,data.positionID,'50;60')">
+                        <div class="pos-number pos-primary">{{data.currentcounts}}</div>
+                        <div class="text-dark-50 mt-1">
+                            <codx-label name="lblCurrentcounts" formName="Positions" default="Chính thức">
+                            </codx-label>
+                        </div>
+                        <div *ngIf="data.currentEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                            <codx-img class="symbol symbol-30 border-white symbol-circle" [objectId]="data.currentEmpID"
+                                [objectName]="data.currentEmpName" objectType="HR_Employees">
+                            </codx-img>
+                            <div *ngIf="data.currentEmpcounts>1"
+                                class="symbol symbol-30 symbol-circle border-white symbol-light">
+                                <span class="symbol-label font-size-sm">{{data.currentcounts-1}}+</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center pos-item mx-6" #o
+                        (click)="loadEmployByCountStatus(o,data.positionID,'20;30')">
+                        <div class="pos-number pos-success">{{data.onboard}}</div>
+                        <div class="text-dark-50 mt-1">
+                            <codx-label name="lblOnboard" formName="Positions" default="Onboard">
+                            </codx-label>
+                        </div>
+                        <div *ngIf="data.onboardEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                            <codx-img class="symbol symbol-30 border-white symbol-circle" [objectId]="data.onboardEmpID"
+                                [objectName]="data.onboardEmpName" objectType="HR_Employees">
+                            </codx-img>
+                            <div *ngIf="data.onboardEmpcounts>1"
+                                class="symbol symbol-30 symbol-circle border-white symbol-light">
+                                <span class="symbol-label font-size-sm">{{data.onboardEmpcounts-1}}+</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center pos-item mx-6" #f
+                        (click)="loadEmployByCountStatus(f,data.positionID,'70')">
+                        <div class="pos-number pos-danger">{{data.offboard}}</div>
+                        <div class="text-dark-50 mt-1">
+                            <codx-label name="lblOffboard" formName="Positions" default="Offboard">
+                            </codx-label>
+                        </div>
+                        <div *ngIf="data.offboardEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                            <codx-img class="symbol symbol-30 border-white symbol-circle"
+                                [objectId]="data.offboardEmpID" [objectName]="data.offboardEmpName"
+                                objectType="HR_Employees">
+                            </codx-img>
+                            <div *ngIf="data.offboardEmpcounts>1"
+                                class="symbol symbol-30 border-white symbol-circle">
+                                <span class="symbol-label font-size-sm">{{data.offboardEmpcounts-1}}+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [subTitle]="'Nhóm chức danh: ' + data.jobID"  [content]="'Chức vụ: ' + data.jobGroupID"  -->
 </ng-template>
 
 <!-- <ng-template #itemPosition let-data>

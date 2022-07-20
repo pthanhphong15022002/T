@@ -25,7 +25,7 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     this.user = this.auth.get();
     this.model = new DataRequest();
     this.model.predicate = 'CompanyID = @0';
-    this.model.dataValue = this.user.buid;
+    this.model.dataValue = this.user.employee?.companyID;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -36,5 +36,9 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     this.getGeneralData();
   }
 
-  private getGeneralData() {}
+  private getGeneralData() {
+    this.tmService.getCompDBData(this.model).subscribe((res) => {
+      console.log(res);
+    });
+  }
 }

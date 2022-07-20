@@ -1,0 +1,9 @@
+.full .k-textbox{
+    width: 100%;
+}
+
+.click-disabled{
+    pointer-events: none;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
