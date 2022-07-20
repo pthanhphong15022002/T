@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, AuthService, NotificationsService, TenantStore } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, NotificationsService, TenantStore, UrlUtil } from 'codx-core';
 
 @Component({
   selector: 'app-login',
@@ -36,12 +36,27 @@ export class LoginComponent implements OnInit, OnDestroy {
     private api: ApiHttpService,
     private routeActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
-
+    private auth: AuthStore,
   ) {
     const tenant = this.tenantStore.getName();
     // redirect to home if already logged in
     if (this.authService.checkUserStatus()) {
-      this.router.navigate([`/${tenant}/`]);
+      this.returnUrl = UrlUtil.getUrl('returnUrl') || "";;
+      if (this.returnUrl) {
+        this.returnUrl = decodeURIComponent(this.returnUrl);
+      }
+      if (this.returnUrl.indexOf("http://") == 0 || this.returnUrl.indexOf("https://") == 0) {
+        this.api.get(`auth/GetInfoToken?token=${this.auth.get().token}`).pipe(
+          map((data) => {
+            if (data && data.userID) {
+              document.location.href = this.returnUrl + "&token=" + this.auth.get().token;
+            }
+          })).subscribe();
+
+        return;
+      }
+      else
+        this.router.navigate([`/${tenant}`]);
     }
 
     this.routeActive.queryParams.subscribe(params => {
@@ -152,11 +167,29 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         if (data) {
           if (!data.isError) {
-            if (this.returnUrl.indexOf(data.tenant) > 0)
-              this.router.navigate([`${this.returnUrl}`]);
-            else
-              this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
-          } else {
+            this.returnUrl = UrlUtil.getUrl('returnUrl') || "";;
+            if (this.returnUrl) {
+              this.returnUrl = decodeURIComponent(this.returnUrl);
+            }
+            
+            if (this.returnUrl.indexOf("http://") == 0 || this.returnUrl.indexOf("https://") == 0) {
+              this.api.get(`auth/GetInfoToken?token=${this.auth.get().token}`).pipe(
+                map((data) => {
+                  if (data && data.userID) {
+                    document.location.href = this.returnUrl + "&token=" + this.auth.get().token;
+                  }
+                })).subscribe();
+
+              return;
+            }
+            else {
+              if (this.returnUrl.indexOf(data.tenant) > 0)
+                this.router.navigate([`${this.returnUrl}`]);
+              else
+                this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
+            }
+          } 
+          else {
             // this.alerttext = data.error;
             //$(this.error.nativeElement).html(data.error);
             this.notificationsService.notify(data.error);

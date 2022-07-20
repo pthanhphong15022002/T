@@ -1,6 +1,7 @@
 .text-error, codx-input.text-error, .file-item input.text-error {
     border: 1px solid red !important;
-    height: 38px !important;
+    //height: 38px !important;
+    height: 32px !important;
 }
 // role="tooltip"
 ngb-popover-window[role="tooltip"] {
@@ -70,4 +71,11 @@ ngb-popover-window[role="tooltip"] {
 
 .symbol.symbol-circle, .symbol.symbol-circle .symbol-label, .symbol.symbol-circle>img {
     border-radius: 50%;
+}
+
+.nav.nav-tabs.nav-tabs-line .nav-link.active, .nav.nav-tabs.nav-tabs-line .nav-link:hover:not(.disabled), .nav.nav-tabs.nav-tabs-line .show>.nav-link {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid #3699ff;
+    transition: color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease;
 }

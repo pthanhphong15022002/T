@@ -334,7 +334,6 @@ export class AddNoteComponent implements OnInit {
           if (this.checkFile == true)
             this.attachment.saveFiles();
           var object = [];
-          debugger;
           if (dateNow.toLocaleDateString() == this.currentDate)
             object = [{ data: res, type: 'edit-currentDate' }]
           else

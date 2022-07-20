@@ -3,10 +3,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
 import 'lodash';
-import { AuthService, FilesService } from 'codx-core';
+import { AuthService, FilesService, NotificationsService } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
 import { isBuffer } from 'util';
 import { environment } from 'src/environments/environment';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { AttachmentComponent } from '../attachment/attachment.component';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
@@ -14,10 +17,12 @@ import { environment } from 'src/environments/environment';
 })
 export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges {
 
+  @Input() funcID:string = "";
   @Input() objectID:string = "";
-  @Input() showBtnRemove: boolean = false;
+  @Input() objectType:string = "";
+  @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
-  @ViewChild('video') video: ElementRef;
+  @ViewChild('atm') atm:AttachmentComponent;
   FILE_CATEGORY = {
     IMAGE: "image",
     VIDEO: "video"
@@ -25,8 +30,11 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   file_img_video:any[] = [];
   files:any[] = [];
   videos:any[] = [];
-
-
+  filesAdd: any[] = [];
+  filesDelete: any[] = [];
+  content:string = "";
+  user:any = null;
+  showEmojiPicker
   mineTypes = {
     //   File Extension   MIME Type
       'abs':           'audio/x-mpeg',
@@ -212,70 +220,70 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   constructor(
     private injector: Injector,
     private auth:AuthService,
-    private df: ChangeDetectorRef
+    private dmSV:CodxDMService,
+    private notifiSV: NotificationsService,
+    private dt: ChangeDetectorRef
   ) {
     super(injector);
+    this.user = this.auth.userValue;
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.lstFile){
       let files = changes.lstFile.currentValue;
-      if(files && files.length >0 ){
+      if(files && files.length > 0 ){
         this.lstFile = files;
-        this.converFile();
+        this.converFile(this.lstFile);
       }
     }
     
   }
-
   ngOnInit() {
     
     if(this.objectID){
       this.getFile();
     }
-    else{
-      this.converFile();
+    else
+    {
+      this.converFile(this.lstFile);
     } 
   }
 
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
   getFile() {
-    this.api.execSv("DM","ERM.Business.DM","FileBussiness","GetFilesByObjectIDImageAsync",this.objectID)
-    .subscribe((files:any) => {
-      if(files){
-        this.lstFile = files;
+    this.api.execSv(
+      "DM","ERM.Business.DM",
+      "FileBussiness",
+      "GetFilesByObjectIDImageAsync",
+      this.objectID)
+    .subscribe((files:any[]) => {
+      if(files.length > 0){
+        this.lstFile = [... files]
         this.lstFile.forEach((f:any) => {
-          let file = f;
-          var minType = this.mineTypes[file.topics];
-          if(minType.indexOf("image") >= 0 ){
-            this.file_img_video.push(file);
+          if(f.category == this.FILE_CATEGORY.IMAGE){
+            this.file_img_video.push(f);
           }
-          else if(minType.indexOf("video") >= 0){
-            file['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${file.recID}?access_token=${this.auth.userValue.token}`;
-            this.file_img_video.push(file);
+          else if(f.category == this.FILE_CATEGORY.VIDEO){
+            f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+            this.file_img_video.push(f);
           }
           else{
-            this.files.push(file);
+            this.files.push(f);
           }
         });
-        this.df.detectChanges();
+        this.dt.detectChanges();
       }
     })
   }
 
 
-  converFile(){
-    if(this.lstFile){
-      this.lstFile.forEach((f:any) => {
-        let minType = this.mineTypes[f.type];
-        if(minType.indexOf("image") >= 0 ){
+  converFile(listFile:any){
+    if(listFile){
+      listFile.forEach((f:any) => {
+        if(f.minType.indexOf("image") >= 0 ){
           f['category'] = 'image';
           this.file_img_video.push(f);
         }
-        else if(minType.indexOf("video") >= 0)
+        else if(f.minType.indexOf("video") >= 0)
         {
           f['category'] = 'video';
           this.file_img_video.push(f);
@@ -284,14 +292,88 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
           this.files.push(f);
         }
       });
-      this.df.detectChanges();
+      this.dt.detectChanges();
     }
   }
 
 
-  removeImg(){
-    
+  deleteFile(fileID:string,deleted:boolean){
+    if(fileID)
+    {
+      this.notifiSV.alertCode("TM003").subscribe((res) => {
+       if(res.event.status == "Y"){
+        this.api.execSv("DM",
+          "ERM.Business.DM",
+          "FileBussiness",
+          "DeleteFileAsync",
+          [fileID, deleted]).subscribe();  
+       }
+      });
+    }
   }
 
   openDetail(indexFile:any){}
+
+  removeFiles(file:any){
+    if(file.recID && file.objectID)
+    {
+      this.filesDelete.push(file);
+      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
+        for (let i = 0; i < this.file_img_video.length; i++) {
+          if(this.file_img_video[i].fileName == file.fileName)
+          {
+            this.file_img_video.splice(i,1);
+            break;
+          };
+        };
+      }
+      else
+      {
+        for (let i = 0; i < this.files.length; i++) {
+          if(this.files[i].fileName == file.fileName)
+          {
+            this.files.splice(i,1);
+            break;
+          };
+        };
+      }
+      this.dt.detectChanges();
+    }
+    else 
+    {
+      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
+        for (let i = 0; i < this.file_img_video.length; i++) {
+          if(this.file_img_video[i].fileName == file.fileName)
+          {
+            this.file_img_video.splice(i,1);
+            break;
+          };
+        };
+      }
+      else
+      {
+        for (let i = 0; i < this.files.length; i++) {
+          if(this.files[i].fileName == file.fileName)
+          {
+            this.files.splice(i,1);
+            break;
+          };
+        };
+      }
+      this.lstFile = [...this.file_img_video.concat(this.files)];
+      this.dmSV.fileUploadList = [...this.lstFile];
+      this.dt.detectChanges();
+    }
+  }
+
+  addFiles(files:any[]){
+    this.converFile(files);
+    if(this.filesAdd.length == 0){
+      this.filesAdd = files;
+    }
+    else{
+      this.filesAdd.concat(files);
+    }
+    this.dt.detectChanges();
+  }
 }

@@ -98,7 +98,6 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.formModel = this.view?.formModel;
-    debugger;
     this.views = [{
       type: ViewType.grid,
       sameData: true,
