@@ -44,7 +44,7 @@ export class AddUserComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1500, 800, '', item);
+    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
@@ -82,7 +82,6 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.save);
@@ -104,7 +103,6 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.update);
@@ -112,7 +110,6 @@ export class AddUserComponent implements OnInit {
         }
       })
     this.closePanel();
-
   }
 
   onSave() {

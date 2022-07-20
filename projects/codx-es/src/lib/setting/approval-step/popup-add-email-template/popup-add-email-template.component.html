@@ -186,7 +186,7 @@
     <div>
       <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
         hideDes="1" [functionID]="" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-        [objectId]="'123456789'" [allowMultiFile]="1" [idBrowse]="'add'">
+        [objectId]="dialogETemplate.value.recID" [allowMultiFile]="1" [idBrowse]="'add'">
       </codx-attachment>
     </div>
     <div class="request-box mt-4">

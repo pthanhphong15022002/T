@@ -22,7 +22,7 @@
         
         <div class="action-menu d-flex align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="deleteFile(item.data.recID)">
-            <i class="icon-delete text-primary icon-18"></i> 
+            <i class="icon-close text-primary icon-18"></i> 
           </div> 
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.data.recID)">
             <i class="icon-preview text-primary icon-18"></i> 
@@ -37,7 +37,7 @@
                 <a ngbDropdownItem [ngClass]="this.checkShareRight() ? 'dropdown-item  cursor-pointer':'dropdown-item  cursor-pointer disabled'"
                   (click)="editfile(item.data, true)">
                   <div class="d-flex align-items-center">
-                      <span class="icon-edit-one icon-18"></span>
+                      <span class="icon-edit icon-18"></span>
                       <span class="ml-3">{{titleUpdateFile}}</span>
                   </div>
                 </a>      
@@ -98,7 +98,7 @@
         </div>         
         <div class="action-menu d-flex align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="deleteFile(item.recID)">
-            <i class="icon-delete text-primary icon-18"></i> 
+            <i class="icon-close text-primary icon-18"></i> 
           </div> 
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.recID)">
             <i class="icon-preview text-primary icon-18"></i> 
@@ -113,7 +113,7 @@
                 <a ngbDropdownItem [ngClass]="this.checkShareRight() ? 'dropdown-item  cursor-pointer':'dropdown-item  cursor-pointer disabled'"
                   (click)="editfile(item, true)">
                   <div class="d-flex align-items-center">
-                      <span class="icon-edit-one icon-18"></span>
+                      <span class="icon-edit icon-18"></span>
                       <span class="ml-3">{{titleUpdateFile}}</span>
                   </div>
                 </a>      

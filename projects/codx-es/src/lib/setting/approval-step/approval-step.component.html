@@ -74,7 +74,7 @@
                             <span class="stepper-number">{{item.stepNo}}</span>
                           </div>
                           <div class="stepper-label has-action-menu">
-                            <h3 class="stepper-title">
+                            <h3 class="stepper-title line-clamp  line-clamp-3">
                               {{item.stepName}}
                             </h3>
                             <div class="stepper-desc">
@@ -90,12 +90,19 @@
                           <div class="d-flex flex-wrap">
                             <ng-container *ngFor="let approver of item.approvers">
                               <div class="border border-gray-300 rounded min-w-250px mw-250px me-6 mb-3">
-                                <codx-temp-full [imageId]="approver.approver" [title]="approver.approverName"
+                                <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType=='U'"
+                                  [imageId]="approver.approver" [title]="approver.approverName"
                                   [subTitle]="approver.positionName ?? 'Vị trí công việc'" [status]="lstStep.status"
-                                  cardCss="card-template px-2 pt-4 pb-2"
-                                  [resources]="(lstStep.createdBy!= undefined ? lstStep.createdBy : '') + (lstStep.owner!=null?';'+lstStep.owner:'')"
                                   [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
                                   [dataItem]="item">
+                                </codx-temp-full>
+
+                                <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType!='U'"
+                                  [imageSrc]="'./assets/themes/sys/default/img/'+(item.icon ? item.icon : 'share_default.svg')"
+                                  imgCss="me-4 symbol symbol-40px symbol-circle"
+                                  [title]="(approver.approver|vll: 'ES014': 'text'|async)" [subTitle]=""
+                                  [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true"
+                                  [titleLine]="3" [footer]="footer1" [dataItem]="item">
                                 </codx-temp-full>
 
                                 <ng-template #footer1 let-data>

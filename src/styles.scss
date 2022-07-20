@@ -79,18 +79,11 @@ body {
 codx-input.text-error,
 .file-item input.text-error {
     border: 1px solid red !important;
-    height: 38px !important;
+    height: 32px !important;
 }
 
 ngb-popover-window[role="tooltip"] {
     z-index: 10000;
-}
-
-.text-error,
-codx-input.text-error,
-.file-item input.text-error {
-    border: 1px solid red !important;
-    height: 38px !important;
 }
 
 // role="tooltip"
@@ -122,10 +115,13 @@ ngb-popover-window[role="tooltip"] {
     height: 30px;
 }
 
-.align-items-center {
-    align-items: center !important;
-}
+// .align-items-center {
+//     align-items: center!important;
+// }
 
+// .d-flex {
+//     display: flex!important;
+// }
 
 .user-mini-item div.text-dark-75 {
     max-width: 165px;

@@ -20,6 +20,8 @@ import { CreateFolderComponent } from './createFolder/createFolder.component';
 import { EditFileComponent } from './editFile/editFile.component';
 import { RolesComponent } from './roles/roles.component';
 import { AddRoleComponent } from './addrole/addrole.component';
+import { PhysicalComponent } from './createFolder/physical/physical.component';
+import { SubFolderComponent } from './createFolder/subFolder/subFolder.component';
 
 export const routes: Routes = [
   {
@@ -54,7 +56,9 @@ const T_Component: Type<any>[] = [
   CreateFolderComponent,
   EditFileComponent,
   RolesComponent,
-  AddRoleComponent
+  AddRoleComponent,
+  PhysicalComponent,
+  SubFolderComponent
 ]
 @NgModule({
   imports: [

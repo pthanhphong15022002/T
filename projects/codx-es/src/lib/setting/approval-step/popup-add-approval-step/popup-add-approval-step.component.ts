@@ -48,6 +48,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApproveMode: any;
   cbxName;
   time: any;
+  currentMode: string;
 
   dialog: DialogRef;
   tmpData: any;
@@ -205,6 +206,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     if (this.dialogApprovalStep.invalid == true) {
       this.notifySvr.notify('invalid');
     }
+    this.dialogApprovalStep.patchValue({ approveMode: this.currentMode });
     if (this.isAdd) {
       this.lstStep.push(this.dialogApprovalStep.value);
       this.dialog && this.dialog.close();
@@ -265,24 +267,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
       } else {
         this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
-        // if (
-        //   event.field == 'representative' &&
-        //   this.dialogApprovalStep.value.representative == true &&
-        //   this.dialogApprovalStep.value.sequential == true
-        // ) {
-        //   this.dialogApprovalStep.patchValue({
-        //     sequential: false,
-        //   });
-        // }
-        // if (
-        //   event.field == 'sequential' &&
-        //   this.dialogApprovalStep.value.sequential == true &&
-        //   this.dialogApprovalStep.value.representative == true
-        // ) {
-        //   this.dialogApprovalStep.patchValue({
-        //     representative: false,
-        //   });
-        // }
       }
     }
 
@@ -298,8 +282,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  valueModeChange(item) {
-    this.dialogApprovalStep.patchValue({ approveMode: item.value });
+  valueModeChange(event, item) {
+    this.currentMode = item?.value;
   }
 
   valueEmailChange(event, eTemplate) {
@@ -342,6 +326,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             appr.roleType = element?.objectType;
             appr.approverName = element?.objectName;
             appr.approver = element?.objectType;
+            appr.icon = element?.icon;
             lst.push(appr);
           }
         }
@@ -353,14 +338,14 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 }
 export class Approvers {
   recID: string;
-  roleType: String = '11';
-  approver: String = 'ADMIN';
-  approverName: String;
-  position: String = 'KT';
-  positionName: String;
+  roleType: string;
+  approver: string;
+  approverName: string;
+  position: string;
+  positionName: string;
   leadTime: any;
-  comment: String;
-
+  comment: string;
+  icon: string = null;
   createdOn: any;
 }
 

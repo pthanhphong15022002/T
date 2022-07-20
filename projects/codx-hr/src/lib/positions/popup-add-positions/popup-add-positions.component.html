@@ -1,6 +1,6 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup adde #body>
-        <div class="offcanvas-wrapper mb-5 mt-2" style="width: 100%;">
+        <!-- <div class="offcanvas-wrapper mb-5 mt-2" style="width: 100%;"> -->
             <div class="content d-flex flex-column flex-column-fluid py-0">
                 <div class="container container-detail" style="padding-top: 0;">
                     <div class="d-flex flex-row">
@@ -9,8 +9,9 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <codx-label fiedName="PositionID" default="Mã chức danh"></codx-label>
-                                        <input class="form-control" [disabled]="!isNew" type="text"
-                                            [(ngModel)]="position.positionID" />
+                                        <codx-input class="form-control" type="text"
+                                            [(ngModel)]="position.positionID">
+                                        </codx-input>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -21,7 +22,9 @@
                                     <div class="form-group">
                                         <codx-label fiedName="PositionName" default="Tên chức danh công việc">
                                         </codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.positionName" />
+                                        <codx-input class="form-control" type="text"
+                                            [(ngModel)]="position.positionName">
+                                        </codx-input>
                                     </div>
                                 </div>
                             </div>
@@ -29,7 +32,9 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <codx-label fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.positionName2" />
+                                        <codx-input class="form-control" type="text"
+                                            [(ngModel)]="position.positionName2">
+                                        </codx-input>
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +165,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        <!-- </div> -->
     </ng-template>
 
     <ng-template #footer>

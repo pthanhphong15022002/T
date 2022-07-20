@@ -56,6 +56,9 @@ import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewListComponent } from './tasks/view-list/view-list.component';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
+import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -90,6 +93,14 @@ export const routes: Routes = [
       {
         path: 'teamdashboard/:funcID',
         component: TeamDashboardComponent,
+      },
+      {
+        path: 'deptdashboard/:funcID',
+        component: DeptDashboardComponent,
+      },
+      {
+        path: 'compdashboard/:funcID',
+        component: CompDashboardComponent,
       },
       {
         path: 'setting',
@@ -180,6 +191,8 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
+  DeptDashboardComponent,
+  CompDashboardComponent,
   ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,

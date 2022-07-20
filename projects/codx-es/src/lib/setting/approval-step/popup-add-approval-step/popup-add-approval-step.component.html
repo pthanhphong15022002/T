@@ -40,7 +40,7 @@
                   </div>
 
                   <div class="d-flex flex-column mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 ">
+                    <div class="d-flex justify-content-between align-items-center ">
                       <div class="fw-bolder d-block mb-2">
                         <codx-label class="text-primary" default="Người thực hiện" fiedName="Attendees"
                           [formModel]="formModel">
@@ -59,12 +59,20 @@
 
                     </div>
                     <ng-container *ngFor="let item of dialogApprovalStep.value.approvers">
-                      <div class="d-flex align-items-center mb-4 min-w-300px mw-300px">
-                        <codx-temp-full [imageId]="item.approver" [subTitle]="" [title]="item.approverName"
+                      <div class="d-flex align-items-center mb-2 w-100">
+                        <codx-temp-full cardCss="card-template" *ngIf="item.roleType == 'U'" [imageId]="item.approver"
+                          [subTitle]="" [title]="item.approverName"
                           [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
-                          [status]="lstStep.status" [statusVll]="" cardCss="card-template border-bottom px-2 py-3"
-                          [imageObjType]="'AD_Users'" [modeImgs]="false" [titleLine]="3" [formModel]="formModel"
-                          (clickMF)="MFClick($event, item)">
+                          [status]="lstStep.status" [statusVll]="" [imageObjType]="'AD_Users'" [modeImgs]="false"
+                          [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)">
+                        </codx-temp-full>
+
+                        <codx-temp-full cardCss="card-template" *ngIf="item.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
+                          (item.icon ? item.icon : 'share_default.svg')" imgCss="me-4 symbol symbol-40px symbol-circle"
+                          [imageWidth]="30" [subTitle]="" [title]="(item.approver| vll:'ES014':'text'|async)"
+                          [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
+                          [status]="lstStep.status" [statusVll]="" [modeImgs]="false" [titleLine]="3"
+                          [formModel]="formModel" (clickMF)="MFClick($event, item)">
                         </codx-temp-full>
                       </div>
                     </ng-container>
@@ -73,22 +81,22 @@
                   <div class="d-flex flex-column mb-4" *ngIf="dialogApprovalStep.value.approvers?.length > 0">
                     <div class="row">
                       <ng-container *ngFor="let item of lstApproveMode; let index = index">
-                        <div class="col-4" *ngIf="dialogApprovalStep.value.approveMode == item.value">
+                        <div class="col-3" *ngIf="dialogApprovalStep.value.approveMode == item.value">
                           <div class="d-flex align-items-center">
                             <codx-input type="radio" [checked]="true" [label]="item.text"
                               [crrValue]="dialogApprovalStep.value.approveMode == item.value ? true : false"
                               name="radio" field="approveMode" class="test-switch"
-                              (valueChange)="valueModeChange(item)">
+                              (valueChange)="valueModeChange($event, item)">
                             </codx-input>
                           </div>
                         </div>
 
-                        <div class="col-4" *ngIf="dialogApprovalStep.value.approveMode != item.value">
+                        <div class="col-3" *ngIf="dialogApprovalStep.value.approveMode != item.value">
                           <div class="d-flex align-items-center">
                             <codx-input type="radio" [label]="item.text"
                               [crrValue]="dialogApprovalStep.value.approveMode == item.value ? true : false"
                               name="radio" field="approveMode" class="test-switch"
-                              (valueChange)="valueModeChange(item)">
+                              (valueChange)="valueModeChange($event, item)">
                             </codx-input>
                           </div>
                         </div>

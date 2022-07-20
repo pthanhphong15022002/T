@@ -84,7 +84,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           this.dialogETemplate = res;
           this.isAfterRender = true;
           this.esService
-            .getEmailTemplate(this.email.TemplateID)
+            .getEmailTemplate(this.email.templateID)
             .subscribe((res1) => {
               if (res1 != null) {
                 this.dialogETemplate.patchValue(res1[0]);
@@ -151,6 +151,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           );
           if (i >= 0) {
             emailTemplates[i].TemplateID = res.recID;
+            this.attachment.objectId = res.recID;
+            this.attachment.saveFiles();
             this.formGroup.patchValue({ emailTemplates: emailTemplates });
           }
           dialog1.close();

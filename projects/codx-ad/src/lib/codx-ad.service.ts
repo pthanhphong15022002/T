@@ -8,6 +8,8 @@ import { lstat } from 'fs';
 })
 export class CodxAdService {
 
+  listview: any;
+
   constructor(private api: ApiHttpService) { }
 
   private modules = new BehaviorSubject<any>(null);
