@@ -15,7 +15,7 @@ import {
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -47,6 +47,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   userRecevier:any;
   recevierID:string;
   recevierName:string = "";
+  codxListView!:CodxListviewComponent;
   @ViewChild('template') template: ElementRef;
   @ViewChild('atmCreate') atmCreate: AttachmentComponent;
   @ViewChild('atmEdit') atmEdit: AttachmentComponent;
@@ -106,12 +107,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dialogRef = dialog;
     this.status = dd.data.status;
     this.title = this.dialogData.title;
+    this.codxListView = this.dialogData.lstView;
     if(this.dialogData.status == this.STATUS.EDIT){
       this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
       this.shareControl = this.dataEdit.shareControl;
       this.lstRecevier = this.dataEdit.permissions
-      this.getFileUpload();
+      this.listFileUpload = this.dataEdit.files;
     }
     if(this.dialogData.status == this.STATUS.SHARE){
       this.dataShare = this.dialogData.post;
@@ -199,7 +201,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    let post = new Post();
+    var post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
     post.category = this.CATEGORY.POST;
@@ -253,8 +255,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
-          this.dialogRef.DataService  as CRUDService;
-          this.dialogRef.dataService.add(res,0).subscribe();
+          var a: any = post;
+          (this.dialogRef.dataService as CRUDService).add(res,0).subscribe((res)=>{
+          });
 
         if(this.listFileUpload.length > 0){
           this.atmCreate.objectId = res.recID;
@@ -277,9 +280,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.dataEdit.content = this.message;
     this.dataEdit.shareControl = this.shareControl;
-    console.log('dataEdit.files: ',this.dataEdit.files);
-    console.log('listFileUpload: ',this.codxFileEdit.lstFile);
-
     // var lstPermision = [];
     // lstPermision.push(this.myPermission);
     // if(this.lstRecevier.length > 0){
