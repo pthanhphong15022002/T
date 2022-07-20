@@ -1,6 +1,7 @@
 import { N } from '@angular/cdk/keycodes';
+import { variable } from '@angular/compiler/src/output/output_ast';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService } from 'codx-core';
+import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
@@ -24,6 +25,7 @@ export class PopRolesComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog1?: DialogRef,
     @Optional() dataView?: DialogRef,
@@ -70,9 +72,6 @@ export class PopRolesComponent implements OnInit {
         }
      //   item[i].idChooseRole= i;
      }
-    
-    
-  
       
      for(var i=1; i<= this.listChooseRole.length; i++) {
       this.listChooseRole[i].idChooseRole= i;
@@ -85,20 +84,54 @@ export class PopRolesComponent implements OnInit {
     }
   }
 
-  onCbx(event){
+  onCbx(event,item?:any){
     if (event.data) {
-      this.choose.recIDofRole = event.data[0];
+    item.recIDofRole = event.data[0];
     }
   }
-
+  // checkClickValueOfUserRoles(value?:any) {
+  //   if(value === undefined) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
   onSave(){
-    // 
-    // for(var i=0; i < this.lstFunc.length; i++){
-    //   if(this.lstFunc[i].recIDofRole){
-    //     list.push(this.lstFunc[i]);
+    let check= true;
+    console.log(this.listChooseRole);
+    // for(var i=1; i<= this.listChooseRole.length; i++) {
+    //    if(this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole)) {
+    //     this.notiService.notifyCode("AD003");
+    //     check=false;
+    //    }
+    //  }
+
+    //  for(var i=1; i<= this.listChooseRole.length; i++)
+    //   {
+    //   if(this.listChooseRole[i].recIDofRole === undefined)
+    //    {
+    //    this.notiService.notifyCode("AD003");
+    //       check=false;
     //   }
     // }
-    // console.log(list);
-    console.log(this.listChooseRole);
+    if(this.CheckTesst()) {
+      this.notiService.notifyCode('Lưu thành công');
+    }
+    else {
+      this.notiService.notifyCode("AD003");
+    }
+     
+  //  console.log(this.listChooseRole);
+  }
+  CheckTesst() {
+    for(var i=1; i<= this.listChooseRole.length; i++)
+      {
+      if(this.listChooseRole[i].recIDofRole === undefined)
+       {
+       //this.notiService.notifyCode("AD003");
+          return false;
+      }
+    
+    }
+    return true;
   }
 }
