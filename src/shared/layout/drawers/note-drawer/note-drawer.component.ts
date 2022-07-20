@@ -156,6 +156,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   checkNumberNotePin(data) {
+    debugger;
     if (data?.isPin == '1' || data?.isPin == true) {
       this.countNotePin -= 1;
       this.checkUpdateNotePin = false;

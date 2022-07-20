@@ -123,7 +123,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   requestEnded(evt: any) {
-    console.log("check requestEnded", evt)
     this.view.currentView;
     this.data = this.lstView.dataService.data;
   }
