@@ -15,9 +15,9 @@
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
-    [subTitle]="data.positionNameCreate" [content]="data.taskName"  [status]="data.status" statusVll="L0614"
-    [date]="data.dueDate" [resources]="data.category=='3'?data.assignTo : (data.owner!=user.userID ?data.owner:'')" resourceObjType="AD_Users"
-    [formModel]="view.formModel">
+    [subTitle]="data.positionNameCreate" [content]="data.taskName" [status]="data.status" statusVll="L0614"
+    [date]="data.dueDate" [resources]="data.category=='3'?data.assignTo : (data.owner!=user.userID ?data.owner:'')"
+    resourceObjType="AD_Users" [formModel]="view.formModel">
   </codx-temp-full>
 </ng-template>
 
@@ -83,7 +83,6 @@
 
 <codx-views #view [funcID]="funcID" service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
-  (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-  [selectedFirst]="true" [autoLoad]="true">
+  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true" [autoLoad]="false">
 </codx-views>

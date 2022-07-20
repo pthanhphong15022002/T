@@ -148,7 +148,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.views = [
       {
         sameData: true,
-        id: '1',
         type: ViewType.list,
         active: false,
         model: {
@@ -157,7 +156,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       },
       {
         sameData: true,
-        id: '1',
         type: ViewType.grid,
         active: true,
         model: {

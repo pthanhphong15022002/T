@@ -10,6 +10,7 @@ export class tmpformChooseRole {
     ischeck: boolean;
     recDelete: string;
     recUpdate: string;
+    idChooseRole: string;
 }
 
 
