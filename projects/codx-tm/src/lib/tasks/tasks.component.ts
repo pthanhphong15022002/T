@@ -44,7 +44,6 @@ export class TasksComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
-  moreFuncs: Array<ButtonModel> = [];
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
@@ -135,19 +134,6 @@ export class TasksComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
     this.getParams();
   }
 
