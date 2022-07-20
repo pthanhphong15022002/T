@@ -3,6 +3,7 @@ import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, Even
 import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
+import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
   selector: 'lib-add-user',
@@ -21,6 +22,7 @@ export class AddUserComponent implements OnInit {
   user: any;
   data1: any;
   adUser = new AD_User();
+  viewChooseRole = new tmpformChooseRole();
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -86,11 +88,16 @@ export class AddUserComponent implements OnInit {
             });
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
+          this.dialog.closed.subscribe(e => {
+            if (e?.event) {
+              this.viewChooseRole = e?.event
+            }
+          })
           this.changDetec.detectChanges();
         }
       });
     this.closePanel();
-
+    console.log(this.viewChooseRole);
   }
 
   onUpdate() {

@@ -22,6 +22,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
+  @Output() evetFile = new EventEmitter();
   @ViewChild('atm') atm:AttachmentComponent;
   FILE_CATEGORY = {
     IMAGE: "image",
@@ -229,11 +230,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.lstFile){
-      let files = changes.lstFile.currentValue;
-      if(files && files.length > 0 ){
-        this.lstFile = files;
-        this.converFile(this.lstFile);
-      }
+        this.converFile();
     }
     
   }
@@ -244,7 +241,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     }
     else
     {
-      this.converFile(this.lstFile);
+      this.converFile();
     } 
   }
 
@@ -271,24 +268,32 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
           }
         });
         this.dt.detectChanges();
+        this.evetFile.emit(this.lstFile);
       }
     })
   }
 
 
-  converFile(listFile:any){
-    if(listFile){
-      listFile.forEach((f:any) => {
-        if(f.minType.indexOf("image") >= 0 ){
+  converFile(){
+    if(this.lstFile){
+      this.lstFile.forEach((f:any) => {
+        if(f.mimeType.indexOf("image") >= 0 ){
           f['category'] = 'image';
+          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.file_img_video.push(f);
         }
-        else if(f.minType.indexOf("video") >= 0)
+        else if(f.mimeType.indexOf("video") >= 0)
         {
           f['category'] = 'video';
+          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.file_img_video.push(f);
         }
         else{
+          f['category'] = 'application';
+          let a = this.files.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.files.push(f);
         }
       });
@@ -367,7 +372,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   }
 
   addFiles(files:any[]){
-    this.converFile(files);
+    this.converFile();
     if(this.filesAdd.length == 0){
       this.filesAdd = files;
     }

@@ -61,6 +61,9 @@ export class TMMeetingsComponent extends UIComponent {
           panelLeftRef: this.templateLeft,
         },
       },]
+
+      this.view.dataService.methodSave = 'AddMeetingsAsync';
+
       this.dt.detectChanges();
 
   }
