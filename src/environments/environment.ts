@@ -5,10 +5,17 @@ export const environment = {
   dfPe: '',
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
+<<<<<<< HEAD
   //apiUrl: 'http://localhost:8011',
   //shopping: 'https://localhost:44317/Shopping',
   shopping: 'https://172.16.7.34:8111/Shopping',
   apiUrl: 'http://172.16.7.34:8011',
+=======
+  apiUrl: 'http://localhost:8011',
+  shopping: 'https://localhost:44317/Shopping',
+  //shopping: 'https://172.16.7.34:8111/Shopping',
+  //apiUrl: 'http://172.16.7.34:8011',
+>>>>>>> d647c565f57ed850e0682b073259336fb22ea784
   pdfUrl: 'http://localhost:8015/api/pdf',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   StoreNames: {

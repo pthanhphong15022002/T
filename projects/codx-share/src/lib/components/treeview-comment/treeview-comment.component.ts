@@ -14,7 +14,8 @@ import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
 import { NgbModal, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 declare var _;
-import { ApiHttpService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -40,16 +41,17 @@ export class TreeviewCommentComponent implements OnInit {
   comments = "";
   repComment = "";
   dicDatas = {};
+  user:any;
   constructor(
     private dt: ChangeDetectorRef,
-    private signalR: SignalRService,
     private signalRApi: WPService,
     private cache: CacheService,
     private api: ApiHttpService,
+    private auth:AuthService,
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
-    private modalService:NgbModal
   ) {
+    this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.lstData = res.datas;
@@ -66,44 +68,15 @@ export class TreeviewCommentComponent implements OnInit {
   lstUserVote:any;
   dataSelected:any[];
   
-  showVotes(content:any, postID:string) {
-    this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",postID)
-    .subscribe((res:any[]) => {
-      if(res)
-      {
-        this.votes = res[0];
-        this.lstUserVote = res[1];
-        this.dt.detectChanges();
-        this.callFuc.openForm(content,"",600,600)
-      }
-    })
+  showVotes(data:any) {
+    this.callFuc.openForm(PopupVoteComponent,"",750,500,"",data);
   }
-
   getUserVotes(postID:string,voteType:String){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetUserVotesAsync",[postID,voteType])
     .subscribe((res) => {
       this.lstUserVote = res;
       this.dt.detectChanges();
     })
-  }
-
-  keyup(e, id) {
-    if (e.keyCode === 13) {
-      let text = e.target.value;
-      if (!text.trim()) {
-        this.notifySvr.notifyCode('E0315');
-        return;
-      }
-      text = text.replace('\n', '');
-      if (id)
-        this.signalRApi
-          .postComment(id, text, this.rootData.id)
-          .subscribe((res) => {
-            e.target.value = '';
-            this.crrId = '';
-            this.closeReply(id);
-          });
-    }
   }
   replyComment(post:any,value:any){
     if (!value.trim()) {
@@ -171,21 +144,6 @@ export class TreeviewCommentComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  closeReply(id) {
-    const t = this;
-    _.filter(this.rootData.listComment, function (o) {
-      if (o.id == id) o.showReply = false;
-      else t.recursiveClose(o.listComment, id);
-    });
-  }
-
-  recursiveClose(root, id) {
-    const t = this;
-    _.filter(root, function (o) {
-      if (o.id == id) o.showReply = false;
-      else t.recursiveClose(o.listComment, id);
-    });
-  }
   votePost(data:any, voteType = null) {
     this.api.execSv(
     "WP",
@@ -236,32 +194,6 @@ export class TreeviewCommentComponent implements OnInit {
       });
   }
 
-  updateVote(obj) {
-    const t = this;
-    if (this.rootData.id == obj.id) {
-      this.rootData.totalVote = parseInt(obj.count);
-      this.rootData.voted = !this.rootData.voted
-      console.log("CHECK func updateVote-if", obj);
-      t.dt.detectChanges()
-    }
-    else {
-      t.recursiveVoted(this.rootData, obj);
-      console.log('CHECK func updateVote-else', obj);
-    }
-  }
-
-  pushCommentToSource(data) {
-    const t = this;
-    if (this.rootData.id == data.refID) {
-      if (t.rootData.listComment.length) t.rootData.listComment.unshift(data);
-      else t.rootData.listComment = [data];
-      t.rootData.totalComment++;
-      t.rootData.totalRecord++;
-    } else {
-      t.recursiveComment(t.rootData.listComment, data);
-    }
-  }
-
   loadSubComment(data) {
     data.isShowComment = !data.isShowComment;
     this.api.execSv(
@@ -280,47 +212,7 @@ export class TreeviewCommentComponent implements OnInit {
 
 
 
-  recursiveComment(root, data) {
-    const t = this;
-    _.filter(root, function (o) {
-      if (o.id == data.refID) {
-        o.totalRecord += 1;
-        o.totalComment += 1;
-        if (o.listComment == null) {
-          o.listComment = [data];
-        } else o.listComment.unshift(data);
-      } else t.recursiveComment(o.listComment, data);
-    });
-  }
 
-  recursiveLoadComment(root, oldData, data) {
-    const t = this;
-    _.filter(root, function (o) {
-      if (o.id == oldData.id) {
-        o.pageIndex = oldData.pageIndex;
-        o.listComment = o.listComment.concat(data);
-        o.totalComment = o.listComment.length;
-      } else {
-        t.recursiveLoadComment(o.listComment, oldData, data);
-      }
-    });
-  }
-
-  recursiveVoted(root, data) {
-    const t = this;
-    _.filter(root.listComment, function (o) {
-      if (o.id == data.id) {
-        console.log('CHECK dunc recursiveVoted-if', o);
-        o.voted = !o.voted;
-        o.totalVote = parseInt(data.count);
-        t.dt.detectChanges()
-      } else {
-        t.recursiveVoted(o, data);
-        console.log('CHECK dunc recursiveVoted-else', o, data);
-      }
-    });
-  }
-  //#endregion
 
   showComments(post:any) {
     if(post.isShowComment){

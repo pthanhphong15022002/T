@@ -15,7 +15,6 @@ import { PopupAddSignFileComponent } from '../sign-file/popup-add-sign-file/popu
 import { SignFileComponent } from '../sign-file/sign-file.component';
 import { ApprovalStepComponent } from './approval-step/approval-step.component';
 import { PopupAddApprovalStepComponent } from './approval-step/popup-add-approval-step/popup-add-approval-step.component';
-import { PopupAddEmailTemplateComponent } from './approval-step/popup-add-email-template/popup-add-email-template.component';
 import { DocCategoryComponent } from './category/category.component';
 import { PopupAddCategoryComponent } from './category/popup-add-category/popup-add-category.component';
 import { ProcessStepComponent } from './category/process-step/process-step.component';
@@ -59,7 +58,6 @@ const routes: Routes = [
     PopupAddApprovalStepComponent,
     PopupAddCategoryComponent,
     PopupAddSignatureComponent,
-    PopupAddEmailTemplateComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

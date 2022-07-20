@@ -1,170 +1,189 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup adde #body>
         <!-- <div class="offcanvas-wrapper mb-5 mt-2" style="width: 100%;"> -->
-            <div class="content d-flex flex-column flex-column-fluid py-0">
-                <div class="container container-detail" style="padding-top: 0;">
-                    <div class="d-flex flex-row">
-                        <div style="width: 100%;">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="PositionID" default="Mã chức danh"></codx-label>
-                                        <codx-input class="form-control" type="text"
-                                            [(ngModel)]="position.positionID">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                                <div class="col">
+        <div class="content d-flex flex-column flex-column-fluid py-0">
+            <div class="container container-detail" style="padding-top: 0;">
+                <div class="d-flex flex-row">
+                    <div style="width: 100%;">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="PositionID" default="Mã chức danh"></codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'PositionID')"
+                                        [crrValue]="position?.positionID">
+                                    </codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="PositionName" default="Tên chức danh công việc">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text"
-                                            [(ngModel)]="position.positionName">
-                                        </codx-input>
-                                    </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="PositionName" default="Tên chức danh công việc">
+                                    </codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'PositionName')"
+                                        [crrValue]="position?.positionName">
+                                    </codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
-                                        <codx-input class="form-control" type="text"
-                                            [(ngModel)]="position.positionName2">
-                                        </codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'PositionName2')"
+                                        [crrValue]="position?.positionName2">
+                                    </codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="JobID" default="Nhóm chức danh">
-                                        </codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.jobID" field="jobID" refValue="jobID" service="HR"
-                                            ngDefaultControl loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="JobID" default="Nhóm chức danh">
+                                    </codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        [crrValue]="position?.jobID" field="jobID" refValue="jobID" service="HR"
+                                        (valueChange)="dataChange($event, 'JobID')" ngDefaultControl loadFull="true">
+                                    </codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="JobGroup" default="Chức vụ">
-                                        </codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.jobGroup" field="jobGroup" refValue="JobGroup"
-                                            service="HR" ngDefaultControl loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="JobGroup" default="Chức vụ">
+                                    </codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        [crrValue]="position?.jobGroup" field="jobGroup" refValue="JobGroup"
+                                        (valueChange)="dataChange($event, 'JobGroup')" service="HR" ngDefaultControl
+                                        loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="OrgUnitID" default="Nhóm/Team">
-                                        </codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.orgUnitID" field="orgUnitID" refValue="OrganizationUnits"
-                                            service="HR" [popupSettings]="{ width: '300px' }" ngDefaultControl
-                                            loadFull="true" (valueChange)="valueChange($event)">
-                                        </codx-input>HeadCounts
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="OrgUnitID" default="Nhóm/Team">
+                                    </codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        [crrValue]="position?.orgUnitID" field="orgUnitID" refValue="OrganizationUnits"
+                                        service="HR" [popupSettings]="{ width: '300px' }" ngDefaultControl
+                                        loadFull="true" (valueChange)="dataChange($event, 'OrgUnitID')">
+                                    </codx-input>HeadCounts
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="DepartmentID" default="Phòng/Ban"></codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.departmentID" field="departmentID"
-                                            refValue="HRDepartments" [popupSettings]="{ width: '300px' }" service="HR"
-                                            ngDefaultControl loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="DepartmentID" default="Phòng/Ban"></codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        [crrValue]="position?.departmentID" field="departmentID"
+                                        (valueChange)="dataChange($event, 'DepartmentID')" refValue="HRDepartments"
+                                        [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
+                                        loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="DivisionID" default="Khối">
-                                        </codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.divisionID" field="divisionID" refValue="HRDivisions"
-                                            [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
-                                            loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="DivisionID" default="Khối">
+                                    </codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        (valueChange)="dataChange($event, 'DivisionID')"
+                                        [crrValue]="position?.divisionID" field="divisionID" refValue="HRDivisions"
+                                        [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
+                                        loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="CompanyID" default="Công ty">
-                                        </codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.companyID" field="companyID" refValue="HRCompany"
-                                            [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
-                                            loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="CompanyID" default="Công ty">
+                                    </codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        (valueChange)="dataChange($event, 'CompanyID')" [crrValue]="position?.companyID"
+                                        field="companyID" refValue="HRCompany" [popupSettings]="{ width: '300px' }"
+                                        service="HR" ngDefaultControl loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="ReportTo" default="Báo cáo trực tiếp cho"></codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.reportTo" field="reportTo" refValue="Positions"
-                                            [virtual]="{ itemHeight: 100 }" [popupSettings]="{ width: '300px' }"
-                                            service="HR" ngDefaultControl loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="ReportTo" default="Báo cáo trực tiếp cho"></codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        (valueChange)="dataChange($event, 'ReportTo')" [crrValue]="position?.reportTo"
+                                        field="reportTo" refValue="Positions" [virtual]="{ itemHeight: 100 }"
+                                        [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
+                                        loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="ReportTo2" default="Báo cáo gián tiếp cho"></codx-label>
-                                        <codx-input type="combobox" class="form-control borderless p-0"
-                                            [value]="position.reportTo2" field="reportTo2" refValue="Positions"
-                                            [virtual]="{ itemHeight: 100 }" [popupSettings]="{ width: '300px' }"
-                                            service="HR" ngDefaultControl loadFull="true"></codx-input>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="ReportTo2" default="Báo cáo gián tiếp cho"></codx-label>
+                                    <codx-input type="combobox" class="form-control borderless p-0"
+                                        (valueChange)="dataChange($event, 'ReportTo2')" [crrValue]="position?.reportTo2"
+                                        field="reportTo2" refValue="Positions" [virtual]="{ itemHeight: 100 }"
+                                        [popupSettings]="{ width: '300px' }" service="HR" ngDefaultControl
+                                        loadFull="true"></codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="Headcounts" default="Định biên">
-                                        </codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.headcounts" />
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="FilledCounts" default="Nhân viên"></codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.filledCounts" />
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="Headcounts" default="Định biên">
+                                    </codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'Headcounts')"
+                                        [crrValue]="position?.headcounts">
+                                    </codx-input>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="Onboard" default="Onboard">
-                                        </codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.onboard" />
-                                    </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="FilledCounts" default="Nhân viên"></codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'FilledCounts')"
+                                        [crrValue]="position?.filledCounts">
+                                    </codx-input>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <codx-label fiedName="Offboard" default="Offboard">
-                                        </codx-label>
-                                        <input class="form-control" type="text" [(ngModel)]="position.offboard" />
-                                    </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="Onboard" default="Onboard">
+                                    </codx-label>
+                                    <codx-input class="form-control" type="text"
+                                        (valueChange)="dataChange($event, 'Onboard')" [crrValue]="position?.onboard">
+                                    </codx-input>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <codx-label fiedName="Offboard" default="Offboard">
+                                    </codx-label>
+                                    <codx-input class="form-control" (valueChange)="dataChange($event, 'Offboard')"
+                                        type="text" [crrValue]="position?.offboard">
+                                    </codx-input>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         <!-- </div> -->
     </ng-template>
 

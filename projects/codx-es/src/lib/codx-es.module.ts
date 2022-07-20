@@ -49,6 +49,7 @@ import {
   FormFieldsService,
   PdfViewerModule,
 } from '@syncfusion/ej2-angular-pdfviewer';
+import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 
 const routes: Routes = [
   {
@@ -105,6 +106,7 @@ const routes: Routes = [
     CodxEsComponent,
     PopupAddAutoNumberComponent,
     PopupAddSignFileComponent,
+    PopupAddEmailTemplateComponent,
     ApprovalStepComponent,
     ViewDetailComponent,
     SignFileComponent,

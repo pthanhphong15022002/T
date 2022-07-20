@@ -1,4 +1,4 @@
-import { ApiHttpService, AuthStore, CacheService, CodxListviewComponent, NotificationsService, TenantStore, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CacheService, CodxListviewComponent, DialogRef, NotificationsService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
 import {
   ChangeDetectorRef,
   Component,
@@ -8,10 +8,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TempService } from "../services/temp.service";
 import { RolesService } from '../services/roles.service';
 import { CodxAdService } from '../../codx-ad.service';
+import { RoleEditComponent } from '../role-edit/role-edit.component';
+import { V } from '@angular/cdk/keycodes';
 
 declare var $: any;
 @Component({
@@ -27,6 +29,11 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   tenant: string;
   isLoad = true;
   index = 0;
+  funcID = '';
+  views = [];
+  button?: ButtonModel;
+  dialog: DialogRef;
+
   @ViewChild("listRoles") listRoles: CodxListviewComponent;
   constructor(
     private injector: Injector,
@@ -38,30 +45,30 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     private rolesService: RolesService,
     private adsv: CodxAdService,
     private auth: AuthStore,
+    private route: ActivatedRoute,
   ) {
-    // super(
-    //   {
-    //     title: "Vai trò & quyền",
-    //     formName: "Roles",
-    //     gridViewName: "grvUserGroups",
-    //     functionID: "AD004",
-    //     hideAside: false,
-    //     hideSubHeader: false,
-    //     hiddenTree: true
-    //   } as ModelPage,
-    //   injector
-    // );
     super(injector);
-
+    this.route.params.subscribe((params) => {
+      this.funcID = params['funcID'];
+    })
     const user = this.auth.get();
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
   onInit(): void {
     // hidden button tree
-    setTimeout(() => {
-      $("#btnTreeView").hide();
-    }, 2000);
+    // setTimeout(() => {
+    //   $("#btnTreeView").hide();
+    // }, 2000);
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
+
+  ngOnDestroy(): void {
+    // show buton tree
+    var btnTreeView = $("#btnTreeView");
+    btnTreeView.show();
   }
 
   ngAfterViewInit() {
@@ -98,18 +105,29 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     //TEMP
   }
 
-  openEdit(id, isnew) {
-    this.tempService.isNew = isnew;
-    this.tempService.id = id;
-    this.tempService.appendRecID(id);
-    if (this.tempService.isNew) {
-      this.tempService.changeDatasaveas("2"); //Sao chép
-    } else this.tempService.changeDatasaveas("0"); //Chỉnh sửa
+  // openEdit(id, isnew) {
+  //   this.tempService.isNew = isnew;
+  //   this.tempService.id = id;
+  //   this.tempService.appendRecID(id);
+  //   if (this.tempService.isNew) {
+  //     this.tempService.changeDatasaveas("2"); //Sao chép
+  //   } else this.tempService.changeDatasaveas("0"); //Chỉnh sửa
 
-    // $("#kt_demo_panel.edit-" + this.modelPage.formName).addClass(
-    //   "offcanvas-on"
-    // );
-    this.tempService.id = "";
+  //   this.tempService.id = "";
+  // }
+
+  openFormEdit(data) {
+    var obj = [{
+      data: this.listRoles.dataService.data,
+      dataUpdate: data,
+      formType: 'edit'
+    }]
+
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
   }
 
   delete(data) {
@@ -153,9 +171,29 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.tempService.changeDatasaveas("1");
   }
 
-  ngOnDestroy(): void {
-    // show buton tree
-    var btnTreeView = $("#btnTreeView");
-    btnTreeView.show();
+  openFormAdd(e) {
+    var obj = [{
+      data: this.listRoles.dataService.data,
+      formType: 'add',
+    }]
+
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+    // this.dialog.closed.subscribe(x => {
+    //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+    // });
+  }
+
+  clickMF(e, item) {
+    switch(e.functionID) {
+      case 'edit':
+        this.openFormEdit(item);
+        break;
+      case 'delete':
+        break;
+    }
   }
 }
