@@ -1,0 +1,11 @@
+<codx-treeview #treeView id="treeView" [data]="data" [showSearch]="false" [itemTemplate]="itemTemplate" [autoLoad]="false" idField="recID" parentIdField="parentID"
+    [isOutput]="true" [isLoadChild]="false">
+</codx-treeview>
+<!-- <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="data"
+[enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false"
+[isOutput]="true" [isLoadChild]="false">
+</codx-treeview> -->
+
+<ng-template #itemTemplate let-item>
+   <div>{{item.taskName}}</div>
+</ng-template>
