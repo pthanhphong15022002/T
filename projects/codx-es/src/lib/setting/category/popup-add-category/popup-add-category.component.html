@@ -65,7 +65,7 @@
         <span class="text-end align-items-end">
           <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
             (click)="openAutoNumPopup()">
-            <i class=" icon-edit-one text-primary text-hover-primary-dark icon-24"></i>
+            <i class=" icon-edit-one text-hover-primary icon-24"></i>
           </button>
         </span>
       </div>
@@ -82,7 +82,7 @@
       <span class="text-end align-items-end">
         <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
           (click)="openPopupApproval()">
-          <i class="icon-settings text-primary text-hover-primary-dark icon-24"></i>
+          <i class="icon-settings text-hover-primary icon-24"></i>
         </button>
       </span>
     </div>
@@ -92,7 +92,7 @@
         <div class="codx-approval-step step-test pb-1">
           <div class="codx-approval-header d-flex align-items-center">
             <div class="step-number">{{item.stepNo}}</div>
-            <div class="step-title text-gray-800 fw-bolder fs-4">{{item.memo}}</div>
+            <div class="step-title text-gray-800 fw-bolder fs-4">{{item.stepName}}</div>
             <!-- <div class="badge badge-success badge-sm badge-circle ms-3">
               <span class="icon-check icon-16"></span>
             </div> -->
@@ -101,7 +101,8 @@
             <ng-container *ngFor="let approver of item.approvers">
               <div class="d-flex align-items-top justify-content-between mb-2">
                 <codx-temp-full [imageId]="approver.approver" [imageObjType]="'AD_Users'" [imageWidth]="40"
-                  [title]="approver.approverName" [desc]="approver.positionName ?? 'Vị trí công việc'">
+                  [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
+                  [desc]="approver.roleType == 'U' ? approver.positionName ?? 'Vị trí công việc' : ''">
                 </codx-temp-full>
                 <div class="d-flex align-items-center text-center">
                   <div class="ms-6 d-flex">

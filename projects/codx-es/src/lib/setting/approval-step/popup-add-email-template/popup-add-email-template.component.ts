@@ -7,11 +7,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { resizeStart } from '@syncfusion/ej2-grids';
-import { Alert } from 'bootstrap';
-import { CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
-import { elementAt } from 'rxjs';
+import {
+  AuthStore,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+} from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -21,6 +24,7 @@ import { CodxEsService } from '../../../codx-es.service';
 })
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -45,6 +49,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   constructor(
     private esService: CodxEsService,
     private callFunc: CallFuncService,
+    private auth: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -58,8 +63,22 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   initForm() {
+    this.formModel = new FormModel();
+    this.formModel.entityName = 'AD_EmailTemplates';
+    this.formModel.formName = 'EmailTemplates';
+    this.formModel.gridViewName = 'grvEmailTemplates';
+    this.formModel.funcID = '';
+
+    const user = this.auth.get();
+    let defaultFrom = new EmailSendTo();
+    defaultFrom.objectType = 'U';
+    defaultFrom.objetID = user.userID;
+    defaultFrom.text = user.userName;
+
+    this.lstFrom.push(defaultFrom);
+
     this.esService
-      .getFormGroup('EmailTemplates', 'grvEmailTemplates')
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogETemplate = res;
@@ -268,15 +287,53 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   applyShare(event, sendType) {
     if (event[0].id) {
-      switch (event[0].objectType) {
-        case 'U':
-          let lstID = event[0].id.split(';');
-          let lstUserName = event[0].text.split(';');
+      let lst = [];
+      // switch (event[0].objectType) {
+      //   case 'U':
+      let lstID = event[0].id.split(';');
+      let lstUserName = event[0].text.split(';');
 
-          for (let i = 0; i < lstID?.length; i++) {}
+      for (let i = 0; i < lstID?.length; i++) {
+        if (lstID[i].toString() != '') {
+          let appr = new EmailSendTo();
+          appr.text = lstUserName[i];
+          appr.objetID = lstID[i];
+          appr.objectType = event[0].objectType;
+          appr.sendType = sendType.toString();
+
+          lst.push(appr);
+        }
+        // }
+        // break;
+      }
+
+      switch (sendType) {
+        case 1:
+          this.lstFrom.push(...lst);
+          break;
+        case 2:
+          this.lstTo.push(...lst);
+          break;
+        case 3:
+          this.lstCc.push(...lst);
+          break;
+        case 4:
+          this.lstBcc.push(...lst);
           break;
       }
     }
+  }
+
+  fileAdded(event) {
+    debugger;
+  }
+
+  openFormUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  getfileCount(e: any) {
+    debugger;
   }
 }
 
@@ -288,6 +345,6 @@ export class EmailSendTo {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
-  modifuedBy: string;
+  modifiedBy: string;
   text: string;
 }
