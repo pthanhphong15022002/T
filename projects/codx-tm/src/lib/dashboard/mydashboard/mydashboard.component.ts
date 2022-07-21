@@ -17,21 +17,23 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  model: DataRequest;
   funcID: string;
-  daySelected: Date;
+  user: any;
+  data: any;
+  taskOfDay: any;
   fromDate: Date;
   toDate: Date;
+  daySelected: Date;
   daySelectedFrom: Date;
   daySelectedTo: Date;
   week: number;
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  taskOfDay: any;
-  user: any;
-  model: DataRequest;
 
   //#region gauge
+
   public rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
@@ -116,8 +118,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   //#endregion chartcolumn
 
-  dbData: any;
-
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -141,43 +141,36 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
-      this.dbData = res;
-      console.log('MyDB', this.dbData);
+      this.data = res;
+      console.log('MyDB', this.data);
       this.detectorRef.detectChanges();
     });
-
-    // this.api
-    //   .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [
-    //     this.model,
-    //     this.fromDate,
-    //     this.toDate,
-    //   ])
-    //   .subscribe((res: any) => {
-    //     this.taskOfDay = res;
-    //     console.log(this.taskOfDay);
-    //     this.detectorRef.detectChanges();
-    //   });
   }
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-    console.log('mouse leave');
-  }
+  closeTooltip() {}
 
   onChangeValueSelectedWeek(data) {
-    this.fromDate = data.fromDate;
-    this.toDate = data.toDate;
-    this.daySelected = data.daySelected;
-    this.daySelectedFrom = data.daySelectedFrom;
-    this.daySelectedTo = data.daySelectedTo;
-    this.week = data.week;
-    this.month = data.month + 1;
-    this.beginMonth = data.beginMonth;
-    this.endMonth = data.endMonth;
+    console.log('select', data);
+    this.fromDate = this.toDate = data?.toDate;
+    this.daySelected = data?.daySelected;
+    this.daySelectedFrom = data?.daySelectedFrom;
+    this.daySelectedTo = data?.daySelectedTo;
+    this.week = data?.week;
+    this.month = data?.month + 1;
+    this.beginMonth = data?.beginMonth;
+    this.endMonth = data?.endMonth;
+    console.log(this.fromDate);
+    console.log(this.toDate);
+    console.log(this.daySelected);
+    console.log(this.daySelectedFrom);
+    console.log(this.daySelectedTo);
+    console.log(this.week);
+    console.log(this.month);
+    console.log(this.endMonth);
     this.getGeneralData();
   }
 }

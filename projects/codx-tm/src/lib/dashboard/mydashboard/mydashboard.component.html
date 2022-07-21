@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.status.overdueTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.status.overdueTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
           <div class="d-flex justify-content-between">
             <div
               class="icon-28 icon-access_time me-2"
-              style="color: rgb(255, 128, 8) "
+              style="color: rgb(255, 128, 8)"
             ></div>
             <div>
               <div class="text-gray-600">
@@ -81,7 +81,7 @@
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.status.overdueTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.performance"
+                  [value]="data?.efficiency.performance"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -150,7 +150,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.availability.toFixed(2) }}
+            {{ data?.efficiency.availability.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -183,7 +183,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.performance"
+                  [value]="data?.efficiency.performance"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -208,7 +208,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.performance.toFixed(2) }}
+            {{ data?.efficiency.performance.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -241,7 +241,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.performance"
+                  [value]="data?.efficiency.quality"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -266,7 +266,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.quality.toFixed(2) }}
+            {{ data?.efficiency.quality.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -299,7 +299,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.kpi"
+                  [value]="data?.efficiency.kpi"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -324,7 +324,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.kpi.toFixed(2) }}
+            {{ data?.efficiency.kpi.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -337,7 +337,7 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="dbData?.tasksByGroup"
+              [dataSource]="data?.tasksByGroup"
               xName="taskGroupName"
               yName="qty"
               radius="70%"
@@ -354,7 +354,7 @@
           "
         >
           <div class="text-center">
-            <p class="text-gray-900 fw-bolder fs-2">{{ dbData?.qtyTasks }}</p>
+            <p class="text-gray-900 fw-bolder fs-2">{{ data?.qtyTasks }}</p>
             <codx-label name="lblTasks" default="Công việc"> </codx-label>
           </div>
         </div>
@@ -398,7 +398,7 @@
                       radius="90%"
                       color="#04DEB7"
                       pointerWidth="12"
-                      [value]="dbData?.rateDoneTaskOnTime"
+                      [value]="data?.rateDoneTaskOnTime"
                     >
                     </e-pointer>
                   </e-pointers>
@@ -433,7 +433,7 @@
                       color="#5465FF"
                       markerWidth="12"
                       pointerWidth="12"
-                      [value]="dbData?.rateDoneTask"
+                      [value]="data?.rateDoneTask"
                     >
                     </e-pointer>
                   </e-pointers>
@@ -448,7 +448,7 @@
                 <div class="d-flex flex-column">
                   <div>Tỷ lệ hoàn thành công việc</div>
                   <div class="text-dark fs-3 fw-bold">
-                    {{ dbData?.rateDoneTask.toFixed(2) }}%
+                    {{ data?.rateDoneTask.toFixed(2) }}%
                   </div>
                 </div>
               </div>
@@ -457,7 +457,7 @@
                 <div class="d-flex flex-column">
                   <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
                   <div class="text-dark fs-3 fw-bold">
-                    {{ dbData?.rateDoneTaskOnTime.toFixed(2) }}%
+                    {{ data?.rateDoneTaskOnTime.toFixed(2) }}%
                   </div>
                 </div>
               </div>
@@ -505,7 +505,7 @@
         <e-series-collection>
           <e-series
             fill="#005DC7"
-            [dataSource]="dbData?.dataBarChart?.barChart"
+            [dataSource]="data?.dataBarChart?.barChart"
             type="Column"
             name="Tasks"
             xName="label"
@@ -515,7 +515,7 @@
           </e-series>
           <e-series
             fill="#F9D923"
-            [dataSource]="dbData?.dataBarChart?.lineChart"
+            [dataSource]="data?.dataBarChart?.lineChart"
             type="Line"
             name="WorkHours"
             yName="value"
