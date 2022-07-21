@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { TempService } from "../services/temp.service";
 import { RolesService } from '../services/roles.service';
 import { CodxAdService } from '../../codx-ad.service';
@@ -74,6 +74,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     //this.adsv.listview = this.listRoles;
     //this.isLoad = false;
+    console.log("check view", this.view.formModel)
   }
   ngOnChanges() {
     if (!this.isLoad) return;

@@ -157,7 +157,7 @@
                 "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue :
                 formModel:"completedOn" : completedOn|async )}}</span> -->
               <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
-                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h'}}</span>
+                "dd/MM/yyyy" }} | {{itemSelected.completed}} <span>h</span> </span>
               <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
                 formModel:"completedOn" : completedOn|async }}</span>
             </div>

@@ -9,7 +9,6 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { Router } from "@angular/router";
 import { DialogData, DialogRef, NotificationsService, TenantStore, UIComponent } from "codx-core";
 import { CodxAdService } from "../../codx-ad.service";
 import { AD_Roles } from "../model/AD_Roles.model";
@@ -37,6 +36,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
   roles: AD_Roles = new AD_Roles();
   formType = '';
   dataUpdate: AD_Roles = new AD_Roles();
+  urlDetailRoles = '';
 
   @Input() modelPage: any;
 
@@ -53,6 +53,10 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     super(injector);
     this.dialog = dialog;
     this.tenant = this.tenantStore.get()?.tenant;
+    this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
+      this.urlDetailRoles = res?.url;
+      debugger;
+    })
     this.roles = dt.data[0]?.data;
     this.formType = dt.data[0]?.formType;
     if (this.formType == 'edit')
@@ -88,23 +92,29 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     //TEMP
     // this.mainService.navigatePageUrl(`ad/roledetail/${this.roleID}`);
     //TEMP
+
+    this.codxService.navigate('', this.urlDetailRoles, { recID: this.roleID })
+
   }
   viewRoleDetail() {
-    if (this.saveas == "0") {
-      // Chỉnh sửa
-      this.redirectPagePermissions();
-      return;
-    }
-    if (this.saveas == "2") {
-      // Copy
+    // if (this.saveas == "0") {
+    //   // Chỉnh sửa
+    //   this.redirectPagePermissions();
+    //   return;
+    // }
+    // if (this.saveas == "2") {
+    //   // Copy
 
-      //TEMP
-      // this.confirmAfterSave("AD001", true);
-      //TEMP
-    } else {
-      // lúc thêm mới bình thường
-      this.SaveRole(true, false);
-    }
+    //   //TEMP
+    //   // this.confirmAfterSave("AD001", true);
+    //   //TEMP
+    // } else {
+    //   // lúc thêm mới bình thường
+    //   this.SaveRole(true, false);
+    // }
+
+      this.redirectPagePermissions();
+
   }
   //TEMP
   // confirmAfterSave(messageCode, isRedirectPage) {

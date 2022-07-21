@@ -49,7 +49,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   checkWeek = true;
   typeList = 'notes-home';
   dataValue = 'WP_Calendars;SettingShow';
-  predicate = '';
+  predicate = 'empty';
   dataValue1: any;
   predicate1 = 'CreatedBy=@0';
   userID = ''

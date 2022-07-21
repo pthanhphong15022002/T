@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 
@@ -18,7 +18,7 @@ export class PositionsComponent implements OnInit {
   funcID: string;
   posInfo: any = {};
   employees: any = [];
-
+  itemSelected: any;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild('p') public popover: NgbPopover;
@@ -115,7 +115,7 @@ export class PositionsComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected, option);
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected , option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -157,7 +157,7 @@ export class PositionsComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfunc.openSide(
         PopupAddPositionsComponent,
@@ -167,8 +167,23 @@ export class PositionsComponent implements OnInit {
     });
   }
 
-  delete(data: any) {
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'Delete';
 
+    opt.data = itemSelected.taskGroupID;
+    return true;
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
   }
 
 loadEmployByCountStatus(el, posID, status) {

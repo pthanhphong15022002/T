@@ -47,7 +47,7 @@ export class EmployeesLeaveComponent implements OnInit {
       {
         id: '1',
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           resources: this.columnsGrid,
