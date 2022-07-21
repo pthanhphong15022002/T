@@ -37,6 +37,7 @@ import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 @Component({
   selector: 'home',
@@ -51,6 +52,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment1') attachment1: AttachmentComponent;
+  @ViewChild('view') codxview!: any;
   currView?: TemplateRef<any>;
   path: string;
   button?: ButtonModel;
@@ -59,6 +61,7 @@ export class HomeComponent extends UIComponent {
   views: Array<ViewModel> = [];
   listFolders: FolderInfo[];
   listFiles: FileInfo[];
+  titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   //loadedFile: boolean;
   //loadedFolder: boolean;
   user: any;
@@ -192,9 +195,11 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    //   console.log($data);
-    let id = $data.recID;
-    let item = $data;
+     console.log($data.data);
+   // alert(1);
+    //let data = $event.data;
+    let id = $data.data.recID;
+    let item = $data.data;
     if (item.read) {
       // var breadcumb = [];
       // var breadcumbLink = [];
@@ -223,15 +228,21 @@ export class HomeComponent extends UIComponent {
       // this.dmSV.currentNode = id;
       // this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
-      if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
+      if (item.items && item.items.length <= 0) {
         //     this.folderService.options.funcID =
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {
           //  this.dmSV.isTree = true;
           if (res != null) {
-            var datas = new Map<string, any>();
-            datas.set(id, res[0]);
-            this.view.dataService.addDatas = datas;
+            //var datas = new Map<string, any>();
+          //  datas.set(id, res[0]);
+            //cdxView            
+            var data = res[0];
+           // this.view.dataService.addNew(data);            
+            this.listFolders = data;            
+            this.view.dataService.addNew(data);
+            //this.view.dataService.
+            //this.view.tree
             //  this.dmSV.listFolder.next(res);
             // $data.dataItem.items = [];
             //  this.tree.addChildNodes($data.dataItem, res);
@@ -241,7 +252,9 @@ export class HomeComponent extends UIComponent {
         });
       } else {
         //this.dmSV.isTree = true;
-        //   this.dmSV.listFolder.next($data.dataItem.items);
+      //  alert(1);
+        this.dmSV.listFolder.next(item.items);
+        this.listFolders = item.items;
         this.changeDetectorRef.detectChanges();
         //this.dmSV.isTree = false;
       }
@@ -253,7 +266,7 @@ export class HomeComponent extends UIComponent {
     } else {
       this.dmSV.disableInput.next(true);
       this.notificationsService.notify(
-        'Bạn không có quyền truy cập thư mục này'
+        this.titleAccessDenied
       );
     }
   }
@@ -317,21 +330,40 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
+   // alert(1);
+    // for(var i=0; i<this.views.length; i++) {
+    //   if (this.view.funcID == "DMT02" || this.view.funcID == "DMT03")
+    //     this.views[i].type = ViewType.treedetail; 
+    //   else
+    //     this.views[i].type = ViewType.content; 
+    // }
+    // this.views[0].type = ViewType.content; 
+    // this.views[1].type = ViewType.content; 
+    // this.views[2].type = ViewType.content; 
+
     this.folderService.options.funcID = this.view.funcID;
+    if (this.dmSV.folderType != this.view.funcID)
+      this.listFolders = this.view.dataService.data;
+    this.dmSV.folderType = this.view.funcID;
+    this.dmSV.idMenuActive = this.view.funcID;
     this.dmSV.loadedFile = false;
-    this.dmSV.loadedFolder = false;
-    this.folderService.getFolders('').subscribe(async (res) => {
-      if (res != null) {
-        this.listFolders = res[0];
-        this.dmSV.loadedFolder = true;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+   // this.dmSV.loadedFolder = false;
+    // if (this.listFolders == null)
+    //   this.listFolders = this.view.dataService.data;
+    this.dmSV.loadedFolder = true;
+    this.changeDetectorRef.detectChanges();
+    // this.folderService.getFolders('').subscribe(async (res) => {
+    //   if (res != null) {
+    //     this.listFolders = res[0];
+    //     this.dmSV.loadedFolder = true;
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
 
     this.fileService.options.funcID = this.view.funcID;
-    this.fileService.getListActiveFiles('', '').subscribe(async (res) => {
+    this.fileService.getListActiveFiles('', this.view.funcID).subscribe(async (res) => {
       if (res != null) {
-        this.listFiles = res[0];
+        this.listFiles = res;
         this.dmSV.loadedFile = true;
         this.changeDetectorRef.detectChanges();
       }

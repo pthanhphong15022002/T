@@ -30,9 +30,8 @@ idField="recID"
   <ng-container *ngTemplateOutlet="currView"></ng-container>
 </ng-template>
 
-<ng-template #templateCard> 
-  
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+<ng-template #templateCard>
+  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
@@ -57,9 +56,9 @@ idField="recID"
       (fileCount)="getfileCount($event)" 
       displayThumb="full"
     > 
-  </codx-attachment>
+  </codx-attachment> -->
   
-  <card type="card" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+  <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File 1</span>
@@ -82,11 +81,11 @@ idField="recID"
 </codx-attachment> -->
 </ng-template>
 <ng-template #templateSmallCard>
-  <card type="smallcard" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+  <card type="smallcard" [listFiles]="listFiles" [listFolders]="listFolders" [formModel]="view.formModel"></card>
 </ng-template>
 <ng-template #templateList>
-  <card type="list" [listFolders]="listFolders" [formModel]="view.formModel"></card>
-</ng-template>
+  <detail type="list" [listFiles]="listFiles" [listFolders]="listFolders" [formModel]="view.formModel"></detail>
+</ng-template> 
 
 <!-- <ng-template #templateRight>  
   <container-element [ngSwitch]="this.viewIcon">

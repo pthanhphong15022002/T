@@ -32,6 +32,7 @@
     "@syncfusion/ej2-angular-calendars": "^19.4.56",
     "@syncfusion/ej2-angular-charts": "^19.4.54",
     "@syncfusion/ej2-angular-circulargauge": "^19.4.52",
+    "@syncfusion/ej2-angular-diagrams": "^19.4.56",
     "@syncfusion/ej2-angular-dropdowns": "^19.4.56",
     "@syncfusion/ej2-angular-gantt": "^19.4.56",
     "@syncfusion/ej2-angular-grids": "^19.4.56",
@@ -48,6 +49,7 @@
     "@syncfusion/ej2-angular-schedule": "^19.4.52",
     "@syncfusion/ej2-angular-treemap": "^19.4.52",
     "@syncfusion/ej2-base": "^19.4.52",
+    "@syncfusion/ej2-data": "^19.4.54",
     "@syncfusion/ej2-gantt": "^19.4.56",
     "@syncfusion/ej2-grids": "^19.4.52",
     "@syncfusion/ej2-notifications": "^19.4.52",
@@ -75,7 +77,7 @@
     "zone.js": "~0.11.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.3.1",
+    "@angular-devkit/build-angular": "^13.3.1",
     "@angular/cli": "~13.3.1",
     "@angular/compiler-cli": "~13.3.1",
     "@types/jasmine": "~4.0.1",

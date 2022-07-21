@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { FileUpload } from '@shared/models/file.model';
 import { AuthService, CacheService, CallFuncService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { Observable, of } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
@@ -92,6 +93,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     option.Width = '550px';
     let data = {} as any;
     data.title = this.titleAddFolder;
+    data.id =  null;
     this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
