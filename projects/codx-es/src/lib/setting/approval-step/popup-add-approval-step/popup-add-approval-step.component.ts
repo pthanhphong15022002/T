@@ -57,6 +57,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
 
+  lstApprover: any = [];
+
   headerText1;
 
   constructor(
@@ -156,6 +158,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
+          this.lstApprover = this.dialogApprovalStep.value.approvers;
           this.currentMode = this.dataEdit?.approveMode;
           this.dialogApprovalStep.addControl(
             'id',
@@ -171,7 +174,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   MFClick(event, data) {
-    let approvalStep = this.dialogApprovalStep.value.approvers;
     if (event?.functionID == 'delete') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
@@ -183,11 +185,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         )
         .closed.subscribe((x) => {
           if (x.event.status == 'Y') {
-            let i = approvalStep.indexOf(data);
+            let i = this.lstApprover.indexOf(data);
 
             if (i != -1) {
-              approvalStep.splice(i, 1);
-              this.dialogApprovalStep.patchValue({ approvers: approvalStep });
+              this.lstApprover.splice(i, 1);
             }
           }
         });
@@ -197,9 +198,17 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     this.isSaved = true;
     if (this.dialogApprovalStep.invalid == true) {
-      this.notifySvr.notify('invalid');
+      this.notifySvr.notifyCode('E0016');
+      return;
     }
-    this.dialogApprovalStep.patchValue({ approveMode: this.currentMode });
+    if (this.lstApprover.length == 0) {
+      this.notifySvr.notifyCode('E0016');
+      return;
+    }
+    this.dialogApprovalStep.patchValue({
+      approveMode: this.currentMode,
+      approvers: this.lstApprover,
+    });
     if (this.isAdd) {
       this.lstStep.push(this.dialogApprovalStep.value);
       this.dialog && this.dialog.close();
@@ -238,22 +247,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field) {
-      if (event.field == 'popup') {
-        if (event.data?.length > 0) {
-          event.data.forEach((element) => {
-            let lst = this.dialogApprovalStep.value.approvers ?? [];
-
-            if (element.objectType == 'U') {
-              let appr = new Approvers();
-              appr.approverName = element.text;
-              appr.approver = element.id;
-              lst.push(appr);
-            }
-
-            this.dialogApprovalStep.patchValue({ approvers: lst });
-          });
-        }
-      }
       if (event.data === Object(event.data)) {
         this.dialogApprovalStep.patchValue({
           [event['field']]: event.data,
@@ -298,35 +291,36 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   applyShare(event) {
     if (event) {
-      let lst = this.dialogApprovalStep.value.approvers ?? [];
       event.forEach((element) => {
         if (element.objectType == 'U') {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
 
           for (let i = 0; i < lstID?.length; i++) {
-            let index = lst.findIndex((p) => p.approver == lstID[i]);
+            let index = this.lstApprover.findIndex(
+              (p) => p.approver == lstID[i]
+            );
             if (lstID[i].toString() != '' && index == -1) {
               let appr = new Approvers();
               appr.roleType = element.objectType;
               appr.approverName = lstUserName[i];
               appr.approver = lstID[i];
-              lst.push(appr);
+              this.lstApprover.push(appr);
             }
           }
         } else {
-          let i = lst.findIndex((p) => p.approver == element?.objectType);
+          let i = this.lstApprover.findIndex(
+            (p) => p.approver == element?.objectType
+          );
           if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.approverName = element?.objectName;
             appr.approver = element?.objectType;
             appr.icon = element?.icon;
-            lst.push(appr);
+            this.lstApprover.push(appr);
           }
         }
-
-        this.dialogApprovalStep.patchValue({ approvers: lst });
       });
     }
   }
@@ -342,6 +336,7 @@ export class Approvers {
   comment: string;
   icon: string = null;
   createdOn: any;
+  delete: boolean = true;
 }
 
 export class Files {

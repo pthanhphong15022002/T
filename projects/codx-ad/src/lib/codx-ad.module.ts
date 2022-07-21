@@ -58,6 +58,10 @@ export const routes: Routes = [
         path: 'groupusers/:funcID',
         component: GroupUsersComponent
       }
+      ,{
+        path: 'roles/:funcID',
+        component: RolesComponent,
+      }
 
     ]
   }

@@ -4,9 +4,9 @@
     [selectedFirst]="true">
 </codx-views> -->
 
-<codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
+<codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID" [itemSelected]="itemSelected"
     assemblyName="ERM.Business.HR" className="PositionsBusiness" method="GetModelFormPositionsAsync" [views]="views"
-    [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (requestEnded)="requestEnded($event)"
+    [button]="button" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" (requestEnded)="requestEnded($event)" 
     (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
 </codx-views>
 
@@ -16,7 +16,7 @@
             <div class="justify-content-start">
                 <codx-temp-full cardCss="card-template"
                     [subTitle]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '') + (data.divisionID ? ' | ' + data.divisionID: '')"
-                    [title]="data.positionName" [titleLine]="data.orgUnitID"
+                    [title]="data.positionName" [titleLine]="data.orgUnitID" [typeMF]="'hover'" [dataItem]="data"
                     [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel" 
                     [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
                 </codx-temp-full>

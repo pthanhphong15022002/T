@@ -39,6 +39,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('treeView') treeView: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
@@ -47,6 +48,7 @@ export class TasksComponent extends UIComponent {
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
+  resourceTree:ResourceModel;
   dialog!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
@@ -60,6 +62,8 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
+  dataObj:any
+  iterationID: string =''
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -74,6 +78,11 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
+    this.dataObj = JSON.stringify(dataObj);
   }
 
   clickMF(e: any, data?: any) {
@@ -131,6 +140,13 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.assemblyName = 'TM';
     this.resourceKanban.className = 'TaskBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    // this.resourceTree = new ResourceModel();
+    // this.resourceTree.assemblyName = 'TM';
+    // this.resourceTree.className = 'TaskBusiness';
+    // this.resourceTree.service = 'TM';
+    // this.resourceTree.method = 'GetListTasksTreeAsync';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -153,7 +169,7 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.listdetail,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -162,7 +178,7 @@ export class TasksComponent extends UIComponent {
       },
       {
         type: ViewType.kanban,
-        active: true,
+        active: false,
         sameData: true,
         request2: this.resourceKanban,
         model: {
@@ -179,6 +195,15 @@ export class TasksComponent extends UIComponent {
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+        },
+      },
+      {
+        type: ViewType.treedetail,
+        active: false,
+        sameData: true,
+        // request2: this.resourceTree,
+        model: {
+          template: this.treeView,
         },
       },
     ];
@@ -343,6 +368,11 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
           if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
@@ -537,18 +567,25 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(
-              new Date(
-                taskAction.startDate
-                  ? taskAction.startDate
-                  : taskAction.createdOn
-              )
-            ).toDate();
-            var time = (
-              (completedOn.getTime() - startDate.getTime()) /
-              3600000
-            ).toFixed(1);
-            var estimated = Number.parseFloat(time);
+            var completed = "0";
+            if(taskAction.estimated > 0){
+              completed=taskAction.estimated
+            }else{
+              var timeStart = moment(
+                new Date(
+                  taskAction.startOn
+                    ? taskAction.startOn
+                    : (taskAction.startDate
+                      ? taskAction.startDate : taskAction.createdOn)
+                )
+              ).toDate();
+              var time = (
+                (completedOn.getTime() - timeStart.getTime()) /
+                3600000
+              ).toFixed(2);
+              completed = Number.parseFloat(time).toFixed(2);
+            }
+           
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -557,15 +594,11 @@ export class TasksComponent extends UIComponent {
                 taskAction.taskID,
                 status,
                 completedOn,
-                estimated.toString(),
+                completed,
                 ''
               )
               .subscribe((res) => {
                 if (res && res.length > 0) {
-                  taskAction.status = status;
-                  taskAction.completedOn = completedOn;
-                  taskAction.comment = '';
-                  taskAction.completed = estimated;
                   res.forEach((obj) => {
                     this.view.dataService.update(obj).subscribe();
                   });
@@ -586,6 +619,7 @@ export class TasksComponent extends UIComponent {
       fieldValue: fieldValue,
       moreFunc: moreFunc,
       taskAction: taskAction,
+      funcID: this.funcID
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
@@ -596,10 +630,13 @@ export class TasksComponent extends UIComponent {
       obj
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        this.itemSelected = e?.event;
-        this.detectorRef.detectChanges();
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
       }
+      this.detectorRef.detectChanges();
     });
   }
   receiveMF(e: any) {

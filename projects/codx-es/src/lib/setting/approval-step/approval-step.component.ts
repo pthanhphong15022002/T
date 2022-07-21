@@ -200,8 +200,4 @@ export class ApprovalStepComponent implements OnInit {
         }
       });
   }
-
-  getLeadTime(event) {
-    return '<div>1 giờ</div>';
-  }
 }

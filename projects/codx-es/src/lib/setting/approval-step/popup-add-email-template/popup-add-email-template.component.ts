@@ -42,6 +42,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showCC = false;
   showBCC = false;
 
+  vllShare = 'ES014';
+
   sendType = 'to';
   lstFrom = [];
   lstTo = [];
@@ -88,6 +90,9 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   'recID',
                   new FormControl(res1[0].recID)
                 );
+
+                console.log('test', this.dialogETemplate.value);
+                console.log('test', this.formModel?.entityName);
 
                 this.api
                   .execSv(
@@ -166,13 +171,15 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           );
           if (i >= 0) {
             emailTemplates[i].templateID = res.recID;
-            this.attachment.objectId = res.recID;
-            console.log(this.dmSV.fileUploadList);
-            this.attachment.saveFiles();
+            if (this.dmSV.fileUploadList.length > 0) {
+              this.attachment.objectId = res.recID;
+              console.log(this.dmSV.fileUploadList);
+              this.attachment.saveFiles();
+            }
 
             this.formGroup.patchValue({ emailTemplates: emailTemplates });
           }
-          dialog1.close();
+          dialog1 && dialog1.close();
           this.dialog && this.dialog.close();
         }
       });
@@ -305,26 +312,37 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event, sendType) {
-    if (event[0].id) {
+    if (event) {
       let lst = [];
-      // switch (event[0].objectType) {
-      //   case 'U':
-      let lstID = event[0].id.split(';');
-      let lstUserName = event[0].text.split(';');
+      event.forEach((element) => {
+        if (element.objectType == 'U') {
+          let lstID = element?.id.split(';');
+          let lstUserName = element?.text.split(';');
 
-      for (let i = 0; i < lstID?.length; i++) {
-        if (lstID[i].toString() != '') {
-          let appr = new EmailSendTo();
-          appr.text = lstUserName[i];
-          appr.objetID = lstID[i];
-          appr.objectType = event[0].objectType;
-          appr.sendType = sendType.toString();
-
-          lst.push(appr);
+          for (let i = 0; i < lstID?.length; i++) {
+            let isExist = this.isExist(element?.objectType, sendType);
+            if (lstID[i].toString() != '' && isExist == false) {
+              let appr = new EmailSendTo();
+              appr.objectType = element.objectType;
+              appr.text = lstUserName[i];
+              appr.objetID = lstID[i];
+              appr.sendType = sendType.toString();
+              lst.push(appr);
+            }
+          }
+        } else {
+          let isExist = this.isExist(element?.objectType, sendType);
+          if (isExist == false) {
+            let appr = new EmailSendTo();
+            appr.objetID = element?.objectType;
+            appr.text = element?.objectName;
+            appr.objectType = element?.objectType;
+            appr.sendType = sendType.toString();
+            appr.icon = sendType.icon;
+            lst.push(appr);
+          }
         }
-        // }
-        // break;
-      }
+      });
 
       switch (sendType) {
         case 1:
@@ -341,6 +359,27 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           break;
       }
     }
+  }
+
+  isExist(objetID, sendType) {
+    let index = -1;
+    switch (sendType) {
+      case 1:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 2:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 3:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 4:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+    }
+
+    if (index == -1) return false;
+    else return true;
   }
 
   fileAdded(event) {
@@ -366,4 +405,5 @@ export class EmailSendTo {
   modifiedOn: Date;
   modifiedBy: string;
   text: string;
+  icon: string = null;
 }

@@ -58,6 +58,7 @@ import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
 import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
+import { TreeViewComponent } from './tasks/tree-view/tree-view.component';
 
 export const routes: Routes = [
   {
@@ -67,6 +68,12 @@ export const routes: Routes = [
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
+        children: [
+          {
+            path: ':id',
+            component: TasksComponent,
+          },
+        ],
       },
       {
         path: 'viewboards/:funcID',
@@ -196,6 +203,7 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
+  TreeViewComponent
 ];
 @NgModule({
   imports: [

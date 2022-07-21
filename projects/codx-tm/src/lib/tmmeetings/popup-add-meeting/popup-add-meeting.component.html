@@ -38,11 +38,11 @@
             <div class="form-group row mt-3">
               <div class="col-4">
                 <div>
-                  <codx-label fiedName="FromDate"  [formModel]="form.formModel" default="Ngày">
+                  <codx-label fiedName="StartDate"  [formModel]="form.formModel" default="Ngày">
                   </codx-label>
                 </div>
-                <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.fromDate" 
-                field="fromDate" format="d" placeholder="datetime"  (valueChange)="valueTime($event)">
+                <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.startDate" 
+                field="startDate" format="d" placeholder="datetime"  (valueChange)="valueTime($event)">
                 </codx-input>
               </div>
               <div class="col-3">
@@ -139,18 +139,19 @@
               <div class="form-group row mt-3">
                 <div class="col-6">
                   <div>
-                    <codx-label fiedName="StartDate" [formModel]="form.formModel"  (valueChange)="valueChange($event)" default="Ngày bắt đầu">
+                    <codx-label fiedName="FromDate" [formModel]="form.formModel" default="Ngày bắt đầu">
                     </codx-label>
                   </div>
-                  <codx-input type="datetime" class="test-datetime"  (valueChange)="valueChange($event)" [crrValue]="meeting?.startDate" field="startDate" placeholder="datetime" format="F">
+                  <codx-input type="datetime" class="test-datetime"  (valueChange)="valueChange($event)" [crrValue]="meeting?.fromDate" 
+                  field="fromDate" placeholder="datetime" format="F">
                   </codx-input>
                 </div>
                 <div class="col-6">
                   <div>
-                    <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
+                    <codx-label fiedName="ToDate" [formModel]="form.formModel" default="Ngày kết thúc">
                     </codx-label>
                   </div>
-                  <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.endDate"  field="endDate" format="F" placeholder="datetime">
+                  <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.toDate" (valueChange)="valueChange($event)" field="toDate" format="F" placeholder="datetime">
                   </codx-input>
                 </div>
               </div>
@@ -249,8 +250,7 @@
                     </div>
                   </div>
                 </div>
-                <codx-input field="repeated"  (valueChange)="valueChange($event)"
-                 [crrValue]="meeting?.repeated" type="textarea" >
+                <codx-input field="repeated"  type="textarea" >
                 </codx-input>
             </div>
             </ng-container>

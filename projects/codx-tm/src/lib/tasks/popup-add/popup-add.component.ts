@@ -503,7 +503,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào phải lớn hơn hoặc bằng 0 !');
+      this.notiService.notify('Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !');
       this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       this.changeDetectorRef.detectChanges();
       return;
@@ -556,10 +556,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
       }
-      // this.task.estimated = moment(this.task.endDate).diff(
-      //   moment(this.task.startDate),
-      //   'hours'
-      // );
     }
   }
 
