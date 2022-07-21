@@ -451,7 +451,7 @@
                                 <div class="form-group gender-control">
                                     <codx-label fiedName="Gender" default="Giới tính">
                                     </codx-label>
-                                    
+
                                     <codx-input name="gender" type="valuelist" field="Gender" placeholder=""
                                         [crrValue]="employee?.gender" (valueChange)="dataChange($event, 'gender')"
                                         refValue="L0068"></codx-input>
@@ -461,9 +461,13 @@
                                 <div class="form-group">
                                     <codx-label fiedName="Birthday" default="Ngày sinh">
                                     </codx-label>
-                                    <codx-input type="datetime" placeholder="datetime" format="d" placeholder="datetime"
+                                    <!-- <codx-input type="datetime" placeholder="datetime" format="d" placeholder="datetime"
                                          [crrValue]="employee?.birthday" field="birthday"
                                         (valueChange)="dataChange($event, 'birthday')">
+                                    </codx-input> -->
+                                    <codx-input type="datetime" class="test-datetime" field="birthday" format="d"
+                                        placeholder="datetime" [crrValue]="employee?.birthday"
+                                        (valueChange)="changeTime($event)">
                                     </codx-input>
                                 </div>
                             </div>
@@ -548,8 +552,9 @@
                                     <codx-label fiedName="OrganizationName" default="Bộ phận">
                                     </codx-label>
                                     <codx-input type="combobox" class="form-control borderless p-0"
-                                        [crrValue]="employee?.organizationName" field="organizationName" refValue="OrganizationUnits"
-                                        service="HR" (valueChange)="dataChange($event, 'organizationName')" loadFull="true"
+                                        [crrValue]="employee?.organizationName" field="organizationName"
+                                        refValue="OrganizationUnits" service="HR"
+                                        (valueChange)="dataChange($event, 'organizationName')" loadFull="true"
                                         [disabled]="isDisable">
                                     </codx-input>
                                 </div>
@@ -586,8 +591,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
-                                    <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" field="joinedOn" (valueChange)="dataChange($event, 'joinedOn')"
+                                    <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
+                                        field="joinedOn" (valueChange)="dataChange($event, 'joinedOn')"
                                         [crrValue]="employee?.joinedOn">
                                     </codx-input>
                                 </div>
@@ -596,8 +601,8 @@
                                 <div class="form-group">
                                     <codx-label fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
                                     </codx-label>
-                                    <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" [crrValue]="employee?.hiredOn" field="hiredOn"
+                                    <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
+                                        [crrValue]="employee?.hiredOn" field="hiredOn"
                                         (valueChange)="dataChange($event, 'hiredOn')">
                                     </codx-input>
                                 </div>
