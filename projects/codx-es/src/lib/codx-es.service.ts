@@ -621,7 +621,7 @@ export class CodxEsService {
     );
   }
 
-  getLastTextLine(data: number): Observable<number> {
+  getLastTextLine(pageNumber: number): Observable<number> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -631,7 +631,7 @@ export class CodxEsService {
       environment.pdfUrl + '/TextOnPage',
       {
         action: 'TextOnPage',
-        pageIndex: data - 1,
+        pageIndex: pageNumber - 1,
       },
       httpOptions
     );

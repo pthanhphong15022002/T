@@ -31,12 +31,12 @@ export class UpdateStatusPopupComponent implements OnInit {
   status: string;
   title: string = 'Cập nhật tình trạng công việc ';
   funcID:any
+  crrCompleted : any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
-    private activedRouter : ActivatedRoute,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -68,12 +68,11 @@ export class UpdateStatusPopupComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
+    this.crrCompleted = this.completed;
   }
   changeTime(data) {
     if(!data.data)return ; 
     this.completedOn = data.data.fromDate;
-    // this.estimated = moment(this.completedOn)
-    //     .diff(moment(this.startDate), 'hours')
     if(this.completed<=0){
       var time = (((this.completedOn?.getTime() -this.timeStart.getTime())/3600000).toFixed(2));
       this.completed = Number.parseFloat(time);
@@ -81,7 +80,24 @@ export class UpdateStatusPopupComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   changeEstimated(data) {
-   
+    if (!data.data) return;
+    var num = Number.parseFloat(data.data);
+    if (!num) {
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
+      this.completed = this.crrCompleted >0 ? this.crrCompleted : 0;
+       this.changeDetectorRef.detectChanges();
+      return;
+    }
+    if (num < 0) {
+      //  this.notiService.notifyCode("can cai code o day đang gan tam")
+      this.notiService.notify('Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !');
+      this.completed= this.crrCompleted > 0 ? this.crrCompleted : 0;
+     this.changeDetectorRef.detectChanges();
+      return;
+    }
+    this.completed = num
+    this.crrCompleted =  this.completed;
   }
 
   beforeSave(op: any) {

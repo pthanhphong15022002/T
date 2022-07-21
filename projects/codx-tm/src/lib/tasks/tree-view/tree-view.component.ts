@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -13,7 +14,7 @@ import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
   templateUrl: './tree-view.component.html',
   styleUrls: ['./tree-view.component.css'],
 })
-export class TreeViewComponent implements OnInit {
+export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() data?: any;
   @Input() formModel?: FormModel;
   dataTree = [];
@@ -40,6 +41,9 @@ export class TreeViewComponent implements OnInit {
       .subscribe((res) => {
         this.dataTree = res;
       });
+  }
+  ngAfterViewInit(): void {
+    
   }
 
   clickMF(e: any, dt?: any) {

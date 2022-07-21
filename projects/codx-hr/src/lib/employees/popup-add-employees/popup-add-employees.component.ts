@@ -185,4 +185,8 @@ export class PopupAddEmployeesComponent implements OnInit {
       }
     }
   }
+  changeTime(data){
+    if (!data.field || !data.data) return;
+    this.employee[data.field] = data.data?.fromDate;
+  }
 }
