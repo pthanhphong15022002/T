@@ -46,7 +46,7 @@ export const routes: Routes = [
       
       {
         path:'',
-        redirectTo:'news/WPT02',
+        redirectTo:'news/WPT02/home',
         pathMatch: 'full'
       }
     ],
