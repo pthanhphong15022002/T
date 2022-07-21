@@ -26,7 +26,7 @@ export class PopupAddMeetingComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.getParam() ;
+    // this.getParam() ;
     this.data = dialog.dataService!.dataSelected;
     this.meeting = this.data;
     this.dialog = dialog;
@@ -49,7 +49,7 @@ export class PopupAddMeetingComponent implements OnInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'TMMeetings'
+        'CO_Meetings'
       )
       .subscribe((res) => {
         if (res) {
@@ -84,15 +84,12 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   valueTime(e){
-    debugger
-    this.meeting[e.field] = e.data?.fromDate;
-    if(e.field=='startDate'){
-
+    if(e.field=='startDate' || e.field=='endDate'){
        let hour = (e.data.fromdate as Date).getHours();
        let minutes = (e.data.fromdate as Date).getMinutes();
        this.meeting.startDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
-       console.log(this.meeting.startDate);
-       
+       this.meeting.endDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
+       console.log(this.meeting.startDate);       
     }
   }
 
