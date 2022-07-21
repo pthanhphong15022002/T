@@ -36,31 +36,29 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   user: any;
   tasksByEmp: any;
   isDesc: boolean = true;
-  public data: object[] = [];
-
+  data: any;
   dbData: any;
 
   top3: any;
   groups: any;
 
-  public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
 
-
-  public isGradient: boolean = true;
+  isGradient: boolean = true;
 
   //#region gauge
-  public font1: Object = {
+  font1: Object = {
     size: '15px',
     color: '#00CC66',
   };
-  public rangeWidth: number = 25;
+  rangeWidth: number = 25;
   //Initializing titleStyle
-  public titleStyle: Object = { size: '18px' };
-  public font2: Object = {
+  titleStyle: Object = { size: '18px' };
+  font2: Object = {
     size: '15px',
     color: '#fcde0b',
   };
-  public rangeLinearGradient1: Object = {
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -69,7 +67,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -78,59 +76,50 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
-  //#endregion gauge
+  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  //#region gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
   //#endregion gauge
 
-  public piedata1: any;
-  public piedata2: Object[];
-  public legendSettings: Object = {
+  piedata1: any;
+  piedata2: Object[];
+  legendSettings: Object = {
     position: 'Top',
     visible: true,
   };
-  public legendRateDoneSettings: Object = {
+  legendRateDoneSettings: Object = {
     visible: true,
   };
-
-  openTooltip() {
-    console.log('mouse enter');
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
-  closeTooltip() {
-    console.log('mouse leave');
-  }
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -183,8 +172,6 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.model = new DataRequest();
     this.model.predicate = 'DepartmentID = @0';
     this.model.dataValue = this.user.employee?.departmentID;
-    this.model.predicates = 'OrgUnitID = @0';
-    this.model.dataValues = this.user.buid;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -206,12 +193,88 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   }
 
   private getGeneralData() {
-    this.tmService.getDeptDBData(this.model).subscribe((res) => {
+    this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
       console.log(res);
+      this.piedata1 = res?.tasksByGroup;
+      this.piedata2 = [
+        {
+          x: 'Chưa thực hiện',
+          y: res?.status.newTasks,
+        },
+        {
+          x: 'Đang thực hiên',
+          y: res?.status.processingTasks,
+        },
+        {
+          x: 'Hoàn tất',
+          y: res?.status.doneTasks,
+        },
+        {
+          x: 'Hoãn lại',
+          y: res?.status.postponeTasks,
+        },
+        {
+          x: 'Bị huỷ',
+          y: res?.status.canceledTasks,
+        },
+      ];
+      this.dataColumn = res?.dataBarChart.barChart;
+      this.dataLine = res?.dataBarChart.lineChart;
+      //this.data = res?.tasksByGroup;
+      res.vltasksByOrgUnit.map((data) => {
+        let newTasks = 0;
+        let processingTasks = 0;
+        let doneTasks = 0;
+        let postponeTasks = 0;
+        let cancelTasks = 0;
+        data.tasks.map((task) => {
+          switch (task.status) {
+            case '1':
+              newTasks = newTasks + 1;
+              break;
+            case '2':
+              processingTasks = processingTasks + 1;
+              break;
+            case '9':
+              doneTasks = doneTasks + 1;
+              break;
+            case '5':
+              postponeTasks = postponeTasks + 1;
+              break;
+            case '8':
+              cancelTasks = cancelTasks + 1;
+              break;
+          }
+        });
+        this.vlWork.push({
+          id: data.id,
+          qtyTasks: data.qtyTasks,
+          status: {
+            new: (newTasks / data.qtyTasks) * 100,
+            processing: (processingTasks / data.qtyTasks) * 100,
+            done: (doneTasks / data.qtyTasks) * 100,
+            postpone: (postponeTasks / data.qtyTasks) * 100,
+            cancel: (cancelTasks / data.qtyTasks) * 100,
+          },
+        });
+      });
+      this.detectorRef.detectChanges();
     });
   }
 
+  openTooltip() {
+    console.log('mouse enter');
+    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
+  }
+
+  closeTooltip() {
+    console.log('mouse leave');
+  }
+
   sort() {
+    debugger;
     this.isDesc = !this.isDesc;
+    this.vlWork = this.vlWork.reverse();
+    this.detectorRef.detectChanges();
   }
 }
