@@ -59,6 +59,7 @@ import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-a
 import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
 import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
 import { TreeViewComponent } from './tasks/tree-view/tree-view.component';
+import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
 
 export const routes: Routes = [
   {
@@ -203,7 +204,8 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
-  TreeViewComponent
+  TreeViewComponent,
+  ViewListMeetComponent
 ];
 @NgModule({
   imports: [

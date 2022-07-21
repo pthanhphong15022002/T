@@ -1,9 +1,9 @@
 <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="button" className="MeetingsBusiness" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [autoLoad]="true"
+  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [autoLoad]="true"
   idField="meetingID">
 </codx-views>
 
-<ng-template #templateLeft>
-
-  aaaaaaaaaaaaaaaa
+<ng-template #itemViewList let-data>
+  <lib-view-list-meet [formModel]="view.formModel" [data]="data" >
+  </lib-view-list-meet>
 </ng-template>
