@@ -64,6 +64,7 @@ export class PopupAddMeetingComponent implements OnInit {
     var data = [];
     if(this.action === 'add'){
       op.method = 'AddMeetingsAsync';
+      op.className = 'MeetingsBusiness';
       data = [
         this.meeting,
         this.functionID,    
@@ -71,6 +72,7 @@ export class PopupAddMeetingComponent implements OnInit {
     }
 
     op.data = data;
+    return true;
   }
 
   onSave(){
@@ -89,16 +91,14 @@ export class PopupAddMeetingComponent implements OnInit {
 
 
   valueChange(e){
-    if(e.data){
-      this.meeting[e.field] = e.data;
-      
-    }
+    if(!e.field || e.data ==null) return;
+    this.meeting[e.field] = e.data;
+
   }
 
   valueTime(e){
-    if(e.data!=null){
-      e.meeting.startDate= e.data.fromDate; 
-    }
+    if(!e.field || e.data ==null) return;
+      this.meeting[e.field]= e.data?.fromDate; 
     // if(e.field=='startDate' || e.field=='endDate'){
     //    let hour = (e.data.fromdate as Date).getUTCHours();
     //    let minutes = (e.data.fromdate as Date).getMinutes();
@@ -110,7 +110,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   valueEndTime(e){
     if(e.data!=null){
-      e.meeting.endDate= e.data.toDate; 
+      this.meeting.endDate= e.data.toDate; 
     }
   }
 

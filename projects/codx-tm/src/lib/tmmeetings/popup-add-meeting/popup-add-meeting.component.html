@@ -43,12 +43,13 @@
                     </codx-label>
                   </div>
                   <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.startDate" 
-                  field="startDate" format="d" placeholder="datetime"  (valueChange)="valueTime($event)">
+                  (valueChange)="valueTime($event)"
+                  field="startDate" format="d" placeholder="datetime" >
                   </codx-input>
                 </div>
                 <div class="col-3">
                   <div>
-                    <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Từ giờ">
+                    <codx-label fiedName="StartDate" [formModel]="form.formModel"  default="Từ giờ">
                     </codx-label>
                   </div>
                   <codx-input type="datetime" field="startDate" [crrValue]="meeting?.startDate" 
@@ -111,7 +112,7 @@
                       </codx-label>
                     </div>
                   </div>
-                  <codx-input type="Share" field="resources" [dataShared]="[]" multiple="true" [showInput]="false">
+                  <codx-input type="Share"  refValue="TM003" field="resources" [dataShared]="[]" multiple="true" [showInput]="false">
                   </codx-input>
                 </div>
                 <div class="">
