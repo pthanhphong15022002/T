@@ -65,8 +65,8 @@ export class UserComponent extends UIComponent {
         },
       },
     ];
-    this.view.dataService.methodSave = '';
-    this.view.dataService.methodUpdate = '';
+    this.view.dataService.methodSave = 'AddUserAsync';
+    this.view.dataService.methodUpdate = 'UpdateUserAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -110,8 +110,8 @@ export class UserComponent extends UIComponent {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
 

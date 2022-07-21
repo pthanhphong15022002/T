@@ -106,7 +106,7 @@
     <ng-template #footer>
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-primary btn-post" (click)="Submit()">
-                <codx-label formName="WP_Comments" name="lblSubmit" default="Đăng"></codx-label>
+                <codx-label formName="WP_Comments" name="lblSubmit" [default]="dialogData.status == STATUS.EDIT? 'Lưu':'Đăng'"></codx-label>
             </button>
         </div>
     </ng-template>
@@ -114,12 +114,21 @@
 <ng-template #create>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" 
+                type="textarea" 
+                [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                (valueChange)="valueChange($event)">
             </codx-input>
        </div>
         <div>
-            <codx-file [lstFile]="listFileUpload" [showBtnRemove]='true'></codx-file>
+            <codx-file 
+                [lstFile]="listFileUpload" 
+                [funcID]="dialogRef.formModel.funcID" 
+                [edit]='true'>
+            </codx-file>
         </div>
         <div class="d-none">
             <codx-attachment #atmCreate 
@@ -139,14 +148,30 @@
     <ng-container *ngIf="dataEdit">
         <div class="my-3">
             <div>
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+                <codx-input 
+                    format="ed3" 
+                    [class]="'border-none'" 
+                    type="textarea" 
+                    [crrValue]="message"
+                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                    (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
             <div >
-                <codx-file [objectID]="dataEdit.recID" [showBtnRemove]='true'></codx-file>
+                <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true'></codx-file>
             </div>
-            
+            <div class="d-none">
+                <codx-attachment #atmEdit
+                    objectType="WP_Comments" 
+                    hideFolder="1" hideUploadBtn="1"
+                    hideDes="1" type="inline" 
+                    allowExtensions=".jpg,.png" 
+                    allowMultiFile="1"
+                    (fileCount)="getfileCount($event)"
+                    idBrowse="atmEdit"
+                    [functionID]="dialogRef.formModel.funcID">
+                </codx-attachment>
+            </div>
         </div>
     </ng-container>
 </ng-template>
@@ -154,8 +179,12 @@
 <ng-template #share>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" type="textarea"
+                [crrValue]="message"
+                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                (valueChange)="valueChange($event)">
             </codx-input>
         </div>
         <div>
@@ -168,24 +197,8 @@
             </codx-attachment>
         </div>
         <div class="border ndchiase p-4 mt-3">
-            <div class="d-flex mb-3 card-border">
-                <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
-                </codx-img>
-                <div class="d-flex flex-column flex-grow-1 ms-2">
-                    <div class="d-flex align-items-center">
-                        <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
-                    </div>
-                    <div class="text-info-date">
-                        <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
-                    </div>
-                </div>
-            </div>
             <div>
                 <ng-container *ngIf="!dataShare?.isPortal;else category2">
-                    <div class="text-dark text-feed">
-                        <read-more #readmore [content]="dataShare?.content" [limit]="800" [completeWords]="true">
-                        </read-more>
-                    </div>
                     <div class="pic-feed">
                         <div class="pic-feed-img">
                             <codx-file [objectID]="dataShare.recID"></codx-file>
@@ -249,6 +262,25 @@
                         </div>
                     </div>
                 </ng-template>
+
+                <div class="border-start border rounded-3 p-4">
+                    <div class="d-flex mb-3 card-border my-2">
+                        <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
+                        </codx-img>
+                        <div class="d-flex flex-column flex-grow-1 ms-2">
+                            <div class="d-flex align-items-center">
+                                <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                            </div>
+                            <div class="text-info-date">
+                                <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-dark text-feed">
+                        <read-more #readmore [content]="dataShare?.content" [limit]="800" [completeWords]="true">
+                        </read-more>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -267,14 +299,6 @@
                 <div class="pic-feed-img">
                     <codx-file [objectID]="item.recID"></codx-file>
                 </div>
-                <!-- <ng-container *ngIf="item.isUploadVideo">
-                    <video src="#"></video>
-                </ng-container>
-                <ng-container *ngIf="item.isUploadFile">
-                    <codx-attachment [objectId]="item.recID"   idBrowse="atmView" objectType="WP_Comments"
-                        hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline" allowExtensions=".jpg,.png">
-                    </codx-attachment>
-                </ng-container> -->
             </div>
         </ng-container>
     </ng-container>

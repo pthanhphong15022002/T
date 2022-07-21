@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 
@@ -16,10 +16,12 @@ export class PositionsComponent implements OnInit {
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
-
-
+  posInfo: any = {};
+  employees: any = [];
+  itemSelected: any;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('p') public popover: NgbPopover;
 
 
   constructor(
@@ -71,9 +73,6 @@ export class PositionsComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
-        this.add();
-        break;
       case 'edit':
         this.edit(data);
         break;
@@ -96,38 +95,60 @@ export class PositionsComponent implements OnInit {
   }
 
   add() {
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '550px';
+    //   this.dialog = this.callfunc.openSide(
+    //     PopupAddPositionsComponent,
+    //     [this.view.dataService.dataSelected, 'add'],
+    //     option
+    //   );
+    //   this.dialog.closed.subscribe((e) => {
+    //     console.log(e);
+    //   });
+    // });
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(
-        PopupAddPositionsComponent,
-        [this.view.dataService.dataSelected, 'add'],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected , option);
+      this.dialog.closed.subscribe(e => {
         console.log(e);
-      });
+      })
     });
   }
 
   edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+    // if (data) {
+    //   this.view.dataService.dataSelected = data;
+    // }
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.currentView?.dataService;
+    //     option.FormModel = this.view?.currentView?.formModel;
+    //     option.Width = '800px';
+    //     this.dialog = this.callfunc.openSide(
+    //       PopupAddPositionsComponent,
+    //       [this.view.dataService.dataSelected, 'edit'],
+    //       option
+    //     );
+    //   });
+
+      if (data) {
+        this.view.dataService.dataSelected = data;
+      }
+      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddPositionsComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
       });
   }
 
@@ -136,7 +157,7 @@ export class PositionsComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       this.view.dataService.dataSelected = data;
       this.dialog = this.callfunc.openSide(
         PopupAddPositionsComponent,
@@ -146,9 +167,41 @@ export class PositionsComponent implements OnInit {
     });
   }
 
-  delete(data: any) {
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'Delete';
 
+    opt.data = itemSelected.taskGroupID;
+    return true;
   }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
+  }
+
+loadEmployByCountStatus(el, posID, status) {
+        var stt = status.split(';');
+        this.popover["_elementRef"] = new ElementRef(el);
+        if (this.popover.isOpen()) {
+            this.popover.close();
+        }
+        this.posInfo = {};
+        this.employees = [];
+        this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+            .subscribe(response => {
+
+                this.employees = response || [];
+                this.popover.open();
+
+            });
+    }
 
   requestEnded(evt: any) {
     this.view.currentView;

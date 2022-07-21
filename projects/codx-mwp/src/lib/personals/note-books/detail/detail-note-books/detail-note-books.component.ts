@@ -2,7 +2,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
-import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
 @Component({
   selector: 'app-detail-note-books',
@@ -98,7 +97,6 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.formModel = this.view?.formModel;
-    debugger;
     this.views = [{
       type: ViewType.grid,
       sameData: true,

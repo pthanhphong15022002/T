@@ -1,0 +1,108 @@
+<codx-views #view [funcID]="funcID" [views]="views" [button]="button" (buttonClick)="openFormAdd($event)"
+    idField="recID" entityName="AD_Roles">
+</codx-views>
+
+<div class="adroles-group qtht border-top-erm">
+    <div class="content-center">
+        <codx-listview [itemTemplate]="template" [funcId]="funcID" service="SYS" #listRoles [predicate]=""
+            [dataValue]="" type="listView" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles">
+        </codx-listview>
+        <ng-template #template let-data>
+            
+
+            <div class="list-item list-action-menu d-flex border-1 hover-more-block">
+                <!-- <div class="div-action-menu">
+                    <div class="action-menu d-flex">
+                        <div class="action-content d-flex align-items-center">
+                            <a class="action-item" *ngIf="data.write" (click)="openEdit(data.recID, false)">
+                                <div class="d-flex align-items-center btn-tooltip">
+                                    <span class="icon-edit icon-18 ml-2 mr-2"></span>
+                                    <span class="tooltiptext">Edit</span>
+                                </div>
+                            </a>
+                            <a class="action-item" *ngIf="data.write" (click)="openEdit(data.recID, true)">
+                                <div class="d-flex align-items-center btn-tooltip">
+                                    <span class="icon-content_copy icon-18 text-warning ml-2 mr-2"></span>
+                                    <span class="tooltiptext">Copy</span>
+                                </div>
+                            </a>
+                            <a class="action-item" *ngIf="data.delete && !data.isSystem" (click)="delete(data)">
+                                <div class="d-flex align-items-center btn-tooltip">
+                                    <span class="icon-close icon-18 text-danger ml-2 mr-2"></span>
+                                    <span class="tooltiptext">Delete</span>
+                                </div>
+                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-icon btn-md" type="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon-attach_file icon-18"></span>
+                                            <span class="ml-3">Đính kèm file</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon-email icon-18"></span>
+                                            <span class="ml-3">Gửi mail</span>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon-share icon-18"></span>
+                                            <span class="ml-3">Chia sẻ</span>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon-extension icon-18"></span>
+                                            <span class="ml-3">Chức năng mở rộng</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> -->
+                <codx-mfunc type="hover" [formModel]="view?.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+                </codx-mfunc>
+                <div (click)="LinkDetail(data.recID, data.roleName, data.isSystem)" class="d-flex flex-grow-1">
+                    <div class="mr-4 ml-4">
+                        <!-- <span class="symbol-text" #elm [ngStyle]="styleObject(elm)">{{data.roleName
+                            |
+                            split:['']:0}}</span> -->
+                        <codx-img class="symbol symbol-35 symbol-circle" [objectId]="data.recID"
+                            [objectName]="data.roleName" objectType="AD_Roles" [width]="90">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="d-flex flex-grow-1">
+                                <div class="task-name font-weight-bold font-size-h5">
+                                    {{data.roleName}}</div>
+                            </div>
+                            <div class="d-flex">
+                                <span *ngIf="data.isSystem; else second"
+                                    class="label label-xxs label-light-primary label-pill label-inline ml-2">System</span>
+
+                                <ng-template #second>
+                                    <span
+                                        class="label label-xxs label-light-primary label-pill label-inline ml-2">Customize</span>
+                                </ng-template>
+                            </div>
+
+                        </div>
+                        <span class="text-dark-50 font-size-sm">{{data.description}}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+
+    </div>
+</div>

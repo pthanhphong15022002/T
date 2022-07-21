@@ -105,6 +105,9 @@
         <div class="pt-3">
             <ng-container *ngIf="item.category == '4'; else shareTemplate">
                 <div [innerHTML]="item.content"></div>
+                <div>
+                    <codx-file [objectID]="item.recID" objectType="WP_Comments"></codx-file>
+                </div>
                 <!-- start share -->
                 <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
                     <div class="post mt-3" (click)="naviagte(item.shares)">
@@ -179,9 +182,12 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
+        <div class="content">
+            <div [innerHTML]="item.content"></div>
+        </div>
         <div class="pic-feed">
             <div class="pic-feed-img">
-                <codx-file [objectID]="item.recID"></codx-file>
+                <codx-file #codxFile [objectID]="item.recID" (evetFile)="getFile($event,item)"></codx-file>
             </div>
         </div>
     </ng-container>

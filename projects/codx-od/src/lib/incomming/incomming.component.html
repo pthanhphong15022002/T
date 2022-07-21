@@ -6,13 +6,9 @@
     cardCss="card-template border-bottom px-2 py-3" [formModel]="view.formModel"
     [resources]="getIdUser(data.createdBy,data.owner)" [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
-    [titleLine]="2">
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark">
   </codx-temp-full>
-
-  <!-- [icoDateCss]="'icon-access_alarm'" -->
-  <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
-
+  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelLeft>
   <div class="codx_e-main codx_left">

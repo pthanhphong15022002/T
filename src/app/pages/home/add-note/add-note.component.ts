@@ -319,13 +319,13 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEdit() {
-    debugger;
     var dateNow = new Date(this.note.createdOn);
     this.note.createdOn = this.currentDate;
 
     if (this.checkPin == true)
       this.note.isPin = this.pin;
     this.note.checkList = this.listNote;
+    this.note.checkList.shift()
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
@@ -334,7 +334,6 @@ export class AddNoteComponent implements OnInit {
           if (this.checkFile == true)
             this.attachment.saveFiles();
           var object = [];
-          debugger;
           if (dateNow.toLocaleDateString() == this.currentDate)
             object = [{ data: res, type: 'edit-currentDate' }]
           else

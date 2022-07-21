@@ -17,6 +17,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -43,8 +44,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   dialogApprovalStep: FormGroup;
   vllEmail = [];
+  vllShare = 'ES014';
+  lstApproveMode: any;
   cbxName;
   time: any;
+  currentMode: string;
 
   dialog: DialogRef;
   tmpData: any;
@@ -72,6 +76,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
+    this.vllShare = data?.data.vllShare ?? 'ES014';
   }
 
   ngAfterViewInit(): void {
@@ -87,20 +92,47 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
-        console.log(this.formModel);
         this.dialog.formModel = this.formModel;
       }
 
-      this.esService
-        .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-        .then((res) => {
-          this.cbxName = res;
-          console.log('cbx', this.cbxName);
-          this.cache.valueList('ES012').subscribe((res) => {
-            console.log('cbx nAME', this.cbxName);
-            console.log('res', res);
-          });
+      this.cbxName = {};
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gv) => {
+          if (gv) {
+            for (const key in gv) {
+              if (Object.prototype.hasOwnProperty.call(gv, key)) {
+                const element = gv[key];
+                if (element.referedValue != null) {
+                  this.cbxName[key] = element.referedValue;
+                }
+              }
+            }
+            console.log(this.cbxName);
+
+            if (this.cbxName) {
+              this.cache.valueList('ES016').subscribe((vllMode) => {
+                if (vllMode) {
+                  this.lstApproveMode = vllMode.datas;
+                  console.log('aaaaaaaaaaaaaaaa', this.lstApproveMode);
+                }
+              });
+            }
+          }
         });
+
+      console.log('getComboboxName1', this.cbxName['ApproveMode']);
+
+      // this.esService
+      //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+      //   .then((res) => {
+      //     this.cbxName = res;
+      //     console.log('cbxName', this.cbxName);
+
+      //     console.log('mode', this.cbxName);
+
+      //     this.cache.valueList('ES012').subscribe((res) => {});
+      //   });
       this.initForm();
     });
   }
@@ -114,15 +146,19 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         if (this.isAdd) {
           this.dialogApprovalStep.patchValue({
             leadTime: 0,
-            representative: true,
-            sequential: false,
+            approveMode: '1',
+            approveControl: '0',
+            rejectControl: '1',
+            rsedoControl: '1',
+            redoStep: 0,
+            recallControl: '1',
+            cancelControl: '1',
             transID: this.transId,
             stepNo: this.stepNo,
           });
 
           this.esService.getNewDefaultEmail().subscribe((res) => {
             this.dialogApprovalStep.patchValue({ emailTemplates: res });
-            console.log(this.dialogApprovalStep.value);
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
@@ -130,6 +166,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             'id',
             new FormControl(this.dataEdit.id)
           );
+          if (!this.dialogApprovalStep.value.emailTemplates) {
+            this.esService.getNewDefaultEmail().subscribe((res) => {
+              this.dialogApprovalStep.patchValue({ emailTemplates: res });
+            });
+          }
         }
       });
   }
@@ -148,7 +189,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         .closed.subscribe((x) => {
           if (x.event.status == 'Y') {
             let i = approvalStep.indexOf(data);
-            console.log(i);
 
             if (i != -1) {
               approvalStep.splice(i, 1);
@@ -163,10 +203,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     this.isSaved = true;
-    console.log(this.dialogApprovalStep.value);
     if (this.dialogApprovalStep.invalid == true) {
       this.notifySvr.notify('invalid');
     }
+    this.dialogApprovalStep.patchValue({ approveMode: this.currentMode });
     if (this.isAdd) {
       this.lstStep.push(this.dialogApprovalStep.value);
       this.dialog && this.dialog.close();
@@ -179,12 +219,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  popup(evt: any) {}
-
   checkedOnlineChange(event) {}
 
   openSetupEmail(email) {
-    if (email?.IsEmail == '1' || email?.isEmail == '1') {
+    if (email?.isEmail == '1') {
       let data = {
         dialog: this.dialog,
         formGroup: this.dialogApprovalStep,
@@ -193,6 +231,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsPublish: true,
         showSendLater: true,
       };
+
       this.cfService.openForm(
         PopupAddEmailTemplateComponent,
         '',
@@ -210,6 +249,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         if (event.data?.length > 0) {
           event.data.forEach((element) => {
             let lst = this.dialogApprovalStep.value.approvers ?? [];
+
             if (element.objectType == 'U') {
               let appr = new Approvers();
               appr.approverName = element.text;
@@ -227,24 +267,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
       } else {
         this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
-        if (
-          event.field == 'representative' &&
-          this.dialogApprovalStep.value.representative == true &&
-          this.dialogApprovalStep.value.sequential == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            sequential: false,
-          });
-        }
-        if (
-          event.field == 'sequential' &&
-          this.dialogApprovalStep.value.sequential == true &&
-          this.dialogApprovalStep.value.representative == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            representative: false,
-          });
-        }
       }
     }
 
@@ -260,9 +282,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // valueEmailChange(event, eTemplate) {
-  //   debugger;
-  // }
+  valueModeChange(event, item) {
+    this.currentMode = item?.value;
+  }
 
   valueEmailChange(event, eTemplate) {
     let index = this.dialogApprovalStep.value.emailTemplates.indexOf(eTemplate);
@@ -280,34 +302,50 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event) {
-    if (event[0].id) {
-      switch (event[0].objectType) {
-        case 'U':
-          let lstID = event[0].id.split(';');
-          let lstUserName = event[0].text.split(';');
-          let lst = this.dialogApprovalStep.value.approvers ?? [];
+    if (event) {
+      let lst = this.dialogApprovalStep.value.approvers ?? [];
+      event.forEach((element) => {
+        if (element.objectType == 'U') {
+          let lstID = element?.id.split(';');
+          let lstUserName = element?.text.split(';');
+
           for (let i = 0; i < lstID?.length; i++) {
+            let index = lst.findIndex((p) => p.approver == lstID[i]);
+            if (lstID[i].toString() != '' && index == -1) {
+              let appr = new Approvers();
+              appr.roleType = element.objectType;
+              appr.approverName = lstUserName[i];
+              appr.approver = lstID[i];
+              lst.push(appr);
+            }
+          }
+        } else {
+          let i = lst.findIndex((p) => p.approver == element?.objectType);
+          if (i == -1) {
             let appr = new Approvers();
-            appr.approverName = lstUserName[i];
-            appr.approver = lstID[i];
+            appr.roleType = element?.objectType;
+            appr.approverName = element?.objectName;
+            appr.approver = element?.objectType;
+            appr.icon = element?.icon;
             lst.push(appr);
           }
-          this.dialogApprovalStep.patchValue({ approvers: lst });
-          break;
-      }
+        }
+
+        this.dialogApprovalStep.patchValue({ approvers: lst });
+      });
     }
   }
 }
 export class Approvers {
   recID: string;
-  roleType: String = '11';
-  approver: String = 'ADMIN';
-  approverName: String;
-  position: String = 'KT';
-  positionName: String;
+  roleType: string;
+  approver: string;
+  approverName: string;
+  position: string;
+  positionName: string;
   leadTime: any;
-  comment: String;
-
+  comment: string;
+  icon: string = null;
   createdOn: any;
 }
 

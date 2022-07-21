@@ -29,6 +29,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   isAfterRender = false;
   gridViewSetup: any;
   action = '';
+  data: any;
 
   constructor(
     private authStore: AuthStore,
@@ -44,10 +45,12 @@ export class PopupAddEmployeesComponent implements OnInit {
       ...this.employee,
       ...dt?.data,
     };
-     this.action = dt.data[1];
+     this.action = dt.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    this.data = dialog.dataService!.dataSelected;
+    this.employee = this.data;
    }
 
   ngOnInit(): void {
@@ -176,9 +179,9 @@ export class PopupAddEmployeesComponent implements OnInit {
   dataChange(e: any, field: string) {
     if (e) {
       if (e?.length == undefined) {
-        this.dataBind[field] = e?.data;
+        this.employee[field] = e?.data;
       } else {
-        this.dataBind[field] = e[0];
+        this.employee[field] = e[0];
       }
     }
   }

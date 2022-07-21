@@ -1,7 +1,8 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { ApiHttpService, DialogData, DialogRef, ImageViewerComponent } from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef, ImageViewerComponent, CRUDService } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, Input, EventEmitter, ViewChild, Output, Optional } from '@angular/core';
 import { NoteBooks } from '../../../model/NoteBooks.model';
+import { NoteBookServices } from '../../../services/notebook.services';
 @Component({
   selector: 'app-add-update-note-book',
   templateUrl: './add-update-note-book.component.html',
@@ -26,6 +27,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
+    private noteBookService: NoteBookServices,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -34,13 +36,12 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.formModel = dialog?.formModel;
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
-      this.noteBooks = this.dialog.dataService?.dataSelected;
-      this.data = this.dialog.dataService?.dataSelected;
+      this.noteBooks = JSON.parse(JSON.stringify(this.dialog.dataService?.dataSelected));
+      this.data = JSON.parse(JSON.stringify(this.dialog.dataService?.dataSelected));
     }
   }
 
   ngOnInit(): void {
-    this.initForm();
   }
 
   valueChange(e) {
@@ -51,19 +52,6 @@ export class AddUpdateNoteBookComponent implements OnInit {
     }
   }
 
-  initForm() {
-    this.formAdd = new FormGroup({
-      title: new FormControl(''),
-      memo: new FormControl(''),
-    });
-    this.changeDetectorRef.detectChanges();
-  }
-
-  clearForm() {
-    this.formAdd.controls['title'].setValue(null);
-    this.formAdd.controls['memo'].setValue(null);
-    this.changeDetectorRef.detectChanges();
-  }
 
   saveNoteBooks() {
     if (this.formType == 'add') {
@@ -79,47 +67,43 @@ export class AddUpdateNoteBookComponent implements OnInit {
       this.noteBooks
     ).subscribe((res) => {
       if (res) {
-        this.imageUpload
-          .updateFileDirectReload(res.recID)
-          .subscribe((result) => {
-            if (result) {
-              this.initForm();
-              this.clearForm();
-              this.loadData.emit();
-              this.dialog.close();
-              this.dialog.dataService.data.push(res);
-              this.changeDetectorRef.detectChanges();
-            }
-          });
+        if (this.imageUpload) {
+          this.imageUpload
+            .updateFileDirectReload(res.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+                this.dialog.close();
+                (this.dialog.dataService as CRUDService).add(res).subscribe();
+              }
+            });
+        }
+        else
+          (this.dialog.dataService as CRUDService).add(res).subscribe();
       }
     })
   }
 
   updateNoteBook() {
-    this.dialog.dataService.save().subscribe(res => {
-      this.dialog.dataService.setDataSelected(res);
-      this.loadData.emit();
-      this.dialog.close();
+    this.api.exec<any>(
+      'ERM.Business.WP',
+      'NoteBooksBusiness',
+      'UpdateNoteBookAsync',
+      this.noteBooks
+    ).subscribe((res) => {
+      if (res) {
+        if (this.imageUpload) {
+          this.imageUpload
+            .updateFileDirectReload(this.data?.recID)
+            .subscribe((result) => {
+              this.loadData.emit();
+              this.dialog.dataService.update(res).subscribe();
+            });
+        } else {
+          this.dialog.dataService.update(res).subscribe();
+        }
+        this.dialog.close();
+      }
     })
-    // this.api.exec<any>(
-    //   'ERM.Business.WP',
-    //   'NoteBooksBusiness',
-    //   'UpdateNoteBookAsync',
-    //   [this.data?.recID, this.noteBooks]
-    // ).subscribe((res) => {
-    //   if (res) {
-    //     this.imageUpload
-    //       .updateFileDirectReload(this.data?.recID)
-    //       .subscribe((result) => {
-    //         if (result) {
-    //           this.loadData.emit();
-    //           this.dialog.close();
-    //           this.changeDetectorRef.detectChanges();
-    //         }
-    //       });
-    //     this.dialog.close();
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // })
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { HR_Employees } from '../model/HR_Employees.model';
@@ -20,7 +20,8 @@ export class EmployeesComponent implements OnInit {
   functionID: string;
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
-
+  
+  @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
@@ -103,22 +104,33 @@ export class EmployeesComponent implements OnInit {
   requestEnded(evt: any) {
   }
 
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+  edit(data) {
+    // if (data) {
+    //   this.view.dataService.dataSelected = data;
+    // }
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.currentView?.dataService;
+    //     option.FormModel = this.view?.currentView?.formModel;
+    //     option.Width = '800px';
+    //     this.dialog = this.callfunc.openSide(
+    //       PopupAddEmployeesComponent,
+    //       [this.view.dataService.dataSelected, 'edit'],
+    //       option
+    //     );
+    //   });
+
+      if (data) {
+        this.view.dataService.dataSelected = data;
+      }
+      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddEmployeesComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
+        this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
       });
   }
 
@@ -159,13 +171,30 @@ export class EmployeesComponent implements OnInit {
     //     }
     //   });
     /* Core em bị lỗi mấy đoạn delete nên em rem lại để code, khi nào merge bỏ rem giúp em với*/
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
   }
 
-  beforeDel(opt: RequestOption) {
-    opt.methodName = 'DeleteAsync';
-    opt.data = this.itemSelected.taskID;
-    return true;
-  }
+  // beforeDel(opt: RequestOption) {
+  //   opt.methodName = 'DeleteAsync';
+  //   opt.data = this.itemSelected.taskID;
+  //   return true;
+
+    beforeDel(opt: RequestOption) {
+      var itemSelected = opt.data[0];
+      opt.methodName = 'DeleteAsync';
+  
+      opt.data = itemSelected.taskGroupID;
+      return true;
+    }
+  
 
   selectedChange(val: any) {
     this.itemSelected = val.data;
@@ -174,9 +203,9 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'add':
-        this.add();
-        break;
+      // case 'add':
+      //   this.add();
+      //   break;
       case 'edit':
         this.edit(data);
         break;
@@ -184,7 +213,7 @@ export class EmployeesComponent implements OnInit {
         this.copy(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }

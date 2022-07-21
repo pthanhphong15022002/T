@@ -11,6 +11,23 @@
     ///
     --primary-active: #187DE4;
     --primary-inverse: #FFFFFF;
+
+
+
+}
+
+/// codx custom
+// [data-theme=light] {
+//     :root {
+//         --codx-text-primary: #005DC7;
+//     }
+// }
+:root {
+    --codx-text-primary: #005DC7;
+}
+
+.text-primary {
+    color: var(--codx-text-primary) !important;
 }
 
 //// 
@@ -48,9 +65,6 @@
 /// 
 /// 
 /// chỉnh tam ///
-body {
-    line-height: 1.4;
-}
 
 .e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
     padding: 0;
@@ -79,18 +93,11 @@ body {
 codx-input.text-error,
 .file-item input.text-error {
     border: 1px solid red !important;
-    height: 38px !important;
+    height: 32px !important;
 }
 
 ngb-popover-window[role="tooltip"] {
     z-index: 10000;
-}
-
-.text-error,
-codx-input.text-error,
-.file-item input.text-error {
-    border: 1px solid red !important;
-    height: 38px !important;
 }
 
 // role="tooltip"

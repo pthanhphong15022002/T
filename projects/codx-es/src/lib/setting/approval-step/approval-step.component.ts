@@ -80,7 +80,7 @@ export class ApprovalStepComponent implements OnInit {
             .callSv(
               'ES',
               'ES',
-              'CategoriesBusiness',
+              'ApprovalStepsBusiness',
               'GetListApprovalStepAsync',
               [this.transId]
             )
