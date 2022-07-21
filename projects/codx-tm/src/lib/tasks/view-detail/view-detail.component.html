@@ -1,7 +1,7 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
-    (clickMF)="clickMF($event, itemSelected)">
+    (clickMF)="clickMF($event, itemSelected)" [dataItem]="itemSelected">
     <ng-template #header>
       <div class="container_detail">
         <div class="d-flex flex-grow-1 mb-3">
@@ -199,11 +199,11 @@
       </div>
       <div class="">
         <div *ngIf="itemSelected.category == '3'" class="">
-          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [i] [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" >
           </codx-imgs>
         </div>
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
-          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="4">
+          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10">
           </codx-imgs>
         </div>
       </div>

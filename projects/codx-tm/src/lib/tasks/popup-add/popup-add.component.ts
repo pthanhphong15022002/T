@@ -66,6 +66,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isHaveFile = false;
   crrIndex :number
   popover: any;
+  vllShare = 'TM003'
+  planholderTaskGoal ="Add to do list…"
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -437,11 +439,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     e?.data?.forEach((obj) => {
       switch (obj.objectType) {
         case 'U':
-          listUserID += obj.id + ';';
+          listUserID += obj.id // cái này bị đổi khi control đổi  xem lại + ';';
           break;
         case 'O':
         case 'D':
-          listDepartmentID += obj.id + ';';
+          listDepartmentID += obj.id // cái này bị đổi khi control đổi  xem lại + ';';
           break;
       }
     });

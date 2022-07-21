@@ -14,7 +14,7 @@
       </div> -->
   </ng-template>
   <ng-template #body>
-    <div class="codx_tab">
+    <div class="codx_tab h-100">
       <ejs-tab headerPlacement="Left">
         <e-tabitems>
           <e-tabitem>
@@ -164,7 +164,7 @@
                       </codx-label>
                     </div>
                   </div>
-                  <codx-input type="Share" refValue="TM003" field="AssignTo" [dataShared]="[]" multiple="true"
+                  <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
                     [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
                 </div>
                 <div class="">
@@ -267,7 +267,7 @@
                     </codx-label>
                   </div>
                 </div>
-                <codx-input type="Share" refValue="L1906" field="AssignTo" [dataShared]="[]" multiple="true"
+                <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
                   [showInput]="false" (valueChange)="eventApply($event)">
                 </codx-input>
               </div>
@@ -378,7 +378,7 @@
                                 <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
                                   [value]="contentTodoEdit" (blur)="updateTodoList(txtTodoEdit.value)"
                                   (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
-                                  placeholder="Add to do list..." />
+                                  placeholder={{planholderTaskGoal}} />
                                 <!-- <codx-input type="text" [crrValue]="contentTodoEdit" (valueChange)="updateTodoList(txtTodoEdit.value)"  ></codx-input> -->
                               </span>
                             </div>
@@ -403,7 +403,7 @@
                     <div class="d-flex flex-column flex-grow-1 w-100">
                       <div class="row">
                         <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
-                          (blur)="onAddToDo(txtTodoAdd)" placeholder="Add to do list..."
+                          (blur)="onAddToDo(txtTodoAdd)" placeholder={{planholderTaskGoal}}
                           (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" style="
                             border-width: thin;
                             border-style: none;
@@ -479,7 +479,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between footer-upload ms-auto ps-6">
       <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
         <i class="icon-cloud_upload fs-5"></i>Upload file
       </button>

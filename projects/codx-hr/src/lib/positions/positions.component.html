@@ -10,6 +10,31 @@
     (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
 </codx-views>
 
+<ng-template #panelLeftRef>
+    <div class="content d-flex flex-column flex-column-fluid paneltree">
+        <div class="searorg">
+            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                <div class="input-group input-group-solid background-transparent erm-search">
+                    <span class="icon-search icon-20"></span>
+                    <!-- <input type="text" class="form-control text-dark px-0" #eleSearchChart
+              placeholder="Nhập thông tin bạn muốn tìm..." (keydown)="search($event,eleSearchChart)"> -->
+                </div>
+            </div>
+        </div>
+        <div class="contact-orgchat">
+            <codx-treeview id="chartOrg" #chartOrg [pageSize]=10 [itemTemplate]="templateorg" funcId="HRS0201"
+                entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
+                gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
+                (onSelectionChanged)="onSelectionChanged($event)" parentIdField="ParentID">
+            </codx-treeview>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateorg let-data>
+    {{data.orgUnitName}}
+</ng-template>
+
 <ng-template #itemTemplate let-data>
     <div class="px-5">
         <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-3">
@@ -17,7 +42,7 @@
                 <codx-temp-full cardCss="card-template"
                     [subTitle]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '') + (data.divisionID ? ' | ' + data.divisionID: '')"
                     [title]="data.positionName" [titleLine]="data.orgUnitID" [typeMF]="'hover'" [dataItem]="data"
-                    [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel" 
+                    [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel"
                     [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
                 </codx-temp-full>
                 <!-- -->
