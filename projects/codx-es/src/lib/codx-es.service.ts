@@ -205,6 +205,24 @@ export class CodxEsService {
     });
   }
 
+  getComboboxName1(formName, gridView) {
+    var obj = {};
+    this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
+      if (gv) {
+        for (const key in gv) {
+          if (Object.prototype.hasOwnProperty.call(gv, key)) {
+            const element = gv[key];
+            if (element.referedValue != null) {
+              obj[key] = element.referedValue;
+            }
+          }
+        }
+      }
+    });
+
+    return obj;
+  }
+
   //#endregion
 
   execEP(
@@ -460,7 +478,7 @@ export class CodxEsService {
   //#endregion
 
   //#region ApprovalSteps
-  private approvalStep = new BehaviorSubject<any>(null);
+  public approvalStep = new BehaviorSubject<any>(null);
   isSetupApprovalStep = this.approvalStep.asObservable();
 
   private lstDelete = new BehaviorSubject<any>(null);
@@ -487,7 +505,7 @@ export class CodxEsService {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
-      'CategoriesBusiness',
+      'ApprovalStepsBusiness',
       'GetListApprovalStepAsync',
       recID
     );
@@ -603,7 +621,7 @@ export class CodxEsService {
     );
   }
 
-  getLastTextLine(data: number): Observable<number> {
+  getLastTextLine(pageNumber: number): Observable<number> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -613,7 +631,7 @@ export class CodxEsService {
       environment.pdfUrl + '/TextOnPage',
       {
         action: 'TextOnPage',
-        pageIndex: data - 1,
+        pageIndex: pageNumber - 1,
       },
       httpOptions
     );

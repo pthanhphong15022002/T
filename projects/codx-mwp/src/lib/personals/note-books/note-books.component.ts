@@ -85,6 +85,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
+    console.log("check data note-books", this.view.dataService.data)
   }
 
   clickMF(e: any, data?: any) {

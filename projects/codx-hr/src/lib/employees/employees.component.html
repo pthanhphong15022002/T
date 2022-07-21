@@ -6,8 +6,8 @@
 
 <ng-template #cardTemp let-data>
     <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
-        [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')"
-        [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" dataItem="data"
+        [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data"
+        [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" [typeMF]="'hover'"
         (clickMF)="clickMF($event, data)">
     </codx-card-center>
 </ng-template>
@@ -21,16 +21,19 @@
             <codx-label name="lblEmail" formName="Employees" default="Email"></codx-label>
         </div> -->
         <span class="text-dark fw-bold">
-            <span #email >{{ data.email | formatvalue: formModel:"email":email | async }}</span>
-          </span>
+            <span #email>{{ data.email | formatvalue: formModel:"email":email | async }}</span>
+        </span>
     </div>
     <div class="d-flex align-items-center">
         <span class="icon-phone_android icon-16 mr-2"></span>
-        <div class="text-dark-75 font-size-sm" *ngIf="data.phone != '---'">{{ data.phone }}
+        <!-- <div class="text-dark-75 font-size-sm" *ngIf="data.phone != '---'">{{ data.phone }}
         </div>
         <div class="text-muted font-size-sm" *ngIf="data.phone == '---'">
             <codx-label name="lblPhone" formName="Employees" default="Số điện thoại"></codx-label>
-        </div>
+        </div> -->
+        <span class="text-dark fw-bold">
+            <span #phone>{{ data.phone | formatvalue: formModel:"phone":phone | async }}</span>
+        </span>
     </div>
 </ng-template>
 
@@ -174,7 +177,8 @@
 </ng-template> -->
 
 <ng-template #itemAction let-data>
-    <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event, data)">
+    <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event, data)"
+        [dataItem]="data" [typeMF]="'hover'">
     </codx-mfunc>
 </ng-template>
 
@@ -226,23 +230,31 @@
 <ng-template #itemContact let-data>
     <div class="d-flex flex-column employee-add">
         <div class="d-flex align-items-center">
-            <span class="icon-email icon-16 text-gray-800 me-1" *ngIf="data.email != '---'"></span>
-            <div class="text-gray-800 fs-7 text-email" *ngIf="data.email != '---'">
+            <span class="icon-email icon-16 text-gray-800 me-1"></span>
+            <!-- <div class="text-gray-800 fs-7 text-email" *ngIf="data.email != '---'">
                 {{data.email}}
             </div>
             <span class="icon-email icon-16 text-gray-400 me-1" *ngIf="data.email == '---'"></span>
             <div class="fs-7 text-gray-400" *ngIf="data.email == '---'">
                 <codx-label name="lblEmail" formName="Employees" default="Email"></codx-label>
-            </div>
+            </div> -->
+
+            <span class="text-dark fw-bold">
+                <span #email>{{ data.email | formatvalue: formModel:"email":email | async }}</span>
+            </span>
         </div>
         <div class="d-flex align-items-center">
-            <span class="icon-phone_android icon-16 text-gray-800 me-1" *ngIf="data.phone != '---'"></span>
-            <div class="text-gray-800 fs-7" *ngIf="data.phone != '---'">{{data.phone}}
+            <span class="icon-phone_android icon-16 text-gray-800 me-1"></span>
+            <!-- <div class="text-gray-800 fs-7" *ngIf="data.phone != '---'">{{data.phone}}
             </div>
             <span class="icon-phone_android icon-16 text-gray-400 me-1" *ngIf="data.phone == '---'"></span>
             <div class="fs-7 text-gray-400" *ngIf="data.phone == '---'">
                 <codx-label name="lblPhone" formName="Employees" default="Số điện thoại"></codx-label>
-            </div>
+            </div> -->
+
+            <span class="text-dark fw-bold">
+                <span #phone>{{ data.phone | formatvalue: formModel:"phone":phone | async }}</span>
+            </span>
         </div>
         <div class="d-flex align-items-center">
             <span class="icon-place icon-16 text-gray-800 me-1" *ngIf="data.street != '---'"></span>

@@ -200,6 +200,7 @@ export class PopupAddSprintsComponent implements OnInit {
         case 'U':
           listUserID += obj.id + ';';
           break;
+        case 'O':
         case 'D':
           listDepartmentID += obj.id + ";";
           break;

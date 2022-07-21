@@ -18,6 +18,7 @@ export class PopupAddMeetingComponent implements OnInit {
   showPlan = true;
   data: any;
   action: any;
+  selectedDate = new Date();
   constructor(
     private changeDetectorRef : ChangeDetectorRef ,
     private api :ApiHttpService,
@@ -32,6 +33,9 @@ export class PopupAddMeetingComponent implements OnInit {
     this.user = this.authStore.get();
     this.action = dt.data;
     this.functionID = this.dialog.formModel.funcID;
+    if(this.meeting.startDate){
+      this.selectedDate = this.meeting.startDate;
+    }
    }
 
   ngOnInit(): void {
@@ -45,7 +49,7 @@ export class PopupAddMeetingComponent implements OnInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'CO_Meetings'
+        'TMMeetings'
       )
       .subscribe((res) => {
         if (res) {
@@ -69,17 +73,27 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   onSave(){
-    
+
   }
 
   valueChange(e){
     if(e.data){
       this.meeting[e.field] = e.data;
+      
     }
   }
 
   valueTime(e){
-    console.log(e);
+    debugger
+    this.meeting[e.field] = e.data?.fromDate;
+    if(e.field=='startDate'){
+
+       let hour = (e.data.fromdate as Date).getHours();
+       let minutes = (e.data.fromdate as Date).getMinutes();
+       this.meeting.startDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
+       console.log(this.meeting.startDate);
+       
+    }
   }
 
   valueChangeTags(e){
