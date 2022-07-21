@@ -46,39 +46,33 @@
                           [formModel]="formModel">
                         </codx-label>
                       </div>
-
-                      <!-- <span class=" icon-group_add text-primary fs-1">
-
-                      </span> -->
                       <div class="icon-person_add_alt_1 text-hover-primary icon-22 ml-2 mb-2"
                         (click)="testdata(controlShare)">
                       </div>
-                      <!-- <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="popup"
-                        (valueChange)="valueChange($event)">
-                      </codx-input> -->
 
                     </div>
-                    <ng-container *ngFor="let item of dialogApprovalStep.value.approvers">
+                    <ng-container *ngFor="let item of lstApprover">
                       <div class="d-flex align-items-center mb-2 w-100">
-                        <codx-temp-full cardCss="card-template" *ngIf="item.roleType == 'U'" [imageId]="item.approver"
+                        <codx-temp-full cardCss="card-template" *ngIf="item.roleType=='U'" [imageId]="item.approver"
                           [subTitle]="" [title]="item.approverName"
                           [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
-                          [status]="lstStep.status" [statusVll]="" [imageObjType]="'AD_Users'" [modeImgs]="false"
-                          [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)">
+                          [imageObjType]="'AD_Users'" [titleLine]="3" [formModel]="formModel"
+                          (clickMF)="MFClick($event, item)" [dataItem]="item" typeMF="hover">
                         </codx-temp-full>
 
                         <codx-temp-full cardCss="card-template" *ngIf="item.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
                           (item.icon ? item.icon : 'share_default.svg')" imgCss="me-4 symbol symbol-40px symbol-circle"
-                          [imageWidth]="30" [subTitle]="" [title]="(item.approver| vll:'ES014':'text'|async)"
+                          [imageWidth]="30" [subTitle]="(item.approver| vll:'ES014':'text'|async)"
+                          [title]="(item.approver| vll:'ES014':'text'|async)"
                           [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
-                          [status]="lstStep.status" [statusVll]="" [modeImgs]="false" [titleLine]="3"
-                          [formModel]="formModel" (clickMF)="MFClick($event, item)">
+                          [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)" [dataItem]="item"
+                          typeMF="hover">
                         </codx-temp-full>
                       </div>
                     </ng-container>
                   </div>
 
-                  <div class="d-flex flex-column mb-4" *ngIf="dialogApprovalStep.value.approvers?.length > 0">
+                  <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 0">
                     <div class="row">
                       <ng-container *ngFor="let item of lstApproveMode; let index = index">
                         <div class="col-3" *ngIf="dialogApprovalStep.value.approveMode == item.value">
@@ -101,32 +95,14 @@
                           </div>
                         </div>
                       </ng-container>
-                      <!-- <div class="col-4">
-                        <div class="d-flex align-items-center">
-                          <codx-input type="radio" [checked]="true" label="Duyệt đại diện"
-                            [crrValue]="dialogApprovalStep.value.representative" name="radio" field="representative"
-                            class="test-switch" (valueChange)="valueChange($event)">
-                          </codx-input>
-
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="d-flex align-items-center">
-                          <codx-input name="radio" type="radio" label="Duyêt tuần tự"
-                            [crrValue]="dialogApprovalStep.value.sequential" field="sequential" class="test-switch"
-                            (valueChange)="valueChange($event)"></codx-input>
-                        </div>
-                      </div> -->
                     </div>
                   </div>
-
                   <div class="d-flex flex-column mb-4">
                     <div class="fw-bolder d-block mb-2">
                       <codx-label class="text-primary" default="Đóng góp ý kiến" fiedName="Attendees"
                         [formModel]="formModel">
                       </codx-label>
                     </div>
-
                     <div class="row">
                       <div class="col-6">
                         <codx-label class="fw-bolder" default="Cho ý kiến khi duyệt" fiedName="ApproveControl"
