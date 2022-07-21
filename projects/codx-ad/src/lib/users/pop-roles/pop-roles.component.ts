@@ -35,11 +35,9 @@ export class PopRolesComponent implements OnInit {
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
-    @Optional() dataView?: DialogRef,
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
-    this.dataView = dataView;
   }
 
   ngOnInit(): void {
@@ -83,7 +81,6 @@ export class PopRolesComponent implements OnInit {
           this.listChooseRole.splice(i,1);
         
         }
-     //   item[i].idChooseRole= i;
      }
       
      for(var i=1; i<= this.listChooseRole.length; i++) {
@@ -125,7 +122,7 @@ export class PopRolesComponent implements OnInit {
 
 
     }
-``
+
   }
   CheckListUserRoles() {
     for(var i=0; i< this.listChooseRole.length; i++)
@@ -140,23 +137,6 @@ export class PopRolesComponent implements OnInit {
       return this.optionSecond;
     }
     return this.optionThird;
-  }
-
-
-  loadData123() {
-    this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1).subscribe((res) => {
-      if (res && res.msgBodyData[0]) {
-        this.lstFunc = res.msgBodyData[0];
-        for (var i = 0; i < this.lstFunc.length; i++) {
-          this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].functionID == 'DM') {
-            this.lstFunc[i].recIDofRole = null;
-            
-          }
-        }
-        this.changeDec.detectChanges();
-      }
-    })
   }
 
 }
