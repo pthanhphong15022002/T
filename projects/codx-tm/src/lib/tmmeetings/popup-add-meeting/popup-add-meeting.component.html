@@ -61,7 +61,7 @@
                     </codx-label>
                   </div>
                   <codx-input type="datetime" field="endDate" [crrValue]="meeting?.endDate" 
-                  format="t" placeholder="timefrom"  (valueChange)="valueTime($event)">
+                  format="t" placeholder="timefrom"  (valueChange)="valueEndTime($event)">
                   </codx-input>
                 </div>
                 <div class="col-2">
@@ -265,7 +265,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary ms-1">
-        <codx-label name="Save" default="Lưu"></codx-label>
+        <codx-label name="Save" default="Lưu" (click)="onSave()"></codx-label>
       </button>
     </div>
   </ng-template>

@@ -86,6 +86,8 @@ export class PopupAddMeetingComponent implements OnInit {
   this.dialog.close();
   }
 
+
+
   valueChange(e){
     if(e.data){
       this.meeting[e.field] = e.data;
@@ -94,12 +96,21 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   valueTime(e){
-    if(e.field=='startDate' || e.field=='endDate'){
-       let hour = (e.data.fromdate as Date).getHours();
-       let minutes = (e.data.fromdate as Date).getMinutes();
-       this.meeting.startDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
-       this.meeting.endDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
-       console.log(this.meeting.startDate);       
+    if(e.data!=null){
+      e.meeting.startDate= e.data.fromDate; 
+    }
+    // if(e.field=='startDate' || e.field=='endDate'){
+    //    let hour = (e.data.fromdate as Date).getUTCHours();
+    //    let minutes = (e.data.fromdate as Date).getMinutes();
+    //    this.meeting.startDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
+    //    this.meeting.endDate = new Date(this.selectedDate.setHours(hour,minutes,0,0));
+    //    console.log(this.meeting.startDate);       
+    // }
+  }
+
+  valueEndTime(e){
+    if(e.data!=null){
+      e.meeting.endDate= e.data.toDate; 
     }
   }
 
