@@ -147,8 +147,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
-    var obj = {
-      post: data,
+    let dataEdit = { ...data }; 
+    let obj = {
+      post: dataEdit,
       status: "edit",
       title: "Chỉnh sửa bài viết"
     }

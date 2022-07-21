@@ -14,8 +14,8 @@
         </div>
         <div class="col-6" *ngIf="status =='9'">
             <codx-label fiedName="Estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
-            <codx-input class="form-control" type="number" field="estimated" [crrValue]="completed" [disabled]="true" ></codx-input> 
-            <!-- (valueChange)="changeEstimated($event)" -->
+            <codx-input class="form-control" type="number" field="estimated" [crrValue]="completed"  (valueChange)="changeEstimated($event)" ></codx-input> 
+          
         </div>
         <div class="col-12">
              <codx-label fiedName="comment" formName="Tasks"  default="Comment"></codx-label>

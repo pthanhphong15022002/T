@@ -310,12 +310,12 @@ export class TreeviewCommentComponent implements OnInit {
       var t = this;
       var parent = this.dicDatas[parentId];
       if (parent) {
-        parent.items = parent.items.filter(function (element: any, index: any) {
+        parent.listComment = parent.listComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       } else {
-        if (!this.rootData) return;
-        this.dataComment = this.dataComment.filter(function (element: any, index: any) {
+        if (!this.dataComment) return;
+        this.dataComment.listComment = this.dataComment.listComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       }
@@ -329,17 +329,49 @@ export class TreeviewCommentComponent implements OnInit {
   deleteComment(comment:any){
     if(!comment) return;
     else{
-      this.api.execSv("WP","ERM.Business.WP","CommentBusiness","DeletePostAsync",comment)
-      .subscribe((res:boolean) => {
-        if(res)
-        {
-          this.removeNodeTree(comment.recID);
-          this.notifySvr.notifyCode('E0026');
+      this.notifySvr.alertCode('Xóa bình luận?').subscribe((res)=>{
+        if(res.event.status == "Y"){
+          this.api.execSv("WP","ERM.Business.WP","CommentBusiness","DeletePostAsync",comment)
+          .subscribe((res:number) => {
+            if(res)
+            {
+              this.removeNodeTree(comment.recID);
+              this.dataComment.totalComment = this.dataComment.totalComment - res;
+              this.notifySvr.notify('Xóa bình luận thành công!');
+            }
+          });
         }
-      })
+      });
     }
   }
-  editComment(comment:any){
+  clickEditComment(comment:any){
+    comment.isEditComment = true;
+    this.dt.detectChanges();
+  }
 
+  valueChangeComment(event:any,comment:any){
+    comment.content = event.data
+    this.dt.detectChanges();
+  }
+  editComment(value:string, comment:any){
+    comment.content = value;
+    this.api.execSv(
+    "WP",
+    "ERM.Business.WP",
+    "CommentBusiness",
+    "UpdateCommentPostAsync",
+    [comment.recID,value])
+    .subscribe((res:boolean) => {
+      if(res)
+      {
+        comment.isEditComment = false;
+        this.notifySvr.notify("Chỉnh sửa thành công");
+        this.dt.detectChanges();
+      }
+      else
+      {
+        this.notifySvr.notify("Xảy ra lỗi");
+      }
+    })
   }
 }

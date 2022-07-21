@@ -44,11 +44,17 @@
             <ng-container>
               <!-- thong tin chung -->
               <div class="user-profile overview d-block mb-3" id="MWP00201">
-                <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblInfoPersonal" formName="Employees" default="Thông tin nhân viên">
-                    <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
-                  </codx-label>
+                <div class="d-flex justify-content-between mb-2 mt-6">
+                  <div class="fw-bold fs-4 text-primary ">
+                    <codx-label name="lblInfoPersonal" formName="Employees" default="Thông tin nhân viên">
+                    </codx-label>
+                  </div>
+                  <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
+                  </a>
                 </div>
+                <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
+
                 <div class="border rounded-2 p-6" *ngIf="employeeInfo">
                   <!-- <div class="d-flex justify-content-between">
                     <div class="text-dark fw-bold text-uppercase mb-1" style="cursor: pointer;">
@@ -56,9 +62,7 @@
                         default="Mã nhân viên: #">
                       </codx-label>
                       <span class="text-dark">{{employeeInfo?.employeeID}}</span>
-                      <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                        <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
-                      </a>
+                      
                     </div>
                   </div> -->
 
