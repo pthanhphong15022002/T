@@ -63,7 +63,7 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Availability</p>
+          <p class="text-center" style="margin: 0px">Availability (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
@@ -121,7 +121,7 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Performance</p>
+          <p class="text-center" style="margin: 0px">Performance (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
@@ -179,7 +179,7 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Quality</p>
+          <p class="text-center" style="margin: 0px">Quality (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
@@ -237,7 +237,7 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">KPI</p>
+          <p class="text-center" style="margin: 0px">KPI (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
@@ -402,14 +402,14 @@
                 <div>{{ emp.role }}</div>
               </div>
             </div>
-            <div>{{ emp.kpi }}</div>
+            <div>{{ emp.kpi }}%</div>
           </div>
         </div>
       </div>
     </div>
     <div class="rounded-2 bg-body mb-3">
       <div class="text-dark text-center fw-bold pt-6 mb-3">
-        Danh sách nhân viên thực hiện công việc
+        Danh sách nhóm thực hiện công việc
       </div>
       <div style="position: relative" class="p-3">
         <button class="btn btn-icon btn-light btn-sortby" style="z-index: 99;" (click)="sort()">

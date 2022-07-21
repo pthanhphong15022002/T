@@ -81,7 +81,8 @@
                               {{(item.stepType | vll:'ES002':'text'|async)}}
                             </div>
                             <div class="action-menu">
-                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover">
+                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
+                                [dataItem]="item">
                               </codx-mfunc>
                             </div>
                           </div>
@@ -100,9 +101,10 @@
                                 <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType!='U'"
                                   [imageSrc]="'./assets/themes/sys/default/img/'+(item.icon ? item.icon : 'share_default.svg')"
                                   imgCss="me-4 symbol symbol-40px symbol-circle"
-                                  [title]="(approver.approver|vll: 'ES014': 'text'|async)" [subTitle]=""
-                                  [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true"
-                                  [titleLine]="3" [footer]="footer1" [dataItem]="item">
+                                  [title]="(approver.approver|vll: 'ES014': 'text'|async)"
+                                  [subTitle]="approver.approver|vll: 'ES014': 'text'|async" [status]="lstStep.status"
+                                  [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                                  [dataItem]="item">
                                 </codx-temp-full>
 
                                 <ng-template #footer1 let-data>
