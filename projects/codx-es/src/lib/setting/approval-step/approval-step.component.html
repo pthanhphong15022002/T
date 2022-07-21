@@ -81,7 +81,8 @@
                               {{(item.stepType | vll:'ES002':'text'|async)}}
                             </div>
                             <div class="action-menu">
-                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover">
+                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
+                                [dataItem]="item">
                               </codx-mfunc>
                             </div>
                           </div>

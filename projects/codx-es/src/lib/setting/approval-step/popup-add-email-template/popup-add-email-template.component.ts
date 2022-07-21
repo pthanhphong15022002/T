@@ -8,12 +8,14 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
+  ApiHttpService,
   AuthStore,
   CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
 
@@ -47,9 +49,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstBcc = [];
 
   constructor(
+    private api: ApiHttpService,
     private esService: CodxEsService,
     private callFunc: CallFuncService,
     private auth: AuthStore,
+    private dmSV: CodxDMService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -69,14 +73,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
 
-    const user = this.auth.get();
-    let defaultFrom = new EmailSendTo();
-    defaultFrom.objectType = 'U';
-    defaultFrom.objetID = user.userID;
-    defaultFrom.text = user.userName;
-
-    this.lstFrom.push(defaultFrom);
-
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
@@ -92,6 +88,16 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   'recID',
                   new FormControl(res1[0].recID)
                 );
+
+                this.api
+                  .execSv(
+                    'DM',
+                    'ERM.Business.DM',
+                    'FileBussiness',
+                    'GetFilesByObjectIDImageAsync',
+                    this.dialogETemplate.value.recID
+                  )
+                  .subscribe((f: any[]) => console.log(f));
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -111,7 +117,16 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                     }
                   });
                 }
-                console.log('data', this.dialogETemplate);
+
+                if (this.lstFrom.length == 0) {
+                  const user = this.auth.get();
+                  let defaultFrom = new EmailSendTo();
+                  defaultFrom.objectType = 'U';
+                  defaultFrom.objetID = user.userID;
+                  defaultFrom.text = user.userName;
+
+                  this.lstFrom.push(defaultFrom);
+                }
               }
             });
         }
@@ -122,7 +137,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.initForm();
   }
 
-  onSaveForm(dialog: DialogRef) {
+  onSaveWithTemplate(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
       this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
     } else {
@@ -147,12 +162,14 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           console.log(res);
           let emailTemplates = this.formGroup.value.emailTemplates;
           let i = emailTemplates.findIndex(
-            (p) => p.EmailType == res.templateType
+            (p) => p.emailType == res.templateType
           );
           if (i >= 0) {
-            emailTemplates[i].TemplateID = res.recID;
+            emailTemplates[i].templateID = res.recID;
             this.attachment.objectId = res.recID;
+            console.log(this.dmSV.fileUploadList);
             this.attachment.saveFiles();
+
             this.formGroup.patchValue({ emailTemplates: emailTemplates });
           }
           dialog1.close();

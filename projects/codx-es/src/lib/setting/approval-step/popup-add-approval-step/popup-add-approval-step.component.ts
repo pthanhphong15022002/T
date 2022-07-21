@@ -114,25 +114,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
               this.cache.valueList('ES016').subscribe((vllMode) => {
                 if (vllMode) {
                   this.lstApproveMode = vllMode.datas;
-                  console.log('aaaaaaaaaaaaaaaa', this.lstApproveMode);
                 }
               });
             }
           }
         });
 
-      console.log('getComboboxName1', this.cbxName['ApproveMode']);
-
-      // this.esService
-      //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      //   .then((res) => {
-      //     this.cbxName = res;
-      //     console.log('cbxName', this.cbxName);
-
-      //     console.log('mode', this.cbxName);
-
-      //     this.cache.valueList('ES012').subscribe((res) => {});
-      //   });
       this.initForm();
     });
   }
@@ -142,6 +129,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
+        console.log(this.dialogApprovalStep.value);
+        this.dialogApprovalStep.addControl('delete', new FormControl(true));
+        this.dialogApprovalStep.addControl('share', new FormControl(true));
+        this.dialogApprovalStep.addControl('write', new FormControl(true));
+        this.dialogApprovalStep.addControl('assign', new FormControl(true));
+
         this.isAfterRender = true;
         if (this.isAdd) {
           this.dialogApprovalStep.patchValue({
@@ -156,12 +149,14 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             transID: this.transId,
             stepNo: this.stepNo,
           });
+          this.currentMode = '1';
 
           this.esService.getNewDefaultEmail().subscribe((res) => {
             this.dialogApprovalStep.patchValue({ emailTemplates: res });
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
+          this.currentMode = this.dataEdit?.approveMode;
           this.dialogApprovalStep.addControl(
             'id',
             new FormControl(this.dataEdit.id)
@@ -198,8 +193,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
     }
   }
-
-  lstApprover = [];
 
   onSaveForm() {
     this.isSaved = true;
@@ -283,7 +276,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   valueModeChange(event, item) {
-    this.currentMode = item?.value;
+    if (event?.component) {
+      this.currentMode = item?.value;
+    }
   }
 
   valueEmailChange(event, eTemplate) {

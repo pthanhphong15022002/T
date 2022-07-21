@@ -74,6 +74,7 @@ export class ApprovalStepComponent implements OnInit {
     this.esService.isSetupApprovalStep.subscribe((res) => {
       if (res != null) {
         this.lstStep = res;
+        console.log(this.lstStep);
       } else {
         if (this.transId != '') {
           this.api
@@ -88,7 +89,6 @@ export class ApprovalStepComponent implements OnInit {
               if (res && res?.msgBodyData[0]) {
                 this.lstStep = res.msgBodyData[0];
                 console.log(this.lstStep);
-
                 this.currentStepNo = this.lstStep.length + 1;
               } else {
                 this.notify.notify('Chưa có dữ liệu');
