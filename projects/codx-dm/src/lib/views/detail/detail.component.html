@@ -1,0 +1,353 @@
+<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
+    class="d-flex flex-column-fluid position-relative main-2zone cancelEvent">
+    <div class="container notop">
+        <div class="dms dms-viewdetail">            
+            <div
+                *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
+            </div>
+            <ng-template #thenBlockList>
+                <ng-container *ngIf="this.dmSV.idMenuActive == 'DMT08'">
+                    <div class="nondata-container w-100 mb-2">
+                        <div class="d-flex justify-content-between page-heading align-items-center">
+                            <div>{{dmSV.titleEmptyTrash30}}</div>
+                            <button (click)="this.dmSV.emptyTrash()" class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="erm-list">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <!-- <th class="px-0" scope="col"></th> -->
+                                <th scope="col">
+                                    <div>Tên tài liệu</div>
+                                </th>
+                                <th scope="col">
+                                    <div>Người tạo</div>
+                                </th>
+                                <th scope="col">
+                                    <div>Ngày tạo</div>
+                                </th>
+                                <th scope="col">
+                                    <div>Dung lượng</div>
+                                </th>
+                                <!-- <th scope="col"></th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <div
+                                *ngIf="this.dmSV.sortDirecttion.getValue() != '1' || this.dmSV.sortDirecttion.getValue() === null; then thenBlockAsc else elseBlockDesc">
+                            </div>
+                            <ng-template #thenBlockAsc>
+                                <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
+                                    <tr title="{{folder.folderName}}">
+                                        <!-- <td class="w-50px text-center px-0"><span
+                                                [className]="getBookmarksClass(folder)"></span>
+                                        </td> -->
+                                        <td>
+                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
+                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
+                                                cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>    
+                                            <!-- <div 
+                                                (dblclick)="onDbclick(folder, folder.permissions, folder.recID, folder.level, folder.parentId, folder.folderName)"
+                                                class="d-flex align-items-center version-item">
+                                                <img alt="" class="max-h-25px mr-3"
+                                                    src="../../../assets/demos/dms/folder.svg">
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span class="text-dark-75">{{folder.folderName}}</span>
+                                                    <span class="text-muted"></span>
+                                                </div>
+                                            </div> -->
+                                        </td>
+                                        <td>
+                                            <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
+                                            </codx-temp-full> 
+                                            <!-- <div class="d-flex align-items-center">
+                                                <div *ngIf="!folder.isSystem"
+                                                    class="symbol symbol-24 symbol-circle mr-3">
+                                                    <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                        [objectId]="folder.createdBy" objectType="AD_Users">
+                                                    </lv-image-viewer>                                                   
+                                                </div>
+                                                <div *ngIf="!folder.isSystem" class="d-flex flex-column">
+                                                    <div class="text-dark">{{folder.userName}}</div>
+                                                    <div class="text-dark-50"></div>
+                                                </div>
+                                            </div> -->
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="erm-date">{{folder.createdOn}}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="erm-date"></div>
+                                            <!-- <codx-temp-full class="float-start" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" 
+                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
+                                                cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>  -->
+                                        </td>
+                                        <!-- <td class="w-50px">
+                                            <div class="d-flex align-items-center">
+                                                <div *ngIf="this.dmSV.checkUserForder(folder) == false">
+                                                    <div class="dropdown dropdown-left ml-2">
+                                                        <app-submenu
+                                                            permissions="{{getPermissionString(folder.permissions)}}"
+                                                            data="{{getDataString(folder)}}"
+                                                            isSystem="{{folder.isSystem}}"
+                                                            parentId="{{folder.parentId}}"
+                                                            bookmarks="{{getBookmarkString(folder.bookmarks)}}"
+                                                            isDelete="{{folder.isDelete}}" id="{{folder.recID}}"
+                                                            fullName="{{folder.folderName}}" type="folder">
+                                                        </app-submenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
+                                    <tr title="{{file.folderName}}">
+                                        <!-- <td class="w-50px text-center px-0"><span
+                                                [className]="getBookmarksClass(file)"></span> -->
+                                        <td>
+                                            <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
+                                            [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                           
+                                            cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>  
+                                            <!-- <span class="text-muted">Version: V01</span> -->
+                                            <!-- <div 
+                                                (dblclick)="viewfile(file, file.permissions, contentDblClickViewFile,file.fileName,file.recID,file.extension)"
+                                                class="d-flex align-items-center version-item">                                              
+                                                <img alt="" class="max-h-25px mr-3 me-3 w-20px"
+                                                    [src]='this.dmSV.getThumbnail(file.thumbnail, file.extension)'>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span class="text-dark-75">{{file.fileName}}</span>                                                    
+                                                </div>
+                                            </div> -->
+                                        </td>
+                                        <td>
+                                            <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
+                                            </codx-temp-full> 
+                                            <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                            <!-- <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-24 symbol-circle mr-3">                                                   
+                                                    <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                        [objectId]="file.createdBy" objectType="AD_Users">
+                                                    </lv-image-viewer>                                                    
+                                                </div>
+                                                <div *ngIf="!file.isSystem" class="d-flex flex-column">
+                                                    <div class="text-dark">{{file.userName}}</div>
+                                                    <div class="text-dark-50"></div>
+                                                </div>
+                                            </div> -->
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="erm-date">{{file.createdOn}}</div>
+                                            </div>
+                                        </td>
+                                        <td>                                            
+                                            <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
+                                        </td>
+                                        <!-- <td class="w-50px">
+                                            <div class="d-flex align-items-center">
+                                                <div class="dropdown dropdown-left ml-2">
+                                                    <app-submenu permissions="{{getPermissionString(file.permissions)}}"
+                                                        data="{{getDataString(file)}}" isSystem="{{file.isSystem}}"
+                                                        parentId="{{file.folderId}}"
+                                                        bookmarks="{{getBookmarkString(file.bookmarks)}}"
+                                                        isDelete="{{file.isDelete}}" id="{{file.recID}}"
+                                                        fullName="{{file.fileName}}" type="file" ext={{file.extension}}>
+                                                    </app-submenu>
+                                                </div>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                </ng-container>
+                            </ng-template>
+                            <ng-template #elseBlockDesc>
+                                <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
+                                    <tr title="{{file.folderName}}">
+                                        <td class="w-50px text-center px-0"><span
+                                                [className]="getBookmarksClass(file)"></span>
+                                        <td>
+                                            <div 
+                                                (dblclick)="viewfile(file, file.permissions, contentDblClickViewFile,file.fileName,file.recID,file.extension)"
+                                                class="d-flex align-items-center version-item">
+                                                <!-- <img alt="" class="max-h-25px mr-3"
+                                                    src="../../../assets/demos/dms/{{getAvatar(file.extension)}}"> -->
+                                                <div
+                                                    *ngIf="(file.thumbnail != null && file.thumbnail != '') then showThumb2 else noThumb2">
+                                                </div>
+                                                <ng-template #showThumb2>
+                                                    <img alt="" class="max-h-25px mr-3"
+                                                        [src]='this.dmSV.getThumbnail(file.thumbnail, file.extension)'>
+                                                </ng-template>
+                                                <ng-template #noThumb2>
+                                                    <img alt="{{file.fileName}}" class="max-h-25px mr-3"
+                                                        src="../../../assets/demos/dms/{{getAvatar(file.extension)}}">
+                                                </ng-template>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span class="text-dark-75">{{file.fileName}}</span>
+                                                    <!-- <span class="text-muted">Version: V01</span> -->
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div *ngIf="!file.isSystem" class="symbol symbol-24 symbol-circle mr-3">
+                                                    <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                        [objectId]="file.createdBy" objectType="AD_Users">
+                                                    </lv-image-viewer>
+                                                    <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                                </div>
+                                                <div *ngIf="!file.isSystem" class="d-flex flex-column">
+                                                    <div class="text-dark">{{file.userName}}</div>
+                                                    <div class="text-dark-50"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="erm-date">{{file.createdOn}}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
+                                        </td>
+                                        <!-- <td class="w-50px">
+                                            <div class="d-flex align-items-center">
+                                                <div class="dropdown dropdown-left ml-2">
+                                                    <app-submenu permissions="{{getPermissionString(file.permissions)}}"
+                                                        data="{{getDataString(file)}}" isSystem="{{file.isSystem}}"
+                                                        parentId="{{file.folderId}}"
+                                                        bookmarks="{{getBookmarkString(file.bookmarks)}}"
+                                                        isDelete="{{file.isDelete}}" id="{{file.recID}}"
+                                                        fullName="{{file.fileName}}" type="file" ext={{file.extension}}>
+                                                    </app-submenu>
+                                                </div>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
+                                    <tr title="{{folder.folderName}}">
+                                        <td class="w-50px text-center px-0"><span
+                                                [className]="getBookmarksClass(folder)"></span>
+                                        <td>
+                                            <div 
+                                                (dblclick)="onDbclick(folder, folder.permissions, folder.recID, folder.level, folder.parentId, folder.folderName)"
+                                                class="d-flex align-items-center version-item">
+                                                <img alt="" class="max-h-25px mr-3"
+                                                    src="../../../assets/demos/dms/folder.svg">
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span class="text-dark-75">{{folder.folderName}}</span>
+                                                    <span class="text-muted"></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div *ngIf="!folder.isSystem"
+                                                    class="symbol symbol-24 symbol-circle mr-3">
+                                                    <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                                        [objectId]="folder.createdBy" objectType="AD_Users">
+                                                    </lv-image-viewer>
+                                                    <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                                </div>
+                                                <div *ngIf="!folder.isSystem" class="d-flex flex-column">
+                                                    <div class="text-dark">{{folder.userName}}</div>
+                                                    <div class="text-dark-50"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="erm-date">{{folder.createdOn}}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="erm-date"></div>
+                                        </td>
+                                        <!-- <td class="w-50px">
+                                            <div class="d-flex align-items-center">
+                                                <div *ngIf="this.dmSV.checkUserForder(folder) == false">
+                                                    <div class="dropdown dropdown-left ml-2">
+                                                        <app-submenu
+                                                            permissions="{{getPermissionString(folder.permissions)}}"
+                                                            data="{{getDataString(folder)}}"
+                                                            isSystem="{{folder.isSystem}}"
+                                                            parentId="{{folder.parentId}}"
+                                                            bookmarks="{{getBookmarkString(folder.bookmarks)}}"
+                                                            isDelete="{{folder.isDelete}}" id="{{folder.recID}}"
+                                                            fullName="{{folder.folderName}}" type="folder">
+                                                        </app-submenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                </ng-container>
+                            </ng-template>
+
+                        </tbody>
+                    </table>
+                </div>
+            </ng-template>
+            <ng-template #elseBlockEmpty>
+                <div
+                    *ngIf="(this.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0)); then thenElseNoData else elseLoading">
+                </div>
+                <ng-template #thenElseNoData>
+                    <div class="w-100 align-items-center mt-20">
+                        <div class="text-center">
+                            <img class="max-h-200px" src="../../../assets/codx/dms/data-empty.png" />
+                        </div>
+                        <div class="text-center">
+                            <h5 class="text-dark mt-6">{{dmSV.titleNodaTa}}</h5>
+                            <div class="mt-3">{{dmSV.titleNodaTaFolder}}</div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #elseLoading>
+                    <div class="w-100 align-items-center mt-20">
+                        <div class="text-center">
+                            <img class="max-h-200px" src="../../../assets/img/loader.gif" />
+                        </div>
+                        <!-- <div class="text-center">
+                            <h5 class="text-dark mt-6">Đang tải dữ liệu</h5>
+                            <div class="mt-3">Thư mục hiện tại đang tải dữ liệu</div>
+                        </div> -->
+                    </div>
+                </ng-template>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<ng-template #contentDblClickViewFile let-modal>
+    <div class="viewfile">
+        <div class="viewfile-toolbar">
+            <span class="icon-arrow_back icon-18 left" (click)="modal.close('Cancel click')"></span>
+            <span class="left namefile">{{fullName}}</span>
+            <div *ngIf="this.item.download">
+                <span class="icon-download icon-18 right" (click)="download()"></span>
+                <span class="icon-print icon-18 right" (click)="print()"></span>
+            </div>
+        </div>
+    </div>
+    <div class="viewfile-content">
+        <view-file iD="{{id}}" ext={{ext}}></view-file>
+    </div>
+</ng-template>
+
+<context-menu>
+    <ng-template contextMenuItem let-item>
+        <app-submenu permissions="{{getPermissionString(item?.permissions)}}" data="{{getDataString(item)}}"
+            isSystem="{{item?.isSystem}}" parentId="{{getParentId(item)}}"
+            bookmarks="{{getBookmarkString(item?.bookmarks)}}" isDelete="{{item?.isDelete}}" id="{{item?.recID}}"
+            hideHeader="false" fullName="{{getMame(item)}}" type="{{getType(item)}}" ext="{{getExt(item)}}">
+        </app-submenu>
+    </ng-template>
+</context-menu>

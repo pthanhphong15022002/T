@@ -668,6 +668,7 @@ export class ApprovalComponent extends UIComponent {
 
         (this.pdfviewerControl.freeTextSettings.customData as String) =
           this.signerInfo.authorID + ':' + type;
+
         this.pdfviewerControl.freeTextSettings.fontSize = 30;
         this.pdfviewerControl.annotation.setAnnotationMode('FreeText');
       }
@@ -689,6 +690,7 @@ export class ApprovalComponent extends UIComponent {
       justAddAnno.customData =
         this.signerInfo.authorName + ':' + e.customStampName;
     }
+    justAddAnno.allowedInteractions = ['Delete'];
     justAddAnno.author = this.signerInfo.authorID;
     justAddAnno.review.author = this.signerInfo.authorID;
     this.curSelectedAnno = justAddAnno;
@@ -744,80 +746,21 @@ export class ApprovalComponent extends UIComponent {
       area.FontStyle = anno.fontFamily;
       area.FontFormat = anno.fontFormat;
       area.FontSize = anno.fontSize;
-      console.log('annot cu', anno);
-
-      let replaceAnnot = {
-        annotationSelectorSettings: {
-          selectionBorderColor: '',
-          resizerBorderColor: 'black',
-          resizerFillColor: '#FF4081',
-          resizerSize: 8,
-          selectionBorderThickness: 1,
-        },
-        annotationSettings: {
-          minWidth: 100,
-          minHeight: 100,
-          isLock: false,
-        },
-        bounds: {
-          top: anno.bounds.top,
-          left: anno.bounds.left,
-          width: anno.bounds.width,
-          height: anno.bounds.height,
-        },
-        author: anno.author,
-        comments: [],
-        dynamicText: anno.dynamicText,
-        fillColor: '#ffffff00',
-        font: {
-          isBold: false,
-          isItalic: false,
-          isStrikeout: false,
-          isUnderline: false,
-          version: undefined,
-        },
-        fontColor: '#000',
-        fontFamily: anno.fontFamily,
-        fontSize: anno.fontSize,
-        isPrint: true,
-        isReadonly: false,
-        modifiedDate: anno.modifiedDate,
-        opacity: 1,
-        pageNumber: anno.pageNumber,
-        review: {
-          state: 'Unmarked',
-          stateModel: 'None',
-          modifiedDate: Date(),
-          version: undefined,
-        },
-        customData: anno.customData,
-        rotateAngle: 0,
-        shapeAnnotationType: 'FreeText',
-        strokeColor: '#ffffff00',
-        subject: 'Text Box',
-        textAlign: 'Left',
-        thickness: 1,
-      } as any;
 
       service.addOrEditSignArea(area).subscribe((res) => {
         if (res) {
-          replaceAnnot.annotationId = res;
-          console.log('replace', replaceAnnot);
-
-          this.pdfviewerControl.addAnnotation(replaceAnnot);
+          let index = this.pdfviewerControl.annotationCollection.findIndex(
+            (annot) => annot.annotationId == anno.annotationId
+          );
+          this.pdfviewerControl.annotationCollection[index].annotationId = res;
+          console.log(
+            this.pdfviewerControl.annotationCollection.filter((curAnnot) => {
+              return curAnnot.annotationId == null;
+            })
+          );
         }
       });
-      let index = this.pdfviewerControl.annotationCollection.findIndex(
-        (curAnno) => {
-          return curAnno.annotationId === this.curSelectedAnno.annotationId;
-        }
-      );
-      this.pdfviewerControl.annotationModule.deleteAnnotationById(
-        this.pdfviewerControl.annotationCollection[index]
-      );
-      this.pdfviewerControl;
-      this.pdfviewerControl.annotationCollection.splice(index, 1);
-      console.log('da xoa', index);
+      this.df.detectChanges();
     }
   }
 

@@ -60,31 +60,20 @@ export class SubFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {      
-      this.dialog = dialog;     
-      this.listSubFolder = data.data[2];      
+      this.dialog = dialog;           
       this.indexSub = data.data[1];
-      this.subitem = new SubFolder;
-      if (this.indexSub != -1) {
-        this.subitem = this.listSubFolder[this.indexSub];
-        this.subitem.type = this.subitem.type;
-        this.subitem.format = this.subitem.format;
-        this.subItemLevel = this.subitem.level;
-        this.subitem.description = this.subitem.levelText;
-      }
-      else {
-        this.subitem.type = "";
-        this.subitem.format = "";
-        this.subItemLevel = "";
-        this.subitem.description = "";
-        this.disableSubItem = true;
-      }
+      this.subitem = data.data[2];
+      this.listSubFolder = data.data[3];          
+      this.subitem.type = this.subitem.type;
+      this.subitem.format = this.subitem.format;
+      this.subItemLevel = this.subitem.level;
+      this.subitem.description = this.subitem.description;
 
-      if (this.listSubFolder != null)
-        this.subitem.level = (this.listSubFolder.length + 1).toString();
-      else {
+      if (this.listSubFolder == null)
         this.listSubFolder = [];
-        this.subitem.level = "";
-      }
+
+      if ( this.indexSub == -1)
+        this.subitem.level = (this.listSubFolder.length + 1).toString();      
   }
 
   ngOnInit(): void {   
@@ -159,10 +148,9 @@ export class SubFolderComponent implements OnInit {
     else {
       this.listSubFolder[this.indexSub] = JSON.parse(JSON.stringify(this.subitem));
     }
-   // this.fileEditing.subFolder = this.listSubFolder;
+
     this.dmSV.ListSubFolder.next(this.listSubFolder);
-    this.changeDetectorRef.detectChanges();
-   // modal.dismiss('Cross click');// modal.close();
+    this.changeDetectorRef.detectChanges();   
     this.dialog.close();
   }
 
