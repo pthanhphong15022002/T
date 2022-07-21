@@ -25,6 +25,7 @@ import { AuthStore, CacheService, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
+import { M } from '@angular/cdk/keycodes';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
@@ -178,9 +179,7 @@ export class ApprovalComponent extends UIComponent {
     this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
   }
 
-  loadingAnnotation(e: any) {
-    console.log('loading', e);
-
+  loadingAnnot(e: any) {
     if (!this.isApprover) {
       this.esService.getSignAreas(this.fileInfo?.fileID).subscribe((res) => {
         this.lstRenderAnnotation = res;
@@ -199,14 +198,14 @@ export class ApprovalComponent extends UIComponent {
               },
               annotationSettings: {
                 minWidth: 100,
-                maxWidth: 100,
                 minHeight: 100,
-                maxHeight: 100,
                 isLock: false,
               },
               bounds: {
                 top: item.location.top,
-                left: item.location.left,
+                left: item.location.height,
+                width: item.location.width,
+                height: item.location.height,
               },
               author: item.signer,
               comments: [],
@@ -224,9 +223,9 @@ export class ApprovalComponent extends UIComponent {
               fontSize: item.fontSize,
               isPrint: true,
               isReadonly: false,
-              modifiedDate: item.modifiedOn,
+              modifiedDate: item.ModifiedOn,
               opacity: 1,
-              pageIndex: item.location.pageNumber,
+              pageNumber: item.location.pageNumber,
               review: {
                 state: 'Unmarked',
                 stateModel: 'None',
@@ -241,13 +240,13 @@ export class ApprovalComponent extends UIComponent {
               textAlign: 'Left',
               thickness: 1,
             } as any;
-
             this.pdfviewerControl.addAnnotation(anno);
           }
         });
       });
     }
   }
+
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
@@ -275,7 +274,7 @@ export class ApprovalComponent extends UIComponent {
           this.esService
             .getLastTextLine(this.pdfviewerControl.currentPageNumber)
             .subscribe((res: any) => {
-              this.test(
+              this.runAutoSign(
                 this.pdfviewerControl.currentPageNumber - 1,
                 res.Y + 31
               );
@@ -296,9 +295,9 @@ export class ApprovalComponent extends UIComponent {
           if (!signed) {
             this.pdfviewerControl.navigationModule.goToLastPage();
 
-            this.test(this.pdfviewerControl.pageCount - 1);
+            this.runAutoSign(this.pdfviewerControl.pageCount - 1);
           } else {
-            this.test(this.pdfviewerControl.currentPageNumber - 1);
+            this.runAutoSign(this.pdfviewerControl.currentPageNumber - 1);
           }
           break;
         }
@@ -361,13 +360,12 @@ export class ApprovalComponent extends UIComponent {
     }
   }
 
-  test(pageNumber: number, top?: number, left?: number) {
+  runAutoSign(pageNumber: number, top?: number, left?: number) {
     top = top ? top : this.pdfviewerControl.viewerBase.pageSize[0].height - 150;
     left = left
       ? left
       : this.pdfviewerControl.viewerBase.pageSize[0].width - 150;
     let anno = {
-      allowedInteractions: [],
       annotationSettings: {
         minWidth: 100,
         maxWidth: 500,
@@ -665,6 +663,8 @@ export class ApprovalComponent extends UIComponent {
             this.pdfviewerControl.freeTextSettings.defaultText = 'Ghi chú';
             break;
         }
+        this.pdfviewerControl.freeTextSettings.author =
+          this.signerInfo.authorID;
 
         (this.pdfviewerControl.freeTextSettings.customData as String) =
           this.signerInfo.authorID + ':' + type;
@@ -677,9 +677,7 @@ export class ApprovalComponent extends UIComponent {
     }
   }
 
-  setStampInfo(e: any) {
-    console.log(e);
-
+  addAnnoEvent(e: any) {
     this.holding = 0;
     let curID = e.annotationId;
     let justAddAnno = this.pdfviewerControl.annotationCollection.find(
@@ -690,28 +688,28 @@ export class ApprovalComponent extends UIComponent {
     if (!(justAddAnno.shapeAnnotationType === 'FreeText')) {
       justAddAnno.customData =
         this.signerInfo.authorName + ':' + e.customStampName;
-      // justAddAnno.annotationId = this.signerInfo.authorID;
     }
     justAddAnno.author = this.signerInfo.authorID;
     justAddAnno.review.author = this.signerInfo.authorID;
     this.curSelectedAnno = justAddAnno;
 
-    this.saveAnnoQueue.set(
-      curID,
-      setTimeout(
-        this.saveAnnoToDB,
-        this.after_X_Second,
-        this.esService,
-        justAddAnno,
-        this.fileInfo,
-        this.user
-      )
-    );
+    if (this.curSelectedAnno) {
+      this.saveAnnoQueue.set(
+        curID,
+        setTimeout(
+          this.saveAnnoToDB.bind(this),
+          this.after_X_Second,
+          this.esService,
+          this.curSelectedAnno,
+          this.fileInfo,
+          this.user
+        )
+      );
+    }
   }
 
   saveAnnoToDB(service, anno, fileInfo, user) {
-    console.log('curent select', anno);
-
+    console.log('save event');
     let area: tmpSignArea = {
       RecID: anno.annotationId,
       TransID: '',
@@ -746,16 +744,84 @@ export class ApprovalComponent extends UIComponent {
       area.FontStyle = anno.fontFamily;
       area.FontFormat = anno.fontFormat;
       area.FontSize = anno.fontSize;
-    }
+      console.log('annot cu', anno);
 
-    // service.addOrEditSignArea(area).subscribe((res) => {
-    //   console.log('ket qua', res);
-    // });
+      let replaceAnnot = {
+        annotationSelectorSettings: {
+          selectionBorderColor: '',
+          resizerBorderColor: 'black',
+          resizerFillColor: '#FF4081',
+          resizerSize: 8,
+          selectionBorderThickness: 1,
+        },
+        annotationSettings: {
+          minWidth: 100,
+          minHeight: 100,
+          isLock: false,
+        },
+        bounds: {
+          top: anno.bounds.top,
+          left: anno.bounds.left,
+          width: anno.bounds.width,
+          height: anno.bounds.height,
+        },
+        author: anno.author,
+        comments: [],
+        dynamicText: anno.dynamicText,
+        fillColor: '#ffffff00',
+        font: {
+          isBold: false,
+          isItalic: false,
+          isStrikeout: false,
+          isUnderline: false,
+          version: undefined,
+        },
+        fontColor: '#000',
+        fontFamily: anno.fontFamily,
+        fontSize: anno.fontSize,
+        isPrint: true,
+        isReadonly: false,
+        modifiedDate: anno.modifiedDate,
+        opacity: 1,
+        pageNumber: anno.pageNumber,
+        review: {
+          state: 'Unmarked',
+          stateModel: 'None',
+          modifiedDate: Date(),
+          version: undefined,
+        },
+        customData: anno.customData,
+        rotateAngle: 0,
+        shapeAnnotationType: 'FreeText',
+        strokeColor: '#ffffff00',
+        subject: 'Text Box',
+        textAlign: 'Left',
+        thickness: 1,
+      } as any;
+
+      service.addOrEditSignArea(area).subscribe((res) => {
+        if (res) {
+          replaceAnnot.annotationId = res;
+          console.log('replace', replaceAnnot);
+
+          this.pdfviewerControl.addAnnotation(replaceAnnot);
+        }
+      });
+      let index = this.pdfviewerControl.annotationCollection.findIndex(
+        (curAnno) => {
+          return curAnno.annotationId === this.curSelectedAnno.annotationId;
+        }
+      );
+      this.pdfviewerControl.annotationModule.deleteAnnotationById(
+        this.pdfviewerControl.annotationCollection[index]
+      );
+      this.pdfviewerControl;
+      this.pdfviewerControl.annotationCollection.splice(index, 1);
+      console.log('da xoa', index);
+    }
   }
 
   resetTime(e: any) {
-    console.log('su kien thay doi', e);
-
     let curID = e.annotationId;
     clearTimeout(this.saveAnnoQueue.get(curID));
 
@@ -782,18 +848,21 @@ export class ApprovalComponent extends UIComponent {
         break;
     }
 
-    this.pdfviewerControl.annotationCollection[curIndex] = this.curSelectedAnno;
-    this.saveAnnoQueue.set(
-      curID,
-      setTimeout(
-        this.saveAnnoToDB,
-        this.after_X_Second,
-        this.esService,
-        this.curSelectedAnno,
-        this.fileInfo,
-        this.user
-      )
-    );
+    if (this.curSelectedAnno) {
+      this.pdfviewerControl.annotationCollection[curIndex] =
+        this.curSelectedAnno;
+      this.saveAnnoQueue.set(
+        curID,
+        setTimeout(
+          this.saveAnnoToDB.bind(this),
+          this.after_X_Second,
+          this.esService,
+          this.curSelectedAnno,
+          this.fileInfo,
+          this.user
+        )
+      );
+    }
   }
 
   pageChange(e: any) {
@@ -808,64 +877,7 @@ export class ApprovalComponent extends UIComponent {
   }
 
   show(e: any) {
-    let anno = {
-      annotationId: Guid.newGuid(),
-      annotationSelectorSettings: {
-        selectionBorderColor: '',
-        resizerBorderColor: 'black',
-        resizerFillColor: '#FF4081',
-        resizerSize: 8,
-        selectionBorderThickness: 1,
-      },
-      annotationSettings: {
-        minWidth: 100,
-        maxWidth: 100,
-        minHeight: 100,
-        maxHeight: 100,
-        isLock: false,
-      },
-      bounds: {
-        top: 700,
-        left: 500,
-      },
-      author: 'ID4',
-      comments: [],
-      dynamicText: 'item.labelValue',
-      fillColor: '#ffffff00',
-      font: {
-        isBold: false,
-        isItalic: false,
-        isStrikeout: false,
-        isUnderline: false,
-        version: undefined,
-      },
-      fontColor: '#000',
-      fontSize: 30,
-      isPrint: true,
-      isReadonly: false,
-      modifiedDate: Date(),
-      opacity: 1,
-      pageIndex: 1,
-      review: {
-        state: 'Unmarked',
-        stateModel: 'None',
-        modifiedDate: Date(),
-        version: undefined,
-      },
-      customData: "item.signer + ':' + item.labelType",
-      rotateAngle: 0,
-      shapeAnnotationType: 'FreeText',
-      strokeColor: '#ffffff00',
-      subject: 'Text Box',
-      textAlign: 'Left',
-      thickness: 1,
-    } as any;
-
-    this.pdfviewerControl.importAnnotation(anno);
-    console.log(this.pdfviewerControl);
-  }
-  success() {
-    console.log('thanh cong');
+    console.log('list anno', this.pdfviewerControl.annotationCollection);
   }
 
   selectedAnnotation(e: any) {
