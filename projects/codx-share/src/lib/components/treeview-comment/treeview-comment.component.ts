@@ -364,7 +364,7 @@ export class TreeviewCommentComponent implements OnInit {
     .subscribe((res:boolean) => {
       if(res)
       {
-        comment.isEditComment = false;
+        comment.isEditComment
         this.notifySvr.notify("Chỉnh sửa thành công");
         this.dt.detectChanges();
       }
