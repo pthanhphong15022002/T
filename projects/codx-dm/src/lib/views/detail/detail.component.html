@@ -1,10 +1,7 @@
 <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="d-flex flex-column-fluid position-relative main-2zone cancelEvent">
     <div class="container notop">
-        <div class="dms dms-viewdetail">
-            <!-- <div
-                *ngIf="(listFolder == null || listFolder.length <= 0) && (listFiles == null || listFiles.length <= 0); then elseBlockEmpty else thenBlockList">
-            </div> -->
+        <div class="dms dms-viewdetail">            
             <div
                 *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
             </div>
@@ -21,7 +18,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="px-0" scope="col"></th>
+                                <!-- <th class="px-0" scope="col"></th> -->
                                 <th scope="col">
                                     <div>Tên tài liệu</div>
                                 </th>
@@ -34,7 +31,7 @@
                                 <th scope="col">
                                     <div>Dung lượng</div>
                                 </th>
-                                <th scope="col"></th>
+                                <!-- <th scope="col"></th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -44,11 +41,15 @@
                             <ng-template #thenBlockAsc>
                                 <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
                                     <tr title="{{folder.folderName}}">
-                                        <td class="w-50px text-center px-0"><span
+                                        <!-- <td class="w-50px text-center px-0"><span
                                                 [className]="getBookmarksClass(folder)"></span>
-                                        </td>
+                                        </td> -->
                                         <td>
-                                            <div 
+                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
+                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
+                                                cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>    
+                                            <!-- <div 
                                                 (dblclick)="onDbclick(folder, folder.permissions, folder.recID, folder.level, folder.parentId, folder.folderName)"
                                                 class="d-flex align-items-center version-item">
                                                 <img alt="" class="max-h-25px mr-3"
@@ -57,22 +58,23 @@
                                                     <span class="text-dark-75">{{folder.folderName}}</span>
                                                     <span class="text-muted"></span>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center">
+                                            <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
+                                            </codx-temp-full> 
+                                            <!-- <div class="d-flex align-items-center">
                                                 <div *ngIf="!folder.isSystem"
                                                     class="symbol symbol-24 symbol-circle mr-3">
                                                     <lv-image-viewer class="symbol symbol-30 symbol-circle"
                                                         [objectId]="folder.createdBy" objectType="AD_Users">
-                                                    </lv-image-viewer>
-                                                    <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                                    </lv-image-viewer>                                                   
                                                 </div>
                                                 <div *ngIf="!folder.isSystem" class="d-flex flex-column">
                                                     <div class="text-dark">{{folder.userName}}</div>
                                                     <div class="text-dark-50"></div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -81,8 +83,12 @@
                                         </td>
                                         <td>
                                             <div class="erm-date"></div>
+                                            <!-- <codx-temp-full class="float-start" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" 
+                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
+                                                cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>  -->
                                         </td>
-                                        <td class="w-50px">
+                                        <!-- <td class="w-50px">
                                             <div class="d-flex align-items-center">
                                                 <div *ngIf="this.dmSV.checkUserForder(folder) == false">
                                                     <div class="dropdown dropdown-left ml-2">
@@ -98,51 +104,54 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 </ng-container>
                                 <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
                                     <tr title="{{file.folderName}}">
-                                        <td class="w-50px text-center px-0"><span
-                                                [className]="getBookmarksClass(file)"></span>
+                                        <!-- <td class="w-50px text-center px-0"><span
+                                                [className]="getBookmarksClass(file)"></span> -->
                                         <td>
-                                            <div 
+                                            <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
+                                            [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                           
+                                            cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>  
+                                            <!-- <span class="text-muted">Version: V01</span> -->
+                                            <!-- <div 
                                                 (dblclick)="viewfile(file, file.permissions, contentDblClickViewFile,file.fileName,file.recID,file.extension)"
-                                                class="d-flex align-items-center version-item">
-                                                <!-- <img alt="" class="max-h-25px mr-3"
-                                                    src="../../../assets/demos/dms/{{getAvatar(file.extension)}}"> -->
-                                                <img alt="" class="max-h-25px mr-3"
+                                                class="d-flex align-items-center version-item">                                              
+                                                <img alt="" class="max-h-25px mr-3 me-3 w-20px"
                                                     [src]='this.dmSV.getThumbnail(file.thumbnail, file.extension)'>
                                                 <div class="d-flex flex-column flex-grow-1">
-                                                    <span class="text-dark-75">{{file.fileName}}</span>
-                                                    <!-- <span class="text-muted">Version: V01</span> -->
+                                                    <span class="text-dark-75">{{file.fileName}}</span>                                                    
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="symbol symbol-24 symbol-circle mr-3">
-                                                    <!-- <lv-image-viewer class="symbol symbol-30 symbol-circle" [objectId]="_user.userID" objectType="AD_Users"> </lv-image-viewer> -->
+                                            <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
+                                            </codx-temp-full> 
+                                            <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                            <!-- <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-24 symbol-circle mr-3">                                                   
                                                     <lv-image-viewer class="symbol symbol-30 symbol-circle"
                                                         [objectId]="file.createdBy" objectType="AD_Users">
-                                                    </lv-image-viewer>
-                                                    <!-- <img alt="Pic" src="../../../assets/demos/user/user7.jpg"> -->
+                                                    </lv-image-viewer>                                                    
                                                 </div>
                                                 <div *ngIf="!file.isSystem" class="d-flex flex-column">
                                                     <div class="text-dark">{{file.userName}}</div>
                                                     <div class="text-dark-50"></div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="erm-date">{{file.createdOn}}</div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td>                                            
                                             <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
                                         </td>
-                                        <td class="w-50px">
+                                        <!-- <td class="w-50px">
                                             <div class="d-flex align-items-center">
                                                 <div class="dropdown dropdown-left ml-2">
                                                     <app-submenu permissions="{{getPermissionString(file.permissions)}}"
@@ -154,7 +163,7 @@
                                                     </app-submenu>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 </ng-container>
                             </ng-template>
@@ -208,7 +217,7 @@
                                         <td>
                                             <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
                                         </td>
-                                        <td class="w-50px">
+                                        <!-- <td class="w-50px">
                                             <div class="d-flex align-items-center">
                                                 <div class="dropdown dropdown-left ml-2">
                                                     <app-submenu permissions="{{getPermissionString(file.permissions)}}"
@@ -220,7 +229,7 @@
                                                     </app-submenu>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 </ng-container>
                                 <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
@@ -262,7 +271,7 @@
                                         <td>
                                             <div class="erm-date"></div>
                                         </td>
-                                        <td class="w-50px">
+                                        <!-- <td class="w-50px">
                                             <div class="d-flex align-items-center">
                                                 <div *ngIf="this.dmSV.checkUserForder(folder) == false">
                                                     <div class="dropdown dropdown-left ml-2">
@@ -278,7 +287,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 </ng-container>
                             </ng-template>

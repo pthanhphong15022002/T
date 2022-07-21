@@ -31,7 +31,7 @@ idField="recID"
 </ng-template>
 
 <ng-template #templateCard>
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
@@ -56,7 +56,7 @@ idField="recID"
       (fileCount)="getfileCount($event)" 
       displayThumb="full"
     > 
-  </codx-attachment> -->
+  </codx-attachment>
   
   <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
