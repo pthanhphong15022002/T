@@ -67,6 +67,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   crrIndex :number
   popover: any;
   vllShare = 'TM003'
+  planholderTaskGoal ="Add to do list…"
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
