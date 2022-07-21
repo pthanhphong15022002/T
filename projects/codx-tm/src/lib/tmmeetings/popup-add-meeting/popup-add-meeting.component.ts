@@ -26,7 +26,7 @@ export class PopupAddMeetingComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-   // this.getParam() ;
+    this.getParam() ;
     this.data = dialog.dataService!.dataSelected;
     this.meeting = this.data;
     this.dialog = dialog;
@@ -49,7 +49,7 @@ export class PopupAddMeetingComponent implements OnInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'CO_Meetings'
+        'TMMeetings'
       )
       .subscribe((res) => {
         if (res) {

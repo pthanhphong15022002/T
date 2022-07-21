@@ -21,7 +21,7 @@
     [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
     [subTitle]="data.positionNameCreate" [content]="data.taskName" [status]="data.status" statusVll="L0614"
     [date]="data.dueDate" [resources]="data.category=='3'?data.assignTo : (data.owner!=user.userID ?data.owner:'')"
-    resourceObjType="AD_Users" [formModel]="view.formModel">
+    resourceObjType="AD_Users" [formModel]="view.formModel" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 

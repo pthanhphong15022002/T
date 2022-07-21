@@ -33,7 +33,7 @@
             <br>
             <div class="notes">
                 <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes"
-                    [groupBy]="'isPin'" gridViewName="'grvNotes'" service="WP" type="listView">
+                    gridViewName="'grvNotes'" service="WP" type="listView">
                 </codx-listview>
             </div>
             <ng-template #template let-item>
@@ -44,7 +44,7 @@
                                 <div *ngIf="item.memo != null">
                                     <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
+                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
@@ -61,7 +61,7 @@
                                 <div *ngIf="item.memo == null">
                                     <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
+                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
@@ -97,7 +97,7 @@
                                 <div *ngIf="item.memo != null">
                                     <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
+                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
@@ -114,7 +114,7 @@
                                 <div *ngIf="item.memo == null">
                                     <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)">
+                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
