@@ -296,37 +296,25 @@ export class CodxTMService {
 
   getMyDBData(
     model: Object,
-    daySelectedFrom: Date,
-    daySelectedTo: Date,
-    fromDate: Date,
-    toDate: Date,
-    beginMonth: Date,
-    endMonth: Date
   ) {
     return this.api.execSv(
       'TM',
       'TM',
       'TaskBusiness',
       'GetDataMyDashboardAsync',
-      [model, beginMonth, endMonth]
+      [model]
     );
   }
 
   getTeamDBData(
     model: Object,
-    daySelectedFrom: Date,
-    daySelectedTo: Date,
-    fromDate: Date,
-    toDate: Date,
-    beginMonth: Date,
-    endMonth: Date
   ) {
     return this.api.execSv(
       'TM',
       'TM',
       'TaskBusiness',
       'GetDataTeamDashboardAsync',
-      [model, beginMonth, endMonth]
+      [model]
     );
   }
 

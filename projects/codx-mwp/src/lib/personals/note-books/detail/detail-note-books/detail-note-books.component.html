@@ -11,13 +11,13 @@
 
 
 <ng-template #memo let-item>
-    <h1>KEFGERHJGBHD</h1>
     <span [innerHTML]="item.memo"></span>
 </ng-template>
 
 <ng-template #iconMoreFunc let-item>
     <div style="width: 100px;height: 200px;margin-left: -90px;">
-        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)">
+        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+        [dataItem]="item">
         </codx-mfunc>
     </div>
 </ng-template>

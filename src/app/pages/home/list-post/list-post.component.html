@@ -187,7 +187,7 @@
         </div>
         <div class="pic-feed">
             <div class="pic-feed-img">
-                <codx-file [objectID]="item.recID"></codx-file>
+                <codx-file #codxFile [objectID]="item.recID" (evetFile)="getFile($event,item)"></codx-file>
             </div>
         </div>
     </ng-container>
