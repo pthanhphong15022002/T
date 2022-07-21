@@ -321,7 +321,7 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'add', this.isAssignTask],
@@ -361,7 +361,7 @@ export class TasksComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
+        option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
@@ -390,7 +390,7 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
@@ -493,7 +493,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = '800px';
+    option.Width = 'Auto';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose],
