@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
+import { catchError, map, finalize, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'lib-positions',
@@ -16,11 +17,14 @@ export class PositionsComponent implements OnInit {
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   funcID: string;
-
+  posInfo: any = {};
+  employees: any = [];
+  itemSelected: any;
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
-
+  @ViewChild('p') public popover: NgbPopover;
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -32,7 +36,6 @@ export class PositionsComponent implements OnInit {
     private api: ApiHttpService,
   ) {
 
-    // this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
@@ -40,18 +43,18 @@ export class PositionsComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
+    // this.moreFuncs = [
+    //   {
+    //     id: 'edit',
+    //     icon: 'icon-list-checkbox',
+    //     text: 'Sửa',
+    //   },
+    //   {
+    //     id: 'copy',
+    //     icon: 'icon-list-checkbox',
+    //     text: 'Sao chép',
+    //   },
+    // ];
   }
 
   ngAfterViewInit(): void {
@@ -62,6 +65,7 @@ export class PositionsComponent implements OnInit {
         active: true,
         sameData: true,
         model: {
+          // panelLeftRef: this.panelLeftRef,
           template: this.itemTemplate,
         }
       },
@@ -71,9 +75,6 @@ export class PositionsComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
-        this.add();
-        break;
       case 'edit':
         this.edit(data);
         break;
@@ -83,72 +84,111 @@ export class PositionsComponent implements OnInit {
       case 'delete':
         this.delete(data);
         break;
-      // case 'sendemail':
-      //   this.sendemail(data);
-      //   break;
-      // case 'TMT025':
-      //   this.assignTask(data);
-      //   break;
-      // default:
-      //   this.changeStatusTask(e, data);
-      //   break;
     }
   }
 
   add() {
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '550px';
+    //   this.dialog = this.callfunc.openSide(
+    //     PopupAddPositionsComponent,
+    //     [this.view.dataService.dataSelected, 'add'],
+    //     option
+    //   );
+    //   this.dialog.closed.subscribe((e) => {
+    //     console.log(e);
+    //   });
+    // });
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(
-        PopupAddPositionsComponent,
-        [this.view.dataService.dataSelected, 'add'],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected , option);
+      this.dialog.closed.subscribe(e => {
         console.log(e);
-      });
+      })
     });
   }
 
   edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+      if (data) {
+        this.view.dataService.dataSelected = data;
+      }
+      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddPositionsComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
       });
   }
 
   copy(data) {
-    this.view.dataService.copy().subscribe((res: any) => {
+    // this.view.dataService.copy().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '550px';
+    //   this.view.dataService.dataSelected = data;
+    //   this.dialog = this.callfunc.openSide(
+    //     PopupAddPositionsComponent,
+    //     [this.view.dataService.dataSelected, 'copy'],
+    //     option
+    //   );
+    // });
+
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.view.dataService.dataSelected = data;
-      this.dialog = this.callfunc.openSide(
-        PopupAddPositionsComponent,
-        [this.view.dataService.dataSelected, 'copy'],
-        option
-      );
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'copy', option);
     });
   }
 
-  delete(data: any) {
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'Delete';
 
+    opt.data = itemSelected.taskGroupID;
+    return true;
   }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
+  }
+
+loadEmployByCountStatus(el, posID, status) {
+        var stt = status.split(';');
+        this.popover["_elementRef"] = new ElementRef(el);
+        if (this.popover.isOpen()) {
+            this.popover.close();
+        }
+        this.posInfo = {};
+        this.employees = [];
+        this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+            .subscribe(response => {
+
+                this.employees = response || [];
+                this.popover.open();
+
+            });
+    }
 
   requestEnded(evt: any) {
     this.view.currentView;
@@ -177,5 +217,54 @@ export class PositionsComponent implements OnInit {
         this.add();
         break;
     }
+  }
+
+  async onSelectionChanged($event) {
+    await this.setEmployeePredicate($event.dataItem.orgUnitID);
+    // this.employList.onChangeSearch();
+  }
+
+  setEmployeePredicate(orgUnitID): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this
+        .loadEOrgChartListChild(orgUnitID)
+        .pipe()
+        .subscribe((response) => {
+          if (response) {
+            var v = '';
+            var p = '';
+            for (let index = 0; index < response.length; index++) {
+              const element = response[index];
+              if (v != '') v = v + ';';
+              if (p != '') p = p + '||';
+              v = v + element;
+              p = p + 'OrgUnitID==@' + index.toString();
+            }
+            // this.employList.predicate = p;
+            // this.employList.dataValue = v;
+          }
+          resolve('');
+        });
+    });
+  }
+
+  loadEOrgChartListChild(orgUnitID): Observable<any> {
+    return this.api
+      .call(
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetOrgChartListChildAsync',
+        orgUnitID
+      )
+      .pipe(
+        map((data: any) => {
+          if (data.error) return;
+          return data.msgBodyData[0];
+        }),
+        catchError((err) => {
+          return of(undefined);
+        }),
+        finalize(() => null)
+      );
   }
 }

@@ -26,6 +26,9 @@ import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { SharedModule } from '@shared/shared.module';
 import { GroupUsersComponent } from './group-users/group-users.component';
+import { RolesComponent } from './Roles/home/home.component';
+import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
+import { RoleDetailComponent } from './Roles/detail/detail.component';
 
 export const routes: Routes = [
   {
@@ -55,6 +58,10 @@ export const routes: Routes = [
         path: 'groupusers/:funcID',
         component: GroupUsersComponent
       }
+      ,{
+        path: 'roles/:funcID',
+        component: RolesComponent,
+      }
 
     ]
   }
@@ -69,7 +76,10 @@ const T_Component: Type<any>[] = [
   AddUserComponent,
   PopupPersonalComponent,
   PopRolesComponent,
-  GroupUsersComponent
+  GroupUsersComponent,
+  RolesComponent,
+  RoleEditComponent,
+  RoleDetailComponent,
 ];
 @NgModule({
   imports: [

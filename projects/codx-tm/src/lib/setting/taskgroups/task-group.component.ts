@@ -197,8 +197,8 @@ export class TaskGroupComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, null, option);
 
@@ -219,14 +219,14 @@ export class TaskGroupComponent implements OnInit {
   }
 
   delete(data: any) {
-    // this.view.dataService.dataSelected = data;
-    // this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
-    //   this.beforeDel(opt)).subscribe((res) => {
-    //     if (res[0]) {
-    //       this.itemSelected = this.view.dataService.data[0];
-    //     }
-    //   }
-    //   );
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
   };
 
 

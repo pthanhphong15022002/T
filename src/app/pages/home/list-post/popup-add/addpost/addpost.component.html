@@ -1,4 +1,4 @@
-<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialogRef">
+<codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
         <div class="body body-addpost">
             <div class="addpost-scroll">
@@ -53,8 +53,21 @@
                                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
                             </div>
                             <ng-template #controlShare let-dialog>
-                                <codx-share [dialog]="dialog" [multiple]="false" (eventApply)="eventApply($event)">
-                                </codx-share>
+                                <ng-container *ngIf="dialogData.status == STATUS.EDIT;else creat_share">
+                                    <codx-share 
+                                        [dialog]="dialog" 
+                                        [multiple]="false" 
+                                        [dataShare]="dataEdit.permissions"
+                                        (eventApply)="eventApply($event)">
+                                    </codx-share>
+                                </ng-container>
+                                <ng-template #creat_share >
+                                    <codx-share 
+                                        [dialog]="dialog" 
+                                        [multiple]="false" 
+                                        (eventApply)="eventApply($event)">
+                                    </codx-share>
+                                </ng-template>
                             </ng-template>
                         </div>
                     </div>
@@ -114,12 +127,24 @@
 <ng-template #create>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" 
+                type="textarea" 
+                [crrValue]="message"
+                [placeholder]="title" 
+                (valueChange)="valueChange($event)">
             </codx-input>
        </div>
         <div>
-            <codx-file [lstFile]="listFileUpload" [funcID]="dialogRef.formModel.funcID" [edit]='true'></codx-file>
+            <codx-file 
+                #codxFileCreated
+                [lstFile]="listFileUpload" 
+                [funcID]="dialogRef.formModel.funcID" 
+                (removeFile)="removeFile($event)"
+                (addFile)="addFile($event)"
+                [edit]='true'>
+            </codx-file>
         </div>
         <div class="d-none">
             <codx-attachment #atmCreate 
@@ -139,12 +164,17 @@
     <ng-container *ngIf="dataEdit">
         <div class="my-3">
             <div>
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+                <codx-input 
+                    format="ed3" 
+                    [class]="'border-none'" 
+                    type="textarea" 
+                    [crrValue]="message"
+                    [placeholder]="title" 
+                    (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
             <div >
-                <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true'></codx-file>
+                <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true' (addFile)="addFile($event)" (removeFile)="removeFile($event)"></codx-file>
             </div>
             <div class="d-none">
                 <codx-attachment #atmEdit
@@ -165,8 +195,13 @@
 <ng-template #share>
     <div class="my-3">
         <div>
-            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" (valueChange)="valueChange($event)">
+            <codx-input 
+                format="ed3" 
+                [class]="'border-none'" 
+                type="textarea"
+                [crrValue]="message"
+                [placeholder]="title" 
+                (valueChange)="valueChange($event)">
             </codx-input>
         </div>
         <div>

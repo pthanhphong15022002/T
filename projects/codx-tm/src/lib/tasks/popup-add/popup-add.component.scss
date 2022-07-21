@@ -1,84 +1,95 @@
 
-.e-tab{
-    height: 100%!important;    
-}
-.e-tab .e-tab-header.e-vertical {
-    max-width: 200px;
-    width: 100%!important;
-    z-index: 1;
-    margin-right: 20px;
-    padding-right: 20px; 
-}
-.e-tab.e-vertical-tab .e-content {
-    display: flex;   
-}
-.e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
-    padding: 0 0px;
-}
-.e-tab .e-tab-header.e-vertical.e-vertical-left .e-toolbar-item.e-active {
-    border-radius: 0;
-    border-right: 0px solid #fff;
-}
-.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
-    border:0;   
-}
-.e-tab .e-tab-header.e-vertical:before {
-//border-width: 0px;    
-border-right: 1px solid #3333330f; 
-}
+// .e-tab{
+//     height: 100%!important;    
+// }
+// .e-tab .e-tab-header.e-vertical {
+//     max-width: 200px;
+//     width: 100%!important;
+//     z-index: 1;
+//     margin-right: 20px;
+//     padding-right: 20px; 
+// }
+// .e-tab.e-vertical-tab .e-content {
+//     display: flex;   
+// }
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+//     padding: 0 0px;
+// }
+// .e-tab .e-tab-header.e-vertical.e-vertical-left .e-toolbar-item.e-active {
+//     border-radius: 0;
+//     border-right: 0px solid #fff;
+// }
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+//     border:0;   
+// }
+// .e-tab .e-tab-header.e-vertical:before {
+// //border-width: 0px;    
+// border-right: 1px solid #3333330f; 
+// }
 
-.e-tab .e-tab-header:before {  
-    //border: 0;
-}
-.e-tab .e-tab-header .e-toolbar-item{
-    border: 0;
-}
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-    border-radius: 0px;
-    font-weight: 500;   
-    //color: var(--text-dark);
-    color: #2b2c30;
-    border: 0px solid rgba(0,0,0,0);
-}
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap .nav-link{
-    color: #2b2c30;
+// .e-tab .e-tab-header:before {  
+//     //border: 0;
+// }
+// .e-tab .e-tab-header .e-toolbar-item{
+//     border: 0;
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+//     border-radius: 0px;
+//     font-weight: 500;   
+//     //color: var(--text-dark);
+//     color: #2b2c30;
+//     border: 0px solid rgba(0,0,0,0);
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap .nav-link{
+//     color: #2b2c30;
     
-}
-.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text, .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
-    color: #005DC7;
-    font-weight: 500;
+// }
+// .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text, .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+//     color: #005DC7;
+//     font-weight: 500;
   
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+//     height: 54px;
+//     padding: 0 12px;
+//     width: 100%;
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-text-wrap{
+//     // padding: 7px 0;
+//     height: auto;
+//     padding: 0;
+// }
+// .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+//     height: auto;
+//     margin: 0 0px 0 0;
+//     min-height: 44px;
+//     min-width: auto; 
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-text{
+//     text-transform:inherit;
+// }
+// .active {
+//     color: #009EF7;
+//     border-color: #F1FAFF;
+//     background-color: #F1FAFF !important;
+// }
+// .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon{
+//     color: #009EF7;
+//     border-color: #F1FAFF;
+//     background-color: #F1FAFF !important;
+// }
+// .navi-item .navi-link {
+//     transition: all .15s ease;
+//     color: #3f4254;
+// }
+.footer-upload{
+    margin: -13px -20px -12px -15px;
+    padding: 13px 20px 12px 15px;     
+    width: 559px;
+    margin-left: auto;
+    border-width: 0 1px 0 0;
+    border-color: #3333330f;
+    border-style: solid;
+    box-shadow: -2px 2px 4px RGBA(150,152,154,.2);
 }
-.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-    height: 54px;
-    padding: 0 12px;
-    width: 100%;
-}
-.e-tab .e-tab-header .e-toolbar-item .e-text-wrap{
-    // padding: 7px 0;
-    height: auto;
-    padding: 0;
-}
-.e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-    height: auto;
-    margin: 0 0px 0 0;
-    min-height: 44px;
-    min-width: auto; 
-}
-.e-tab .e-tab-header .e-toolbar-item .e-tab-text{
-    text-transform:inherit;
-}
-.active {
-    color: #009EF7;
-    border-color: #F1FAFF;
-    background-color: #F1FAFF !important;
-}
-.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon{
-    color: #009EF7;
-    border-color: #F1FAFF;
-    background-color: #F1FAFF !important;
-}
-.navi-item .navi-link {
-    transition: all .15s ease;
-    color: #3f4254;
-}
+ 

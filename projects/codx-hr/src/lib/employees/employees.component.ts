@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
 
@@ -21,6 +22,7 @@ export class EmployeesComponent implements OnInit {
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
 
+  @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
@@ -29,11 +31,13 @@ export class EmployeesComponent implements OnInit {
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
     private changedt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private api: ApiHttpService,
   ) {
   }
 
@@ -47,7 +51,6 @@ export class EmployeesComponent implements OnInit {
       { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      // { headerText: 'Hành động', width: 200, template: this.itemAction },
     ];
   }
 
@@ -56,9 +59,10 @@ export class EmployeesComponent implements OnInit {
       {
         id: '1',
         type: ViewType.grid,
-        active: false  ,
+        active: false,
         sameData: true,
         model: {
+          panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
           // template: this.grid,
         }
@@ -69,6 +73,7 @@ export class EmployeesComponent implements OnInit {
         active: true,
         sameData: true,
         model: {
+          panelLeftRef: this.panelLeftRef,
           template: this.cardTemp,
         }
       },
@@ -103,23 +108,17 @@ export class EmployeesComponent implements OnInit {
   requestEnded(evt: any) {
   }
 
-  edit(data?) {
+  edit(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
-        this.dialog = this.callfunc.openSide(
-          PopupAddEmployeesComponent,
-          [this.view.dataService.dataSelected, 'edit'],
-          option
-        );
-      });
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+    });
   }
 
   copy(data) {
@@ -144,28 +143,78 @@ export class EmployeesComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
     });
   }
 
   delete(data: any) {
-    // this.view.dataService
-    //   .delete([this.view.dataService.dataSelected],true,(opt) =>
-    //     this.beforeDel(opt)
-    //   )
-    //   .subscribe((res) => {
-    //     if (res[0]) {
-    //       this.notiService.notifyCode('TM004');
-    //     }
-    //   });
-    /* Core em bị lỗi mấy đoạn delete nên em rem lại để code, khi nào merge bỏ rem giúp em với*/
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
+  }
+
+  async onSelectionChanged($event) {
+    await this.setEmployeePredicate($event.dataItem.orgUnitID);
+    // this.employList.onChangeSearch();
+  }
+
+  setEmployeePredicate(orgUnitID): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this
+        .loadEOrgChartListChild(orgUnitID)
+        .pipe()
+        .subscribe((response) => {
+          if (response) {
+            var v = '';
+            var p = '';
+            for (let index = 0; index < response.length; index++) {
+              const element = response[index];
+              if (v != '') v = v + ';';
+              if (p != '') p = p + '||';
+              v = v + element;
+              p = p + 'OrgUnitID==@' + index.toString();
+            }
+            // this.employList.predicate = p;
+            // this.employList.dataValue = v;
+          }
+          resolve('');
+        });
+    });
+  }
+
+  loadEOrgChartListChild(orgUnitID): Observable<any> {
+    return this.api
+      .call(
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetOrgChartListChildAsync',
+        orgUnitID
+      )
+      .pipe(
+        map((data: any) => {
+          if (data.error) return;
+          return data.msgBodyData[0];
+        }),
+        catchError((err) => {
+          return of(undefined);
+        }),
+        finalize(() => null)
+      );
   }
 
   beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
     opt.methodName = 'DeleteAsync';
-    opt.data = this.itemSelected.taskID;
+
+    opt.data = itemSelected.taskGroupID;
     return true;
   }
+
 
   selectedChange(val: any) {
     this.itemSelected = val.data;
@@ -174,9 +223,9 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'add':
-        this.add();
-        break;
+      // case 'add':
+      //   this.add();
+      //   break;
       case 'edit':
         this.edit(data);
         break;
@@ -184,7 +233,7 @@ export class EmployeesComponent implements OnInit {
         this.copy(data);
         break;
       case 'delete':
-        // this.delete(data);
+        this.delete(data);
         break;
     }
   }

@@ -140,20 +140,11 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   }
 
   private getGeneralData() {
-    this.tmService
-      .getMyDBData(
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.beginMonth,
-        this.endMonth
-      )
-      .subscribe((res) => {
-        this.dbData = res;
-        console.log('MyDB', this.dbData);
-      });
+    this.tmService.getMyDBData(this.model).subscribe((res) => {
+      this.dbData = res;
+      console.log('MyDB', this.dbData);
+      this.detectorRef.detectChanges();
+    });
 
     // this.api
     //   .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [

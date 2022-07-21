@@ -22,6 +22,10 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
+  @Output() evetFile = new EventEmitter();
+  @Output() removeFile = new EventEmitter();
+  @Output() addFile = new EventEmitter();
+
   @ViewChild('atm') atm:AttachmentComponent;
   FILE_CATEGORY = {
     IMAGE: "image",
@@ -229,11 +233,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.lstFile){
-      let files = changes.lstFile.currentValue;
-      if(files && files.length > 0 ){
-        this.lstFile = files;
-        this.converFile(this.lstFile);
-      }
+        this.converFile();
     }
     
   }
@@ -244,7 +244,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     }
     else
     {
-      this.converFile(this.lstFile);
+      this.converFile();
     } 
   }
 
@@ -271,109 +271,92 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
           }
         });
         this.dt.detectChanges();
+        this.evetFile.emit(this.lstFile);
       }
     })
   }
 
 
-  converFile(listFile:any){
-    if(listFile){
-      listFile.forEach((f:any) => {
-        if(f.minType.indexOf("image") >= 0 ){
+  converFile(){
+    if(this.lstFile){
+      this.lstFile.forEach((f:any) => {
+        if(f.mimeType.indexOf("image") >= 0 ){
           f['category'] = 'image';
+          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.file_img_video.push(f);
         }
-        else if(f.minType.indexOf("video") >= 0)
+        else if(f.mimeType.indexOf("video") >= 0)
         {
           f['category'] = 'video';
+          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.file_img_video.push(f);
         }
         else{
+          f['category'] = 'application';
+          let a = this.files.find(f2 => f2.fileName == f.fileName);
+          if(a) return;
           this.files.push(f);
         }
       });
       this.dt.detectChanges();
     }
   }
-
-
-  deleteFile(fileID:string,deleted:boolean){
-    if(fileID)
-    {
-      this.notifiSV.alertCode("TM003").subscribe((res) => {
-       if(res.event.status == "Y"){
-        this.api.execSv("DM",
-          "ERM.Business.DM",
-          "FileBussiness",
-          "DeleteFileAsync",
-          [fileID, deleted]).subscribe();  
-       }
-      });
-    }
-  }
-
   openDetail(indexFile:any){}
 
   removeFiles(file:any){
-    if(file.recID && file.objectID)
-    {
-      this.filesDelete.push(file);
-      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
+    let f: any = null;
+    this.filesDelete.push(file);
+    if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
+      for (let i = 0; i < this.file_img_video.length; i++) {
+        if(this.file_img_video[i].fileName == file.fileName)
+        {
+          f =  this.file_img_video.splice(i,1);
+          break;
         };
-      }
-      else
-      {
-        for (let i = 0; i < this.files.length; i++) {
-          if(this.files[i].fileName == file.fileName)
-          {
-            this.files.splice(i,1);
-            break;
-          };
-        };
-      }
-      this.dt.detectChanges();
+      };
     }
-    else 
+    else
     {
-      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
+      for (let i = 0; i < this.files.length; i++) {
+        if(this.files[i].fileName == file.fileName)
+        {
+          f = this.files.splice(i,1);
+          break;
         };
-      }
-      else
-      {
-        for (let i = 0; i < this.files.length; i++) {
-          if(this.files[i].fileName == file.fileName)
-          {
-            this.files.splice(i,1);
-            break;
-          };
-        };
-      }
+      };
+    }
       this.lstFile = [...this.file_img_video.concat(this.files)];
-      this.dmSV.fileUploadList = [...this.lstFile];
+      this.removeFile.emit(f[0]);
       this.dt.detectChanges();
-    }
   }
 
   addFiles(files:any[]){
-    this.converFile(files);
-    if(this.filesAdd.length == 0){
-      this.filesAdd = files;
-    }
-    else{
-      this.filesAdd.concat(files);
-    }
+    this.lstFile.concat(files);
+    files.map(f => {
+      if(f.mimeType.indexOf("image") >= 0 ){
+        f['category'] = 'image';
+        let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.file_img_video.push(f);
+      }
+      else if(f.mimeType.indexOf("video") >= 0)
+      {
+        f['category'] = 'video';
+        let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.file_img_video.push(f);
+      }
+      else{
+        f['category'] = 'application';
+        let a = this.files.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.files.push(f);
+      }
+    });
+    this.addFile.emit(files);
     this.dt.detectChanges();
   }
+
 }

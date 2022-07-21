@@ -15,7 +15,6 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private changedt: ChangeDetectorRef,
     private cache: CacheService,
     inject: Injector
   ) {
