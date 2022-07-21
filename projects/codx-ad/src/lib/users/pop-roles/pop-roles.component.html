@@ -1,4 +1,4 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog1">
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
       <e-tabitems>
@@ -33,7 +33,6 @@
   
                   </div>
                   <div class="col-10 column_second">
-
                     <div class="row">
                       <div class="col-2">
                         <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
@@ -45,8 +44,21 @@
                           </div>
                          </div>
                          <div class="col-12">
-                          <codx-input type="combobox" field="userID" [crrValue]="" refValue="UserRoles" (valueChange)="onCbx($event,item)" [multiple]="false" loadFull="true" >
+
+                          <div *ngIf="item.ischeck; else imgDefault_personal">
+                           
+                          <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
                           </codx-input>
+                          </div>
+                          <ng-template #imgDefault_personal>
+                         
+                              <codx-input type="combobox" style="background-color:red;"   field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
+                              </codx-input>
+                 
+                          </ng-template>
+<!-- 
+                          <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
+                          </codx-input> -->
                         </div>
                       </div>
                     </div>
