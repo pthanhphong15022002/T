@@ -53,8 +53,21 @@
                                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
                             </div>
                             <ng-template #controlShare let-dialog>
-                                <codx-share [dialog]="dialog" [multiple]="false" (eventApply)="eventApply($event)">
-                                </codx-share>
+                                <ng-container *ngIf="dialogData.status == STATUS.EDIT;else creat_share">
+                                    <codx-share 
+                                        [dialog]="dialog" 
+                                        [multiple]="false" 
+                                        [dataShare]="dataEdit.permissions"
+                                        (eventApply)="eventApply($event)">
+                                    </codx-share>
+                                </ng-container>
+                                <ng-template #creat_share >
+                                    <codx-share 
+                                        [dialog]="dialog" 
+                                        [multiple]="false" 
+                                        (eventApply)="eventApply($event)">
+                                    </codx-share>
+                                </ng-template>
                             </ng-template>
                         </div>
                     </div>
@@ -125,8 +138,11 @@
        </div>
         <div>
             <codx-file 
+                #codxFileCreated
                 [lstFile]="listFileUpload" 
                 [funcID]="dialogRef.formModel.funcID" 
+                (removeFile)="removeFile($event)"
+                (addFile)="addFile($event)"
                 [edit]='true'>
             </codx-file>
         </div>
@@ -158,7 +174,7 @@
                 </codx-input>
             </div>
             <div >
-                <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true'></codx-file>
+                <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true' (addFile)="addFile($event)" (removeFile)="removeFile($event)"></codx-file>
             </div>
             <div class="d-none">
                 <codx-attachment #atmEdit
