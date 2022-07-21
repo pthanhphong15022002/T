@@ -20,9 +20,10 @@ export class PopupAddMeetingComponent implements OnInit {
   action: any;
   selectedDate = new Date();
   constructor(
-    private changeDetectorRef : ChangeDetectorRef ,
+    private changDetec : ChangeDetectorRef ,
     private api :ApiHttpService,
     private authStore: AuthStore,
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -73,7 +74,16 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   onSave(){
-
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option))
+    .subscribe((res) => {
+      if (res.save) {
+        this.dialog.dataService.setDataSelected(res.save);
+        this.dialog.dataService.afterSave.next(res);
+        this.changDetec.detectChanges();
+      }
+    });
+  this.dialog.close();
   }
 
   valueChange(e){
