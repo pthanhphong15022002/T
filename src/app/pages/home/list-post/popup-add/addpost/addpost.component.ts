@@ -36,8 +36,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   message: string = '';
   user: any;
   showEmojiPicker = false;
-  shareType: string = '9';
-  title = "";
+  headerText:string = "";
+  title:string = "";
   lstRecevier = [];
   shareControl:string = "";
   objectType:string = "";
@@ -104,6 +104,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dialogData = dd.data;
     this.dialogRef = dialog;
     this.status = dd.data.status;
+    this.headerText = this.dialogData.headerText;
     this.title = this.dialogData.title;
     this.codxListView = this.dialogData.lstView;
     if(this.dialogData.status == this.STATUS.EDIT){

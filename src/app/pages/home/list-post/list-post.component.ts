@@ -26,7 +26,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   // lstType = this.env.jsonType;
   dataVll = [];
-
+  title:string = "";
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
@@ -55,12 +55,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private codxService: CodxService
   ) {
     this.user = this.authStore.get();
-    this.cache.valueList('L1901').subscribe((res) => {
+    this.cache.valueList('L1901').subscribe((res:any) => {
       if (res) {
         this.dataVll = res.datas;
         this.dt.detectChanges();
       }
     });
+    this.cache.message('WP011').subscribe((mssg:any)=>{
+      this.title = this.user.userName + mssg.defaultName;
+      this.dt.detectChanges();
+    })
   }
 
   ngOnInit(): void {
@@ -137,7 +141,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   openCreateModal() {
     var obj = {
       status: "create",
-      title: "Tạo bài viết",
+      headerText: "Tạo bài viết",
+      title: this.title,
       lstView: this.listview
     }
     let option = new DialogModel();
@@ -151,7 +156,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     let obj = {
       post: dataEdit,
       status: "edit",
-      title: "Chỉnh sửa bài viết"
+      headerText: "Chỉnh sửa bài viết",
+      title: this.title,
     }
     console.log(this.codxFile);
     let option = new DialogModel();
@@ -165,7 +171,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     var obj = {
       post: data,
       status: "share",
-      title: "Chia sẻ bài viết"
+      headerText: "Chia sẻ bài viết",
+      title: this.title,
     }
     this.dt.detectChanges()
     let option = new DialogModel();

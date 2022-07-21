@@ -1,4 +1,4 @@
-<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialogRef">
+<codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
         <div class="body body-addpost">
             <div class="addpost-scroll">
@@ -132,7 +132,7 @@
                 [class]="'border-none'" 
                 type="textarea" 
                 [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                [placeholder]="title" 
                 (valueChange)="valueChange($event)">
             </codx-input>
        </div>
@@ -169,7 +169,7 @@
                     [class]="'border-none'" 
                     type="textarea" 
                     [crrValue]="message"
-                    placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                    [placeholder]="title" 
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -197,9 +197,10 @@
         <div>
             <codx-input 
                 format="ed3" 
-                [class]="'border-none'" type="textarea"
+                [class]="'border-none'" 
+                type="textarea"
                 [crrValue]="message"
-                placeholder="{{user.userName + ' bạn đang nghĩ gì?'}}" 
+                [placeholder]="title" 
                 (valueChange)="valueChange($event)">
             </codx-input>
         </div>
