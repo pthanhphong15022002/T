@@ -101,7 +101,7 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnUpload',
+      id: 'btnUpload',            
     };
   }
 
@@ -167,6 +167,15 @@ export class HomeComponent extends UIComponent {
   getPath() {
     var url = window.location.origin;
     return url;
+  }
+
+  clickMF($event, data, type) {
+    if (type == 'file') {
+
+    }
+    else {
+
+    }
   }
 
   setFullHtmlNode(folder, text) {
@@ -275,9 +284,11 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  checkUserForder(data) {
-    return false;
-  }
+ 
+
+  // checkUserForder(data) {
+  //   return false;
+  // }
 
   ngAfterViewInit(): void {
     // this.button.nativeElement.disabled = true;

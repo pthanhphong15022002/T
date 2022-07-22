@@ -11,8 +11,13 @@ idField="recID"
 (viewChanged)="changeView($event)"
 ></codx-views>
 
+<!-- <codx-temp-full  imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
+title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"          
+[desc]="getSubTitle(item.data.recID)" [descLine]="1">
+</codx-temp-full> -->
+
 <ng-template #templateMain let-data>
-  <div *ngIf="(checkUserForder(data)) then noContext else context">
+  <div *ngIf="(dmSV.checkUserForder(data)) then noContext else context">
   </div>
   <ng-template #noContext>
       <div oncontextmenu="return false;" class="d-flex align-items-center mb-2" #item>
@@ -20,9 +25,18 @@ idField="recID"
       </div>
   </ng-template>
   <ng-template #context>
-      <div class="d-flex align-items-center mb-2">
-          <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>            
-      </div>
+    <!-- <codx-temp-full  [imageSrc]="setFullHtmlNode(data, '')" imgCss="w-20px me-3 cursor-pointer" 
+    [title]="data.folderName"          
+    [descLine]="1">
+    </codx-temp-full> -->
+    <div class="d-flex align-items-center mb-2">
+        <div [innerHTML]="setFullHtmlNode(data, '')">          
+        </div>          
+        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, data, 'folder')" [title]="data.folderName"
+            [formModel]="view.formModel" [typeMF]="'hover'"
+            cardCss="w-150px">
+          </codx-temp-full> 
+    </div>
   </ng-template>
 </ng-template>
 
@@ -50,6 +64,7 @@ idField="recID"
       allowExtensions=".jpg,.png"
       allowMultiFile="1"
       idBrowse="btn1"
+
       [formModel]="view.formModel"
       [functionID]="'ODT3'" 
       (fileAdded)="fileAdded($event)" 
