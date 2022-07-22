@@ -8,6 +8,7 @@ import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { NoteServices } from '@pages/services/note.services';
+import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
 
 @Component({
   selector: 'app-note-drawer',
@@ -47,7 +48,10 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   predicate = '';
   dataValue = '';
-  moreFunction: any;
+  editMF: any;
+  deleteMF: any;
+  pinMF: any;
+  saveMF: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -60,7 +64,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
-      this.moreFunction = res;
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
     })
   }
 

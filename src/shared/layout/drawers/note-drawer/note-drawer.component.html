@@ -40,18 +40,16 @@
                                 <div *ngIf="item.memo != null">
                                     <div class="action-menu d-flex">
                                         <div class="d-flex align-items-center">
-                                            <div *ngFor="let data of moreFunction">
-                                                <a class="action-item" *ngIf="data.largeIcon == 'icon-edit'">
-                                                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                        <span [class]="data.largeIcon"></span>
-                                                    </div>
-                                                </a>
-                                                <a class="action-item" *ngIf="data.largeIcon == 'icon-close'">
-                                                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                        <span [class]="data.largeIcon"></span>
-                                                    </div>
-                                                </a>
-                                            </div>
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"></span>
+                                                </div>
+                                            </a>
                                             <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
                                                 [autoClose]="'outside'">
                                                 <div class="d-flex align-items-center btn-tooltip icon-18">
@@ -172,22 +170,20 @@
     </ng-template>
 
     <ng-template #popMoreFunc let-modal>
-        <div class="flex" *ngFor="let data of moreFunction">
-            <div *ngIf="data.largeIcon == 'icon-push_pin1'">
-                <div class="w-5px">
-                    <span [class]="data.largeIcon"></span>
-                </div>
-                <div class="show-event">
-                    <span>{{data.customName}}</span>
-                </div>
+        <div class="flex">
+            <div class="">
+                <span [class]="pinMF?.largeIcon"></span>
             </div>
-            <div *ngIf="data.largeIcon == 'icon-save_alt'">
-                <div class="w-5px">
-                    <span [class]="data.largeIcon"></span>
-                </div>
-                <div class="show-event">
-                    <span>{{data.customName}}</span>
-                </div>
+            <div class="show-customName">
+                <span>{{pinMF?.customName}}</span>
+            </div>\
+        </div>
+        <div class="flex">
+            <div class="">
+                <span [class]="saveMF?.largeIcon"></span>
+            </div>
+            <div class="show-customName">
+                <span>{{saveMF?.customName}}</span>
             </div>
         </div>
     </ng-template>
