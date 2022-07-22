@@ -16,7 +16,7 @@ export class PopRolesComponent implements OnInit {
   choose1: tmpformChooseRole[] = [];
   choose = new tmpformChooseRole();
   data: any;
-  dialog: any;
+  dialogSecond: any;
   dataView:any;
   title = 'Phân quyền người dùng';
   count: number = 0;
@@ -36,7 +36,7 @@ export class PopRolesComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
-    this.dialog = dialog;
+    this.dialogSecond = dialog;
     this.data = dt?.data;
   }
 
@@ -120,7 +120,7 @@ export class PopRolesComponent implements OnInit {
     }
     else if(this.CheckListUserRoles() === this.optionSecond)  {
       this.notiService.notifyCode('Lưu thành công');
-      this.dialog.close(this.listChooseRole);
+      this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
     }
     else {

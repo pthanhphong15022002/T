@@ -167,4 +167,19 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
+  ];
+  
+   setTitle(e: any) {
+    this.title = 'Thêm ' + e;
+    this.changDetec.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
+  }
 }
