@@ -200,7 +200,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.lstRecevier = data.dataSelected;
       if(objectType == this.SHARECONTROLS.USER)
       {
-        this.recevierName = this.lstRecevier.slice(-1,0)[0].UserName;
+        this.recevierName = this.lstRecevier[this.lstRecevier.length - 1].UserName;
       }
       else{
         this.recevierName = data.objectName + " " + data.text;

@@ -241,22 +241,25 @@
     </div>
   </ng-container>
   <ng-container *ngIf="file_application.length > 0">
-    <div class="mt-2">
-      <div class="my-3" *ngFor="let file of file_application">
+    <div class="mt-2 d-flex " *ngFor="let file of file_application">
+      <div class="me-2">
         <codx-temp-full  
             imageSrc="{{file.extension | avtFile}}" 
             imgCss="w-20px me-3 cursor-pointer" 
             title="{{file.fileName}}"        
             [descLine]="1">
         </codx-temp-full>
-    </div>
+      </div>
+      <ng-container *ngIf="edit">
+        <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file }"></ng-container>
+      </ng-container>
     </div>
   </ng-container>
 </div>
 
 <ng-template #removeFile let-file>
   <div class="remove-file">
-    <a href="javascript:void(0)" (click)="removeFiles(file)">
+    <a href="javascript:void(0)" class="h-100" (click)="removeFiles(file)">
       <i class="icon-close icon-24"></i>
     </a>
   </div>
