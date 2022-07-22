@@ -48,6 +48,8 @@ import { EditExperenceComponent } from './employeeinfomation/edit-experence/edit
 import { EditRelationComponent } from './employeeinfomation/edit-relation/edit-relation.component';
 import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.component';
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
 
 export const routes: Routes = [
   {
@@ -59,12 +61,6 @@ export const routes: Routes = [
         component: PersonalsComponent,
       },
       {
-
-        path: 'notedetails/:funcID',
-        component: DetailNoteBooksComponent,
-
-      },
-      {
         path: 'employeeinfo/:funcID',
         component: EmployeeInfomationComponent,
       },
@@ -73,6 +69,26 @@ export const routes: Routes = [
       //   redirectTo:'personals/:funcID',
       //   component: PersonalsComponent,
       // },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'notedetails/:funcID',
+        component: DetailNoteBooksComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'notedetails/:funcID',
+        component: DetailNoteBooksComponent,
+      },
     ],
   },
 ];
@@ -92,9 +108,9 @@ const Component: Type<any>[] = [
   PopupAddUpdate,
   DetailNoteBooksComponent,
   PostsComponent,
-  EditInfoComponent, 
-  EditHobbyComponent, 
-  EditExperenceComponent, 
+  EditInfoComponent,
+  EditHobbyComponent,
+  EditExperenceComponent,
   EditRelationComponent,
 ];
 

@@ -4,6 +4,6 @@
         [height]="0" [width]="0">
     </codx-listview>
 </div>
-<div *ngIf="data?.files && data?.files?.length != 0">
-    <codx-file [images]="data?.files" [showBtnRemove]='false'></codx-file>
+<div *ngFor="let item of data">
+    <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
 </div>

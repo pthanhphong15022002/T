@@ -135,7 +135,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialogCategory = res;
           this.isAfterRender = true;
-          this.dialogCategory.patchValue({ eSign: true, signatureType: '1' });
+          this.dialogCategory.patchValue({
+            eSign: true,
+            signatureType: '1',
+            icon: 'icon-category',
+          });
           this.dialogCategory.addControl(
             'countStep',
             new FormControl(this.data.countStep ?? 0)

@@ -1,15 +1,11 @@
-<div id="kt_drawer_note" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="note"
-    data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
-    data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_note_toggle"
-    data-kt-drawer-close="#kt_drawer_note_close">
-    <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
-        <div class="card-header pe-5" id="kt_drawer_note_messenger_header">
-            <div class="card-title">
-                <div class="d-flex justify-content-center flex-column me-3">
-                    <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
-              me-1 mb-2 lh-1 cursor-pointer">
-                        <codx-label name="lblTitleNote" formName="WP_Notes" default=" Ghi chú"></codx-label>
-                    </a>
+<codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
+    <ng-template popup add #body>
+        <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
+            <div class="d-flex flex-column">
+                <div class="notes">
+                    <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                        service="WP" type="listView" [predicate]="predicate" [dataValue]="dataValue">
+                    </codx-listview>
                 </div>
             </div>
 
@@ -42,10 +38,48 @@
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
                                 <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
+                                    </div> -->
+                                    <!--  -->
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip">
+                                                    <span class="icon-edit icon-18 ml-2 mr-2"></span>
+                                                    <span class="tooltiptext">Edit</span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip">
+                                                    <span class="icon-close icon-18 text-danger ml-2 mr-2"></span>
+                                                    <span class="tooltiptext">Delete</span>
+                                                </div>
+                                            </a>
+                                            <!-- <div class="dropdown">
+                                                <button ngbDropdownToggle class="btn btn-icon btn-md" type="button"
+                                                    id="dropdownMenuButton1" aria-expanded="false">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </button>
+                                                <div ngbDropdownMenu class="dropdown-menu"
+                                                    aria-labelledby="dropdownMenuButton1">
+                                                    <a ngbDropdownItem class="dropdown-item">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-attach_file icon-18"></span>
+                                                            <span class="ml-3">Đính kèm file</span>
+                                                        </div>
+                                                    </a>
+                                                    <a ngbDropdownItem class="dropdown-item">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-email icon-18"></span>
+                                                            <span class="ml-3">Gửi mail</span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div> -->
+                                        </div>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
@@ -59,11 +93,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
@@ -79,14 +113,14 @@
                                                         <li>{{itemList.listNote}}</li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -95,11 +129,11 @@
                             </div>
                             <div *ngIf="item.isPin == false">
                                 <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -112,11 +146,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -132,14 +166,14 @@
                                                         <li>{{itemList.listNote}}</li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,10 +182,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-</div>
-
-<codx-views #view funcID="WPT08"></codx-views>
+                    </div>
+                </ng-template>
+            </div>
+    </ng-template>
+    <ng-template #subheader>
+        <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
+            (click)="openFormAddNote()">
+        </span>
+    </ng-template>
+</codx-form>
