@@ -8,7 +8,7 @@ import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
   templateUrl: './detail-note-books.component.html',
   styleUrls: ['./detail-note-books.component.scss']
 })
-export class DetailNoteBooksComponent extends UIComponent implements OnInit {
+export class DetailNoteBooksComponent extends UIComponent {
 
   views = [];
   recID: any;
@@ -93,6 +93,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
       width: 150
     },
     ];
+    
   }
 
   ngAfterViewInit(): void {

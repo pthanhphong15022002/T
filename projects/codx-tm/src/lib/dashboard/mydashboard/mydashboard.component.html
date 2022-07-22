@@ -46,14 +46,14 @@
               </div>
               <div class="text-dark fw-bold">
                 <codx-label
-                  name="lblOverdueTask"
-                  default="Đã quá hạn"
+                  name="lblNewTask"
+                  default="Chưa thực hiện"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ data?.status.overdueTasks }}
+            {{ data?.status.newTasks }}
           </div>
         </div>
       </div>
@@ -74,14 +74,14 @@
               </div>
               <div class="text-dark fw-bold">
                 <codx-label
-                  name="lblOverdueTask"
-                  default="Đã quá hạn"
+                  name="lblPostponeTask"
+                  default="Hoãn lại"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ data?.status.overdueTasks }}
+            {{ data?.status.postponeTasks }}
           </div>
         </div>
       </div>
