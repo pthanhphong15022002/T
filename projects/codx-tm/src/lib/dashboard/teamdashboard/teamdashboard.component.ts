@@ -29,34 +29,43 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
+  user: any;
+  isDesc: boolean = true;
+  availability: number = 0;
+  performance: number = 0;
+  quality: number = 0;
+  kpi: number = 0;
+  tasksByGroup: object;
+  status: any = {
+    doneTasks: 0,
+    overdueTasks: 0,
+  };
+  piedata: any;
+  dataBarChart: any = {};
+  rateDoneTaskOnTime: number = 0;
+  qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  user: any;
-  tasksByEmp: any;
-  isDesc: boolean = true;
-  public data: object[] = [];
 
-  dbData: any;
-
-  public rangeColors: RangeColorModel[] = [
+  rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
     { start: 50, end: 100, color: 'orange' },
   ];
-  public isGradient: boolean = true;
+  isGradient: boolean = true;
 
   //#region gauge
-  public font1: Object = {
+  font1: Object = {
     size: '15px',
     color: '#00CC66',
   };
-  public rangeWidth: number = 25;
+  rangeWidth: number = 25;
   //Initializing titleStyle
-  public titleStyle: Object = { size: '18px' };
-  public font2: Object = {
+  titleStyle: Object = { size: '18px' };
+  font2: Object = {
     size: '15px',
     color: '#fcde0b',
   };
-  public rangeLinearGradient1: Object = {
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -65,7 +74,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -74,48 +83,46 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
   //#endregion gauge
 
-  public piedata1: any;
-  public piedata2: Object[];
-  public legendSettings: Object = {
+  legendSettings: Object = {
     position: 'Top',
     visible: true,
   };
-  public legendRateDoneSettings: Object = {
+  legendRateDoneSettings: Object = {
     visible: true,
   };
 
@@ -129,8 +136,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   }
 
   //#region chartcolumn
-  dataColumn: Object[] = [];
-  dataLine: Object[] = [];
   columnXAxis: Object = {
     interval: 1,
     valueType: 'Category',
@@ -163,7 +168,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   };
   //#endregion chartcolumn
 
-  public headerText: Object = [
+  headerText: Object = [
     { text: 'Khối lượng công việc' },
     { text: 'Thời gian thực hiện' },
   ];
@@ -191,76 +196,95 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
-      console.log('Team DB', res);
-      this.dbData = res;
-      this.piedata1 = res?.tasksByGroup;
-      this.piedata2 = [
-        {
-          x: 'Chưa thực hiện',
-          y: res?.status.newTasks,
-        },
-        {
-          x: 'Đang thực hiên',
-          y: res?.status.processingTasks,
-        },
-        {
-          x: 'Hoàn tất',
-          y: res?.status.doneTasks,
-        },
-        {
-          x: 'Hoãn lại',
-          y: res?.status.postponeTasks,
-        },
-        {
-          x: 'Bị huỷ',
-          y: res?.status.canceledTasks,
-        },
-      ];
-      this.dataColumn = res?.dataBarChart.barChart;
-      this.dataLine = res?.dataBarChart.lineChart;
-      this.data = res?.tasksByGroup;
-      // res.tasksByEmp.map((data) => {
-      //   let newTasks = 0;
-      //   let processingTasks = 0;
-      //   let doneTasks = 0;
-      //   let postponeTasks = 0;
-      //   let cancelTasks = 0;
-      //   data.tasks.map((task) => {
-      //     switch (task.status) {
-      //       case '1':
-      //         newTasks = newTasks + 1;
-      //         break;
-      //       case '2':
-      //         processingTasks = processingTasks + 1;
-      //         break;
-      //       case '9':
-      //         doneTasks = doneTasks + 1;
-      //         break;
-      //       case '5':
-      //         postponeTasks = postponeTasks + 1;
-      //         break;
-      //       case '8':
-      //         cancelTasks = cancelTasks + 1;
-      //         break;
-      //     }
-      //   });
-      //   this.vlWork.push({
-      //     id: data.id,
-      //     qtyTasks: data.qtyTasks,
-      //     status: {
-      //       new: (newTasks / data.qtyTasks) * 100,
-      //       processing: (processingTasks / data.qtyTasks) * 100,
-      //       done: (doneTasks / data.qtyTasks) * 100,
-      //       postpone: (postponeTasks / data.qtyTasks) * 100,
-      //       cancel: (cancelTasks / data.qtyTasks) * 100,
-      //     },
-      //   });
-      // });
-      this.detectorRef.detectChanges();
+      if (res) {
+        const {
+          efficiency,
+          tasksByGroup,
+          status,
+          dataBarChart,
+          rateDoneTaskOnTime,
+          qtyTasks,
+          vltasksByEmp,
+          hoursByEmp,
+        } = res;
+        this.availability = efficiency.availability.toFixed(2);
+        this.performance = efficiency.performance.toFixed(2);
+        this.quality = efficiency.quality.toFixed(2);
+        this.kpi = efficiency.kpi.toFixed(2);
+        this.tasksByGroup = tasksByGroup;
+        this.status = status;
+        this.dataBarChart = dataBarChart;
+        this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.qtyTasks = qtyTasks;
+        this.piedata = [
+          {
+            x: 'Chưa thực hiện',
+            y: status.newTasks,
+          },
+          {
+            x: 'Đang thực hiên',
+            y: status.processingTasks,
+          },
+          {
+            x: 'Hoàn tất',
+            y: status.doneTasks,
+          },
+          {
+            x: 'Hoãn lại',
+            y: status.postponeTasks,
+          },
+          {
+            x: 'Bị huỷ',
+            y: status.canceledTasks,
+          },
+        ];
+        vltasksByEmp.map((task) => {
+          let newTasks = 0;
+          let processingTasks = 0;
+          let doneTasks = 0;
+          let postponeTasks = 0;
+          let cancelTasks = 0;
+          task.tasks.map((task) => {
+            switch (task.status) {
+              case '1':
+                newTasks = newTasks + 1;
+                break;
+              case '2':
+                processingTasks = processingTasks + 1;
+                break;
+              case '9':
+                doneTasks = doneTasks + 1;
+                break;
+              case '5':
+                postponeTasks = postponeTasks + 1;
+                break;
+              case '8':
+                cancelTasks = cancelTasks + 1;
+                break;
+            }
+          });
+          this.vlWork.push({
+            id: task.id,
+            qtyTasks: task.qtyTasks,
+            status: {
+              new: (newTasks / task.qtyTasks) * 100,
+              processing: (processingTasks / task.qtyTasks) * 100,
+              done: (doneTasks / task.qtyTasks) * 100,
+              postpone: (postponeTasks / task.qtyTasks) * 100,
+              cancel: (cancelTasks / task.qtyTasks) * 100,
+            },
+          });
+        });
+        this.hrWork = hoursByEmp;
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
   sort() {
     this.isDesc = !this.isDesc;
+    this.vlWork = this.vlWork.reverse();
+    this.hrWork = this.hrWork.reverse();
+    this.detectorRef.detectChanges();
   }
 }

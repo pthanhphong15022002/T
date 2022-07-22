@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  TemplateRef,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -47,9 +48,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   contentTodoEdit = '';
   recIDTodoDelete = '';
   indexEditTodo = -1;
-  // required = {
-  //   taskName: false,
-  // };
   isConfirm = true;
   isCheckTime = true;
   isCheckProjectControl = false;
@@ -64,21 +62,59 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isAdd = false;
   crrEstimated: any;
   isHaveFile = false;
-  crrIndex :number
+  crrIndex: number;
   popover: any;
-  vllShare = 'TM003'
-  planholderTaskGoal ="Add to do list…"
+  vllShare = 'TM003';
+  planholderTaskGoal = 'Add to do list…';
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
   @ViewChild('messageError') messageError;
   @ViewChild('txtTodoEdit') txtTodoEdit: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('tabDescription') tabDescription: TemplateRef<any>;
+  @ViewChild('tabJob') tabJob: TemplateRef<any>;
+  @ViewChild('tabAssignTo') tabAssignTo: TemplateRef<any>;
+  @ViewChild('tabListToDo') tabListToDo: TemplateRef<any>;
+  @ViewChild('tabReference') tabReference: TemplateRef<any>;
+  
 
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
   taskCopy: any;
   newID: string;
+  paramControlReference = true
+  menuDes = {
+    icon: 'icon-info',
+    text: 'Thông tin chung',
+    name: 'Description',
+  };
+
+  menuJobDes = {
+    icon: 'icon-article',
+    text: 'Mô tả công việc',
+    name: 'JobDescription',
+  };
+  menuAssign = {
+    icon: 'icon-person_outline',
+    text: 'Phân công cho',
+    name: 'AssignTo',
+  };
+  menuListTaskGoal = {
+    icon: 'icon-check_box',
+    text: 'Công việc cần làm',
+    name: 'ListTaskGoal',
+  };
+  menuRef = {
+    icon: 'icon-insert_link',
+    text: 'Tham chiếu',
+    name: 'Reference',
+  };
+
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
+  titleAction =  'Thêm'
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -89,30 +125,51 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    
     this.getParam();
+    
     this.task = {
       ...this.task,
       ...dt?.data[0],
     };
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
-    this.taskCopy = dt?.data[3];  
+    this.taskCopy = dt?.data[3];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
     if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    this.paramControlReference =this.param?.ProjectControl != '0'|| this.param?.LocationControl != '0' || this.param?.ReferenceControl != '0' || this.param?.ActivityControl != '0' || this.param?.ActivityControl == null  
+  
   }
 
   ngOnInit(): void {
     if (this.action == 'add') {
+      this.titleAction ='Thêm'
       this.openTask();
     } else if (this.action == 'copy') {
-      // this.title="Copy công việc"  // cái này sau Quang làm
-      this.getTaskCoppied(this.taskCopy.taskID)   //nếu alowCopy = false thì bật cái này lên 
-    } else this.openInfo(this.task.taskID, this.action);
+      this.titleAction ='Copy'
+      this.getTaskCoppied(this.taskCopy.taskID); //nếu alowCopy = false thì bật cái này lên
+    } else {
+      this.titleAction ='Chỉnh sửa'
+      this.openInfo(this.task.taskID, this.action);
+    }
+   
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+    if (this.showAssignTo) {
+      this.tabInfo = [this.menuDes,this.menuJobDes,this.menuAssign,this.menuListTaskGoal];
+       this.tabContent =[this.tabDescription,this.tabJob,this.tabAssignTo,this.tabListToDo]
+    }else{
+      this.tabInfo = [this.menuDes,this.menuJobDes,this.menuListTaskGoal];
+      this.tabContent =[this.tabDescription,this.tabJob,this.tabListToDo]
+    }
+    if(this.paramControlReference){
+      this.tabInfo = this.tabInfo.concat(this.menuRef)
+      this.tabContent =this.tabContent.concat(this.tabReference)
+    }
+  }
 
   getParam(callback = null) {
     this.api
@@ -126,6 +183,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = JSON.parse(res.dataValue);
+          this.paramControlReference =this.param?.ProjectControl != '0'|| this.param?.LocationControl != '0' || this.param?.ReferenceControl != '0' || this.param?.ActivityControl != '0' || this.param?.ActivityControl == null  
           return callback && callback(true);
         }
       });
@@ -151,18 +209,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   changeMemo(event: any) {
     var field = event.field;
-    if(event?.data){
-      this.task[field] = event?.data 
+    if (event?.data) {
+      this.task[field] = event?.data;
     }
-   
   }
 
   onAddToDo(evt: any) {
-    if (!this.todoAddText || this.todoAddText.trim()=='' ) {
-       this.todoAddText = '';
+    if (!this.todoAddText || this.todoAddText.trim() == '') {
+      this.todoAddText = '';
       return;
     }
-   
+
     if (this.listTodo == null) this.listTodo = [];
     var todo = new TaskGoal();
     todo.status = this.STATUS_TASK_GOAL.NotChecked;
@@ -180,8 +237,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     this.listTodo.splice(index, 1); //remove element from array
     if (this.listTodo.length == 0) {
-      if(this.task.taskGroupID)this.isCheckCheckListTrue= this.isCheckCheckListControl;
-    };
+      if (this.task.taskGroupID)
+        this.isCheckCheckListTrue = this.isCheckCheckListControl;
+    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -195,10 +253,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   updateTodoList(content: string) {
-    if(content != "" || content.trim() == ''){
+    if (content != '' || content.trim() == '') {
       this.indexEditTodo = -1;
-      return
-    }  ;
+      return;
+    }
     if (this.indexEditTodo >= 0) {
       this.listTodo[this.indexEditTodo].text = content;
     }
@@ -214,7 +272,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   openTask(): void {
-    this.title = 'Tạo mới công việc';
+    // this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -228,7 +286,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   openInfo(id, action) {
     this.readOnly = action === 'edit' ? false : true;
-    this.title = 'Chỉnh sửa công việc'
+    // this.title = 'Chỉnh sửa công việc';
     this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
@@ -238,9 +296,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listMemo2OfUser = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        this.api.execSv<any[]>("DM", "DM", "FileBussiness", "GetFilesByObjectIDAsync", [this.task.taskID]).subscribe(res => {
-          if (res && res.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
-        })
+        this.api
+          .execSv<any[]>(
+            'DM',
+            'DM',
+            'FileBussiness',
+            'GetFilesByObjectIDAsync',
+            [this.task.taskID]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) this.isHaveFile = true;
+            else this.isHaveFile = false;
+          });
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -253,7 +320,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.listMemo2OfUser = [];
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-      //  this.beforeCopy(res[0]);
+        //  this.beforeCopy(res[0]);
         this.copyListTodo(res[2]);
       }
     });
@@ -275,7 +342,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   beforeCopy(data) {
     const t = this;
     // t.task = data as TM_Tasks;
-   // t.task.taskID = this.newID;
+    // t.task.taskID = this.newID;
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
@@ -294,7 +361,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       // this.notiService.notifyCode('???code');
       this.notiService.notify('Tên công việc không được để trống !');
-      return ;
+      return;
     }
     if (
       this.showAssignTo &&
@@ -405,7 +472,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo,
       ])
       .subscribe((res) => {
-        if (res && res.length>0) {
+        if (res && res.length > 0) {
           // this.dialog.dataService.data = res.concat(
           //   this.dialog.dataService.data
           // );
@@ -439,11 +506,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     e?.data?.forEach((obj) => {
       switch (obj.objectType) {
         case 'U':
-          listUserID += obj.id // cái này bị đổi khi control đổi  xem lại + ';';
+          listUserID += obj.id + ';';
           break;
         case 'O':
         case 'D':
-          listDepartmentID += obj.id // cái này bị đổi khi control đổi  xem lại + ';';
+          listDepartmentID += obj.id + ';';
           break;
       }
     });
@@ -505,7 +572,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !');
+      this.notiService.notify(
+        'Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !'
+      );
       this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       this.changeDetectorRef.detectChanges();
       return;
@@ -535,6 +604,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   changeTime(data) {
+    //debugger
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -745,13 +815,23 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
   }
-  showPoppoverDelete(p, i){
-    if(this.popover)
-    this.popover.close() ;
+  showPoppoverDelete(p, i) {
+    if (this.popover) this.popover.close();
     this.crrIndex = i;
     p.open();
-    this.popover = p ;
+    this.popover = p;
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + " " + e;
+    this.changeDetectorRef.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
   }
 }

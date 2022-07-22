@@ -67,6 +67,7 @@ export class PhysicalComponent implements OnInit {
 
   onSavePhysical() {
     this.location = this.floor + "|" + this.range + "|" + this.shelf + "|" + this.compartment;
+    this.dmSV.Location.next(this.location);
     this.dialog.close();
   }
 
@@ -90,7 +91,5 @@ export class PhysicalComponent implements OnInit {
 
   viewOnly() {
     return this.viewFolderOnly;
-  }
-
-  
+  }  
 }

@@ -29,7 +29,7 @@ export class OpenFolderComponent implements OnInit {
   titlemessage = 'Thông báo';
   remote = true;
   listRemoteFolder: any;
-  listNodeAdd: any;
+  listNodeAdd: FileUpload[] = [];
   selectId: string;
   closeResult = '';
   onRole = false;
@@ -43,6 +43,7 @@ export class OpenFolderComponent implements OnInit {
   titleDialog = "Chọn thư mục";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
+  titleSelect = "Select";
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
@@ -62,8 +63,7 @@ export class OpenFolderComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
-  // @Input('openFolder') openFolder: ViewsComponent;
-
+  // @Input('openFolder') openFolder: ViewsComponent;  
   constructor(private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
     private auth: AuthStore,
@@ -79,9 +79,6 @@ export class OpenFolderComponent implements OnInit {
     this.dialog = dialog;
     if (data != undefined)
       this.functionID = data?.data[0];    
-
-    this.openFormFolder();
-    this.getFolderPath();
 
     this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
@@ -126,9 +123,12 @@ export class OpenFolderComponent implements OnInit {
   }
 
   ngOnInit(): void {    
+    this.openFormFolder();
+  //  this.getFolderPath();
+
     this.atSV.isSetDisableSave.subscribe(res => {
       this.disableSave = res;
-      this.changeDetectorRef.detectChanges();
+   //   this.changeDetectorRef.detectChanges();
     });
 
     this.cache.message(this.codetitle).subscribe(item => {
@@ -246,7 +246,7 @@ export class OpenFolderComponent implements OnInit {
           this.atSV.breadcumbLink = breadcumbLink;
           this.atSV.folderId.next(id);
 
-          this.changeDetectorRef.detectChanges();
+         // this.changeDetectorRef.detectChanges();
           this.remotePermission = res[0].permissions;
         }
       });
@@ -265,7 +265,7 @@ export class OpenFolderComponent implements OnInit {
             this.loadChildNode(res[0], 0, list);
           }
         }
-        this.changeDetectorRef.detectChanges();
+      //  this.changeDetectorRef.detectChanges();
         this.remotePermission = res[0].permissions;
       }
     });
@@ -493,7 +493,7 @@ export class OpenFolderComponent implements OnInit {
       return null;
   }
 
-  selectFolderPath(dialog) {
+  selectFolderPath() {
     this.atSV.breadcumbLink = this.breadcumbLink;
     this.atSV.breadcumb.next(this.breadcumb);
     this.atSV.currentNode = '';
@@ -592,8 +592,9 @@ export class OpenFolderComponent implements OnInit {
       //   }
       //   else this.dmSV.setDisableSave.next(false);
 
-      this.folderService.getFolders(id).subscribe(async res => {
+      this.folderService.getFolders(id).subscribe(async item => {
         // that.treeAdd.addChildNodes(parent, res);
+        var res = item[0];
         var nodeAdd = new NodeTreeAdd();
         var list = [];
         // list.push(Object.assign({}, res));

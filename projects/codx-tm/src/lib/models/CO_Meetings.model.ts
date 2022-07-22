@@ -31,5 +31,5 @@ export class CO_Meetings{
     createOn: Date;
     createBy: string;
     modifiedBy: Date;
-    
+    online: boolean;
 }
