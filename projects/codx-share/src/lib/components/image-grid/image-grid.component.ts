@@ -252,10 +252,10 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       if(files.length > 0){
         this.lstFile = files
         this.lstFile.forEach((f:any) => {
-          if(f.category == this.FILE_REFERTYPE.IMAGE){
+          if(f.referType == this.FILE_REFERTYPE.IMAGE){
             this.file_img_video.push(f);
           }
-          else if(f.category == this.FILE_REFERTYPE.VIDEO){
+          else if(f.referType == this.FILE_REFERTYPE.VIDEO){
             f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
             this.file_img_video.push(f);
           }
