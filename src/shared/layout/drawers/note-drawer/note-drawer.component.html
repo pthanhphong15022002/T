@@ -144,19 +144,15 @@
     </ng-template>
 
     <ng-template #popMoreFunc let-modal>
-        <div class="flex">
-            <div class="">
-                <span [class]="pinMF?.largeIcon" [style.color]="pinMF?.color"></span>
-            </div>
-            <div class="show-customName">
+        <div class="flex align-items-center mb-1">
+            <span [class]="pinMF?.largeIcon" [style]="pinMF?.color"></span>
+            <div class="show-customName ms-2">
                 <span>{{pinMF?.customName}}</span>
             </div>
         </div>
-        <div class="flex">
-            <div class="">
-                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
-            </div>
-            <div class="show-customName">
+        <div class="flex align-items-center">
+            <span [class]="saveMF?.largeIcon" [style]="saveMF?.color"></span>
+            <div class="show-customName ms-2">
                 <span>{{saveMF?.customName}}</span>
             </div>
         </div>
