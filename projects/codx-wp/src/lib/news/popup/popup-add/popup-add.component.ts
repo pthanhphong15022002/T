@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { preRender } from '@syncfusion/ej2-angular-buttons';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService } from 'codx-core';
+import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
@@ -24,7 +25,8 @@ export class PopupAddComponent implements OnInit {
   popupFiled = 1;
   popupContent = 2;
   objectID = '';
-  dialogRef: DialogRef
+  dialogData:any;
+  dialogRef: any;
   startDate: Date;
   endDate: Date;
   tagName = "";
@@ -36,7 +38,8 @@ export class PopupAddComponent implements OnInit {
   lstRecevier = [];
   headerText = "Soạn thảo văn bản";
   dataEdit:any;
-
+  isUpload:boolean = false;
+  fileUpload:any[] = [];
   CATEGORY= {
     NEWS: "1",
     VIDEO: "2"
@@ -45,18 +48,20 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
+  @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
+    protected callFunc: CallFuncService,
     @Optional() dd?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialogRef?: DialogRef
 
   ) {
-    this.dataEdit = dd.data;
-    this.dialogRef = dialog;
+    this.dialogData = dd.data;
+    this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
   ngAfterViewInit(): void {
@@ -66,6 +71,7 @@ export class PopupAddComponent implements OnInit {
       this.isVideo = false;
     }
     this.shareControl = "1";
+    this.objectType = "1";
     this.myPermission = new Permission();
     this.myPermission.objectType = '1';
     this.myPermission.memberType = "1";
@@ -85,17 +91,18 @@ export class PopupAddComponent implements OnInit {
     this.initForm();
   }
 
-
+  openFormShare(content: any) {
+    this.callFunc.openForm(content, '', 420, window.innerHeight);
+  }
   clickInsertNews() {
-    // if(this.tagName == "" ){
-    //   this.notifSV.notifyCode("WP013");
-    //   return;
-    // }
-    // if(!this.startDate){
-    //   this.notifSV.notifyCode("WP012");
-    //   return;
-    // }
-   
+    if(this.tagName == "" ){
+      this.notifSV.notifyCode("WP013");
+      return;
+    }
+    if(!this.startDate){
+      this.notifSV.notifyCode("WP012");
+      return;
+    }
     let objNews = new WP_News();
     objNews = this.formGroup.value;
     objNews.newsType = this.CATEGORY.NEWS;
@@ -320,13 +327,6 @@ export class PopupAddComponent implements OnInit {
     this.formGroup.controls['CreatePost'].setValue(false);
     this.changedt.detectChanges();
   }
-  clickShowPopup() {
-    // this.viewbase.currentView.openSidebarRight();
-  }
-  clickClosePopup(index: any) {
-    this.dialogRef.close();
-    this.clearValueForm();
-  }
   PopoverEmpEnter(p:any){
     p.open();
   }
@@ -334,4 +334,14 @@ export class PopupAddComponent implements OnInit {
     p.close();
   }
 
+  addFiles(files:any){
+    if(files && files.data.length >0 ){
+      this.fileUpload = files.data;
+      this.changedt.detectChanges();
+    }
+    return;
+  }
+  clickUploadFile(){
+    this.codxAttachment.uploadFile();
+  }
 }

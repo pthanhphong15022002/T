@@ -15,7 +15,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
 })
-export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges {
+export class ImageGridComponent extends ErmComponent implements OnInit {
 
   @Input() funcID:string = "";
   @Input() objectID:string = "";
@@ -231,25 +231,16 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     super(injector);
     this.user = this.auth.userValue;
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes.lstFile){
-        this.converFile();
-    }
-    
-  }
+  
   ngOnInit() {
-    
     if(this.objectID){
-      this.getFile();
+      this.getFileByObjectID();
     }
-    else
-    {
-      this.converFile();
-    } 
   }
-
-
-  getFile() {
+  getFiles(){
+    return this.lstFile.concat(this.file_img_video,this.files);
+  }
+  getFileByObjectID() {
     this.api.execSv(
       "DM","ERM.Business.DM",
       "FileBussiness",
@@ -276,43 +267,14 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     })
   }
 
-
-  converFile(){
-    if(this.lstFile){
-      this.lstFile.forEach((f:any) => {
-        if(f.mimeType.indexOf("image") >= 0 ){
-          f['category'] = 'image';
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else if(f.mimeType.indexOf("video") >= 0)
-        {
-          f['category'] = 'video';
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else{
-          f['category'] = 'application';
-          let a = this.files.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.files.push(f);
-        }
-      });
-      this.dt.detectChanges();
-    }
-  }
   openDetail(indexFile:any){}
 
   removeFiles(file:any){
-    let f: any = null;
-    this.filesDelete.push(file);
-    if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
+    if(file.referType == this.FILE_CATEGORY.IMAGE || file.referType == this.FILE_CATEGORY.VIDEO){
       for (let i = 0; i < this.file_img_video.length; i++) {
         if(this.file_img_video[i].fileName == file.fileName)
         {
-          f =  this.file_img_video.splice(i,1);
+          this.file_img_video.splice(i,1);
           break;
         };
       };
@@ -322,13 +284,14 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
       for (let i = 0; i < this.files.length; i++) {
         if(this.files[i].fileName == file.fileName)
         {
-          f = this.files.splice(i,1);
+          this.files.splice(i,1);
           break;
         };
       };
     }
       this.lstFile = [...this.file_img_video.concat(this.files)];
-      this.removeFile.emit(f[0]);
+      this.filesDelete.push(file);
+      this.removeFile.emit(file);
       this.dt.detectChanges();
   }
 
@@ -336,25 +299,26 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     this.lstFile.concat(files);
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
-        f['category'] = 'image';
+        f['referType'] = 'image';
         let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
         if(a) return;
         this.file_img_video.push(f);
       }
       else if(f.mimeType.indexOf("video") >= 0)
       {
-        f['category'] = 'video';
+        f['referType'] = 'video';
         let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
         if(a) return;
         this.file_img_video.push(f);
       }
       else{
-        f['category'] = 'application';
+        f['referType'] = 'application';
         let a = this.files.find(f2 => f2.fileName == f.fileName);
         if(a) return;
         this.files.push(f);
       }
     });
+    this.filesAdd.concat(files);
     this.addFile.emit(files);
     this.dt.detectChanges();
   }
