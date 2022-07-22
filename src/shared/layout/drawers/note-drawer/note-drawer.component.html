@@ -42,12 +42,12 @@
                                         <div class="d-flex align-items-center">
                                             <a class="action-item">
                                                 <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                    <span [class]="editMF?.largeIcon"></span>
+                                                    <span [class]="editMF?.largeIcon" [style]="editMF?.color"></span>
                                                 </div>
                                             </a>
                                             <a class="action-item">
                                                 <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                    <span [class]="deleteMF?.largeIcon"></span>
+                                                    <span [class]="deleteMF?.largeIcon" [style]="deleteMF?.color"></span>
                                                 </div>
                                             </a>
                                             <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
@@ -172,15 +172,15 @@
     <ng-template #popMoreFunc let-modal>
         <div class="flex">
             <div class="">
-                <span [class]="pinMF?.largeIcon"></span>
+                <span [class]="pinMF?.largeIcon" [style]="pinMF?.color"></span>
             </div>
             <div class="show-customName">
                 <span>{{pinMF?.customName}}</span>
-            </div>\
+            </div>
         </div>
         <div class="flex">
             <div class="">
-                <span [class]="saveMF?.largeIcon"></span>
+                <span [class]="saveMF?.largeIcon" [style]="saveMF?.color"></span>
             </div>
             <div class="show-customName">
                 <span>{{saveMF?.customName}}</span>
