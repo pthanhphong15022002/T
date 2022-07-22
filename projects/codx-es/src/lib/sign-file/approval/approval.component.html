@@ -1,13 +1,7 @@
 <div class="d-row justify-content-between main-pane">
   <div class="row main-content">
-    <div
-      class="showArrow"
-      [class.icon-arrow_back]="!hideThumbnail"
-      [class.icon-arrow_forward]="hideThumbnail"
-      (click)="changeShowThumbnailState()"
-    ></div>
-    <div class="col-2" [class.d-none]="hideThumbnail">
-      <ejs-tab #leftToolbar>
+    <div class="col-2" [class.hideCol]="hideThumbnail">
+      <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
@@ -25,8 +19,14 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
+      <div
+        class="showArrow"
+        [class.icon-arrow_back]="!hideThumbnail"
+        [class.icon-arrow_forward]="hideThumbnail"
+        (click)="changeShowThumbnailState()"
+      ></div>
     </div>
-    <div class="col-7">
+    <div class="col-7 flex-grow-1">
       <div class="row">
         <div class="d-flex w-100">
           <div class="left_Toolbar w-100 d-flex justify-content-start">
@@ -100,6 +100,7 @@
           (created)="onCreated($event)"
           (annotationAdd)="addAnnoEvent($event)"
           (annotationMove)="resetTime($event)"
+          (annotationRemove)="removeAnnot($event)"
           (annotationResize)="resetTime($event)"
           (annotationSelect)="selectedAnnotation($event)"
           (annotationPropertiesChange)="resetTime($event)"
@@ -119,8 +120,8 @@
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions col-3">
-      <ejs-tab #rightToolbar>
+    <div class="actions col-3" [class.hideCol]="hideActions">
+      <ejs-tab #rightToolbar [class.d-none]="hideActions">
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
@@ -150,13 +151,13 @@
               </div> -->
               <div class="card-group">
                 <div
-                  class="card-item me-5 mb-5"
+                  class="card-item me-3 mb-3"
                   *ngFor="let action of actionsButton; let index = index"
                   [class.active]="holding == index + 1"
                   (click)="changeAnnotationItem(index + 1)"
                 >
                   <codx-card-center
-                    cardCss="border h-100 min-w-125px w-125px"
+                    cardCss="border h-100 min-w-100px w-100px"
                     icoCss="icon-20  {{
                       index + 1 | vll: 'ES015':'icon' | async
                     }}"
@@ -219,9 +220,11 @@
                   (valueChange)="changeAutoSignState($event, 1)"
                 ></codx-input>
               </div>
-
-              <div class="row w-100 position-relative mt-4">
+              <div
+                class="buttons w-50 d-flex flex-column justify-content-between"
+              >
                 <button (click)="show($event)">Show</button>
+                <button (click)="testFunc($event)">Test Func</button>
               </div>
             </ng-template>
           </e-tabitem>
@@ -241,6 +244,12 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
+      <div
+        class="showArrow reverse"
+        [class.icon-arrow_back]="hideActions"
+        [class.icon-arrow_forward]="!hideActions"
+        (click)="changeShowActionsState()"
+      ></div>
     </div>
   </div>
 </div>
