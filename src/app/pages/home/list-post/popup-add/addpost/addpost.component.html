@@ -14,7 +14,7 @@
                                 <ng-container *ngIf="dialogData.status == STATUS.EDIT;else noPermission">
                                     <ng-container *ngIf="lstRecevier.length > 0; else shareName">
                                         <ng-container *ngIf="shareControl == 'U';else havePermission">
-                                            <ng-container *ngIf="lstRecevier.length == 2; else shareWith">
+                                            <ng-container *ngIf="lstRecevier.length == 1; else shareWith">
                                                 <div class="fw-bold fs-6">
                                                     <codx-label [formName]="dialogRef.formModel.formName"
                                                         name="lblShareWith" default="cùng với "></codx-label>
@@ -24,10 +24,16 @@
                                             <ng-template #shareWith>
                                                 <div class="fw-bold fs-6">
                                                     <codx-label [formName]="dialogRef.formModel.formName"
-                                                        name="lblShareWith" default="cùng với "></codx-label>
-                                                    <span class="ms-2 me-2">{{lstRecevier.length - 1}}</span>
+                                                        name="lblShareWith" default="cùng với ">
+                                                    </codx-label> 
+                                                    <span class="me-2 fw-bolder">{{recevierName}}</span>
                                                     <codx-label [formName]="dialogRef.formModel.formName"
-                                                        name="lblShareWith" default=" người khác "></codx-label>
+                                                        name="lblShareWith" default=" và ">
+                                                    </codx-label>
+                                                    <span class="ms-2 me-2">{{lstRecevier.length -1}}</span>
+                                                    <codx-label [formName]="dialogRef.formModel.formName"
+                                                        name="lblShareWith" default=" người khác ">
+                                                    </codx-label>
                                                 </div>
                                             </ng-template>
                                         </ng-container>
@@ -56,10 +62,16 @@
                                             <ng-template #shareWith>
                                                 <div class="fw-bold fs-6">
                                                     <codx-label [formName]="dialogRef.formModel.formName"
-                                                        name="lblShareWith" default="cùng với "></codx-label>
-                                                    <span class="ms-2 me-2">{{lstRecevier.length}}</span>
+                                                        name="lblShareWith" default="cùng với ">
+                                                    </codx-label> 
+                                                    <span class="me-2 fw-bolder">{{recevierName}}</span>
                                                     <codx-label [formName]="dialogRef.formModel.formName"
-                                                        name="lblShareWith" default=" người khác "></codx-label>
+                                                        name="lblShareWith" default=" và ">
+                                                    </codx-label>
+                                                    <span class="ms-2 me-2">{{lstRecevier.length -1}}</span>
+                                                    <codx-label [formName]="dialogRef.formModel.formName"
+                                                        name="lblShareWith" default=" người khác ">
+                                                    </codx-label>
                                                 </div>
                                             </ng-template>
                                         </ng-container>

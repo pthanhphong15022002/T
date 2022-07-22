@@ -200,8 +200,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.lstRecevier = data.dataSelected;
       if(objectType == this.SHARECONTROLS.USER)
       {
-        this.recevierID = data.id;
-        this.recevierName = data.text;
+        this.recevierName = this.lstRecevier.slice(-1,0)[0].UserName;
       }
       else{
         this.recevierName = data.objectName + " " + data.text;
@@ -276,12 +275,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.saveFiles();
           }
           (this.dialogRef.dataService as CRUDService).add(res,0).subscribe((res2)=>{console.log(res2)});
+          this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
           this.dt.detectChanges();
         }
         
       });
   }
+
+
   editPost() {
     if (!this.message) {
       this.notifySvr.notifyCode('E0315');
@@ -355,6 +357,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  
   
   sharePost() {
     if (!this.message && this.listFileUpload.length < 0) {
