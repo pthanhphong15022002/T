@@ -5,13 +5,17 @@
       <div class="fw-bolder codx-label">
         <codx-label default="Icon & màu sắc" name="lblIconColor" [formModel]="form.formModel"></codx-label>
       </div>
-      <div class="d-block">
+      <div class="d-flex">
         <codx-input class="btn btn-icon btn-primary btn-icon btn-icon-md btn-circle me-5" type="vllicon"
           refValue="L1470" field="icon" [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
         </codx-input>
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md ms-2" data-dismiss="modal">
+        <!-- <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md ms-2" data-dismiss="modal">
           <i class="icon-color_lens text-primary text-hover-primary-dark icon-24"></i>
-        </button>
+
+        </button> -->
+        <codx-input type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="dialogCategory.value.color"
+          field="color" (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
     </div>
     <div class="row mt-3">
