@@ -1,6 +1,9 @@
 import { N } from '@angular/cdk/keycodes';
+import { variable } from '@angular/compiler/src/output/output_ast';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService } from 'codx-core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { eventClick } from '@syncfusion/ej2-angular-schedule';
+import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
@@ -13,7 +16,7 @@ export class PopRolesComponent implements OnInit {
   choose1: tmpformChooseRole[] = [];
   choose = new tmpformChooseRole();
   data: any;
-  dialog1: any;
+  dialogSecond: any;
   dataView:any;
   title = 'Phân quyền người dùng';
   count: number = 0;
@@ -21,20 +24,30 @@ export class PopRolesComponent implements OnInit {
   lstEmp = [];
   listChooseRole =[]
   idClickFunc:any;
+  viewChooseRoleSelected: tmpformChooseRole;
+  optionFrist= 'ADC01' // Check unselect from list
+  optionSecond= 'ADC02' // Check list is null 
+  optionThird= 'ADC03' // Check select from list
+
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
-    @Optional() dialog1?: DialogRef,
-    @Optional() dataView?: DialogRef,
+    @Optional() dialog?: DialogRef,
   ) {
-    this.dialog1 = dialog1;
+    this.dialogSecond = dialog;
     this.data = dt?.data;
-    this.dataView = dataView;
   }
 
   ngOnInit(): void {
     this.loadData();
+   this.viewChooseRoleSelected = this.data;
+    console.log('co data nghe');
+  //  if(this.viewChooseRoleSelected.idChooseRole !=null) {
+      // this.lstFunc.ischeck = true;
+//    }
+    console.log(this.viewChooseRoleSelected);
   }
 
   loadData() {
@@ -43,7 +56,7 @@ export class PopRolesComponent implements OnInit {
         this.lstFunc = res.msgBodyData[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].recIDofRole == '00000000-0000-0000-0000-000000000000') {
+          if (this.lstFunc[i].recIDofRole != null) {
             this.lstFunc[i].recIDofRole = null;
           }
         }
@@ -57,6 +70,11 @@ export class PopRolesComponent implements OnInit {
     if (event.target.checked === false) {
       this.choose.recIDofRole = null;
       this.count = this.count - 1;
+      for (var i = 0; i < this.lstFunc.length; i++) {
+        if(item.functionID === this.lstFunc[i].functionID) {
+          this.lstFunc[i].recIDofRole = null;
+        }       
+      }
       if (this.count < 0) {
         this.count = 0;
         this.listChooseRole = [];
@@ -67,12 +85,9 @@ export class PopRolesComponent implements OnInit {
         if(item === this.listChooseRole[i]) 
         {
           this.listChooseRole.splice(i,1);
+        
         }
-     //   item[i].idChooseRole= i;
      }
-    
-    
-  
       
      for(var i=1; i<= this.listChooseRole.length; i++) {
       this.listChooseRole[i].idChooseRole= i;
@@ -83,22 +98,51 @@ export class PopRolesComponent implements OnInit {
       item.idChooseRole = this.count;
       this.listChooseRole.push(item);
     }
+    this.changeDec.detectChanges();
   }
 
-  onCbx(event){
+  onCbx(event,item?:any){
     if (event.data) {
-      this.choose.recIDofRole = event.data[0];
+    item.recIDofRole = event.data[0];
     }
   }
-
-  onSave(){
-    // 
-    // for(var i=0; i < this.lstFunc.length; i++){
-    //   if(this.lstFunc[i].recIDofRole){
-    //     list.push(this.lstFunc[i]);
-    //   }
-    // }
-    // console.log(list);
-    console.log(this.listChooseRole);
+  checkClickValueOfUserRoles(value?:any) {
+    if(value == null) {
+      return true;
+    }
+    return false;
   }
+  onSave(){
+
+    if(this.CheckListUserRoles() === this.optionFrist) {
+    
+      this.notiService.notifyCode("AD006");
+    }
+    else if(this.CheckListUserRoles() === this.optionSecond)  {
+      this.notiService.notifyCode('Lưu thành công');
+      this.dialogSecond.close(this.listChooseRole);
+      this.changeDec.detectChanges();
+    }
+    else {
+      this.notiService.notifyCode('Không có gì thay đổi');
+
+
+    }
+
+  }
+  CheckListUserRoles() {
+    for(var i=0; i< this.listChooseRole.length; i++)
+      {
+        if(this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole))
+       {
+          return this.optionFrist;
+       }
+
+    }
+    if(this.listChooseRole.length > 0) {
+      return this.optionSecond;
+    }
+    return this.optionThird;
+  }
+
 }

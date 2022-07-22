@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { UIComponent, AuthStore, ViewModel, ViewType, DialogRef, ButtonModel, SidebarModel, CallFuncService } from 'codx-core';
-import { Component, OnInit, inject, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, inject, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef, Input, Optional } from '@angular/core';
 import { ViewUsersComponent } from './view-users/view-users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 
@@ -29,9 +29,11 @@ export class UserComponent extends UIComponent {
     private authStore: AuthStore,
     private activeRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.activeRouter.snapshot.params['funcID'];
   }
@@ -112,7 +114,7 @@ export class UserComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
 
     });
@@ -121,7 +123,7 @@ export class UserComponent extends UIComponent {
     //   let option = new SidebarModel();
     //   option.DataService = this.view?.currentView?.dataService;
     //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '800px'; // s k thấy gửi từ ben đây,
+    //   option.Width = 'Auto'; // s k thấy gửi từ ben đây,
     //   this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
     //   this.dialog.closed.subscribe((x) => {
     //     if (x.event == null)
@@ -142,9 +144,17 @@ export class UserComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(AddUserComponent, 'edit', option);
     });
+
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.dataService;
+    //   option.FormModel = this.view?.formModel;
+    //   option.Width = 'Auto';
+    //   this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
+    // });
   }
 
   delete(data: any) {

@@ -17,22 +17,24 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  model: DataRequest;
   funcID: string;
-  daySelected: Date;
+  user: any;
+  data: any;
+  taskOfDay: any;
   fromDate: Date;
   toDate: Date;
+  daySelected: Date;
   daySelectedFrom: Date;
   daySelectedTo: Date;
   week: number;
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  taskOfDay: any;
-  user: any;
-  model: DataRequest;
 
   //#region gauge
-  public rangeLinearGradient1: Object = {
+
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -41,7 +43,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -50,40 +52,40 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
-  public radius: Object = { topLeft: 10, topRight: 10 };
+  radius: Object = { topLeft: 10, topRight: 10 };
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -116,8 +118,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   //#endregion chartcolumn
 
-  dbData: any;
-
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -141,43 +141,26 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
-      this.dbData = res;
-      console.log('MyDB', this.dbData);
+      this.data = res;
       this.detectorRef.detectChanges();
     });
-
-    // this.api
-    //   .execSv('TM', 'TM', 'TaskBusiness', 'GetTasksOfDayAsync', [
-    //     this.model,
-    //     this.fromDate,
-    //     this.toDate,
-    //   ])
-    //   .subscribe((res: any) => {
-    //     this.taskOfDay = res;
-    //     console.log(this.taskOfDay);
-    //     this.detectorRef.detectChanges();
-    //   });
   }
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-    console.log('mouse leave');
-  }
+  closeTooltip() {}
 
   onChangeValueSelectedWeek(data) {
-    this.fromDate = data.fromDate;
-    this.toDate = data.toDate;
-    this.daySelected = data.daySelected;
-    this.daySelectedFrom = data.daySelectedFrom;
-    this.daySelectedTo = data.daySelectedTo;
-    this.week = data.week;
-    this.month = data.month + 1;
-    this.beginMonth = data.beginMonth;
-    this.endMonth = data.endMonth;
+    this.fromDate = this.toDate = data?.toDate;
+    this.daySelected = data?.daySelected;
+    this.daySelectedFrom = data?.daySelectedFrom;
+    this.daySelectedTo = data?.daySelectedTo;
+    this.week = data?.week;
+    this.month = data?.month + 1;
+    this.beginMonth = data?.beginMonth;
+    this.endMonth = data?.endMonth;
     this.getGeneralData();
   }
 }

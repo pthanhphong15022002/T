@@ -12,15 +12,14 @@ export class LayoutComponent extends LayoutBaseComponent {
   // asideFixed = true;
   // toolbar = false;
   valueList: [];
+  category:string = "home";
 
   constructor(
     private route: ActivatedRoute,
-    private changedt: ChangeDetectorRef,
     private cache: CacheService,
     inject: Injector
   ) {
     super(inject);
-    this.codxService.init(this.module, false,false);
     
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
@@ -31,12 +30,6 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void {}
 
-  category = 'news';
-  navigate(category = 'news', funcID = null) {
-    this.category = category;
-    if (!funcID) {
-      funcID = this.route.firstChild.snapshot.params['funcID'];
-    }
-    this.codxService.navigate('', 'wp/' + category + '/' + funcID);
+  navigate(category, funcID = null) {
   }
 }

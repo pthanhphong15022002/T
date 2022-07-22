@@ -7,13 +7,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
+  ApiHttpService,
   AuthStore,
   CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
 
@@ -40,6 +43,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showCC = false;
   showBCC = false;
 
+  vllShare = 'ES014';
+
   sendType = 'to';
   lstFrom = [];
   lstTo = [];
@@ -47,9 +52,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstBcc = [];
 
   constructor(
+    private api: ApiHttpService,
     private esService: CodxEsService,
     private callFunc: CallFuncService,
     private auth: AuthStore,
+    private dmSV: CodxDMService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -69,20 +76,12 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
 
-    const user = this.auth.get();
-    let defaultFrom = new EmailSendTo();
-    defaultFrom.objectType = 'U';
-    defaultFrom.objetID = user.userID;
-    defaultFrom.text = user.userName;
-
-    this.lstFrom.push(defaultFrom);
-
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogETemplate = res;
-          this.isAfterRender = true;
+
           this.esService
             .getEmailTemplate(this.email.templateID)
             .subscribe((res1) => {
@@ -92,6 +91,18 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   'recID',
                   new FormControl(res1[0].recID)
                 );
+
+                // this.api
+                //   .execSv(
+                //     'DM',
+                //     'ERM.Business.DM',
+                //     'FileBussiness',
+                //     'GetFilesByObjectIDImageAsync',
+                //     this.dialogETemplate.value.recID
+                //   )
+                //   .subscribe((f: any[]) => {
+                //     console.log(f);
+                //   });
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -111,8 +122,18 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                     }
                   });
                 }
-                console.log('data', this.dialogETemplate);
+
+                if (this.lstFrom.length == 0) {
+                  const user = this.auth.get();
+                  let defaultFrom = new EmailSendTo();
+                  defaultFrom.objectType = 'U';
+                  defaultFrom.objetID = user.userID;
+                  defaultFrom.text = user.userName;
+
+                  this.lstFrom.push(defaultFrom);
+                }
               }
+              this.isAfterRender = true;
             });
         }
       });
@@ -122,7 +143,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.initForm();
   }
 
-  onSaveForm(dialog: DialogRef) {
+  onSaveWithTemplate(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
       this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
     } else {
@@ -146,16 +167,22 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         if (res) {
           console.log(res);
           let emailTemplates = this.formGroup.value.emailTemplates;
+          this.esService.lstTmpEmail.push(res);
           let i = emailTemplates.findIndex(
-            (p) => p.EmailType == res.templateType
+            (p) => p.emailType == res.templateType
           );
           if (i >= 0) {
-            emailTemplates[i].TemplateID = res.recID;
-            this.attachment.objectId = res.recID;
-            this.attachment.saveFiles();
+            emailTemplates[i].templateID = res.recID;
+
+            if (this.dmSV.fileUploadList.length > 0) {
+              this.attachment.objectId = res.recID;
+              console.log(this.dmSV.fileUploadList);
+              this.attachment.saveFiles();
+            }
+
             this.formGroup.patchValue({ emailTemplates: emailTemplates });
           }
-          dialog1.close();
+          dialog1 && dialog1.close();
           this.dialog && this.dialog.close();
         }
       });
@@ -288,26 +315,37 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event, sendType) {
-    if (event[0].id) {
+    if (event) {
       let lst = [];
-      // switch (event[0].objectType) {
-      //   case 'U':
-      let lstID = event[0].id.split(';');
-      let lstUserName = event[0].text.split(';');
+      event.forEach((element) => {
+        if (element.objectType == 'U') {
+          let lstID = element?.id.split(';');
+          let lstUserName = element?.text.split(';');
 
-      for (let i = 0; i < lstID?.length; i++) {
-        if (lstID[i].toString() != '') {
-          let appr = new EmailSendTo();
-          appr.text = lstUserName[i];
-          appr.objetID = lstID[i];
-          appr.objectType = event[0].objectType;
-          appr.sendType = sendType.toString();
-
-          lst.push(appr);
+          for (let i = 0; i < lstID?.length; i++) {
+            let isExist = this.isExist(element?.objectType, sendType);
+            if (lstID[i].toString() != '' && isExist == false) {
+              let appr = new EmailSendTo();
+              appr.objectType = element.objectType;
+              appr.text = lstUserName[i];
+              appr.objetID = lstID[i];
+              appr.sendType = sendType.toString();
+              lst.push(appr);
+            }
+          }
+        } else {
+          let isExist = this.isExist(element?.objectType, sendType);
+          if (isExist == false) {
+            let appr = new EmailSendTo();
+            appr.objetID = element?.objectType;
+            appr.text = element?.objectName;
+            appr.objectType = element?.objectType;
+            appr.sendType = sendType.toString();
+            appr.icon = sendType.icon;
+            lst.push(appr);
+          }
         }
-        // }
-        // break;
-      }
+      });
 
       switch (sendType) {
         case 1:
@@ -326,17 +364,34 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  fileAdded(event) {
-    debugger;
+  isExist(objetID, sendType) {
+    let index = -1;
+    switch (sendType) {
+      case 1:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 2:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 3:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 4:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+    }
+
+    if (index == -1) return false;
+    else return true;
   }
+
+  fileAdded(event) {}
 
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
 
-  getfileCount(e: any) {
-    debugger;
-  }
+  getfileCount(e: any) {}
 }
 
 export class EmailSendTo {
@@ -349,4 +404,5 @@ export class EmailSendTo {
   modifiedOn: Date;
   modifiedBy: string;
   text: string;
+  icon: string = null;
 }

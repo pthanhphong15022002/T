@@ -25,6 +25,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { UploaderComponent, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
+import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { PopupVoteComponent } from './components/treeview-comment/popup-vote/popup-vote.component';
 import { LayoutNoAsideComponent } from './_layoutNoAside/layoutNoAside.component';
@@ -45,6 +46,7 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   CodxExportComponent,
   CodxExportAddComponent,
+  CodxFullTextSearch,
   CodxImportComponent,
   TreeviewCommentComponent,
   PopupVoteComponent,

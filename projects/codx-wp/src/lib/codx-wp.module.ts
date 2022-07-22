@@ -21,11 +21,12 @@ import { ElecticSearchComponent } from './news/popup/popup-search/electic-search
 import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
 import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { Layout2Component } from './_layout2/layout2.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
+    component: Layout2Component,
     children: [
       {
         path:'companyinfo/:funcID',
@@ -46,7 +47,7 @@ export const routes: Routes = [
       
       {
         path:'',
-        redirectTo:'news/WPT02',
+        redirectTo:'news/WPT02/home',
         pathMatch: 'full'
       }
     ],
@@ -56,6 +57,7 @@ export const routes: Routes = [
 const Component: Type<any>[] = 
 [
   LayoutComponent, 
+  Layout2Component,
   CodxWpComponent,
   NewsComponent,
   PopupAddComponent,

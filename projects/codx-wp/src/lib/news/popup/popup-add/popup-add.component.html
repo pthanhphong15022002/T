@@ -1,80 +1,37 @@
-<codx-form [dialog]="dialogRef" [headerText]="headerText" [body]="body" [footer]="footer">
-    <ng-template #body>
-    <div class="card w-100 rounded-0 border-0">
-        <div class="card-header">
-            <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center justify-content-start user-square ms-3">
-                    <div class="d-flex align-items-center justify-content-start ">
-                        <div class="me-2">
-                            <codx-img [objectId]="user.userID" objectType="AD_Users" imageType="square" [width]="90"></codx-img>
-                        </div>
-                        <div>
-                            <span class="fw-bolder ms-2 me-2">{{user.userName}}</span>
-                            
-                            <ng-container *ngIf="lstRecevier.length > 0">
-                                <ng-container *ngIf="objectType=='U';else deparments">
-                                    <ng-containert *ngIf="lstRecevier.length == 1; else shareWith">
-                                        <div  class="fw-bolder fs-5 ms-2">
-                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                                            <span class="me-2 ">{{userRecevier.UserName}}</span>
-                                            <codx-img [objectId]="userRecevier.UserID" objectType="AD_Users" [width]="25" imageType="circle"></codx-img>
-                                        </div>
-                                    </ng-containert>
-                                    <ng-template #shareWith>
-                                        <div  class="fs-5 ms-2">
-                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                                            <span class="me-2 fw-bolder">{{userRecevier.UserName}}</span>
-                                            <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="và "></codx-label>
-                                            <span class="ms-2 me-2">{{lstRecevier.length - 1}}</span>
-                                            <span class="fs-7 text-gray-600">{{shareControl| vll:'L1901':'text' | async}}</span>
-                                            <span 
-                                                class="tag" 
-                                                placement="bottom" 
-                                                #empPopover="ngbPopover"
-                                                [ngbPopover]="popContent"
-                                                (mouseenter)="PopoverEmpEnter(empPopover)"
-                                                (mouseleave)="PopoverEmpLeave(empPopover)"
-                                                >
-                                                <img class="tag-img" src="../../../../assets/img/fed/user-tag.png" />
-                                                <ng-template  #popContent>
-                                                    <div class="list-user">
-                                                        <div class="row" *ngFor="let item of lstRecevier">
-                                                            <div class="col-2">
-                                                                <codx-img 
-                                                                [objectId]="item.UserID" 
-                                                                objectName="AD_Users" 
-                                                                [width]="25" 
-                                                                imageType="circle">
-                                                            </codx-img>
-                                                            </div>
-                                                            <div class="col-10">
-                                                                <span class="ms-2 fs-6">{{item.UserName}}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ng-template>
-                                            </span>
-                                        </div>
-                                    </ng-template>
-                                </ng-container>
-                                <ng-template #deparments>
-                                    <div  class="fw-bolder fs-5 ms-2">
-                                        <codx-label [formModel]="dialogRef.formModel" name="lblShareWith" default="cùng với"></codx-label>
-                                        <span class="fs-7 text-gray-600">{{shareControl| vll:'L1901':'text' | async}}</span>
-                                        <span class="me-2 ms-2">{{recevierName}}</span>
-                                    </div>
-                                </ng-template>
-                            </ng-container>
-                        </div>
-                    </div>
-                    
-                    <div class="text-dark fs-7 ms-2">
-                        <codx-share [multiple]="true" (eventApply)="eventApply($event)"> </codx-share>
-                    </div>
+<codx-form [dialog]="dialogRef" [headerText]="headerText" [body]="body"  [footer]="footer" [subHeader]="subheader">
+    <ng-template #subheader>
+        <div class="d-flex align-items-center justify-content-start">
+            <!-- <div class="me-2">
+                <codx-img [objectId]="user.userID" objectType="AD_Users" imageType="square" [width]="40"></codx-img>
+            </div> -->
+            <!-- <div class="fw-bolder">
+                <span>{{user.userName}}</span>
+            </div> -->
+            <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center" (click)="openFormShare(controlShare)">
+                <span>
+                    <img src="assets/themes/sys/default/img/{{(objectType | vll:'L1901' : 'icon' | async)}}" />
+                </span>
+                <span class="text-gray-700 fs-6 ms-1">
+                    {{objectType | vll:'L1901' : 'text' | async}}
+                </span>
+                <i class="icon-arrow_drop_down icon-18 text-dark"></i>
+            </div>
+            <div class="d-flex my-2">
+                <div class="dropdown" id="tag_toggle">
+                    <codx-tag
+                        entityName="WP_News"
+                        [isEdit]="false"
+                        field="Tags"
+                        [value]="tagName"
+                        (valueChange)="valueChange($event)"
+                        >
+                    </codx-tag>
                 </div>
             </div>
         </div>
-        <div class="card-body">
+    </ng-template>
+    <ng-template #body>
+        <div class="card w-100 rounded-0 border-0">
             <div class="d-flex my-2">
                 <div class="dropdown" id="tag_toggle">
                     <codx-tag
@@ -89,7 +46,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblCategory" default="Phân loại"></codx-label>
+                    <codx-label [formModel]="dialogData.formModel" name="lblCategory" default="Phân loại"></codx-label>
                 </div>
                 <codx-input type="valuelist" name="valuelist" ngDefaultControl refValue="L1492" field="Category"
                     [crrValue]="formGroup.controls['Category'].value" (valueChange)="valueChange($event)"></codx-input>
@@ -97,15 +54,15 @@
             <div class="form-group row mt-3">
                 <div class="col-6">
                     <div class="label">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" field="StartDate"
                         [crrValue]="formGroup.controls['StartDate'].value" format="F" (valueChange)="valueChange($event)">
-                      </codx-input>
+                    </codx-input>
                 </div>
                 <div class="col-6">
                     <div class="label">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblEndDate" default="Ngày kết thúc"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblEndDate" default="Ngày kết thúc"></codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" field="EndDate"
                         [crrValue]="formGroup.controls['EndDate'].value" format="F"
@@ -114,7 +71,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formModel]="dialogRef.formModel"name="lblSubtitle" default="Tiêu đề"></codx-label>
+                    <codx-label [formModel]="dialogData.formModel"name="lblSubtitle" default="Tiêu đề"></codx-label>
                 </div>
                 <codx-input type="text" class="form-control" placeholder="Tiêu đề" field="Subject"
                     [crrValue]="formGroup.controls['Subject'].value" (valueChange)="valueChange($event)" ngDefaultControl>
@@ -122,7 +79,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblDesciption" default="Mô tả"></codx-label>
+                    <codx-label [formModel]="dialogData.formModel" name="lblDesciption" default="Mô tả"></codx-label>
                 </div>
                 <codx-input type="text" class="form-control"  placeholder="Mô tả"
                     field="SubContent" [crrValue]="formGroup.controls['SubContent'].value"
@@ -130,7 +87,7 @@
             </div>
             <div class="form-group mt-3">
                 <div class="label">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblContents" default="Nội dung"></codx-label>
+                    <codx-label [formModel]="dialogData.formModel" name="lblContents" default="Nội dung"></codx-label>
                 </div>
                 <codx-input type="textarea" class="test-textarea" field="textarea" field="Contents"
                     [crrValue]="formGroup.controls['Contents'].value" placeholder="Nội dung" (valueChange)="valueChange($event)" ngDefaultControl>
@@ -140,18 +97,32 @@
             <div class="form-group row mt-3">
                 <div class="col-12">
                     <div class="label">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
                     </div>
                 </div>
                 <div class="col-6 view-img">
-                    <codx-img #imageUpLoad imageType="square" width="200" [funcId]="'WPT02'" [objectType]="'WP_News'" [objectId]="objectID"
-                        [isAllowEdit]="true" [updateDirect]="false"></codx-img>
+                    <!-- <codx-img #imageUpLoad imageType="square" width="200" [funcId]="'WPT02'" [objectType]="'WP_News'" [objectId]="objectID"
+                        [isAllowEdit]="true" [updateDirect]="false">
+                    </codx-img> -->
+                    <ng-container *ngIf="fileUpload.length > 0;else noUpFile">
+                        <div  class="w-100 h-100px">
+                            <img  class="w-100 h-100" [src]="fileUpload[0].data || fileUpload[0].thumbnail" alt="">
+                        </div>
+                    </ng-container>
+                    <ng-template #noUpFile>
+                        <div  class="w-100 h-100px">
+                            <img src="" class="w-100 h-100" alt="">
+                        </div>
+                    </ng-template>
+                    <div class="d-none">
+                        <codx-attachment #codxAttachment [functionID]="dialogData?.FormModel.funcID" [objectType]="dialogData?.FormModel.entityName" (fileCount)="addFiles($event)"></codx-attachment>
+                    </div>
                 </div>
             </div>
             <div class="form-group mt-3">
                 <div class="d-flex align-items-center mb-2">
                     <div class="label me-6">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
                     </div>
                     <codx-input type="switch" [checked]="false" [disabled]="false" id="switchShared" labelPosition="Before"
                         field="AllowShare" [crrValue]="formGroup.controls['AllowShare'].value" class="test-switch"
@@ -159,7 +130,7 @@
                 </div>
                 <div class="d-flex align-items-center mb-2">
                     <div class="label me-6">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
                     </div>
                     <codx-input type="switch" [checked]="false" [disabled]="false" id="switchCreated" labelPosition="Before"
                         field="CreatePost" [crrValue]="formGroup.controls['CreatePost'].value" class="test-switch"
@@ -167,17 +138,26 @@
                 </div>
             </div>
         </div>
-    </div>
     </ng-template>
     <ng-template #footer>
         <div class="card-footer pt-4">
             <div class="d-flex justify-content-between">
                 <div class="d-flex">
                     <button (click)="clickInsertNews()" type="button" class="btn btn-light-primary">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+                        <codx-label [formModel]="dialogData.formModel" name="lblSave" default="Lưu"></codx-label>
                     </button>
                 </div>
             </div>
         </div>
     </ng-template>
 </codx-form>
+
+
+<ng-template #controlShare let-dialog>
+    <codx-share 
+        [dialog]="dialog" 
+        [multiple]="false" 
+        [dataShare]="dataEdit.permissions"
+        (eventApply)="eventApply($event)">
+    </codx-share>
+</ng-template>

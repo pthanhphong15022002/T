@@ -74,7 +74,6 @@ export class SprintsComponent extends UIComponent {
     inject: Injector,
     private notiService: NotificationsService,
     private authStore: AuthStore,
-    override codxService: CodxService,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
@@ -260,7 +259,7 @@ export class SprintsComponent extends UIComponent {
       this.urlView += '/' + data.iterationID;
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
-    
+
     this.codxService.navigate('',this.urlView)
   }
 

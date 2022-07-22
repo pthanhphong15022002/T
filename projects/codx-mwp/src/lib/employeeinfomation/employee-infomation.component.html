@@ -1,7 +1,14 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views">
+<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
+  [formModel]="view.formModel">
 </codx-views>
 
 
+
+<ng-template>
+
+  <span #phone>{{ employeeInfo?.phone | formatvalue: view.formModel:"phone":phone | async }}</span>
+
+</ng-template>
 
 <ng-template #panelRightRef>
   <div class="page-pw">
@@ -44,23 +51,18 @@
             <ng-container>
               <!-- thong tin chung -->
               <div class="user-profile overview d-block mb-3" id="MWP00201">
-                <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblInfoPersonal" formName="Employees" default="Thông tin nhân viên">
-                    <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
-                  </codx-label>
+                <div class="d-flex justify-content-between mb-2 mt-6">
+                  <div class="fw-bold fs-4 text-primary ">
+                    <codx-label name="lblInfoPersonal" formName="Employees" default="Thông tin nhân viên">
+                    </codx-label>
+                  </div>
+                  <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
+                  </a>
                 </div>
+                <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
+
                 <div class="border rounded-2 p-6" *ngIf="employeeInfo">
-                  <!-- <div class="d-flex justify-content-between">
-                    <div class="text-dark fw-bold text-uppercase mb-1" style="cursor: pointer;">
-                      <codx-label fiedName="employeeID" formName="Employees" gridViewName="grvEmployees"
-                        default="Mã nhân viên: #">
-                      </codx-label>
-                      <span class="text-dark">{{employeeInfo?.employeeID}}</span>
-                      <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                        <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
-                      </a>
-                    </div>
-                  </div> -->
 
                   <div class="d-flex align-items-center">
                     <div class="fs-4 fw-bold text-dark">{{employeeInfo?.employeeName}}</div>
@@ -135,18 +137,12 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <span class="text-gray-600 me-2">+</span>
-                    <span class="text-dark" *ngIf="employeeInfo?.phone!='---'">{{employeeInfo?.phone}}</span>
-                    <span class="text-muted" *ngIf="employeeInfo?.phone=='---'">
-                      <codx-label fiedName="phone" formName="Employees" default="Điện thoại">
-                      </codx-label>
-                    </span>
+
+                    <span #phone>{{ employeeInfo?.phone | formatvalue: view.formModel:"phone":phone | async }}</span>
                     <span class="text-gray-500 mx-3">|</span>
-                    <span class="text-primary"
-                      *ngIf="employeeInfo?.personalEmail!='---'">{{employeeInfo?.personalEmail}}</span>
-                    <span class="text-muted" *ngIf="employeeInfo?.personalEmail=='---'">
-                      <codx-label fiedName="email" formName="Employees" default="Email">
-                      </codx-label>
-                    </span>
+
+                    <span #personalEmail>{{ employeeInfo.personalEmail | formatvalue:
+                      view.formModel:"personalEmail":personalEmail | async }}</span>
                     <span class="text-gray-500 mx-3">|</span>
                     <span class="text-dark" *ngIf="employeeInfo?.street!='---'">{{employeeInfo?.street}}</span>
                     <span class="text-muted" *ngIf="employeeInfo?.street=='---'">
@@ -344,7 +340,7 @@
                               </div>
                             </div> -->
                             <codx-temp-full [formModel]="view.formModel" [content]="experences.companyName"
-                              [desc]="experences.roleName" (clickMF)="clickMF($event, experences)">
+                              [dataItem]="data" [desc]="experences.roleName" (clickMF)="clickMF($event, experences)">
                             </codx-temp-full>
                           </div>
                           <!-- <div class="text-primary">{{experences.roleName}}</div> -->
@@ -391,7 +387,7 @@
                         <ng-container *ngFor="let data of skillEmployee">
                           <div class="d-flex flex-column">
                             <div class="fw-bold text-dark mb-1">{{data.category}}</div>
-                            <div *ngIf="!editSkillMode" class=" bg-success-o-60">
+                            <div class=" bg-success-o-60">
                               <div id='container'>
                                 <div class="wrap">
                                   <div class="sliderwrap">
@@ -537,7 +533,7 @@
 
                         <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
                           [formModel]="view.formModel" [title]="relationship.relationName"
-                          (clickMF)="clickMF($event, data)"
+                          (clickMF)="clickMF($event, data)" [dataItem]="data" [typeMF]="'hover'"
                           [desc]="(relationship.relationType) + '| ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
                         </codx-card-center>
                         <!-- </div> -->
@@ -591,6 +587,4 @@
       </div>
     </div>
   </div>
-
-
 </ng-template>

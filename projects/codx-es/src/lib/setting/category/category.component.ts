@@ -50,6 +50,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('process', { static: true }) process;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+  @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
+  @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
 
   devices: any;
   editform: FormGroup;
@@ -96,19 +98,18 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         field: 'categoryID',
         headerText: 'Mã phân loại',
         template: '',
-        width: 70,
-        textAlign: 'Center',
+        width: 100,
       },
       {
         field: 'categoryName',
         headerText: 'Tên phân loại',
         template: '',
-        width: 120,
+        width: 150,
       },
       {
         field: 'parentID',
         headerText: 'Phân nhóm',
-        template: '',
+        template: this.parentID,
         width: 120,
       },
       {
@@ -121,22 +122,20 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         field: 'color',
         headerText: 'Color',
         template: '',
-        width: 60,
-        textAlign: 'Center',
+        width: 80,
       },
       {
-        field: 'note',
+        field: 'memo',
         headerText: 'Ghi chú',
-        template: '',
+        template: this.memo,
         width: 150,
       },
       {
         field: 'processID',
         headerText: 'Qui trình duyệt',
         template: this.process,
-        width: 150,
+        width: 200,
       },
-      { field: 'noName', headerText: '', template: this.noName, width: 30 },
     ];
   }
 

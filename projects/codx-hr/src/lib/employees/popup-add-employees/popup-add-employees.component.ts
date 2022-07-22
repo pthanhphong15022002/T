@@ -144,6 +144,10 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   
   OnSaveForm(){
+    for (var key in this.data) {  
+      if(Array.isArray(this.data[key]))
+      this.data[key] = this.data[key].join(';');
+    }
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {
@@ -184,5 +188,9 @@ export class PopupAddEmployeesComponent implements OnInit {
         this.employee[field] = e[0];
       }
     }
+  }
+  changeTime(data){
+    if (!data.field || !data.data) return;
+    this.employee[data.field] = data.data?.fromDate;
   }
 }

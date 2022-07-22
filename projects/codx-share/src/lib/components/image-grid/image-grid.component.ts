@@ -15,7 +15,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
 })
-export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges {
+export class ImageGridComponent extends ErmComponent implements OnInit {
 
   @Input() funcID:string = "";
   @Input() objectID:string = "";
@@ -23,13 +23,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
   @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
   @Output() evetFile = new EventEmitter();
+  @Output() removeFile = new EventEmitter();
+  @Output() addFile = new EventEmitter();
+
   @ViewChild('atm') atm:AttachmentComponent;
-  FILE_CATEGORY = {
+  FILE_REFERTYPE = {
     IMAGE: "image",
-    VIDEO: "video"
+    VIDEO: "video",
+    APPLICATION :'application'
   }
   file_img_video:any[] = [];
-  files:any[] = [];
+  file_application:any[] = [];
   videos:any[] = [];
   filesAdd: any[] = [];
   filesDelete: any[] = [];
@@ -228,25 +232,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     super(injector);
     this.user = this.auth.userValue;
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes.lstFile){
-        this.converFile();
-    }
-    
-  }
+  
   ngOnInit() {
-    
     if(this.objectID){
-      this.getFile();
+      this.getFileByObjectID();
     }
-    else
-    {
-      this.converFile();
-    } 
   }
-
-
-  getFile() {
+  getFiles(){
+    let files = this.file_img_video.concat(this.file_application);
+    return this.lstFile.concat(this.file_img_video,this.file_application);
+  }
+  getFileByObjectID() {
     this.api.execSv(
       "DM","ERM.Business.DM",
       "FileBussiness",
@@ -254,17 +250,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
       this.objectID)
     .subscribe((files:any[]) => {
       if(files.length > 0){
-        this.lstFile = [... files]
+        this.lstFile = files
         this.lstFile.forEach((f:any) => {
-          if(f.category == this.FILE_CATEGORY.IMAGE){
+          if(f.referType == this.FILE_REFERTYPE.IMAGE){
             this.file_img_video.push(f);
           }
-          else if(f.category == this.FILE_CATEGORY.VIDEO){
+          else if(f.referType == this.FILE_REFERTYPE.VIDEO){
             f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
             this.file_img_video.push(f);
           }
           else{
-            this.files.push(f);
+            this.file_application.push(f);
           }
         });
         this.dt.detectChanges();
@@ -273,112 +269,59 @@ export class ImageGridComponent extends ErmComponent implements OnInit,OnChanges
     })
   }
 
-
-  converFile(){
-    if(this.lstFile){
-      this.lstFile.forEach((f:any) => {
-        if(f.mimeType.indexOf("image") >= 0 ){
-          f['category'] = 'image';
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else if(f.mimeType.indexOf("video") >= 0)
-        {
-          f['category'] = 'video';
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else{
-          f['category'] = 'application';
-          let a = this.files.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.files.push(f);
-        }
-      });
-      this.dt.detectChanges();
-    }
-  }
-
-
-  deleteFile(fileID:string,deleted:boolean){
-    if(fileID)
-    {
-      this.notifiSV.alertCode("TM003").subscribe((res) => {
-       if(res.event.status == "Y"){
-        this.api.execSv("DM",
-          "ERM.Business.DM",
-          "FileBussiness",
-          "DeleteFileAsync",
-          [fileID, deleted]).subscribe();  
-       }
-      });
-    }
-  }
-
   openDetail(indexFile:any){}
 
   removeFiles(file:any){
-    if(file.recID && file.objectID)
+    if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
+      for (let i = 0; i < this.file_img_video.length; i++) {
+        if(this.file_img_video[i].fileName == file.fileName)
+        {
+          this.file_img_video.splice(i,1);
+          break;
+        };
+      };
+    }
+    else
     {
+      for (let i = 0; i < this.file_application.length; i++) {
+        if(this.file_application[i].fileName == file.fileName)
+        {
+          this.file_application.splice(i,1);
+          break;
+        };
+      };
+    }
       this.filesDelete.push(file);
-      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
-        };
-      }
-      else
-      {
-        for (let i = 0; i < this.files.length; i++) {
-          if(this.files[i].fileName == file.fileName)
-          {
-            this.files.splice(i,1);
-            break;
-          };
-        };
-      }
+      this.removeFile.emit(file);
       this.dt.detectChanges();
-    }
-    else 
-    {
-      if(file.category == this.FILE_CATEGORY.IMAGE || file.category == this.FILE_CATEGORY.VIDEO){
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
-        };
-      }
-      else
-      {
-        for (let i = 0; i < this.files.length; i++) {
-          if(this.files[i].fileName == file.fileName)
-          {
-            this.files.splice(i,1);
-            break;
-          };
-        };
-      }
-      this.lstFile = [...this.file_img_video.concat(this.files)];
-      this.dmSV.fileUploadList = [...this.lstFile];
-      this.dt.detectChanges();
-    }
   }
 
   addFiles(files:any[]){
-    this.converFile();
-    if(this.filesAdd.length == 0){
-      this.filesAdd = files;
-    }
-    else{
-      this.filesAdd.concat(files);
-    }
+    this.lstFile.concat(files);
+    files.map(f => {
+      if(f.mimeType.indexOf("image") >= 0 ){
+        f['referType'] = this.FILE_REFERTYPE.IMAGE;
+        let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.file_img_video.push(f);
+      }
+      else if(f.mimeType.indexOf("video") >= 0)
+      {
+        f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.file_img_video.push(f);
+      }
+      else{
+        f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        let a = this.file_application.find(f2 => f2.fileName == f.fileName);
+        if(a) return;
+        this.file_application.push(f);
+      }
+    });
+    this.filesAdd.concat(files);
+    this.addFile.emit(files);
     this.dt.detectChanges();
   }
+
 }

@@ -12,11 +12,23 @@
             <div class="w-100 me-2">
               <div class="d-flex align-items-center">
                 <ng-container *ngFor="let item of lstFrom">
-                  <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                  <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                    *ngIf="item.objectType=='U'">
                     <div class="me-3">
                       <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
                     </div>
                     <div class="text-gray-600 flex-grow-1 me-2">{{item.text}}</div><a
+                      class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 1)"><span
+                        class="icon-close icon-16"></span></a>
+                  </div>
+                  <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                    *ngIf="item.objectType!='U'">
+                    <div class="me-3 user-mini-icon">
+                      <!-- <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img> -->
+                      <img [src]="'./assets/themes/sys/default/img/'+item.icon ?? 'share_default.svg'" />
+                    </div>
+                    <div class="text-gray-600 flex-grow-1 me-2">{{item.text ??
+                      (item.objetID|vll:vllShare:'text'|async)}}</div><a
                       class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 1)"><span
                         class="icon-close icon-16"></span></a>
                   </div>
@@ -38,7 +50,8 @@
           <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstTo">
-                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType=='U'">
                   <div class="me-3">
                     <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
                   </div>
@@ -46,19 +59,28 @@
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 2)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType!='U'">
+                  <div class="me-3 user-mini-icon">
+                    <!-- <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img> -->
+                    <img [src]="'./assets/themes/sys/default/img/'+item.icon ?? 'share_default.svg'" />
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text != null? item.text :
+                    (item.objetID|vll:vllShare:'text'|async)}}
+                  </div><a class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 2)"><span
+                      class="icon-close icon-16"></span></a>
+                </div>
               </ng-container>
             </div>
           </div>
         </div>
         <div class="d-flex align-items-end">
-          <span class="btn btn-sm fw-bold align-items-end" *ngIf="!showCC && !showBCC"
+          <span class="btn btn-sm fw-bold align-items-end"
+            *ngIf="!showCC && !showBCC && !(showBCC || lstBcc.length >0) && !(showCC || lstCc.length >0)"
             (click)="changeSendType('cc')">Cc</span>
-          <span class="btn btn-sm fw-bold" *ngIf="!showCC && !showBCC" (click)="changeSendType('bcc')">Bcc</span>
-          <!-- <span>
-            <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="to"
-              (valueChange)="valueSentoChange($event, 2)">
-            </codx-input>
-          </span> -->
+          <span class="btn btn-sm fw-bold"
+            *ngIf="!showCC && !showBCC && !(showCC || lstCc.length >0) && !(showBCC || lstBcc.length >0)"
+            (click)="changeSendType('bcc')">Bcc</span>
           <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
             (click)="testdata(controlShare2)"></span>
         </div>
@@ -71,7 +93,8 @@
           <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstCc">
-                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType=='U'">
                   <div class="me-3">
                     <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
                   </div>
@@ -79,11 +102,22 @@
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 3)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType!='U'">
+                  <div class="me-3 user-mini-icon">
+                    <!-- <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img> -->
+                    <img [src]="'./assets/themes/sys/default/img/'+item.icon ?? 'share_default.svg'" />
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text ?? (item.objetID|vll:vllShare:'text'|async)}}
+                  </div><a class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 3)"><span
+                      class="icon-close icon-16"></span></a>
+                </div>
               </ng-container>
             </div>
           </div>
           <div class="d-flex align-items-end">
-            <span class="btn btn-sm fw-bold" *ngIf="!showBCC" (click)="changeSendType('bcc')">Bcc</span>
+            <span class="btn btn-sm fw-bold" *ngIf="!showBCC && !(showBCC || lstBcc.length >0)"
+              (click)="changeSendType('bcc')">Bcc</span>
             <!-- <span>
               <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="cc"
                 (valueChange)="valueSentoChange($event, 3)">
@@ -104,7 +138,8 @@
           <div class="w-100 me-2">
             <div class="d-flex align-items-center">
               <ng-container *ngFor="let item of lstBcc">
-                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center">
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType=='U'">
                   <div class="me-3">
                     <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img>
                   </div>
@@ -112,11 +147,24 @@
                     class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 4)"><span
                       class="icon-close icon-16"></span></a>
                 </div>
+                <div class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType!='U'">
+                  <div class="me-3 user-mini-icon">
+                    <!-- <codx-img [objectId]="item.objetID" objectType="AD_Users" width="25"></codx-img> -->
+                    <img class="svg-icon w-20px"
+                      [src]="'./assets/themes/sys/default/img/'+(item.icon ?? 'share_default.svg')" />
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">{{item.text != null? item.text :
+                    (item.objetID|vll:vllShare:'text'|async)}}
+                  </div><a class="text-hover-danger d-flex align-items-center" (click)="deleteItem(item, 4)"><span
+                      class="icon-close icon-16"></span></a>
+                </div>
               </ng-container>
             </div>
           </div>
           <div class="d-flex align-items-end">
-            <span class="btn btn-sm fw-bold" *ngIf="!showCC" (click)="changeSendType('cc')">Cc</span>
+            <span class="btn btn-sm fw-bold" *ngIf="!showCC && !(showCC || lstCc.length >0)"
+              (click)="changeSendType('cc')">Cc</span>
             <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
               (click)="testdata(controlShare4)"></span>
           </div>
@@ -167,7 +215,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-4">
-      <div class="d-flex align-items-center" (click)="openFormUploadFile()">
+      <div class="d-flex align-items-center cursor-pointer" (click)="openFormUploadFile()">
         <span class="icon-attach_email icon-18 me-2 text-primary"></span>
         <span class="text-primary fw-bold">
           <codx-label default="Đính kèm file" name="lblAttachment" formName="EmailTemplates"
@@ -185,12 +233,11 @@
     </div>
     <div>
       <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-        hideDes="1" [functionID]="" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+        hideDes="1" [functionID]="'EST04'" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
         [objectId]="dialogETemplate.value.recID" [allowMultiFile]="1" [idBrowse]="'add'">
       </codx-attachment>
     </div>
     <div class="request-box mt-4">
-      <!-- <textarea class="form-control" rows="12" placeholder="Nhập nội dung..."></textarea> -->
       <codx-input type="textarea" field="message" [Group]="dialogETemplate" placeholder="textarea"
         [crrValue]="dialogETemplate.value.message"></codx-input>
     </div>
@@ -250,7 +297,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <a class="btn btn-primary font-weight-bold" (click)="onSaveForm(null)">
+      <a class="btn btn-primary font-weight-bold" (click)="onSaveWithTemplate(null)">
         <codx-label name="lblSave" default="Lưu" formName="EmailTemplates" gridViewName="grvEmailTemplates">
         </codx-label>
       </a>
@@ -258,22 +305,22 @@
   </ng-template>
 
   <ng-template #controlShare1 let-dialog>
-    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 1)">
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 1)" [listName]="vllShare">
     </codx-share>
   </ng-template>
 
   <ng-template #controlShare2 let-dialog>
-    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 2)">
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 2)" [listName]="vllShare">
     </codx-share>
   </ng-template>
 
   <ng-template #controlShare3 let-dialog>
-    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 3)">
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 3)" [listName]="vllShare">
     </codx-share>
   </ng-template>
 
   <ng-template #controlShare4 let-dialog>
-    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 4)">
+    <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event, 4)" [listName]="vllShare">
     </codx-share>
   </ng-template>
 
@@ -281,7 +328,7 @@
 </codx-form>
 
 <ng-template #addTemplateName let-dialog1>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+  <div class=" codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">

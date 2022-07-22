@@ -22,6 +22,7 @@ import { RolesComponent } from './roles/roles.component';
 import { AddRoleComponent } from './addrole/addrole.component';
 import { PhysicalComponent } from './createFolder/physical/physical.component';
 import { SubFolderComponent } from './createFolder/subFolder/subFolder.component';
+import { DetailComponent } from './views/detail/detail.component';
 
 export const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   HomeComponent,
   CardComponent,
+  DetailComponent,
   CreateFolderComponent,
   EditFileComponent,
   RolesComponent,

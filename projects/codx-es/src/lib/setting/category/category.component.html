@@ -20,14 +20,26 @@
       </codx-label>
     </div>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover"></codx-mfunc>
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover" [dataItem]="data">
+      </codx-mfunc>
     </div>
   </div>
+</ng-template>
+
+<ng-template #memo let-data>
+  <div *ngIf="data.memo != ''" class="text-dark">{{data.memo }}</div>
+  <div *ngIf="data.memo == ''">{{ data.memo | formatvalue: viewBase.formModel:"Memo":'headerText' | async}}</div>
 </ng-template>
 
 <ng-template #icon let-data>
   <div class="">
     <i [ngClass]="data.icon" class="icon-24"></i>
+  </div>
+</ng-template>
+
+<ng-template #parentID let-data>
+  <div class="">
+    {{ data.parentID | formatvalue: viewBase.formModel:"parentID":'headerText' | async}}
   </div>
 </ng-template>
 

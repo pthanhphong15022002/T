@@ -68,12 +68,12 @@
                 <div class="timeline timeline-3">
                   <div class="timeline-items">
                     <ng-container *ngFor="let item of lstStep; let index=index">
-                      <div class="timeline-item ">
+                      <div class="timeline-item has-action-menu">
                         <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                           <div class=" timeline-media w-40px h-40px me-4">
                             <span class="stepper-number">{{item.stepNo}}</span>
                           </div>
-                          <div class="stepper-label has-action-menu">
+                          <div class="stepper-label">
                             <h3 class="stepper-title line-clamp  line-clamp-3">
                               {{item.stepName}}
                             </h3>
@@ -81,7 +81,8 @@
                               {{(item.stepType | vll:'ES002':'text'|async)}}
                             </div>
                             <div class="action-menu">
-                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover">
+                              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
+                                [dataItem]="item">
                               </codx-mfunc>
                             </div>
                           </div>
@@ -100,9 +101,10 @@
                                 <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType!='U'"
                                   [imageSrc]="'./assets/themes/sys/default/img/'+(item.icon ? item.icon : 'share_default.svg')"
                                   imgCss="me-4 symbol symbol-40px symbol-circle"
-                                  [title]="(approver.approver|vll: 'ES014': 'text'|async)" [subTitle]=""
-                                  [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true"
-                                  [titleLine]="3" [footer]="footer1" [dataItem]="item">
+                                  [title]="(approver.approver|vll: 'ES014': 'text'|async)"
+                                  [subTitle]="approver.approver|vll: 'ES014': 'text'|async" [status]="lstStep.status"
+                                  [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                                  [dataItem]="item">
                                 </codx-temp-full>
 
                                 <ng-template #footer1 let-data>

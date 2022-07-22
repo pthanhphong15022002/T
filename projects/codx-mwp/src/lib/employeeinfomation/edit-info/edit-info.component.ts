@@ -34,6 +34,11 @@ export class EditInfoComponent implements OnInit {
    
   }
 
+  changeTime(data){
+    if (!data.field || !data.data) return;
+    this.employee[data.field] = data.data?.fromDate;
+  }
+
   dataChange(e: any, field: string) {
     if (e) {
       if (e?.length == undefined) {
