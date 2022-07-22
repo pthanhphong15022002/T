@@ -10,6 +10,7 @@ import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeei
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
+import { UpdateStatusComponent } from './employees/update-status/update-status.component';
 import { EmployeesLeaveComponent } from './employeesleave/employees-leave.component';
 import { CertificatesComponent } from './hrparameters/category/certificates/certificates.component';
 import { CompetencesComponent } from './hrparameters/category/competences/competences.component';
@@ -126,6 +127,7 @@ const T_Component: Type<any>[] = [
   OrganizationsComponent,
   ReligionsComponent,
   EthnicGroupsComponent,
+  UpdateStatusComponent,
 ]
 @NgModule({
   imports: [

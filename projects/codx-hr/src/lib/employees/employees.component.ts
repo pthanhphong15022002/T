@@ -4,6 +4,7 @@ import { ApiHttpService, ButtonModel, CallFuncService, DialogRef, NotificationsS
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
+import { UpdateStatusComponent } from './update-status/update-status.component';
 
 @Component({
   selector: 'lib-employees',
@@ -22,7 +23,7 @@ export class EmployeesComponent implements OnInit {
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
 
-  @Input() formModel: any;
+  // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
@@ -32,12 +33,15 @@ export class EmployeesComponent implements OnInit {
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  @ViewChild('view') codxView!: any;
+  employStatus: any;
 
   constructor(
     private changedt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private df: ChangeDetectorRef,
   ) {
   }
 
@@ -94,7 +98,7 @@ export class EmployeesComponent implements OnInit {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
@@ -221,6 +225,47 @@ export class EmployeesComponent implements OnInit {
     this.changedt.detectChanges();
   }
 
+  updateStatus(data) {
+    // let obj = {
+    //   fieldValue: fieldValue,
+    //   moreFunc: moreFunc,
+    //   taskAction: taskAction,
+    //   funcID: this.funcID
+    // };
+    this.dialog = this.callfunc.openForm(
+      UpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      '',
+      data
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.df.detectChanges();
+    });
+
+    // this.api
+    //   .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
+    //     employeeID: this.employStatus.employeeID,
+    //     status: this.employStatus.status,
+    //   })
+    //   .subscribe((res) => { });
+    // if (this.employStatus.status == "90") {
+    //   this.employList.removeHandler(this.employStatus, "employeeID");
+    // } else {
+    //   this.employList.addHandler(this.employStatus, false, "employeeID");
+    // }
+    // this.dialog.closed.subscribe(e => {
+    //   console.log(e);
+    // })
+  }
+
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       // case 'add':
@@ -234,6 +279,9 @@ export class EmployeesComponent implements OnInit {
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!
+        this.updateStatus(data);
         break;
     }
   }
