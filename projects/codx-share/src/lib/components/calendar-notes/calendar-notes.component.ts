@@ -59,7 +59,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   dialog: DialogRef;
   checkUpdate = false;
   dataObj: any;
-  dateT: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -179,43 +178,24 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   onChangeValueSelectedWeek(e, lstView) {
-    this.dateT = e.daySelected;
-    var ev = e;
-    var data = ev.daySelected
+    var data = JSON.parse(JSON.stringify(e.daySelected));
+    this.setDate(data, lstView);
+  }
+
+  onValueChange(args: any, lstView) {
+    var data = JSON.parse(JSON.stringify(args.value));
     this.setDate(data, lstView);
   }
 
   setDate(data, lstView) {
-    debugger;
-    var dt = data;
-    var fromDate = dt.toISOString();
+    var dateT = new Date(data);
+    var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
-    var toDate = new Date(dt.setDate(dt.getDate() + 1)).toISOString();
+    var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
     (lstView.dataService as CRUDService).dataObj = `WP_Calendars`;
-    (lstView.dataService as CRUDService).predicates = "CreatedOn > @0 && CreatedOn <= @1";
+    (lstView.dataService as CRUDService).predicates = "CreatedOn >= @0 && CreatedOn < @1";
     (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
     lstView.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-  }
-
-  onValueChange(args: any, lstView) {
-    debugger;
-    var date = args.value;
-    var fromDate = date.toISOString();
-    this.daySelected = fromDate;
-    var toDate = new Date(date.setDate(date.getDate() + 1)).toISOString();
-    (lstView.dataService as CRUDService).dataObj = `WP_Calendars`;
-    (lstView.dataService as CRUDService).predicates = "CreatedOn > @0 && CreatedOn <= @1";
-    (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
-    lstView.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-
-
-    // let title: string = '';
-    // if (args.event) {
-    //   title = args.event.currentTarget.getAttribute('data-val');
-    //   title = title == null ? '' : ' ( ' + title + ' )';
-    // }
-    // document.getElementById('selected').textContent =
-    //   'Selected Value: ' + args.value.toLocaleDateString() + title;
   }
 
   valueChangeTyCalendar(e) {
@@ -229,25 +209,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       }
     }
   }
-
-  // getMinMaxDate(calendar: any) {
-  //   if (calendar) {
-  //     var d = calendar.currentDate;
-  //     var localDate = new Date(d.getFullYear(), d.getMonth(), 0, d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
-  //     var firstDayOfWeek = calendar?.firstDayOfWeek
-
-  //     const dayMilliSeconds: number = 86400000
-  //     while (localDate.getDay() !== firstDayOfWeek) {
-  //       calendar.setStartDate(localDate, -1 * dayMilliSeconds);
-  //     }
-  //     var fromDate = new Date(localDate);
-  //     this.fromDate = fromDate.toLocaleDateString();
-  //     var toDate = new Date(calendar.renderDayCellArgs.date);
-  //     this.toDate = toDate.toLocaleDateString();
-
-  //     this.getParam(this.fromDate, this.toDate);
-  //   }
-  // }
 
   getParam() {
     this.api
@@ -389,6 +350,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       currentDate: this.daySelected,
       dataSelected: this.lstView.dataService.dataSelected,
     };
+    debugger;
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;

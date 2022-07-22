@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
@@ -47,6 +47,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   predicate = '';
   dataValue = '';
+  moreFunction: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -58,6 +59,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
+      this.moreFunction = res;
+    })
   }
 
   onInit(): void {

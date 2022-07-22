@@ -38,47 +38,26 @@
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
                                 <div *ngIf="item.memo != null">
-                                    <!-- <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                        </codx-mfunc>
-                                    </div> -->
-                                    <!--  -->
                                     <div class="action-menu d-flex">
                                         <div class="d-flex align-items-center">
-                                            <a class="action-item">
-                                                <div class="d-flex align-items-center btn-tooltip">
-                                                    <span class="icon-edit icon-18 ml-2 mr-2"></span>
-                                                    <span class="tooltiptext">Edit</span>
-                                                </div>
-                                            </a>
-                                            <a class="action-item">
-                                                <div class="d-flex align-items-center btn-tooltip">
-                                                    <span class="icon-close icon-18 text-danger ml-2 mr-2"></span>
-                                                    <span class="tooltiptext">Delete</span>
-                                                </div>
-                                            </a>
-                                            <!-- <div class="dropdown">
-                                                <button ngbDropdownToggle class="btn btn-icon btn-md" type="button"
-                                                    id="dropdownMenuButton1" aria-expanded="false">
+                                            <div *ngFor="let data of moreFunction">
+                                                <a class="action-item" *ngIf="data.largeIcon == 'icon-edit'">
+                                                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                        <span [class]="data.largeIcon"></span>
+                                                    </div>
+                                                </a>
+                                                <a class="action-item" *ngIf="data.largeIcon == 'icon-close'">
+                                                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                        <span [class]="data.largeIcon"></span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
                                                     <span class="icon-more_vert icon-20 text-dark-75"></span>
-                                                </button>
-                                                <div ngbDropdownMenu class="dropdown-menu"
-                                                    aria-labelledby="dropdownMenuButton1">
-                                                    <a ngbDropdownItem class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-attach_file icon-18"></span>
-                                                            <span class="ml-3">Đính kèm file</span>
-                                                        </div>
-                                                    </a>
-                                                    <a ngbDropdownItem class="dropdown-item">
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="icon-email icon-18"></span>
-                                                            <span class="ml-3">Gửi mail</span>
-                                                        </div>
-                                                    </a>
                                                 </div>
-                                            </div> -->
+                                            </a>
                                         </div>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
@@ -182,13 +161,34 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-                </ng-template>
-            </div>
+                </div>
+            </ng-template>
+        </div>
     </ng-template>
     <ng-template #subheader>
         <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
             (click)="openFormAddNote()">
         </span>
+    </ng-template>
+
+    <ng-template #popMoreFunc let-modal>
+        <div class="flex" *ngFor="let data of moreFunction">
+            <div *ngIf="data.largeIcon == 'icon-push_pin1'">
+                <div class="w-5px">
+                    <span [class]="data.largeIcon"></span>
+                </div>
+                <div class="show-event">
+                    <span>{{data.customName}}</span>
+                </div>
+            </div>
+            <div *ngIf="data.largeIcon == 'icon-save_alt'">
+                <div class="w-5px">
+                    <span [class]="data.largeIcon"></span>
+                </div>
+                <div class="show-event">
+                    <span>{{data.customName}}</span>
+                </div>
+            </div>
+        </div>
     </ng-template>
 </codx-form>
