@@ -225,6 +225,7 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region  EP
   execEP(
     className: string,
     methodName: string,
@@ -332,6 +333,7 @@ export class CodxEsService {
       recID
     );
   }
+  //#endregion
 
   //#region  AutoNumbers
   public setupAutoNumber = new BehaviorSubject<any>(null);
@@ -581,6 +583,17 @@ export class CodxEsService {
   //#endregion
 
   //#region EmailTemplate
+  public lstTmpEmail = [];
+  deleteEmailTemplate(): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'DeleteEmailTemplateAsync',
+      [this.lstTmpEmail]
+    );
+  }
+
   getEmailTemplate(templateID: string): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -600,6 +613,8 @@ export class CodxEsService {
       [data, sendTo]
     );
   }
+
+  //#endregion
 
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
@@ -636,7 +651,6 @@ export class CodxEsService {
       httpOptions
     );
   }
-  //#endregion
 }
 export class LayoutModel {
   isChange: boolean = false;

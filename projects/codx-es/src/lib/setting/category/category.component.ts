@@ -96,14 +96,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         field: 'categoryID',
         headerText: 'Mã phân loại',
         template: '',
-        width: 70,
-        textAlign: 'Center',
+        width: 100,
       },
       {
         field: 'categoryName',
         headerText: 'Tên phân loại',
         template: '',
-        width: 120,
+        width: 150,
       },
       {
         field: 'parentID',
@@ -125,7 +124,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         textAlign: 'Center',
       },
       {
-        field: 'note',
+        field: 'memo',
         headerText: 'Ghi chú',
         template: '',
         width: 150,
