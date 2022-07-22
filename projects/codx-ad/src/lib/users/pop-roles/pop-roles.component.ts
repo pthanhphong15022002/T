@@ -24,7 +24,7 @@ export class PopRolesComponent implements OnInit {
   lstEmp = [];
   listChooseRole =[]
   idClickFunc:any;
-
+  viewChooseRoleSelected: tmpformChooseRole;
   optionFrist= 'ADC01' // Check unselect from list
   optionSecond= 'ADC02' // Check list is null 
   optionThird= 'ADC03' // Check select from list
@@ -42,6 +42,12 @@ export class PopRolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+   this.viewChooseRoleSelected = this.data;
+    console.log('co data nghe');
+  //  if(this.viewChooseRoleSelected.idChooseRole !=null) {
+      // this.lstFunc.ischeck = true;
+//    }
+    console.log(this.viewChooseRoleSelected);
   }
 
   loadData() {
@@ -50,7 +56,7 @@ export class PopRolesComponent implements OnInit {
         this.lstFunc = res.msgBodyData[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].recIDofRole == '00000000-0000-0000-0000-000000000000') {
+          if (this.lstFunc[i].recIDofRole != null) {
             this.lstFunc[i].recIDofRole = null;
           }
         }
