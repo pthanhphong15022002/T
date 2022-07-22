@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Tasks } from '../../models/TM_Tasks.model';
+import { PopupViewTaskResourceComponent } from '../popup-view-task-resource/popup-view-task-resource.component';
 
 @Component({
   selector: 'app-view-detail',
@@ -17,6 +18,7 @@ export class ViewDetailComponent implements OnInit {
   @Output() clickMoreFunction = new EventEmitter<any>();
   constructor(
     private api: ApiHttpService,
+    private callfc : CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -27,6 +29,16 @@ export class ViewDetailComponent implements OnInit {
 
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({e:e,data:dt})
+  }
+  openViewListTaskResource(data){
+    this.dialog = this.callfc.openForm(
+      PopupViewTaskResourceComponent,
+      '',
+      400,
+      500,
+      '',
+      [data,this.formModel.funcID]
+    );
   }
 
 }

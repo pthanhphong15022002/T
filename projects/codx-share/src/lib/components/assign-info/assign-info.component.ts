@@ -345,7 +345,7 @@ export class AssignInfoComponent implements OnInit {
             var taskResource = new tmpTaskResource();
             taskResource.resourceID = emp.userID;
             taskResource.resourceName = emp.userName;
-            taskResource.position = emp.positionName;
+            taskResource.positionName = emp.positionName;
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           };
