@@ -1,4 +1,5 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialogSecond">
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+[formModel]="dialogSecond.formModel" [dialog]="dialogSecond" >
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
       <e-tabitems>
@@ -110,9 +111,7 @@
                           </div>
                         </div>
                       </div>
-
                     </div>
-
                   </div>
                 </div>
 

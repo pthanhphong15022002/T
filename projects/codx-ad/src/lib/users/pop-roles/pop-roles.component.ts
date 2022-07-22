@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
 import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import { CodxAdService } from '../../codx-ad.service';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
@@ -33,11 +34,13 @@ export class PopRolesComponent implements OnInit {
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
     private notiService: NotificationsService,
+    private adService: CodxAdService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
     this.dialogSecond = dialog;
     this.data = dt?.data;
+
   }
 
   ngOnInit(): void {
@@ -51,9 +54,10 @@ export class PopRolesComponent implements OnInit {
   }
 
   loadData() {
-    this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1).subscribe((res) => {
-      if (res && res.msgBodyData[0]) {
-        this.lstFunc = res.msgBodyData[0];
+   this.adService.getListAppByUserRolesAsync().subscribe((res) => {
+      // if (res && res.msgBodyData[0]) {
+        if (res) {
+        this.lstFunc = res[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
           if (this.lstFunc[i].recIDofRole != null) {

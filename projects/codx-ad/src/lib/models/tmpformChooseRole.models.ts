@@ -11,6 +11,7 @@ export class tmpformChooseRole {
     recDelete: string;
     recUpdate: string;
     idChooseRole: string;
+    color:string;
 }
 
 
