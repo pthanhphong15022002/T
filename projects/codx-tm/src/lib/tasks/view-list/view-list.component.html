@@ -4,7 +4,9 @@
       {{ data?.taskName }}</div>
   </td>
   <td class=" w-5">
-    <div class="align-items-center text-dark">
+  
+    <div class="align-items-center">
+      <span [ngClass]="'icon-notifications' +' ' + (data?.isTimeOut?'expired':'unexpired')" ></span>
       <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
                   data?.priority | vll: 'L0186':'textColor' | async
                     ">
@@ -22,7 +24,7 @@
                   data?.status | vll: 'L0614':'textColor' | async
                   " style="border: none">
       {{ data?.status | vll: "L0614":"text" | async }}
-    </div>
+  </div>
   </td>
   <td class=" w-20">
     <div class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
@@ -83,7 +85,7 @@
     </div>
   </td>
   <td class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" type="hover">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data" type="hover">
     </codx-mfunc>
   </td>
 </div>
@@ -92,7 +94,6 @@
   <div>
     <ng-container>
       <div class="d-flex flex-column flex-grow-1">
-        <div class="result-title text-dark fs-6 mb-2">Mô tả chi tiết</div>
         <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
           <div class="d-flex align-items-center mt-2">
             <div class="d-flex align-items-center me-2">

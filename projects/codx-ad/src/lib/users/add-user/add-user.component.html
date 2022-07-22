@@ -20,13 +20,12 @@
           <ng-template #content>
             <div class="form-group">
               <div class="form-group row mt-3 pb-5">
-                <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage" [width]="150" funcId="AD006"
-                  [objectId]="adUser.userID" [objectName]="adUser.userName" objectType="AD_Users"  [isAllowEdit]=true
-                  data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-                  data-kt-menu-flip="bottom" [updateDirect]="false">
+                <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage"
+                  [width]="150" funcId="AD006" [objectId]="adUser.userID" [objectName]="adUser.userName"
+                  objectType="AD_Users" [isAllowEdit]=true data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                  data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [updateDirect]="false">
                 </codx-img>
                 <!-- <codx-user-inner (onAvatarChanged)="reloadAvatar($event)"></codx-user-inner> -->
-
               </div>
               <div class="form-group row mt-3">
                 <div class="form-group col-6">
@@ -60,7 +59,7 @@
                 </codx-input>
               </div>
               <div class="form-group row mt-3">
-                <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Đơn vị">
+                <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
                 </codx-label>
                 <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
                   (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
@@ -84,6 +83,8 @@
           </ng-template>
         </e-tabitem>
 
+        <!-- <div class="codx_tab"><ejs-tab headerPlacement="Left"></ejs-tab> </div> -->
+
         <e-tabitem>
           <ng-template #headerText>
             <div class="nav-item ">
@@ -101,8 +102,88 @@
           <ng-template #content>
             <div class="form-group mt-3">
               <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" (click)="openPopup(null)">Chỉnh sửa quyền</button>
+                <button type="button" class="btn btn-primary" (click)="openPopup(viewChooseRole)">Chỉnh sửa
+                  quyền</button>
               </div>
+
+              <!-- List checkbox of UserRoles -->
+
+              <div class="form-group py-5 px-5">
+                <div class="row">
+                  <div class="col-12">
+                    <span class="d-flex flex-column align-items-start">
+                      <span class="fw-bolder">
+                        <codx-label name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
+                        </codx-label> ({{3}})
+                      </span>
+                      <hr>
+                    </span>
+                  </div>
+
+                  <div class="col-12 " *ngFor="let item of viewChooseRole; let i= index">
+                    <div class="row">
+                      <div class="col-6 text-start">
+                        <div class="row">
+                          <div class="col-2">
+                            <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                          </div>
+                          <div class="col-10 space_row">
+                              <div class="font-weight-bold" style="font-weight: bold">
+                                {{item.customName}}
+                              </div>
+                          </div>
+                          </div>
+                        </div>
+                        <div class="col-6 text-end">
+                          <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
+                          </codx-input>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="form-group py-5 px-5">
+                  <div class="row">
+                    <div class="col-12">
+                      <span class="d-flex flex-column align-items-start">
+                        <span class="fw-bolder">
+                          <codx-label name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
+                          </codx-label> ({{3}})
+                        </span>
+                        <hr>
+                      </span>
+                    </div>
+  
+                    <div class="col-12 " *ngFor="let item of viewChooseRole; let i= index">
+                      <div class="row">
+                        <div class="col-6 text-start">
+                          <div class="row">
+                            <div class="col-2">
+                              <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                            </div>
+                            <div class="col-10 space_row">
+                                <div class="font-weight-bold" style="font-weight: bold">
+                                  {{item.customName}}
+                                </div>
+                            </div>
+                            </div>
+                          </div>
+                          <div class="col-6 text-end">
+                            <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
+                            </codx-input>
+                          </div>
+                        </div>
+  
+                      </div>
+  
+                    </div>
+                  </div>
+         
+
+
             </div>
           </ng-template>
         </e-tabitem>
@@ -111,7 +192,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <div class="d-flex justify-content-lg-start">
+    <div class="d-flex justify-content-lg-start pl-3">
       <span>
         <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
       </span>

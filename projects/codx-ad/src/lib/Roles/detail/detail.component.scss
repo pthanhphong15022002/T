@@ -1,0 +1,33 @@
+// .w-content {
+//     width: calc(100% - 41px);
+// }
+
+//custom
+// .switch.switch-sm input:empty ~ span {
+//     height: 18px;
+//     width: 25px;
+//     top: 6px;
+// }
+
+// .switch.switch-sm input:empty ~ span:before,
+// .switch.switch-sm input:empty ~ span:after {
+//     width: 30px;
+// }
+
+// .switch.switch-sm input:empty ~ span:after {
+//     height: 13px;
+//     width: 13px;
+//     top: 2px;
+// }
+
+// .switch.switch-sm input:checked ~ span:after {
+//     margin-left: 14px;
+// }
+
+.btn.btn-primary.disabled, .btn.btn-primary:disabled,
+.btn.btn-primary.disabled:hover, .btn.btn-primary:disabled  {
+    color: #FFFFFF;
+    background-color:rgb(179, 173, 173) !important;
+    border-color: rgb(179, 173, 173) !important;
+    cursor: unset;
+}

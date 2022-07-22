@@ -1,10 +1,10 @@
 <div class="page-content d-flex flex-row">
   <div class="w-100 me-4">
     <!-- <codx-input type="switch"></codx-input> -->
-    <div class="row m-0 bg-body mb-2 p-3">
-      <div class="col-4 px-0">
+    <div class="row m-0 bg-body rounded-2 mb-3 p-3">
+      <div class="col-4 px-2">
         <div
-          class="d-flex justify-content-between h-50px p-3"
+          class="d-flex justify-content-between p-3"
           style="background-color: #d8fffd"
         >
           <div class="d-flex justify-content-between">
@@ -13,7 +13,7 @@
               style="color: rgb(6, 221, 184)"
             ></div>
             <div>
-              <div class="fw-bold text-gray-400">
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc"></codx-label>
               </div>
               <div class="text-dark fw-bold">
@@ -25,14 +25,14 @@
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.overDueTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
 
       <div class="col-4 pe-0">
         <div
-          class="d-flex justify-content-between rounded h-50px p-3"
+          class="d-flex justify-content-between p-3"
           style="background-color: #daecff"
         >
           <div class="d-flex justify-content-between">
@@ -41,51 +41,52 @@
               style="color: rgb(0, 93, 199)"
             ></div>
             <div>
-              <div class="fw-bold text-gray-400">
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc"></codx-label>
               </div>
               <div class="text-dark fw-bold">
                 <codx-label
                   name="lblOverdueTask"
-                  default="Chưa thực hiên"
+                  default="Đã quá hạn"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.newTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
+
       <div class="col-4 pe-0">
         <div
-          class="d-flex justify-content-between rounded h-50px p-3"
+          class="d-flex justify-content-between p-3"
           style="background-color: #fff8e6"
         >
-          <div class="d-flex align-items-center">
+          <div class="d-flex justify-content-between">
             <div
               class="icon-28 icon-access_time me-2"
               style="color: rgb(255, 128, 8)"
             ></div>
-            <div class="d-flex flex-column">
-              <div class="text-gray-400">
+            <div>
+              <div class="text-gray-600">
                 <codx-label name="lblTask" default="Công việc"></codx-label>
               </div>
-              <div class="fw-bold text-dark">
+              <div class="text-dark fw-bold">
                 <codx-label
                   name="lblOverdueTask"
-                  default="Hoãn lại"
+                  default="Đã quá hạn"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ dbData?.postponeTasks }}
+            {{ data?.status.overdueTasks }}
           </div>
         </div>
       </div>
     </div>
-    <div class="row m-0 bg-body mb-2">
+    <div class="row m-0 bg-body rounded-2 mb-3">
       <div class="d-flex justify-content-end">
         <button
           type="button"
@@ -124,12 +125,12 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.performance"
+                  [value]="data?.efficiency.performance"
                   markerShape="Image"
-                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
-                  markerWidth="20"
-                  markerHeight="20"
+                  markerWidth="30"
+                  markerHeight="30"
                 >
                 </e-pointer>
               </e-pointers>
@@ -144,12 +145,12 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Availability</p>
+          <p class="text-center" style="margin: 0px">Availability (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.availability.toFixed(2) }}
+            {{ data?.efficiency.availability.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -182,12 +183,12 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.performance"
+                  [value]="data?.efficiency.performance"
                   markerShape="Image"
-                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
-                  markerWidth="20"
-                  markerHeight="20"
+                  markerWidth="30"
+                  markerHeight="30"
                 >
                 </e-pointer>
               </e-pointers>
@@ -202,12 +203,12 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Performance</p>
+          <p class="text-center" style="margin: 0px">Performance (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.performance.toFixed(2) }}
+            {{ data?.efficiency.performance.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -240,12 +241,12 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.performance"
+                  [value]="data?.efficiency.quality"
                   markerShape="Image"
-                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
-                  markerWidth="20"
-                  markerHeight="20"
+                  markerWidth="30"
+                  markerHeight="30"
                 >
                 </e-pointer>
               </e-pointers>
@@ -260,12 +261,12 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">Quality</p>
+          <p class="text-center" style="margin: 0px">Quality (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.quality.toFixed(2) }}
+            {{ data?.efficiency.quality.toFixed(2) }}
           </p>
         </div>
       </div>
@@ -298,12 +299,12 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.kpi"
+                  [value]="data?.efficiency.kpi"
                   markerShape="Image"
-                  imageUrl="https://ej2.syncfusion.com/angular/demos/assets/circular-gauge/images/golf-ball.png"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
-                  markerWidth="20"
-                  markerHeight="20"
+                  markerWidth="30"
+                  markerHeight="30"
                 >
                 </e-pointer>
               </e-pointers>
@@ -318,17 +319,17 @@
             transform: translate(-50%, -50%);
           "
         >
-          <p class="text-center" style="margin: 0px">KPI</p>
+          <p class="text-center" style="margin: 0px">KPI (%)</p>
           <p
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.kpi.toFixed(2) }}
+            {{ data?.efficiency.kpi.toFixed(2) }}
           </p>
         </div>
       </div>
     </div>
-    <div class="d-flex mb-4">
+    <div class="rounded-2 d-flex mb-3">
       <div style="position: relative; width: 50%">
         <ejs-accumulationchart
           id="chart-task-group"
@@ -336,7 +337,7 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="dbData?.tasksByGroup"
+              [dataSource]="data?.tasksByGroup"
               xName="taskGroupName"
               yName="qty"
               radius="70%"
@@ -353,12 +354,12 @@
           "
         >
           <div class="text-center">
-            <p class="text-gray-900 fw-bolder fs-2">{{ dbData?.qtyTasks }}</p>
+            <p class="text-gray-900 fw-bolder fs-2">{{ data?.qtyTasks }}</p>
             <codx-label name="lblTasks" default="Công việc"> </codx-label>
           </div>
         </div>
       </div>
-      <div class="ms-2 bg-body" style="position: relative; width: 50%">
+      <div class="ms-3 bg-body" style="position: relative; width: 50%">
         <div class="row">
           <div class="col-5">
             <ejs-circulargauge
@@ -397,7 +398,7 @@
                       radius="90%"
                       color="#04DEB7"
                       pointerWidth="12"
-                      [value]="dbData?.rateDoneTaskOnTime"
+                      [value]="data?.rateDoneTaskOnTime"
                     >
                     </e-pointer>
                   </e-pointers>
@@ -432,7 +433,7 @@
                       color="#5465FF"
                       markerWidth="12"
                       pointerWidth="12"
-                      [value]="dbData?.rateDoneTask"
+                      [value]="data?.rateDoneTask"
                     >
                     </e-pointer>
                   </e-pointers>
@@ -440,14 +441,14 @@
               </e-axes>
             </ejs-circulargauge>
           </div>
-          <div class="col-7" style="margin-top: 100px">
-            <div class="ps-9 pt-12">
+          <div class="col-7">
+            <div class="pt-12">
               <div class="d-flex align-items-top">
                 <div class="label1"></div>
                 <div class="d-flex flex-column">
                   <div>Tỷ lệ hoàn thành công việc</div>
                   <div class="text-dark fs-3 fw-bold">
-                    {{ dbData?.rateDoneTask.toFixed(2) }}%
+                    {{ data?.rateDoneTask.toFixed(2) }}%
                   </div>
                 </div>
               </div>
@@ -456,7 +457,7 @@
                 <div class="d-flex flex-column">
                   <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
                   <div class="text-dark fs-3 fw-bold">
-                    {{ dbData?.rateDoneTaskOnTime.toFixed(2) }}%
+                    {{ data?.rateDoneTaskOnTime.toFixed(2) }}%
                   </div>
                 </div>
               </div>
@@ -465,7 +466,20 @@
         </div>
       </div>
     </div>
-    <div class="row bg-body mb-2">
+    <div class="bg-body rounded-2 mb-3">
+      <ejs-chart
+        style="display: block"
+        background="transparent"
+        id="chartbar"
+        [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis"
+        [legendSettings]="legendSettings1"
+        height="100%"
+        width="100%"
+      >
+      </ejs-chart>
+    </div>
+    <div class="row bg-body mb-3">
       <ejs-chart
         style="display: block"
         background="transparent"
@@ -491,7 +505,7 @@
         <e-series-collection>
           <e-series
             fill="#005DC7"
-            [dataSource]="dbData?.dataBarChart?.barChart"
+            [dataSource]="data?.dataBarChart?.barChart"
             type="Column"
             name="Tasks"
             xName="label"
@@ -501,7 +515,7 @@
           </e-series>
           <e-series
             fill="#F9D923"
-            [dataSource]="dbData?.dataBarChart?.lineChart"
+            [dataSource]="data?.dataBarChart?.lineChart"
             type="Line"
             name="WorkHours"
             yName="value"
@@ -513,8 +527,7 @@
       </ejs-chart>
     </div>
   </div>
-
-  <div class="w-350px min-w-350p bg-body">
+  <div class="w-300px min-w-300px bg-body rounded-2">
     <div class="taskbox-user">
       <selectweek
         #selectweek

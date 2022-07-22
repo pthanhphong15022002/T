@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
@@ -17,6 +17,8 @@ export class TMMeetingsComponent extends UIComponent {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any> | null;
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -37,6 +39,7 @@ export class TMMeetingsComponent extends UIComponent {
   gridView: any;
   param: any
   constructor(inject: Injector,
+    private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,) {
     super(inject);
@@ -53,13 +56,36 @@ export class TMMeetingsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        type: ViewType.list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.itemViewList,
+        },
+      },
+      {
         type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           panelLeftRef: this.templateLeft,
         },
-      },]
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: true,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+        },
+      },
+    ]
+
+      this.view.dataService.methodSave = 'AddMeetingsAsync';
+
+      this.dt.detectChanges();
+
   }
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
@@ -87,20 +113,15 @@ export class TMMeetingsComponent extends UIComponent {
     }
   }
 
+
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfc.openSide(
-        PopupAddMeetingComponent,
-        [this.view.dataService.dataSelected, 'add'],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        // this.itemSelected = this.view.dataService.data[0];
-      });
+      this.dialog = this.callfc.openSide(PopupAddMeetingComponent, 'add', option);
+
     });
   }
   edit(data) {

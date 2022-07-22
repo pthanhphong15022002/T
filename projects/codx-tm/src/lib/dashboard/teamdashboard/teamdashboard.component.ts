@@ -9,7 +9,6 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
-import { RemiderOnDay, TaskRemind } from '../../models/dashboard.model';
 
 @Component({
   selector: 'teamdashboard',
@@ -21,7 +20,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   funcID: string;
   model: DataRequest;
-  taskRemind: TaskRemind = new TaskRemind();
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -31,31 +29,43 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  remiderOnDay: RemiderOnDay[] = [];
+  user: any;
+  isDesc: boolean = true;
+  availability: number = 0;
+  performance: number = 0;
+  quality: number = 0;
+  kpi: number = 0;
+  tasksByGroup: object;
+  status: any = {
+    doneTasks: 0,
+    overdueTasks: 0,
+  };
+  piedata: any;
+  dataBarChart: any = {};
+  rateDoneTaskOnTime: number = 0;
+  qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  user: any;
-  tasksByEmp: any;
 
-  public rangeColors: RangeColorModel[] = [
+  rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
     { start: 50, end: 100, color: 'orange' },
   ];
-  public isGradient: boolean = true;
+  isGradient: boolean = true;
 
   //#region gauge
-  public font1: Object = {
+  font1: Object = {
     size: '15px',
     color: '#00CC66',
   };
-  public rangeWidth: number = 25;
+  rangeWidth: number = 25;
   //Initializing titleStyle
-  public titleStyle: Object = { size: '18px' };
-  public font2: Object = {
+  titleStyle: Object = { size: '18px' };
+  font2: Object = {
     size: '15px',
     color: '#fcde0b',
   };
-  public rangeLinearGradient1: Object = {
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -64,7 +74,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -73,48 +83,46 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
   //#endregion gauge
 
-  public piedata1: any;
-  public piedata2: Object[];
-  public legendSettings: Object = {
+  legendSettings: Object = {
     position: 'Top',
     visible: true,
   };
-  public legendRateDoneSettings: Object = {
+  legendRateDoneSettings: Object = {
     visible: true,
   };
 
@@ -128,8 +136,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   }
 
   //#region chartcolumn
-  dataColumn: Object[] = [];
-  dataLine: Object[] = [];
   columnXAxis: Object = {
     interval: 1,
     valueType: 'Category',
@@ -167,10 +173,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     { text: 'Thời gian thực hiện' },
   ];
 
-  public data: object[] = [];
-
-  dbData: any;
-
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -193,52 +195,46 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   }
 
   private getGeneralData() {
-    this.tmService
-      .getTeamDBData(
-        this.model,
-        this.daySelectedFrom,
-        this.daySelectedTo,
-        this.fromDate,
-        this.toDate,
-        this.beginMonth,
-        this.endMonth
-      )
-      .subscribe((res: any) => {
-        console.log('TeamDB', res);
-        this.dbData = res;
-        this.piedata1 = res?.tasksByGroup;
-        this.piedata2 = [
+    this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
+      if (res) {
+        this.availability = res.efficiency.availability.toFixed(2);
+        this.performance = res.efficiency.performance.toFixed(2);
+        this.quality = res.efficiency.quality.toFixed(2);
+        this.kpi = res.efficiency.kpi.toFixed(2);
+        this.tasksByGroup = res.tasksByGroup;
+        this.status = res.status;
+        this.dataBarChart = res.dataBarChart;
+        this.rateDoneTaskOnTime = res.rateDoneTaskOnTime.toFixed(2);
+        this.qtyTasks = res.qtyTasks;
+        this.piedata = [
           {
             x: 'Chưa thực hiện',
-            y: res?.newTasks,
+            y: res.status.newTasks,
           },
           {
             x: 'Đang thực hiên',
-            y: res?.processingTasks,
+            y: res.status.processingTasks,
           },
           {
             x: 'Hoàn tất',
-            y: res?.doneTasks,
+            y: res.status.doneTasks,
           },
           {
             x: 'Hoãn lại',
-            y: res?.postponeTasks,
+            y: res.status.postponeTasks,
           },
           {
             x: 'Bị huỷ',
-            y: res?.canceledTasks,
+            y: res.status.canceledTasks,
           },
         ];
-        this.dataColumn = res?.dataBarChart.barChart;
-        this.dataLine = res?.dataBarChart.lineChart;
-        this.data = res?.tasksByGroup;
-        res.tasksByEmp.map((data) => {
+        res.vltasksByEmp.map((task) => {
           let newTasks = 0;
           let processingTasks = 0;
           let doneTasks = 0;
           let postponeTasks = 0;
           let cancelTasks = 0;
-          data.tasks.map((task) => {
+          task.tasks.map((task) => {
             switch (task.status) {
               case '1':
                 newTasks = newTasks + 1;
@@ -258,18 +254,27 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             }
           });
           this.vlWork.push({
-            id: data.id,
-            qtyTasks: data.qtyTasks,
+            id: task.id,
+            qtyTasks: task.qtyTasks,
             status: {
-              new: (newTasks / data.qtyTasks) * 100,
-              processing: (processingTasks / data.qtyTasks) * 100,
-              done: (doneTasks / data.qtyTasks) * 100,
-              postpone: (postponeTasks / data.qtyTasks) * 100,
-              cancel: (cancelTasks / data.qtyTasks) * 100,
+              new: (newTasks / task.qtyTasks) * 100,
+              processing: (processingTasks / task.qtyTasks) * 100,
+              done: (doneTasks / task.qtyTasks) * 100,
+              postpone: (postponeTasks / task.qtyTasks) * 100,
+              cancel: (cancelTasks / task.qtyTasks) * 100,
             },
           });
         });
+        this.hrWork = res.hoursByEmp;
         this.detectorRef.detectChanges();
-      });
+      }
+    });
+  }
+
+  sort() {
+    this.isDesc = !this.isDesc;
+    this.vlWork = this.vlWork.reverse();
+    this.hrWork = this.hrWork.reverse();
+    this.detectorRef.detectChanges();
   }
 }

@@ -1,0 +1,102 @@
+<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup add #body>
+        <div class="offcanvas-wrapper">
+            <div class="row">
+                <div class="col-xl-12 col-md-12">
+                    <div class="form-group">
+                        <codx-label name="lblRoleName" formName="AD_Roles" default="Tên vai trò"></codx-label>
+                        <codx-input type="text" class="form-control" id="roleName"
+                            name="roleName" placeholder="{{'Tên vai trò' | lang:    
+                        'Roles':'RoleName':'grvRoles'| async}}" [crrValue]="dataUpdate?.roleName">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-md-12">
+                    <div class="form-group">
+                        <codx-label name="lblDescription" formName="AD_Roles" default="Mô tả"></codx-label>
+                        <codx-input type="textarea" class="test-textarea" name="description" rows="5"
+                            style="width: 100%;" [crrValue]="dataUpdate?.description" format="ed2" crrValue="">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <div
+                    [class]="'d-flex align-items-center' + (dataUpdate.roleType == '1' || dataUpdate.roleType == '2' || dataUpdate.roleID=='ADMIN' || dataUpdate.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
+                    <a (click)="viewRoleDetail()" class="text-primary disabled">{{'Phân quyền chi tiết' | lang:
+                        'Roles':'lblRolesDetail' | async}}</a>
+                    <i class="icon-keyboard_arrow_right icon-18 mr-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-light-primary" (click)="dialog.close()">
+                <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+            </button>
+            <button type="button" class="btn btn-primary ms-1" (click)="clickBtnSave()" *ngIf="!readOnly">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>
+
+
+<!-- <div id="kt_demo_panel" class="offcanvas offcanvas-md offcanvas-right useredit-right p-6 edit-{{modelPage?.formName}}">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7" kt-hidden-height="46">
+        <h4 class="m-0" *ngIf="saveas==null">
+            <codx-label name="lblTitleRoles" formName="AD_Roles" default="Vai trò"></codx-label>
+        </h4>
+        <h4 class="m-0" *ngIf="saveas=='1'">
+            <codx-label name="lblTitleAddRoles" formName="AD_Roles" default="Thêm mới"></codx-label>
+        </h4>
+        <h4 class="m-0" *ngIf="saveas=='0'">
+            <codx-label name="lblTitleEditRoles" formName="AD_Roles" default="Chỉnh sửa"></codx-label>
+        </h4>
+        <h4 class="m-0" *ngIf="saveas=='2'">
+            <codx-label name="lblTitleCopyRoles" formName="AD_Roles" default="Sao chép"></codx-label>
+        </h4>
+        <a class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
+            <span (click)="closeEdit()" class="icon-close icon-18"></span>
+        </a>
+    </div>
+    <form>
+        <div class="offcanvas-content">
+            <div class="offcanvas-wrapper">
+                <div class="row">
+
+                    <div class="col-xl-12 col-md-12">
+                        <div class="form-group">
+                            <codx-label name="lblRoleName" formName="AD_Roles" default="Tên vai trò"></codx-label>
+                            <input type="text" class="form-control" [(ngModel)]="data.roleName" id="roleName"
+                                name="roleName" placeholder="{{'Tên vai trò' | lang:    
+                            'Roles':'RoleName':'grvRoles'| async}}">
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-md-12">
+                        <div class="form-group">
+                            <codx-label name="lblDescription" formName="AD_Roles" default="Mô tả"></codx-label>
+                            <textarea name="description" rows="5" style="width: 100%;"
+                                [(ngModel)]="data.description"></textarea>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <div
+                        [class]="'d-flex align-items-center' + (data.roleType == '1' || data.roleType == '2' || data.roleID=='ADMIN' || data.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
+                        <a (click)="viewRoleDetail()" class="text-primary disabled">{{'Phân quyền chi tiết' | lang:
+                            'Roles':'lblRolesDetail' | async}}</a>
+                        <i class="icon-keyboard_arrow_right icon-18 mr-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="offcanvas-footer" kt-hidden-height="35">
+                <button type="button" (click)="clickBtnSave()" class="btn btn-primary">Lưu</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="offcanvas-overlay"></div> -->

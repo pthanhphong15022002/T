@@ -1,0 +1,35 @@
+.card.card-stretch {
+    height: 100%;
+}
+
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+    padding-right: 10px;
+}
+
+.full .k-textbox,
+.adroles-group.qtht .k-listview-item {
+    width: 100%;
+}
+
+.adroles-group.qtht .k-listview-item {
+    width: 850px;
+}
+
+.e-list-item {
+    padding: 10px 10px 10px 10px !important;
+}
+
+.label.label-pill {
+    border-radius: 30px !important;
+}
+
+.label.label-light-primary {
+    color: #3699FF;
+    background-color: #E1F0FF;
+}

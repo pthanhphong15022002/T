@@ -31,12 +31,17 @@
             <div class="pw-card delay-500" (click)="openDetailPage(item)">
                 <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
                     imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
-                    [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'" [formModel]="formModel">
+                    [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'" [formModel]="formModel"
+                    [dataItem]="item">
                 </codx-card-img>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #footerCard let-item>
+    <h1>{{item.memo}}</h1>
+</ng-template>
 
 <ng-template #moreFunc>
     <div class="formMoreFunc">

@@ -1,4 +1,4 @@
-<codx-views #view [views]="views" [button]="button" [funcID]="funcID"  
+<codx-views #view [views]="views" [button]="button" [funcID]="funcID" [toolbar]="true"
     (buttonClick)="openFormCreateDetail($event)" idField="recID" entityName="WP_Notes" service="WP"
     entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue" >
 </codx-views>
@@ -7,7 +7,6 @@
 <!-- <div class="pw-search">
         <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
     </div> -->
-
 <!-- </ng-container> -->
 
 
@@ -17,7 +16,8 @@
 
 <ng-template #iconMoreFunc let-item>
     <div style="width: 100px;height: 200px;margin-left: -90px;">
-        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)">
+        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+        [dataItem]="item">
         </codx-mfunc>
     </div>
 </ng-template>

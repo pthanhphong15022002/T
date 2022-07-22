@@ -20,7 +20,8 @@
       </codx-label>
     </div>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover"></codx-mfunc>
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover" [dataItem]="data">
+      </codx-mfunc>
     </div>
   </div>
 </ng-template>

@@ -3,6 +3,7 @@ import { Post } from '@shared/models/post';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService } from 'codx-core';
+import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AddPostComponent } from './popup-add/addpost/addpost.component';
@@ -20,33 +21,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   method = "GetListPostAsync";
   totalPage: number = 0;
   pageIndex = 0;
-  users = [];
   user: any;
-  tenant: string;
-  dataRef: any;
   dataDetail: any;
-  closeResult: any;
-  previewFiles = [];
-  errorMessage = [];
-  employTag: any = [];
-  employees: any = [];
-  fileUpload: UploadFile[] = [];
-  imgExt = environment.IMGEXTENSION;
   showEmojiPicker = false;
-  isFileReady: boolean = false;
-  tags: Array<any> = [];
-  shareWith: any[] = [];
-  shareType: string = '9';
-  displayShare: string = 'Everyone';
   // lstType = this.env.jsonType;
-  count = 0;
-  isLoading = true;
-  crrId = '';
-  onlyDepartment = false;
-  orgchartServiceSub: Subscription;
-  OrgUnitID = '';
   dataVll = [];
-
+  title:string = "";
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
@@ -62,31 +42,29 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('player') player;
-  @ViewChild('modalpost') modalpost: AddPostComponent;
-  @ViewChild('modalShare') modalShare;
-  @ViewChild('detail') detail;
+  @ViewChild('codxFile') codxFile:ImageGridComponent;
   @Input() isShowCreate = true;
 
   constructor(
     private authStore: AuthStore,
-    private tenantStore: TenantStore,
     private cache: CacheService,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
     private notifySvr: NotificationsService,
-    private fileService: FileService,
     private codxService: CodxService
   ) {
-    this.tenant = this.tenantStore.getName();
     this.user = this.authStore.get();
-    this.cache.valueList('L1901').subscribe((res) => {
+    this.cache.valueList('L1901').subscribe((res:any) => {
       if (res) {
         this.dataVll = res.datas;
         this.dt.detectChanges();
       }
     });
+    this.cache.message('WP011').subscribe((mssg:any)=>{
+      this.title = this.user.userName + mssg.defaultName;
+      this.dt.detectChanges();
+    })
   }
 
   ngOnInit(): void {
@@ -114,7 +92,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) => {
       this.cache.gridViewSetup(func.formName, func.gridViewName)
         .subscribe((grd: any) => {
-          console.log(grd);
           this.headerText = grd['Comments']['headerText'];
           this.dt.detectChanges();
         })
@@ -130,8 +107,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return option;
   }
   removePost(data: any) {
-    this.codxViews.dataService as CRUDService;
-    this.codxViews.dataService.delete([data]).subscribe((res) => {
+    (this.codxViews.dataService as CRUDService).delete([data]).subscribe((res) => {
       if (res) {
           this.api.execSv("DM",
           "ERM.Business.DM",
@@ -162,15 +138,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-
-  gotoImageDetail(data) {
-    this.player?.video?.nativeElement.pause();
-  }
-
   openCreateModal() {
     var obj = {
       status: "create",
-      title: "Tạo bài viết",
+      headerText: "Tạo bài viết",
+      title: this.title,
+      lstView: this.listview
     }
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
@@ -179,11 +152,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.modal.closed.subscribe();
   }
   openEditModal(data: any) {
-    var obj = {
-      post: data,
+    let dataEdit = { ...data }; 
+    let obj = {
+      post: dataEdit,
       status: "edit",
-      title: "Chỉnh sửa bài viết"
+      headerText: "Chỉnh sửa bài viết",
+      title: this.title,
     }
+    console.log(this.codxFile);
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
@@ -195,7 +171,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     var obj = {
       post: data,
       status: "share",
-      title: "Chia sẻ bài viết"
+      headerText: "Chia sẻ bài viết",
+      title: this.title,
     }
     this.dt.detectChanges()
     let option = new DialogModel();
@@ -204,16 +181,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
     this.modal.closed.subscribe();
   }
-
-
-
-
-
-  openDetail(index, id) {
-    this.detail.setData(index, id);
-  }
-
-
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {
       if (p.recID == data.refID) {
@@ -222,9 +189,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     })
   }
-  changed($e) {
-    // this.listview.updateOneField('id', $e.id, 'content', $e.content);
-  }
+
 
   getTagUser(id) {
     this.api
@@ -288,5 +253,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         }
       });
 
+  }
+
+  getFile(event:any,data:any){
+    data.files = event;
   }
 }

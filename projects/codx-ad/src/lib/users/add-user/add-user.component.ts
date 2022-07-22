@@ -3,6 +3,7 @@ import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, Even
 import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
+import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
   selector: 'lib-add-user',
@@ -14,13 +15,14 @@ export class AddUserComponent implements OnInit {
   @Output() loadData = new EventEmitter();
 
   title = 'Thêm người dùng';
-  dialog: DialogRef;
+  dialog!: DialogRef;
   data: any;
   readOnly = false;
   isAddMode = true;
   user: any;
   data1: any;
   adUser = new AD_User();
+  viewChooseRole:tmpformChooseRole;
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -44,10 +46,19 @@ export class AddUserComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1500, 800, '', item);
+    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
+      this.dialog.closed.subscribe(e => {
+        if (e?.event) {
+          this.viewChooseRole = e?.event
+          this.changDetec.detectChanges();
+                console.log('in thành công nghe');
+      console.log(this.viewChooseRole);
+        }
+      })
+
   }
 
   beforeSave(op: any) {
@@ -82,16 +93,21 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
+          // this.dialog.closed.subscribe(e => {
+          //   if (e?.event) {
+          //     this.viewChooseRole = e?.event
+          //   }
+          // })
           this.changDetec.detectChanges();
         }
       });
     this.closePanel();
-
+    this.dialog.close();
+    console.log(this.viewChooseRole);
   }
 
   onUpdate() {
@@ -104,7 +120,6 @@ export class AddUserComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-
               }
             });
           this.dialog.dataService.setDataSelected(res.update);
@@ -112,7 +127,6 @@ export class AddUserComponent implements OnInit {
         }
       })
     this.closePanel();
-
   }
 
   onSave() {
@@ -152,4 +166,5 @@ export class AddUserComponent implements OnInit {
       this.adUser[data.field] = data.data[0];
     }
   }
+
 }

@@ -17,6 +17,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -43,8 +44,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   dialogApprovalStep: FormGroup;
   vllEmail = [];
+  vllShare = 'ES014';
+  lstApproveMode: any;
   cbxName;
   time: any;
+  currentMode: string;
 
   dialog: DialogRef;
   tmpData: any;
@@ -52,6 +56,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   isSaved = false;
   header1 = 'Thiết lập qui trình duyệt';
   subHeaderText = 'Qui trình duyệt';
+
+  lstApprover: any = [];
 
   headerText1;
 
@@ -72,6 +78,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
+    this.vllShare = data?.data.vllShare ?? 'ES014';
   }
 
   ngAfterViewInit(): void {
@@ -87,20 +94,34 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
-        console.log(this.formModel);
         this.dialog.formModel = this.formModel;
       }
 
-      this.esService
-        .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-        .then((res) => {
-          this.cbxName = res;
-          console.log('cbx', this.cbxName);
-          this.cache.valueList('ES012').subscribe((res) => {
-            console.log('cbx nAME', this.cbxName);
-            console.log('res', res);
-          });
+      this.cbxName = {};
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gv) => {
+          if (gv) {
+            for (const key in gv) {
+              if (Object.prototype.hasOwnProperty.call(gv, key)) {
+                const element = gv[key];
+                if (element.referedValue != null) {
+                  this.cbxName[key] = element.referedValue;
+                }
+              }
+            }
+            console.log(this.cbxName);
+
+            if (this.cbxName) {
+              this.cache.valueList('ES016').subscribe((vllMode) => {
+                if (vllMode) {
+                  this.lstApproveMode = vllMode.datas;
+                }
+              });
+            }
+          }
         });
+
       this.initForm();
     });
   }
@@ -110,32 +131,49 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
+        console.log(this.dialogApprovalStep.value);
+        this.dialogApprovalStep.addControl('delete', new FormControl(true));
+        this.dialogApprovalStep.addControl('share', new FormControl(true));
+        this.dialogApprovalStep.addControl('write', new FormControl(true));
+        this.dialogApprovalStep.addControl('assign', new FormControl(true));
+
         this.isAfterRender = true;
         if (this.isAdd) {
           this.dialogApprovalStep.patchValue({
             leadTime: 0,
-            representative: true,
-            sequential: false,
+            approveMode: '1',
+            approveControl: '0',
+            rejectControl: '1',
+            rsedoControl: '1',
+            redoStep: 0,
+            recallControl: '1',
+            cancelControl: '1',
             transID: this.transId,
             stepNo: this.stepNo,
           });
+          this.currentMode = '1';
 
           this.esService.getNewDefaultEmail().subscribe((res) => {
             this.dialogApprovalStep.patchValue({ emailTemplates: res });
-            console.log(this.dialogApprovalStep.value);
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
+          this.lstApprover = this.dialogApprovalStep.value.approvers;
+          this.currentMode = this.dataEdit?.approveMode;
           this.dialogApprovalStep.addControl(
             'id',
             new FormControl(this.dataEdit.id)
           );
+          if (!this.dialogApprovalStep.value.emailTemplates) {
+            this.esService.getNewDefaultEmail().subscribe((res) => {
+              this.dialogApprovalStep.patchValue({ emailTemplates: res });
+            });
+          }
         }
       });
   }
 
   MFClick(event, data) {
-    let approvalStep = this.dialogApprovalStep.value.approvers;
     if (event?.functionID == 'delete') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
@@ -147,26 +185,30 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         )
         .closed.subscribe((x) => {
           if (x.event.status == 'Y') {
-            let i = approvalStep.indexOf(data);
-            console.log(i);
+            let i = this.lstApprover.indexOf(data);
 
             if (i != -1) {
-              approvalStep.splice(i, 1);
-              this.dialogApprovalStep.patchValue({ approvers: approvalStep });
+              this.lstApprover.splice(i, 1);
             }
           }
         });
     }
   }
 
-  lstApprover = [];
-
   onSaveForm() {
     this.isSaved = true;
-    console.log(this.dialogApprovalStep.value);
     if (this.dialogApprovalStep.invalid == true) {
-      this.notifySvr.notify('invalid');
+      this.notifySvr.notifyCode('E0016');
+      return;
     }
+    if (this.lstApprover.length == 0) {
+      this.notifySvr.notifyCode('E0016');
+      return;
+    }
+    this.dialogApprovalStep.patchValue({
+      approveMode: this.currentMode,
+      approvers: this.lstApprover,
+    });
     if (this.isAdd) {
       this.lstStep.push(this.dialogApprovalStep.value);
       this.dialog && this.dialog.close();
@@ -179,12 +221,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  popup(evt: any) {}
-
   checkedOnlineChange(event) {}
 
   openSetupEmail(email) {
-    if (email?.IsEmail == '1' || email?.isEmail == '1') {
+    if (email?.isEmail == '1') {
       let data = {
         dialog: this.dialog,
         formGroup: this.dialogApprovalStep,
@@ -193,6 +233,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsPublish: true,
         showSendLater: true,
       };
+
       this.cfService.openForm(
         PopupAddEmailTemplateComponent,
         '',
@@ -206,45 +247,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field) {
-      if (event.field == 'popup') {
-        if (event.data?.length > 0) {
-          event.data.forEach((element) => {
-            let lst = this.dialogApprovalStep.value.approvers ?? [];
-            if (element.objectType == 'U') {
-              let appr = new Approvers();
-              appr.approverName = element.text;
-              appr.approver = element.id;
-              lst.push(appr);
-            }
-
-            this.dialogApprovalStep.patchValue({ approvers: lst });
-          });
-        }
-      }
       if (event.data === Object(event.data)) {
         this.dialogApprovalStep.patchValue({
           [event['field']]: event.data,
         });
       } else {
         this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
-        if (
-          event.field == 'representative' &&
-          this.dialogApprovalStep.value.representative == true &&
-          this.dialogApprovalStep.value.sequential == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            sequential: false,
-          });
-        }
-        if (
-          event.field == 'sequential' &&
-          this.dialogApprovalStep.value.sequential == true &&
-          this.dialogApprovalStep.value.representative == true
-        ) {
-          this.dialogApprovalStep.patchValue({
-            representative: false,
-          });
-        }
       }
     }
 
@@ -260,9 +268,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // valueEmailChange(event, eTemplate) {
-  //   debugger;
-  // }
+  valueModeChange(event, item) {
+    if (event?.component) {
+      this.currentMode = item?.value;
+    }
+  }
 
   valueEmailChange(event, eTemplate) {
     let index = this.dialogApprovalStep.value.emailTemplates.indexOf(eTemplate);
@@ -280,35 +290,53 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event) {
-    if (event[0].id) {
-      switch (event[0].objectType) {
-        case 'U':
-          let lstID = event[0].id.split(';');
-          let lstUserName = event[0].text.split(';');
-          let lst = this.dialogApprovalStep.value.approvers ?? [];
+    if (event) {
+      event.forEach((element) => {
+        if (element.objectType == 'U') {
+          let lstID = element?.id.split(';');
+          let lstUserName = element?.text.split(';');
+
           for (let i = 0; i < lstID?.length; i++) {
-            let appr = new Approvers();
-            appr.approverName = lstUserName[i];
-            appr.approver = lstID[i];
-            lst.push(appr);
+            let index = this.lstApprover.findIndex(
+              (p) => p.approver == lstID[i]
+            );
+            if (lstID[i].toString() != '' && index == -1) {
+              let appr = new Approvers();
+              appr.roleType = element.objectType;
+              appr.approverName = lstUserName[i];
+              appr.approver = lstID[i];
+              this.lstApprover.push(appr);
+            }
           }
-          this.dialogApprovalStep.patchValue({ approvers: lst });
-          break;
-      }
+        } else {
+          let i = this.lstApprover.findIndex(
+            (p) => p.approver == element?.objectType
+          );
+          if (i == -1) {
+            let appr = new Approvers();
+            appr.roleType = element?.objectType;
+            appr.approverName = element?.objectName;
+            appr.approver = element?.objectType;
+            appr.icon = element?.icon;
+            this.lstApprover.push(appr);
+          }
+        }
+      });
     }
   }
 }
 export class Approvers {
   recID: string;
-  roleType: String = '11';
-  approver: String = 'ADMIN';
-  approverName: String;
-  position: String = 'KT';
-  positionName: String;
+  roleType: string;
+  approver: string;
+  approverName: string;
+  position: string;
+  positionName: string;
   leadTime: any;
-  comment: String;
-
+  comment: string;
+  icon: string = null;
   createdOn: any;
+  delete: boolean = true;
 }
 
 export class Files {

@@ -15,13 +15,14 @@ import {
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import * as mime from 'mime-types'
+import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 
 @Component({
   selector: 'app-addpost',
@@ -31,25 +32,23 @@ import * as mime from 'mime-types'
 })
 export class AddPostComponent implements OnInit, AfterViewInit {
   
-  @Input() dataRef = new Post();
   data: any;
   message: string = '';
   user: any;
-  fileUpload: UploadFile[] = [];
   showEmojiPicker = false;
-  shareType: string = '9';
-  title = "";
-  dialogRef: DialogRef;
+  headerText:string = "";
+  title:string = "";
   lstRecevier = [];
   shareControl:string = "";
-  objectType:string = "9";
+  objectType:string = "";
   userRecevier:any;
   recevierID:string;
   recevierName:string = "";
-  @ViewChild('template') template: ElementRef;
+  codxListView!:CodxListviewComponent;
   @ViewChild('atmCreate') atmCreate: AttachmentComponent;
   @ViewChild('atmEdit') atmEdit: AttachmentComponent;
-  modalPost: NgbModalRef;
+  @ViewChild('codxFileCreated') codxFileCreated:ImageGridComponent;
+  @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   //Variable for control share
   CATEGORY = {
     POST: "1",
@@ -60,14 +59,17 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     VIDEO: "10",
     FILE: "1"
   }
-  POST:number = 1;
-  COMMENTS:number = 2;
-  SHARE:number = 4;
+  STATUS = {
+    CREATED: "create",
+    EDIT: "edit",
+    SHARE: "share"
+  }
   entityName = 'WP_Comments';
   objectName = '';
-  dataShare: any;
-  dataEdit: any;
+  dataShare: Post = null;
+  dataEdit: Post = null;
   myPermission: Permission;
+  
   sets = [
     'native',
     'google',
@@ -79,7 +81,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   ]
   set = 'apple';
   status:string = "";
-  fileType:string = "";
+  dialogData : any;
+  dialogRef: DialogRef;
+  listFileUpload:any[] = []
+
   @Input() isShow: boolean;
   constructor(
     private dt: ChangeDetectorRef,
@@ -93,20 +98,23 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
 
-  ) {
-    
+  )
+  {
+    this.user = authStore.userValue;
+    this.dialogData = dd.data;
     this.dialogRef = dialog;
     this.status = dd.data.status;
-    this.title = dd.data.title;
-    if(this.status == "edit"){
-      this.dataEdit = dd.data.post;
+    this.headerText = this.dialogData.headerText;
+    this.title = this.dialogData.title;
+    this.codxListView = this.dialogData.lstView;
+    if(this.dialogData.status == this.STATUS.EDIT){
+      this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
+      this.shareControl = this.dataEdit.shareControl;
     }
-    if(this.status == "share"){
-      this.dataShare = dd.data.post;
+    if(this.dialogData.status == this.STATUS.SHARE){
+      this.dataShare = this.dialogData.post;
     }
-    this.user = authStore.userValue;
-
   }
   ngAfterViewInit(): void {
   }
@@ -128,21 +136,23 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.myPermission.isActive = true;
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
-    this.shareControl = "9";
+    this.shareControl = "1";
     this.objectType = "1";
   }
 
 
 
   Submit() {
-    if (this.status == "create") {
-      this.publishPost();
-    }
-    else if (this.status == "edit") {
-      this.editPost();
-    }
-    else {
-      this.sharePost();
+    switch(this.dialogData.status){
+      case this.STATUS.EDIT:
+        this.editPost();
+        break;
+      case this.STATUS.SHARE:
+        this.sharePost();
+        break;
+      default:
+        this.publishPost();
+        break;
     }
   }
 
@@ -184,11 +194,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
   publishPost() {
-    if (!this.message) {
+    if (!this.message && this.listFileUpload.length < 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    let post = new Post();
+    var post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
     post.category = this.CATEGORY.POST;
@@ -242,17 +252,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
-          this.dialogRef.DataService  as CRUDService;
-          this.dialogRef.dataService.add(res,0).subscribe();
-
-        if(this.listFileUpload.length > 0){
-          this.atmCreate.objectId = res.recID;
-          this.atmCreate.saveFiles();
-        }
-        this.dialogRef.close();
-        this.dt.detectChanges();
-        this.notifySvr.notifyCode('E0026');
-
+          if(this.listFileUpload.length > 0){
+            this.atmCreate.objectId = res.recID;
+            this.dmSV.fileUploadList = [...this.listFileUpload];
+            res.files = [...this.listFileUpload];
+            this.atmCreate.saveFiles();
+          }
+          (this.dialogRef.dataService as CRUDService).add(res,0).subscribe((res2)=>{console.log(res2)});
+          this.dialogRef.close();
+          this.dt.detectChanges();
         }
         
       });
@@ -264,56 +272,85 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-
-    var recID = this.dataEdit.recID;
-    var comment = "";
-    var isComment = false;
-    var isShare = false;
-    var lstPermission = [];
-    if (this.message != this.dataEdit.content) {
-      isComment = true;
-      comment = this.message;
-    }
-    if (this.shareControl != this.dataEdit.shareControl) {
-      isShare = true;
-      lstPermission.push(this.myPermission);
-      this.lstRecevier.map((item) => {
+    this.dataEdit.content = this.message;
+    this.dataEdit.shareControl = this.shareControl;
+    let lstPermission:any[] = [];
+    lstPermission.push(this.myPermission);
+    if(this.lstRecevier.length > 0){
+      this.lstRecevier.forEach((item) => {
         var per = new Permission();
         per.memberType = "3";
-        per.objectType = item.objectType;
-        per.objectID = item.id;
-        per.objectName = item.text;
+        switch(this.objectType){
+          case "U":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "P":
+            per.objectID = item.PositionID;
+            per.objectName = item.PositionName;
+            per.objectType = this.objectType;
+            break
+          case "D":
+            per.objectID = item.OrgUnitID;
+            per.objectName = item.OrgUnitName;
+            per.objectType = this.objectType;
+            break;
+          case "G":
+            per.objectID = item.UserID;
+            per.objectName = item.UserName;
+            per.objectType = this.objectType;
+            break;
+          case "R":
+            per.objectID = item.RoleID;
+            per.objectName = item.RoleName;
+            per.objectType = this.objectType;
+            break
+        }
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
         per.createdOn = new Date();
         lstPermission.push(per);
-      })
+      });
     }
+    this.dataEdit.permissions = lstPermission;
     this.api
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
         'CommentBusiness',
         'EditPostAsync',
-        [
-          recID,
-          isComment,
-          comment,
-          isShare,
-          this.shareControl,
-          lstPermission
-        ]
+        [this.dataEdit]
       )
-      .subscribe((res) => {
+      .subscribe((res:any) => {
         if (res) {
+          if(this.listFileUpload.length > 0)
+          {
+            this.atmEdit.objectId = this.dataEdit.recID;
+            this.dmSV.fileUploadList = this.listFileUpload;
+            this.atmEdit.saveFiles();
+          }
+          if(this.codxFileEdit.filesDelete.length > 0)
+          {
+            this.codxFileEdit.filesDelete.forEach((f:any) => {
+              this.deleteFile(f.recID,true);
+            });
+          }
+          res.files = this.codxFileEdit.lstFile;
+          (this.dialogRef.dataService as CRUDService).edit(res).subscribe();
           this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
         }
       });
   }
+
+
+  
+  
+  
   sharePost() {
-    if (!this.message) {
+    if (!this.message && this.listFileUpload.length < 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
@@ -376,6 +413,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if(res){
           this.dialogRef.DataService as CRUDService;
           this.dialogRef.dataService.add(res, 0).subscribe();
+          if(this.listFileUpload.length > 0){
+            this.atmCreate.objectId = res.recID;
+            this.atmCreate.saveFiles();
+          }
           this.dialogRef.close();
         }
       });
@@ -383,73 +424,72 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  getShareOfComment(shareControl, commentID) {
-    if (shareControl == '1') {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentBusiness',
-          'GetShareOwnerListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res)
-            res.forEach((obj) => {
-              var e = { id: obj.userID, name: obj.objectName };
-            });
-        });
-    } else {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentBusiness',
-          'GetShareUserListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res)
-            res.forEach((obj) => {
-              var e = { id: obj.s, name: obj.objectName };
-            });
-        });
-    }
-  }
-
-
+  
   toggleEmojiPicker() {
     this.showEmojiPicker = !this.showEmojiPicker;
     this.dt.detectChanges();
   }
-
   addEmoji(event) {
     this.message += event.emoji.native;
     this.dt.detectChanges();
   }
-
-
-  saveFile() {
-    this.atmCreate.saveFiles();
-  }
-
   openFile() {
     this.dmSV.fileUploadList = [];
-    this.atmCreate.uploadFile();
+    if(this.dialogData.status == this.STATUS.EDIT){
+      this.atmEdit.uploadFile(); 
+    }
+    else 
+    {
+      this.atmCreate.uploadFile(); 
+    }
   }
-  listFileUpload:any[] = []
 
   getfileCount(event: any) {
-    if (!event || event.data.length <= 0) {
-      this.listFileUpload = [];
-      this.dmSV.fileUploadList = []
-      return;
-    }
-    else
-    {
-      this.listFileUpload = event.data;
+    if (event && event.data.length > 0) {
+      if(this.dialogData.status == this.STATUS.EDIT){
+        this.codxFileEdit.addFiles(event.data);
+      }
+      else 
+      {
+        this.codxFileCreated.addFiles(event.data);
+      }
     }
     this.dt.detectChanges();
   }
 
+  removeFile(file:any){
+    switch(this.dialogData.status){
+      case this.STATUS.EDIT:
+        let fileEdit = this.listFileUpload.filter((f:any) => { return f.fileName == file.fileName});
+        this.dataEdit.files = fileEdit;
+        break;
+      default:
+        let fileAdd = this.listFileUpload.filter((f:any) => { return f.fileName != file.fileName});
+        this.listFileUpload = fileAdd;
+    }
+    this.dt.detectChanges();
+  }
 
+  deleteFile(fileID:string,deleted:boolean){
+    if(fileID)
+    {
+      this.api.execSv(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "DeleteFileAsync",
+        [fileID, deleted]).subscribe();  
+    }
+  }
+  addFile(files:any){
+    if(this.listFileUpload.length == 0){
+      this.listFileUpload = files;
+    }
+    else 
+    {
+      this.listFileUpload.concat(files);
+    }
+    this.dt.detectChanges();
+  }
 
 }

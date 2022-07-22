@@ -39,15 +39,16 @@ export class TasksComponent extends UIComponent {
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('treeView') treeView: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
-  moreFuncs: Array<ButtonModel> = [];
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
+  resourceTree:ResourceModel;
   dialog!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
@@ -61,6 +62,8 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
+  dataObj:any
+  iterationID: string =''
   @Input() calendarID: string;
 
   @Input() viewPreset: string = 'weekAndDay';
@@ -75,6 +78,11 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
+    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
+    this.dataObj = JSON.stringify(dataObj);
   }
 
   clickMF(e: any, data?: any) {
@@ -132,22 +140,16 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.assemblyName = 'TM';
     this.resourceKanban.className = 'TaskBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    // this.resourceTree = new ResourceModel();
+    // this.resourceTree.assemblyName = 'TM';
+    // this.resourceTree.className = 'TaskBusiness';
+    // this.resourceTree.service = 'TM';
+    // this.resourceTree.method = 'GetListTasksTreeAsync';
+
     this.button = {
       id: 'btnAdd',
     };
-
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
     this.getParams();
   }
 
@@ -193,6 +195,15 @@ export class TasksComponent extends UIComponent {
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+        },
+      },
+      {
+        type: ViewType.treedetail,
+        active: false,
+        sameData: true,
+        // request2: this.resourceTree,
+        model: {
+          template: this.treeView,
         },
       },
     ];
@@ -305,12 +316,13 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion schedule
 
+   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'add', this.isAssignTask],
@@ -350,13 +362,18 @@ export class TasksComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
+        option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
           if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
@@ -374,7 +391,7 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
@@ -427,16 +444,6 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            // this.view.dataService
-            //   .delete([this.view.dataService.dataSelected], true, (opt) =>
-            //     this.beforeDel(opt)
-            //   )
-            //   .subscribe((res) => {
-            //     if (res[0]) {
-            //       this.itemSelected = this.view.dataService.data[0];
-            //     }
-            //   });
-
             this.notiService.alertCode('TM003').subscribe((confirm) => {
               if (confirm?.event && confirm?.event?.status == 'Y') {
                 this.tmSv.deleteTask(data.taskID).subscribe((res) => {
@@ -445,9 +452,9 @@ export class TasksComponent extends UIComponent {
                     var parent = res[1];
                     listTaskDelete.forEach((x) => {
                       this.view.dataService.remove(x).subscribe();
-                      this.notiService.notify('Xóa thành công !');
-                      //  this.notiService.notifyCode('cần code');
                     });
+                    this.notiService.notify('Xóa công việc thành công !');
+                    //  this.notiService.notifyCode('cần code');
                     if (parent) {
                       this.view.dataService.update(parent).subscribe();
                     }
@@ -461,6 +468,8 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
+//#endregion
+
 
   sendemail(data) { }
 
@@ -477,7 +486,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = '800px';
+    option.Width = 'Auto';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose],
@@ -551,18 +560,25 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var startDate = moment(
-              new Date(
-                taskAction.startDate
-                  ? taskAction.startDate
-                  : taskAction.createdOn
-              )
-            ).toDate();
-            var time = (
-              (completedOn.getTime() - startDate.getTime()) /
-              3600000
-            ).toFixed(1);
-            var estimated = Number.parseFloat(time);
+            var completed = "0";
+            if(taskAction.estimated > 0){
+              completed=taskAction.estimated
+            }else{
+              var timeStart = moment(
+                new Date(
+                  taskAction.startOn
+                    ? taskAction.startOn
+                    : (taskAction.startDate
+                      ? taskAction.startDate : taskAction.createdOn)
+                )
+              ).toDate();
+              var time = (
+                (completedOn.getTime() - timeStart.getTime()) /
+                3600000
+              ).toFixed(2);
+              completed = Number.parseFloat(time).toFixed(2);
+            }
+           
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -571,15 +587,11 @@ export class TasksComponent extends UIComponent {
                 taskAction.taskID,
                 status,
                 completedOn,
-                estimated.toString(),
+                completed,
                 ''
               )
               .subscribe((res) => {
                 if (res && res.length > 0) {
-                  taskAction.status = status;
-                  taskAction.completedOn = completedOn;
-                  taskAction.comment = '';
-                  taskAction.completed = estimated;
                   res.forEach((obj) => {
                     this.view.dataService.update(obj).subscribe();
                   });
@@ -600,6 +612,7 @@ export class TasksComponent extends UIComponent {
       fieldValue: fieldValue,
       moreFunc: moreFunc,
       taskAction: taskAction,
+      funcID: this.funcID
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
@@ -610,10 +623,13 @@ export class TasksComponent extends UIComponent {
       obj
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        this.itemSelected = e?.event;
-        this.detectorRef.detectChanges();
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
       }
+      this.detectorRef.detectChanges();
     });
   }
   receiveMF(e: any) {

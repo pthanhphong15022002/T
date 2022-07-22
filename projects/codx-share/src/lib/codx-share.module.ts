@@ -26,6 +26,8 @@ import { UploaderComponent, UploaderModule } from '@syncfusion/ej2-angular-input
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { PopupVoteComponent } from './components/treeview-comment/popup-vote/popup-vote.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -43,11 +45,12 @@ const T_Component: Type<any>[] = [
   CodxFullTextSearch,
   CodxImportComponent,
   TreeviewCommentComponent,
+  PopupVoteComponent,
   ReadMoreComponent,
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
-  CalendarDateComponent  
+  CalendarDateComponent,
 ];
 
 
@@ -58,8 +61,8 @@ const T_Pipe: Type<any>[] = [
 
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule, UploaderModule],
+  declarations: [T_Component, T_Pipe],  
+  imports: [CommonModule, NgbModule, FormsModule, CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule, UploaderModule , PickerModule],
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule { }

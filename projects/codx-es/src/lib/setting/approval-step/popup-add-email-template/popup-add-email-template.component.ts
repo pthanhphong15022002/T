@@ -7,11 +7,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { resizeStart } from '@syncfusion/ej2-grids';
-import { Alert } from 'bootstrap';
-import { CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
-import { elementAt } from 'rxjs';
+import {
+  ApiHttpService,
+  AuthStore,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+} from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -21,6 +26,7 @@ import { CodxEsService } from '../../../codx-es.service';
 })
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -36,6 +42,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showCC = false;
   showBCC = false;
 
+  vllShare = 'ES014';
+
   sendType = 'to';
   lstFrom = [];
   lstTo = [];
@@ -43,8 +51,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstBcc = [];
 
   constructor(
+    private api: ApiHttpService,
     private esService: CodxEsService,
     private callFunc: CallFuncService,
+    private auth: AuthStore,
+    private dmSV: CodxDMService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -58,14 +69,20 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   initForm() {
+    this.formModel = new FormModel();
+    this.formModel.entityName = 'AD_EmailTemplates';
+    this.formModel.formName = 'EmailTemplates';
+    this.formModel.gridViewName = 'grvEmailTemplates';
+    this.formModel.funcID = '';
+
     this.esService
-      .getFormGroup('EmailTemplates', 'grvEmailTemplates')
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
           this.dialogETemplate = res;
           this.isAfterRender = true;
           this.esService
-            .getEmailTemplate(this.email.TemplateID)
+            .getEmailTemplate(this.email.templateID)
             .subscribe((res1) => {
               if (res1 != null) {
                 this.dialogETemplate.patchValue(res1[0]);
@@ -73,6 +90,19 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   'recID',
                   new FormControl(res1[0].recID)
                 );
+
+                console.log('test', this.dialogETemplate.value);
+                console.log('test', this.formModel?.entityName);
+
+                this.api
+                  .execSv(
+                    'DM',
+                    'ERM.Business.DM',
+                    'FileBussiness',
+                    'GetFilesByObjectIDImageAsync',
+                    this.dialogETemplate.value.recID
+                  )
+                  .subscribe((f: any[]) => console.log(f));
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -92,7 +122,16 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                     }
                   });
                 }
-                console.log('data', this.dialogETemplate);
+
+                if (this.lstFrom.length == 0) {
+                  const user = this.auth.get();
+                  let defaultFrom = new EmailSendTo();
+                  defaultFrom.objectType = 'U';
+                  defaultFrom.objetID = user.userID;
+                  defaultFrom.text = user.userName;
+
+                  this.lstFrom.push(defaultFrom);
+                }
               }
             });
         }
@@ -103,7 +142,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.initForm();
   }
 
-  onSaveForm(dialog: DialogRef) {
+  onSaveWithTemplate(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
       this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
     } else {
@@ -128,13 +167,19 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           console.log(res);
           let emailTemplates = this.formGroup.value.emailTemplates;
           let i = emailTemplates.findIndex(
-            (p) => p.EmailType == res.templateType
+            (p) => p.emailType == res.templateType
           );
           if (i >= 0) {
-            emailTemplates[i].TemplateID = res.recID;
+            emailTemplates[i].templateID = res.recID;
+            if (this.dmSV.fileUploadList.length > 0) {
+              this.attachment.objectId = res.recID;
+              console.log(this.dmSV.fileUploadList);
+              this.attachment.saveFiles();
+            }
+
             this.formGroup.patchValue({ emailTemplates: emailTemplates });
           }
-          dialog1.close();
+          dialog1 && dialog1.close();
           this.dialog && this.dialog.close();
         }
       });
@@ -267,16 +312,86 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event, sendType) {
-    if (event[0].id) {
-      switch (event[0].objectType) {
-        case 'U':
-          let lstID = event[0].id.split(';');
-          let lstUserName = event[0].text.split(';');
+    if (event) {
+      let lst = [];
+      event.forEach((element) => {
+        if (element.objectType == 'U') {
+          let lstID = element?.id.split(';');
+          let lstUserName = element?.text.split(';');
 
-          for (let i = 0; i < lstID?.length; i++) {}
+          for (let i = 0; i < lstID?.length; i++) {
+            let isExist = this.isExist(element?.objectType, sendType);
+            if (lstID[i].toString() != '' && isExist == false) {
+              let appr = new EmailSendTo();
+              appr.objectType = element.objectType;
+              appr.text = lstUserName[i];
+              appr.objetID = lstID[i];
+              appr.sendType = sendType.toString();
+              lst.push(appr);
+            }
+          }
+        } else {
+          let isExist = this.isExist(element?.objectType, sendType);
+          if (isExist == false) {
+            let appr = new EmailSendTo();
+            appr.objetID = element?.objectType;
+            appr.text = element?.objectName;
+            appr.objectType = element?.objectType;
+            appr.sendType = sendType.toString();
+            appr.icon = sendType.icon;
+            lst.push(appr);
+          }
+        }
+      });
+
+      switch (sendType) {
+        case 1:
+          this.lstFrom.push(...lst);
+          break;
+        case 2:
+          this.lstTo.push(...lst);
+          break;
+        case 3:
+          this.lstCc.push(...lst);
+          break;
+        case 4:
+          this.lstBcc.push(...lst);
           break;
       }
     }
+  }
+
+  isExist(objetID, sendType) {
+    let index = -1;
+    switch (sendType) {
+      case 1:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 2:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 3:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+      case 4:
+        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        break;
+    }
+
+    if (index == -1) return false;
+    else return true;
+  }
+
+  fileAdded(event) {
+    debugger;
+  }
+
+  openFormUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  getfileCount(e: any) {
+    debugger;
   }
 }
 
@@ -288,6 +403,7 @@ export class EmailSendTo {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
-  modifuedBy: string;
+  modifiedBy: string;
   text: string;
+  icon: string = null;
 }

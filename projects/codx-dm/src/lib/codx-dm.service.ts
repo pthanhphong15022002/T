@@ -5,7 +5,7 @@ import { DataItem, FolderInfo, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { AuthService, FormModel, NotificationsService } from "codx-core";
-import { FileInfo, FileUpload, Permission } from "@shared/models/file.model";
+import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
 
 @Injectable({
     providedIn: 'root'
@@ -61,6 +61,12 @@ export class CodxDMService {
     public fileUploadList: FileUpload[];
     public dataFileEditing: FileUpload;
     // public confirmationDialogService: ConfirmationDialogService;
+    
+    public Location = new BehaviorSubject<string>(null);
+    isLocation = this.Location.asObservable();
+
+    public ListSubFolder = new BehaviorSubject<SubFolder[]>(null);
+    isListSubFolder = this.ListSubFolder.asObservable();
 
     public HideTree = new BehaviorSubject<boolean>(null);
     isHideTree = this.HideTree.asObservable();
@@ -284,13 +290,43 @@ export class CodxDMService {
         this.setRight.next(true);
     }
 
-    getThumbnail(data) {
+    getAvatar(ext: string) {
+        if (ext == null) return "file.svg";
+        switch (ext) {
+            case ".txt":
+            return "txt.svg";
+            case ".doc":
+            case ".docx":
+            return "doc.svg";
+            case ".7z":
+            case ".rar":
+            case ".zip":
+            return "zip.svg";
+            case ".jpg":
+            return "jpg.svg";
+            case ".mp4":
+            return "mp4.svg";
+            case ".xls":
+            case ".xlsx":
+            return "xls.svg";
+            case ".pdf":
+            return "pdf.svg";
+            case ".png":
+            return "png.svg";
+            case ".js":
+            return "javascript.svg";
+            default:
+            return "file.svg";
+        }
+    }
+
+    getThumbnail(data, ext) {
         if (data != "") {
             var url = 'data:image/png;base64,' + data;
             return this.domSanitizer.bypassSecurityTrustUrl(data);
         }
         else
-            return "";
+            return `../../../assets/codx/dms/${this.getAvatar(ext)}`;//this.getAvatar(ext);
     }
 
     deniedRight() {
