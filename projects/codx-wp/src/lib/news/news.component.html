@@ -9,8 +9,6 @@ idField="recID"
 [assemblyName]="assemblyName"
 [className]="className"
 [method]="method"
-[autoLoad]="true"
-[showToolBar]="false"
 >
 </codx-views>
 <ng-template #panelLeftRef>
@@ -83,9 +81,6 @@ idField="recID"
     
     <ng-container *ngIf="isHome; else catagory">
       <ng-container *ngIf="predicate">
-        <!-- <div class="fw-bold text-dark fs-2 mt-6 mb-3 border-bottom border-gray">
-          <codx-label formName="News" name="lblInternal" default="Tin nội bộ"></codx-label>
-        </div> -->
         <div class="row news-catagory">
           <codx-listview [emptyTemplate]="empty" #listView [itemTemplate]="listGroup" title="Tin nội bộ" [funcId]="functionID" [entityName]="entityName"
             [gridViewName]="gridViewName" type="listView" [predicate]="predicate" [dataValue]="dataValue" predicates="NewsType = @0"

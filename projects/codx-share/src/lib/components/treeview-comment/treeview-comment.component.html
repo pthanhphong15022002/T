@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center ms-1">
         <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
             <div class="flex align-items-center">
                 <span class="me-2">
@@ -20,7 +20,7 @@
         </ng-template>
         <span>{{dataComment.totalVote}}</span>
     </div>
-    <div class="d-flex align-items-center text-hover-underline" (click)="showComments(dataComment)">
+    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
         <span class="text-gray-800 ms-2">
             <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
@@ -32,8 +32,8 @@
         <div class="btn-like delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                        style="width: 18px; height: 18x;">
+                    <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
+                        style="width: 18px; height: 18x;"> -->
                     <span class="fw-bold ms-2" style="color: gray;">
                         <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
                     </span>
@@ -176,11 +176,11 @@
                 <div class="mt-2 d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-grow-1">
                         <span class="text-gray-400 fs-7 text-hover-primary ">
-                            <div class="delay-500">
+                            <div class="btn-like delay-500">
                                 <div *ngIf="!data.myVotedType;else dataMyVoted">
                                     <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <img src="/assets/themes/wp/default/img/L1480_None.svg"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px;">
+                                        <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg"
+                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px;"> -->
                                         <span class="fs-7 text-gray-400 ms-2">
                                             <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                             </codx-label>
@@ -248,7 +248,7 @@
                 <codx-img [width]="40" objectType="AD_Users" [objectId]="childData?.createdBy">
                 </codx-img>
             </div>
-            <div class="d-flex flex-column w-100  ms-4">
+            <div class="d-flex flex-column w-100 ms-4">
                 <div class="d-flex justify-content-between comments">
                     <div class="comment-content level-1">
                         <div class="d-flex align-items-center flex-wrap">
@@ -334,12 +334,12 @@
                     </ng-container>
                 </div>
                 <div class="mt-2 d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-grow-1  align-items-center">
+                    <div class="d-flex flex-grow-1 align-items-center">
                         <div class="btn-like delay-500">
                             <div *ngIf="!childData.myVotedType;else childMyVoted">
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                                        style="width: 18px; height: 18px;">
+                                    <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
+                                        style="width: 18px; height: 18px;"> -->
                                     <span class="fw-bold ms-2" style="color: gray;">
                                         <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
                                     </span>
@@ -372,8 +372,8 @@
                 </div>
                 <ng-container *ngIf="childData.totalRecord > 0">
                     <div class="align-items-center" [class]="childData.isShowComment?'isHiden':'isShow'">
-                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon rotate-180">
-                            <span class="icon-reply icon-18"></span>
+                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon btn-sm rotate-180">
+                            <span class="icon-reply icon-16"></span>
                         </span>
                         <span class="text-gray-800" (click)="loadSubComment(childData)">
                             {{childData.totalRecord}}

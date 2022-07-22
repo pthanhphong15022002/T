@@ -16,6 +16,9 @@ export class EditSkillComponent implements OnInit {
   width = '720';
   height = window.innerHeight;
   showCBB = false;
+  dataValue = "";
+  parentIdField = "";
+
   constructor(
     private notiService: NotificationsService,
     private callfunc: CallFuncService,
@@ -25,7 +28,7 @@ export class EditSkillComponent implements OnInit {
     @Optional() dt?: DialogData
   ) { 
     this.dialog = dialog;
-     this.skillEmployee = dt?.data[0]
+     this.skillEmployee = dt?.data
   }
 
   ngOnInit(): void {
@@ -33,36 +36,24 @@ export class EditSkillComponent implements OnInit {
   sliderChange(e, data) {
     this.skillChartEmployee = [];
     data.rating = data.valueX = e.toString();
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
-      .subscribe((o: any) => {
-        var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
-        this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
-        this.skillEmployee = [...this.skillEmployee, ...[]];
-        this.df.detectChanges();
-      });
-  }
-
-  beforeSave(op: any) {
-    var data = [];
-    op.method = 'UpdateEmployeeSkillAsync';
-    data = [
-      this.skillEmployee,   
-    ];
-    op.data = data;
-    return true;
+    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
+    //   .subscribe((o: any) => {
+    //     var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
+    //     this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
+    //     this.skillEmployee = [...this.skillEmployee, ...[]];
+    //     this.df.detectChanges();
+    //   });
   }
 
   OnSaveForm(){
-    this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Sửa thành công'); 
-      }
-    });
 
-    
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [this.skillEmployee])
+    .subscribe((o: any) => {
+      console.log(o);    
+     
+    });
+    this.dialog.close(this.skillEmployee);
+      
   }
 
   popupAddSkill() {
@@ -75,5 +66,16 @@ export class EditSkillComponent implements OnInit {
 
   saveAddUser(e: any){
     console.log(e);
+  }
+
+  deleteSkill(data) {
+    // this.view.dataService.dataSelected = data;
+    // this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+    //   this.beforeDel(opt)).subscribe((res) => {
+    //     if (res[0]) {
+    //       this.itemSelected = this.view.dataService.data[0];
+    //     }
+    //   }
+    //   );
   }
 }

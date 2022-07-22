@@ -107,6 +107,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           .subscribe((res1) => {
             console.log('result delete auto', res1);
           });
+
+        //delete EmailTemplate da thiet lap
+        this.esService.deleteEmailTemplate().subscribe((res1) => {
+          if (res1) {
+            this.esService.lstTmpEmail = [];
+          }
+        });
       }
     });
   }
@@ -128,7 +135,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialogCategory = res;
           this.isAfterRender = true;
-          this.dialogCategory.patchValue({ eSign: true, signatureType: '1' });
+          this.dialogCategory.patchValue({
+            eSign: true,
+            signatureType: '1',
+            icon: 'icon-category',
+          });
           this.dialogCategory.addControl(
             'countStep',
             new FormControl(this.data.countStep ?? 0)
@@ -292,7 +303,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopupApproval() {
-    let transID = '00000000-0000-0000-0000-000000000000';
+    let transID = '';
     if (!this.isAdd) {
       transID = this.dialogCategory.value.id;
     }

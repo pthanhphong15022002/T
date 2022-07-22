@@ -1,6 +1,6 @@
-<codx-views #view [views]="views" [button]="button" [funcID]="funcID" [toolbar]="true"
-    (buttonClick)="openFormCreateDetail($event)" idField="recID" entityName="WP_Notes" service="WP"
-    entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue">
+<codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
+    idField="recID" entityName="WP_Notes" service="WP" entityName="WP_Notes" [predicate]="predicate"
+    [dataValue]="dataValue">
 </codx-views>
 
 <!-- <ng-container *ngIf="recID"> -->
@@ -15,11 +15,9 @@
 </ng-template>
 
 <ng-template #iconMoreFunc let-item>
-    <div style="width: 100px;height: 200px;margin-left: -90px;">
-        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+    <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
         [dataItem]="item">
-        </codx-mfunc>
-    </div>
+    </codx-mfunc>
 </ng-template>
 
 <ng-template #tag>

@@ -70,6 +70,7 @@ export class EmployeeInfomationComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('header') header: TemplateRef<any>;
+  @ViewChild('view') codxView!: any;
 
   //currentSection = 'InfoPersonal';
   constructor(
@@ -123,8 +124,11 @@ export class EmployeeInfomationComponent implements OnInit {
     this.editSkillMode = true;
     var model = new DialogModel();
     model.DataService = new CRUDService(this.inject); 
-    this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', [item],"", model);
-    this.dialog.closed.subscribe(e => {
+    var dt = item;
+    var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', dt,"", model);
+    dialog.closed.subscribe(e => {
+      this.skillEmployee = [...e.event, ...[]];
+      this.dt.detectChanges();
       console.log(e);
     })
   }
@@ -298,22 +302,22 @@ export class EmployeeInfomationComponent implements OnInit {
       }
     }
   }
-  sliderChange(e, data) {
-    this.skillChartEmployee = [];
-    data.rating = data.valueX = e.toString();
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
-      .subscribe((o: any) => {
-        var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
-        this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
-        this.skillEmployee = [...this.skillEmployee, ...[]];
-        this.dt.detectChanges();
-      });
-    // for (let index = 0; index < this.skillEmployee.length; index++) {
-    //   const element = this.skillEmployee[index];
-    //   this.skillChartEmployee.push(element);
-    // }
-    // this.dt.detectChanges();
-  }
+  // // sliderChange(e, data) {
+  // //   this.skillChartEmployee = [];
+  // //   data.rating = data.valueX = e.toString();
+  // //   // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
+  // //   //   .subscribe((o: any) => {
+  // //   //     var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
+  // //   //     this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
+  // //   //     this.skillEmployee = [...this.skillEmployee, ...[]];
+  // //   //     this.dt.detectChanges();
+  // //   //   });
+  // //   // for (let index = 0; index < this.skillEmployee.length; index++) {
+  // //   //   const element = this.skillEmployee[index];
+  // //   //   this.skillChartEmployee.push(element);
+  // //   // }
+  // //   // this.dt.detectChanges();
+  // // }
 
   ngAfterViewInit() {
     this.views = [
@@ -329,6 +333,7 @@ export class EmployeeInfomationComponent implements OnInit {
         }
       },
     ];
+    this.formModel = this.codxView.formModel;
     this.dt.detectChanges();
   }
 
@@ -381,9 +386,6 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editExperences(data?) {
-    // this.allowexp = true;
-    // this.codxMwpService.EmployeeInfomation = this;
-    // this.codxMwpService.experienceEdit.next(data || { employeeID: this.employeeInfo.employeeID });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -415,6 +417,19 @@ export class EmployeeInfomationComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
+    });
+  }
+
+  addExperences() {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(EditRelationComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
     });
   }
 

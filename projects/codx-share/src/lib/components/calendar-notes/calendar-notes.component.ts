@@ -2,7 +2,7 @@ import { NoteServices } from './../../../../../../src/app/pages/services/note.se
 import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
 import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent, RequestOption } from 'codx-core';
+import { ApiHttpService, CallFuncService, CacheService, UIComponent, SidebarModel, DialogRef, DialogModel, FormModel, AuthStore, CRUDService, CodxListviewComponent, RequestOption, DataService } from 'codx-core';
 import {
   Component,
   ViewEncapsulation,
@@ -17,6 +17,7 @@ import { Notes } from '@shared/models/notes.model';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
+import moment from 'moment';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -48,10 +49,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   changeDateSelect = false;
   checkWeek = true;
   typeList = 'notes-home';
-  dataValue = 'WP_Calendars;SettingShow';
-  predicate = 'empty';
-  dataValue1: any;
-  predicate1 = 'CreatedBy=@0';
+  dataValue = '';
+  predicate = '';
   userID = ''
   data: any;
   fromDate: any;
@@ -59,6 +58,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   arrDate: any = [];
   dialog: DialogRef;
   checkUpdate = false;
+  dataObj: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -68,8 +68,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     private noteService: NoteServices,
   ) {
     super(injector);
-    this.dataValue1 = this.auth.get();
-    this.userID = this.dataValue1?.userID;
+    this.userID = this.auth.get().userID;
     this.messageParam = this.cache.message('WP003');
     this.getParam();
   }
@@ -120,6 +119,9 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   ngAfterViewInit() {
+    this.lstView.dataService.requestEnd = (t, data) => {
+      debugger;
+    }
   }
 
   requestEnded(evt: any) {
@@ -175,36 +177,25 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     }
   }
 
-  onChangeValueSelectedWeek(e) {
-    this.changeDateSelect = true;
-    this.daySelected = e.daySelected;
-    var daySelected = new Date(Date.parse(this.daySelected));
-    this.daySelected = daySelected.toISOString();
-    this.dataValue = '';
-    this.dataValue = `WP_Calendars;${this.daySelected}`;
-    this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-    this.changeDetectorRef.detectChanges();
+  onChangeValueSelectedWeek(e, lstView) {
+    var data = JSON.parse(JSON.stringify(e.daySelected));
+    this.setDate(data, lstView);
   }
 
-  onValueChange(args: any) {
-    this.changeDateSelect = true;
-    this.daySelected = args.value;
-    var daySelected = new Date(Date.parse(this.daySelected));
-    this.daySelected = daySelected.toISOString();
-    this.dataValue = '';
-    this.dataValue = `WP_Calendars;${this.daySelected}`;
-    this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-    this.changeDetectorRef.detectChanges();
+  onValueChange(args: any, lstView) {
+    var data = JSON.parse(JSON.stringify(args.value));
+    this.setDate(data, lstView);
+  }
 
-
-    let title: string = '';
-    if (args.event) {
-      /*Displays selected date in the label*/
-      title = args.event.currentTarget.getAttribute('data-val');
-      title = title == null ? '' : ' ( ' + title + ' )';
-    }
-    document.getElementById('selected').textContent =
-      'Selected Value: ' + args.value.toLocaleDateString() + title;
+  setDate(data, lstView) {
+    var dateT = new Date(data);
+    var fromDate = dateT.toISOString();
+    this.daySelected = fromDate;
+    var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
+    (lstView.dataService as CRUDService).dataObj = `WP_Calendars`;
+    (lstView.dataService as CRUDService).predicates = "CreatedOn >= @0 && CreatedOn < @1";
+    (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
+    lstView.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
   }
 
   valueChangeTyCalendar(e) {
@@ -218,25 +209,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       }
     }
   }
-
-  // getMinMaxDate(calendar: any) {
-  //   if (calendar) {
-  //     var d = calendar.currentDate;
-  //     var localDate = new Date(d.getFullYear(), d.getMonth(), 0, d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
-  //     var firstDayOfWeek = calendar?.firstDayOfWeek
-
-  //     const dayMilliSeconds: number = 86400000
-  //     while (localDate.getDay() !== firstDayOfWeek) {
-  //       calendar.setStartDate(localDate, -1 * dayMilliSeconds);
-  //     }
-  //     var fromDate = new Date(localDate);
-  //     this.fromDate = fromDate.toLocaleDateString();
-  //     var toDate = new Date(calendar.renderDayCellArgs.date);
-  //     this.toDate = toDate.toLocaleDateString();
-
-  //     this.getParam(this.fromDate, this.toDate);
-  //   }
-  // }
 
   getParam() {
     this.api
@@ -378,6 +350,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       currentDate: this.daySelected,
       dataSelected: this.lstView.dataService.dataSelected,
     };
+    debugger;
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;

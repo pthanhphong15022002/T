@@ -34,7 +34,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
 
   //#region gauge
 
-  public rangeLinearGradient1: Object = {
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -43,7 +43,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -52,40 +52,40 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
-  public radius: Object = { topLeft: 10, topRight: 10 };
+  radius: Object = { topLeft: 10, topRight: 10 };
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -142,7 +142,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
       this.data = res;
-      console.log('MyDB', this.data);
       this.detectorRef.detectChanges();
     });
   }
@@ -154,7 +153,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   closeTooltip() {}
 
   onChangeValueSelectedWeek(data) {
-    console.log('select', data);
     this.fromDate = this.toDate = data?.toDate;
     this.daySelected = data?.daySelected;
     this.daySelectedFrom = data?.daySelectedFrom;
@@ -163,14 +161,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.month = data?.month + 1;
     this.beginMonth = data?.beginMonth;
     this.endMonth = data?.endMonth;
-    console.log(this.fromDate);
-    console.log(this.toDate);
-    console.log(this.daySelected);
-    console.log(this.daySelectedFrom);
-    console.log(this.daySelectedTo);
-    console.log(this.week);
-    console.log(this.month);
-    console.log(this.endMonth);
     this.getGeneralData();
   }
 }

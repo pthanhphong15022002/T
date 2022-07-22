@@ -7,14 +7,19 @@
                 <!-- <div *ngIf="editSkillMode"> -->
                 <!-- <div id='container'> -->
                 <!-- <div class="d-flex w-100"> -->
-                <div class="sliderwrap flex-grow-1">
-                    <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10" width="250" [value]="data.valueX"
-                        (valueChange)="sliderChange($event,data)">
-                    </ejs-slider>
+                <div class="d-flex align-items-center">
+                    <!-- <div class="full"> -->
+                        <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10" width="250"
+                            [value]="data.valueX" (valueChange)="sliderChange($event,data)">
+                        </ejs-slider>
+                    <!-- </div>
+                    <div class="ml-3"> -->
+                        <a class="btn btn-xs btn-icon btn-light btn-hover-danger" (click)="deleteSkill(data)">
+                            <span class="icon-close icon-18"></span>
+                        </a>
+                    <!-- </div> -->
                 </div>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-danger">
-                    <span class="icon-close icon-18"></span>
-                </a>
+
                 <!-- </div> -->
 
             </ng-container>
@@ -28,7 +33,7 @@
                 <a (click)="popupAddSkill()" class="text-primary">Thêm mới</a>
                 <ng-container *ngIf="showCBB">
                     <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
-                        [height]="height" (clickSave)="saveAddUser($event)">
+                        [height]="height" (clickSave)="saveAddUser($event)" title="Kỹ năng">
                     </codx-combobox-popup>
                 </ng-container>
             </div>

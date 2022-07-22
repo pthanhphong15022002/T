@@ -120,8 +120,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
 
   }
-
-
   show() {
     if (this.searchField == '' || this.searchField == null) return true;
     for (let index = 0; index < this.tagUsers.length; index++) {
@@ -254,8 +252,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
 
   }
-
-  getFile(event:any,data:any){
+  getFiles(event:any,data:any){
     data.files = event;
   }
 }

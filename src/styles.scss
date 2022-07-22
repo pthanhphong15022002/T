@@ -38,6 +38,10 @@
     height: 16px !important;
 }
 
+.rotate-180 {
+    transform: rotateZ(180deg);
+    transition: transform 0.3s ease;
+}
 
 
 //////////////tbchung custom css///////////////////
@@ -94,6 +98,11 @@ codx-input.text-error,
 .file-item input.text-error {
     border: 1px solid red !important;
     height: 32px !important;
+}
+
+.action-menu {
+    padding: 0px 6px 0 10px !important;
+    height: 32px;
 }
 
 ngb-popover-window[role="tooltip"] {
@@ -179,4 +188,8 @@ ngb-popover-window[role="tooltip"] {
 
 .expired {
     color: #F64E60;
+}
+
+.max-h-25px {
+    max-height: 18px !important;
 }

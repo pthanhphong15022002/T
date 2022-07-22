@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -76,25 +77,25 @@ export class ApprovalStepComponent implements OnInit {
         this.lstStep = res;
         console.log(this.lstStep);
       } else {
-        if (this.transId != '') {
-          this.api
-            .callSv(
-              'ES',
-              'ES',
-              'ApprovalStepsBusiness',
-              'GetListApprovalStepAsync',
-              [this.transId]
-            )
-            .subscribe((res) => {
-              if (res && res?.msgBodyData[0]) {
-                this.lstStep = res.msgBodyData[0];
-                console.log(this.lstStep);
-                this.currentStepNo = this.lstStep.length + 1;
-              } else {
-                this.notify.notify('Chưa có dữ liệu');
-              }
-            });
-        }
+        // if (this.transId != '') {
+        this.api
+          .callSv(
+            'ES',
+            'ES',
+            'ApprovalStepsBusiness',
+            'GetListApprovalStepAsync',
+            [this.transId]
+          )
+          .subscribe((res) => {
+            if (res && res?.msgBodyData[0]) {
+              this.lstStep = res.msgBodyData[0];
+              console.log(this.lstStep);
+              this.currentStepNo = this.lstStep.length + 1;
+            } else {
+              this.notify.notify('Chưa có dữ liệu');
+            }
+          });
+        // }
       }
     });
   }
@@ -141,15 +142,7 @@ export class ApprovalStepComponent implements OnInit {
       dataEdit: null,
     };
 
-    // this.addEditItem.emit(data);
-    this.cfService.openForm(
-      PopupAddApprovalStepComponent,
-      '',
-      800,
-      1500,
-      'EST04',
-      data
-    );
+    this.openPopupAddAppStep(data);
   }
 
   edit(approvalStep) {
@@ -160,15 +153,7 @@ export class ApprovalStepComponent implements OnInit {
       isAdd: false,
       dataEdit: approvalStep,
     };
-
-    this.cfService.openForm(
-      PopupAddApprovalStepComponent,
-      '',
-      800,
-      1500,
-      'EST04',
-      data
-    );
+    this.openPopupAddAppStep(data);
   }
 
   delete(approvalStep) {
@@ -199,5 +184,24 @@ export class ApprovalStepComponent implements OnInit {
           }
         }
       });
+  }
+
+  openPopupAddAppStep(data) {
+    this.esService.getFormModel('EST04').then((res) => {
+      if (res) {
+        var model = new DialogModel();
+        model.FormModel = res;
+        this.cfService.openForm(
+          PopupAddApprovalStepComponent,
+          '',
+          850,
+          1500,
+          'EST04',
+          data,
+          '',
+          model
+        );
+      }
+    });
   }
 }

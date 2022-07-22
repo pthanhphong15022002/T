@@ -26,6 +26,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   @Input() gridViewSetup:any;
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
+  @Input() dataItem:any;
   @Output() uploaded = new EventEmitter<string>();
   @ViewChild("tmpdeadline") tmpdeadline : any; 
   @ViewChild("tmpFolderCopy") tmpFolderCopy : any; 
@@ -67,8 +68,9 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       }
     }
   }
-  n
   ngOnInit(): void {
+    debugger;
+    var a = this.dataItem;
     this.active = 1;
     this.formModel = this.view.formModel;
         //this.data = this.view.dataService.dataSelected;
@@ -317,7 +319,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         }
       case "delete":
         {
-          this.view.dataService.delete([datas]).subscribe((item:any)=>{
+          this.view.dataService.dataSelected = datas;
+          this.view.dataService.delete([datas],true,(opt) => this.beforeDel(opt)).subscribe((item:any)=>{
             if(item.status == 0)
             {
               this.odService.getDetailDispatch(this.view.dataService.data[0].recID).subscribe(item => {
@@ -603,8 +606,31 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
           break;
         }
+      //Gửi duyệt 
+      case "ODT201":
+        {
+          debugger;
+          this.api
+          .execSv(
+            this.view.service,
+            'ERM.Business.CM',
+            'DataBusiness',
+            'ReleaseAsync',
+            [datas?.recID,"5A5DCC53ADC142F1A2663C81E0A8EA57",this.view.formModel.entityName]
+          ).subscribe((res2) =>
+          {
+            debugger;
+            console.log(res2)
+          });
+          break;
+        }
     }
   } 
+  beforeDel(opt: RequestOption) {
+    opt.methodName = 'DeleteDispatchByIDAsync';
+    opt.data = this.view.dataService.dataSelected;
+    return true;
+  }
   checkOpenForm(val:any)
   {
     if(val == "ODT108" && this.checkUserPer?.created) return true;
