@@ -113,6 +113,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
+  titleAction =  'Thêm'
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -144,11 +145,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
+      this.titleAction ='Thêm'
       this.openTask();
     } else if (this.action == 'copy') {
-      // this.title="Copy công việc"  // cái này sau Quang làm
+      this.titleAction ='Copy'
       this.getTaskCoppied(this.taskCopy.taskID); //nếu alowCopy = false thì bật cái này lên
-    } else this.openInfo(this.task.taskID, this.action);
+    } else {
+      this.titleAction ='Chỉnh sửa'
+      this.openInfo(this.task.taskID, this.action);
+    }
+   
   }
 
   ngAfterViewInit(): void {
@@ -266,7 +272,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   openTask(): void {
-    this.title = 'Tạo mới công việc';
+    // this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -280,7 +286,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   openInfo(id, action) {
     this.readOnly = action === 'edit' ? false : true;
-    this.title = 'Chỉnh sửa công việc';
+    // this.title = 'Chỉnh sửa công việc';
     this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
@@ -598,7 +604,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   changeTime(data) {
-    debugger
+    //debugger
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -820,7 +826,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   setTitle(e: any) {
-    this.title = 'Thêm ' + e;
+    this.title = this.titleAction + " " + e;
     this.changeDetectorRef.detectChanges();
     console.log(e);
   }
