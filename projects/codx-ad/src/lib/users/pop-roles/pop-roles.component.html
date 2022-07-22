@@ -28,9 +28,19 @@
                 <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc; let i= index">
                   <div class="row">
                   <div class="col-2">
-                    <input type="checkbox" [(ngModel)]="item.ischeck"
-                     class="check-{{i}} checkbox-round" name="Checkboxes4" (change)="onChange($event,item)">
-  
+
+                    <!-- <div *ngIf="item.idChooseRole; else test">
+                      <input type="checkbox" [(ngModel)]="item.ischeck"
+                      class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true"  (change)="onChange($event,item)">
+                    </div>
+                      <ng-template #test>
+                        <input type="checkbox"  [(ngModel)]="item.ischeck"
+                        class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true"  (change)="onChange($event,item)">
+                      </ng-template> -->
+                      <input type="checkbox"  [(ngModel)]="item.ischeck"
+                      class="check-{{i}} checkbox-round" name="Checkboxes4"   (change)="onChange($event,item)">
+                     <!-- <input type="checkbox" 
+                     class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true" (change)="onChange($event,item)"> -->
                   </div>
                   <div class="col-10 column_second">
                     <div class="row">

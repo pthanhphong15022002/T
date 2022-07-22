@@ -19,7 +19,7 @@ export class PopupAddMeetingComponent implements OnInit {
   user: any;
   param: any;
   functionID: string;
-  title = 'Thêm họp định kì'
+  title = ''
   showPlan = true;
   data: any;
   isFullDay: false;
@@ -56,6 +56,10 @@ export class PopupAddMeetingComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.openFormMeeting()
+    if(this.action === 'add'){
+      this.title = 'Thêm họp định kì'
+      this.meeting.meetingType = '1';
+    }
     this.isFullDay = false;
   }
   getParam(callback = null) {
@@ -196,8 +200,9 @@ export class PopupAddMeetingComponent implements OnInit {
         }
         console.log(this.endDate);
       }
-      if (this.beginHour > this.endHour || this.beginMinute > this.endMinute) {
-        this.notiService.notify('Thời gian không hợp lệ!', 'error');
+      if (this.beginHour >= this.endHour) {
+        if(this.beginMinute >= this.endMinute)
+          this.notiService.notify('Thời gian không hợp lệ!', 'error');
       }
     }
   }
@@ -213,6 +218,10 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   valueChangeTags(e) {
+    this.meeting.tags = e.data
+  }
 
+  eventApply(e){
+    console.log(e);
   }
 }

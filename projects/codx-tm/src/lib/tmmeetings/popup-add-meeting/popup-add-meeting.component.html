@@ -2,7 +2,7 @@
   [formModel]="dialog.formModel" [data]="data">
 
   <ng-template #subHeader>
-    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="''"
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="meeting?.tags || ''"
       (valueChange)="valueChangeTags($event)"></codx-tag>
   </ng-template>
   <ng-template #body>
@@ -137,104 +137,24 @@
                       </codx-label>
                     </div>
                   </div>
-                  <codx-input type="Share" refValue="TM003" field="resources" [dataShared]="[]" multiple="true"
+                  <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)"
+                   field="resources" [dataShared]="[]" multiple="true"
                     [showInput]="false">
                   </codx-input>
                 </div>
-                <div class="d-flex flex-column mb-8">
-                  <!--begin::Title-->
-                  <div
-                    class="d-flex justify-content-between align-items-center mb-2"
-                  >
-                    <h4 class="fw-bolder text-gray-800 d-block">
-                      <codx-label
-                        default="Người tham dự"
-                        fiedName="Attendees"
-                      ></codx-label>
-                    </h4>
-                    <!--begin: btn-icon-->
-                    <span class="text-end align-items-end">
-                      <button
-                        type="button"
-                        class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                        data-dismiss="modal"
-                      >
-                        <i
-                          class="icon-group_add text-primary text-hover-primary-dark icon-24"
-                        ></i>
-                      </button>
-                    </span>
-                    <!--end: btn-icon-->
-                  </div>
-                  <!--end::Title-->
-                  <!--begin::Users group-->
-                  <div
-                    class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-                  >
-                    <div
-                      class="symbol symbol-35px symbol-circle"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Alan Warden"
-                    >
-                      <span
-                        class="symbol-label bg-warning text-inverse-warning fw-bolder"
-                        >A</span
-                      >
-                      <span
-                        class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
-                      ></span>
-                    </div>
-                    <div
-                      class="symbol symbol-35px symbol-circle"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Michael Eberon"
-                    >
-                      <img
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
-                      <span
-                        class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                      ></span>
-                    </div>
-                    <div
-                      class="symbol symbol-35px symbol-circle"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Melody Macy"
-                    >
-                      <img
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
-                      <span
-                        class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                      ></span>
-                    </div>
-
-                    <a
-                      href="#"
-                      class="symbol symbol-35px symbol-circle"
-                      data-bs-toggle="modal"
-                      data-bs-target="#kt_modal_view_users"
-                    >
-                      <span
-                        class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                        >+3</span
-                      >
-                    </a>
-                  </div>
-                  <!--end::Users group-->
+                <div class="">
+                  <ng-container>
+                    <codx-imgs class=" flex symbol-40px " objectType="AD_Users" [numberImages]="5">
+                    </codx-imgs>
+                  </ng-container>
                 </div>
               </ng-container>
-              <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)">
+              <div class="extend-function" *ngIf="(meeting.meetingType =='1')">
                 <hr />
                 <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
                   <div class="d-flex align-items-center w-auto extend-title">
                     <span class="text-primary text-hover-primary_darker fw-bold me-1">
-                      <codx-label name="Plan" formName="Tasks" default="Công việc review"></codx-label>
+                      <codx-label name="Plan" [formModel]="form.formModel" default="Công việc review"></codx-label>
                     </span>
                     <span *ngIf="showPlan"
                       class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
@@ -244,14 +164,14 @@
                 </div>
               </div>
 
-              <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
+              <ng-container *ngIf="(meeting.meetingType =='1') && showPlan ">
                 <div class="form-group row mt-3">
                   <div class="col-6">
                     <div>
                       <codx-label fiedName="FromDate" [formModel]="form.formModel" default="Ngày bắt đầu">
                       </codx-label>
                     </div>
-                    <codx-input type="datetime" class="test-datetime" (valueChange)="valueChange($event)"
+                    <codx-input type="datetime" class="test-datetime" (valueChange)="valueDateChange($event)"
                       [crrValue]="meeting?.fromDate" field="fromDate" placeholder="datetime" format="F">
                     </codx-input>
                   </div>
@@ -261,14 +181,14 @@
                       </codx-label>
                     </div>
                     <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.toDate"
-                      (valueChange)="valueChange($event)" field="toDate" format="F" placeholder="datetime">
+                      (valueChange)="valueDateChange($event)" field="toDate" format="F" placeholder="datetime">
                     </codx-input>
                   </div>
                 </div>
                 <div class="form-group mt-3">
                   <codx-label fiedName="Projects" formName="TMMeetings" gridViewName="grvTMMeetings" default="Dự án">
                   </codx-label>
-                  <codx-input type="combobox" field="projects" refValue="Projects" [multiple]="false" loadFull="true">
+                  <codx-input type="combobox" field="projects" refValue="PM_Projects" [multiple]="false" loadFull="true">
                   </codx-input>
                 </div>
               </ng-container>

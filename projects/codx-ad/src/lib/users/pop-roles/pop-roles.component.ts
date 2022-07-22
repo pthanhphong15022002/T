@@ -24,7 +24,7 @@ export class PopRolesComponent implements OnInit {
   lstEmp = [];
   listChooseRole =[]
   idClickFunc:any;
-
+  viewChooseRoleSelected: tmpformChooseRole;
   optionFrist= 'ADC01' // Check unselect from list
   optionSecond= 'ADC02' // Check list is null 
   optionThird= 'ADC03' // Check select from list
@@ -35,15 +35,19 @@ export class PopRolesComponent implements OnInit {
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
-    @Optional() dataView?: DialogRef,
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
-    this.dataView = dataView;
   }
 
   ngOnInit(): void {
     this.loadData();
+   this.viewChooseRoleSelected = this.data;
+    console.log('co data nghe');
+  //  if(this.viewChooseRoleSelected.idChooseRole !=null) {
+      // this.lstFunc.ischeck = true;
+//    }
+    console.log(this.viewChooseRoleSelected);
   }
 
   loadData() {
@@ -52,7 +56,7 @@ export class PopRolesComponent implements OnInit {
         this.lstFunc = res.msgBodyData[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].recIDofRole == '00000000-0000-0000-0000-000000000000') {
+          if (this.lstFunc[i].recIDofRole != null) {
             this.lstFunc[i].recIDofRole = null;
           }
         }
@@ -83,7 +87,6 @@ export class PopRolesComponent implements OnInit {
           this.listChooseRole.splice(i,1);
         
         }
-     //   item[i].idChooseRole= i;
      }
       
      for(var i=1; i<= this.listChooseRole.length; i++) {
@@ -125,7 +128,7 @@ export class PopRolesComponent implements OnInit {
 
 
     }
-``
+
   }
   CheckListUserRoles() {
     for(var i=0; i< this.listChooseRole.length; i++)
@@ -140,23 +143,6 @@ export class PopRolesComponent implements OnInit {
       return this.optionSecond;
     }
     return this.optionThird;
-  }
-
-
-  loadData123() {
-    this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1).subscribe((res) => {
-      if (res && res.msgBodyData[0]) {
-        this.lstFunc = res.msgBodyData[0];
-        for (var i = 0; i < this.lstFunc.length; i++) {
-          this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].functionID == 'DM') {
-            this.lstFunc[i].recIDofRole = null;
-            
-          }
-        }
-        this.changeDec.detectChanges();
-      }
-    })
   }
 
 }

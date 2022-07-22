@@ -22,7 +22,7 @@ export class AddUserComponent implements OnInit {
   user: any;
   data1: any;
   adUser = new AD_User();
-  viewChooseRole:any;
+  viewChooseRole:tmpformChooseRole;
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -34,7 +34,7 @@ export class AddUserComponent implements OnInit {
   ) {
     this.data = dialog.dataService!.dataSelected;
     this.adUser = this.data;
-    //this.dialog = dialog;
+    this.dialog = dialog;
     this.data1 = dt?.data;
     this.user = auth.get();
   }
@@ -166,4 +166,5 @@ export class AddUserComponent implements OnInit {
       this.adUser[data.field] = data.data[0];
     }
   }
+
 }

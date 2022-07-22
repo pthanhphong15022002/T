@@ -28,6 +28,7 @@ import {
   AccumulationChartComponent,
   AccumulationChart,
   AnimationModel,
+  Theme,
 } from '@syncfusion/ej2-angular-charts';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { CodxDMService } from '../codx-dm.service';
@@ -100,7 +101,7 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnAdd',
+      id: 'btnUpload',
     };
   }
 
@@ -228,7 +229,8 @@ export class HomeComponent extends UIComponent {
       // this.dmSV.currentNode = id;
       // this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
-      if (item.items && item.items.length <= 0) {
+      var items = item.items;
+      if (items == undefined || items.length <= 0) {
         //     this.folderService.options.funcID =
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {
@@ -240,7 +242,9 @@ export class HomeComponent extends UIComponent {
             var data = res[0];
            // this.view.dataService.addNew(data);            
             this.listFolders = data;            
-            this.view.dataService.addNew(data);
+            var tree = this.codxview.currentView.currentComponent.treeView;
+         //   item.items = [];
+           // tree.addChildNodes(item, data);
             //this.view.dataService.
             //this.view.tree
             //  this.dmSV.listFolder.next(res);
@@ -347,6 +351,7 @@ export class HomeComponent extends UIComponent {
     this.dmSV.folderType = this.view.funcID;
     this.dmSV.idMenuActive = this.view.funcID;
     this.dmSV.loadedFile = false;
+    
    // this.dmSV.loadedFolder = false;
     // if (this.listFolders == null)
     //   this.listFolders = this.view.dataService.data;
