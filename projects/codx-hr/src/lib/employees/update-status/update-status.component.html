@@ -1,0 +1,25 @@
+<codx-form #form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template  #body>
+    <!-- <div class="modal-body"> -->
+        <div class="form-group row">
+            <div class="col-4">
+                <!-- <label>Tình trạng</label> -->
+                <codx-label name="status" default="Tình trạng"></codx-label>
+            </div>
+            <div class="col-8">
+                <codx-input type="valuelist" class="form-control noBorder cotrol-vll" 
+                    [crrValue]="employStatus.status" field="status" ngDefaultControl refValue="L0225">
+            </codx-input>
+            </div>
+        </div>
+    <!-- </div> -->
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+           <!-- <button (click)="updateStatus()" type="button" class="btn btn-primary" default="Chọn"></button> -->
+           <button type="button" class="btn btn-primary" (click)="updateStatus()">
+            <codx-label name="Save" default="Chọn"></codx-label>
+        </button>
+        </div>
+ </ng-template>
+</codx-form>

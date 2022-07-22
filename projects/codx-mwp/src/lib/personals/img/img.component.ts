@@ -31,8 +31,11 @@ export class ImgComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log("check data", this.listview.dataService.data)
-    debugger;
-    this.data = this.listview.dataService.data;
+    this.listview.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded')
+        this.data = data;
+    }
   }
+
+
 }

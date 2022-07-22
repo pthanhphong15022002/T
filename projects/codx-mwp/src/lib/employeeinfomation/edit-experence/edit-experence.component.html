@@ -1,7 +1,7 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template popup adde #body>
-        <!-- <div class="offcanvas-content">
-            <div class="offcanvas-wrapper"> -->
+    <ng-template #body>
+        <div class="card-content">
+            <div class="card-wrapper">
                 <div class="user-detail-update">
                     <div class="row">
                         <div class="col">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-            <!-- </div> -->
+            </div>
             <!-- <div class="offcanvas-footer">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex">
@@ -112,7 +112,7 @@
                     <button (click)="Save()" type="button" *ngIf="!isSaving" class="btn btn-primary">Lưu</button>
                 </div>
             </div> -->
-        <!-- </div> -->
+        </div>
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">
