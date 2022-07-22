@@ -54,7 +54,10 @@ export class PopRolesComponent implements OnInit {
   }
 
   loadData() {
-   this.adService.getListAppByUserRolesAsync().subscribe((res) => {
+ // this.adService.getListAppByUserRoles(this.choose1)
+ this.api.exec('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync', this.choose1)
+ // this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1)
+  .subscribe((res) => {
       // if (res && res.msgBodyData[0]) {
         if (res) {
         this.lstFunc = res[0];
