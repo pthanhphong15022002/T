@@ -110,6 +110,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             }
           })
         }
+        (this.lstView.dataService as CRUDService).page = 5;
       }
     }
   }

@@ -1,35 +1,9 @@
 <codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
     <ng-template popup add #body>
-        <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
-            <div class="d-flex flex-column">
-                <div class="notes">
-                    <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
-                        service="WP" type="listView" [predicate]="predicate" [dataValue]="dataValue">
-                    </codx-listview>
-                </div>
-            </div>
-
-            <div class="card-toolbar">
-                <div class="me-2">
-                    <div class="btn-add">
-                        <span
-                            class="icon-edit-one icon-16 icon-add btn btn-icon btn-active-light-primary position-relative"
-                            (click)="openFormAddNote()"></span>
-                    </div>
-                </div>
-                <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_note_close">
-                    <span class="svg-icon svg-icon-2"></span>
-                    <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-                        class="svg-icon svg-icon-2"></span>
-                </div>
-            </div>
-        </div>
-        <br>
         <div class="d-flex flex-column">
-            <br>
             <div class="notes">
-                <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes"
-                    gridViewName="'grvNotes'" service="WP" type="listView">
+                <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                    gridViewName="'grvNotes'" service="WP" type="listView" [predicate]="predicate" [dataValue]="dataValue">
                 </codx-listview>
             </div>
             <ng-template #template let-item>
@@ -42,12 +16,12 @@
                                         <div class="d-flex align-items-center">
                                             <a class="action-item">
                                                 <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                    <span [class]="editMF?.largeIcon" [style]="editMF?.color"></span>
+                                                    <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
                                                 </div>
                                             </a>
                                             <a class="action-item">
                                                 <div class="d-flex align-items-center btn-tooltip icon-18">
-                                                    <span [class]="deleteMF?.largeIcon" [style]="deleteMF?.color"></span>
+                                                    <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
                                                 </div>
                                             </a>
                                             <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
@@ -172,7 +146,7 @@
     <ng-template #popMoreFunc let-modal>
         <div class="flex">
             <div class="">
-                <span [class]="pinMF?.largeIcon" [style]="pinMF?.color"></span>
+                <span [class]="pinMF?.largeIcon" [style.color]="pinMF?.color"></span>
             </div>
             <div class="show-customName">
                 <span>{{pinMF?.customName}}</span>
@@ -180,7 +154,7 @@
         </div>
         <div class="flex">
             <div class="">
-                <span [class]="saveMF?.largeIcon" [style]="saveMF?.color"></span>
+                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
             </div>
             <div class="show-customName">
                 <span>{{saveMF?.customName}}</span>
