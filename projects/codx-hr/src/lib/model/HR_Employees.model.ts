@@ -31,5 +31,5 @@ export class HR_Employees {
     public pitIssuedOn: Date;
     public siRegisterNo: string;
     public siRegisterOn: Date;
-    
+    public personalEmail: string;
 }

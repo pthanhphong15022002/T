@@ -4,9 +4,11 @@ import {
   ElementRef,
   Injector,
   Input,
+  IterableDiffers,
   OnInit,
   ViewChild,
   ViewChildren,
+  DoCheck,
 } from '@angular/core';
 import {
   note,
@@ -45,15 +47,24 @@ export class ApprovalComponent extends UIComponent {
 
   user?: any;
   url: string = '';
+
+  actionCollection: any;
+  actionCollectionsChange: any;
+
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
     private esService: CodxEsService,
     private cacheSv: CacheService,
-    private df: ChangeDetectorRef
+    private df: ChangeDetectorRef,
+    private actionCollectionsChanges: IterableDiffers
   ) {
     super(inject);
     this.user = this.authStore.get();
+    //get the actionCollections change len
+    this.actionCollectionsChange = actionCollectionsChanges
+      .find([])
+      .create(null);
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -80,7 +91,8 @@ export class ApprovalComponent extends UIComponent {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = false;
+  hideThumbnail: boolean = true;
+  hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
 
@@ -163,7 +175,7 @@ export class ApprovalComponent extends UIComponent {
         fileName: 'Test 2: có page number',
         fileRefNum: '123',
         fileID: '62d67a04c9193951d7e48782',
-        signers: [],
+        signers: this.tmpLstSigners,
       },
       {
         fileName: 'Test 3: có footer',
@@ -174,9 +186,16 @@ export class ApprovalComponent extends UIComponent {
     ];
   }
 
-  ngAfterViewInit() {
-    this.pdfviewerControl.zoomValue = 50;
+  ngDoCheck() {
+    let changes = this.actionCollectionsChange.diff(
+      this.pdfviewerControl?.annotationModule?.actionCollection
+    );
+    if (changes) {
+      console.log('change', changes.collection);
+    }
   }
+
+  ngAfterViewInit() {}
   onCreated(evt: any) {
     this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
 
@@ -184,6 +203,7 @@ export class ApprovalComponent extends UIComponent {
   }
 
   loadingAnnot(e: any) {
+    this.pdfviewerControl.zoomValue = 50;
     if (!this.isApprover) {
       this.esService.getSignAreas(this.fileInfo?.fileID).subscribe((res) => {
         this.lstRenderAnnotation = res;
@@ -334,6 +354,9 @@ export class ApprovalComponent extends UIComponent {
   changeShowThumbnailState() {
     this.hideThumbnail = !this.hideThumbnail;
   }
+  changeShowActionsState() {
+    this.hideActions = !this.hideActions;
+  }
   changeZoomValue(e: any) {
     this.zoomValue = e.zoomValue;
   }
@@ -441,6 +464,17 @@ export class ApprovalComponent extends UIComponent {
         anno.bounds = locations[i];
         anno.pageNumber = pageNumber;
         this.pdfviewerControl.addAnnotation(anno);
+        this.saveAnnoQueue.set(
+          anno.annotationId,
+          setTimeout(
+            this.saveAnnoToDB.bind(this),
+            this.after_X_Second,
+            this.esService,
+            { ...anno },
+            this.fileInfo,
+            this.user
+          )
+        );
       }
     }
   }
@@ -703,6 +737,8 @@ export class ApprovalComponent extends UIComponent {
   }
 
   addAnnoEvent(e: AnnotationAddEventArgs) {
+    console.log('add event', e);
+
     this.holding = 0;
     let curID = e.annotationId;
     let justAddAnno = this.pdfviewerControl.annotationCollection.find(
@@ -785,10 +821,10 @@ export class ApprovalComponent extends UIComponent {
       }
     });
   }
-
+  removeAnnot(e: any) {
+    this.esService.deleteAreaById(e.annotationId).subscribe((res) => {});
+  }
   resetTime(e: any) {
-    console.log(e);
-
     let curID = e.annotationId;
     clearTimeout(this.saveAnnoQueue.get(curID));
 
@@ -844,8 +880,10 @@ export class ApprovalComponent extends UIComponent {
   }
 
   show(e: any) {
-    console.log('event', e);
-    console.log('list anno', this.pdfviewerControl.annotationCollection);
+    console.log(this.pdfviewerControl.annotationModule);
+  }
+  testFunc(e: any) {
+    console.log('dang test', e);
   }
 
   selectedAnnotation(e: any) {
@@ -854,7 +892,6 @@ export class ApprovalComponent extends UIComponent {
         return anno.annotationId === e.annotationId;
       }
     );
-    console.log('current selected', this.curSelectedAnno);
   }
 
   clickZoom(type: string, e?: any) {

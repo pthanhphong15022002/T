@@ -144,6 +144,10 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   
   OnSaveForm(){
+    for (var key in this.data) {  
+      if(Array.isArray(this.data[key]))
+      this.data[key] = this.data[key].join(';');
+    }
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option))
     .subscribe((res) => {

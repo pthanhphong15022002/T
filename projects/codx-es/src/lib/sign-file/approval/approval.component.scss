@@ -64,7 +64,7 @@
   .showArrow {
     position: absolute;
     top: 50%;
-    right: -10px;
+    right: 0;
     width: 40px;
     height: 40px;
     align-items: center;
@@ -73,6 +73,9 @@
     &:hover {
       background-color: rgb(172, 165, 157);
       color: blue;
+    }
+    &.reverse {
+      left: -20px;
     }
   }
   .col-2 {
@@ -86,6 +89,9 @@
       width: fit-content !important;
       z-index: 10 !important;
       background: white !important;
+      &.hideCol {
+        width: 75px;
+      }
     }
   }
 
@@ -103,5 +109,9 @@
     .autoSign_Space {
       margin-top: 15px;
     }
+  }
+
+  .hideCol {
+    width: 75px !important;
   }
 }

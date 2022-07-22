@@ -17,7 +17,8 @@
                 <div class="erm-list">
                     <table class="table">
                         <thead>
-                            <tr>                              
+                            <tr>         
+                                <th class="px-0" scope="col"></th>                     
                                 <th scope="col">
                                     <div>Tên tài liệu</div>
                                 </th>
@@ -38,56 +39,73 @@
                             </div>
                             <ng-template #thenBlockAsc>
                                 <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
-                                    <tr title="{{folder.folderName}}">                                       
-                                        <td>
-                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
-                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
-                                                cardCss="card-template w-225px px-2 py-3">
+                                    <tr title="{{folder.folderName}}">  
+                                        <td class="w-50px text-center px-0"><span
+                                            [className]="getBookmarksClass(folder)"></span>
+                                         </td>                                     
+                                        <td> 
+                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="w-25px  me-3 cursor-pointer symbol symbol-25 symbol-circle"  [title]="folder.folderName"
+                                                [formModel]="formModel" [typeMF]="'hover'"  cardCss="w-225px"                                            
+                                                >
                                             </codx-temp-full> 
                                         </td>
                                         <td>
-                                            <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
+                                            <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-25px  me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
                                             </codx-temp-full>                                            
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="erm-date">{{folder.createdOn}}</div>
+                                                <div class="erm-date">{{folder.createdOn | date : "dd/MM/yyyy"}}</div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="erm-date"></div>                                          
+                                            <codx-temp-full class="float-start" imgCss="img-folder me-4 max-h-25px" (clickMF)="clickMF($event, folder, 'folder')" 
+                                                [formModel]="formModel" [typeMF]="'hover'"
+                                                cardCss="card-template w-225px px-2 py-3">
+                                             </codx-temp-full> 
+                                            <!-- <div class="erm-date"></div>                                           -->
                                         </td>                                        
                                     </tr>
                                 </ng-container>
                                 <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                                    <tr title="{{file.folderName}}">                                      
+                                    <tr title="{{file.folderName}}">   
+                                        <td class="w-50px text-center px-0"><span
+                                            [className]="getBookmarksClass(file)"></span>
+                                        </td>                                   
                                         <td>
-                                            <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
-                                            [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                           
-                                            cardCss="card-template w-225px px-2 py-3">
+                                            <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="file.fileName"
+                                            [formModel]="formModel" [typeMF]="'hover'"                                        
+                                            cardCss="w-225px">
                                             </codx-temp-full>                                             
                                         </td>
                                         <td>
-                                            <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
+                                            <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
                                             </codx-temp-full>                                            
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="erm-date">{{file.createdOn}}</div>
+                                                <div class="erm-date">{{file.createdOn | date : "dd/MM/yyyy"}}</div>
                                             </div>
                                         </td>
-                                        <td>                                            
-                                            <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
+                                        <td>
+                                            <codx-temp-full imgCss="img-folder max-h-25px me-4" (clickMF)="clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
+                                            [formModel]="formModel" [typeMF]="'hover'"                                        
+                                            cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>                                                   
+                                            <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
                                         </td>                                       
                                     </tr>
                                 </ng-container>
                             </ng-template>
                             <ng-template #elseBlockDesc>
                                 <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                                    <tr title="{{file.folderName}}">                                      
+                                    <tr title="{{file.folderName}}">    
+                                        <td class="w-50px text-center px-0"><span
+                                            [className]="getBookmarksClass(file)"></span>
+                                        <td>                                                                     
                                         <td>
                                             <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
-                                            [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                           
+                                            [formModel]="formModel" [typeMF]="'hover'"                                     
                                             cardCss="card-template w-225px px-2 py-3">
                                             </codx-temp-full>                                             
                                         </td>
@@ -97,19 +115,26 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="erm-date">{{file.createdOn}}</div>
+                                                <div class="erm-date">{{file.createdOn | date : "dd/MM/yyyy"}}</div>
                                             </div>
                                         </td>
-                                        <td>                                            
-                                            <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div>
+                                        <td>   
+                                            <codx-temp-full imgCss="img-folder max-h-25px me-4" (clickMF)="clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
+                                            [formModel]="formModel" [typeMF]="'hover'"                                        
+                                            cardCss="card-template w-225px px-2 py-3">
+                                            </codx-temp-full>                                           
+                                            <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
                                         </td>                                       
                                     </tr>
                                 </ng-container>
                                 <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
-                                    <tr title="{{folder.folderName}}">                                       
+                                    <tr title="{{folder.folderName}}">    
+                                        <td class="w-50px text-center px-0"><span
+                                            [className]="getBookmarksClass(folder)"></span>
+                                    </td>                                   
                                         <td>
-                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
-                                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"                                               
+                                            <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" [title]="folder.folderName"
+                                                [formModel]="formModel" [typeMF]="'hover'"                                              
                                                 cardCss="card-template w-225px px-2 py-3">
                                             </codx-temp-full> 
                                         </td>
@@ -119,11 +144,15 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="erm-date">{{folder.createdOn}}</div>
+                                                <div class="erm-date">{{folder.createdOn | date : "dd/MM/yyyy"}}</div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="erm-date"></div>                                          
+                                            <codx-temp-full class="float-start" imgCss="img-folder me-4 max-h-25px" (clickMF)="clickMF($event, folder, 'folder')" 
+                                            [formModel]="formModel" [typeMF]="'hover'"
+                                            cardCss="card-template w-225px px-2 py-3">
+                                             </codx-temp-full> 
+                                            <!-- <div class="erm-date"></div>                                           -->
                                         </td>                                        
                                     </tr>
                                 </ng-container>
