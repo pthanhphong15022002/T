@@ -1,4 +1,10 @@
-import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
@@ -28,31 +34,30 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
   user: any;
   tasksByEmp: any;
   isDesc: boolean = true;
-  public data: object[] = [];
+  data: object[] = [];
 
   dbData: any;
 
   top3: any;
   groups: any;
 
-  public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
 
-
-  public isGradient: boolean = true;
+  isGradient: boolean = true;
 
   //#region gauge
-  public font1: Object = {
+  font1: Object = {
     size: '15px',
     color: '#00CC66',
   };
-  public rangeWidth: number = 25;
+  rangeWidth: number = 25;
   //Initializing titleStyle
-  public titleStyle: Object = { size: '18px' };
-  public font2: Object = {
+  titleStyle: Object = { size: '18px' };
+  font2: Object = {
     size: '15px',
     color: '#fcde0b',
   };
-  public rangeLinearGradient1: Object = {
+  rangeLinearGradient1: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -61,7 +66,7 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public rangeLinearGradient2: Object = {
+  rangeLinearGradient2: Object = {
     startValue: '0%',
     endValue: '100%',
     colorStop: [
@@ -70,48 +75,48 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     ],
   };
 
-  public minorTicks: Object = {
+  minorTicks: Object = {
     width: 0,
   };
 
-  public majorTicks1: Object = {
+  majorTicks1: Object = {
     position: 'Outside',
     height: 1,
     width: 1,
     offset: 0,
     interval: 30,
   };
-  public majorTicks2: Object = {
+  majorTicks2: Object = {
     height: 0,
   };
 
-  public lineStyle: Object = {
+  lineStyle: Object = {
     width: 0,
   };
 
-  public labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
-  public labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
-  public legendSettings1: Object = {
+  legendSettings1: Object = {
     position: 'Top',
     visible: true,
   };
 
-  public legendSettings2: Object = {
+  legendSettings2: Object = {
     position: 'Right',
     visible: true,
   };
 
   //#endregion gauge
 
-  public piedata1: any;
-  public piedata2: Object[];
-  public legendSettings: Object = {
+  piedata1: any;
+  piedata2: Object[];
+  legendSettings: Object = {
     position: 'Top',
     visible: true,
   };
-  public legendRateDoneSettings: Object = {
+  legendRateDoneSettings: Object = {
     visible: true,
   };
 
@@ -159,7 +164,7 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
   };
   //#endregion chartcolumn
 
-  public headerText: Object = [
+  headerText: Object = [
     { text: 'Khối lượng công việc' },
     { text: 'Thời gian thực hiện' },
   ];

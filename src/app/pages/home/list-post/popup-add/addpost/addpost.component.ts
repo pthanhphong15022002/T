@@ -59,6 +59,27 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     VIDEO: "10",
     FILE: "1"
   }
+  SHARECONTROLS = {
+    OWNER: "1",
+    MYGROUP: "2",
+    MYTEAM: "3",
+    MYDEPARMENTS:"4",
+    MYDIVISION:"5",
+    MYCOMPANY: "6",
+    ADMINISTRATOR: "7",
+    EVERYONE: "9",
+    OGRHIERACHY: "O",
+    DEPARMENTS: "D",
+    POSITIONS: "P",
+    ROLES: "R",
+    GROUPS: "G",
+    USER: "U",
+  }
+  MEMPERTPE ={
+    CREATED: "1",
+    SHARE: "2",
+    TAGS: "3"
+  }
   STATUS = {
     CREATED: "create",
     EDIT: "edit",
@@ -83,7 +104,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   status:string = "";
   dialogData : any;
   dialogRef: DialogRef;
-  listFileUpload:any[] = []
+  listFileUpload:any[] = [];
 
   @Input() isShow: boolean;
   constructor(
@@ -103,26 +124,18 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.user = authStore.userValue;
     this.dialogData = dd.data;
     this.dialogRef = dialog;
-    this.status = dd.data.status;
     this.headerText = this.dialogData.headerText;
     this.title = this.dialogData.title;
     this.codxListView = this.dialogData.lstView;
-    if(this.dialogData.status == this.STATUS.EDIT){
-      this.dataEdit = this.dialogData.post;
-      this.message = this.dataEdit.content;
-      this.shareControl = this.dataEdit.shareControl;
-    }
-    if(this.dialogData.status == this.STATUS.SHARE){
-      this.dataShare = this.dialogData.post;
-    }
+    
   }
   ngAfterViewInit(): void {
   }
 
   ngOnInit() {
     this.myPermission = new Permission();
-    this.myPermission.objectType = '1';
-    this.myPermission.memberType = "1";
+    this.myPermission.objectType = "1";
+    this.myPermission.memberType = this.MEMPERTPE.CREATED;
     this.myPermission.objectID = this.user.userID;
     this.myPermission.objectName = this.user.userName;
     this.myPermission.create = true;
@@ -136,8 +149,16 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.myPermission.isActive = true;
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
-    this.shareControl = "1";
-    this.objectType = "1";
+    this.shareControl = this.SHARECONTROLS.OWNER;
+    if(this.dialogData.status == this.STATUS.EDIT){
+      this.dataEdit = this.dialogData.post;
+      this.message = this.dataEdit.content;
+      this.shareControl = this.dataEdit.shareControl;
+    }
+    if(this.dialogData.status == this.STATUS.SHARE){
+      this.dataShare = this.dialogData.post;
+    }
+    this.dt.detectChanges();
   }
 
 
@@ -177,7 +198,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
     if(isNaN(Number(objectType))){
       this.lstRecevier = data.dataSelected;
-      if(objectType == 'U')
+      if(objectType == this.SHARECONTROLS.USER)
       {
         this.recevierID = data.id;
         this.recevierName = data.text;
@@ -209,34 +230,30 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if(this.lstRecevier.length > 0){
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
-        per.memberType = "3";
         switch(this.objectType){
           case "U":
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
           case "P":
             per.objectID = item.PositionID;
             per.objectName = item.PositionName;
-            per.objectType = this.objectType;
             break
           case "D":
             per.objectID = item.OrgUnitID;
             per.objectName = item.OrgUnitName;
-            per.objectType = this.objectType;
             break;
           case "G":
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
           case "R":
             per.objectID = item.RoleID;
             per.objectName = item.RoleName;
-            per.objectType = this.objectType;
             break
         }
+        per.memberType = this.MEMPERTPE.TAGS;
+        per.objectType = this.objectType;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -254,7 +271,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if(res){
           if(this.listFileUpload.length > 0){
             this.atmCreate.objectId = res.recID;
-            this.dmSV.fileUploadList = [...this.listFileUpload];
+            this.dmSV.fileUploadList =  this.codxFileCreated.getFiles();
             res.files = [...this.listFileUpload];
             this.atmCreate.saveFiles();
           }
@@ -265,8 +282,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         
       });
   }
-
-
   editPost() {
     if (!this.message) {
       this.notifySvr.notifyCode('E0315');
@@ -279,34 +294,30 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if(this.lstRecevier.length > 0){
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
-        per.memberType = "3";
         switch(this.objectType){
-          case "U":
+          case this.SHARECONTROLS.USER:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "P":
+          case this.SHARECONTROLS.POSITIONS:
             per.objectID = item.PositionID;
             per.objectName = item.PositionName;
-            per.objectType = this.objectType;
             break
-          case "D":
+          case this.SHARECONTROLS.DEPARMENTS:
             per.objectID = item.OrgUnitID;
             per.objectName = item.OrgUnitName;
-            per.objectType = this.objectType;
             break;
-          case "G":
+          case this.SHARECONTROLS.GROUPS:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "R":
+          case this.SHARECONTROLS.ROLES:
             per.objectID = item.RoleID;
             per.objectName = item.RoleName;
-            per.objectType = this.objectType;
             break
         }
+        per.memberType = this.MEMPERTPE.TAGS;
+        per.objectType = this.objectType;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -344,10 +355,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
-
-  
-  
   
   sharePost() {
     if (!this.message && this.listFileUpload.length < 0) {
@@ -367,34 +374,30 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if(this.lstRecevier.length > 0){
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
-        per.memberType = "3";
         switch(this.objectType){
-          case "U":
+          case this.SHARECONTROLS.USER:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "P":
+          case this.SHARECONTROLS.POSITIONS:
             per.objectID = item.PositionID;
             per.objectName = item.PositionName;
-            per.objectType = this.objectType;
             break
-          case "D":
+          case this.SHARECONTROLS.DEPARMENTS:
             per.objectID = item.OrgUnitID;
             per.objectName = item.OrgUnitName;
-            per.objectType = this.objectType;
             break;
-          case "G":
+          case this.SHARECONTROLS.GROUPS:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "R":
+          case this.SHARECONTROLS.ROLES:
             per.objectID = item.RoleID;
             per.objectName = item.RoleName;
-            per.objectType = this.objectType;
             break
         }
+        per.memberType = this.MEMPERTPE.TAGS;
+        per.objectType = this.objectType;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -491,5 +494,4 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-
 }

@@ -316,6 +316,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion schedule
 
+   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -443,16 +444,6 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            // this.view.dataService
-            //   .delete([this.view.dataService.dataSelected], true, (opt) =>
-            //     this.beforeDel(opt)
-            //   )
-            //   .subscribe((res) => {
-            //     if (res[0]) {
-            //       this.itemSelected = this.view.dataService.data[0];
-            //     }
-            //   });
-
             this.notiService.alertCode('TM003').subscribe((confirm) => {
               if (confirm?.event && confirm?.event?.status == 'Y') {
                 this.tmSv.deleteTask(data.taskID).subscribe((res) => {
@@ -477,6 +468,8 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
+//#endregion
+
 
   sendemail(data) { }
 

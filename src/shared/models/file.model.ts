@@ -92,6 +92,7 @@ export class FileUpload {
     thumbnail: string;
     uploadId: string;
     createdBy: string;
+    referType: string;
     createdOn: any;
     extension: string;
     category: string;
