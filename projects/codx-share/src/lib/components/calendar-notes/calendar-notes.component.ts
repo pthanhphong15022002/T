@@ -26,8 +26,6 @@ import moment from 'moment';
 })
 export class CalendarNotesComponent extends UIComponent implements OnInit, AfterViewInit {
 
-  @Input() dataAdd = new Notes();
-  @Input() dataUpdate = new Notes();
   message: any;
   messageParam: any;
   listNote: any[] = [];
@@ -44,9 +42,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   WP_NotesParam: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
-  param: any;
   daySelected: any;
-  changeDateSelect = false;
   checkWeek = true;
   typeList = 'notes-home';
   dataValue = '';
@@ -55,10 +51,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   data: any;
   fromDate: any;
   toDate: any;
-  arrDate: any = [];
-  dialog: DialogRef;
-  checkUpdate = false;
   dataObj: any;
+  editMF: any;
+  deleteMF: any;
+  pinMF: any;
+  saveMF: any;
+  dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent
   @ViewChild('calendar') calendar: any;
@@ -71,6 +69,14 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.userID = this.auth.get().userID;
     this.messageParam = this.cache.message('WP003');
     this.getParam();
+    this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
+    })
   }
 
   onInit(): void {
@@ -516,20 +522,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'edit':
-        this.openFormUpdateNote(data);
-        break;
-      case 'delete':
-        this.onDeleteNote(data)
-        break;
-      case 'WPT0801':
-        this.checkNumberNotePin(data);
-        break;
-      case 'WPT0802':
-        this.openFormNoteBooks(data);
-        break;
-    }
+  getMoreF(item) {
+    this.dataUpdate = item;
   }
 }

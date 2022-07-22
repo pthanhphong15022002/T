@@ -32,5 +32,7 @@ export class CodxAdService {
   updateInformationCompanySettings(data, option?:any,imageUpload?:any) {
     return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [data,option,imageUpload])
   }
-
+  getListAppByUserRoles(data?:any) {
+    return  this.api.exec('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync',data)
+  }
 }
