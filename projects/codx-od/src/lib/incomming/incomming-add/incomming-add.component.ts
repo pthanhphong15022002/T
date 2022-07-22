@@ -69,6 +69,8 @@ export class IncommingAddComponent implements OnInit {
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID =   this.formModel?.funcID;
 
+    this.dispatch.dispatchType = this.data?.dispatchType;
+
     if(this.type == "add" || this.type == "copy")
     {
       this.dispatch.copies = 1;
@@ -133,7 +135,7 @@ export class IncommingAddComponent implements OnInit {
   }
   //Nơi nhận
   changeValueBUID(event: any) {
-    this.dispatch.deptID = event.data.value[0];
+    this.dispatch.deptID = event?.data?.value[0];
     if (event.data?.value[0]) {
       this.api.execSv("HR", "ERM.Business.HR", "OrganizationUnitsBusiness", "GetUserByDept", [event.data?.value[0], null, null]).subscribe((item: any) => {
          if (item != null && item.length > 0) {
@@ -214,7 +216,6 @@ export class IncommingAddComponent implements OnInit {
           this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
         this.dispatch.status = "1",
         this.dispatch.approveStatus = "1",
-        this.dispatch.dispatchType = "1";
         this.odService.saveDispatch(this.dataRq,this.dispatch).subscribe((item) => {
           if (item.status == 0) 
           {

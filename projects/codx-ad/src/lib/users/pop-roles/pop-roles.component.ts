@@ -16,7 +16,7 @@ export class PopRolesComponent implements OnInit {
   choose1: tmpformChooseRole[] = [];
   choose = new tmpformChooseRole();
   data: any;
-  dialog: any;
+  dialogSecond: any;
   dataView:any;
   title = 'Phân quyền người dùng';
   count: number = 0;
@@ -24,7 +24,7 @@ export class PopRolesComponent implements OnInit {
   lstEmp = [];
   listChooseRole =[]
   idClickFunc:any;
-
+  viewChooseRoleSelected: tmpformChooseRole;
   optionFrist= 'ADC01' // Check unselect from list
   optionSecond= 'ADC02' // Check list is null 
   optionThird= 'ADC03' // Check select from list
@@ -36,12 +36,18 @@ export class PopRolesComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
-    this.dialog = dialog;
+    this.dialogSecond = dialog;
     this.data = dt?.data;
   }
 
   ngOnInit(): void {
     this.loadData();
+   this.viewChooseRoleSelected = this.data;
+    console.log('co data nghe');
+  //  if(this.viewChooseRoleSelected.idChooseRole !=null) {
+      // this.lstFunc.ischeck = true;
+//    }
+    console.log(this.viewChooseRoleSelected);
   }
 
   loadData() {
@@ -50,7 +56,7 @@ export class PopRolesComponent implements OnInit {
         this.lstFunc = res.msgBodyData[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].recIDofRole == '00000000-0000-0000-0000-000000000000') {
+          if (this.lstFunc[i].recIDofRole != null) {
             this.lstFunc[i].recIDofRole = null;
           }
         }
@@ -114,7 +120,7 @@ export class PopRolesComponent implements OnInit {
     }
     else if(this.CheckListUserRoles() === this.optionSecond)  {
       this.notiService.notifyCode('Lưu thành công');
-      this.dialog.close(this.listChooseRole);
+      this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
     }
     else {

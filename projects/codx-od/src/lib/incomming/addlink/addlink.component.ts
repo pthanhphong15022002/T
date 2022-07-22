@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { convertHtmlAgency, extractContent, getIdUser } from '../../function/default.function';
-import { ApiHttpService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DispatchService } from '../../services/dispatch.service';
@@ -25,6 +25,7 @@ export class AddLinkComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService, 
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -34,6 +35,7 @@ export class AddLinkComponent implements OnInit {
     this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
+    //this.cache.gridViewSetup()
     this.searchText("");
   }
  
@@ -53,7 +55,7 @@ export class AddLinkComponent implements OnInit {
     this.api.execSv<any>("OD","OD", "DispatchesBusiness", "SearchFullTextAdvAsync",
     {
       query: val,
-      functionID: "ODT3",
+      functionID:  this.dialog?.formModel?.funcID,
       entityName: "OD_Dispatches",
       page: 1,
       pageSize: 20

@@ -1,12 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Optional, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ViewModel } from 'codx-core';
 @Component({
-  selector: 'app-od-search',
-  templateUrl: './searching.component.html',
-  styleUrls: ['./searching.component.scss']
+  selector: 'codx-fulltextsearch',
+  templateUrl: './codx-fulltextsearch.component.html',
+  styleUrls: ['./codx-fulltextsearch.component.scss']
 })
 
-export class ODSearchComponent implements OnInit , OnChanges {
+export class CodxFullTextSearch implements OnInit , OnChanges {
     views: Array<ViewModel> | any = [];
     @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   constructor(  
@@ -16,6 +16,7 @@ export class ODSearchComponent implements OnInit , OnChanges {
 
   }
   ngOnInit(): void {
+    alert("bn");
   }
   ngOnChanges(changes: SimpleChanges): void {
   }

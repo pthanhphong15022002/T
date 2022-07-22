@@ -114,7 +114,7 @@ export class UserComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
 
     });
@@ -123,7 +123,7 @@ export class UserComponent extends UIComponent {
     //   let option = new SidebarModel();
     //   option.DataService = this.view?.currentView?.dataService;
     //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '800px'; // s k thấy gửi từ ben đây,
+    //   option.Width = 'Auto'; // s k thấy gửi từ ben đây,
     //   this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
     //   this.dialog.closed.subscribe((x) => {
     //     if (x.event == null)
@@ -144,7 +144,7 @@ export class UserComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(AddUserComponent, 'edit', option);
     });
 
@@ -152,7 +152,7 @@ export class UserComponent extends UIComponent {
     //   let option = new SidebarModel();
     //   option.DataService = this.view?.dataService;
     //   option.FormModel = this.view?.formModel;
-    //   option.Width = '800px';
+    //   option.Width = 'Auto';
     //   this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
     // });
   }

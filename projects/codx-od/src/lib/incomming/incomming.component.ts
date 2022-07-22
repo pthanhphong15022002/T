@@ -66,15 +66,9 @@ export class IncommingComponent
   crrDate = new Date().getTime();
   gridViewSetup: any;
   dispatch = new dispatch();
-  showCbxAgency = false;
-  action: any;
-  actionEdit: any;
-  autoLoad = false;
-  itemDelete: any;
   active = 1;
   activeDiv = "1";
   fileAdd: any;
-  funcID = 'ODT1';
   idAgency: any;
   ///////////Các biến data valuelist/////////////////
   dvlSecurity: any;
@@ -87,6 +81,8 @@ export class IncommingComponent
   dvlReCall: any;
   widthAsideRight = '700px';
   showAgency = false;
+  dataItem :any;
+  funcList: any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -113,8 +109,8 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
-
-  }
+    
+  } 
 
   ngAfterViewInit(): void {
     this.views = [
@@ -136,7 +132,7 @@ export class IncommingComponent
       this.view.dataService.predicates = "Status=@0"
       this.view.dataService.dataValues = "1"
     }
-    this.getGridViewSetup();
+    this.getGridViewSetup(this.view.formModel.funcID);
     this.button = {
       id: 'btnAdd',
     };
@@ -157,10 +153,11 @@ export class IncommingComponent
         IncommingAddComponent,
         {
           gridViewSetup: this.gridViewSetup,
-          headerText: 'Thêm mới công văn đến',
+          headerText: 'Thêm mới '+ (this.funcList?.defaultName).toLowerCase(),
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
+          dispatchType: this.funcList?.dataValue
         },
         option
       );
@@ -183,9 +180,10 @@ export class IncommingComponent
     return true;
   }
 
-  getGridViewSetup() {
-    //this.funcID
-    this.cache.functionList(this.view.formModel.funcID).subscribe((fuc) => {
+  getGridViewSetup(funcID:any) {
+   
+    this.cache.functionList(funcID).subscribe((fuc) => {
+      this.funcList = fuc;
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -317,18 +315,24 @@ export class IncommingComponent
 
   //hàm render lại list view theo status công văn
   clickChangeStatus(status: any) {
+    this.view.dataService.page = 0;
     this.view.dataService.setPredicates(['Status=@0'],[status]).subscribe(item=>{
       this.lstDtDis = item[0];
     });
     this.activeDiv = status;
   }
  
-  selectFirst(dt: any) {
+  valueChange(dt: any) {
     var recID = null;
-    if (dt?.data) recID = dt.data.recID;
-    else if(dt?.recID) recID = dt.recID;
+    if (dt?.data) {
+      recID = dt.data.recID
+      this.dataItem = dt?.data;
+    }
+    else if(dt?.recID){
+      recID = dt.recID
+      this.dataItem = dt;
+    };
     this.getDtDis(recID);
-    this.detectorRef.detectChanges();
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;
@@ -359,5 +363,13 @@ export class IncommingComponent
     //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
   }
-
+  viewChange(e:any)
+  {
+    var funcID = e?.component?.instance?.funcID;
+    this.view.dataService.predicates = "Status=@0";
+    this.view.dataService.dataValues = "1";
+    //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
+    this.activeDiv = "1";
+    this.getGridViewSetup(funcID);
+  }
 }

@@ -316,12 +316,13 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion schedule
 
+   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'add', this.isAssignTask],
@@ -361,7 +362,7 @@ export class TasksComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '800px';
+        option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
@@ -390,7 +391,7 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
@@ -443,16 +444,6 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            // this.view.dataService
-            //   .delete([this.view.dataService.dataSelected], true, (opt) =>
-            //     this.beforeDel(opt)
-            //   )
-            //   .subscribe((res) => {
-            //     if (res[0]) {
-            //       this.itemSelected = this.view.dataService.data[0];
-            //     }
-            //   });
-
             this.notiService.alertCode('TM003').subscribe((confirm) => {
               if (confirm?.event && confirm?.event?.status == 'Y') {
                 this.tmSv.deleteTask(data.taskID).subscribe((res) => {
@@ -477,6 +468,8 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
+//#endregion
+
 
   sendemail(data) { }
 
@@ -493,7 +486,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = '800px';
+    option.Width = 'Auto';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose],

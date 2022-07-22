@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   AuthStore,
@@ -80,7 +81,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogETemplate = res;
-          this.isAfterRender = true;
+
           this.esService
             .getEmailTemplate(this.email.templateID)
             .subscribe((res1) => {
@@ -91,18 +92,17 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   new FormControl(res1[0].recID)
                 );
 
-                console.log('test', this.dialogETemplate.value);
-                console.log('test', this.formModel?.entityName);
-
-                this.api
-                  .execSv(
-                    'DM',
-                    'ERM.Business.DM',
-                    'FileBussiness',
-                    'GetFilesByObjectIDImageAsync',
-                    this.dialogETemplate.value.recID
-                  )
-                  .subscribe((f: any[]) => console.log(f));
+                // this.api
+                //   .execSv(
+                //     'DM',
+                //     'ERM.Business.DM',
+                //     'FileBussiness',
+                //     'GetFilesByObjectIDImageAsync',
+                //     this.dialogETemplate.value.recID
+                //   )
+                //   .subscribe((f: any[]) => {
+                //     console.log(f);
+                //   });
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -133,6 +133,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   this.lstFrom.push(defaultFrom);
                 }
               }
+              this.isAfterRender = true;
             });
         }
       });
@@ -166,11 +167,13 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         if (res) {
           console.log(res);
           let emailTemplates = this.formGroup.value.emailTemplates;
+          this.esService.lstTmpEmail.push(res);
           let i = emailTemplates.findIndex(
             (p) => p.emailType == res.templateType
           );
           if (i >= 0) {
             emailTemplates[i].templateID = res.recID;
+
             if (this.dmSV.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
               console.log(this.dmSV.fileUploadList);
@@ -382,17 +385,13 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     else return true;
   }
 
-  fileAdded(event) {
-    debugger;
-  }
+  fileAdded(event) {}
 
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
 
-  getfileCount(e: any) {
-    debugger;
-  }
+  getfileCount(e: any) {}
 }
 
 export class EmailSendTo {
