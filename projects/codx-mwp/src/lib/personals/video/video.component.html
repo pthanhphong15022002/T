@@ -5,5 +5,7 @@
     </codx-listview>
 </div>
 <div *ngFor="let item of data">
-    <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
+    <div *ngIf="item.referType == 'video'">
+        <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
+    </div>
 </div>
