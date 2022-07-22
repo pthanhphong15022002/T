@@ -85,8 +85,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   openDetailPage(item) {
-    // this.codxService.navigate('', this.urlDetailNoteBook, { recID: item.recID })
-    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
+    this.codxService.navigate('', this.urlDetailNoteBook, { recID: item.recID })
   }
 
   openFormMoreFunc(data: any) {

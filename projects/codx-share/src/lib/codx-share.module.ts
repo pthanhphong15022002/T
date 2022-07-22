@@ -25,6 +25,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { UploaderComponent, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
+import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -39,6 +40,7 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   CodxExportComponent,
   CodxExportAddComponent,
+  CodxFullTextSearch,
   CodxImportComponent,
   TreeviewCommentComponent,
   ReadMoreComponent,
