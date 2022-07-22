@@ -42,10 +42,48 @@
                         <div class="checkbox-list">
                             <div *ngIf="item.isPin == true">
                                 <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
+                                    </div> -->
+                                    <!--  -->
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip">
+                                                    <span class="icon-edit icon-18 ml-2 mr-2"></span>
+                                                    <span class="tooltiptext">Edit</span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item">
+                                                <div class="d-flex align-items-center btn-tooltip">
+                                                    <span class="icon-close icon-18 text-danger ml-2 mr-2"></span>
+                                                    <span class="tooltiptext">Delete</span>
+                                                </div>
+                                            </a>
+                                            <!-- <div class="dropdown">
+                                                <button ngbDropdownToggle class="btn btn-icon btn-md" type="button"
+                                                    id="dropdownMenuButton1" aria-expanded="false">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </button>
+                                                <div ngbDropdownMenu class="dropdown-menu"
+                                                    aria-labelledby="dropdownMenuButton1">
+                                                    <a ngbDropdownItem class="dropdown-item">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-attach_file icon-18"></span>
+                                                            <span class="ml-3">Đính kèm file</span>
+                                                        </div>
+                                                    </a>
+                                                    <a ngbDropdownItem class="dropdown-item">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="icon-email icon-18"></span>
+                                                            <span class="ml-3">Gửi mail</span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div> -->
+                                        </div>
                                     </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
@@ -59,11 +97,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
@@ -95,11 +133,11 @@
                             </div>
                             <div *ngIf="item.isPin == false">
                                 <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>
@@ -112,11 +150,11 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
+                                    <!-- <div class="has-action-menu">
                                         <codx-mfunc type="hover" [formModel]="view?.formModel"
                                             (clickMF)="clickMF($event,item)" [dataItem]="item">
                                         </codx-mfunc>
-                                    </div>
+                                    </div> -->
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin1 icon-16" type="button"></span>
                                     </div>

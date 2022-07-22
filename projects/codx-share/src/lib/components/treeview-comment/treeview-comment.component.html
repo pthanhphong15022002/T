@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center ms-1">
         <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
             <div class="flex align-items-center">
                 <span class="me-2">
@@ -20,7 +20,7 @@
         </ng-template>
         <span>{{dataComment.totalVote}}</span>
     </div>
-    <div class="d-flex align-items-center text-hover-underline" (click)="showComments(dataComment)">
+    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
         <span class="text-gray-800 ms-2">
             <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
@@ -372,8 +372,8 @@
                 </div>
                 <ng-container *ngIf="childData.totalRecord > 0">
                     <div class="align-items-center" [class]="childData.isShowComment?'isHiden':'isShow'">
-                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon rotate-180">
-                            <span class="icon-reply icon-18"></span>
+                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon btn-sm rotate-180">
+                            <span class="icon-reply icon-16"></span>
                         </span>
                         <span class="text-gray-800" (click)="loadSubComment(childData)">
                             {{childData.totalRecord}}
