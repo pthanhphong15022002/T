@@ -611,6 +611,16 @@ export class CodxEsService {
     );
   }
 
+  deleteAreaById(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'DeleteAreaAsync',
+      data
+    );
+  }
+
   getSignAreas(data): Observable<any> {
     return this.api.execSv(
       'ES',
