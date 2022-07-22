@@ -3,14 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
   selector: 'lib-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  templateUrl: './layout2.component.html',
+  styleUrls: ['./layout2.component.scss'],
 })
-export class LayoutComponent extends LayoutBaseComponent {
+export class Layout2Component extends LayoutBaseComponent {
   module = 'WP';
-  // aside=true;
-  // asideFixed = true;
-  // toolbar = false;
+  override toolbar = false;
+  override aside = false;
   valueList: [];
   category:string = "home";
 
@@ -20,16 +19,18 @@ export class LayoutComponent extends LayoutBaseComponent {
     inject: Injector
   ) {
     super(inject);
-    
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
     });
   }
 
-  onInit(): void {}
+  onInit(): void {
+
+  }
 
   onAfterViewInit(): void {}
 
   navigate(category, funcID = null) {
+    
   }
 }
