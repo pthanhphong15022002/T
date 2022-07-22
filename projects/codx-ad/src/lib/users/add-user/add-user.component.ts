@@ -15,14 +15,14 @@ export class AddUserComponent implements OnInit {
   @Output() loadData = new EventEmitter();
 
   title = 'Thêm người dùng';
-  dialog: DialogRef;
+  dialog!: DialogRef;
   data: any;
   readOnly = false;
   isAddMode = true;
   user: any;
   data1: any;
   adUser = new AD_User();
-  viewChooseRole = new tmpformChooseRole();
+  viewChooseRole:tmpformChooseRole;
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -50,6 +50,15 @@ export class AddUserComponent implements OnInit {
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
+      this.dialog.closed.subscribe(e => {
+        if (e?.event) {
+          this.viewChooseRole = e?.event
+          this.changDetec.detectChanges();
+                console.log('in thành công nghe');
+      console.log(this.viewChooseRole);
+        }
+      })
+
   }
 
   beforeSave(op: any) {
@@ -157,4 +166,5 @@ export class AddUserComponent implements OnInit {
       this.adUser[data.field] = data.data[0];
     }
   }
+
 }

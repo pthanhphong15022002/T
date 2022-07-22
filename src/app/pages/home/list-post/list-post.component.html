@@ -14,7 +14,7 @@
                     </div>
                     <div class="d-flex flex-column flex-grow-1 share">
                         <span class="text-gray-500 feed-box box-new share-input" (click)="openCreateModal()">
-                            <codx-label class="fw-normal" formName="Comments" name="lblThinks" [default]="headerText">
+                            <codx-label class="fw-normal" formName="Comments" name="lblThinks" [default]="title">
                             </codx-label>
                         </span>
                     </div>
@@ -108,7 +108,6 @@
                 <div>
                     <codx-file [objectID]="item.recID" objectType="WP_Comments"></codx-file>
                 </div>
-                <!-- start share -->
                 <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
                     <div class="post mt-3" (click)="naviagte(item.shares)">
                         <codx-img [width]="200" [objectId]="item.refID" objectType="WP_News" imageType="square">
@@ -118,11 +117,11 @@
                 <ng-template #templateShare>
                     <ng-container *ngIf="item.shares; else postShareDeleted">
                         <div class="card card-custom mt-3">
-                            <div class="">
+                            <div class="border">
                                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item.shares }">
                                 </ng-container>
 
-                                <div class="border-start border rounded-3 my-3 p-4">
+                                <div class=" mt-3 p-4 border-top">
                                     <div class="d-flex">
                                         <div class="me-3">
                                             <codx-img slot="start" class="symbol symbol-30px symbol-circle"
@@ -139,10 +138,10 @@
                                                     |timefrom}}</span>
                                             </div>
                                         </div>
-
+                                        
                                     </div>
-                                    <div class="text-feed mt-2 ">
-                                        <div [innerHTML]="item.shares.content"></div>
+                                    <div [innerHTML]="item.shares.content">
+
                                     </div>
                                 </div>
                             </div>
@@ -182,9 +181,9 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-        <div class="content">
+        <!-- <div class="content">
             <div [innerHTML]="item.content"></div>
-        </div>
+        </div> -->
         <div class="pic-feed">
             <div class="pic-feed-img">
                 <codx-file #codxFile [objectID]="item.recID" (evetFile)="getFile($event,item)"></codx-file>

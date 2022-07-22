@@ -17,6 +17,8 @@ export class TMMeetingsComponent extends UIComponent {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any> | null;
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -54,13 +56,31 @@ export class TMMeetingsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
+        type: ViewType.list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.itemViewList,
+        },
+      },
+      {
         type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           panelLeftRef: this.templateLeft,
         },
-      },]
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: true,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+        },
+      },
+    ]
 
       this.view.dataService.methodSave = 'AddMeetingsAsync';
 

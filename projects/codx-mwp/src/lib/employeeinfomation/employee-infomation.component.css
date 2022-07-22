@@ -47,13 +47,13 @@ ngx-skeleton-loader {
 .tagitem {
     border-radius: 15px;
     width: fit-content;
-    height: 26px;
+    height: 24px;
     padding-right: 12px;
     padding-left: 12px;
 }
 
 .tagitem div {
-    line-height: 26px;
+    font-size: 12px;
 }
 
 .swiper-button-next {
@@ -84,6 +84,9 @@ ngx-skeleton-loader {
     float: left;
     margin-bottom: 4px;
     margin-right: 4px;
+    padding: 5px 10px;
+    height: 22px;
+    line-height: 22px;
 }
 
 
@@ -171,4 +174,114 @@ lib-employee-infomation {
 
 .list-hoppy {
     overflow: hidden;
+}
+
+.employee-container {
+    box-shadow: 0px 0px 28px 0px rgb(101 104 116 / 10%);
+}
+
+.pw-profile .avatar img {
+    border: 4px #fff solid;
+}
+
+.pic-circle {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border: 2px #bfbcbc solid;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+.process-line {
+    position: relative;
+}
+
+.process-line::before {
+    position: absolute;
+    display: block;
+    width: 1px;
+    left: 5.5px;
+    bottom: -21px;
+    top: 16px;
+    background-color: rgb(215 212 212);
+    content: "";
+    z-index: 1;
+}
+
+.process-h .process-item:last-child .process-line::before {
+    display: none;
+}
+
+.border-h {
+    width: 1px;
+    background-color: #ddd;
+}
+
+.user-item {
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    border: 1px #e0e0e0 solid;
+    padding: 10px 10px 10px 12px;
+}
+
+.e-control-wrapper.e-slider-container.e-horizontal {
+    height: 20px;
+}
+
+.e-control-wrapper.e-slider-container.e-horizontal .e-slider {
+    height: 20px;
+}
+
+.user-item.tagitem {
+    border-radius: 20px;
+    border: 0;
+}
+
+.edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 40px;
+    position: fixed;
+    top: 98px;
+    left: 115px;
+    cursor: pointer;
+    z-index: 100;
+    background-color: #3699ff;
+}
+
+.edit-btn:hover {
+    background-color: #03a9f4;
+}
+
+.edit-btn span {
+    color: #fff;
+}
+
+.edit-btn[data-title]:hover:before {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 40px;
+    left: 0px;
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 2px;
+    background: #252d42;
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.edit-btn[data-title]:hover:after {
+    content: "";
+    position: absolute;
+    bottom: 26px;
+    left: 8px;
+    display: inline-block;
+    color: #fff;
+    border: 8px solid transparent;
+    border-top: 8px solid #252d42;
 }

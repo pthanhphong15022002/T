@@ -13,7 +13,6 @@ import { SharedModule } from '@shared/shared.module';
 import { DepartmentComponent } from './incomming/department/department.component';
 import { ForwardComponent } from './incomming/forward/forward.component';
 //import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ODSearchComponent } from './searching/searching.component';
 import { CodxOdComponent } from './codx-od.component';
 import { UpdateExtendComponent } from './incomming/update/update.component';
 import { AgencyComponent } from './incomming/agency/agency.component';
@@ -29,6 +28,8 @@ import { FolderComponent } from './incomming/folder/folder.component';
 import { ThumbnailComponent } from 'projects/codx-share/src/lib/components/thumbnail/thumbnail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
+import { SearchingComponent } from './incomming/searching/searching.component';
 
 const routes: Routes = [
   {
@@ -45,7 +46,7 @@ const routes: Routes = [
       },  
       {
         path: 'searching/:funcID',
-        component: ODSearchComponent
+        component: SearchingComponent
       },     
       {
         path: '',
@@ -77,7 +78,6 @@ const routes: Routes = [
     AssignSubMenuComponent,
     AddLinkComponent,
     SendEmailComponent,
-    ODSearchComponent,
     ViewDetailComponent,
     IncommingAddComponent,
     FolderComponent

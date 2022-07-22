@@ -1,11 +1,230 @@
-<codx-treeview #treeView id="treeView" [data]="data" [showSearch]="false" [itemTemplate]="itemTemplate" [autoLoad]="false" idField="recID" parentIdField="parentID"
-    [isOutput]="true" [isLoadChild]="false">
-</codx-treeview>
-<!-- <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="data"
-[enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false"
-[isOutput]="true" [isLoadChild]="false">
-</codx-treeview> -->
+<ng-container >
+    <div class="container-fluid">
+        <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [enableCheck]=false
+        idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+    </codx-treeview>
+    </div>
+   
+</ng-container>
 
-<ng-template #itemTemplate let-item>
-   <div>{{item.taskName}}</div>
-</ng-template>
+
+<ng-template #templateTreeView let-item>
+    <div class="d-flex flex-row align-items-center p-2 border-bottom">
+        <td class="ps-3 w-5" >
+            <span *ngIf="item?.items.length >0">
+                <!-- <span class="icon-18 icon-remove me-2 align-items-start"></span> -->
+                <span class="icon-18 icon-add_box me-2 align-items-start"></span>
+            </span>
+            <span class="priority mb-1 max-h-70px" [class]="item?.priority | vll: 'L0186':'icon' | async" [style.color]="
+            item?.priority | vll: 'L0186':'textColor' | async"></span>
+        </td>
+
+        <!-- <td class="w-5" >
+            <div class="priority mb-1 max-h-70px" [class]="item?.priority | vll: 'L0186':'icon' | async" [style.color]="
+            item?.priority | vll: 'L0186':'textColor' | async"></div>
+        </td> -->
+        <td class="w-55">
+            <div class="a" [ngbTooltip]="data.taskName">
+                {{ item?.taskName }}</div>
+        </td>
+        <td class="w-15" >
+            <div>
+                <div >
+                    <codx-imgs [width]="30"
+                        [objectId]="item?.assignTo" objectType="AD_Users" [numberImages]="4">
+                    </codx-imgs>
+                </div>
+                <!-- <div *ngIf="item?.category == '1' || item?.category == '2'">
+                    <codx-imgs class="symbol symbol-30px symbol-circle ms-1 symbol-icon symbol-icon-check-bottom"
+                        [objectId]="item?.owner" objectType="AD_Users" [numberImages]="4">
+                    </codx-img>
+                </div> -->
+            </div>
+        </td>
+        <td class="w-10">
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center me-3 {{data?.comments  ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
+                    <span class="ms-1"> {{data?.comments}}</span>
+                </div>
+                <div class="d-flex align-items-center me-3 {{data?.todo ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-check-correct icon-16"></span>
+                    <span class="ms-1">
+                        {{data?.todo}}</span>
+                </div>
+                <div class="d-flex align-items-center me-3 {{data?.attachments ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-attach_file icon-16"></span>
+                    <span>
+                        {{data?.attachments}}
+                    </span>
+                </div>
+            </div>
+        </td>
+        <td class="w-10">
+            <div class="d-status">
+                <div class="badge badge-danger me-2 label-status" [style.border-color]="
+                    (item?.status | vll: 'L0614':'textColor' | async) +
+                    '30'
+                  " [style.background-color]="
+                    (item?.status | vll: 'L0614':'textColor' | async) +
+                    '30'
+                  " [style.color]="
+                  item?.status | vll: 'L0614':'textColor' | async
+                  " style="border: none">
+                    {{ item?.status | vll: "L0614":"text" | async }}
+                </div>
+            </div>
+        </td>
+        <td class=" w-5">
+            <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" type="hover">
+            </codx-mfunc>
+        </td>
+    </div>
+
+
+    <!-- <div class="d-flex flex-row align-items-center p-2 border-bottom">
+        <td class="ps-3 w-25">
+            <div class="a" [ngbTooltip]="data.taskName">
+                {{ data?.taskName }}</div>
+        </td>
+        <td class=" w-5">
+
+            <div class="align-items-center">
+                <span [ngClass]="'icon-notifications' +' ' + (data?.isTimeOut?'expired':'unexpired')"></span>
+                <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
+                        data?.priority | vll: 'L0186':'textColor' | async
+                          ">
+                </span>
+            </div>
+        </td>
+        <td class=" w-10">
+            <div class="badge badge-danger label-status" [style.border-color]="
+                          (data?.status | vll: 'L0614':'textColor' | async) +
+                          '30'
+                        " [style.background-color]="
+                          (data?.status | vll: 'L0614':'textColor' | async) +
+                          '30'
+                        " [style.color]="
+                        data?.status | vll: 'L0614':'textColor' | async
+                        " style="border: none">
+                {{ data?.status | vll: "L0614":"text" | async }}
+            </div>
+        </td>
+        <td class=" w-20">
+            <div class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+                [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+                placement="bottom" autoClose="outside">
+                <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="d-flex">
+                        <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
+                        <div class="b text-start" *ngIf="data.memo" [innerHTML]="data?.memo">
+                        </div>
+                        <span *ngIf="!data.memo" class="b text-start">Không có mô tả</span>
+                    </div>
+                </button>
+            </div>
+        </td>
+        <td class=" w-5">
+            <div class="d-flex">
+                <div class=" symbol-hover justify-content-end" *ngIf="data?.category == '3' || data?.category == '4'">
+                    <codx-img popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom"
+                        #empPopover="ngbPopover" [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, data)"
+                        (mouseleave)="PopoverEmp(empPopover, null)" [width]="30" [objectId]="data?.assignTo"
+                        objectName="AD_Users" [numberImages]="4">
+                    </codx-img>
+                </div>
+                <div class="symbol-hover justify-content-end" *ngIf="data?.category == '1' || data?.category == '2'">
+                    <codx-img [width]="30" [objectId]="data?.assignTo" objectName="AD_Users" [numberImages]="4">
+                    </codx-img>
+                </div>
+            </div>
+        </td>
+        <td class=" w-20">
+            <div class="d-flex align-items-center ">
+                <div class="text-dark fw-bold fs-7 me-1">
+                    Ngày hết hạn:
+                </div>
+                <div class="text-gray-600 fs-7">
+                    {{data.dueDate|date:'dd/MM/yyyy'}}
+                </div>
+            </div>
+        </td>
+        <td class=" w-10">
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center me-3 {{data?.comments  ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
+                    <span class="ms-1"> {{data?.comments}}</span>
+                </div>
+                <div class="d-flex align-items-center me-3 {{data?.todo ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-check-correct icon-16"></span>
+                    <span class="ms-1">
+                        {{data?.todo}}</span>
+                </div>
+                <div class="d-flex align-items-center me-3 {{data?.attachments ? 'text-success' : 'text-gray-600'}}">
+                    <span class="text-hover-primary icon-attach_file icon-16"></span>
+                    <span>
+                        {{data?.attachments}}
+                    </span>
+                </div>
+            </div>
+        </td>
+        <td class=" w-5">
+            <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" type="hover">
+            </codx-mfunc>
+        </td>
+    </div> -->
+
+    <!-- <ng-template #popDetail>
+        <div>
+            <ng-container>
+                <div class="d-flex flex-column flex-grow-1">
+                    <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
+                        <div class="d-flex align-items-center mt-2">
+                            <div class="d-flex align-items-center me-2">
+                                <span class="icon-create icon-18 text-gray-600"></span>
+                                <span class="text-gray-600 text-italic" [innerHTML]="popoverDetail?.memo2">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+    </ng-template>
+
+    <ng-template #popContent>
+        <div>
+            <ng-container>
+                <div class="result-title text-dark fs-6 mb-5 mt-3">Phân công cho</div>
+                <div class="task-list p10 full">
+                    <div class="d-flex align-items-start user-card p-3" *ngFor="let item of lstTaskbyParent">
+                        <div class="me-3">
+                            <codx-imgs [width]="30" [objectId]="item?.resourceID" objectType="AD_Users"></codx-imgs>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div class="text-dark fw-bold">{{item?.resourceName}}</div>
+                            <div class="text-gray-600 fs-7">{{item?.position}}</div>
+                            <div class="text-dark">
+                                {{item?.memo}}
+                            </div>
+                            <div class="d-flex align-items-center"
+                                *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
+                                <div class="d-flex align-items-center me-2">
+                                    <span class="icon-access_time icon-16 text-muted"></span>
+                                    <span class="text-muted">{{item?.dueDate | date:'dd/MM/yyyy'}}</span>
+                                </div>
+                                <div class="label label-xxs label-pill label-inline label-light-danger me-2 label-status"
+                                    [style.border-color]="(item?.status | vll: 'L0614':'color' | async) + '30'"
+                                    [style.background-color]="(item?.status | vll: 'L0614':'color' | async) + '30'"
+                                    [style.color]="item?.status | vll: 'L0614':'color' | async" style="border: none">{{
+                                    item?.status | vll: "L0614":"text" | async }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-template> -->

@@ -2,14 +2,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
-import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
   styleUrls: ['./detail-note-books.component.scss']
 })
-export class DetailNoteBooksComponent extends UIComponent implements OnInit {
+export class DetailNoteBooksComponent extends UIComponent {
 
   views = [];
   recID: any;
@@ -94,6 +93,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnInit {
       width: 150
     },
     ];
+    
   }
 
   ngAfterViewInit(): void {
