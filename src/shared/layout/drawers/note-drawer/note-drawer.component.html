@@ -1,145 +1,121 @@
-<div id="kt_drawer_note" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="note"
-    data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
-    data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_note_toggle"
-    data-kt-drawer-close="#kt_drawer_note_close">
-    <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
-        <div class="card-header pe-5" id="kt_drawer_note_messenger_header">
-            <div class="card-title">
-                <div class="d-flex justify-content-center flex-column me-3">
-                    <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
-              me-1 mb-2 lh-1 cursor-pointer">
-                        <codx-label name="lblTitleNote" formName="WP_Notes" default=" Ghi chú"></codx-label>
-                    </a>
+<codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
+    <ng-template popup add #body>
+        <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
+            <div class="d-flex flex-column">
+                <div class="notes">
+                    <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                        service="WP" type="listView" [predicate]="predicate" [dataValue]="dataValue">
+                    </codx-listview>
                 </div>
-            </div>
-
-            <div class="card-toolbar">
-                <div class="me-2">
-                    <div class="btn-add">
-                        <span
-                            class="icon-edit-one icon-16 icon-add btn btn-icon btn-active-light-primary position-relative"
-                            (click)="openFormAddNote()"></span>
-                    </div>
-                </div>
-                <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_note_close">
-                    <span class="svg-icon svg-icon-2"></span>
-                    <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-                        class="svg-icon svg-icon-2"></span>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="d-flex flex-column">
-            <br>
-            <div class="notes">
-                <codx-listview [itemTemplate]="template" #listview [funcId]="''" entityName="WP_Notes"
-                    gridViewName="'grvNotes'" service="WP" type="listView">
-                </codx-listview>
-            </div>
-            <ng-template #template let-item>
-                <div class="pd-note">
-                    <div class="p-3 note-content mb-3">
-                        <div class="checkbox-list">
-                            <div *ngIf="item.isPin == true">
-                                <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                        </codx-mfunc>
+                <ng-template #template let-item>
+                    <div class="pd-note">
+                        <div class="p-3 note-content mb-3">
+                            <div class="checkbox-list">
+                                <div *ngIf="item.isPin == true">
+                                    <div *ngIf="item.memo != null">
+                                        <div class="has-action-menu">
+                                            <codx-mfunc type="hover" [formModel]="lstView.formModel"
+                                                (clickMF)="clickMF($event,item)" [dataItem]="item">
+                                            </codx-mfunc>
+                                        </div>
+                                        <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                            <span class="icon-push_pin icon-16" type="button"></span>
+                                        </div>
+                                        <div
+                                            class="note-date d-flex justify-content-end align-items-center format-date">
+                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        </div>
+                                        <br>
+                                        <div class="d-flex flex-column note-option ms-3">
+                                            <span [innerHTML]="item.memo"></span>
+                                        </div>
                                     </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin icon-16" type="button"></span>
-                                    </div>
-                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    </div>
-                                    <br>
-                                    <div class="d-flex flex-column note-option ms-3">
-                                        <span [innerHTML]="item.memo"></span>
-                                    </div>
-                                </div>
-                                <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                        </codx-mfunc>
-                                    </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin icon-16" type="button"></span>
-                                    </div>
-                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    </div>
-                                    <br>
-                                    <div class="d-flex flex-column note-option ms-3">
-                                        <div *ngFor="let itemList of item.checkList">
-                                            <div *ngIf="itemList.status == null">
-                                                <div class="my-1 note-list">
-                                                    <ul>
-                                                        <li>{{itemList.listNote}}</li>
-                                                    </ul>
+                                    <div *ngIf="item.memo == null">
+                                        <div class="has-action-menu">
+                                            <codx-mfunc type="hover" [formModel]="lstView?.formModel"
+                                                (clickMF)="clickMF($event,item)" [dataItem]="item">
+                                            </codx-mfunc>
+                                        </div>
+                                        <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                            <span class="icon-push_pin icon-16" type="button"></span>
+                                        </div>
+                                        <div
+                                            class="note-date d-flex justify-content-end align-items-center format-date">
+                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        </div>
+                                        <br>
+                                        <div class="d-flex flex-column note-option ms-3">
+                                            <div *ngFor="let itemList of item.checkList">
+                                                <div *ngIf="itemList.status == null">
+                                                    <div class="my-1 note-list">
+                                                        <ul>
+                                                            <li>{{itemList.listNote}}</li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div *ngIf="item.isPin == false">
-                                <div *ngIf="item.memo != null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                        </codx-mfunc>
+                                <div *ngIf="item.isPin == false">
+                                    <div *ngIf="item.memo != null">
+                                        <div class="has-action-menu">
+                                            <codx-mfunc type="hover" [formModel]="lstView?.formModel"
+                                                (clickMF)="clickMF($event,item)" [dataItem]="item">
+                                            </codx-mfunc>
+                                        </div>
+                                        <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                            <span class="icon-push_pin1 icon-16" type="button"></span>
+                                        </div>
+                                        <div
+                                            class="note-date d-flex justify-content-end align-items-center format-date">
+                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        </div>
+                                        <br>
+                                        <div class="d-flex flex-column note-option ms-3">
+                                            <span [innerHTML]="item.memo"></span>
+                                        </div>
                                     </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
-                                    </div>
-                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    </div>
-                                    <br>
-                                    <div class="d-flex flex-column note-option ms-3">
-                                        <span [innerHTML]="item.memo"></span>
-                                    </div>
-                                </div>
-                                <div *ngIf="item.memo == null">
-                                    <div class="has-action-menu">
-                                        <codx-mfunc type="hover" [formModel]="view?.formModel"
-                                            (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                        </codx-mfunc>
-                                    </div>
-                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
-                                        <span class="icon-push_pin1 icon-16" type="button"></span>
-                                    </div>
-                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
-                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
-                                    </div>
-                                    <br>
-                                    <div class="d-flex flex-column note-option ms-3">
-                                        <div *ngFor="let itemList of item.checkList">
-                                            <div *ngIf="itemList.status == null">
-                                                <div class="my-1 note-list">
-                                                    <ul>
-                                                        <li>{{itemList.listNote}}</li>
-                                                    </ul>
+                                    <div *ngIf="item.memo == null">
+                                        <div class="has-action-menu">
+                                            <codx-mfunc type="hover" [formModel]="lstView?.formModel"
+                                                (clickMF)="clickMF($event,item)" [dataItem]="item">
+                                            </codx-mfunc>
+                                        </div>
+                                        <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                            <span class="icon-push_pin1 icon-16" type="button"></span>
+                                        </div>
+                                        <div
+                                            class="note-date d-flex justify-content-end align-items-center format-date">
+                                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                        </div>
+                                        <br>
+                                        <div class="d-flex flex-column note-option ms-3">
+                                            <div *ngFor="let itemList of item.checkList">
+                                                <div *ngIf="itemList.status == null">
+                                                    <div class="my-1 note-list">
+                                                        <ul>
+                                                            <li>{{itemList.listNote}}</li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,10 +124,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </ng-template>
+                </ng-template>
+            </div>
         </div>
-    </div>
-</div>
-
-<codx-views #view funcID="WPT08"></codx-views>
+    </ng-template>
+    <ng-template #subheader>
+        <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
+            (click)="openFormAddNote()">
+        </span>
+    </ng-template>
+</codx-form>
