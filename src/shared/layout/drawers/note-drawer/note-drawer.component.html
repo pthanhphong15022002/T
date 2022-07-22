@@ -1,15 +1,11 @@
-<div id="kt_drawer_note" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="note"
-    data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
-    data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_note_toggle"
-    data-kt-drawer-close="#kt_drawer_note_close">
-    <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
-        <div class="card-header pe-5" id="kt_drawer_note_messenger_header">
-            <div class="card-title">
-                <div class="d-flex justify-content-center flex-column me-3">
-                    <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
-              me-1 mb-2 lh-1 cursor-pointer">
-                        <codx-label name="lblTitleNote" formName="WP_Notes" default=" Ghi chú"></codx-label>
-                    </a>
+<codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
+    <ng-template popup add #body>
+        <div class="card w-100 rounded-0" id="kt_drawer_note_messenger">
+            <div class="d-flex flex-column">
+                <div class="notes">
+                    <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                        service="WP" type="listView" [predicate]="predicate" [dataValue]="dataValue">
+                    </codx-listview>
                 </div>
             </div>
 
@@ -117,14 +113,14 @@
                                                         <li>{{itemList.listNote}}</li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,14 +166,14 @@
                                                         <li>{{itemList.listNote}}</li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div *ngIf="itemList.status != null">
-                                                <div class="my-1 note-list">
-                                                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
-                                                        label="{{itemList.listNote}}"
-                                                        [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -186,10 +182,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-</div>
-
-<codx-views #view funcID="WPT08"></codx-views>
+                    </div>
+                </ng-template>
+            </div>
+    </ng-template>
+    <ng-template #subheader>
+        <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
+            (click)="openFormAddNote()">
+        </span>
+    </ng-template>
+</codx-form>
