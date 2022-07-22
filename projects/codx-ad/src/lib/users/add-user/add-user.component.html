@@ -1,4 +1,4 @@
-<codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" 
+<codx-layout-add #view [title]="title" [tabInfo]="tabInfo" [formModel]="view.formModel" 
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" 
   (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)"></codx-layout-add>
 
@@ -122,6 +122,7 @@
             <hr>
           </span>
         </div>
+        
 
         <div class="col-12 " *ngFor="let item of viewChooseRole; let i= index">
           <div class="row">
