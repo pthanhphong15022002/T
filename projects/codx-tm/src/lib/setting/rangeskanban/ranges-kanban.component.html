@@ -122,7 +122,7 @@
 
 <ng-template #moreFun let-data>
   <div>
-    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
       (clickMF)="moreFuncClick($event,data)">
     </codx-mfunc>
   </div>
