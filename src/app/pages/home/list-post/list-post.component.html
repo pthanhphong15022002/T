@@ -8,8 +8,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="me-3">
-                        <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40"
-                            class="symbol symbol-40px symbol-circle">
+                        <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
                         </codx-img>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 share">
@@ -40,8 +39,7 @@
     <div class="p-5">
         <div class="d-flex align-items-top">
             <div class="me-3">
-                <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40"
-                    class="symbol symbol-40px symbol-circle">
+                <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40">
                 </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
@@ -102,7 +100,7 @@
             </div>
         </div>
         <!--begin::Bottom-->
-        <div class="pt-3">
+        <div class="pt-4">
             <ng-container *ngIf="item.category == '4'; else shareTemplate">
                 <div [innerHTML]="item.content"></div>
                 <div>
@@ -117,32 +115,23 @@
                 <ng-template #templateShare>
                     <ng-container *ngIf="item.shares; else postShareDeleted">
                         <div class="card card-custom mt-3">
-                            <div class="border">
+                            <div class="border rounded-3 p-3">
                                 <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item.shares }">
                                 </ng-container>
-
-                                <div class=" mt-3 p-4 border-top">
+                                <div class="mt-3">
                                     <div class="d-flex">
                                         <div class="me-3">
-                                            <codx-img slot="start" class="symbol symbol-30px symbol-circle"
-                                                [objectId]="item.shares.createdBy" objectType="AD_Users" [width]="30">
+                                            <codx-img slot="start" [objectId]="item.shares.createdBy"
+                                                objectType="AD_Users" [width]="30">
                                             </codx-img>
                                         </div>
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <span
-                                                    class="text-gray-800 fs-6 fw-bolder">{{item.shares.createdName}}</span>
-                                            </div>
-                                            <div class="text-info-date">
-                                                <span class="text-gray-400 fs-7 me-2">{{item.shares.createdOn
-                                                    |timefrom}}</span>
-                                            </div>
+                                            <span class="text-dark fw-bolder">{{item.shares.createdName}}</span>
+                                            <span class="text-gray-500 fs-7">{{item.shares.createdOn
+                                                |timefrom}}</span>
                                         </div>
-                                        
                                     </div>
-                                    <div [innerHTML]="item.shares.content">
-
-                                    </div>
+                                    <div [innerHTML]="item.shares.content" class="mt-3"></div>
                                 </div>
                             </div>
                         </div>
@@ -152,8 +141,7 @@
                             <div class="card-body p-5">
                                 <div class="d-flex">
                                     <div class="me-3">
-                                        <codx-img slot="start" class="symbol symbol-30px symbol-circle" objectId=""
-                                            objectType="AD_Users" [width]="30">
+                                        <codx-img slot="start" objectId="" objectType="AD_Users" [width]="30">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
@@ -214,18 +202,16 @@
                             </h2>
                         </div>
                         <div class="d-flex justify-content-center align-items-center">
-                            <div class="symbol symbol-40 symbol-circle" *ngIf="item?.card">
-                                <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                    [objectId]=" item?.card?.senderID" objectType="AD_Users">
+                            <div *ngIf="item?.card">
+                                <codx-img [width]="40" [objectId]=" item?.card?.senderID" objectType="AD_Users">
                                 </codx-img>
                             </div>
                             <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
                                 <img src="/assets/themes/fd/default/img/img_SendCard.svg"
                                     class="icon-mail ion-margin-top-8" />
                             </div>
-                            <div class="symbol symbol-40 symbol-circle " *ngIf="item?.card?.receiverID">
-                                <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                    [objectId]=" item?.card?.receiverID" objectType="AD_Users">
+                            <div *ngIf="item?.card?.receiverID">
+                                <codx-img [width]="40" [objectId]=" item?.card?.receiverID" objectType="AD_Users">
                                 </codx-img>
                             </div>
                         </div>
@@ -236,9 +222,9 @@
                         </div>
                         <div class="d-flex align-items-center group-hasGift mt-6">
 
-                            <div class="d-flex align-items-center ion-wrap mr-2"
+                            <div class="d-flex align-items-center ion-wrap me-2"
                                 *ngIf="item?.card?.cardType=='2' || item?.card?.cardType =='3'">
-                                <div class=" symbol symbol-30 mr-2">
+                                <div class="symbol symbol-30 me-2">
                                     <img class="w-100"
                                         src="/assets/themes/fd/default/img/{{ item?.card?.rating | vll:item?.card?.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
                                 </div>
@@ -246,7 +232,7 @@
                             <div class="d-flex align-items-center ion-wrap mar-auto"
                                 *ngIf="item?.card?.hasGift || item?.card?.hasPoint">
                                 <img src="/assets/themes/fd/default/img/img_HasGifts.svg" *ngIf="item?.card?.hasGift"
-                                    class="symbol-image icon-surface1 mr-1" />
+                                    class="symbol-image icon-surface1 me-1" />
                                 <img src="/assets/themes/fd/default/img/img_HasCoins.svg" *ngIf="item?.card?.hasPoint"
                                     class="symbol-image icon-money-1" />
                             </div>
@@ -265,8 +251,7 @@
         <div *ngFor="let tagUser of tagUsers">
             <div class="row" style="margin-top: 10px;margin-bottom: 10px;margin-left: -10px;">
                 <div class="col-md-2">
-                    <codx-img class="symbol symbol-40px symbol-circle me-3" [objectId]="tagUser.objectID"
-                        objectType="AD_Users">
+                    <codx-img class="me-3" [width]="40" [objectId]="tagUser.objectID" objectType="AD_Users">
                     </codx-img>
                 </div>
                 <div class="col-md-8" style="margin-left: 2px;">
@@ -296,8 +281,7 @@
             <div *ngIf="tagUser.orgUnitName == undefined">
                 <div class="row" style="margin-top: 10px;margin-bottom: 10px;margin-left: -10px;">
                     <div class="col-md-2">
-                        <codx-img class="symbol symbol-40px symbol-circle me-3" [objectId]="tagUser.userID"
-                            objectType=" HR_Employees">
+                        <codx-img class="me-3" [width]="40" [objectId]="tagUser.userID" objectType=" HR_Employees">
                         </codx-img>
                     </div>
                     <div class="col-md-8">
