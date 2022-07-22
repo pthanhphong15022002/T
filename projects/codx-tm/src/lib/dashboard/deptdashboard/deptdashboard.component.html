@@ -43,7 +43,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.performance"
+                  [value]="availability"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -68,7 +68,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.availability.toFixed(2) }}
+            {{ availability }}
           </p>
         </div>
       </div>
@@ -101,7 +101,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.performance"
+                  [value]="performance"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -126,7 +126,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.performance.toFixed(2) }}
+            {{ performance }}
           </p>
         </div>
       </div>
@@ -159,7 +159,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.quality"
+                  [value]="quality"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -184,7 +184,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.quality.toFixed(2) }}
+            {{ quality }}
           </p>
         </div>
       </div>
@@ -217,7 +217,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="dbData?.efficiency.kpi"
+                  [value]="kpi"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -242,7 +242,7 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.efficiency.kpi.toFixed(2) }}
+            {{ kpi }}
           </p>
         </div>
       </div>
@@ -258,7 +258,7 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="piedata1"
+              [dataSource]="tasksByGroup"
               xName="taskGroupName"
               yName="percentage"
               innerRadius="80%"
@@ -276,9 +276,9 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="piedata2"
-              xName="x"
-              yName="y"
+              [dataSource]="tasksByOrgUnit"
+              xName="orgUnitID"
+              yName="qty"
               innerRadius="80%"
             >
             </e-accumulation-series>
@@ -296,9 +296,9 @@
             class="text-center text-gray-900 fw-bolder fs-2"
             style="margin: 0px"
           >
-            {{ dbData?.qtyTasks }}
+            {{ status.doneTasks }}
           </p>
-          <p class="text-center" style="margin: 0px">Đánh giá</p>
+          <p class="text-center" style="margin: 0px">Công việc hoàn thành</p>
         </div>
       </div>
     </div>
@@ -334,7 +334,7 @@
           <e-series-collection>
             <e-series
               fill="#005DC7"
-              [dataSource]="dataColumn"
+              [dataSource]="dataBarChart?.barChart"
               type="Column"
               name="Tasks"
               xName="label"
@@ -344,7 +344,7 @@
             </e-series>
             <e-series
               fill="#F9D923"
-              [dataSource]="dataLine"
+              [dataSource]="dataBarChart?.lineChart"
               type="Line"
               name="WorkHours"
               yName="value"
@@ -363,7 +363,7 @@
               <codx-img
                 class="me-2"
                 [width]="25"
-                [objectId]="'ADMIN'"
+                [objectId]="group.id"
                 [objectType]="'AD_Users'"
               ></codx-img>
               <div>{{ group.name }}</div>
@@ -384,7 +384,7 @@
     </div>
   </div>
   <div class="w-350px min-w-350px">
-    <div class="rounded-2 bg-body mb-3">
+    <div class="rounded-2 bg-body mb-3 p-6">
       <div class="text-dark text-center fw-bold pt-6 mb-3">
         Top 3 nhân viên hiệu quả làm việc cao nhất
       </div>
@@ -394,7 +394,7 @@
             <div class="d-flex justify-content-between">
               <codx-img
                 [width]="25"
-                [objectId]="'ADMIN'"
+                [objectId]="emp.id"
                 [objectType]="'AD_Users'"
               ></codx-img>
               <div class="ms-2">
@@ -481,38 +481,25 @@
 
 <!-- Thời gian thực hiện -->
 <ng-template #workHours>
-  <div class="d-flex flex-column py-6">
-    <div class="d-flex align-items-center justify-content-end mb-2">
-      <div class="text-dark fs-7 me-3">Lê Phạm Hoài Thương</div>
-      <codx-img
-        [width]="25"
-        [objectId]="'ADMIN'"
-        [objectName]="'Lê Phạm Hoài Thương'"
-        [objectType]="'AD_Users'"
-      >
-      </codx-img>
-    </div>
-    <div class="progress">
-      <div
-        class="progress-bar progress-bar-done"
-        role="progressbar"
-        style="width: 20%"
-      ></div>
-      <div
-        class="progress-bar progress-bar-processing"
-        role="progressbar"
-        style="width: 20%"
-      ></div>
-      <div
-        class="progress-bar progress-bar-postpone"
-        role="progressbar"
-        style="width: 20%"
-      ></div>
-      <div
-        class="progress-bar progress-bar-cancel"
-        role="progressbar"
-        style="width: 20%"
-      ></div>
+  <div class="d-flex flex-column" *ngFor="let item of hrWork">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center justify-content-end">
+        <span class="me-3">{{ item?.id }}</span>
+        <codx-img
+          [width]="25"
+          [objectId]="item?.id"
+          [objectName]="item?.id"
+          [objectType]="'AD_Users'"
+        ></codx-img>
+      </div>
+      <span>{{ item?.completed }}</span>
+      <div class="progress">
+        <div
+          class="progress-bar progress-bar-processing"
+          role="progressbar"
+          [style.width.%]="item?.percentage"
+        ></div>
+      </div>
     </div>
   </div>
 </ng-template>
