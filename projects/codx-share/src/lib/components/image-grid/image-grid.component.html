@@ -10,7 +10,7 @@
       </ng-container> -->
       <ng-container *ngSwitchCase="1">
         <div class="feed-1pic position-relative">
-          <ng-container *ngIf="file_img_video[0].referType == FILE_CATEGORY.IMAGE; else video_1_0">
+          <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
             <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
           </ng-container>
           <ng-template #video_1_0>
@@ -26,7 +26,7 @@
       <ng-container *ngSwitchCase="2">
         <div class="row row-custom feed-2pic m-0 ">
           <div class="col-7 pe-2 ps-0 position-relative">
-            <ng-container *ngIf="file_img_video[0].referType == FILE_CATEGORY.IMAGE; else video_2_0">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_2_0">
               <img class="w-100 rounded h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_2_0>
@@ -39,7 +39,7 @@
             </ng-container>
           </div>
           <div class="col-5 px-0 h-250px bg-secondary d-flex algin-items-center position-relative">
-            <ng-container *ngIf="file_img_video[1].referType == FILE_CATEGORY.IMAGE; else video_2_1">
+            <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_2_1">
               <img class="w-100 rounded h-250px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
             </ng-container>
             <ng-template #video_2_1>
@@ -56,7 +56,7 @@
       <ng-container *ngSwitchCase="3">
         <div class="row row-custom feed-3pic m-0">
           <div class="col-7 ps-0 pe-2 position-relative">
-            <ng-container *ngIf="file_img_video[0].referType == FILE_CATEGORY.IMAGE; else video_3_0">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_3_0">
               <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_3_0>
@@ -70,7 +70,7 @@
           </div>
           <div class="col-5 px-0 ">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[1].referType == FILE_CATEGORY.IMAGE; else video_3_1">
+              <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_3_1">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
               </ng-container>
               <ng-template #video_3_1>
@@ -83,7 +83,7 @@
               </ng-container>
             </div>
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[2].referType == FILE_CATEGORY.IMAGE; else video_3_2">
+              <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_3_2">
                 <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
               </ng-container>
               <ng-template #video_3_2>
@@ -101,7 +101,7 @@
       <ng-container *ngSwitchCase="4">
         <div class="row row-custom feed-4pic m-0">
           <div class="col-5 pe-2 position-relative">
-            <ng-container *ngIf="file_img_video[0].referType == FILE_CATEGORY.IMAGE; else video_4_0">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_4_0">
               <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_4_0>
@@ -115,7 +115,7 @@
           </div>
           <div class="col-7 px-0">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[1].referType == FILE_CATEGORY.IMAGE; else video_4_1">
+              <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_4_1">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
               </ng-container>
               <ng-template #video_4_1>
@@ -129,7 +129,7 @@
             </div>
             <div class="row row-custom mt-2 mx-0">
               <div class="col-6 ps-0 pe-2 position-relative">
-                <ng-container *ngIf="file_img_video[2].referType == FILE_CATEGORY.IMAGE; else video_4_2">
+                <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                 </ng-container>
                 <ng-template #video_4_2>
@@ -142,7 +142,7 @@
                 </ng-container>
               </div>
               <div class="col-6 px-0 position-relative">
-                <ng-container *ngIf="file_img_video[3].referType == FILE_CATEGORY.IMAGE; else video_4_3">
+                <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
                 </ng-container>
                 <ng-template #video_4_3>
@@ -162,7 +162,7 @@
         <div class="row row-custom feed-5pic m-0">
           <div class="col-7 ps-0 pe-2">
             <div class="position-relative"> 
-              <ng-container *ngIf="file_img_video[0].referType == FILE_CATEGORY.IMAGE; else video_n_0">
+              <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_n_0">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
               </ng-container>
               <ng-template #video_n_0>
@@ -176,7 +176,7 @@
             </div>
             <div class="row row-custom mt-2 mx-0">
               <div class="col-6 ps-0 pe-2 position-relative">
-                <ng-container  *ngIf="file_img_video[1].referType == FILE_CATEGORY.IMAGE; else video_n_1">
+                <ng-container  *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                 </ng-container>
                 <ng-template #video_n_1>
@@ -189,7 +189,7 @@
                 </ng-container>
               </div>
               <div class="col-6 px-0 position-relative">
-                <ng-container *ngIf="file_img_video[2].referType == FILE_CATEGORY.IMAGE; else video_n_2">
+                <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
                 </ng-container>
                 <ng-template #video_n_2>
@@ -205,7 +205,7 @@
           </div>
           <div class="col-5 px-0">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[3].referType == FILE_CATEGORY.IMAGE; else video_n_3">
+              <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_n_3">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail ||file_img_video[3].data " />
               </ng-container>
               <ng-template #video_n_3>
@@ -218,7 +218,7 @@
               </ng-container>
             </div>
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[4].referType == FILE_CATEGORY.IMAGE; else video_n_4">
+              <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
                 <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
               </ng-container>
               <ng-template #video_n_4>
@@ -240,9 +240,9 @@
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="files.length > 0">
+  <ng-container *ngIf="file_application.length > 0">
     <div class="mt-2">
-      <div class="my-3" *ngFor="let file of files">
+      <div class="my-3" *ngFor="let file of file_application">
         <codx-temp-full  
             imageSrc="{{file.extension | avtFile}}" 
             imgCss="w-20px me-3 cursor-pointer" 

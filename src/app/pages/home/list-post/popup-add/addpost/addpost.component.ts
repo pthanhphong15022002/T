@@ -266,13 +266,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         post.isUpload = true;
         post.files = this.listFileUpload;
     }
-    var files = this.codxFileCreated.getFiles();
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
           if(this.listFileUpload.length > 0){
             this.atmCreate.objectId = res.recID;
-            this.dmSV.fileUploadList = [...this.listFileUpload];
+            this.dmSV.fileUploadList =  this.codxFileCreated.getFiles();
             res.files = [...this.listFileUpload];
             this.atmCreate.saveFiles();
           }
@@ -283,8 +282,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         
       });
   }
-
-
   editPost() {
     if (!this.message) {
       this.notifySvr.notifyCode('E0315');
@@ -358,10 +355,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
-
-  
-  
   
   sharePost() {
     if (!this.message && this.listFileUpload.length < 0) {

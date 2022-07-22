@@ -27,12 +27,13 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Output() addFile = new EventEmitter();
 
   @ViewChild('atm') atm:AttachmentComponent;
-  FILE_CATEGORY = {
+  FILE_REFERTYPE = {
     IMAGE: "image",
-    VIDEO: "video"
+    VIDEO: "video",
+    APPLICATION :'application'
   }
   file_img_video:any[] = [];
-  files:any[] = [];
+  file_application:any[] = [];
   videos:any[] = [];
   filesAdd: any[] = [];
   filesDelete: any[] = [];
@@ -238,7 +239,8 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
   }
   getFiles(){
-    return this.lstFile.concat(this.file_img_video,this.files);
+    let files = this.file_img_video.concat(this.file_application);
+    return this.lstFile.concat(this.file_img_video,this.file_application);
   }
   getFileByObjectID() {
     this.api.execSv(
@@ -248,17 +250,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       this.objectID)
     .subscribe((files:any[]) => {
       if(files.length > 0){
-        this.lstFile = [... files]
+        this.lstFile = files
         this.lstFile.forEach((f:any) => {
-          if(f.category == this.FILE_CATEGORY.IMAGE){
+          if(f.category == this.FILE_REFERTYPE.IMAGE){
             this.file_img_video.push(f);
           }
-          else if(f.category == this.FILE_CATEGORY.VIDEO){
+          else if(f.category == this.FILE_REFERTYPE.VIDEO){
             f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
             this.file_img_video.push(f);
           }
           else{
-            this.files.push(f);
+            this.file_application.push(f);
           }
         });
         this.dt.detectChanges();
@@ -270,7 +272,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   openDetail(indexFile:any){}
 
   removeFiles(file:any){
-    if(file.referType == this.FILE_CATEGORY.IMAGE || file.referType == this.FILE_CATEGORY.VIDEO){
+    if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
       for (let i = 0; i < this.file_img_video.length; i++) {
         if(this.file_img_video[i].fileName == file.fileName)
         {
@@ -281,15 +283,14 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
     else
     {
-      for (let i = 0; i < this.files.length; i++) {
-        if(this.files[i].fileName == file.fileName)
+      for (let i = 0; i < this.file_application.length; i++) {
+        if(this.file_application[i].fileName == file.fileName)
         {
-          this.files.splice(i,1);
+          this.file_application.splice(i,1);
           break;
         };
       };
     }
-      this.lstFile = [...this.file_img_video.concat(this.files)];
       this.filesDelete.push(file);
       this.removeFile.emit(file);
       this.dt.detectChanges();
@@ -299,23 +300,23 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     this.lstFile.concat(files);
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
-        f['referType'] = 'image';
+        f['referType'] = this.FILE_REFERTYPE.IMAGE;
         let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
         if(a) return;
         this.file_img_video.push(f);
       }
       else if(f.mimeType.indexOf("video") >= 0)
       {
-        f['referType'] = 'video';
+        f['referType'] = this.FILE_REFERTYPE.VIDEO;
         let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
         if(a) return;
         this.file_img_video.push(f);
       }
       else{
-        f['referType'] = 'application';
-        let a = this.files.find(f2 => f2.fileName == f.fileName);
+        f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        let a = this.file_application.find(f2 => f2.fileName == f.fileName);
         if(a) return;
-        this.files.push(f);
+        this.file_application.push(f);
       }
     });
     this.filesAdd.concat(files);
