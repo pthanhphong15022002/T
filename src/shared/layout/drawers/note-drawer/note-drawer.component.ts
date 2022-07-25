@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
@@ -8,6 +8,7 @@ import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { NoteServices } from '@pages/services/note.services';
+import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
 
 @Component({
   selector: 'app-note-drawer',
@@ -21,32 +22,23 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   data: any;
   message: any;
   listNote: any[] = [];
-  messageOld: any;
-  listNoteOld: any[] = [];
   type: any;
-  isCalendar = false;
-  isCalendarOld: any;
-  noteTypeOld: any;
   itemUpdate: any;
   recID: any;
-  recIdOld: any;
-  isPin: any;
-  isPinOld: any;
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  TM_Tasks: any;
-  WP_Notes: any;
-  TM_TasksParam: any;
-  WP_NotesParam: any;
-  param: any;
-  countIsPin = 0;
-  countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
   dialog: DialogRef;
   predicate = '';
   dataValue = '';
+  editMF: any;
+  deleteMF: any;
+  pinMF: any;
+  saveMF: any;
+  dataService: DataService;
+  dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -58,6 +50,17 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
+    })
+    var dataSv = new DataService(injector);
+    dataSv.request.pageSize = 6;
+    this.dataService = dataSv;
   }
 
   onInit(): void {
@@ -97,6 +100,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             }
           })
         }
+        (this.lstView.dataService as CRUDService).page = 5;
       }
     }
   }
@@ -239,20 +243,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'edit':
-        this.openFormUpdateNote(data);
-        break;
-      case 'delete':
-        this.onDeleteNote(data)
-        break;
-      case 'WPT0801':
-        this.checkNumberNotePin(data);
-        break;
-      case 'WPT0802':
-        this.openFormNoteBooks(data);
-        break;
-    }
+  getMoreF(item) {
+    this.dataUpdate = item;
   }
 }

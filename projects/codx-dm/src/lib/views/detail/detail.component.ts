@@ -24,6 +24,11 @@ export class DetailComponent implements OnInit {
   @Input() type: any;
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
+ titleFileName = 'Tên tài liệu';
+ titleCreatedBy = 'Người tạo';
+ titleCreatedOn = 'Ngày tạo';
+ titleLength = 'Dung lượng';
+
   html: string;
   count: number;
   tenant: string;

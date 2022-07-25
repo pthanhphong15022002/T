@@ -6,7 +6,7 @@
       <ng-template #header>
         <div class="menu-item">
           <a class="menu-link without-sub" href="javascript:;">
-            <button (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" data-toggle="tooltip">
+            <button [disabled]="disableInput" (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" data-toggle="tooltip">
               <i class="icon-add"></i>
               <span class="font-size-lg">{{titleAddFolder}}</span>
             </button>

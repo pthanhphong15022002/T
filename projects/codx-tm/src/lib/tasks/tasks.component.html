@@ -19,9 +19,8 @@
   <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
-    [status]="data.status" statusVll="L0614" [date]="data.dueDate"
-    [resources]="data.category=='3'?data.assignTo : (data.owner!=user.userID ?data.owner:'')" resourceObjType="AD_Users"
-    [subTitle]="data.positionNameCreate" [content]="data.taskName" [formModel]="view.formModel" [dataItem]="data">
+    [subTitle]="data.positionNameCreate" [content]="data.taskName" [formModel]="view.formModel" [footer]="footerList"
+    [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
@@ -65,7 +64,8 @@
       </div>
       <div class="symbol-group symbol-hover justify-content-end"
         *ngIf="setting.resources && data.assignTo && data.assignTo.length">
-        <codx-imgs [width]="30" [objectId]="data.assignTo" objectType="AD_Users" [numberImages]="3">
+        <codx-imgs [width]="30" [objectId]="data.assignTo" objectType="AD_Users" [numberImages]="3"
+          (click)="openViewListTaskResource(data)">
         </codx-imgs>
       </div>
     </div>
@@ -92,6 +92,8 @@
   [autoLoad]="false">
 </codx-views>
 
+
+
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-2">
     <div class="d-flex align-items-end me-2 codx-badge">
@@ -104,7 +106,7 @@
               (data?.status | vll: 'L0614':'textColor' | async) +
               '30'
             " [style.color]="
-              itemSelected?.status | vll: 'L0614':'textColor' | async
+            data?.status | vll: 'L0614':'textColor' | async
             " style="border: none">
             {{ data?.status | vll: "L0614":"text" | async }}
           </div>
@@ -116,13 +118,36 @@
           }}</span>
       </span>
     </div>
-    <div class="symbol-hover justify-content-end">
-      <codx-imgs *ngIf="data.category=='1'||data.category=='2'" [width]="30" [objectId]="data.owner"
-        objectType="AD_Users" [numberImages]="3">
-      </codx-imgs>
-      <codx-imgs *ngIf="data.category=='3'||data.category=='4'" [width]="30" [objectId]="data.assignTo"
-        objectType="AD_Users" [numberImages]="3">
+    <div *ngIf="data.category == '3'" class="" (click)="openViewListTaskResource(data)">
+      <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
       </codx-imgs>
     </div>
+    <div *ngIf="data.category == '1' || data.category == '2'" class="">
+      <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
+      </codx-imgs>
+    </div>
+    <!-- <div *ngIf="data.category=='1'||data.category=='2'">
+        <codx-img [width]="30" [objectId]="data.owner" objectType="AD_Users">
+        </codx-img>
+      </div>
+      <div *ngIf="data.category=='3'|| data.category=='4'" (click)="openViewListTaskResource(data)">
+      
+          <div *ngIf="data.assignTo.split(';').length <= 3">
+            <ng-container *ngFor="let item of data.assignTo.split(';')">
+              <codx-img [width]="30" [objectId]="item" objectType="AD_Users">
+              </codx-img>
+            </ng-container>
+          </div>
+          <div *ngIf="data.assignTo.split(';').length > 3">
+            <ng-container *ngFor="let item of data.assignTo.split(';'); index as i">
+              <codx-img *ngIf="i < 2" [width]="30" [objectId]="item" objectType="AD_Users">
+              </codx-img>
+              <div *ngIf="i == 2" class="symbol symbol-30px symbol-circle">
+                <span class="symbol-label fs-4"
+                  style="background-color : #d0e41c;">+{{data.assignTo.split(';')?.length-2}}</span>
+              </div>
+            </ng-container>
+          </div> 
+      </div>    -->
   </div>
 </ng-template>

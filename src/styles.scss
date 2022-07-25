@@ -101,7 +101,8 @@ codx-input.text-error,
 }
 
 .action-menu {
-    padding: 5px 6px !important;
+    padding: 0px 6px 0 10px !important;
+    height: 32px;
 }
 
 ngb-popover-window[role="tooltip"] {
@@ -190,5 +191,5 @@ ngb-popover-window[role="tooltip"] {
 }
 
 .max-h-25px {
-    max-height: 18px!important;
+    max-height: 18px !important;
 }

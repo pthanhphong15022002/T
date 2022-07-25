@@ -386,9 +386,6 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editExperences(data?) {
-    // this.allowexp = true;
-    // this.codxMwpService.EmployeeInfomation = this;
-    // this.codxMwpService.experienceEdit.next(data || { employeeID: this.employeeInfo.employeeID });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -420,6 +417,19 @@ export class EmployeeInfomationComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
+    });
+  }
+
+  addExperences() {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(EditRelationComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
     });
   }
 
