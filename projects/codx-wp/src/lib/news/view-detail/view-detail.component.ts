@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel } from 'codx-core';
+import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel } from 'codx-core';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 
 @Component({
@@ -14,6 +14,7 @@ export class ViewDetailComponent implements OnInit {
     post: "1",
     video: "2"
   }
+  entityName:string = "WP_News";
   category:string ="";
   recID:string = "";
   funcID:string = "";
@@ -35,7 +36,15 @@ export class ViewDetailComponent implements OnInit {
       this.category = p["category"];
       this.funcID = p["funcID"];
       this.loadData(this.recID);
-    })
+    });
+    this.api
+      .exec<any[]>('BS', 'TagsBusiness', 'GetModelDataAsync', this.entityName)
+      .subscribe((o: any) => {
+        if (o) {
+          this.listTag = o.datas;
+          this.changedt.detectChanges();
+        }
+      });
     
   }
   ngAfterViewInit(): void {
@@ -78,18 +87,11 @@ export class ViewDetailComponent implements OnInit {
   }
 
   clickShowPopupCreate(){
-    let option = new SidebarModel();
+    let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
-    option.Width = '550px';
-    this.callfc.openSide(PopupAddComponent,null,option);
-  }
-  clickShowPopupSearch(){
-    // this.callfc.openForm(PopupSearchComponent,"Tìm kiếm",900,700,"")
-  }
-
-  clickClosePopup(){
-    // this.viewbase.currentView.closeSidebarRight();
+    option.IsFull = true;
+    this.callfc.openForm(PopupAddComponent,'',0,0,'',null,'',option);
   }
 
   searchField:string ="";

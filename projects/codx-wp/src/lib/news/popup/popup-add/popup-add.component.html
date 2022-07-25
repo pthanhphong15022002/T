@@ -77,21 +77,48 @@
                         <div class="w-100 my-2">
                                 <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
                         </div>
-                        <div class="w-100 view-img">
-                            <div *ngIf="fileUpload.length > 0">
-                                <img  class="w-100 h-200px" [src]="fileUpload[0].data || fileUpload[0].thumbnail" alt="">
+                        <ng-container *ngIf="newsType == NEWSTYPE.POST;else video">
+                            <div class="w-100 my-2">
+                                <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
                             </div>
-                            <div >
-                                <codx-attachment #codxAttachment 
-                                    [functionID]="dialogRef?.formModel.funcID" 
-                                    [objectType]="dialogRef?.formModel.entityName" 
-                                    [allowMultiFile]="0"
-                                    [hideImageUpload]="'1'"
-                                    [hideUploadBtn]="0"
-                                    (fileCount)="addFiles($event)">
-                                </codx-attachment>
+                            <div class="w-100">
+                                <div *ngIf="fileUpload.length > 0">
+                                    <img  class="w-100 h-200px" [src]="fileUpload[0].data || fileUpload[0].thumbnail" alt="">
+                                </div>
+                                <div >
+                                    <codx-attachment #codxAttachment 
+                                        [functionID]="dialogRef?.formModel.funcID" 
+                                        [objectType]="dialogRef?.formModel.entityName" 
+                                        [allowMultiFile]="0"
+                                        [hideImageUpload]="'1'"
+                                        [hideUploadBtn]="0"
+                                        (fileCount)="addFiles($event)">
+                                    </codx-attachment>
+                                </div>
                             </div>
-                        </div>
+                        </ng-container>
+                        <ng-template #video>
+                            <div class="w-100 my-2">
+                                <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Video"></codx-label>
+                            </div>
+                            <div class="w-100">
+                                <div *ngIf="fileUpload.length > 0">
+                                    <video controls class="w-100 h-200px">
+                                        <source [src]="fileUpload[0].data || fileUpload[0].srcVideo" alt="" />
+                                    </video>
+                                </div>
+                                <div >
+                                    <codx-attachment #codxAttachment 
+                                        [functionID]="dialogRef?.formModel.funcID" 
+                                        [objectType]="dialogRef?.formModel.entityName" 
+                                        [allowMultiFile]="0"
+                                        [hideImageUpload]="'1'"
+                                        [hideUploadBtn]="0"
+                                        (fileCount)="addFiles($event)">
+                                    </codx-attachment>
+                                </div>
+                            </div>
+                        </ng-template>
                     </div>
                     <div class="">
                         <div class="d-flex align-items-center mb-2">
