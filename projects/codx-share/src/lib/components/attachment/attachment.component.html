@@ -68,11 +68,27 @@
                     </div>       -->
                     <div class="offcanvas-wrapper">
                         <div *ngFor="let file of sortBy();  index as i;" class=" mt-2 mb-2 has-action-menu">                                   
-                            <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                            <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
+                            <ng-template #simple>
+                                <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"       
+                                    [subTitleTmp]="cardImgFooter"                                    
+                                    [descLine]="1">
+                                </codx-temp-full>
+                            </ng-template>
+                            <ng-template #full>
+                                <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
+                                    subTitle="{{file.createdOn}}{{' | ' + file.createdBy}}"
+                                    [subTitleTmp]="cardImgFooter"
+                                    [descLine]="1">
+                                </codx-temp-full>
+                            </ng-template>  
+                            <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
                                 title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
                                 [subTitleTmp]="cardImgFooter"
                                 [descLine]="1">
-                            </codx-temp-full>
+                            </codx-temp-full>-->
                             <ng-template #cardImgFooter let-data>
                                 <div class="d-flex flex-column flex-grow-1 file-item">
                                     <span class="text-dark"></span>
@@ -87,13 +103,13 @@
                                         > </codx-input> 
                                     </div>
                                 </div>                                      
-                            </ng-template>                                   
+                            </ng-template>                                    -->
                             <div class="action-menu d-flex align-items-center cursor-pointer">
                                 <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteUploaded(file.fileName)">
-                                    <i class="icon-delete text-primary icon-18"></i> 
+                                    <i class="icon-close text-primary icon-18"></i> 
                                 </div> 
                                 <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="editfile(file, true, i)">
-                                    <i class="icon-edit-one text-primary icon-18"></i> 
+                                    <i class="icon-edit text-primary icon-18"></i> 
                                 </div>
                             </div>                                
                         </div>
@@ -145,11 +161,27 @@
                     </div>
                     <div *ngIf="hideImageUpload == '1'" style="max-height: 100px; overflow-y: auto;">
                         <div *ngFor="let file of sortBy();  index as i;" class="d-flex align-items-center mt-2 mb-2 has-action-menu">                           
-                            <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                            <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
                                 title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
                                 [subTitleTmp]="cardImgFooter"
                                 [descLine]="1">
-                            </codx-temp-full>
+                            </codx-temp-full> -->
+                            <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
+                            <ng-template #simple>
+                                <codx-temp-full   imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"             
+                                    [subTitleTmp]="cardImgFooter"                              
+                                    [descLine]="1">
+                                </codx-temp-full>
+                            </ng-template>
+                            <ng-template #full>
+                                <codx-temp-full   imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
+                                    subTitle="{{file.createdOn}}{{' | ' + file.createdBy}}"
+                                    [subTitleTmp]="cardImgFooter"
+                                    [descLine]="1">
+                                </codx-temp-full>
+                            </ng-template>  
                             <ng-template #cardImgFooter let-data>
                                 <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item">
                                     <span class="text-dark"></span>
@@ -167,10 +199,10 @@
                             </ng-template>                             
                             <div class="action-menu d-flex align-items-center cursor-pointer">
                                 <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteUploaded(file.fileName)">
-                                  <i class="icon-delete text-primary icon-18"></i> 
+                                  <i class="icon-close text-primary icon-18"></i> 
                                 </div> 
                                 <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="editfile(file, true, i)">
-                                    <i class="icon-edit-one text-primary icon-18"></i> 
+                                    <i class="icon-edit text-primary icon-18"></i> 
                                 </div>
                             </div> 
                             <!-- <div ngbDropdown class="dropdown d-flex align-items-center">

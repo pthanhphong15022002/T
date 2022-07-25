@@ -40,27 +40,19 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   updateStatus() {
-    // this.api
-    //   .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
-    //     employeeID: this.employStatus.employeeID,
-    //     status: this.employStatus.status,
-    //   })
-    //   .subscribe((res) => { });
-    // if (this.employStatus.status == "90") {
-    //   this.employList.removeHandler(this.employStatus, "employeeID");
-    // } else {
-    //   this.employList.addHandler(this.employStatus, false, "employeeID");
-    // }
-    // this.dialog.hide(this.data);
 
-    this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Cập nhật thành công'); 
-      }
-    });
+    this.api
+      .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
+        employeeID: this.employStatus.employeeID,
+        status: this.employStatus.status,
+      })
+      .subscribe((res) => { });
+    // if (this.employStatus.status == "90") {
+    //   this.form.removeHandler(this.employStatus, "employeeID");
+    // } else {
+    //   this.view.addHandler(this.employStatus, false, "employeeID");
+    // }
+    this.dialog.close();
   }
 
 }
