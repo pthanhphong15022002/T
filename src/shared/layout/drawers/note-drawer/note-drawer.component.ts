@@ -37,7 +37,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   deleteMF: any;
   pinMF: any;
   saveMF: any;
-  dataService: DataService;
+  dtService: CRUDService;
   dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
@@ -58,9 +58,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.saveMF = res[1];
       }
     })
-    var dataSv = new DataService(injector);
-    dataSv.request.pageSize = 6;
-    this.dataService = dataSv;
+    var dataSv = new CRUDService(injector);
+    dataSv.request.pageSize = 10;
+    this.dtService = dataSv;
   }
 
   onInit(): void {

@@ -115,14 +115,14 @@ app-notes-home {
     margin-left: 10px;
 }
 
-.pd-note {
-    padding-right: 3% !important;
-}
-
 .top-2 {
     margin-top: 2%;
 }
 
 .lstView {
     height: 350px !important;
+}
+
+ejs-listview .e-ul>li {
+    margin-bottom: 0;
 }

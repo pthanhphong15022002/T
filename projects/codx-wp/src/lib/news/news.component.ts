@@ -180,12 +180,12 @@ export class NewsComponent implements OnInit {
       }
     });
   }
-  clickShowPopupCreate() {
+  clickShowPopupCreate(newsType:string) {
     let option = new DialogModel();
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent,'',0,0,'',null,'',option);
+    this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
   }
 
   clickShowPopupSearch() {

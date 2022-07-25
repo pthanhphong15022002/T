@@ -4,7 +4,7 @@
             <div class="notes">
                 <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
                     gridViewName="'grvNotes'" service="WP" type="listView" [predicate]="predicate"
-                    [dataValue]="dataValue" [dataService]="dataService">
+                    [dataValue]="dataValue" [dataService]="dtService">
                 </codx-listview>
             </div>
             <ng-template #template let-item>
