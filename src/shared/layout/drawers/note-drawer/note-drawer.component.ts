@@ -37,7 +37,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   deleteMF: any;
   pinMF: any;
   saveMF: any;
-  dataService: DataService;
+  dtService: CRUDService;
   dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
@@ -58,9 +58,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.saveMF = res[1];
       }
     })
-    var dataSv = new DataService(injector);
-    dataSv.request.pageSize = 6;
-    this.dataService = dataSv;
+    var dataSv = new CRUDService(injector);
+    dataSv.request.pageSize = 10;
+    this.dtService = dataSv;
   }
 
   onInit(): void {
@@ -80,7 +80,14 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).update(data).subscribe();
+            (this.lstView.dataService as CRUDService).update(data).subscribe((res)=>{
+          
+              var dt = this.lstView?.dataService.data;
+              dt.sort(function(a, b) {
+                return Number(b.isPin) - Number(a.isPin);
+            });
+              dt = [...dt, ...[]];
+            });
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -213,7 +220,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         this.dataValue = '';
-        this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+       // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
         var object = [{ data: data, type: 'edit' }]
         this.noteService.data.next(object);
         this.changeDetectorRef.detectChanges();

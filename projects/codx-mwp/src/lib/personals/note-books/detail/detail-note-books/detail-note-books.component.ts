@@ -129,17 +129,23 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   openFormCreateDetail(e) {
+    var obj = [{
+      data: this.view.dataService.data,
+      type: 'add',
+      parentID: this.recID,
+    }]
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new DialogModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       this.view.dataService.data.pop();
       this.dialog = this.callfc.openForm(PopupAddUpdate,
-        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.data, 'add'], '', option
+        'Thêm mới ghi chú', 1438, 775, '', obj, '', option
       );
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
@@ -155,6 +161,12 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   edit(data) {
+    var obj = [{
+      data: data,
+      type: 'edit',
+      parentID: this.recID,
+    }]
+
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -164,7 +176,7 @@ export class DetailNoteBooksComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       this.dialog = this.callfc.openForm(PopupAddUpdate,
-        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.dataSelected, 'edit'], '', option
+        'Thêm mới ghi chú', 1438, 775, '', obj, '', option
       );
       // this.dialog.closed.subscribe(x => {
       //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();

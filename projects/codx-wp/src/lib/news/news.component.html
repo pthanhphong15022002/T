@@ -1,5 +1,3 @@
-<!-- <div class="box-link">main-header</div> -->
-
 <codx-views #codxViews 
 [funcID]="funcID" 
 idField="recID"
@@ -21,7 +19,11 @@ idField="recID"
         <div class="col-6">
           <div class="news-card news-hot">
             <codx-img imageType="square" width="200" imgCss="w-250px" (click)="clickViewDeital(newsItem)" class="h-250px" [objectId]="newsItem.recID"
-              objectType="WP_News"></codx-img>
+            [objectType]="entityName">
+            </codx-img>
+            <!-- <div>
+              <codx-file [objectID]="newsItem.recID" [objectType]="entityName" [edit]="false"></codx-file>
+            </div> -->
             <div class="fs-4 fw-bolder mt-2 news-title">
               {{ newsItem?.subject }}
             </div>
@@ -111,9 +113,9 @@ idField="recID"
         <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
         <div class="d-flex btn-postnews">
 
-          <a (click)="clickShowPopupCreate()" class="btn btn-icon btn-primary me-3"><i
+          <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
               class="icon-video_call fs-1"></i></a>
-          <a (click)="clickShowPopupCreate()" class="btn btn-icon btn-primary"><i class="icon-post_add fs-1"></i></a>
+          <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i class="icon-post_add fs-1"></i></a>
         </div>
       </span>
     </div>
@@ -131,7 +133,7 @@ idField="recID"
 </ng-template>
 <!-- lisst group -->
 <ng-template #listGroup let-item>
-  <div (click)="clickViewDeital(item)" class="row">
+  <div (click)="clickViewDeital(item)" class="row mb-3">
     <div class="col-2">
       <codx-img width="100" class="w-100" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
     </div>

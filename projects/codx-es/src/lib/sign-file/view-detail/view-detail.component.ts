@@ -77,6 +77,8 @@ export class ViewDetailComponent implements OnInit {
     this.itemDetailDataStt = stt;
   }
 
+  openFormFuncID(val: any, datas: any = null) {}
+
   clickMF(e) {
     console.log(e);
   }

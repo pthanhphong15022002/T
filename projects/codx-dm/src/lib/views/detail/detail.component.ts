@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileInfo, HistoryFile, View } from '@shared/models/file.model';
-import { ApiHttpService, AuthStore, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../../codx-dm.service';
@@ -62,6 +62,7 @@ export class DetailComponent implements OnInit {
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
+    private callfc: CallFuncService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -202,14 +203,7 @@ export class DetailComponent implements OnInit {
     alert(file.folderName);
   }
 
-  clickMF($event, data, type) {
-    if (type == 'file') {
 
-    }
-    else {
-
-    }
-  }
 
   getViews(data: HistoryFile[]) {
     if (data != null) {

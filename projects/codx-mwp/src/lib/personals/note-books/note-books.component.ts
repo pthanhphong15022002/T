@@ -96,6 +96,8 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       case 'delete':
         this.delete(data);
         break;
+      case 'MWP00941':
+        this.openDetailPage(data);
     }
   }
 
@@ -125,7 +127,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.view.dataService.remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -141,9 +143,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 
