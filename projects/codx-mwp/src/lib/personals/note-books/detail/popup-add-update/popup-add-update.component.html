@@ -97,15 +97,11 @@
                 </codx-input>
             </div>
         </div>
-        <!-- 
-        <attachment #attachment type="center" objectType="WP_Notes" functionID="WPT03941"
-            (fileAdded)="fileAdded($event)"></attachment> -->
 
         <div class="d-flex align-items-center file-item mt-3">
             <div class="d-flex flex-column flex-grow-1">
                 <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="MWP00941" (fileAdded)="fileAdded($event)"
-                    type="inline">
+                    hideFolder="1" hideUploadBtn="1" functionID="MWP00941" type="inline">
                 </codx-attachment>
             </div>
         </div>

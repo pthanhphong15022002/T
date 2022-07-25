@@ -10,6 +10,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { Notes } from '@shared/models/notes.model';
+import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 
 @Component({
   selector: 'app-popup-add-update',
@@ -27,6 +28,7 @@ export class PopupAddUpdate implements OnInit {
   readOnly = false;
   data: any;
   header = 'Thêm mới chi tiết sổ tay';
+  checkFile = false;
 
   note: Notes = new Notes();
 
@@ -51,7 +53,7 @@ export class PopupAddUpdate implements OnInit {
     // this.lstNote = data.data?.lstNote;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit() {
     console.log('check attachment', this.attachment);
@@ -81,6 +83,10 @@ export class PopupAddUpdate implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
+          if (this.checkFile == true) {
+            this.attachment.objectId = res.recID;
+            this.attachment.saveFiles();
+          }
           this.dialog.close();
           this.dialog.dataService.data.push(res);
           this.changeDetectorRef.detectChanges();
@@ -105,10 +111,12 @@ export class PopupAddUpdate implements OnInit {
   }
 
   popup() {
+    this.checkFile = true;
     this.attachment.uploadFile();
   }
 
   fileAdded(e) {
-    this.attachment.saveFiles();
+    if (e)
+      this.attachment.saveFiles();
   }
 }

@@ -1,11 +1,6 @@
-<div class="listView">
-    <codx-listview [predicates]="predicate" [dataValues]="dataValue" #listview funcId="" [pageSize]="10" service="WP"
-        assemblyName="ERM.Business.WP" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
-        [height]="0" [width]="0">
-    </codx-listview>
-</div>
-<div *ngFor="let item of data">
+<div *ngFor="let item of data" class="img-card">
     <div *ngIf="item.referType == 'video'">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
+        <codx-file #file [objectType]="item.objectType" [showBtnRemove]='false' [objectID]="item.objectID">
+        </codx-file>
     </div>
 </div>

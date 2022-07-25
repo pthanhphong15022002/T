@@ -1,4 +1,4 @@
-import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent } from 'codx-core';
+import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent, CacheService } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 
 @Component({
@@ -8,30 +8,38 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 })
 export class VideoComponent implements OnInit {
 
-  user: any;
-  predicate = '';
-  dataValue = '';
-  dataSort: any;
   data: any = [];
+  functionList = {
+    entityName: '',
+    funcID: '',
+  }
+
 
   @ViewChild('listview') listview: CodxListviewComponent;
 
-  constructor(private authStore: AuthStore,
-    private changedt: ChangeDetectorRef,
-    private codxService: CodxService,
+  constructor(
     private api: ApiHttpService,
-    ) {
-    this.user = this.authStore.get();
-    this.predicate = `(CreatedBy="${this.user?.userID}")`;
+    private cache: CacheService,
+  ) {
+    this.cache.functionList('WP').subscribe(res => {
+      this.functionList.entityName = res.entityName;
+      this.functionList.funcID = res.functionID;
+    })
   }
 
   ngOnInit(): void {
+    this.getFile();
   }
 
   ngAfterViewInit() {
-    this.listview.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded')
-        this.data = data;
-    }
+  }
+
+  getFile() {
+    this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').subscribe(res => {
+      if (res) {
+        this.data = res;
+        console.log("check getFile", res);
+      }
+    })
   }
 }

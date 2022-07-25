@@ -91,7 +91,7 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
         var type = res[0]?.type;
         if (this.lstView) {
           if (type == 'add-otherDate') {
-            (this.lstView.dataService as CRUDService).load().subscribe();
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'add-currentDate') {
             (this.lstView.dataService as CRUDService).add(data).subscribe();
@@ -101,13 +101,11 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             this.WP_Notes = this.WP_Notes.filter(x => x.recID != data.recID);
           } else if (type == 'edit-otherDate') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
-            var dt: any = this.lstView.dataService.data;
             for (let i = 0; i < this.WP_Notes.length; i++) {
               if (this.WP_Notes[i].recID == data?.recID) {
                 this.WP_Notes[i].createdOn = data.createdOn;
               }
             }
-            this.changeDetectorRef.detectChanges();
           } else if (type == 'edit-currentDate') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
           }
@@ -125,9 +123,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   ngAfterViewInit() {
-    this.lstView.dataService.requestEnd = (t, data) => {
-      debugger;
-    }
   }
 
   requestEnded(evt: any) {
@@ -356,7 +351,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       currentDate: this.daySelected,
       dataSelected: this.lstView.dataService.dataSelected,
     };
-    debugger;
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
@@ -384,7 +378,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
   }
 
   // getNumberNotePin(WP_Notes) {
-  //   debugger;
   //   WP_Notes.forEach((res) => {
   //     if (res.isPin == true || res.isPin == '1') {
   //       this.countNotePin++;
