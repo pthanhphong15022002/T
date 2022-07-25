@@ -22,7 +22,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
-  @Output() evetFile = new EventEmitter();
+  @Output() evtGetFiles = new EventEmitter();
   @Output() removeFile = new EventEmitter();
   @Output() addFile = new EventEmitter();
 
@@ -237,6 +237,10 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     if(this.objectID){
       this.getFileByObjectID();
     }
+    else
+    {
+      this.converFile();
+    }
   }
   getFiles(){
     let files = this.file_img_video.concat(this.file_application);
@@ -250,8 +254,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       this.objectID)
     .subscribe((files:any[]) => {
       if(files.length > 0){
-        this.lstFile = files
-        this.lstFile.forEach((f:any) => {
+        files.forEach((f:any) => {
           if(f.referType == this.FILE_REFERTYPE.IMAGE){
             this.file_img_video.push(f);
           }
@@ -264,9 +267,23 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
           }
         });
         this.dt.detectChanges();
-        this.evetFile.emit(this.lstFile);
+        this.evtGetFiles.emit(files);
       }
     })
+  }
+
+  converFile(){
+    if(this.lstFile){
+      this.lstFile.forEach((f:any) => {
+        if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO  ){
+          this.file_img_video.push(f);
+        }
+        else{
+          this.file_application.push(f);
+        }
+      });
+      this.dt.detectChanges();
+    }
   }
 
   openDetail(indexFile:any){}
@@ -297,7 +314,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   addFiles(files:any[]){
-    this.lstFile.concat(files);
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
         f['referType'] = this.FILE_REFERTYPE.IMAGE;

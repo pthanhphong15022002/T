@@ -1,10 +1,11 @@
-import { ApiHttpService, AuthStore, ButtonModel, CacheService, CodxListviewComponent, DialogRef, NotificationsService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CacheService, CodxListviewComponent, DialogRef, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewType } from 'codx-core';
 import {
   ChangeDetectorRef,
   Component,
   Injector,
   OnDestroy,
   OnInit,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
@@ -35,6 +36,8 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   dialog: DialogRef;
 
   @ViewChild("listRoles") listRoles: CodxListviewComponent;
+  @ViewChild('templateListView') templateListView!: TemplateRef<any>;
+
   constructor(
     private injector: Injector,
     private temp: TempService,
@@ -74,7 +77,17 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     //this.adsv.listview = this.listRoles;
     //this.isLoad = false;
-    console.log("check view", this.view.formModel)
+    this.views = [
+      {
+        type: ViewType.list,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateListView,
+          contextMenu: '',
+        },
+      },
+    ];
   }
   ngOnChanges() {
     if (!this.isLoad) return;

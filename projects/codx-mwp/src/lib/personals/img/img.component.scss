@@ -62,7 +62,7 @@
 }
 
 .pw-card {
-    width: 232px;
+    width: 200px;
     float: left;
     margin-right: 25px;
     margin-bottom: 25px;
@@ -105,4 +105,13 @@
 .listView {
     width: 0px;
     height: 0px;
+}
+
+.img-card {
+    width: 232px;
+    float: left;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    border: 1px #eee solid;
+    border-radius: 6px !important;
 }

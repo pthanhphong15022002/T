@@ -7,10 +7,11 @@ export class tmpformChooseRole {
     functionID: string;
     roleNames: string;
     recIDofRole: string;
+    recRoleName: string;
     ischeck: boolean;
     recDelete: string;
     recUpdate: string;
-    idChooseRole: string;
+    color: string;
 }
 
 

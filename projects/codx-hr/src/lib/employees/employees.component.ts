@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
@@ -42,7 +42,9 @@ export class EmployeesComponent implements OnInit {
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private df: ChangeDetectorRef,
+    private codxService: CodxService,
   ) {
+    
   }
 
   ngOnInit(): void {
@@ -249,21 +251,14 @@ export class EmployeesComponent implements OnInit {
       }
       this.df.detectChanges();
     });
+  }
 
-    // this.api
-    //   .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
-    //     employeeID: this.employStatus.employeeID,
-    //     status: this.employStatus.status,
-    //   })
-    //   .subscribe((res) => { });
-    // if (this.employStatus.status == "90") {
-    //   this.employList.removeHandler(this.employStatus, "employeeID");
-    // } else {
-    //   this.employList.addHandler(this.employStatus, false, "employeeID");
-    // }
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
+  viewEmployeeInfo(e, data) {
+    // this.urlView = e?.url;
+    // if (data.iterationID != this.user.userID)
+    //   this.urlView += '/' + data.iterationID;
+
+    // this.codxService.navigate('',this.urlView)
   }
 
   clickMF(e: any, data?: any) {
@@ -282,6 +277,9 @@ export class EmployeesComponent implements OnInit {
         break;
       case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!
         this.updateStatus(data);
+        break;
+      case 'HR0032':
+        this.viewEmployeeInfo(e, data);
         break;
     }
   }
