@@ -89,6 +89,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   clickMF(e: any, data?: any) {
+    debugger;
     switch (e.functionID) {
       case 'edit':
         this.edit(data);
@@ -96,6 +97,8 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       case 'delete':
         this.delete(data);
         break;
+      case 'MWP00941':
+        this.openDetailPage(data);
     }
   }
 
@@ -125,7 +128,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.view.dataService.remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
