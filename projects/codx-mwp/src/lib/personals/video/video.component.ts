@@ -1,5 +1,6 @@
-import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent } from 'codx-core';
+import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent, CacheService, AuthService } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-video',
@@ -8,27 +9,51 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 })
 export class VideoComponent implements OnInit {
 
-  user: any;
-  predicate = '';
-  dataValue = '';
-  dataSort: any;
   data: any = [];
+  functionList = {
+    entityName: '',
+    funcID: '',
+  }
+  FILE_REFERTYPE = {
+    IMAGE: "image",
+    VIDEO: "video",
+  }
+  file_video: any[] = [];
+
 
   @ViewChild('listview') listview: CodxListviewComponent;
 
-  constructor(private authStore: AuthStore,
-    private changedt: ChangeDetectorRef,
-    private codxService: CodxService,
+  constructor(
     private api: ApiHttpService,
-    ) {
-    this.user = this.authStore.get();
-    this.predicate = `(CreatedBy="${this.user?.userID}")`;
+    private cache: CacheService,
+    private dt: ChangeDetectorRef,
+    private auth: AuthService,
+  ) {
+    this.cache.functionList('WP').subscribe(res => {
+      this.functionList.entityName = res.entityName;
+      this.functionList.funcID = res.functionID;
+    })
   }
 
   ngOnInit(): void {
+    this.getFile();
   }
 
   ngAfterViewInit() {
-    this.data = this.listview.dataService.data;
+  }
+
+  getFile() {
+    this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
+      subscribe((files: any[]) => {
+        if (files.length > 0) {
+          files.forEach((f: any) => {
+            if (f.referType == this.FILE_REFERTYPE.VIDEO) {
+              f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+              this.file_video.push(f);
+            }
+          });
+          this.dt.detectChanges();
+        }
+      })
   }
 }

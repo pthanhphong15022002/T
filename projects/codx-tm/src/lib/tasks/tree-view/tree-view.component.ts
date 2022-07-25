@@ -7,7 +7,8 @@ import {
   Optional,
   Output,
 } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { PopupViewTaskResourceComponent } from '../popup-view-task-resource/popup-view-task-resource.component';
 
 @Component({
   selector: 'lib-tree-view',
@@ -18,6 +19,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() data?: any;
   @Input() formModel?: FormModel;
   dataTree = [];
+  dialog :any
   // popoverList: any;
   // popoverDetail: any;
   // lstTaskbyParent = [];
@@ -25,25 +27,26 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   constructor(
     private api: ApiHttpService,
+    private callfc : CallFuncService ,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
 
   ngOnInit(): void {
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksTreeAsync',
-        this.data?.taskID
-      )
-      .subscribe((res) => {
-        this.dataTree = res;
-      });
+   
   }
   ngAfterViewInit(): void {
-    
+    this.api
+    .execSv<any>(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTasksTreeAsync',
+      this.data?.taskID
+    )
+    .subscribe((res) => {
+      this.dataTree = res;
+    });
   }
 
   clickMF(e: any, dt?: any) {
@@ -78,4 +81,15 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //       });
   //   }
   // }
+
+  openViewListTaskResource(data){
+    this.dialog = this.callfc.openForm(
+      PopupViewTaskResourceComponent,
+      '',
+      400,
+      500,
+      '',
+      [data,this.formModel.funcID]
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService, FormModel } from 'codx-core';
+import { DialogData, DialogRef, ApiHttpService, FormModel, CallFuncService } from 'codx-core';
+import { PopupViewTaskResourceComponent } from '../popup-view-task-resource/popup-view-task-resource.component';
 
 @Component({
   selector: 'lib-view-list',
@@ -11,7 +12,7 @@ export class ViewListComponent implements OnInit {
   popoverList: any;
   popoverDetail: any;
   item: any;
-
+  dialog : any
   @Input() data?: any
   @Input() formModel?: FormModel;
 
@@ -21,6 +22,7 @@ export class ViewListComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
+    private callfc : CallFuncService ,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) { }
@@ -59,5 +61,16 @@ export class ViewListComponent implements OnInit {
     //   this.lstTaskbyParent = [];
     //   p.close();
     // }
+  }
+
+  openViewListTaskResource(data){
+    this.dialog = this.callfc.openForm(
+      PopupViewTaskResourceComponent,
+      '',
+      400,
+      500,
+      '',
+      [data,this.formModel.funcID]
+    );
   }
 }

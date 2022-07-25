@@ -71,6 +71,7 @@ export class AddNoteComponent implements OnInit {
   maxPinNotes = 0;
   countNotePin = 0;
   component: any;
+  typeEntity = '';
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -259,26 +260,29 @@ export class AddNoteComponent implements OnInit {
           this.note
         )
         .subscribe((res) => {
-          if (this.checkFile == true) {
-            this.attachment.objectId = res.recID;
-            this.attachment.saveFiles();
-          }
-          var object = [];
-          if (this.note.createdOn != dateNow.toLocaleDateString())
-            object = [{ data: res, type: 'add-otherDate' }]
-          else
-            object = [{ data: res, type: 'add-currentDate' }]
-          this.noteService.data.next(object);
-          this.dialog.close()
-          if (this.note?.showCalendar == true) {
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
+          if (res) {
+            this.typeEntity = 'WP_Notes';
+            if (this.checkFile == true) {
+              this.attachment.objectId = res.recID;
+              this.attachment.saveFiles();
             }
+            var object = [];
+            if (this.note.createdOn != dateNow.toLocaleDateString())
+              object = [{ data: res, type: 'add-otherDate' }]
+            else
+              object = [{ data: res, type: 'add-currentDate' }]
+            this.noteService.data.next(object);
+            this.dialog.close()
+            if (this.note?.showCalendar == true) {
+              var today: any = document.querySelector(
+                ".e-footer-container button[aria-label='Today']"
+              );
+              if (today) {
+                today.click();
+              }
+            }
+            this.changeDetectorRef.detectChanges();
           }
-          this.changeDetectorRef.detectChanges();
         });
     } else {
       this.notificationsService.notify(
@@ -303,19 +307,21 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEditNote() {
-    if (this.countNotePin + 1 > this.maxPinNotes) {
-      if (this.pin == '1' || this.pin == true) {
-        this.openFormUpdateIsPin(this.note);
+    if (this.checkPin == true) {
+      if (this.countNotePin + 1 > this.maxPinNotes) {
+        if (this.pin == '1' || this.pin == true) {
+          this.openFormUpdateIsPin(this.note);
+        } else {
+          this.countNotePin -= 1;
+          this.onEdit();
+        }
       } else {
-        this.countNotePin -= 1;
+        if (this.pin == '1' || this.pin == true)
+          this.countNotePin += 1;
+        else this.countNotePin -= 1;
         this.onEdit();
       }
-    } else {
-      if (this.pin == '1' || this.pin == true)
-        this.countNotePin += 1;
-      else this.countNotePin -= 1;
-      this.onEdit();
-    }
+    } else this.onEdit();
   }
 
   onEdit() {

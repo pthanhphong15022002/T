@@ -200,7 +200,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.lstRecevier = data.dataSelected;
       if(objectType == this.SHARECONTROLS.USER)
       {
-        this.recevierName = this.lstRecevier.slice(-1,0)[0].UserName;
+        this.recevierName = this.lstRecevier[this.lstRecevier.length - 1].UserName;
       }
       else{
         this.recevierName = data.objectName + " " + data.text;
@@ -230,23 +230,23 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
         switch(this.objectType){
-          case "U":
+          case this.SHARECONTROLS.USER:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
             break;
-          case "P":
+          case this.SHARECONTROLS.POSITIONS:
             per.objectID = item.PositionID;
             per.objectName = item.PositionName;
             break
-          case "D":
+          case this.SHARECONTROLS.DEPARMENTS:
             per.objectID = item.OrgUnitID;
             per.objectName = item.OrgUnitName;
             break;
-          case "G":
+          case this.SHARECONTROLS.GROUPS:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
             break;
-          case "R":
+          case this.SHARECONTROLS.ROLES:
             per.objectID = item.RoleID;
             per.objectName = item.RoleName;
             break
@@ -291,9 +291,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.dataEdit.content = this.message;
     this.dataEdit.shareControl = this.shareControl;
-    let lstPermission:any[] = [];
-    lstPermission.push(this.myPermission);
     if(this.lstRecevier.length > 0){
+      let lstPermission:any[] = [];
+      lstPermission.push(this.myPermission);
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
         switch(this.objectType){
@@ -326,8 +326,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         per.createdOn = new Date();
         lstPermission.push(per);
       });
+      this.dataEdit.permissions = lstPermission;
     }
-    this.dataEdit.permissions = lstPermission;
     this.api
       .execSv<any>(
         'WP',

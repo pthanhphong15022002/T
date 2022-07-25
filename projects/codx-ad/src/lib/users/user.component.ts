@@ -10,9 +10,11 @@ import { AddUserComponent } from './add-user/add-user.component';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent extends UIComponent {
-  @Input() formModel: any;
+  // @Input() formModel: any;
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('view') codxView!: any;
+
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
