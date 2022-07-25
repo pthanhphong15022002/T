@@ -1,16 +1,15 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [body]="body" [footer]="footer" [formModel]="formModel">
+<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [body]="body" [footer]="footer"
+  [formModel]="formModel" (clickMF)="openFormFuncID($event)">
+
   <ng-template #header>
     <div class="vmd-detail">
       <div class="d-flex justify-content-between flex-grow-1 mb-2">
         <div class="d-flex align-items-center">
-          <!-- [imageId]="itemDetail?.categoryID" -->
-          <div [class]="'icon-60 icon me-4 rounded-circle p-3 ' + itemDetail?.icon"
-            [style.background-color]="'lightgreen'"></div>
-          <codx-temp-full [title]="itemDetail?.title" imageObjType="AD_Users">
+          <codx-temp-full [icoCss]="itemDetail?.icon" [title]="itemDetail?.title" imageObjType="AD_Users">
           </codx-temp-full>
         </div>
         <div class="d-flex align-self-center">
-          <span class="badge badge-square badge-md" [style.color]="'black'" [style.background-color]="
+          <!-- <span class="badge badge-square badge-md" [style.color]="'black'" [style.background-color]="
               itemDetail
                 ? (itemDetail?.approveStatus | vll: 'ES003':'color' | async)
                 : 'lightblue'
@@ -20,14 +19,17 @@
             ? (itemDetail?.approveStatus | vll: "ES003":"text" | async)
             : ""
             }}
-          </span>
+          </span> -->
+          <codx-vll [showText]="true" [formModel]="formModel" [field]="'ApproveStatus'"
+            [value]="itemDetail?.approveStatus" class="badge badge-light badge-square badge-md fs-7">
+          </codx-vll>
         </div>
       </div>
     </div>
 
     <div class="d-flex flex-column flex-grow-1 mb-2">
-      <codx-temp-full [title]="itemDetail?.ownerName" [subTitle]="itemDetail?.ownerPosition"
-        [imageId]="itemDetail?.createdBy" imageObjType="AD_Users" [imageWidth]="50">
+      <codx-temp-full [title]="itemDetail?.ownerName" [subTitle]="itemDetail?.ownerPosition ?? 'Vị trí công việc'"
+        [imageId]="itemDetail?.createdBy" imageObjType="AD_Users" [imageWidth]="40">
       </codx-temp-full>
     </div>
     <div class="d-flex flex-grow-1 mb-2">
