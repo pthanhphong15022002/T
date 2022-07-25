@@ -1,7 +1,11 @@
-<div *ngFor="let item of data" class="img-card">
-    <div *ngIf="item.referType == 'image'">
-        <codx-file #file [objectType]="item.objectType" [showBtnRemove]='false' [objectID]="item.objectID">
-        </codx-file>
-        
+<div *ngIf="file_img.length > 0">
+    <div class="pw-listcard mt-6">
+        <div *ngFor="let item of file_img">
+            <div class="pw-card">
+                <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
+                    <img class="w-100 rounded min-h-200px" [src]="item.thumbnail || item.data" />
+                </ng-container>
+            </div>
+        </div>
     </div>
 </div>
