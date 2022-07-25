@@ -115,10 +115,6 @@ app-notes-home {
     margin-left: 10px;
 }
 
-.pd-note {
-    padding-right: 3% !important;
-}
-
 .top-2 {
     margin-top: 2%;
 }
@@ -127,8 +123,6 @@ app-notes-home {
     height: 350px !important;
 }
 
-.show-customName {
-    margin-left: 3%;
-    width: 130px;
-    margin-top: 1%;
+ejs-listview .e-ul>li {
+    margin-bottom: 0;
 }
