@@ -1,0 +1,40 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
+    <ng-template #body>      
+        <form name="frm_renamebox1">
+            <div class="form-group">
+                <div class="d-flex justify-content-between">
+                    <div class="mr-2 flex-grow-1">
+                        <codx-input placeholder="{{titleFullName}}"                                    
+                            [class]="validate('fullName')"
+                            type="text"
+                            [crrValue]="fullName"
+                            (valueChange)="changeValue($event, 'fullName')"                                        
+                        ></codx-input>       
+                        <div id="folderError" autofocus *ngIf="fullName === ''"
+                            class="d-flex mb-4 invalid-feedback">
+                            <div
+                                *ngIf="fullName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
+                            </div>
+                            <ng-template #thenBlockErrorFolder>{{titleRequired}}</ng-template>
+                            <ng-template #thenBlockErrorElseFolder>{{titleMessage}}</ng-template>
+                        </div>
+                        <!-- <input class="form-control" (input)="validate('fullName')" required matInput id="fullName"
+                            name="fullName" placeholder="" [(ngModel)]='fullName' #fullNameInput> -->
+                        <!-- <div id="errorCopy" autofocus *ngIf="errorshow || fullNameInput.value === ''"
+                            class="invalid-feedback">
+                            <div
+                                *ngIf="fullNameInput.value === ''; then thenBlockErrorCopy else thenBlockErrorElseCopy">
+                            </div>
+                            <ng-template #thenBlockErrorCopy>{{titleRequired}}</ng-template>
+                            <ng-template #thenBlockErrorElseCopy>{{titleMessage}}</ng-template>
+                        </div> -->
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>    
+    <ng-template #footer>
+        <button type="button" id="btnRename" class="btn btn-primary" (click)="SaveData()">{{titleSave}}</button>        
+    </ng-template>
+</codx-form>
