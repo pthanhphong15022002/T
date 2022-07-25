@@ -1,7 +1,7 @@
 <codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesBusiness"
   method="GetListRangesKanbanAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
-  idField="rangeID" [selectedFirst]="true" [autoLoad]="false">
+  idField="rangeID" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
 
 <ng-template #grid let-data>
@@ -122,7 +122,7 @@
 
 <ng-template #moreFun let-data>
   <div>
-    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
       (clickMF)="moreFuncClick($event,data)">
     </codx-mfunc>
   </div>

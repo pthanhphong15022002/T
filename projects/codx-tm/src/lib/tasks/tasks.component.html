@@ -89,7 +89,7 @@
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true"
-  [autoLoad]="false">
+  [autoLoad]="true">
 </codx-views>
 
 
@@ -118,7 +118,15 @@
           }}</span>
       </span>
     </div>
-      <div *ngIf="data.category=='1'||data.category=='2'">
+    <div *ngIf="data.category == '3'" class="" (click)="openViewListTaskResource(data)">
+      <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
+      </codx-imgs>
+    </div>
+    <div *ngIf="data.category == '1' || data.category == '2'" class="">
+      <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
+      </codx-imgs>
+    </div>
+    <!-- <div *ngIf="data.category=='1'||data.category=='2'">
         <codx-img [width]="30" [objectId]="data.owner" objectType="AD_Users">
         </codx-img>
       </div>
@@ -140,6 +148,6 @@
               </div>
             </ng-container>
           </div> 
-      </div>   
+      </div>    -->
   </div>
 </ng-template>

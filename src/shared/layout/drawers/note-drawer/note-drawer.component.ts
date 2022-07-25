@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
@@ -22,27 +22,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   data: any;
   message: any;
   listNote: any[] = [];
-  messageOld: any;
-  listNoteOld: any[] = [];
   type: any;
-  isCalendar = false;
-  isCalendarOld: any;
-  noteTypeOld: any;
   itemUpdate: any;
   recID: any;
-  recIdOld: any;
-  isPin: any;
-  isPinOld: any;
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  TM_Tasks: any;
-  WP_Notes: any;
-  TM_TasksParam: any;
-  WP_NotesParam: any;
-  param: any;
-  countIsPin = 0;
-  countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
   dialog: DialogRef;
@@ -52,6 +37,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   deleteMF: any;
   pinMF: any;
   saveMF: any;
+  dataService: DataService;
+  dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -71,6 +58,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         this.saveMF = res[1];
       }
     })
+    var dataSv = new DataService(injector);
+    dataSv.request.pageSize = 6;
+    this.dataService = dataSv;
   }
 
   onInit(): void {
@@ -253,20 +243,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'edit':
-        this.openFormUpdateNote(data);
-        break;
-      case 'delete':
-        this.onDeleteNote(data)
-        break;
-      case 'WPT0801':
-        this.checkNumberNotePin(data);
-        break;
-      case 'WPT0802':
-        this.openFormNoteBooks(data);
-        break;
-    }
+  getMoreF(item) {
+    this.dataUpdate = item;
   }
 }
