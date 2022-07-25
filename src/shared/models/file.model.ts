@@ -38,6 +38,7 @@ export class FileInfo {
     isSystem: boolean;
     isSharing: boolean;
     fileName: string;
+    folderName: string;
     extension: string;
     pathDisk: string;
     highlight: string;

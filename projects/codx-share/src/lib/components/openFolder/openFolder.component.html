@@ -8,9 +8,8 @@
                 [isOutput]="true" [isLoadChild]="false">
               </codx-treeview>
               <ng-template #templatetree let-data>
-                <div class="d-flex align-items-center mb-2" #item>
-                  aaaaaaaaaaa
-                  <!-- <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div> -->
+                <div class="d-flex align-items-center mb-2" #item>                  
+                  <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
                 </div>
               </ng-template>
             </form>
