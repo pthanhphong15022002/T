@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { preRender } from '@syncfusion/ej2-angular-buttons';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService } from 'codx-core';
+import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
@@ -24,7 +25,8 @@ export class PopupAddComponent implements OnInit {
   popupFiled = 1;
   popupContent = 2;
   objectID = '';
-  dialogRef: DialogRef
+  dialogData:any;
+  dialogRef: DialogRef;
   startDate: Date;
   endDate: Date;
   tagName = "";
@@ -36,27 +38,52 @@ export class PopupAddComponent implements OnInit {
   lstRecevier = [];
   headerText = "Soạn thảo văn bản";
   dataEdit:any;
-
+  isUpload:boolean = false;
+  fileUpload:any[] = [];
   CATEGORY= {
     NEWS: "1",
     VIDEO: "2"
   }
+  SHARECONTROLS = {
+    OWNER: "1",
+    MYGROUP: "2",
+    MYTEAM: "3",
+    MYDEPARMENTS:"4",
+    MYDIVISION:"5",
+    MYCOMPANY: "6",
+    ADMINISTRATOR: "7",
+    EVERYONE: "9",
+    OGRHIERACHY: "O",
+    DEPARMENTS: "D",
+    POSITIONS: "P",
+    ROLES: "R",
+    GROUPS: "G",
+    USER: "U",
+  }
+  MEMPERTPE ={
+    CREATED: "1",
+    SHARE: "2",
+    TAGS: "3"
+  }
   myPermission:any;
+  approverPermission:any;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
+  @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
+    protected callFunc: CallFuncService,
     @Optional() dd?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialogRef?: DialogRef
 
   ) {
-    this.dataEdit = dd.data;
-    this.dialogRef = dialog;
+    this.dialogData = dd.data;
+    this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
   ngAfterViewInit(): void {
@@ -65,10 +92,10 @@ export class PopupAddComponent implements OnInit {
     if (this.newsType != "1") {
       this.isVideo = false;
     }
-    this.shareControl = "1";
+    this.shareControl = this.SHARECONTROLS.EVERYONE;
     this.myPermission = new Permission();
-    this.myPermission.objectType = '1';
-    this.myPermission.memberType = "1";
+    this.myPermission.objectType = this.SHARECONTROLS.OWNER;
+    this.myPermission.memberType = this.MEMPERTPE.CREATED;
     this.myPermission.objectID = this.user.userID;
     this.myPermission.objectName = this.user.userName;
     this.myPermission.create = true;
@@ -82,20 +109,21 @@ export class PopupAddComponent implements OnInit {
     this.myPermission.isActive = true;
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
+    // appover 
+    this.approverPermission = new Permission();
+    this.approverPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
+    this.approverPermission.objectID = 'ADMIN';
+    this.approverPermission.read = true;
+    this.approverPermission.isActive = true;
+    this.approverPermission.createdBy = this.user.userID;
+    this.approverPermission.createdOn = new Date();
     this.initForm();
   }
 
-
+  openFormShare(content: any) {
+    this.callFunc.openForm(content, '', 420, window.innerHeight);
+  }
   clickInsertNews() {
-    // if(this.tagName == "" ){
-    //   this.notifSV.notifyCode("WP013");
-    //   return;
-    // }
-    // if(!this.startDate){
-    //   this.notifSV.notifyCode("WP012");
-    //   return;
-    // }
-   
     let objNews = new WP_News();
     objNews = this.formGroup.value;
     objNews.newsType = this.CATEGORY.NEWS;
@@ -106,38 +134,34 @@ export class PopupAddComponent implements OnInit {
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
+    lstPermissions.push(this.approverPermission);
     // permission
     if(this.lstRecevier.length > 0){
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
         switch(this.objectType){
-          case "U":
+          case this.SHARECONTROLS.USER:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "P":
+          case this.SHARECONTROLS.POSITIONS:
             per.objectID = item.PositionID;
             per.objectName = item.PositionName;
-            per.objectType = this.objectType;
             break
-          case "D":
+          case this.SHARECONTROLS.DEPARMENTS:
             per.objectID = item.OrgUnitID;
             per.objectName = item.OrgUnitName;
-            per.objectType = this.objectType;
             break;
-          case "G":
+          case this.SHARECONTROLS.GROUPS:
             per.objectID = item.UserID;
             per.objectName = item.UserName;
-            per.objectType = this.objectType;
             break;
-          case "R":
+          case this.SHARECONTROLS.ROLES:
             per.objectID = item.RoleID;
             per.objectName = item.RoleName;
-            per.objectType = this.objectType;
             break
         }
-        per.memberType = "3";
+        per.memberType = this.MEMPERTPE.TAGS;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -154,22 +178,18 @@ export class PopupAddComponent implements OnInit {
         'InsertNewsAsync',
         objNews
       )
-      .subscribe((res1: any) => {
-        if (res1) {
-          let data = res1;
-          this.objectID = data.recID;
-          this.imageUpload
-            .updateFileDirectReload(data.recID)
-            .subscribe((res2) => {
-              if (res2) {
-                this.initForm();
-                this.objectID = '';
-                this.objectType = '';
-                this.lstRecevier = [];
-                this.notifSV.notifyCode('E0026');
-                this.insertWPComment(data);
-              }
-            });
+      .subscribe((res: any) => {
+        if (res) {
+          let data = res;
+          if(this.fileUpload.length > 0){
+            this.codxAttachment.objectId = data.recID;
+            this.codxAttachment.saveFiles();
+          }
+          this.initForm();
+          this.shareControl = this.SHARECONTROLS.EVERYONE;
+          this.lstRecevier = [];
+          this.notifSV.notifyCode('E0026');
+          this.insertWPComment(data);
         }
       });
   }
@@ -320,18 +340,25 @@ export class PopupAddComponent implements OnInit {
     this.formGroup.controls['CreatePost'].setValue(false);
     this.changedt.detectChanges();
   }
-  clickShowPopup() {
-    // this.viewbase.currentView.openSidebarRight();
-  }
-  clickClosePopup(index: any) {
-    this.dialogRef.close();
-    this.clearValueForm();
-  }
   PopoverEmpEnter(p:any){
     p.open();
   }
   PopoverEmpLeave(p:any){
     p.close();
   }
-
+  removeFile(file){
+    if(file){
+      this.fileUpload = [];
+    }
+  }
+  addFiles(file:any){
+    if(file && file.data.length > 0 ){
+      this.fileUpload = file.data;
+      this.changedt.detectChanges();
+    }
+    return;
+  }
+  clickUploadFile(){
+    this.codxAttachment.uploadFile();
+  }
 }

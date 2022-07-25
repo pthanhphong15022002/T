@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
 import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import { CodxAdService } from '../../codx-ad.service';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
@@ -16,7 +17,7 @@ export class PopRolesComponent implements OnInit {
   choose1: tmpformChooseRole[] = [];
   choose = new tmpformChooseRole();
   data: any;
-  dialog: any;
+  dialogSecond: any;
   dataView:any;
   title = 'Phân quyền người dùng';
   count: number = 0;
@@ -33,11 +34,13 @@ export class PopRolesComponent implements OnInit {
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
     private notiService: NotificationsService,
+    private adService: CodxAdService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
-    this.dialog = dialog;
+    this.dialogSecond = dialog;
     this.data = dt?.data;
+
   }
 
   ngOnInit(): void {
@@ -51,9 +54,13 @@ export class PopRolesComponent implements OnInit {
   }
 
   loadData() {
-    this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1).subscribe((res) => {
-      if (res && res.msgBodyData[0]) {
-        this.lstFunc = res.msgBodyData[0];
+ // this.adService.getListAppByUserRoles(this.choose1)
+ this.api.exec('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync', this.choose1)
+ // this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1)
+  .subscribe((res) => {
+      // if (res && res.msgBodyData[0]) {
+        if (res) {
+        this.lstFunc = res[0];
         for (var i = 0; i < this.lstFunc.length; i++) {
           this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
           if (this.lstFunc[i].recIDofRole != null) {
@@ -120,7 +127,7 @@ export class PopRolesComponent implements OnInit {
     }
     else if(this.CheckListUserRoles() === this.optionSecond)  {
       this.notiService.notifyCode('Lưu thành công');
-      this.dialog.close(this.listChooseRole);
+      this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
     }
     else {

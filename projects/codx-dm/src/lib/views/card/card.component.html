@@ -1,300 +1,267 @@
 <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home">
-    <div class="container">
-        <div class="dms dms-viewcard">
-            <div class="card-group">                
-                <div
-                    *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
-                </div>
-                <ng-template #thenBlockList>
-                    <ng-container *ngIf="this.dmSV.idMenuActive == 'DMT08'">
-                        <div class="nondata-container w-100 mb-2">
-                            <div class="d-flex justify-content-between page-heading align-items-center">
-                                <div>{{dmSV.titleEmptyTrash30}}</div>
-                                <button (click)="this.dmSV.emptyTrash()" class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
-                            </div>
-                        </div>
-                    </ng-container>
-  
-                    <div
-                        *ngIf="this.dmSV.sortDirecttion.getValue() != '1' || this.dmSV.sortDirecttion.getValue() === null; then thenBlockAsc else elseBlockDesc">
-                    </div>
-                    <ng-template #thenBlockAsc>
-                        <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
-                            <container-element [ngSwitch]="this.type">
-                                <some-element *ngSwitchCase="'card'">   
-                                    <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
-                                        [bookmark]="'true'"  [formModel]="formModel"   (clickMF)="clickMF($event, folder, 'folder')" [content]="folder.folderName"
-                                        [footer]="cardImgFooter">
-                                    </codx-card-img>
-                                    <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
-                                        <div title="{{folder.folderName}}" class="d-flex align-items-start">
-                                            <div
-                                                *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
-                                            </div>
-                                            <ng-template #showicon2>
-                                                <div *ngIf="(checkIconFolder(folder)) then showsvg2 else noshowsvg2">
-                                                </div>
-                                                <ng-template #showsvg2>
-                                                    <img alt="" class="mh-20px me-2" src="{{getSvg(folder.icon)}}">
-                                                </ng-template>
-                                                <ng-template #noshowsvg2>
-                                                    <span [className]="getFolderClass(folder.icon)"></span>
-                                                </ng-template>
-                                            </ng-template>
-                                            <ng-template #noshowicon2>
-                                                <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
-                                            </ng-template>
-        
-                                            <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                                <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
-                                                </div>
-                                                <div *ngIf="showBookmark(folder)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
-                                                    </div>
-                                                    <ng-template #createBy2>
-                                                        <span class="text-dark-50 font-size-sm">{{folder.userName}}</span>
-                                                    </ng-template>
-                                                    <ng-template #nocreateBy2>
-                                                        <span class="text-dark-50 font-size-sm"></span>
-                                                    </ng-template>
-                                                    <span *ngIf="checkView(folder.read) == false"
-                                                        class="icon-security text-primary icon-18"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </ng-template>
-                                </some-element>
-                                <some-element *ngSwitchCase="'smallcard'">
-                                    <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
-                                    [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"
-                                    [subTitle]="folder.createdOn + ' | ' + folder.userName"
-                                    cardCss="card-template w-225px px-2 py-3">
-                                  </codx-temp-full>                                 
-                                </some-element>                                
-                            </container-element>
-                        </ng-container>
-
-                        <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                            <container-element [ngSwitch]="this.type">
-                                <some-element *ngSwitchCase="'card'">   
-                                    <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file"
-                                        [bookmark]="'true'"  [formModel]="formModel"   (clickMF)="clickMF($event, file, 'file')" [content]="file.fileName">
-                                    </codx-card-img>
-                                    <ng-template #cardImgFooter let-data let-setting="setting">
-                                        <div title="{{file.fileName}}" class="dms-card-footer d-flex">
-                                            <div class="d-flex flex-column flex-grow-1">
-                                                <div class="d-flex align-items-center">
-                                                    <img alt="" class="mh-20px me-2"
-                                                        src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
-                                                    <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
-                                                </div>
-                                                <div *ngIf="showBookmark(file)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div>
-                                                <div class="d-flex align-items-center mt-2">
-                                                    <div class="d-flex flex-grow-1 text-dark-75">
-                                                        <div class="d-flex mr-3">
-                                                            <span
-                                                                class="mr-1 font-weight-bold">{{getRating(file.views)}}</span>
-                                                            <span class="icon-star text-warning icon-16"></span>
-                                                        </div>
-                                                        <div class="d-flex mr-3">
-                                                            <span
-                                                                class="mr-1 font-weight-bold">{{getViews(file.history)}}</span>
-                                                            <span class="icon-remove_red_eye icon-16"></span>
-                                                        </div>
-                                                        <div class="d-flex mr-3">
-                                                            <span
-                                                                class="mr-1 font-weight-bold">{{showDownloadCount(file.countDownload)}}</span>
-                                                            <span class="icon-download icon-16"></span>
-                                                        </div>
-                                                    </div>
-                                                    <span *ngIf="checkView(file.read) == false"
-                                                        class="icon-security text-primary icon-18"></span>
-                                                </div>
-                                            </div>
-                                        </div>  
-                                    </ng-template>  
-                                </some-element>
-                                <some-element *ngSwitchCase="'smallcard'">
-                                    <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
-                                    [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"
-                                    [subTitle]="file.createdOn + ' | ' + file.userName"
-                                    cardCss="card-template w-225px px-2 py-3">
-                                  </codx-temp-full>                                 
-                                </some-element>                                
-                            </container-element>
-                            <!-- <codx-card-img cardCss="d-flex flex-column align-items-center dms-card-img h-100" 
-                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/codx/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
-                            </codx-card-img>
-                            <ng-template #cardImgFooter let-data let-setting="setting">
-                                <div title="{{file.fileName}}" class="dms-card-footer d-flex">
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <div class="d-flex align-items-center">
-                                            <img alt="" class="mh-20px me-2"
-                                                src="../../../assets/codx/dms/{{getAvatar(file.extension)}}">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}
-                                            </div>
-                                        </div>
-                                        <div *ngIf="showBookmark(file)" class="dms-bookmark">
-                                            <span class="icon-bookmark icon-24"></span>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2">
-                                            <div class="d-flex flex-grow-1 text-dark-75">
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{getRating(file.views)}}</span>
-                                                    <span class="icon-star text-warning icon-16"></span>
-                                                </div>
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{getViews(file.history)}}</span>
-                                                    <span class="icon-remove_red_eye icon-16"></span>
-                                                </div>
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{showDownloadCount(file.countDownload)}}</span>
-                                                    <span class="icon-download icon-16"></span>
-                                                </div>
-                                            </div>
-                                            <span *ngIf="checkView(file.read) == false"
-                                                class="icon-security text-primary icon-18"></span>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </ng-template>                             -->
-                        </ng-container>
-                    </ng-template>
-                    <ng-template #elseBlockDesc>
-                        <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                            <codx-card-img cardCss="d-flex flex-column align-items-center dms-card-img h-100" 
-                            (click)="viewFile(file)" (clickMF)="clickMF($event, file, 'file')" imageSrc="'../../../assets/codx/dms/folder.svg'"  [formModel]="formModel"  [rootData]="file" [content]="file.fileName" [footer]="cardImgFooter" [bookmark]="true">
-                            </codx-card-img>
-                            <ng-template #cardImgFooter let-data let-setting="setting">
-                                <div title="{{file.fileName}}" class="dms-card-footer d-flex">
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <div class="d-flex align-items-center">
-                                            <img alt="" class="mh-20px me-2"
-                                                src="../../../assets/codx/dms/{{getAvatar(file.extension)}}">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}
-                                            </div>
-                                        </div>
-                                        <div *ngIf="showBookmark(file)" class="dms-bookmark">
-                                            <span class="icon-bookmark icon-24"></span>
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2">
-                                            <div class="d-flex flex-grow-1 text-dark-75">
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{getRating(file.views)}}</span>
-                                                    <span class="icon-star text-warning icon-16"></span>
-                                                </div>
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{getViews(file.history)}}</span>
-                                                    <span class="icon-remove_red_eye icon-16"></span>
-                                                </div>
-                                                <div class="d-flex mr-3">
-                                                    <span
-                                                        class="mr-1 font-weight-bold">{{showDownloadCount(file.countDownload)}}</span>
-                                                    <span class="icon-download icon-16"></span>
-                                                </div>
-                                            </div>
-                                            <span *ngIf="checkView(file.read) == false"
-                                                class="icon-security text-primary icon-18"></span>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </ng-template>                            
-                        </ng-container>
-                        <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
-                            <container-element [ngSwitch]="this.type">
-                                <some-element *ngSwitchCase="'card'">   
-                                   <div class="card-item me-5 mb-5">
-                                        <codx-card-img cardCss="border h-100 w-225px" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
-                                            [bookmark]="'true'"  [formModel]="formModel"   (clickMF)="clickMF($event, folder, 'folder')" [content]="folder.folderName"
-                                            [footer]="cardImgFooter">
-                                        </codx-card-img>
-                                   </div>                                   
-                                    <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
-                                        <div title="{{folder.folderName}}" class="d-flex align-items-start">
-                                            <div
-                                                *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
-                                            </div>
-                                            <ng-template #showicon2>
-                                                <div *ngIf="(checkIconFolder(folder)) then showsvg2 else noshowsvg2">
-                                                </div>
-                                                <ng-template #showsvg2>
-                                                    <img alt="" class="mh-20px me-2" src="{{getSvg(folder.icon)}}">
-                                                </ng-template>
-                                                <ng-template #noshowsvg2>
-                                                    <span [className]="getFolderClass(folder.icon)"></span>
-                                                </ng-template>
-                                            </ng-template>
-                                            <ng-template #noshowicon2>
-                                                <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
-                                            </ng-template>
-        
-                                            <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                                <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
-                                                </div>
-                                                <div *ngIf="showBookmark(folder)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
-                                                    </div>
-                                                    <ng-template #createBy2>
-                                                        <span class="text-dark-50 font-size-sm">{{folder.userName}}</span>
-                                                    </ng-template>
-                                                    <ng-template #nocreateBy2>
-                                                        <span class="text-dark-50 font-size-sm"></span>
-                                                    </ng-template>
-                                                    <span *ngIf="checkView(folder.read) == false"
-                                                        class="icon-security text-primary icon-18"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </ng-template>
-                                </some-element>
-                                <some-element *ngSwitchCase="'smallcard'">
-                                    <codx-temp-full  imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
-                                    [formModel]="formModel" [typeMF]="'hover'" [bookmark]="true"
-                                    [subTitle]="folder.createdOn + ' | ' + folder.userName"
-                                    cardCss="card-template w-225px px-2 py-3">
-                                  </codx-temp-full>                                 
-                                </some-element>                               
-                            </container-element>
-                        </ng-container>
-                    </ng-template>
-                </ng-template>
-                <ng-template #elseBlockEmpty>
-                    <div
-                        *ngIf="(this.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0)); then thenElseNoData else elseLoading">
-                    </div>
-                    <ng-template #thenElseNoData>
-                        <div class="w-100 align-items-center mt-20">
-                            <div class="text-center">
-                                <img class="max-h-200px" src="../../../assets/codx/dms/data-empty.png" />
-                            </div>
-                            <div class="text-center">
-                                <h5 class="text-dark mt-6">{{dmSV.titleNodaTa}}</h5>
-                                <div class="mt-3">{{dmSV.titleNodaTaFolder}}</div>
-                            </div>
-                        </div>
-                    </ng-template>
-                    <ng-template #elseLoading>
-                        <div class="w-100 align-items-center mt-20">
-                            <div class="text-center">
-                                <img class="max-h-200px" src="../../../assets/img/loader.gif" />
-                            </div>
-                        </div>
-                    </ng-template>
-                </ng-template>
+    <div class="dms dms-viewcard">
+        <div class="card-group">                
+            <div
+                *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
             </div>
+            <ng-template #thenBlockList>
+                <ng-container *ngIf="this.dmSV.idMenuActive == 'DMT08'">
+                    <div class="nondata-container w-100 mb-2">
+                        <div class="d-flex justify-content-between page-heading align-items-center">
+                            <div>{{dmSV.titleEmptyTrash30}}</div>
+                            <button (click)="this.dmSV.emptyTrash()" class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div
+                    *ngIf="this.dmSV.sortDirecttion.getValue() != '1' || this.dmSV.sortDirecttion.getValue() === null; then thenBlockAsc else elseBlockDesc">
+                </div>
+                <ng-template #thenBlockAsc>
+                    <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
+                        <container-element [ngSwitch]="this.type">
+                            <some-element *ngSwitchCase="'card'">   
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
+                                    [bookmark]="showBookmark(folder)"  [formModel]="formModel"   (clickMF)="clickMF($event, folder, 'folder')" [content]="folder.folderName"
+                                    [footer]="cardImgFooter">
+                                </codx-card-img>
+                                <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
+                                    <div title="{{folder.folderName}}" class="d-flex align-items-start">
+                                        <div
+                                            *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
+                                        </div>
+                                        <ng-template #showicon2>
+                                            <div *ngIf="(checkIconFolder(folder)) then showsvg2 else noshowsvg2">
+                                            </div>
+                                            <ng-template #showsvg2>
+                                                <img alt="" class="mh-20px me-2" src="{{getSvg(folder.icon)}}">
+                                            </ng-template>
+                                            <ng-template #noshowsvg2>
+                                                <span [className]="getFolderClass(folder.icon)"></span>
+                                            </ng-template>
+                                        </ng-template>
+                                        <ng-template #noshowicon2>
+                                            <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
+                                        </ng-template>
+    
+                                        <div class="d-flex flex-column flex-grow-1 dms-footer-r">
+                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            </div>
+                                            <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
+                                                <span class="icon-bookmark icon-24"></span>
+                                            </div> -->
+                                            <div class="d-flex justify-content-between">
+                                                <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
+                                                </div>
+                                                <ng-template #createBy2>
+                                                    <span class="text-dark-50 font-size-sm">{{folder.userName}}</span>
+                                                </ng-template>
+                                                <ng-template #nocreateBy2>
+                                                    <span class="text-dark-50 font-size-sm"></span>
+                                                </ng-template>
+                                                <span *ngIf="checkView(folder.read) == false"
+                                                    class="icon-security text-primary icon-18"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </some-element> 
+                            <some-element *ngSwitchCase="'smallcard'">
+                                <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
+                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(folder)"
+                                subTitle="{{folder.createdOn | date : 'dd/MM/yyyy'}} | {{folder.userName}}"                                    
+                                cardCss="card-template w-225px px-2 py-3">
+                              </codx-temp-full>                                 
+                            </some-element>                                
+                        </container-element>
+                    </ng-container>
+
+                    <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
+                        <container-element [ngSwitch]="this.type">
+                            <some-element *ngSwitchCase="'card'">   
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file"
+                                    [bookmark]="showBookmark(file)"  [formModel]="formModel"   (clickMF)="clickMF($event, file, 'file')" [content]="file.fileName">
+                                </codx-card-img>
+                                <ng-template #cardImgFooter let-data let-setting="setting">
+                                    <div title="{{file.fileName}}" class="dms-card-footer d-flex">
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <img alt="" class="mh-20px me-2"
+                                                    src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
+                                                <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
+                                            </div>
+                                            <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
+                                                <span class="icon-bookmark icon-24"></span>
+                                            </div> -->
+                                            <div class="d-flex align-items-center mt-2">
+                                                <div class="d-flex flex-grow-1 text-dark-75">
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{getRating(file.views)}}</span>
+                                                        <span class="icon-star text-warning icon-16"></span>
+                                                    </div>
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{getViews(file.history)}}</span>
+                                                        <span class="icon-remove_red_eye icon-16"></span>
+                                                    </div>
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{showDownloadCount(file.countDownload)}}</span>
+                                                        <span class="icon-download icon-16"></span>
+                                                    </div>
+                                                </div>
+                                                <span *ngIf="checkView(file.read) == false"
+                                                    class="icon-security text-primary icon-18"></span>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </ng-template>  
+                            </some-element>
+                            <some-element *ngSwitchCase="'smallcard'">
+                                <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
+                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(file)"
+                                subTitle="{{file.createdOn | date : 'dd/MM/yyyy'}} | {{file.userName}}"
+                                cardCss="card-template w-225px px-2 py-3">
+                              </codx-temp-full>                                 
+                            </some-element>                                
+                        </container-element>                       
+                    </ng-container>
+                </ng-template>
+                <ng-template #elseBlockDesc>
+                    <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
+                        <container-element [ngSwitch]="this.type">
+                            <some-element *ngSwitchCase="'card'">   
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file"
+                                    [bookmark]="showBookmark(file)"  [formModel]="formModel"   (clickMF)="clickMF($event, file, 'file')" [content]="file.fileName">
+                                </codx-card-img>
+                                <ng-template #cardImgFooter let-data let-setting="setting">
+                                    <div title="{{file.fileName}}" class="dms-card-footer d-flex">
+                                        <div class="d-flex flex-column flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <img alt="" class="mh-20px me-2"
+                                                    src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
+                                                <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
+                                            </div>
+                                            <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
+                                                <span class="icon-bookmark icon-24"></span>
+                                            </div> -->
+                                            <div class="d-flex align-items-center mt-2">
+                                                <div class="d-flex flex-grow-1 text-dark-75">
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{getRating(file.views)}}</span>
+                                                        <span class="icon-star text-warning icon-16"></span>
+                                                    </div>
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{getViews(file.history)}}</span>
+                                                        <span class="icon-remove_red_eye icon-16"></span>
+                                                    </div>
+                                                    <div class="d-flex mr-3">
+                                                        <span
+                                                            class="mr-1 font-weight-bold">{{showDownloadCount(file.countDownload)}}</span>
+                                                        <span class="icon-download icon-16"></span>
+                                                    </div>
+                                                </div>
+                                                <span *ngIf="checkView(file.read) == false"
+                                                    class="icon-security text-primary icon-18"></span>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </ng-template>  
+                            </some-element>
+                            <some-element *ngSwitchCase="'smallcard'">
+                                <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="img-folder me-4" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
+                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(file)"
+                                subTitle="{{file.createdOn | date : 'dd/MM/yyyy'}} | {{file.userName}}"
+                                cardCss="card-template w-225px px-2 py-3">
+                              </codx-temp-full>                                 
+                            </some-element>                                
+                        </container-element>                           
+                    </ng-container>
+                    <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
+                        <container-element [ngSwitch]="this.type">
+                            <some-element *ngSwitchCase="'card'">   
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
+                                    [bookmark]="showBookmark(folder)"  [formModel]="formModel"   (clickMF)="clickMF($event, folder, 'folder')" [content]="folder.folderName"
+                                    [footer]="cardImgFooter">
+                                </codx-card-img>
+                                <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
+                                    <div title="{{folder.folderName}}" class="d-flex align-items-start">
+                                        <div
+                                            *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
+                                        </div>
+                                        <ng-template #showicon2>
+                                            <div *ngIf="(checkIconFolder(folder)) then showsvg2 else noshowsvg2">
+                                            </div>
+                                            <ng-template #showsvg2>
+                                                <img alt="" class="mh-20px me-2" src="{{getSvg(folder.icon)}}">
+                                            </ng-template>
+                                            <ng-template #noshowsvg2>
+                                                <span [className]="getFolderClass(folder.icon)"></span>
+                                            </ng-template>
+                                        </ng-template>
+                                        <ng-template #noshowicon2>
+                                            <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
+                                        </ng-template>
+    
+                                        <div class="d-flex flex-column flex-grow-1 dms-footer-r">
+                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            </div>
+                                            <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
+                                                <span class="icon-bookmark icon-24"></span>
+                                            </div> -->
+                                            <div class="d-flex justify-content-between">
+                                                <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
+                                                </div>
+                                                <ng-template #createBy2>
+                                                    <span class="text-dark-50 font-size-sm">{{folder.userName}}</span>
+                                                </ng-template>
+                                                <ng-template #nocreateBy2>
+                                                    <span class="text-dark-50 font-size-sm"></span>
+                                                </ng-template>
+                                                <span *ngIf="checkView(folder.read) == false"
+                                                    class="icon-security text-primary icon-18"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </some-element> 
+                            <some-element *ngSwitchCase="'smallcard'">
+                                <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="img-folder me-4" (clickMF)="clickMF($event, folder, 'folder')" [title]="folder.folderName"
+                                [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(folder)"
+                                subTitle="{{folder.createdOn | date : 'dd/MM/yyyy'}} | {{folder.userName}}"                                    
+                                cardCss="card-template w-225px px-2 py-3">
+                              </codx-temp-full>                                 
+                            </some-element>                                
+                        </container-element>
+                    </ng-container>
+                </ng-template>
+            </ng-template>
+            <ng-template #elseBlockEmpty>
+                <div
+                    *ngIf="(this.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0)); then thenElseNoData else elseLoading">
+                </div>
+                <ng-template #thenElseNoData>
+                    <div class="w-100 align-items-center mt-20">
+                        <div class="text-center">
+                            <img class="max-h-200px" src="../../../assets/codx/dms/data-empty.png" />
+                        </div>
+                        <div class="text-center">
+                            <h5 class="text-dark mt-6">{{dmSV.titleNodaTa}}</h5>
+                            <div class="mt-3">{{dmSV.titleNodaTaFolder}}</div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #elseLoading>
+                    <div class="w-100 align-items-center mt-20">
+                        <div class="text-center">
+                            <img class="max-h-200px" src="../../../assets/img/loader.gif" />
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-template>
         </div>
     </div>
 </div>

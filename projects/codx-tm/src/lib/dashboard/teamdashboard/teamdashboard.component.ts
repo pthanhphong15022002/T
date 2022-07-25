@@ -168,7 +168,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   };
   //#endregion chartcolumn
 
-  public headerText: Object = [
+  headerText: Object = [
     { text: 'Khối lượng công việc' },
     { text: 'Thời gian thực hiện' },
   ];
@@ -197,38 +197,48 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   private getGeneralData() {
     this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
       if (res) {
-        this.availability = res.efficiency.availability.toFixed(2);
-        this.performance = res.efficiency.performance.toFixed(2);
-        this.quality = res.efficiency.quality.toFixed(2);
-        this.kpi = res.efficiency.kpi.toFixed(2);
-        this.tasksByGroup = res.tasksByGroup;
-        this.status = res.status;
-        this.dataBarChart = res.dataBarChart;
-        this.rateDoneTaskOnTime = res.rateDoneTaskOnTime.toFixed(2);
-        this.qtyTasks = res.qtyTasks;
+        const {
+          efficiency,
+          tasksByGroup,
+          status,
+          dataBarChart,
+          rateDoneTaskOnTime,
+          qtyTasks,
+          vltasksByEmp,
+          hoursByEmp,
+        } = res;
+        this.availability = efficiency.availability.toFixed(2);
+        this.performance = efficiency.performance.toFixed(2);
+        this.quality = efficiency.quality.toFixed(2);
+        this.kpi = efficiency.kpi.toFixed(2);
+        this.tasksByGroup = tasksByGroup;
+        this.status = status;
+        this.dataBarChart = dataBarChart;
+        this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.qtyTasks = qtyTasks;
         this.piedata = [
           {
             x: 'Chưa thực hiện',
-            y: res.status.newTasks,
+            y: status.newTasks,
           },
           {
             x: 'Đang thực hiên',
-            y: res.status.processingTasks,
+            y: status.processingTasks,
           },
           {
             x: 'Hoàn tất',
-            y: res.status.doneTasks,
+            y: status.doneTasks,
           },
           {
             x: 'Hoãn lại',
-            y: res.status.postponeTasks,
+            y: status.postponeTasks,
           },
           {
             x: 'Bị huỷ',
-            y: res.status.canceledTasks,
+            y: status.canceledTasks,
           },
         ];
-        res.vltasksByEmp.map((task) => {
+        vltasksByEmp.map((task) => {
           let newTasks = 0;
           let processingTasks = 0;
           let doneTasks = 0;
@@ -265,7 +275,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             },
           });
         });
-        this.hrWork = res.hoursByEmp;
+        this.hrWork = hoursByEmp;
         this.detectorRef.detectChanges();
       }
     });

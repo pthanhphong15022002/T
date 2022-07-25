@@ -1,4 +1,5 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+[formModel]="dialogSecond.formModel" [dialog]="dialogSecond" >
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
       <e-tabitems>
@@ -24,23 +25,11 @@
                 </div>
               </div>
               <div class="form-group row mt-3">
-
                 <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc; let i= index">
                   <div class="row">
                   <div class="col-2">
-
-                    <!-- <div *ngIf="item.idChooseRole; else test">
-                      <input type="checkbox" [(ngModel)]="item.ischeck"
-                      class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true"  (change)="onChange($event,item)">
-                    </div>
-                      <ng-template #test>
-                        <input type="checkbox"  [(ngModel)]="item.ischeck"
-                        class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true"  (change)="onChange($event,item)">
-                      </ng-template> -->
                       <input type="checkbox"  [(ngModel)]="item.ischeck"
-                      class="check-{{i}} checkbox-round" name="Checkboxes4"   (change)="onChange($event,item)">
-                     <!-- <input type="checkbox" 
-                     class="check-{{i}} checkbox-round" name="Checkboxes4" [checked]="true" (change)="onChange($event,item)"> -->
+                      class="check-{{i}} checkbox-round" name="Checkboxes4" (change)="onChange($event,item)">
                   </div>
                   <div class="col-10 column_second">
                     <div class="row">
@@ -63,11 +52,8 @@
                           <ng-template #imgDefault_personal>
                               <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
                               </codx-input>
-                 
                           </ng-template>
-<!-- 
-                          <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
-                          </codx-input> -->
+
                         </div>
                       </div>
                     </div>
@@ -125,9 +111,7 @@
                           </div>
                         </div>
                       </div>
-
                     </div>
-
                   </div>
                 </div>
 

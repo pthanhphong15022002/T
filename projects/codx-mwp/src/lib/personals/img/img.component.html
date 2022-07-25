@@ -1,11 +1,10 @@
 <div class="listView">
     <codx-listview [predicate]="predicate" [dataValue]="dataValue" #listview funcId="" [pageSize]="10" service="WP"
-        assemblyName="ERM.Business.WP" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
-        [height]="0" [width]="0">
+        assemblyName="ERM.Business.WP" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments">
     </codx-listview>
 </div>
-<div *ngIf="data?.images || data?.images?.length != 0">
-    <!-- <lv-image-grid [database]="true" [files]="item?.listImage">
-        </lv-image-grid> -->
-    <codx-file [images]="data?.images" [showBtnRemove]='false'></codx-file>
+<div *ngFor="let item of data" class="img-card">
+    <div *ngIf="item.referType == 'image'">
+        <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
+    </div>
 </div>

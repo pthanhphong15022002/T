@@ -69,7 +69,7 @@ export class NewsComponent implements OnInit {
       var category = params["category"];
       this.funcID = this.route.snapshot.params["funcID"];
       switch (category) {
-        case "news":
+        case "home":
           this.dataValue ="0;1;5;2;comanyinfo";
           this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus =@2 )) && Status =@3 && Category !=@4";
           break;
@@ -155,25 +155,25 @@ export class NewsComponent implements OnInit {
   searchEvent(event: any) { }
 
   clickViewDeital(data: any) {
-        this.codxService.navigate(
-          '',
-          '/wp/' + data.category + '/view-detail/' + data.recID + '/' + this.funcID
-        );
     this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'UpdateViewNewsAsync',
-        data.recID
-      )
-      .subscribe();
+    .execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NewsBusiness',
+      'UpdateViewNewsAsync',
+      data.recID
+    )
+    .subscribe((res:any) => {
+      if(res){
+        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category + data.recID);
+      }
+    });
   }
   clickShowPopupCreate() {
     let option = new SidebarModel();
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     this.dialogRef =  this.callfc.openSide(PopupAddComponent,option);
   }
 

@@ -1,6 +1,6 @@
 import { AD_User } from './../../models/AD_User.models';
 import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService } from 'codx-core';
+import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -13,9 +13,12 @@ import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 export class AddUserComponent implements OnInit {
   @ViewChild("imageUpload", { static: false }) imageUpload?: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
-
+  @ViewChild('view') codxView!: any;
+  @ViewChild('view') view!: ViewsComponent;
+  
   title = 'Thêm người dùng';
   dialog!: DialogRef;
+  dialogRole : DialogRef
   data: any;
   readOnly = false;
   isAddMode = true;
@@ -46,11 +49,11 @@ export class AddUserComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
+    this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
-      this.dialog.closed.subscribe(e => {
+      this.dialogRole.closed.subscribe(e => {
         if (e?.event) {
           this.viewChooseRole = e?.event
           this.changDetec.detectChanges();
@@ -167,4 +170,19 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
+  ];
+  
+   setTitle(e: any) {
+    this.title = 'Thêm ' + e;
+    this.changDetec.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
+  }
 }

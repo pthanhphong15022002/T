@@ -208,7 +208,7 @@ export class CodxDMService {
     private titleMessage = 'Thông báo';
     private titleCopymessage = 'Bạn có muốn lưu lên không ?';
     private titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
-    private FOLDER_NAME = "QUẢN LÝ TÀI LIỆU CÁ NHÂN";
+    private FOLDER_NAME = "DM";//"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
     public titleEmptyTrash30 = "Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày";
     public titleEmptyAction = 'Dọn sạch thùng rác';
     public titleNodaTa = 'Không có tài liệu';
@@ -239,16 +239,7 @@ export class CodxDMService {
         this.folderID = folder;
         this.type = type;
         this.openFileDialog.next(true);
-    }
-
-    checkUserForder(folder) {
-        return false;
-        if (this.idMenuActive == "3" && (folder.folderId == "DM" || folder.path.indexOf(this.FOLDER_NAME) > -1) && folder.isSystem && (folder.level == "1" || folder.level == "2")) {
-            return true;
-        }
-        else
-            return false;
-    }
+    }   
 
     getRight(folder: FolderInfo) {
         this.parentCreate = folder.create;
@@ -358,6 +349,17 @@ export class CodxDMService {
         if (this.folderId == null) return "";
         else return this.folderId.getValue();
     }
+
+    
+    checkUserForder(folder) {
+       // return true;
+        if (folder.folderId != null && this.idMenuActive == "DMT02" && (folder.folderId == "DM" || folder.folderId.indexOf(this.FOLDER_NAME) > -1) && folder.isSystem && (folder.level == "1" || folder.level == "2")) {
+          return true;
+        }
+        else
+          return false;
+    }
+ 
 
     changeTextSearch(text: any, total: any, totalPage: any, pageNo: any, paoaSize: any) {
         this.textSearch.next(text);

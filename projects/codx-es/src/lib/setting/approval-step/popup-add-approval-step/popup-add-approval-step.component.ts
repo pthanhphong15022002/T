@@ -61,6 +61,32 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   headerText1;
 
+  title = '';
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
+    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabInfo2' },
+    {
+      icon: 'icon-email',
+      text: 'Email/thông báo',
+      name: 'tabInfo3',
+    },
+    {
+      icon: 'icon-tune',
+      text: 'Thông tin khác',
+      name: 'tabInfo4',
+    },
+  ];
+
+  setTitle(e: any) {
+    // this.title = 'Thêm ' + e;
+    // this.cr.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
+  }
+
   constructor(
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
@@ -110,7 +136,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 }
               }
             }
-            console.log(this.cbxName);
+            console.log('cbxName', this.cbxName);
 
             if (this.cbxName) {
               this.cache.valueList('ES016').subscribe((vllMode) => {
@@ -158,7 +184,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
-          this.lstApprover = this.dialogApprovalStep.value.approvers;
+          this.lstApprover = JSON.parse(
+            JSON.stringify(this.dialogApprovalStep.value.approvers)
+          );
           this.currentMode = this.dataEdit?.approveMode;
           this.dialogApprovalStep.addControl(
             'id',
@@ -322,6 +350,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+
+      console.log(this.lstApprover);
+      console.log(this.dataEdit);
+      console.log(this.lstStep);
     }
   }
 }

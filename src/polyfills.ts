@@ -48,10 +48,16 @@
 import 'zone.js';  // Included with Angular CLI.
 import '@angular/localize/init';
 import * as jquery from 'jquery';
+<<<<<<< HEAD
 let windowInstance = window as { [key: string]: any };
 windowInstance['jQuery'] = jquery;
 windowInstance['$'] = jquery;
 
+=======
+let windowInstance = (window as { [key: string]: any });
+windowInstance['jQuery'] = jquery;
+windowInstance['$'] = jquery;
+>>>>>>> 04c110b2ce8d49fe3492a55e495fb91cfa0ae670
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
