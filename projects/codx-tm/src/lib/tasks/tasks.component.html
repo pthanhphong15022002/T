@@ -89,7 +89,7 @@
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true"
-  [autoLoad]="false">
+  [autoLoad]="true">
 </codx-views>
 
 <ng-template #footerList let-data>
