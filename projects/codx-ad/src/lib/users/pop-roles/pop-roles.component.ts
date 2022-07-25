@@ -23,9 +23,7 @@ export class PopRolesComponent implements OnInit {
   count: number = 0;
   lstFunc = [];
   lstEmp = [];
-listChooseRole:tmpformChooseRole[] =[];
-//  listChooseRole:[];
-    //listChooseRole:tmpformChooseRole[] =[];
+  listChooseRole:tmpformChooseRole[] =[];
   idClickFunc: any;
   listRoles:tmpformChooseRole[] =[];
  // viewChooseRoleSelected: tmpformChooseRole;
@@ -43,9 +41,7 @@ listChooseRole:tmpformChooseRole[] =[];
   ) {
     this.dialogSecond = dialog;
     this.data = dt?.data;
-
   }
-
   ngOnInit(): void {
   this.listChooseRole = this.data;  // 
   this.loadData(this.listChooseRole); 
@@ -73,11 +69,12 @@ listChooseRole:tmpformChooseRole[] =[];
                   this.lstFunc[i].ischeck = true;
                   this.lstFunc[i].recIDofRole = dataChecked[j].recIDofRole;
                 }
+                this.count =j;
               }
             }
-            console.log(dataChecked);
+            this.count = this.count+1;
           }
-         
+       
           this.changeDec.detectChanges();
         }
       })
@@ -92,24 +89,17 @@ listChooseRole:tmpformChooseRole[] =[];
           this.lstFunc[i].ischeck = true;
         }
       }
-      // this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-      // if (this.lstFunc[i].recIDofRole != null) {
-      //   this.lstFunc[i].recIDofRole = null;
-      // }
     }
   }
 
   onChange(event, item?: any) {
-    var check = true;
-   if(item.ischeck) {
-   // event.target.checked=true;
-    check = true;
-   }
-   else {
-  //  event.target.checked=false;
-    check = false;
-   } 
-    if (event.target.checked === check) {
+  if(item.ischeck) {
+    event.target.checked = true;
+  }
+  else {
+    event.target.checked = false;
+  }
+    if (event.target.checked === false) {
       item.ischeck = false;
       this.count = this.count - 1;
       for (var i = 0; i < this.lstFunc.length; i++) {
@@ -125,22 +115,28 @@ listChooseRole:tmpformChooseRole[] =[];
       }
 
       for (var i = 0; i < this.listChooseRole.length; i++) {
-        if (item === this.listChooseRole[i]) {
+        if (item.functionID === this.listChooseRole[i].functionID) {
           this.listChooseRole.splice(i, 1);
         }
-      }
-
-      for (var i = 1; i <= this.listChooseRole.length; i++) {
-        this.listChooseRole[i].idChooseRole = i.toString();
       }
     }
     else {
       this.count = this.count + 1;
       item.idChooseRole = this.count;
-      this.listChooseRole.push(item);
+      var checkExist= true;
+      this.listChooseRole.forEach(element => {
+        if(element.functionID == item.functionID) {
+          checkExist= false;
+        }
+      });
+      if(checkExist)
+      {
+        this.listChooseRole.push(item);
+      }
+     
       item.ischeck = true;
     }
-   
+    
     this.changeDec.detectChanges();
   }
 
@@ -161,6 +157,7 @@ listChooseRole:tmpformChooseRole[] =[];
     }
     return false;
   }
+
   onSave() {
 
     if (this.CheckListUserRoles() === this.optionFrist) {
@@ -170,8 +167,6 @@ listChooseRole:tmpformChooseRole[] =[];
     else if (this.CheckListUserRoles() === this.optionSecond) {
       this.notiService.notifyCode('Lưu thành công');
       this.dialogSecond.close(this.listChooseRole);
-      console.log('hello hello');
-      console.log(this.listChooseRole);
       this.changeDec.detectChanges();
     }
     else {
@@ -180,8 +175,8 @@ listChooseRole:tmpformChooseRole[] =[];
     }
 
   }
-  CheckListUserRoles() {
 
+  CheckListUserRoles() {
     for (var i = 0; i < this.listChooseRole.length; i++) {
       if (this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole)) {
         return this.optionFrist;
