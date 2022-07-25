@@ -33,6 +33,17 @@ export class NewsComponent implements OnInit {
   views: Array<ViewModel> = [];
   funcID = "";
   countCarousel = 3;
+  NEWSTYPE = {
+    POST: "1",
+    VIDEO: "2"
+  }
+  CATEGORY = {
+    COMPANYINFO:"0",
+    EVENTS: "1",
+    INTERNAL: "2",
+    POLICY: "3",
+    ORTHERS: "4"
+  }
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('codxViews') codxView: ViewsComponent;
@@ -170,11 +181,11 @@ export class NewsComponent implements OnInit {
     });
   }
   clickShowPopupCreate() {
-    let option = new SidebarModel();
+    let option = new DialogModel();
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
-    option.Width = '800px';
-    this.dialogRef =  this.callfc.openSide(PopupAddComponent,option);
+    option.IsFull = true;
+    this.callfc.openForm(PopupAddComponent,'',0,0,'',null,'',option);
   }
 
   clickShowPopupSearch() {

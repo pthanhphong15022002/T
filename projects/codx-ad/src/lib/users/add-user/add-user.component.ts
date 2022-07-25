@@ -25,7 +25,8 @@ export class AddUserComponent implements OnInit {
   user: any;
   data1: any;
   adUser = new AD_User();
-  viewChooseRole:tmpformChooseRole;
+  countListViewChooseRole:any;
+  viewChooseRole:tmpformChooseRole[] =[];
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -59,6 +60,7 @@ export class AddUserComponent implements OnInit {
           this.changDetec.detectChanges();
                 console.log('in thành công nghe');
       console.log(this.viewChooseRole);
+  
         }
       })
 

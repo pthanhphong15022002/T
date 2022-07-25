@@ -36,7 +36,6 @@ export class PopupAddComponent implements OnInit {
   recevierID = "";
   recevierName = "";
   lstRecevier = [];
-  headerText = "Soạn thảo văn bản";
   dataEdit:any;
   isUpload:boolean = false;
   fileUpload:any[] = [];
@@ -78,11 +77,9 @@ export class PopupAddComponent implements OnInit {
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     protected callFunc: CallFuncService,
-    @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
   ) {
-    this.dialogData = dd.data;
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }

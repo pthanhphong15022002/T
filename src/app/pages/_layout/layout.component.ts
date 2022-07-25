@@ -5,10 +5,11 @@ import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'WP';
+  override aside = true;
   override asideFixed = false;
   override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   override toolbar = false;
