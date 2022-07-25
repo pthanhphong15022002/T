@@ -3,7 +3,7 @@
         <div *ngFor="let item of file_video">
             <div class="pw-card">
                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
-                    <video #video controls class="w-100 rounded min-h-250px">
+                    <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
                         <source [src]="item.srcVideo || item.data" type="video/mp4">
                     </video>
                 </ng-container>
