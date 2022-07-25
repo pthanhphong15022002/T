@@ -58,7 +58,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, folder, 'folder')" 
+                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, '', folder, 'folder')" 
                                             [formModel]="formModel" [typeMF]="'hover'"
                                             cardCss="w-150px">
                                          </codx-temp-full> 
@@ -87,7 +87,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
+                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, '', file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
                                         [formModel]="formModel" [typeMF]="'hover'"                                        
                                         cardCss="w-150px">
                                         </codx-temp-full>                                                   
@@ -103,7 +103,7 @@
                                         [className]="getBookmarksClass(file)"></span>
                                     <td>                                                                     
                                     <td>
-                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, file, 'file')" [title]="file.fileName"
+                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, '', file, 'file')" [title]="file.fileName"
                                         [formModel]="formModel" [typeMF]="'hover'"                                     
                                         cardCss="w-225px">
                                         </codx-temp-full>                                             
@@ -118,7 +118,7 @@
                                         </div>
                                     </td>
                                     <td>   
-                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
+                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, '', file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb"
                                         [formModel]="formModel" [typeMF]="'hover'"                                        
                                         cardCss="w-150px">
                                         </codx-temp-full>                                           
@@ -147,7 +147,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, folder, 'folder')" 
+                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, '', folder, 'folder')" 
                                         [formModel]="formModel" [typeMF]="'hover'"
                                         cardCss="w-150px">
                                          </codx-temp-full> 

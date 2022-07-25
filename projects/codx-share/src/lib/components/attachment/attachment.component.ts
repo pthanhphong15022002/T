@@ -52,6 +52,7 @@ export class AttachmentComponent implements OnInit {
   titleDialog = "Thêm file";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
+  titleUpload = 'Upload';
   //fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
