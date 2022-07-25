@@ -5,11 +5,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileInfo, HistoryFile, View } from '@shared/models/file.model';
-import { ApiHttpService, AuthStore, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { CopyComponent } from '../../copy/copy.component';
 
 @Component({
   selector: 'card',
@@ -21,9 +22,7 @@ export class CardComponent implements OnInit {
   @Input() listFolders: any;
   @Input() listFiles: any;
   @Input() formModel: any;
-  @Input() type: any;
-  //listFolders: FolderInfo[];
- // listFiles: FileInfo[];
+  @Input() type: any;  
   html: string;
   count: number;
   tenant: string;
@@ -35,14 +34,13 @@ export class CardComponent implements OnInit {
   user: any;
   item: FolderInfo;
   totalRating: number;
-  totalViews: number;
-  //type1: string;
-  //data: any;
-  //Mustache = require('mustache');
+  totalViews: number;  
   loaded: boolean;
   loadedFile: boolean;
   loadedFolder: boolean;
   setting: any;
+  titleCopy = 'Sao chép';
+  titleRename = 'Thay đổi tên';
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -57,6 +55,7 @@ export class CardComponent implements OnInit {
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
+    private callfc: CallFuncService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -186,16 +185,21 @@ export class CardComponent implements OnInit {
   // }
 
   viewFile(file) {
-    alert(file.folderName);
+   // alert(file.folderName);
   }
 
   clickMF($event, data, type) {
-    if (type == 'file') {
+    switch($event.functionID) {
+      case "copy": // copy file hay thu muc
+        var title = `${this.titleCopy} ${type}`;
+        this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+        break;
 
-    }
-    else {
-
-    }
+      case "rename": // copy file hay thu muc
+        var title = `${this.titleRename} ${type}`;
+        this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+        break;
+    }  
   }
 
   getViews(data: HistoryFile[]) {

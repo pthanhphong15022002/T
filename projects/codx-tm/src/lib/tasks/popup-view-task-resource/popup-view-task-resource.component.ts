@@ -11,13 +11,15 @@ export class PopupViewTaskResourceComponent implements OnInit, AfterViewInit {
   dialog: any;
   title = '';
   listTaskResousce = [];
+  listTaskResousceFull = [];
   searchField = '';
   funcID = '';
-  listRoles = []
-  vllRole = 'TM002'
+  listRoles = [];
+  vllRole = 'TM002';
+  countResource = 0;
   constructor(
     private api: ApiHttpService,
-    private cache : CacheService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -32,6 +34,7 @@ export class PopupViewTaskResourceComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {}
+
   ngAfterViewInit(): void {
     if (this.funcID == 'TMT0203') {
       //can 1 bien co dinh để xác định là task của giao viẹc
@@ -46,8 +49,10 @@ export class PopupViewTaskResourceComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.listTaskResousce = res;
+            this.listTaskResousceFull = res;
+            this.countResource = res.length;
             this.title =
-              'Danh sách được phân công (' + this.listTaskResousce.length + ')';
+              'Danh sách được phân công (' + this.countResource + ')';
           }
         });
     } else {
@@ -62,10 +67,28 @@ export class PopupViewTaskResourceComponent implements OnInit, AfterViewInit {
       //   .subscribe((res) => {
       //     if (res) {
       //       this.listTaskResousce.push(res);
+      //  this.listTaskResousceFull.push(res) ;
+      // this.countResource = res.length
       //       this.title =
       //         'Danh sách được phân công (' + this.listTaskResousce.length + ')';
       //     }
       //   });
     }
+  }
+
+  searchName(e) {
+    var listTaskResousce = [];
+    this.searchField = e;
+    if (this.searchField.trim()=='') {
+      this.listTaskResousce = this.listTaskResousceFull;
+      return;
+    }
+    this.listTaskResousceFull.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResousce.push(res);
+      }
+    });
+    this.listTaskResousce = listTaskResousce;
   }
 }

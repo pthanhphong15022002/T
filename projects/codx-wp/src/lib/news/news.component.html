@@ -1,5 +1,3 @@
-<!-- <div class="box-link">main-header</div> -->
-
 <codx-views #codxViews 
 [funcID]="funcID" 
 idField="recID"
@@ -21,7 +19,11 @@ idField="recID"
         <div class="col-6">
           <div class="news-card news-hot">
             <codx-img imageType="square" width="200" imgCss="w-250px" (click)="clickViewDeital(newsItem)" class="h-250px" [objectId]="newsItem.recID"
-              objectType="WP_News"></codx-img>
+            [objectType]="entityName">
+            </codx-img>
+            <!-- <div>
+              <codx-file [objectID]="newsItem.recID" [objectType]="entityName" [edit]="false"></codx-file>
+            </div> -->
             <div class="fs-4 fw-bolder mt-2 news-title">
               {{ newsItem?.subject }}
             </div>

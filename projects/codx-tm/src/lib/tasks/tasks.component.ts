@@ -490,7 +490,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = 'Auto';
+    option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose],

@@ -2,11 +2,10 @@
 </codx-form>
 <ng-template #body>
     <div>
-        <codx-input *ngIf="listTaskResousce.length > 0" type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm"></codx-input>
+        <codx-searchbar  (searchEvent)="searchName($event)"></codx-searchbar>
       </div>
       <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousce">
         <div class="me-3">
-          <!-- <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users"></codx-img> -->
           <div style=" position: relative">
             <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
             </codx-img>

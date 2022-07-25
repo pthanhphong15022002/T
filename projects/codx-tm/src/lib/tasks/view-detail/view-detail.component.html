@@ -199,16 +199,16 @@
         </codx-label>:
       </div>
       <div class="">
-        <!-- <div *ngIf="itemSelected.category == '3'" class="" (click)="openViewListTaskResource(itemSelected)">
+        <div *ngIf="itemSelected.category == '3'" class="" (click)="openViewListTaskResource(itemSelected)">
           <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" >
           </codx-imgs>
-        </div> -->
-        <!-- <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
+        </div>
+        <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
           <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10" >
           </codx-imgs>
-        </div> -->
+        </div>
 
-
+<!-- 
         <div *ngIf="itemSelected?.category=='1'||itemSelected?.category=='2'">
           <codx-img [width]="35" [objectId]="itemSelected?.owner" objectType="AD_Users">
           </codx-img>
@@ -231,7 +231,7 @@
                 </div>
               </ng-container>
             </div>
-        </div>
+        </div> -->
       </div>
       <div class="mt-6 mb-3 text-primary fw-bold">
         <!-- <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">

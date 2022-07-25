@@ -34,9 +34,28 @@
                         <div class="note-content">
                             <div class="checkbox-list">
                                 <div *ngIf="item.memo != null">
-                                    <!-- <codx-mfunc type="hover" [formModel]="lstView?.formModel"
-                                        (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                    </codx-mfunc> -->
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
@@ -45,9 +64,28 @@
                                     </div>
                                 </div>
                                 <div *ngIf="item.memo == null">
-                                    <!-- <codx-mfunc type="hover" [formModel]="lstView?.formModel"
-                                        (clickMF)="clickMF($event,item)" [dataItem]="item">
-                                    </codx-mfunc> -->
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                                         <span class="icon-push_pin icon-16" type="button"></span>
                                     </div>
@@ -133,6 +171,21 @@
                     labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #popMoreFunc let-modal>
+    <div class="flex align-items-center mb-1" (click)="checkNumberNotePin(dataUpdate)">
+        <span [class]="pinMF?.largeIcon" [style.color]="pinMF?.color"></span>
+        <div class="show-customName ms-2">
+            <span>{{pinMF?.customName}}</span>
+        </div>
+    </div>
+    <div class="flex align-items-center" (click)="openFormNoteBooks(dataUpdate)">
+        <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
+        <div class="show-customName ms-2">
+            <span>{{saveMF?.customName}}</span>
         </div>
     </div>
 </ng-template>
