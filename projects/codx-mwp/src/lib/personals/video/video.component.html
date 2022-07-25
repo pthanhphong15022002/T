@@ -1,11 +1,13 @@
-<div class="listView">
-    <codx-listview [predicates]="predicate" [dataValues]="dataValue" #listview funcId="" [pageSize]="10" service="WP"
-        assemblyName="ERM.Business.WP" className="CommentBusiness" method="GetListPostAsync" entityName="WP_Comments"
-        [height]="0" [width]="0">
-    </codx-listview>
-</div>
-<div *ngFor="let item of data">
-    <div *ngIf="item.referType == 'video'">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" [showBtnRemove]='false'></codx-file>
+<div *ngIf="file_video.length > 0">
+    <div class="pw-listcard mt-6">
+        <div *ngFor="let item of file_video">
+            <div class="pw-card">
+                <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+                    <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
+                        <source [src]="item.srcVideo || item.data" type="video/mp4">
+                    </video>
+                </ng-container>
+            </div>
+        </div>
     </div>
 </div>

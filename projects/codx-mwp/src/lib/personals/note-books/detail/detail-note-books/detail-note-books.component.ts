@@ -137,9 +137,9 @@ export class DetailNoteBooksComponent extends UIComponent {
       this.dialog = this.callfc.openForm(PopupAddUpdate,
         'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.data, 'add'], '', option
       );
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
+      // this.dialog.closed.subscribe(x => {
+      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
+      // });
     });
   }
 
