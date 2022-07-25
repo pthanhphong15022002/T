@@ -46,11 +46,21 @@
 
                           <div *ngIf="item.ischeck; else imgDefault_personal">
                            
-                          <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
+                          <!-- <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
                           </codx-input>
                           </div>
                           <ng-template #imgDefault_personal>
                               <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
+                              </codx-input>
+                          </ng-template> -->
+
+
+                          <codx-input type="combobox"  field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles"
+                           (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
+                          </codx-input>
+                          </div>
+                          <ng-template #imgDefault_personal>
+                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
                               </codx-input>
                           </ng-template>
 

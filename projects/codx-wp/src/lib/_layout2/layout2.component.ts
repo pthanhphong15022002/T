@@ -12,10 +12,13 @@ export class Layout2Component extends LayoutBaseComponent {
   override aside = false;
   valueList: [];
   category:string = "home";
+  funcID:string | null = "";
+ 
 
   constructor(
     private route: ActivatedRoute,
     private cache: CacheService,
+    private dt:ChangeDetectorRef,
     inject: Injector
   ) {
     super(inject);
@@ -31,6 +34,14 @@ export class Layout2Component extends LayoutBaseComponent {
   onAfterViewInit(): void {}
 
   navigate(category, funcID = null) {
-    
+    this.category = category;
+    if(funcID){
+      this.codxService.navigate(this.funcID);
+    }
+    else
+    {
+      this.funcID = this.route.firstChild.snapshot.params["funcID"];
+      this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
+    }
   }
 }
