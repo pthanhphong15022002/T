@@ -41,13 +41,13 @@ export class TreeviewCommentComponent implements OnInit {
   comments = "";
   repComment = "";
   dicDatas = {};
-  user:any;
+  user: any;
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
     private cache: CacheService,
     private api: ApiHttpService,
-    private auth:AuthService,
+    private auth: AuthService,
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
   ) {
@@ -61,24 +61,24 @@ export class TreeviewCommentComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log('post: ',this.dataComment)
+    console.log('post: ', this.dataComment)
   }
-  
-  votes:any;
-  lstUserVote:any;
-  dataSelected:any[];
-  
-  showVotes(data:any) {
-    this.callFuc.openForm(PopupVoteComponent,"",750,500,"",data);
+
+  votes: any;
+  lstUserVote: any;
+  dataSelected: any[];
+
+  showVotes(data: any) {
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
   }
-  getUserVotes(postID:string,voteType:String){
-    this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetUserVotesAsync",[postID,voteType])
-    .subscribe((res) => {
-      this.lstUserVote = res;
-      this.dt.detectChanges();
-    })
+  getUserVotes(postID: string, voteType: String) {
+    this.api.execSv("WP", "ERM.Business.WP", "VotesBusiness", "GetUserVotesAsync", [postID, voteType])
+      .subscribe((res) => {
+        this.lstUserVote = res;
+        this.dt.detectChanges();
+      })
   }
-  replyComment(post:any,value:any){
+  replyComment(post: any, value: any) {
     if (!value.trim()) {
       this.notifySvr.notifyCode('E0315');
       return;
@@ -144,39 +144,37 @@ export class TreeviewCommentComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  votePost(data:any, voteType = null) {
+  votePost(data: any, voteType = null) {
     this.api.execSv(
-    "WP",
-    "ERM.Business.WP",
-    "VotesBusiness",
-    "VotePostAsync",
-    [data.recID,voteType])
-    .subscribe((res:any) => {
-      if(res)
-      {
-        data.votes = res[0];
-        data.totalVote = res[1];
-        data.listVoteType = res[2];
-        if(voteType == data.myVotedType)
-        {
-          data.myVotedType = null;
-          data.myVoted = false;
-          this.checkVoted = false;
+      "WP",
+      "ERM.Business.WP",
+      "VotesBusiness",
+      "VotePostAsync",
+      [data.recID, voteType])
+      .subscribe((res: any) => {
+        if (res) {
+          data.votes = res[0];
+          data.totalVote = res[1];
+          data.listVoteType = res[2];
+          if (voteType == data.myVotedType) {
+            data.myVotedType = null;
+            data.myVoted = false;
+            this.checkVoted = false;
+          }
+          else {
+            data.myVotedType = voteType;
+            data.myVoted = true;
+            this.checkVoted = true;
+          }
+          this.dt.detectChanges();
         }
-        else{
-          data.myVotedType = voteType;
-          data.myVoted = true;
-          this.checkVoted = true;
-        }
-        this.dt.detectChanges();
-      }
-      
-    });
+
+      });
   }
 
 
-  voteComment(data:any){
-    if(!data.recID) return;
+  voteComment(data: any) {
+    if (!data.recID) return;
     this.api
       .execSv<any>(
         'WP',
@@ -214,8 +212,8 @@ export class TreeviewCommentComponent implements OnInit {
 
 
 
-  showComments(post:any) {
-    if(post.isShowComment){
+  showComments(post: any) {
+    if (post.isShowComment) {
       post.isShowComment = false;
     }
     else {
@@ -288,11 +286,11 @@ export class TreeviewCommentComponent implements OnInit {
           }
         });
       }
-      if (idx == -1){
-        if(dataNode.length == 0)
+      if (idx == -1) {
+        if (dataNode.length == 0)
           dataNode.push(newNode);
         else
-        dataNode.listComment.push(newNode);
+          dataNode.listComment.push(newNode);
       }
       else {
         var obj = dataNode[idx];
@@ -326,52 +324,49 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
 
-  deleteComment(comment:any){
-    if(!comment) return;
-    else{
-      this.notifySvr.alertCode('Xóa bình luận?').subscribe((res)=>{
-        if(res.event.status == "Y"){
-          this.api.execSv("WP","ERM.Business.WP","CommentBusiness","DeletePostAsync",comment)
-          .subscribe((res:number) => {
-            if(res)
-            {
-              this.removeNodeTree(comment.recID);
-              this.dataComment.totalComment = this.dataComment.totalComment - res;
-              this.notifySvr.notify('Xóa bình luận thành công!');
-            }
-          });
+  deleteComment(comment: any) {
+    if (!comment) return;
+    else {
+      this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
+        if (res.event.status == "Y") {
+          this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "DeletePostAsync", comment)
+            .subscribe((res: number) => {
+              if (res) {
+                this.removeNodeTree(comment.recID);
+                this.dataComment.totalComment = this.dataComment.totalComment - res;
+                this.notifySvr.notify('Xóa bình luận thành công!');
+              }
+            });
         }
       });
     }
   }
-  clickEditComment(comment:any){
+  clickEditComment(comment: any) {
     comment.isEditComment = true;
     this.dt.detectChanges();
   }
 
-  valueChangeComment(event:any,comment:any){
+  valueChangeComment(event: any, comment: any) {
     comment.content = event.data
     this.dt.detectChanges();
   }
-  editComment(value:string, comment:any){
+  editComment(value: string, comment: any) {
     comment.content = value;
     this.api.execSv(
-    "WP",
-    "ERM.Business.WP",
-    "CommentBusiness",
-    "UpdateCommentPostAsync",
-    [comment.recID,value])
-    .subscribe((res:boolean) => {
-      if(res)
-      {
-        comment.isEditComment = false;
-        this.notifySvr.notify("Chỉnh sửa thành công");
-        this.dt.detectChanges();
-      }
-      else
-      {
-        this.notifySvr.notify("Xảy ra lỗi");
-      }
-    })
+      "WP",
+      "ERM.Business.WP",
+      "CommentBusiness",
+      "UpdateCommentPostAsync",
+      [comment.recID, value])
+      .subscribe((res: boolean) => {
+        if (res) {
+          comment.isEditComment = false;
+          this.notifySvr.notify("Chỉnh sửa thành công");
+          this.dt.detectChanges();
+        }
+        else {
+          this.notifySvr.notify("Xảy ra lỗi");
+        }
+      })
   }
 }

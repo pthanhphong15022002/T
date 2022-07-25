@@ -130,7 +130,12 @@
 
             <ng-template #content>
               <div class="row position-relative" style="margin-top: 10px">
-                <label class="col-12" for="">Chọn người kí cần thiết lập</label>
+                <codx-label
+                  name="lblChooseSigner"
+                  [formModel]=""
+                  default="Chọn người kí cần thiết lập"
+                  class="ms-2 fw-bold"
+                ></codx-label>
                 <ejs-dropdownlist
                   #inputAuthor
                   id="signatureDropdownList"
@@ -140,7 +145,12 @@
                 ></ejs-dropdownlist>
               </div>
 
-              <div>Kéo thả</div>
+              <codx-label
+                name="lblDragAction"
+                [formModel]=""
+                default="Kéo thả"
+                class="ms-2 fw-bold"
+              ></codx-label>
               <!-- <div class="row d-flex">
                 <div *ngFor="let action of actionsButton; let index = index" class="col-5 action"
                   [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
@@ -161,9 +171,7 @@
                     icoCss="icon-20  {{
                       index + 1 | vll: 'ES015':'icon' | async
                     }}"
-                    content="lbl + {{
-                      index + 1 | vll: 'ES015':'text' | async
-                    }}"
+                    content="{{ index + 1 | vll: 'ES015':'text' | async }}"
                   >
                   </codx-card-center>
                 </div>
@@ -229,14 +237,14 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem>
+          <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
               {{ headerRightName[1].text }}
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
 
-          <e-tabitem>
+          <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
               {{ headerRightName[2].text }}
             </ng-template>

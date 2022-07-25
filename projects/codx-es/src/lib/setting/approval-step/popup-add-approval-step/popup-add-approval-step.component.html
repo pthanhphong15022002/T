@@ -1,7 +1,7 @@
 <!-- <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [formControl]="dialogApprovalStep" *ngIf="isAfterRender"> -->
-<codx-layout-add [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader"
-  [dialog]="dialog" [openMore]="true" [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]"
+<codx-layout-add *ngIf="type == '1'" [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel"
+  [subHeader]="subHeader" [dialog]="dialog" [openMore]="true" [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]"
   (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false">
 </codx-layout-add>
 
@@ -258,6 +258,14 @@
 <ng-template #controlShare let-dialog>
   <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event)" [listName]="vllShare">
   </codx-share>
+</ng-template>
+
+<codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [formControl]="dialogApprovalStep" *ngIf="isAfterRender && type == '0'">
+
+</codx-form>
+<ng-template #body>
+
 </ng-template>
 
 <!-- <ng-template #body>

@@ -6,6 +6,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
@@ -40,8 +41,8 @@ export class PopupAddComponent implements OnInit {
   dataEdit:any;
   isUpload:boolean = false;
   fileUpload:any[] = [];
-  CATEGORY= {
-    NEWS: "1",
+  NEWSTYPE = {
+    POST: "1",
     VIDEO: "2"
   }
   SHARECONTROLS = {
@@ -60,10 +61,15 @@ export class PopupAddComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  MEMPERTPE ={
+  MEMPERTYPE ={
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
+  }
+  FILE_REFERTYPE = {
+    IMAGE: "image",
+    VIDEO: "video",
+    APPLICATION :'application'
   }
   myPermission:any;
   approverPermission:any;
@@ -79,9 +85,12 @@ export class PopupAddComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     protected callFunc: CallFuncService,
     private dmSV:CodxDMService,
+    @Optional() dd? : DialogData,
     @Optional() dialogRef?: DialogRef
 
   ) {
+
+    this.newsType = dd.data;
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
@@ -94,7 +103,7 @@ export class PopupAddComponent implements OnInit {
     this.shareControl = this.SHARECONTROLS.EVERYONE;
     this.myPermission = new Permission();
     this.myPermission.objectType = this.SHARECONTROLS.OWNER;
-    this.myPermission.memberType = this.MEMPERTPE.CREATED;
+    this.myPermission.memberType = this.MEMPERTYPE.CREATED;
     this.myPermission.objectID = this.user.userID;
     this.myPermission.objectName = this.user.userName;
     this.myPermission.create = true;
@@ -125,7 +134,7 @@ export class PopupAddComponent implements OnInit {
   clickInsertNews() {
     let objNews = new WP_News();
     objNews = this.formGroup.value;
-    objNews.newsType = this.CATEGORY.NEWS;
+    objNews.newsType = this.newsType;
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
@@ -160,7 +169,7 @@ export class PopupAddComponent implements OnInit {
             per.objectName = item.RoleName;
             break
         }
-        per.memberType = this.MEMPERTPE.TAGS;
+        per.memberType = this.MEMPERTYPE.TAGS;
         per.read = true;
         per.isActive = true;
         per.createdBy = this.user.userID;
@@ -333,8 +342,21 @@ export class PopupAddComponent implements OnInit {
   }
   addFiles(file:any){
     if(file && file.data.length > 0 ){
+      file.data.map(f => {
+        if(f.mimeType.indexOf("image") >= 0 ){
+          f['referType'] = this.FILE_REFERTYPE.IMAGE;
+        }
+        else if(f.mimeType.indexOf("video") >= 0)
+        {
+          f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        }
+        else{
+          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        }
+      });
       this.fileUpload = [...file.data];
       this.dmSV.fileUploadList = [...file.data]
+
       this.changedt.detectChanges();
     }
   }

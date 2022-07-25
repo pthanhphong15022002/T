@@ -12,6 +12,7 @@ export class tmpformChooseRole {
     recDelete: string;
     recUpdate: string;
     color: string;
+    isPortal:boolean;
 }
 
 

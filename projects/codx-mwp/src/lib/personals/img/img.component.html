@@ -3,7 +3,7 @@
         <div *ngFor="let item of file_img" (click)="openImg(item)">
             <div class="pw-card">
                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
-                    <img class="w-100 rounded min-h-200px" [src]="item.thumbnail || item.data" />
+                    <img class="w-100 rounded h-150px mh-150px " [src]="item.thumbnail || item.data" />
                 </ng-container>
             </div>
         </div>
