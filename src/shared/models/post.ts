@@ -54,7 +54,6 @@ export class Post {
   createdName:string;
 
   constructor(){
-    this.recID = null;
     this.createdOn = new Date();
     this.permissions = [];
     this.isUpload = false;

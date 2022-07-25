@@ -9,13 +9,21 @@
             </div> -->
             <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center" (click)="openFormShare(controlShare)">
                 <span>
-                    <img src="assets/themes/sys/default/img/{{(objectType | vll:'L1901' : 'icon' | async)}}" />
+                    <img src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901' : 'icon' | async)}}" />
                 </span>
                 <span class="text-gray-700 fs-6 ms-1">
-                    {{objectType | vll:'L1901' : 'text' | async}}
+                    {{shareControl | vll:'L1901' : 'text' | async}}
                 </span>
                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
             </div>
+            <ng-template #controlShare let-dialog>
+                <codx-share 
+                    [dialog]="dialog" 
+                    [multiple]="false" 
+                    [dataShare]="dataEdit.permissions"
+                    (eventApply)="eventApply($event)">
+                </codx-share>
+            </ng-template>
             <div class="d-flex my-2">
                 <div class="dropdown" id="tag_toggle">
                     <codx-tag
@@ -93,12 +101,12 @@
                         [isAllowEdit]="true" [updateDirect]="false">
                     </codx-img> -->
                     <ng-container *ngIf="fileUpload.length > 0;else noUpFile">
-                        <div  class="col-10 h-100px">
+                        <div  class="col-10 h-200px">
                             <img  class="w-100 h-100" [src]="fileUpload[0].data || fileUpload[0].thumbnail" alt="">
                         </div>
                     </ng-container>
                     <ng-template #noUpFile>
-                        <div  class="col-10 h-100px">
+                        <div  class="col-10 h-200px">
                             <img src="" class="w-100 h-100" alt="">
                         </div>
                     </ng-template>
@@ -106,7 +114,13 @@
                         <a href="javascript:void(0);" (click)="clickUploadFile()"><i class="icon-create"></i></a>
                     </div>
                     <div class="d-none">
-                        <codx-attachment #codxAttachment [functionID]="dialogData?.FormModel.funcID" [objectType]="dialogData?.FormModel.entityName" (fileCount)="addFiles($event)"></codx-attachment>
+                        <codx-attachment #codxAttachment 
+                            [functionID]="dialogData?.FormModel.funcID" 
+                            [objectType]="dialogData?.FormModel.entityName" 
+                            [allowMultiFile]="0"
+                            [hideUploadBtn]="0"
+                            (fileCount)="addFiles($event)">
+                        </codx-attachment>
                     </div>
                 </div>
             </div>
@@ -144,11 +158,3 @@
 </codx-form>
 
 
-<ng-template #controlShare let-dialog>
-    <codx-share 
-        [dialog]="dialog" 
-        [multiple]="false" 
-        [dataShare]="dataEdit.permissions"
-        (eventApply)="eventApply($event)">
-    </codx-share>
-</ng-template>
