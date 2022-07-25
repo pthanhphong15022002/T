@@ -2,6 +2,7 @@
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" 
   (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)"></codx-layout-add>
 
+
 <ng-template #tabDescription>
   <div class="form-group">
     <div class="form-group row mt-3 pb-5">
@@ -10,7 +11,7 @@
         [isAllowEdit]=true data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom" [updateDirect]="false">
       </codx-img>
-      <!-- <codx-user-inner (onAvatarChanged)="reloadAvatar($event)"></codx-user-inner> -->
+    
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-6">
@@ -100,9 +101,13 @@
               </div>
             </div>
             <div class="col-6 text-end">
-              <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles"
-                [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-              </codx-input>
+
+            <div class="text-end">
+              <div [style.color]="item.color">
+                  {{item.recRoleName}}
+              </div>    
+            </div>
+
             </div>
           </div>
 
@@ -139,9 +144,9 @@
               </div>
             </div>
             <div class="col-6 text-end">
-              <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles"
+              <!-- <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles"
                 [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-              </codx-input>
+              </codx-input> -->
             </div>
           </div>
 
