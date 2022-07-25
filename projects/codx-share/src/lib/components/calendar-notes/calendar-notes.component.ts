@@ -126,7 +126,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
 
   ngAfterViewInit() {
     this.lstView.dataService.requestEnd = (t, data) => {
-      debugger;
     }
   }
 
