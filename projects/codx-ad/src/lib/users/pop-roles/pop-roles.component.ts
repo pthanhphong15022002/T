@@ -18,17 +18,20 @@ export class PopRolesComponent implements OnInit {
   choose = new tmpformChooseRole();
   data: any;
   dialogSecond: any;
-  dataView:any;
+  dataView: any;
   title = 'Phân quyền người dùng';
   count: number = 0;
   lstFunc = [];
   lstEmp = [];
-  listChooseRole =[]
-  idClickFunc:any;
-  viewChooseRoleSelected: tmpformChooseRole;
-  optionFrist= 'ADC01' // Check unselect from list
-  optionSecond= 'ADC02' // Check list is null 
-  optionThird= 'ADC03' // Check select from list
+listChooseRole:tmpformChooseRole[] =[];
+//  listChooseRole:[];
+    //listChooseRole:tmpformChooseRole[] =[];
+  idClickFunc: any;
+  listRoles:tmpformChooseRole[] =[];
+ // viewChooseRoleSelected: tmpformChooseRole;
+  optionFrist = 'ADC01' // Check unselect from list
+  optionSecond = 'ADC02' // Check list is null
+  optionThird = 'ADC03' // Check select from list
 
   constructor(
     private api: ApiHttpService,
@@ -44,109 +47,147 @@ export class PopRolesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
-   this.viewChooseRoleSelected = this.data;
-    console.log('co data nghe');
-  //  if(this.viewChooseRoleSelected.idChooseRole !=null) {
-      // this.lstFunc.ischeck = true;
-//    }
-    console.log(this.viewChooseRoleSelected);
+  this.listChooseRole = this.data;  // 
+  this.loadData(this.listChooseRole); 
+    
   }
 
-  loadData() {
- // this.adService.getListAppByUserRoles(this.choose1)
- this.api.exec('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync', this.choose1)
- // this.api.call('ERM.Business.AD', 'UsersBusiness', 'GetListAppByUserRolesAsync', this.choose1)
-  .subscribe((res) => {
-      // if (res && res.msgBodyData[0]) {
+  loadData(dataChecked?:any) {
+    this.adService.getListAppByUserRoles(this.choose1)
+      .subscribe((res) => {
         if (res) {
-        this.lstFunc = res[0];
-        for (var i = 0; i < this.lstFunc.length; i++) {
-          this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-          if (this.lstFunc[i].recIDofRole != null) {
-            this.lstFunc[i].recIDofRole = null;
+          this.lstFunc = res[0];
+          this.listRoles = res[1];
+          console.log(this.listRoles);
+          for (var i = 0; i < this.lstFunc.length; i++) {
+            this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
+            if (this.lstFunc[i].recIDofRole != null) {
+              this.lstFunc[i].recIDofRole = null;
+            }
           }
+          if(dataChecked !=null) {
+            for (var i = 0; i < this.lstFunc.length; i++) {
+              for(var j = 0; j < dataChecked.length; j++)
+              {
+                if(dataChecked[j].functionID === this.lstFunc[i].functionID) {
+                  this.lstFunc[i].ischeck = true;
+                  this.lstFunc[i].recIDofRole = dataChecked[j].recIDofRole;
+                }
+              }
+            }
+            console.log(dataChecked);
+          }
+         
+          this.changeDec.detectChanges();
         }
-        this.changeDec.detectChanges();
+      })
+    
+    this.changeDec.detectChanges();
+  }
+  loadedData(dataChecked?:any) {
+    for (var i = 0; i < this.lstFunc.length; i++) {
+      for(var j = 0; j < dataChecked.length; j++)
+      {
+        if(dataChecked[j].recIDofRole === this.lstFunc[i].recIDofRole) {
+          this.lstFunc[i].ischeck = true;
+        }
       }
-    })
+      // this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
+      // if (this.lstFunc[i].recIDofRole != null) {
+      //   this.lstFunc[i].recIDofRole = null;
+      // }
+    }
   }
 
-  onChange(event,item?:any) {
-    console.log(item);
-    if (event.target.checked === false) {
-      this.choose.recIDofRole = null;
+  onChange(event, item?: any) {
+    var check = true;
+   if(item.ischeck) {
+   // event.target.checked=true;
+    check = true;
+   }
+   else {
+  //  event.target.checked=false;
+    check = false;
+   } 
+    if (event.target.checked === check) {
+      item.ischeck = false;
       this.count = this.count - 1;
       for (var i = 0; i < this.lstFunc.length; i++) {
-        if(item.functionID === this.lstFunc[i].functionID) {
+        if (item.functionID === this.lstFunc[i].functionID) {
           this.lstFunc[i].recIDofRole = null;
-        }       
+          this.lstFunc[i].recRoleName = null;
+          this.lstFunc[i].color = null;
+        }
       }
       if (this.count < 0) {
         this.count = 0;
         this.listChooseRole = [];
       }
 
-      for(var i=0; i<this.listChooseRole.length; i++)
-      {
-        if(item === this.listChooseRole[i]) 
-        {
-          this.listChooseRole.splice(i,1);
-        
+      for (var i = 0; i < this.listChooseRole.length; i++) {
+        if (item === this.listChooseRole[i]) {
+          this.listChooseRole.splice(i, 1);
         }
-     }
-      
-     for(var i=1; i<= this.listChooseRole.length; i++) {
-      this.listChooseRole[i].idChooseRole= i;
-     }
+      }
+
+      for (var i = 1; i <= this.listChooseRole.length; i++) {
+        this.listChooseRole[i].idChooseRole = i.toString();
+      }
     }
-    if (event.target.checked === true) {
+    else {
       this.count = this.count + 1;
       item.idChooseRole = this.count;
       this.listChooseRole.push(item);
+      item.ischeck = true;
     }
+   
     this.changeDec.detectChanges();
   }
 
-  onCbx(event,item?:any){
+  onCbx(event, item?: any) {
     if (event.data) {
-    item.recIDofRole = event.data[0];
+      item.recIDofRole = event.data[0];
+      this.listRoles.forEach(element => {
+        if (element.recIDofRole == item.recIDofRole) {
+          item.recRoleName = element.roleNames;
+          item.color = element.color;
+        }
+      });
     }
   }
-  checkClickValueOfUserRoles(value?:any) {
-    if(value == null) {
+  checkClickValueOfUserRoles(value?: any) {
+    if (value == null) {
       return true;
     }
     return false;
   }
-  onSave(){
+  onSave() {
 
-    if(this.CheckListUserRoles() === this.optionFrist) {
-    
+    if (this.CheckListUserRoles() === this.optionFrist) {
+
       this.notiService.notifyCode("AD006");
     }
-    else if(this.CheckListUserRoles() === this.optionSecond)  {
+    else if (this.CheckListUserRoles() === this.optionSecond) {
       this.notiService.notifyCode('Lưu thành công');
       this.dialogSecond.close(this.listChooseRole);
+      console.log('hello hello');
+      console.log(this.listChooseRole);
       this.changeDec.detectChanges();
     }
     else {
+      this.dialogSecond.close();
       this.notiService.notifyCode('Không có gì thay đổi');
-
-
     }
 
   }
   CheckListUserRoles() {
-    for(var i=0; i< this.listChooseRole.length; i++)
-      {
-        if(this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole))
-       {
-          return this.optionFrist;
-       }
 
+    for (var i = 0; i < this.listChooseRole.length; i++) {
+      if (this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole)) {
+        return this.optionFrist;
+      }
     }
-    if(this.listChooseRole.length > 0) {
+    if (this.listChooseRole.length > 0) {
       return this.optionSecond;
     }
     return this.optionThird;
