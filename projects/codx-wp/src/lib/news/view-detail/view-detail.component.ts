@@ -10,7 +10,7 @@ import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 })
 export class ViewDetailComponent implements OnInit {
 
-  NEW_TYPE = {
+  NEWSTYPE = {
     post: "1",
     video: "2"
   }
@@ -21,13 +21,7 @@ export class ViewDetailComponent implements OnInit {
   listViews = [];
   listTag = [];
   listNews=[];
-  views: Array<ViewModel> = [
-    {
-      id: '1',
-      type: ViewType.listdetail,
-      active: false
-    },
-  ];
+  views: Array<ViewModel> = [];
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('codxViews') codxViews: ViewsComponent;
   constructor(private api:ApiHttpService,
@@ -36,10 +30,13 @@ export class ViewDetailComponent implements OnInit {
     private callfc:CallFuncService,
     private changedt: ChangeDetectorRef) { }
   ngOnInit(): void {
-    this.recID =  this.route.snapshot.paramMap.get("recID");
-    this.category = this.route.snapshot.paramMap.get("category");
-    this.funcID = this.route.snapshot.paramMap.get("funcID");
-    this.loadData(this.recID,this.category);
+    this.route.params.subscribe((p:any) => {
+      this.recID =  p["recID"];
+      this.category = p["category"];
+      this.funcID = p["funcID"];
+      this.loadData(this.recID);
+    })
+    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -54,30 +51,24 @@ export class ViewDetailComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
-  loadData(recID:string, category:string){
+  loadData(recID:string){
     this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetNewsInforAsync",recID).subscribe(
       (res) => {
         if(res){
-          this.dataItem = res;
+          this.dataItem = res[0];
+          this.listViews = res[1];
+          this.listNews = res[2];
+          this.changedt.detectChanges();
         }
       }
     );
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetDataNewsAsync",category).subscribe(
-      (res) => {
-        if(res)
-        {
-          this.listViews = res[0];
-          this.listNews = res[1];
-        }}
-      );
-    this.changedt.detectChanges();
   }
   clickViewDeital(data:any){
     this.api.execSv("WP","ERM.Business.WP","NewsBusiness","UpdateViewNewsAsync",data.recID).subscribe(
       (res) => {
         if(res){
           this.codxService.navigate('','/wp/'+data.category+'/view-detail/'+ data.recID +'/'+this.funcID);
-          this.loadData(data.recID,data.category);
+          this.loadData(data.recID);
         }
     });
   }

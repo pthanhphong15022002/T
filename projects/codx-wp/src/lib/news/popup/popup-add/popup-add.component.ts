@@ -4,6 +4,7 @@ import { Permission } from '@shared/models/file.model';
 import { preRender } from '@syncfusion/ej2-angular-buttons';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
@@ -77,6 +78,7 @@ export class PopupAddComponent implements OnInit {
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     protected callFunc: CallFuncService,
+    private dmSV:CodxDMService,
     @Optional() dialogRef?: DialogRef
 
   ) {
@@ -216,9 +218,9 @@ export class PopupAddComponent implements OnInit {
     if(!event || event.data == "" || !event.data){
       return;
     }
-    var field = event.field;
-    var value = event.data;
-    var obj = {};
+    let field = event.field;
+    let value = event.data;
+    let obj = {};
     switch(field)
     {
       case 'StartDate':
@@ -243,26 +245,7 @@ export class PopupAddComponent implements OnInit {
           obj[field] = this.endDate;
         }
         break;
-      case 'Category':
-        obj[field] = value;
-        break;
-      case 'Subject':
-        obj[field] = value;
-        break;
-      case 'SubContent':
-        obj[field] = value;
-        break;
-      case 'Contents':
-        obj[field] = value.value;
-        break;
-      case 'AllowShare':
-        obj[field] = value;
-        break;
-      case 'CreatePost':
-        obj[field] = value;
-        break;
-      case 'Tags':
-        this.tagName = value;
+      default:
         obj[field] = value;
         break; 
     }
@@ -350,10 +333,10 @@ export class PopupAddComponent implements OnInit {
   }
   addFiles(file:any){
     if(file && file.data.length > 0 ){
-      this.fileUpload = file.data;
+      this.fileUpload = [...file.data];
+      this.dmSV.fileUploadList = [...file.data]
       this.changedt.detectChanges();
     }
-    return;
   }
   clickUploadFile(){
     this.codxAttachment.uploadFile();

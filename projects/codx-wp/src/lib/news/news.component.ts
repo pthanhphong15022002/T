@@ -176,7 +176,7 @@ export class NewsComponent implements OnInit {
     )
     .subscribe((res:any) => {
       if(res){
-        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category + data.recID);
+        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
       }
     });
   }
