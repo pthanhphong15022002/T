@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PopupAddUpdate } from './popup-add-update.component';
 
-import { AddDetailNoteBooksComponent } from './add-detail-note-books.component';
 
 describe('AddDetailNoteBooksComponent', () => {
-  let component: AddDetailNoteBooksComponent;
-  let fixture: ComponentFixture<AddDetailNoteBooksComponent>;
+  let component: PopupAddUpdate;
+  let fixture: ComponentFixture<PopupAddUpdate>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddDetailNoteBooksComponent ]
+      declarations: [ PopupAddUpdate ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddDetailNoteBooksComponent);
+    fixture = TestBed.createComponent(PopupAddUpdate);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
