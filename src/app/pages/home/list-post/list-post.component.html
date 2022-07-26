@@ -100,69 +100,68 @@
             </div>
         </div>
         <!--begin::Bottom-->
-        <div class="pt-4">
-            <ng-container *ngIf="item.category == '4'; else shareTemplate">
-                <div [innerHTML]="item.content"></div>
-                <div>
-                    <codx-file [objectID]="item.recID" objectType="WP_Comments"></codx-file>
+
+        <ng-container *ngIf="item.category == '4'; else shareTemplate">
+            <div [innerHTML]="item.content"></div>
+            <div>
+                <codx-file [objectID]="item.recID" objectType="WP_Comments"></codx-file>
+            </div>
+            <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
+                <div class="post mt-3" (click)="naviagte(item.shares)">
+                    <codx-file [objectID]="item.refID" (evtGetFiles)="getFiles($event,item)"></codx-file>
                 </div>
-                <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
-                    <div class="post mt-3" (click)="naviagte(item.shares)">
-                        <codx-file [objectID]="item.refID" (evtGetFiles)="getFiles($event,item)"></codx-file>
-                    </div>
-                </ng-container>
-                <ng-template #templateShare>
-                    <ng-container *ngIf="item.shares; else postShareDeleted">
-                        <div class="card card-custom mt-3">
-                            <div class="border rounded-3 p-3">
-                                <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item.shares }">
-                                </ng-container>
-                                <div class="mt-3">
-                                    <div class="d-flex">
-                                        <div class="me-3">
-                                            <codx-img slot="start" [objectId]="item.shares.createdBy"
-                                                objectType="AD_Users" [width]="30">
-                                            </codx-img>
-                                        </div>
-                                        <div class="d-flex flex-column flex-grow-1">
-                                            <span class="text-dark fw-bolder">{{item.shares.createdName}}</span>
-                                            <span class="text-gray-500 fs-7">{{item.shares.createdOn
-                                                |timefrom}}</span>
-                                        </div>
-                                    </div>
-                                    <div [innerHTML]="item.shares.content" class="mt-3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-                    <ng-template #postShareDeleted>
-                        <div class="card card-custom card-border border mt-3">
-                            <div class="card-body p-5">
+            </ng-container>
+            <ng-template #templateShare>
+                <ng-container *ngIf="item.shares; else postShareDeleted">
+                    <div class="card card-custom mt-3">
+                        <div class="border rounded-3 p-3">
+                            <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item.shares }">
+                            </ng-container>
+                            <div class="mt-3">
                                 <div class="d-flex">
                                     <div class="me-3">
-                                        <codx-img slot="start" objectId="" objectType="AD_Users" [width]="30">
+                                        <codx-img slot="start" [objectId]="item.shares.createdBy" objectType="AD_Users"
+                                            [width]="30">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <codx-label formModel="" name="lblPostDeleted"
-                                            default="Bài viết không còn tồn tại">
-                                        </codx-label>
+                                        <span class="text-dark fw-bolder">{{item.shares.createdName}}</span>
+                                        <span class="text-gray-500 fs-7">{{item.shares.createdOn
+                                            |timefrom}}</span>
                                     </div>
+                                </div>
+                                <div [innerHTML]="item.shares.content" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #postShareDeleted>
+                    <div class="card card-custom card-border border mt-3">
+                        <div class="card-body p-5">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <codx-img slot="start" objectId="" objectType="AD_Users" [width]="30">
+                                    </codx-img>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <codx-label formModel="" name="lblPostDeleted" default="Bài viết không còn tồn tại">
+                                    </codx-label>
                                 </div>
                             </div>
                         </div>
-                    </ng-template>
+                    </div>
                 </ng-template>
-
-                <!-- end share -->
-            </ng-container>
-            <ng-template #shareTemplate>
-                <div class="content">
-                    <div [innerHTML]="item.content"></div>
-                </div>
-                <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
             </ng-template>
-        </div>
+
+            <!-- end share -->
+        </ng-container>
+        <ng-template #shareTemplate>
+            <div class="content">
+                <div [innerHTML]="item.content"></div>
+            </div>
+            <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
+        </ng-template>
+
         <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)">
         </treeview-comment>
     </div>
@@ -171,7 +170,7 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-        
+
         <div class="pic-feed">
             <div class="pic-feed-img">
                 <codx-file #codxFile [objectID]="item.recID" (evtGetFiles)="getFiles($event,item)"></codx-file>
