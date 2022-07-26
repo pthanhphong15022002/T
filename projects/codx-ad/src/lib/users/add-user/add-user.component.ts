@@ -36,7 +36,6 @@ export class AddUserComponent implements OnInit {
     private auth: AuthStore,
     public codxService: CodxService,
     private cache: CacheService,
-
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -65,12 +64,12 @@ export class AddUserComponent implements OnInit {
       }
     })
   }
-  initForm() 
-  {
+ // initForm() 
+ // {
     // this.view.entityName = 'AD_Users';
     // this.view.formName = 'Users';
     // this.view.gridViewName = 'grvUsers';
-  }
+ // }
 
   // openPopup(item: any) {
   //   this.view.dataService.addNew().subscribe((res: any) => {
