@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditInfoComponent } from './edit-info/edit-info.component';
@@ -51,18 +51,18 @@ export class EmployeeInfomationComponent implements OnInit {
   dataSelcected = [];
   service = "BS";
 
-  minType= "MinRange";
+  minType = "MinRange";
   data: Object[];
   primaryXAxis: Object;
   primaryYAxis: Object;
   moreFunc = []
   functionID: string;
-  defautFunc :any ;
+  defautFunc: any;
   formName: string = "";
   gridViewName: string = "";
   user: any;
   dialog!: DialogRef;
-  formModel : FormModel ;
+  formModel: FormModel;
   showCBB = false;
 
   @ViewChild('contentSkill') contentSkill;
@@ -71,6 +71,7 @@ export class EmployeeInfomationComponent implements OnInit {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('header') header: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  itemSelected: any;
 
   //currentSection = 'InfoPersonal';
   constructor(
@@ -78,27 +79,28 @@ export class EmployeeInfomationComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private routeActive: ActivatedRoute,
     private api: ApiHttpService,
+    private notiService: NotificationsService,
     private auth: AuthStore,
     private cachesv: CacheService,
     private callfunc: CallFuncService,
     private inject: Injector
   ) {
     this.user = this.auth.get();
-    this.functionID = this.routeActive.snapshot.params['funcID'] ;
+    this.functionID = this.routeActive.snapshot.params['funcID'];
     // this.cachesv.moreFunction(this.functionID,null).subscribe(res=>{
     //   if(res)this.moreFunc=res;
     // })
     // this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=>{
     //     if(res)this.moreFunc=res;
     // });
-    this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=> {
+    this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
-        this.defautFunc =res[0]
+        this.defautFunc = res[0]
         this.formName = res.formName;
         this.gridViewName = res.gridViewName;
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
-          if(res)
-           this.moreFunc =res ;
+          if (res)
+            this.moreFunc = res;
           //  this.formModel.funcID =this.functionID;
           //  this.formModel.gridViewName = this.gridViewName;
           //  this.formModel.formName = this.formName ;
@@ -109,8 +111,8 @@ export class EmployeeInfomationComponent implements OnInit {
       }
     });
 
-  
-   
+
+
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
@@ -123,9 +125,9 @@ export class EmployeeInfomationComponent implements OnInit {
   editSkill(item: any) {
     this.editSkillMode = true;
     var model = new DialogModel();
-    model.DataService = new CRUDService(this.inject); 
+    model.DataService = new CRUDService(this.inject);
     var dt = item;
-    var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', dt,"", model);
+    var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', dt, "", model);
     dialog.closed.subscribe(e => {
       this.skillEmployee = [...e.event, ...[]];
       this.dt.detectChanges();
@@ -135,7 +137,7 @@ export class EmployeeInfomationComponent implements OnInit {
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
       this.editMode = res;
-       this.editSkillMode = false;
+      this.editSkillMode = false;
     })
     this.codxMwpService.empInfo.subscribe((res: string) => {
       if (res) {
@@ -473,11 +475,26 @@ export class EmployeeInfomationComponent implements OnInit {
 
 
   deleteSkill(data) {
-    
+
+  }
+
+  beforeDel(opt: RequestOption) {
+    // var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteEmployeeHobby';
+
+    opt.data = this.itemSelected.employeeID;
+    return true;
   }
 
   deleteHobby(data) {
-
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.employeeHobbie = this.view.dataService.data[0];
+        }
+      }
+      );
   }
 
   deleteExperences(data) {
@@ -485,10 +502,10 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   deleteRelation(data) {
-    
+
   }
 
   deleteEducation(data) {
-    
+
   }
 }

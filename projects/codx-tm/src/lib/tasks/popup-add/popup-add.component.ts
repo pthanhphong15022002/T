@@ -153,19 +153,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.task.category = '3';
     } else {
       this.task.category = '1';
-      // this.api
-      //   .execSv<any>(
-      //     'SYS',
-      //     'ERM.Business.SYS',
-      //     'SettingValuesBusiness',
-      //     'GetByModuleWithCategoryAsync',
-      //     ['TM_Parameters', this.task.category]
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.paramByCategory = JSON.parse(res.dataValue);
-      //     }
-      //   });
+      
     }
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -220,20 +208,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   getParam(callback = null) {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = JSON.parse(res.dataValue);
-          return callback && callback(true);
-        }
-      });
+  this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.SYS',
+          'SettingValuesBusiness',
+          'GetByModuleWithCategoryAsync',
+          ['TM_Parameters', '1',null]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.param = JSON.parse(res.dataValue);
+          }
+        });
   }
 
   changeMemo(event: any) {
@@ -301,7 +288,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   openTask(): void {
-    // this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -315,7 +301,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   openInfo(id, action) {
     this.readOnly = action === 'edit' ? false : true;
-    // this.title = 'Chỉnh sửa công việc';
     this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
@@ -601,6 +586,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       this.changeDetectorRef.detectChanges();
       return;
+    }
+    if(this.param.MaxHoursControl !=0 && num > this.param.MaxHours ){
+        num = this.param.MaxHours
     }
     if (data.data && num) {
       this.task[data.field] = data.data;

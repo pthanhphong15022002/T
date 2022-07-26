@@ -74,6 +74,8 @@ export class TasksComponent extends UIComponent {
   countResource = 0;
   popoverCrr: any;
   popoverDataSelected: any;
+  vllStatusTasks ='TM004'
+  vllStatusAssignTasks ='TM007'
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
