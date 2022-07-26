@@ -286,7 +286,7 @@
                                 </ng-container>
                                 <ng-template #listVote>
                                     <div *ngFor="let votedType of childData.listVoteType">
-                                        <a class="me-2" (click)="showVotes(childData)">
+                                        <a class="me-1" (click)="showVotes(childData)">
                                             <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
                                                 alt="Kiwi standing on oval" style="width: 18px; height: 18px;">
                                         </a>

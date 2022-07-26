@@ -94,5 +94,6 @@ export class tmpTaskResource {
   delete: boolean;
   write: boolean;
   share: boolean;
-  positionName : string
+  positionName : string;
+  departmentName : string ;
 }
