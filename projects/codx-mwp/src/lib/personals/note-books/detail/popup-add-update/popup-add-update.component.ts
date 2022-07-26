@@ -128,6 +128,7 @@ export class PopupAddUpdate implements OnInit {
   }
 
   fileAdded(e) {
+    console.log("check fileAdded", e)
     debugger;
   }
 

@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, T
 import { Post } from '@shared/models/post';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService } from 'codx-core';
+import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService, Util } from 'codx-core';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -62,8 +62,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     this.cache.message('WP011').subscribe((mssg:any)=>{
-      this.title = this.user.userName + mssg.defaultName;
-      this.dt.detectChanges();
+      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.dt.detectChanges();  
     })
   }
 
@@ -75,7 +75,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.views = [{
       type: ViewType.content,
       active: true,
-      sameData:true,
+      sameData:false,
       model: {
         panelLeftRef: this.panelLeftRef
       }

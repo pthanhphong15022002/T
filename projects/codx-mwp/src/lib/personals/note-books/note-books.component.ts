@@ -20,7 +20,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   predicate = "CreatedBy=@0";
   dataValue = "";
   user: any;
-  funcID = "";
   data: any;
   onUpdate = false;
   recID: any;
@@ -39,15 +38,10 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   constructor(inject: Injector,
     private authStore: AuthStore,
-    private route: ActivatedRoute,
     private modalService: NgbModal,
     private noteBookService: NoteBookServices,
   ) {
     super(inject);
-    this.route.params.subscribe(params => {
-      this.funcID = params['funcID'];
-    })
-
     this.cache.functionList('MWP00941').subscribe(res => {
       this.urlDetailNoteBook = res?.url;
     })
@@ -184,6 +178,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
     this.view.onSearch(e);
+    debugger;
     this.detectorRef.detectChanges();
   }
 

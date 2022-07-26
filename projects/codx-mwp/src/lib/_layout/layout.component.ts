@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { LayoutBaseComponent } from 'codx-core';
+import { CodxService, LayoutBaseComponent } from 'codx-core';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
@@ -12,7 +12,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   override toolbar = false;
-  constructor(inject: Injector) {
+  constructor(inject: Injector,
+    ) {
     super(inject);
   }
 
