@@ -32,7 +32,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
     <div class="d-flex align-items-center mb-2">
         <div [innerHTML]="setFullHtmlNode(data, '')">          
         </div>          
-        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="clickMF($event, data, 'folder')" [title]="data.folderName"
+        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, data, 'folder')" [title]="data.folderName"
             [formModel]="view.formModel" [typeMF]="'hover'"
             cardCss="w-150px">
           </codx-temp-full> 
@@ -45,7 +45,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </ng-template>
 
 <ng-template #templateCard>
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
@@ -72,7 +72,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       (fileCount)="getfileCount($event)" 
       displayThumb="full"
     > 
-  </codx-attachment>
+  </codx-attachment> -->
   
   <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">

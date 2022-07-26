@@ -252,8 +252,8 @@ export class HomeComponent extends UIComponent {
            // this.view.dataService.addNew(data);            
             this.listFolders = data;            
             var tree = this.codxview.currentView.currentComponent.treeView;
-         //   item.items = [];
-           // tree.addChildNodes(item, data);
+            item.items = [];
+            tree.addChildNodes(item, data);
             //this.view.dataService.
             //this.view.tree
             //  this.dmSV.listFolder.next(res);

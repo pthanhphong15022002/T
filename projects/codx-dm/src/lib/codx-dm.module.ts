@@ -24,6 +24,7 @@ import { PhysicalComponent } from './createFolder/physical/physical.component';
 import { SubFolderComponent } from './createFolder/subFolder/subFolder.component';
 import { DetailComponent } from './views/detail/detail.component';
 import { CopyComponent } from './copy/copy.component';
+import { PropertiesComponent } from './properties/properties.component';
 
 export const routes: Routes = [
   {
@@ -62,7 +63,8 @@ const T_Component: Type<any>[] = [
   AddRoleComponent,
   PhysicalComponent,
   SubFolderComponent,
-  CopyComponent
+  CopyComponent,
+  PropertiesComponent
 ]
 @NgModule({
   imports: [
