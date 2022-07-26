@@ -13,11 +13,6 @@
     <span [innerHTML]="item.memo"></span>
 </ng-template>
 
-<ng-template #iconMoreFunc let-item>
-    <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-        [dataItem]="item" type="hover">
-    </codx-mfunc>
-</ng-template>
 
 <ng-template #tag let-item>
     <codx-tag [entityName]="functionList.entityName" [isEdit]="false" [disabled]="true" [value]="item?.tag"></codx-tag>
@@ -28,7 +23,14 @@
 </ng-template>
 
 <ng-template #modifiedOn let-item>
-    <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+    <div class="has-action-menu">
+        <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+        <div class="action-menu">
+            <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+                [dataItem]="item" type="hover">
+            </codx-mfunc>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #fileCount let-item>

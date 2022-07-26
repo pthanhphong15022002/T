@@ -84,8 +84,8 @@ export class PersonalsComponent implements OnInit {
     this.default = false;
     this.menuUrl = url;
 
-    // this.funcID = url;
-    this.codxService.navigate('', `mwp/personals/${url}`);
+    this.funcID = url;
+    // this.codxService.navigate('', `mwp/personals/${url}`);
     this.changedt.detectChanges();
   }
 
