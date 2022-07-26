@@ -364,6 +364,17 @@ export class EmployeeInfomationComponent implements OnInit {
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
+        this.editExperences(data);
+        break;
+      case 'delete':
+        this.deleteExperences(data);
+        break;
+    }
+  }
+
+  clickMFS(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'edit':
         this.editRelation(data);
         break;
       case 'delete':
@@ -378,8 +389,8 @@ export class EmployeeInfomationComponent implements OnInit {
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
     });
@@ -391,8 +402,8 @@ export class EmployeeInfomationComponent implements OnInit {
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditExperenceComponent, 'edit', option);
     });
@@ -405,16 +416,13 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editRelation(data) {
-    // this.allowrela = true;
-    // this.codxMwpService.EmployeeInfomation = this;
-    // this.codxMwpService.relationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
     });
@@ -425,7 +433,20 @@ export class EmployeeInfomationComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(EditExperenceComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
+    });
+  }
+
+  addRelation() {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
       this.dialog = this.callfunc.openSide(EditRelationComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
@@ -439,8 +460,8 @@ export class EmployeeInfomationComponent implements OnInit {
     // data = data || { employeeID: this.employeeInfo.employeeID };
     // data.list = this.employeeHobbie;
     // this.codxMwpService.hobbyEdit.next(data);
-    this.showCBB = true;
-    this.dt.detectChanges();
+    // this.showCBB = true;
+    // this.dt.detectChanges();
 
     // var model = new DialogModel();
     // model.DataService = new CRUDService(this.inject); 
