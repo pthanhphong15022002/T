@@ -1,6 +1,6 @@
 import { AD_User } from './../../models/AD_User.models';
 import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent } from 'codx-core';
+import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent, SidebarModel } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -15,18 +15,19 @@ export class AddUserComponent implements OnInit {
   @Output() loadData = new EventEmitter();
   @ViewChild('view') codxView!: any;
   @ViewChild('view') view!: ViewsComponent;
-  
+
   title = 'Thêm người dùng';
   dialog!: DialogRef;
-  dialogRole : DialogRef
+  dialogRole: DialogRef
   data: any;
   readOnly = false;
   isAddMode = true;
   user: any;
   data1: any;
   adUser = new AD_User();
-  countListViewChooseRole:any;
-  viewChooseRole:tmpformChooseRole[] =[];
+  countListViewChooseRoleApp: Number = 0;
+  countListViewChooseRoleService: Number = 0;
+  viewChooseRole: tmpformChooseRole[] = [];
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
@@ -49,23 +50,59 @@ export class AddUserComponent implements OnInit {
     this.isAddMode = false;
   }
 
+  // openPopup(item: any) {
+  //   this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
+  //   this.dialogRole.closed.subscribe(e => {
+  //     if (e?.event) {
+  //       this.viewChooseRole = e?.event;
+  //       this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
+  //       this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
+  //       this.changDetec.detectChanges()
+
+  //     }
+  //   })
+  // }
+
   openPopup(item: any) {
-    this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
-      this.dialogRole.closed.subscribe(e => {
-        if (e?.event) {
-          this.viewChooseRole = e?.event
-          this.changDetec.detectChanges();
-                console.log('in thành công nghe');
-      console.log(this.viewChooseRole);
-  
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
+      this.dialogRole.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved) {
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe(x => {
+              this.changDetec.detectChanges();
+            });
         }
-      })
-
+        if (x.event) {
+          this.viewChooseRole = x?.event;
+          this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
+          this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
+          this.changDetec.detectChanges()
+        }
+      });
+    });
   }
-
+  // add() {
+  //   this.view.dataService.addNew().subscribe((res: any) => {
+  //     let option = new SidebarModel();
+  //     option.DataService = this.view.dataService;
+  //     option.FormModel = this.view.formModel;
+  //     option.Width = '550px';
+  //     this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
+  //     this.dialog.closed.subscribe((x) => {
+  //       if (x.event == null && this.view.dataService.hasSaved)
+  //         this.view.dataService
+  //           .delete([this.view.dataService.dataSelected])
+  //           .subscribe(x => {
+  //             this.dt.detectChanges();
+  //           });
+  //     });
+  //   });
+  // }
   beforeSave(op: any) {
     var data = [];
     if (this.data1 == 'add') {
@@ -177,8 +214,8 @@ export class AddUserComponent implements OnInit {
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
   ];
-  
-   setTitle(e: any) {
+
+  setTitle(e: any) {
     this.title = 'Thêm ' + e;
     this.changDetec.detectChanges();
     console.log(e);
