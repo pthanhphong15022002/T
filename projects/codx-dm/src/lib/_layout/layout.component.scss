@@ -1,33 +1,119 @@
 .btn.btn-pill {
-    border-radius: 20px!important;
-    padding: 0 14px;
-    border: 1px solid white !important;
-    color: white;
+  border-radius: 20px !important;
+  padding: 0 14px;
+  border: 1px solid white !important;
+  color: white;
 }
 
 .icon-add {
-    color: white;
+  color: white;
 }
 
 .icon-wb_cloudy:before {
-    content: "\ef2a";
+  content: "\ef2a";
 }
 
 :host {
+  height: 100%;
+  margin: 0;
+
+  .flex-root {
     height: 100%;
-    margin: 0;
-  
-    .flex-root {
-      height: 100%;
-    }
   }
-  
-  .page-loaded {
-    codx-layout {
-      opacity: 1;
-      transition: opacity 1s ease-in-out;
-    }
+}
+
+.page-loaded {
+  codx-layout {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
   }
-  
-  
-  /**** module OD ****/
+}
+
+#kt_aside_menu_header+div {
+  margin-bottom: 0 !important;
+}
+
+.progress {
+  background-color: #ffffff26;
+}
+
+.progress-bar {
+  background-color: #00bcd4;
+}
+
+/**** module OD ****/
+
+@keyframes growProgressBar {
+
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+
+  100% {
+    --pgPercentage: var(--value);
+  }
+}
+
+@property --pgPercentage {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.progress-circle div[role="progressbar"] {
+  --size: 48px;
+  --fg: #003c79;
+  --bg: #def;
+  --pgPercentage: var(--value);
+  animation: growProgressBar 3s 1 forwards;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(closest-side, #005dc7 75%, transparent 0 99.9%, #005dc7 0),
+    conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), #ffffff17 0);
+  font-size: 14px;
+  color: #fff;
+}
+
+.progress-circle div[role="progressbar"]::before {
+  counter-reset: percentage var(--value);
+  content: counter(percentage) '%';
+}
+
+[data-kt-aside-minimize="on"] .progress-line {
+  display: none;
+}
+
+.progress-circle {
+  display: none;
+}
+
+[data-kt-aside-minimize="on"] .progress-circle {
+  display: block;
+}
+
+[data-kt-aside-minimize="on"] {
+  .btn-add {
+    .btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        padding-right: 0 !important;
+        font-size: 24px !important;
+      }
+    }
+
+    .fs-5 {
+      display: none;
+    }
+
+  }
+}
