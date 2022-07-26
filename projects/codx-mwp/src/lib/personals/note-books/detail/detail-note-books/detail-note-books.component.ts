@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel } from 'codx-core';
+import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel, CacheService } from 'codx-core';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
@@ -19,9 +19,19 @@ export class DetailNoteBooksComponent extends UIComponent {
   predicate = 'TransID=@0';
   dataValue = '';
   button?: ButtonModel;
-  formModel: any = '';
   itemSelected: any;
   dialog!: DialogRef;
+  functionList = {
+    formName: '',
+    gridViewName: '',
+    entityName: '',
+  }
+  gridViewSetup = {
+    entityName: '',
+    service: '',
+    assemblyName: '',
+    className: '',
+  }
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
@@ -32,15 +42,24 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('tag', { static: true }) tag;
   @ViewChild('createdOn', { static: true }) createdOn;
   @ViewChild('modifiedOn', { static: true }) modifiedOn;
+  @ViewChild('fileCount', { static: true }) fileCount;
 
   constructor(injector: Injector,
     private route: ActivatedRoute,
   ) {
     super(injector);
     this.route.params.subscribe(params => {
-      this.funcID = params['funcID'];
+      if (params)
+        this.funcID = params['funcID'];
     })
 
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if (res) {
+        this.functionList.formName = res.formName;
+        this.functionList.gridViewName = res.gridViewName;
+        this.functionList.entityName = res.entityName;
+      }
+    })
   }
 
   onInit(): void {
@@ -71,7 +90,7 @@ export class DetailNoteBooksComponent extends UIComponent {
     {
       field: 'Đính kèm',
       headerText: 'Đính kèm',
-      template: '',
+      template: this.fileCount,
       width: 100
     },
     {
@@ -93,11 +112,9 @@ export class DetailNoteBooksComponent extends UIComponent {
       width: 150
     },
     ];
-    
   }
 
   ngAfterViewInit(): void {
-    this.formModel = this.view?.formModel;
     this.views = [{
       type: ViewType.grid,
       sameData: true,
@@ -129,17 +146,19 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   openFormCreateDetail(e) {
+    var obj = [{
+      data: this.view.dataService.data,
+      type: 'add',
+      parentID: this.recID,
+    }]
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new DialogModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      this.view.dataService.data.pop();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
       this.dialog = this.callfc.openForm(PopupAddUpdate,
-        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.data, 'add'], '', option
+        'Thêm mới ghi chú', 1438, 775, '', obj, '', option
       );
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 
@@ -155,6 +174,12 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   edit(data) {
+    var obj = [{
+      data: data,
+      type: 'edit',
+      parentID: this.recID,
+    }]
+
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -164,11 +189,8 @@ export class DetailNoteBooksComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       this.dialog = this.callfc.openForm(PopupAddUpdate,
-        'Thêm mới ghi chú', 1438, 775, '', [this.view.dataService.dataSelected, 'edit'], '', option
+        'Thêm mới ghi chú', 1438, 775, '', obj, '', option
       );
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 
@@ -182,16 +204,14 @@ export class DetailNoteBooksComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID)
+          this.view.dataService.remove(res).subscribe();
           this.detectorRef.detectChanges();
         }
       });
   }
 
-
   onSearch(e) {
     this.lstGrid.onSearch(e);
     this.detectorRef.detectChanges();
   }
-
 }

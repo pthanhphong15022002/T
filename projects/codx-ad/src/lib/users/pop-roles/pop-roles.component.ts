@@ -5,6 +5,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
 import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
+import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 
 @Component({
@@ -20,17 +21,20 @@ export class PopRolesComponent implements OnInit {
   dialogSecond: any;
   dataView: any;
   title = 'Phân quyền người dùng';
-  count: number = 0;
+  countService: number = 0;
+  countApp: number = 0;
   lstFunc = [];
   lstEmp = [];
-  listChooseRole:tmpformChooseRole[] =[];
+  listRestore = [];
+  listChooseRole: tmpformChooseRole[] = [];
+  // listChooseRole:tmpformChooseRole[] =[];
   idClickFunc: any;
-  listRoles:tmpformChooseRole[] =[];
- // viewChooseRoleSelected: tmpformChooseRole;
+  listRoles: AD_Roles[] = [];
   optionFrist = 'ADC01' // Check unselect from list
   optionSecond = 'ADC02' // Check list is null
   optionThird = 'ADC03' // Check select from list
-
+  checkApp = false;
+  checkService = true;
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
@@ -43,109 +47,156 @@ export class PopRolesComponent implements OnInit {
     this.data = dt?.data;
   }
   ngOnInit(): void {
-  this.listChooseRole = this.data;  // 
-  this.loadData(this.listChooseRole); 
-    
+    this.listChooseRole = this.data;
+    this.loadData();
+
   }
 
-  loadData(dataChecked?:any) {
+  loadData() {
     this.adService.getListAppByUserRoles(this.choose1)
       .subscribe((res) => {
         if (res) {
           this.lstFunc = res[0];
           this.listRoles = res[1];
-          console.log(this.listRoles);
-          for (var i = 0; i < this.lstFunc.length; i++) {
-            this.lstFunc[i].roleName = this.lstFunc[i].roleNames;
-            if (this.lstFunc[i].recIDofRole != null) {
-              this.lstFunc[i].recIDofRole = null;
-            }
-          }
-          if(dataChecked !=null) {
-            for (var i = 0; i < this.lstFunc.length; i++) {
-              for(var j = 0; j < dataChecked.length; j++)
-              {
-                if(dataChecked[j].functionID === this.lstFunc[i].functionID) {
-                  this.lstFunc[i].ischeck = true;
-                  this.lstFunc[i].recIDofRole = dataChecked[j].recIDofRole;
-                }
-                this.count =j;
-              }
-            }
-            this.count = this.count+1;
-          }
-       
+          this.lstEmp = res[2];
+          this.getListLoadDataApp();
+          this.getListLoadDataService();
           this.changeDec.detectChanges();
         }
       })
-    
+
     this.changeDec.detectChanges();
   }
-  loadedData(dataChecked?:any) {
+
+  getListLoadDataApp() {
     for (var i = 0; i < this.lstFunc.length; i++) {
-      for(var j = 0; j < dataChecked.length; j++)
-      {
-        if(dataChecked[j].recIDofRole === this.lstFunc[i].recIDofRole) {
-          this.lstFunc[i].ischeck = true;
+      if (this.lstFunc[i].recIDofRole != null) {
+        this.lstFunc[i].recIDofRole = null;
+      }
+    }
+    if (this.listChooseRole.length > 0) {
+      for (var i = 0; i < this.lstFunc.length; i++) {
+        for (var j = 0; j < this.listChooseRole.length; j++) {
+          if (this.listChooseRole[j].functionID === this.lstFunc[i].functionID && this.lstFunc[i].isPortal == false) {
+            this.lstFunc[i].ischeck = true;
+            this.lstFunc[i].recIDofRole = this.listChooseRole[j].recIDofRole;
+            this.countApp++;
+          }
+
+        }
+      }
+    }
+  }
+  getListLoadDataService() {
+    for (var i = 0; i < this.lstEmp.length; i++) {
+      if (this.lstEmp[i].recIDofRole != null) {
+        this.lstEmp[i].recIDofRole = null;
+      }
+    }
+    if (this.listChooseRole.length > 0) {
+      for (var i = 0; i < this.lstEmp.length; i++) {
+        for (var j = 0; j < this.listChooseRole.length; j++) {
+          if (this.listChooseRole[j].functionID === this.lstEmp[i].functionID
+            && this.lstEmp[i].isPortal == true) {
+            this.lstEmp[i].ischeck = true;
+            this.lstEmp[i].recIDofRole = this.listChooseRole[j].recIDofRole;
+            this.countService++;
+          }
         }
       }
     }
   }
 
   onChange(event, item?: any) {
-  if(item.ischeck) {
-    event.target.checked = true;
-  }
-  else {
-    event.target.checked = false;
-  }
-    if (event.target.checked === false) {
-      item.ischeck = false;
-      this.count = this.count - 1;
-      for (var i = 0; i < this.lstFunc.length; i++) {
-        if (item.functionID === this.lstFunc[i].functionID) {
-          this.lstFunc[i].recIDofRole = null;
-          this.lstFunc[i].recRoleName = null;
-          this.lstFunc[i].color = null;
+    if (item.ischeck) {
+      event.target.checked = true;
+    }
+    else {
+      event.target.checked = false;
+    }
+    if (!item.isPortal) {
+      if (event.target.checked === false) {
+        item.ischeck = false;
+        this.countApp = this.countApp - 1;
+        for (var i = 0; i < this.lstFunc.length; i++) {
+          if (item.functionID === this.lstFunc[i].functionID) {
+            this.lstFunc[i].recIDofRole = null;
+            this.lstFunc[i].recRoleName = null;
+            this.lstFunc[i].color = null;
+          }
         }
-      }
-      if (this.count < 0) {
-        this.count = 0;
-        this.listChooseRole = [];
-      }
+        if (this.countApp < 0) {
+          this.countApp = 0;
+          this.listChooseRole = [];
+        }
 
-      for (var i = 0; i < this.listChooseRole.length; i++) {
-        if (item.functionID === this.listChooseRole[i].functionID) {
-          this.listChooseRole.splice(i, 1);
+        for (var i = 0; i < this.listChooseRole.length; i++) {
+          if (item.functionID === this.listChooseRole[i].functionID) {
+            this.listChooseRole.splice(i, 1);
+          }
         }
+      }
+      else {
+        this.countApp = this.countApp + 1;
+        item.idChooseRole = this.countApp;
+        var checkExist = true;
+        this.listChooseRole.forEach(element => {
+          if (element.functionID == item.functionID) {
+            checkExist = false;
+          }
+        });
+        if (checkExist) {
+          this.listChooseRole.push(item);
+        }
+        item.ischeck = true;
+
       }
     }
     else {
-      this.count = this.count + 1;
-      item.idChooseRole = this.count;
-      var checkExist= true;
-      this.listChooseRole.forEach(element => {
-        if(element.functionID == item.functionID) {
-          checkExist= false;
+      if (event.target.checked === false) {
+        item.ischeck = false;
+        this.countService = this.countService - 1;
+        for (var i = 0; i < this.lstEmp.length; i++) {
+          if (item.functionID === this.lstEmp[i].functionID) {
+            this.lstEmp[i].recIDofRole = null;
+            this.lstEmp[i].recRoleName = null;
+            this.lstEmp[i].color = null;
+          }
         }
-      });
-      if(checkExist)
-      {
-        this.listChooseRole.push(item);
+        if (this.countService < 0) {
+          this.countService = 0;
+          this.listChooseRole = [];
+        }
+
+        for (var i = 0; i < this.listChooseRole.length; i++) {
+          if (item.functionID === this.listChooseRole[i].functionID) {
+            this.listChooseRole.splice(i, 1);
+          }
+        }
       }
-     
-      item.ischeck = true;
+      else {
+        this.countService = this.countService + 1;
+        item.idChooseRole = this.countService;
+        var checkExist = true;
+        this.listChooseRole.forEach(element => {
+          if (element.functionID == item.functionID) {
+            checkExist = false;
+          }
+        });
+        if (checkExist) {
+          this.listChooseRole.push(item);
+        }
+        item.ischeck = true;
+      }
     }
-    
     this.changeDec.detectChanges();
   }
-
   onCbx(event, item?: any) {
     if (event.data) {
       item.recIDofRole = event.data[0];
       this.listRoles.forEach(element => {
-        if (element.recIDofRole == item.recIDofRole) {
-          item.recRoleName = element.roleNames;
+        if (element.recID == item.recIDofRole) {
+          item.recRoleName = element.roleName;
           item.color = element.color;
         }
       });
@@ -170,8 +221,8 @@ export class PopRolesComponent implements OnInit {
       this.changeDec.detectChanges();
     }
     else {
-      this.dialogSecond.close();
       this.notiService.notifyCode('Không có gì thay đổi');
+      this.dialogSecond.close(this.listChooseRole);
     }
 
   }
@@ -187,5 +238,24 @@ export class PopRolesComponent implements OnInit {
     }
     return this.optionThird;
   }
+
+
+  // addLine(template: any, data = null) {
+  //   this.dialog.dataService.save().subscribe(res => {
+  //     if (!res?.save?.error || !res?.update?.error) {
+  //       if (!this.dialog.dataService.dataSelected.isNew())
+  //         this.dialog.dataService.hasSaved = true;
+  //       if (data)
+  //         this.line = data;
+  //       else {
+  //         this.line.recID = Util.uid();
+  //         this.line.rangeID = this.master.rangeID;
+  //         this.codxService.setAddNew(this.line, 'recID')
+  //       }
+  //       this.callfc.openForm(template, '', 500, 400);
+  //     }
+  //   });
+  // }
+
 
 }

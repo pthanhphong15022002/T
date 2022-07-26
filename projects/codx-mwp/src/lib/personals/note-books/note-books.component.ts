@@ -35,7 +35,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   @ViewChild('lstCardNoteBooks') lstCardNoteBooks: CodxCardImgComponent;
   @ViewChild('lstNoteBook') lstNoteBook: AddUpdateNoteBookComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('inputSearch') inputSearch: CodxSearchBarComponent;
   @Output() loadData = new EventEmitter();
 
   constructor(inject: Injector,
@@ -85,11 +84,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
-    console.log("check data note-books", this.view.dataService.data)
   }
 
   clickMF(e: any, data?: any) {
-    debugger;
     switch (e.functionID) {
       case 'edit':
         this.edit(data);
@@ -144,9 +141,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 
@@ -175,9 +169,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
     });
   }
 

@@ -60,6 +60,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApprover: any = [];
 
   headerText1;
+  type = '1';
 
   title = '';
   tabInfo: any[] = [
@@ -105,6 +106,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
     this.vllShare = data?.data.vllShare ?? 'ES014';
+    this.type = data?.data.type ?? '1';
   }
 
   ngAfterViewInit(): void {

@@ -12,6 +12,7 @@ export class Notes {
     showCalendar: boolean;
     createdOn: string;
     createdBy: string;   
+    tag: string;
 }
 
 export class TempNote {

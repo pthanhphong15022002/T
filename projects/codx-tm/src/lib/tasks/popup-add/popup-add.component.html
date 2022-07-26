@@ -1,6 +1,6 @@
-<codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader" [footer]="footer"
-  [dialog]="dialog" [openMore]="true" [tabContent]="tabContent"
-  (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" #form></codx-layout-add>
+<codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader"
+  [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="tabContent" (setTitle)="setTitle($event)"
+  (buttonClick)="buttonClick($event)" #form></codx-layout-add>
 <ng-template #subHeader>
   <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task?.tags || ''"
     (valueChange)="valueChangeTags($event)"></codx-tag>
@@ -60,7 +60,7 @@
   </div>
   <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
     <div class="form-group row mt-3">
-      <div class="col-4">
+      <div class="col-5">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -69,7 +69,7 @@
           [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <div>
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
@@ -78,12 +78,12 @@
           [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-2">
         <div>
-          <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ thực hiện">
+          <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
         </div>
-        <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ thực hiện"
+        <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ "
           [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)">
         </codx-input>
 
@@ -151,6 +151,14 @@
 
 
 <ng-template #tabAssignTo>
+  <div class="d-flex justify-content-end me-2">
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center ms-4">
+        <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+        <div class="fs-8 text-gray-500">{{item.text}}</div>
+      </div>
+    </ng-container>
+  </div>
   <div class="d-flex align-items-center justify-content-between mt-4">
     <div class="d-flex align-items-center">
       <span class="icon-person icon-16 me-2 text-primary"></span>
@@ -169,6 +177,17 @@
         <div class="d-flex align-items-top">
           <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
           </codx-img>
+          <!-- <div style=" position: relative">
+            <codx-img class="" [objectId]="item?.userID" objectType="AD_Users">
+            </codx-img>
+            <div style="position: absolute; right: 0px;bottom: 0px">
+              <ng-container *ngFor="let role of listRoles">
+                <ng-container *ngIf="role.value== item.roleType">
+                  <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
+                </ng-container>
+                </ng-container>   
+            </div>
+          </div> -->
 
           <div class="d-flex flex-column me-2 ">
             <div class="text-dark fw-bold fs-6">
@@ -336,7 +355,7 @@
       </span>
     </a>
   </ng-container>
-</ng-template> 
+</ng-template>
 
 
 

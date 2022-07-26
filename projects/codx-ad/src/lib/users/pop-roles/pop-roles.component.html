@@ -1,5 +1,5 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
-[formModel]="dialogSecond.formModel" [dialog]="dialogSecond" >
+  [formModel]="dialogSecond.formModel" [dialog]="dialogSecond">
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
       <e-tabitems>
@@ -21,55 +21,48 @@
             <div class="form-group">
               <div class="form-group mt-3">
                 <div class="text-dark fw-bolder d-flex justify-content-end">
-                  Đã chọn ({{count}})
+                  Đã chọn ({{countApp}})
                 </div>
               </div>
               <div class="form-group row mt-3">
                 <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc; let i= index">
-                  <div class="row">
-                  <div class="col-2">
-                      <input type="checkbox"  [(ngModel)]="item.ischeck"
-                      class="check-{{i}} checkbox-round" name="Checkboxes4" (change)="onChange($event,item)">
-                  </div>
-                  <div class="col-10 column_second">
-                    <div class="row">
-                      <div class="col-2">
-                        <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
-                      </div>
-                      <div class="col-10">
-                         <div class="col-12 pb-2">
-                          <div class="font-weight-bold" style="font-weight: bold">
-                            {{item.customName}}
+                  <div class="row" *ngIf="!item.isPortal">
+                    <div class="col-2">
+                      <input type="checkbox" [(ngModel)]="item.ischeck" class="check-{{i}} checkbox-round"
+                        name="Checkboxes4" (change)="onChange($event,item)">
+                    </div>
+                    <div class="col-10 column_second">
+                      <div class="row">
+                        <div class="col-2">
+                          <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                        </div>
+                        <div class="col-10">
+                          <div class="col-12 pb-2">
+                            <div class="font-weight-bold" style="font-weight: bold">
+                              {{item.customName}}
+                            </div>
                           </div>
-                         </div>
-                         <div class="col-12">
+                          <div class="col-12">
 
-                          <div *ngIf="item.ischeck; else imgDefault_personal">
-                           
-                          <!-- <codx-input type="combobox"  field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
-                          </codx-input>
-                          </div>
-                          <ng-template #imgDefault_personal>
-                              <codx-input type="combobox" field="userID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
+                            <div *ngIf="item.ischeck; else checkAppIsNull">
+
+                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
+                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
+                                [multiple]="false" [disabled]="false" loadFull="true">
                               </codx-input>
-                          </ng-template> -->
-
-
-                          <codx-input type="combobox"  field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles"
-                           (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true" >
-                          </codx-input>
-                          </div>
-                          <ng-template #imgDefault_personal>
-                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false" [disabled]="true" loadFull="true" >
+                            </div>
+                            <ng-template #checkAppIsNull>
+                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
+                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
+                                [multiple]="false" [disabled]="true" loadFull="true">
                               </codx-input>
-                          </ng-template>
-
+                            </ng-template>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
           </ng-template>
@@ -92,39 +85,48 @@
             <div class="form-group">
               <div class="form-group mt-3">
                 <div class="text-dark fw-bolder d-flex justify-content-end">
-                  Đã chọn (0)
+                  Đã chọn ({{countService}})
                 </div>
               </div>
               <div class="form-group row mt-3">
-
-                <div class="col-4 px-5 pb-12" *ngFor="let item of lstFunc">
-                  <div class="row">
-
+                <div class="col-4 px-5 pb-12" *ngFor="let item of lstEmp; let i= index">
+                  <div class="row" *ngIf="item.isPortal">
                     <div class="col-2">
-                      <input type="checkbox" class="checkbox-round">
+                      <input type="checkbox" [(ngModel)]="item.ischeck" class="check-{{i}} checkbox-round"
+                        name="Checkboxes4" (change)="onChange($event,item)">
                     </div>
-
                     <div class="col-10 column_second">
                       <div class="row">
                         <div class="col-2">
                           <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
                         </div>
                         <div class="col-10">
-                           <div class="col-12 pb-2">
+                          <div class="col-12 pb-2">
                             <div class="font-weight-bold" style="font-weight: bold">
                               {{item.customName}}
                             </div>
-                           </div>
-                           <div class="col-12">
-                            <codx-input type="combobox" field="userID" refValue="UserRoles">
-                            </codx-input>
+                          </div>
+                          <div class="col-12">
+
+                            <div *ngIf="item.ischeck; else checkEmpIsNull">
+
+                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
+                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
+                                [multiple]="false" [disabled]="false" loadFull="true">
+                              </codx-input>
+                            </div>
+                            <ng-template #checkEmpIsNull>
+                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
+                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
+                                [multiple]="false" [disabled]="true" loadFull="true">
+                              </codx-input>
+                            </ng-template>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </ng-template>

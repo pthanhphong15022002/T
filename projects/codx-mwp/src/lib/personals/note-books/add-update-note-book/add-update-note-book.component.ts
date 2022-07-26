@@ -73,13 +73,13 @@ export class AddUpdateNoteBookComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                this.dialog.close();
                 (this.dialog.dataService as CRUDService).add(res).subscribe();
               }
             });
         }
         else
           (this.dialog.dataService as CRUDService).add(res).subscribe();
+        this.dialog.close();
       }
     })
   }
