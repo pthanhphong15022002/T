@@ -330,7 +330,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'GetByProcessIDAsync',
-      recID
+      [recID]
+    );
+  }
+
+  getApprovedSignatures(recID, userID) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovedSignTransAsync',
+      [recID, userID]
     );
   }
   //#endregion
