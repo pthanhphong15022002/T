@@ -11,24 +11,24 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import {
-  BehaviorSubject,
-  Observable,
-  map,
-  catchError,
-  finalize,
-  of,
-} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { debug } from 'util';
-import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 
+export class GridModels {
+  pageSize: number;
+  entityName: string;
+  entityPermission: string;
+  formName: string;
+  gridViewName: string;
+  funcID: string;
+  dataValue: string;
+  predicate: string;
+}
 export class AddGridData {
   dataItem: any = null;
   isAdd: boolean = false;
   key: String = '';
 }
-
 export class Item {
   header: string;
   content: string;
@@ -307,16 +307,6 @@ export class CodxEsService {
     );
   }
 
-  addSignFile(data, isAdd) {
-    this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'AddEditAsync',
-      [data, isAdd]
-    );
-  }
-
   getApprovalTrans(recID: string) {
     // let data = new DataRequest();
     // data.formName = 'ApprovalTrans';
@@ -513,13 +503,13 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(recID): Observable<any> {
+  getApprovalSteps(model: GridModels): Observable<any> {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
       'ApprovalStepsBusiness',
       'GetListApprovalStepAsync',
-      recID
+      [model]
     );
   }
 
@@ -626,6 +616,18 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region ES_SignFiles
+
+  addNewSignFile(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'AddNewSignFile',
+      [data]
+    );
+  }
+  //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',

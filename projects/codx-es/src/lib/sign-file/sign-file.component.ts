@@ -13,6 +13,7 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  DialogModel,
   DialogRef,
   SidebarModel,
   ViewModel,
@@ -103,7 +104,9 @@ export class SignFileComponent implements OnInit {
       this.taskViewStt = stt;
       this.codxViews.dataService.predicate = 'ApproveStatus=@0';
       this.codxViews.dataService.dataValue = stt;
-      this.codxViews.dataService.load().subscribe();
+      this.codxViews.dataService
+        .setPredicates(['ApproveStatus=@0'], [stt])
+        .subscribe((item) => {});
     }
   }
 
@@ -161,19 +164,22 @@ export class SignFileComponent implements OnInit {
       option.Width = '800px';
       option.DataService = this.codxViews?.currentView?.dataService;
       option.FormModel = this.codxViews?.currentView?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
       this.dialog = this.callfunc.openForm(
         PopupAddSignFileComponent,
         'Thêm mới',
         700,
         650,
+        this.funcID,
+        {
+          dataSelected: this.codxViews.dataService.dataSelected,
+          isAdd: true,
+          formModel: this.codxViews?.currentView?.formModel,
+        },
         '',
-        [
-          {
-            dataSelected: this.codxViews.dataService.dataSelected,
-            isAdd: true,
-            formModel: this.codxViews?.currentView?.formModel,
-          },
-        ]
+        dialogModel
       );
     });
   }
@@ -218,4 +224,6 @@ export class SignFileComponent implements OnInit {
         break;
     }
   }
+
+  viewChange(e: any) {}
 }

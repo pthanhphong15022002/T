@@ -1,3 +1,4 @@
+import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -20,9 +21,15 @@ import { Readmorev2Component } from './components/readmorev2/readmorev2.componen
 import { ImageGridComponent } from './components/image-grid/image-grid.component';
 import { TruncatePipe } from './pipe/truncate.pipe';
 import { CalendarNotesComponent } from './components/calendar-notes/calendar-notes.component';
-import { CalendarModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import {
+  CalendarModule,
+  DateRangePickerModule,
+} from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { UploaderComponent, UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import {
+  UploaderComponent,
+  UploaderModule,
+} from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
@@ -59,22 +66,27 @@ const T_Component: Type<any>[] = [
   LayoutOnlyHeaderComponent,
 ];
 
+const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
-const T_Pipe: Type<any>[] = [
-  TruncatePipe,
-  FileImage
-]
-
-
-@NgModule({  
+@NgModule({
   declarations: [T_Component, T_Pipe],
-  imports: [CommonModule, NgbModule, FormsModule,
+  imports: [
+    CommonModule,
+    NgbModule,
+    FormsModule,
     SharedModule,
     InlineSVGModule.forRoot(),
-    CodxCoreModule, CalendarModule, DateRangePickerModule, TabModule, UploaderModule, PickerModule],
+    CodxCoreModule,
+    CalendarModule,
+    DateRangePickerModule,
+    TabModule,
+    UploaderModule,
+    PickerModule,
+    ChartAllModule,
+  ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule { }
+export class CodxShareModule {}
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,
 //   CodxCoreModule,
