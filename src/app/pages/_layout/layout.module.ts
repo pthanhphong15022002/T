@@ -13,6 +13,8 @@ import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.comp
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { MyTeamComponent } from '@pages/home/my-team/my-team.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { CoreModule } from '@core/core.module';
+import { CodxCoreModule } from 'codx-core';
 
 @NgModule({
   declarations: [
@@ -29,8 +31,10 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
     CommonModule,
     PagesRoutingModule,
     SharedModule,
+    CodxCoreModule,
     CodxShareModule,
-    PickerModule  
+    PickerModule,
+    CoreModule
   ],
   exports: [RouterModule],
 })
