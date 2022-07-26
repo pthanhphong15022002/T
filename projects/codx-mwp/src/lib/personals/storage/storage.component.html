@@ -2,7 +2,7 @@
     <div class="pw-storgae">
         <div class="d-flex align-items-center justify-content-between pw-header mb-3">
             <div class="pw-search">
-                <codx-searchbar [width]="300"></codx-searchbar>
+                <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
             </div>
             <div class="d-flex justify-content-end align-items-center pw-toolbar">
                 <div class="text-dark me-1">
@@ -29,74 +29,14 @@
                 <div class="pw-card delay-500" (click)="openStorageDetail(item)">
                     <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"
                         icoTitleCss="icon-assignment icon-16" [title]="item.title" [desc2]="item.memo"
-                        [imageObjType]="'WP_Storages'" [formModel]="formModel" (clickMF)="clickMF($event,item)">
+                        [imageObjType]="'WP_Storages'" [formModel]="formModel" (clickMF)="clickMF($event,item)"
+                        [dataItem]="item">
                     </codx-card-img>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- <ng-template #itemViewBoard let-data>
-    <div class="w-230 h-150 pd-5">
-        <codx-card-img cardCss="border mw-300px h-100" [imageId]="data.recID" imageObjType="WP_Storages"
-            [title]="data.title" [icouSbTitleCss]="" [subTitle]="data.memo">
-        </codx-card-img>
-    </div>
-</ng-template> -->
-
-<ng-template #moreFunc>
-    <div class="formMoreFunc">
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div id="kt_drawer_updateStorage_toggle" (click)="formUpdateStorage(data)">
-                <div aria-expanded="false" class="moreFunc">
-                    <codx-label name="lblDeleteNote" formName="Notes" default="Chỉnh sửa kho"></codx-label>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div (click)="openFormUpdateBackground(formUpdateBackground, data?.recID)">
-                <codx-label name="lblDeleteNote" formName="Notes" default="Đổi hình nền"></codx-label>
-            </div>
-        </div>
-        <br>
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div (click)="delete(data)">
-                <codx-label name="lblDeleteNote" formName="Notes" default="Xóa"></codx-label>
-            </div>
-        </div>
-        <div class="separator my-3"></div>
-        <div class="d-flex font-1-3">
-            <li></li>
-            <div (click)="openStorageDetail(data)">
-                <codx-label name="lblDeleteNote" formName="Notes" default="Chi tiết kho"></codx-label>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #formUpdateBackground>
-    <div class="card-body">
-        <div class="upload-img">
-            <codx-img #imageUpLoad [width]="200" [objectType]="'WP_NoteBooks'" aria-disabled="true" [funcId]="'WPT0394'"
-                [objectId]="recID" [isAllowEdit]="true"></codx-img>
-        </div>
-    </div>
-    <div class="card-footer pt-4">
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-light-primary" (click)="onUpdateBackground(data)">Lưu</button>
-        </div>
-    </div>
-</ng-template>
-
-<!-- <ng-template #cardTemp let-data> 
-    <codx-card-img cardCss="border h-100" [title]="data.userName" [subTitle]="data.positionName"
-        [content]="data.memo||'memo'">
-    </codx-card-img>
-</ng-template> -->
 
 <div *ngIf="checkFormComment == true">
     <div class="details">
@@ -110,7 +50,6 @@
                 </div>
             </div>
         </button>
-        <!-- <ng-template #detail></ng-template> -->
         <ng-template #detail></ng-template>
     </div>
 </div>
