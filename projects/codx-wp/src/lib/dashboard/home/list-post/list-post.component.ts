@@ -62,7 +62,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     this.cache.message('WP011').subscribe((mssg:any)=>{
-      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      // this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
       this.dt.detectChanges();  
     })
   }
