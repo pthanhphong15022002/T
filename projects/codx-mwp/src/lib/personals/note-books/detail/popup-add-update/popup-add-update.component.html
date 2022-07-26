@@ -6,7 +6,8 @@
         <div class="row">
             <div class="col-4">
                 <div class="d-flex my-2">
-                    <codx-tag [entityName]="functionList.entityName" [isEdit]="true" [value]="''"></codx-tag>
+                    <codx-tag [entityName]="functionList.entityName" [isEdit]="true" [value]="''"
+                        (valueChange)="valueChangeTag($event)"></codx-tag>
                 </div>
                 <div class="form-group">
                     <codx-label name="lblTitle" formName="Notes" default="Tiêu đề"></codx-label>
@@ -26,8 +27,9 @@
                         <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
                     </button>
                 </div>
-                <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
-                    hideFolder="1" hideUploadBtn="1" functionID="MWP00941" type="inline">
+                <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
+                    hideUploadBtn="1" hideDes="1" [functionID]="functionList.funcID" [objectId]="note?.recID"
+                    [allowMultiFile]="1" [idBrowse]="'add'">
                 </codx-attachment>
             </div>
             <div class="col-8">

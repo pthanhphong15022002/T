@@ -182,14 +182,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         return;
       }
       var message = 'Bạn có chắc chắn muốn xóa task này !';
-      // this.notiService
-      //   .alert('Cảnh báo', message, { type: 'YesNo' })
-      //   .subscribe((dialog: Dialog) => {
-      //     var that = this;
-      //     dialog.close = function (e) {
-      //       return that.close(e, that);
-      //     };
-      //   });
     } else this.notiService.notify('Bạn chưa được cấp quyền này !');
   }
 

@@ -18,7 +18,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { CodxEsService } from '../../codx-es.service';
+import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
 export class Approver {}
@@ -38,11 +38,12 @@ export class ApprovalStepComponent implements OnInit {
   dialog: DialogRef;
   formModel: FormModel;
   approvers = [];
-  lstStep: any;
+  lstStep: any = null;
   lstDeleteStep = [];
   isDeleteAll = false;
 
   model: any;
+  type = '1';
 
   constructor(
     private cfService: CallFuncService,
@@ -51,22 +52,27 @@ export class ApprovalStepComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
-    @Optional() data: DialogData,
+    @Optional() dialogData: DialogData,
     @Optional() dialog: DialogRef
   ) {
-    this.transId = data?.data.transID;
-    this.model = data?.data.model;
-    this.dialog = dialog;
+    if (dialogData?.data.type) {
+      this.type = dialogData?.data.type;
+      this.transId = dialogData?.data.transID ?? '';
+      this.model = dialogData?.data.model;
+      this.dialog = dialog;
+    } else {
+      this.type = '0';
+    }
   }
 
   ngOnInit(): void {
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
+        this.initForm();
       }
     });
     console.log('transID', this.transId);
-    this.initForm();
   }
 
   close() {}
@@ -76,35 +82,27 @@ export class ApprovalStepComponent implements OnInit {
       if (res != null) {
         this.lstStep = res;
         console.log(this.lstStep);
-      } else {
+      } else if (this.transId != '') {
         // if (this.transId != '') {
-        this.api
-          .callSv(
-            'ES',
-            'ES',
-            'ApprovalStepsBusiness',
-            'GetListApprovalStepAsync',
-            [this.transId]
-          )
-          .subscribe((res) => {
-            if (res && res?.msgBodyData[0]) {
-              this.lstStep = res.msgBodyData[0];
-              console.log(this.lstStep);
-              this.currentStepNo = this.lstStep.length + 1;
-            } else {
-              this.notify.notify('Chưa có dữ liệu');
-            }
-          });
-        // }
+        let gridModels = new GridModels();
+        gridModels.dataValue = this.transId;
+        gridModels.predicate = 'TransID=@0';
+        gridModels.funcID = this.formModel.funcID;
+        gridModels.entityName = this.formModel.entityName;
+        gridModels.gridViewName = this.formModel.gridViewName;
+        gridModels.pageSize = 20;
+
+        this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+          if (res && res?.length >= 0) {
+            this.lstStep = res;
+            this.currentStepNo = this.lstStep.length + 1;
+          }
+        });
+      } else {
+        this.lstStep = [];
+        this.currentStepNo = this.lstStep.length + 1;
       }
     });
-  }
-
-  addHandler(data, stepNo: number) {
-    if (data[stepNo - 1]) {
-      this.lstStep[stepNo - 1] = data;
-    } else this.lstStep.push(data);
-    this.cr.detectChanges();
   }
 
   setTransID(transID) {
@@ -140,6 +138,7 @@ export class ApprovalStepComponent implements OnInit {
       lstStep: this.lstStep,
       isAdd: true,
       dataEdit: null,
+      type: this.type,
     };
 
     this.openPopupAddAppStep(data);
@@ -152,6 +151,7 @@ export class ApprovalStepComponent implements OnInit {
       lstStep: this.lstStep,
       isAdd: false,
       dataEdit: approvalStep,
+      type: this.type,
     };
     this.openPopupAddAppStep(data);
   }

@@ -11,6 +11,7 @@ import {
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -66,6 +67,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
+  listRoles : any
+  vllRole ='TM001'
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -122,6 +125,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     private tmSv: CodxTMService,
     private notiService: NotificationsService,
     public atSV: AttachmentService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -140,7 +144,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.functionID = this.dialog.formModel.funcID;
     if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     this.paramControlReference =this.param?.ProjectControl != '0'|| this.param?.LocationControl != '0' || this.param?.ReferenceControl != '0' || this.param?.ActivityControl != '0' || this.param?.ActivityControl == null  
-  
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -276,7 +284,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
-    this.task.status = '1';
+    this.task.status = '10';
     this.task.memo = '';
     this.task.dueDate = moment(new Date())
       .set({ hour: 23, minute: 59, second: 59 })
@@ -367,8 +375,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)
     ) {
-      this.notiService.notify('Phải nhập danh sách người được phân công !');
-      // this.notiService.notifyCode('mã code');
+      this.notiService.notifyCode('TM011');
       return;
     }
 

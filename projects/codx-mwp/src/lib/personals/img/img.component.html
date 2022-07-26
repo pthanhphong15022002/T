@@ -1,5 +1,5 @@
 <div *ngIf="file_img.length > 0">
-    <div class="pw-listcard mt-6">
+    <div class="pw-listcard">
         <div *ngFor="let item of file_img" (click)="openImg(item)">
             <div class="pw-card">
                 <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">

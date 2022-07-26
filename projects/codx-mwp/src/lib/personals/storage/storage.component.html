@@ -1,6 +1,6 @@
 <div *ngIf="checkFormComment == false">
-    <div class="pw-container">
-        <div class="d-flex align-items-center justify-content-between pw-header">
+    <div class="pw-storgae">
+        <div class="d-flex align-items-center justify-content-between pw-header mb-3">
             <div class="pw-search">
                 <codx-searchbar [width]="300"></codx-searchbar>
             </div>
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="pw-listcard mt-6">
+        <div class="pw-listcard">
             <div *ngFor="let item of view.dataService.data">
                 <div class="pw-card delay-500" (click)="openStorageDetail(item)">
                     <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"

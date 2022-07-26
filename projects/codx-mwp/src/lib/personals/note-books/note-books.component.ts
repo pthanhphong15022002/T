@@ -89,7 +89,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   clickMF(e: any, data?: any) {
-    debugger;
     switch (e.functionID) {
       case 'edit':
         this.edit(data);
@@ -144,9 +143,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 

@@ -1,4 +1,4 @@
-import { ApiHttpService, AuthStore, DialogData, DialogRef, CacheService } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, CacheService, CRUDService } from 'codx-core';
 import {
   Component,
   OnInit,
@@ -33,6 +33,7 @@ export class PopupAddUpdate implements OnInit {
     entityName: '',
     funcID: '',
   }
+  transID = '';
 
   note: Notes = new Notes();
 
@@ -48,7 +49,9 @@ export class PopupAddUpdate implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.formType = dt?.data[1];
+    this.formType = dt?.data[0].type;
+    this.transID = dt?.data[0].parentID;
+    debugger;
     if (this.formType == 'edit') {
       this.header = 'Cập nhật chi tiết sổ tay';
       this.note = dialog.dataService.dataSelected;
@@ -83,7 +86,7 @@ export class PopupAddUpdate implements OnInit {
   }
 
   addNoteBookDetails() {
-    this.note.transID = '628b54be8549d257de3f4fa9';
+    this.note.transID = this.transID;
     this.api
       .exec<any>(
         'ERM.Business.WP',
@@ -98,7 +101,7 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.saveFiles();
           }
           this.dialog.close();
-          this.dialog.dataService.data.push(res);
+          (this.dialog.dataService as CRUDService).add(res).subscribe();
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -114,6 +117,10 @@ export class PopupAddUpdate implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
+          if (this.checkFile == true) {
+            this.attachment.objectId = res.recID;
+            this.attachment.saveFiles();
+          }
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
         }
@@ -128,5 +135,11 @@ export class PopupAddUpdate implements OnInit {
   fileAdded(e) {
     if (e)
       this.attachment.saveFiles();
+  }
+
+  valueChangeTag(e) {
+    if(e) {
+      this.note.tag = e.data;
+    }
   }
 }
