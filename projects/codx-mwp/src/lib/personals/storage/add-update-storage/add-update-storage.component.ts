@@ -58,9 +58,9 @@ export class AddUpdateStorageComponent implements OnInit {
   addStorage() {
     this.storage.storageType = "WP_Comments";
 
-    this.storage.details = [{ recID: null, refID: '62d1044500504527ec13c83d', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: '62d1049a00504527ec13c84c', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: '62d106870c5a013e37bed6c9', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
+    this.storage.details = [{ recID: null, refID: '0d3a4683-28a9-4cd9-a1ca-4bf990fae936', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    { recID: null, refID: '6bef86f0-fed4-4551-ba31-fb73a852dbe9', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    { recID: null, refID: '8bf3152f-7a1b-4a5f-946f-2775c5baeb09', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
 
     this.api.exec<any>(
       'ERM.Business.WP',

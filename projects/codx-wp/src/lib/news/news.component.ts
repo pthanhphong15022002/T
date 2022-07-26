@@ -126,41 +126,41 @@ export class NewsComponent implements OnInit {
         }
 
       });
-    // var model2 = new DataRequest();
-    // model2.funcID = this.functionID;
-    // model2.predicate = this.predicate;
-    // model2.dataValue = this.datavalue;
-    // model2.predicates = 'NewsType = @0';
-    // model2.dataValues = '2';
-    // model2.pageLoading = true;
-    // model2.page = 1;
-    // model2.pageSize = 6;
-    // model2.formName = this.fromName;
-    // model2.gridViewName = this.gridViewName;
-    // model2.entityName = this.entityName;
-    // model2.srtColumns = this.sortColumns;
-    // model2.srtDirections = this.sortDirections;
-    // model2.dataObj = 'list';
-    // this.api
-    //   .execSv(
-    //     'WP',
-    //     'ERM.Business.WP',
-    //     'NewsBusiness',
-    //     'GetListNewsAsync',
-    //     model2
-    //   )
-    //   .subscribe((res2) => {
-    //     if (res2) {
-    //       this.listSlider = [];
-    //       if (res2[0].length <= this.countCarousel) {
-    //         this.isAllowNavigationArrows = false;
-    //         this.carousel?.pause();
-    //       }
-    //       this.listSlider.push(res2[0].splice(0, 3));
-    //       this.listSlider.push(res2[0]);
-    //       this.changedt.detectChanges();
-    //     }
-    //   });
+    var model2 = new DataRequest();
+    model2.funcID = this.functionID;
+    model2.predicate = this.predicate;
+    model2.dataValue = this.dataValue;
+    model2.predicates = 'NewsType = @0';
+    model2.dataValues = '2';
+    model2.pageLoading = true;
+    model2.page = 1;
+    model2.pageSize = 6;
+    model2.formName = this.fromName;
+    model2.gridViewName = this.gridViewName;
+    model2.entityName = this.entityName;
+    model2.srtColumns = this.sortColumns;
+    model2.srtDirections = this.sortDirections;
+    model2.dataObj = 'list';
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetListNewsAsync',
+        model2
+      )
+      .subscribe((res2) => {
+        if (res2) {
+          this.listSlider = [];
+          if (res2[0].length <= this.countCarousel) {
+            this.isAllowNavigationArrows = false;
+            this.carousel?.pause();
+          }
+          this.listSlider.push(res2[0].splice(0, 3));
+          this.listSlider.push(res2[0]);
+          this.changedt.detectChanges();
+        }
+      });
 
   }
   searchEvent(event: any) { }

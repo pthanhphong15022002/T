@@ -1,0 +1,63 @@
+.user-teams {
+    max-width: 320px;
+}
+
+.ut-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    float: left;
+    position: relative;
+}
+
+.ut-item .value {
+    width: 11px;
+    height: 11px;
+    position: absolute;
+    background-color: #f0f2f5;
+    display: block;
+    content: "";
+    right: 4px;
+    bottom: 0;
+    border-radius: 50%;
+    border: 1px #fff solid;
+    z-index: 99;
+}
+
+.ut-more .symbol-label {
+    color: var(--primary-dark);
+}
+
+.ut-more {
+    border: 2px #F5F8FA solid;
+}
+
+.border-count-team {
+    width: 30px;
+    margin-left: 5px;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.count-team {
+    background-color: antiquewhite;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.left-5 {
+    margin-left: 5px;
+}
+
+.pd-top-0 {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.card {
+    height: 150.7px !important;
+}

@@ -4,18 +4,18 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12">
                     <div class="form-group">
-                        <codx-label name="lblRoleName" formName="AD_Roles" default="Tên vai trò"></codx-label>
+                        <codx-label name="lblRoleName" [formName]="dialog.formModel.entityName" default="Tên vai trò"></codx-label>
                         <codx-input type="text" class="form-control" id="roleName"
-                            name="roleName" placeholder="{{'Tên vai trò' | lang:    
-                        'Roles':'RoleName':'grvRoles'| async}}" [crrValue]="dataUpdate?.roleName">
+                            name="roleName" [placeholder]="gridViewSetup?.RoleName?.headerText" [crrValue]="dataUpdate?.roleName">
                         </codx-input>
                     </div>
                 </div>
                 <div class="col-xl-12 col-md-12">
                     <div class="form-group">
-                        <codx-label name="lblDescription" formName="AD_Roles" default="Mô tả"></codx-label>
+                        <codx-label name="lblDescription" [formName]="dialog.formModel.entityName" default="Mô tả"></codx-label>
                         <codx-input type="textarea" class="test-textarea" name="description" rows="5"
-                            style="width: 100%;" [crrValue]="dataUpdate?.description" format="ed2" crrValue="">
+                            style="width: 100%;" [crrValue]="dataUpdate?.description" format="ed2" 
+                            [placeholder]="gridViewSetup?.RoleName?.description">
                         </codx-input>
                     </div>
                 </div>
