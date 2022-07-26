@@ -75,7 +75,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
         var data = res[0]?.data;
         var type = res[0]?.type;
 
-        if(type == 'edit') {
+        if (type == 'edit') {
           this.view.dataService.update(data).subscribe();
         }
       }

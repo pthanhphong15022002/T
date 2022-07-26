@@ -1,9 +1,10 @@
 import { AD_User } from './../../models/AD_User.models';
 import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent, SidebarModel } from 'codx-core';
+import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent, SidebarModel, FormModel, CacheService } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-add-user',
@@ -28,11 +29,13 @@ export class AddUserComponent implements OnInit {
   countListViewChooseRoleApp: Number = 0;
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
+  formModel: FormModel;
   constructor(
     private callfc: CallFuncService,
     private changDetec: ChangeDetectorRef,
     private auth: AuthStore,
     public codxService: CodxService,
+    private cache: CacheService,
 
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
@@ -50,42 +53,48 @@ export class AddUserComponent implements OnInit {
     this.isAddMode = false;
   }
 
-  // openPopup(item: any) {
-  //   this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
-  //   this.dialogRole.closed.subscribe(e => {
-  //     if (e?.event) {
-  //       this.viewChooseRole = e?.event;
-  //       this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
-  //       this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
-  //       this.changDetec.detectChanges()
-
-  //     }
-  //   })
-  // }
-
   openPopup(item: any) {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
-      this.dialogRole.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved) {
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe(x => {
-              this.changDetec.detectChanges();
-            });
-        }
-        if (x.event) {
-          this.viewChooseRole = x?.event;
-          this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
-          this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
-          this.changDetec.detectChanges()
-        }
-      });
-    });
+    this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
+    this.dialogRole.closed.subscribe(e => {
+      if (e?.event) {
+        this.viewChooseRole = e?.event;
+        this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
+        this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
+        this.changDetec.detectChanges()
+
+      }
+    })
   }
+  initForm() 
+  {
+    // this.view.entityName = 'AD_Users';
+    // this.view.formName = 'Users';
+    // this.view.gridViewName = 'grvUsers';
+  }
+
+  // openPopup(item: any) {
+  //   this.view.dataService.addNew().subscribe((res: any) => {
+  //     let option = new SidebarModel();
+  //     option.DataService = this.view.dataService;
+  //     option.FormModel = this.view.formModel;
+  //     this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
+  //     this.dialogRole.closed.subscribe((x) => {
+  //       if (x.event == null && this.view.dataService.hasSaved) {
+  //         this.view.dataService
+  //           .delete([this.view.dataService.dataSelected])
+  //           .subscribe(x => {
+  //             this.changDetec.detectChanges();
+  //           });
+  //       }
+  //       // if (x.event) {
+  //       //   this.viewChooseRole = x?.event;
+  //       //   this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
+  //       //   this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
+  //       //   this.changDetec.detectChanges()
+  //       // }
+  //     });
+  //   });
+  // }
   // add() {
   //   this.view.dataService.addNew().subscribe((res: any) => {
   //     let option = new SidebarModel();
@@ -218,10 +227,53 @@ export class AddUserComponent implements OnInit {
   setTitle(e: any) {
     this.title = 'Thêm ' + e;
     this.changDetec.detectChanges();
-    console.log(e);
   }
 
   buttonClick(e: any) {
-    console.log(e);
+   
   }
+
+  // getFormGroup(formName, gridView): Promise<FormGroup> {
+  //   return new Promise<FormGroup>((resolve, reject) => {
+  //     this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
+  //       var model = {};
+  //       if (gv) {
+  //         const user = this.auth.get();
+  //         for (const key in gv) {
+  //           var b = false;
+  //           if (Object.prototype.hasOwnProperty.call(gv, key)) {
+  //             const element = gv[key];
+  //             element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
+  //             model[element.fieldName] = [];
+
+  //             if (element.fieldName == "owner") {
+  //               model[element.fieldName].push(user.userID);
+  //             }
+  //             if (element.fieldName == "createdOn") {
+  //               model[element.fieldName].push(new Date());
+  //             }
+  //             else if (element.fieldName == "stop") {
+  //               model[element.fieldName].push(false);
+  //             }
+  //             else if (element.fieldName == "orgUnitID") {
+  //               model[element.fieldName].push(user['buid']);
+  //             }
+  //             else if (element.dataType == "Decimal" || element.dataType == "Int") {
+  //               model[element.fieldName].push(0);
+  //             }
+  //             else if (element.dataType == "Bool" || element.dataType == "Boolean")
+  //               model[element.fieldName].push(false);
+  //             else if (element.fieldName == "createdBy") {
+  //               model[element.fieldName].push(user.userID);
+  //             } else {
+  //               model[element.fieldName].push(null);
+  //             }
+  //           }
+  //         }
+  //       }
+  //       resolve(this.fb.group(model, { updateOn: 'blur' }));
+  //     });
+  //   });
+  // }
+
 }

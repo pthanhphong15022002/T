@@ -1,5 +1,5 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'lib-edit-experence',
@@ -7,14 +7,16 @@ import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-
   styleUrls: ['./edit-experence.component.css']
 })
 export class EditExperenceComponent implements OnInit {
-  title = "Cập nhật thông tin";
+  title = "Thêm mới";
   dataBind: any = {};
   dialog: any;
   data: any;
+  action = '';
 
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) { 
@@ -24,6 +26,17 @@ export class EditExperenceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.action==='edit'){
+      this.title = 'Cập nhật thông tin';
+    }
+    // if(this.action==='copy'){
+    //   this.title = 'Sao chép';
+    // }
+  }
+
+  changeTime(data){
+    if (!data.field || !data.data) return;
+    this.dataBind[data.field] = data.data?.fromDate;
   }
 
   dataChange(e: any, field: string) {
@@ -48,13 +61,20 @@ export class EditExperenceComponent implements OnInit {
   }
 
   OnSaveForm(){
-    this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
-      }
+    // this.dialog.dataService
+    // .save((option: any) => this.beforeSave(option))
+    // .subscribe((res) => {
+    //   if (res.save) {
+    //     this.dialog.close();
+    //     this.notiService.notify('Thêm thành công'); 
+    //   }
+    // });
+
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
+    .subscribe((o: any) => {
+      console.log(o);    
+     
     });
+    this.dialog.close(this.dataBind);
   }
 }

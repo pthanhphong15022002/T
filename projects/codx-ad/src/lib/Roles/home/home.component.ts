@@ -14,7 +14,6 @@ import { TempService } from "../services/temp.service";
 import { RolesService } from '../services/roles.service';
 import { CodxAdService } from '../../codx-ad.service';
 import { RoleEditComponent } from '../role-edit/role-edit.component';
-import { V } from '@angular/cdk/keycodes';
 
 declare var $: any;
 @Component({
@@ -35,7 +34,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   button?: ButtonModel;
   dialog: DialogRef;
 
-  @ViewChild("listRoles") listRoles: CodxListviewComponent;
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
   constructor(
@@ -75,8 +73,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    //this.adsv.listview = this.listRoles;
-    //this.isLoad = false;
     this.views = [
       {
         type: ViewType.list,
@@ -132,7 +128,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   openFormEdit(data) {
     var obj = [{
-      data: this.listRoles.dataService.data,
+      data: this.view.dataService.data,
       dataUpdate: data,
       formType: 'edit'
     }]
@@ -187,7 +183,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   openFormAdd(e) {
     var obj = [{
-      data: this.listRoles.dataService.data,
+      data: this.view.dataService.data,
       formType: 'add',
     }]
 
@@ -196,9 +192,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
-    // this.dialog.closed.subscribe(x => {
-    //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-    // });
   }
 
   clickMF(e, item) {

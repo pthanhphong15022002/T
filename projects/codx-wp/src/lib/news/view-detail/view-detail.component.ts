@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel } from 'codx-core';
+import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
+import { environment } from 'src/environments/environment';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class ViewDetailComponent implements OnInit {
   @ViewChild('codxViews') codxViews: ViewsComponent;
   constructor(private api:ApiHttpService,
     private codxService:CodxService,
+    private auth:AuthService,
     private route:ActivatedRoute,
     private callfc:CallFuncService,
     private changedt: ChangeDetectorRef) { }
@@ -60,6 +62,7 @@ export class ViewDetailComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
+  srcVideo:string ="";
   loadData(recID:string){
     this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetNewsInforAsync",recID).subscribe(
       (res) => {
@@ -67,7 +70,19 @@ export class ViewDetailComponent implements OnInit {
           this.dataItem = res[0];
           this.listViews = res[1];
           this.listNews = res[2];
-          this.changedt.detectChanges();
+          // this.api.execSv(
+          //   "DM","ERM.Business.DM",
+          //   "FileBussiness",
+          //   "GetFilesByObjectIDImageAsync",
+          //   this.dataItem.recID)
+          // .subscribe((files:any[]) => {
+          //   if(files && files.length > 0){
+          //     files.map((f:any) => {
+          //     this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+          //     });
+          //     this.changedt.detectChanges();
+          //   }
+          // });
         }
       }
     );

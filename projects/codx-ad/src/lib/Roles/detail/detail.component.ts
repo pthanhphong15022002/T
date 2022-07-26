@@ -9,7 +9,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { NotificationsService, TenantStore, UIComponent } from "codx-core";
 import { Subscription } from "rxjs";
-import { switchMap } from "rxjs/operators";
 import { RolesService } from "../services/roles.service";
 import { TempService } from "../services/temp.service";
 
