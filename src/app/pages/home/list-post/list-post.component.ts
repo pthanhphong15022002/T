@@ -75,6 +75,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.views = [{
       type: ViewType.content,
       active: true,
+      sameData:true,
       model: {
         panelLeftRef: this.panelLeftRef
       }
@@ -144,10 +145,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       lstView: this.listview
     }
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService;
-    option.FormModel = this.codxViews.formModel;
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
-    this.modal.closed.subscribe();
+    this.modal.closed.subscribe(res=>{
+
+    })
   }
   openEditModal(data: any) {
     let dataEdit = { ...data }; 
@@ -159,8 +162,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
     console.log(this.codxFile);
     let option = new DialogModel();
-    option.DataService = this.codxViews.dataService;
-    option.FormModel = this.codxViews.formModel;
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
 
   }
@@ -177,7 +180,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
-    this.modal.closed.subscribe();
   }
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {

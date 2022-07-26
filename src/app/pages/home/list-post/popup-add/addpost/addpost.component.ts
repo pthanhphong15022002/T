@@ -213,6 +213,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     
     this.dt.detectChanges();
   }
+
+  beforSave(opt:any,data:any):boolean{
+    opt.method = 'PublishPostAsync';
+    opt.data = data;
+    return true;
+  }
   publishPost() {
     if (!this.message && this.listFileUpload.length < 0) {
       this.notifySvr.notifyCode('E0315');
@@ -265,6 +271,18 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         post.isUpload = true;
         post.files = this.listFileUpload;
     }
+    // this.dialogRef.dataService.save((opt:any)=> this.beforSave(opt,post)).subscribe((res:any) => {
+    //   if(res){
+    //           if(this.listFileUpload.length > 0){
+    //             this.atmCreate.objectId = res.recID;
+    //             this.dmSV.fileUploadList =  this.codxFileCreated.getFiles();
+    //             res.files = [...this.listFileUpload];
+    //             this.atmCreate.saveFiles();
+    //           }
+    //           this.notifySvr.notifyCode('E0026');
+    //           this.dialogRef.close();
+    //         }
+    // })
     this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if(res){
