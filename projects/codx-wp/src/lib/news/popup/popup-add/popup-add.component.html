@@ -19,18 +19,19 @@
     </ng-template>
     <ng-template #body>
         <div class="row">
+            <div class="">
+                <codx-tag
+                    entityName="WP_News"
+                    [isEdit]="false"
+                    field="Tags"
+                    [value]="tagName"
+                    (valueChange)="valueChange($event)"
+                    >
+                </codx-tag>
+            </div>
             <div class="col-5 h-100">
                 <div class="card w-100 rounded-0 border-0">
-                    <div class="">
-                        <codx-tag
-                            entityName="WP_News"
-                            [isEdit]="false"
-                            field="Tags"
-                            [value]="tagName"
-                            (valueChange)="valueChange($event)"
-                            >
-                        </codx-tag>
-                    </div>
+                    
                     <div class="">
                         <div class="my-2">
                             <codx-label [formModel]="dialogRef.formModel" name="lblCategory" default="Phân loại"></codx-label>
