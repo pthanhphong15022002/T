@@ -14,7 +14,6 @@ import { TempService } from "../services/temp.service";
 import { RolesService } from '../services/roles.service';
 import { CodxAdService } from '../../codx-ad.service';
 import { RoleEditComponent } from '../role-edit/role-edit.component';
-import { V } from '@angular/cdk/keycodes';
 
 declare var $: any;
 @Component({
@@ -34,27 +33,24 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   views = [];
   button?: ButtonModel;
   dialog: DialogRef;
+  urlDetailRoles: any;
 
-  @ViewChild("listRoles") listRoles: CodxListviewComponent;
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
-    private temp: TempService,
     private tenantStore: TenantStore,
     private tempService: TempService,
-    private changeDR: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private rolesService: RolesService,
-    private adsv: CodxAdService,
-    private auth: AuthStore,
+    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
     })
-    const user = this.auth.get();
+    this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
+      this.urlDetailRoles = res[0]?.url;
+    })
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
@@ -75,8 +71,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    //this.adsv.listview = this.listRoles;
-    //this.isLoad = false;
     this.views = [
       {
         type: ViewType.list,
@@ -114,6 +108,10 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.tempService.roleName = roleName;
     this.tempService.isSystem = isSystem;
 
+    this.urlDetailRoles
+    recID
+    debugger;
+    this.codxService.navigate('', this.urlDetailRoles, { recID: recID })
     //TEMP
     // this.router.navigate([`${this.tenant}/ad/roledetail/${recID}`]);
     //TEMP
@@ -132,7 +130,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   openFormEdit(data) {
     var obj = [{
-      data: this.listRoles.dataService.data,
+      data: this.view.dataService.data,
       dataUpdate: data,
       formType: 'edit'
     }]
@@ -187,7 +185,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   openFormAdd(e) {
     var obj = [{
-      data: this.listRoles.dataService.data,
+      data: this.view.dataService.data,
       formType: 'add',
     }]
 
@@ -196,9 +194,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
-    // this.dialog.closed.subscribe(x => {
-    //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-    // });
   }
 
   clickMF(e, item) {

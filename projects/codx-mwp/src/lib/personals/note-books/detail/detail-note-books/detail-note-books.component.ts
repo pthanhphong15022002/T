@@ -37,7 +37,6 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
-  @ViewChild('iconMoreFunc', { static: true }) iconMoreFunc;
   @ViewChild('memo', { static: true }) memo;
   @ViewChild('tag', { static: true }) tag;
   @ViewChild('createdOn', { static: true }) createdOn;
@@ -103,12 +102,6 @@ export class DetailNoteBooksComponent extends UIComponent {
       field: 'modifiedOn',
       headerText: 'Ngày cập nhật',
       template: this.modifiedOn,
-      width: 150
-    },
-    {
-      field: '',
-      headerText: 'Chức năng',
-      template: this.iconMoreFunc,
       width: 150
     },
     ];

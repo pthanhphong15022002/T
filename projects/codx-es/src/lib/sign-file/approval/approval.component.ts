@@ -43,7 +43,7 @@ import { M, T } from '@angular/cdk/keycodes';
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
   @Input() recID = '';
-  @Input() isApprover = false;
+  @Input() isApprover = true;
 
   @Output() canSend = new EventEmitter<any>();
   // service =
@@ -201,71 +201,11 @@ export class ApprovalComponent extends UIComponent {
     if (addToDBQueueChange) {
       if (this.saveAnnoQueue.size == 0) {
         this.canSend.emit(true);
-        console.log('co the gui');
       } else {
         this.canSend.emit(false);
-        console.log('ko the gui');
       }
     }
   }
-  //user for Ctrl Z / Ctrl Y
-
-  // ngDoCheck() {
-  //   let changes = this.actionCollectionsChange.diff(
-  //     this.pdfviewerControl?.annotationCollection
-  //   );
-
-  //   // let undoQueue = [];
-  //   // let redoQueue = [];
-  //   // if (changes) {
-  //   //   try {
-  //   //     console.log(changes);
-
-  //   //     changes.forEachAddedItem((item) => {
-  //   //       if (item) {
-  //   //         undoQueue.push(item);
-  //   //       }
-  //   //     });
-  //   //     changes.forEachRemovedItem((item) => {
-  //   //       if (item) {
-  //   //         redoQueue.push(item);
-  //   //       }
-  //   //     });
-  //   //   } catch (e) {
-  //   //     // pass
-  //   //   }
-  //   let lengthChanged: boolean = false;
-
-  //   if (changes) {
-  //     try {
-  //       changes.forEachAddedItem((item) => {
-  //         if (item) {
-  //           lengthChanged = true;
-  //           throw 'Array length changed'; // break from the `forEach`
-  //         }
-  //       });
-
-  //       if (!lengthChanged) {
-  //         // proceed only if `lengthChanged` is still `false`
-  //         changes.forEachRemovedItem((item) => {
-  //           if (item) {
-  //             lengthChanged = true;
-  //             throw 'Array length changed'; // break from the `forEach`
-  //           }
-  //         });
-  //       }
-  //     } catch (e) {
-  //       // pass
-  //     }
-
-  //     if (lengthChanged) {
-  //       // this.doSmth();
-  //       console.log(changes);
-  //     }
-  //     // console.log('undo queue', undoQueue);
-  //     // console.log('redo Queue', redoQueue);
-  //   }
-  // }
 
   ngAfterViewInit() {
     this.pdfviewerControl.zoomValue = 50;
@@ -370,6 +310,12 @@ export class ApprovalComponent extends UIComponent {
           this.pdfviewerControl.addAnnotation(anno);
         });
       });
+    } else {
+      this.esService
+        .getApprovedSignatures(this.fileInfo.fileID, this.user.userID)
+        .subscribe((res) => {
+          console.log('load chu ki', res);
+        });
     }
   }
 
@@ -395,42 +341,57 @@ export class ApprovalComponent extends UIComponent {
   changeAutoSignState(e: any, mode: number) {
     this.autoSignState = e.data;
     if (this.autoSignState) {
-      switch (mode) {
-        case 0: {
-          this.esService
-            .getLastTextLine(this.pdfviewerControl.currentPageNumber)
-            .subscribe((res: any) => {
-              this.runAutoSign(
-                this.pdfviewerControl.currentPageNumber - 1,
-                mode,
-                res.Y + 31
-              );
-            });
-          break;
-        }
+      let signed = this.pdfviewerControl.annotationCollection.find((anno) => {
+        let signType: string = anno.customData.split(':')[1];
+        return (
+          signType === '1' &&
+          this.pdfviewerControl.pageCount - 1 == anno.pageNumber
+        );
+      });
 
-        case 1: {
-          let signed = this.pdfviewerControl.annotationCollection.find(
-            (anno) => {
-              let signType: string = anno.customData.split(':')[1];
-              return (
-                signType === '1' &&
-                this.pdfviewerControl.pageCount - 1 == anno.pageNumber
-              );
-            }
-          );
-          if (!signed) {
-            this.pdfviewerControl.navigationModule.goToLastPage();
-
-            this.runAutoSign(this.pdfviewerControl.pageCount - 1, mode);
-          } else {
-            this.runAutoSign(this.pdfviewerControl.currentPageNumber - 1, mode);
+      if (!signed) {
+        this.pdfviewerControl.navigationModule.goToLastPage();
+        switch (mode) {
+          case 0: {
+            this.esService
+              .getLastTextLine(this.pdfviewerControl.currentPageNumber)
+              .subscribe((res: any) => {
+                this.runAutoSign(
+                  this.pdfviewerControl.pageCount - 1,
+                  mode,
+                  res.Y + 31
+                );
+              });
+            break;
           }
-          break;
+          case 1: {
+            this.runAutoSign(this.pdfviewerControl.pageCount - 1, mode);
+            break;
+          }
+          default:
+            break;
         }
-
-        default:
-          break;
+      } else {
+        switch (mode) {
+          case 0: {
+            this.esService
+              .getLastTextLine(this.pdfviewerControl.currentPageNumber)
+              .subscribe((res: any) => {
+                this.runAutoSign(
+                  this.pdfviewerControl.currentPageNumber - 1,
+                  mode,
+                  res.Y + 31
+                );
+              });
+            break;
+          }
+          case 1: {
+            this.runAutoSign(this.pdfviewerControl.currentPageNumber - 1, mode);
+            break;
+          }
+          default:
+            break;
+        }
       }
     } else {
       let justAddByAutoSign = this.pdfviewerControl.annotationCollection.filter(

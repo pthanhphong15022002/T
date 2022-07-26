@@ -128,8 +128,8 @@ export class PopupAddUpdate implements OnInit {
   }
 
   fileAdded(e) {
-    if (e)
-      this.attachment.saveFiles();
+    console.log("check fileAdded", e)
+    debugger;
   }
 
   valueChangeTag(e) {

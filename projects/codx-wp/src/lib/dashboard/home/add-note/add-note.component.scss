@@ -1,0 +1,61 @@
+.pw-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+[ngbPopover] {
+    white-space: nowrap;
+}
+
+
+.active [class*="icon-"] {
+    color: var(--primary-dark);
+}
+
+.add-note {
+    position: relative;
+    height: 100%;
+}
+
+.note-text {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 120px;
+    top: 50px;
+    overflow: auto;
+}
+
+.note-text .e-float-input {
+    box-sizing: border-box;
+    height: 30px;
+}
+
+.note-action {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 65px;
+    padding: 5px 10px;
+}
+
+.note-action .e-input-group {
+    border: 0 !important;
+}
+
+.note-footer {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 15px;
+}
+
+app-add-note {
+    height: 100%;
+}
+
+.attachment {
+    width: 0px;
+    height: 0px;
+}

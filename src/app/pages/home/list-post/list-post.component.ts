@@ -75,7 +75,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.views = [{
       type: ViewType.content,
       active: true,
-      sameData:true,
+      sameData:false,
       model: {
         panelLeftRef: this.panelLeftRef
       }

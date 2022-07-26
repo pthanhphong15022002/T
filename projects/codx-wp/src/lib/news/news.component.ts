@@ -119,10 +119,10 @@ export class NewsComponent implements OnInit {
         'GetListNewsAsync',
         model1
       )
-      .subscribe((res1) => {
+      .subscribe((res1:any[]) => {
         if (res1) {
           this.listNews = res1[0];
-          this.newsItem = this.listNews.shift();
+          this.changedt.detectChanges();
         }
 
       });
@@ -151,7 +151,6 @@ export class NewsComponent implements OnInit {
       )
       .subscribe((res2) => {
         if (res2) {
-          this.listSlider = [];
           if (res2[0].length <= this.countCarousel) {
             this.isAllowNavigationArrows = false;
             this.carousel?.pause();

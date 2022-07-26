@@ -208,11 +208,6 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
-                                    <!-- <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" field="joinedOn" (valueChange)="dataChange($event, 'joinedOn')"
-                                        [crrValue]="employee?.joinedOn">
-                                    </codx-input> -->
-
                                     <codx-input type="datetime" class="test-datetime" field="joinedOn" format="d"
                                         placeholder="datetime" [crrValue]="employee?.joinedOn"
                                         (valueChange)="changeTime($event)">
@@ -223,11 +218,6 @@
                                 <div class="form-group">
                                     <codx-label fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
                                     </codx-label>
-                                    <!-- <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" [crrValue]="employee?.hiredOn" field="hiredOn"
-                                        (valueChange)="dataChange($event, 'hiredOn')">
-                                    </codx-input> -->
-
                                     <codx-input type="datetime" class="test-datetime" field="hiredOn" format="d"
                                         placeholder="datetime" [crrValue]="employee?.hiredOn"
                                         (valueChange)="changeTime($event)">

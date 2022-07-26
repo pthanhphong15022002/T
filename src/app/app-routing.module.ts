@@ -20,7 +20,7 @@ export const routes: Routes = [
         path: '',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('./pages/_layout/layout.module').then((m) => m.LayoutModule),
+          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
       },
       {
         path: 'tm',
@@ -88,9 +88,10 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
       },
+      
       { path: '**', redirectTo: 'error/404' }
-    ]
-  },
+    ],
+  }
 
 ];
 

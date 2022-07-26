@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { DialogData, DialogRef, NotificationsService, TenantStore, UIComponent } from "codx-core";
 import { CodxAdService } from "../../codx-ad.service";
-import { AD_Roles } from "../model/AD_Roles.model";
+import { AD_Roles } from "../../models/AD_Roles.models";
 import { RolesService } from "../services/roles.service";
 import { TempService } from "../services/temp.service";
 
@@ -37,6 +37,8 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
   formType = '';
   dataUpdate: AD_Roles = new AD_Roles();
   urlDetailRoles = '';
+  gridViewSetup: any = [];
+  empty = '';
 
   @Input() modelPage: any;
 
@@ -53,9 +55,11 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     super(injector);
     this.dialog = dialog;
     this.tenant = this.tenantStore.get()?.tenant;
-    this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
-      this.urlDetailRoles = res?.url;
-      debugger;
+    this.cache.moreFunction(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe(res => {
+      this.urlDetailRoles = res[0]?.url;
+    })
+    this.cache.gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe(res => {
+      if(res) this.gridViewSetup = res;
     })
     this.roles = dt.data[0]?.data;
     this.formType = dt.data[0]?.formType;
@@ -88,6 +92,11 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
       }
     });
   }
+
+  ngAfterViewInit() {
+    console.log(this.gridViewSetup)
+  }
+
   redirectPagePermissions() {
     //TEMP
     // this.mainService.navigatePageUrl(`ad/roledetail/${this.roleID}`);

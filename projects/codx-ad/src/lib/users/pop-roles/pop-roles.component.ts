@@ -3,7 +3,7 @@ import { variable } from '@angular/compiler/src/output/output_ast';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
-import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import { DialogData, DialogRef, ApiHttpService, NotificationsService, FormModel } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -106,6 +106,7 @@ export class PopRolesComponent implements OnInit {
       }
     }
   }
+
 
   onChange(event, item?: any) {
     if (item.ischeck) {
@@ -224,9 +225,8 @@ export class PopRolesComponent implements OnInit {
       this.notiService.notifyCode('Không có gì thay đổi');
       this.dialogSecond.close(this.listChooseRole);
     }
-
   }
-
+  
   CheckListUserRoles() {
     for (var i = 0; i < this.listChooseRole.length; i++) {
       if (this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole)) {

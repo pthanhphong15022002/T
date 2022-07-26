@@ -1,33 +1,57 @@
-import { ApiHttpService, DialogData, FormModel, DialogRef } from 'codx-core';
-import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
+import {
+  ApiHttpService,
+  DialogData,
+  FormModel,
+  DialogRef,
+  UIComponent,
+  AuthStore,
+} from 'codx-core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormGroup } from '@angular/forms';
+import { CodxTMService } from '../../../codx-tm.service';
 
 @Component({
   selector: 'popup-add-event',
   templateUrl: './popup-add-event.component.html',
   styleUrls: ['./popup-add-event.component.scss'],
 })
-export class PopupAddEventComponent implements OnInit, AfterViewInit {
+export class PopupAddEventComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   dialogAddEvent: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
+  user: any;
+  funcID: string;
   evtData: any;
   dayOff: any;
   set = false;
   data: any;
 
   constructor(
-    private api: ApiHttpService,
+    private injector: Injector,
+    private tmService: CodxTMService,
+    private authService: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
+    this.user = this.authService.get();
+    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
     this.data = dt?.data;
   }
 
-  ngOnInit(): void {
-   console.log(this.data)
+  onInit(): void {
+    console.log(this.data);
   }
 
   ngAfterViewInit(): void {}
