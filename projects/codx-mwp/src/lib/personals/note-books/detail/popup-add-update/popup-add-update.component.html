@@ -25,7 +25,7 @@
                     </button>
                 </div>
                 <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
-                    hideUploadBtn="1" hideDes="1" [functionID]="functionList.funcID" [objectId]="note?.recID"
+                    hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="functionList.funcID" [objectId]="note?.recID"
                     [allowMultiFile]="1" [idBrowse]="'add'" (fileAdded)="fileAdded($event)">
                 </codx-attachment>
             </div>

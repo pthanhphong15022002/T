@@ -157,8 +157,9 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     }
     var a = this.detail.createComponent(ListPostComponent);
     a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-    a.instance.dataValue = `[${arr.join(';')}]`;
+    a.instance.dataValue = `[${arr.join(';')}]`;   
     a.instance.isShowCreate = false;
+    this.detectorRef.detectChanges();
   }
 
   onUpdateBackground(e) {
