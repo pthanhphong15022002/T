@@ -132,9 +132,9 @@
                             </div>
                         </ng-container>
                         <ng-template #dataVote>
-                            <div class="flex align-items-center mt-2">
+                            <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                                 <div *ngFor="let vote of data.votes">
-                                    <a class="me-2" (click)="showVotes(data)">
+                                    <a class="me-2" >
                                         <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
                                             alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                                     </a>
@@ -279,7 +279,7 @@
                         <ng-template #comment>
                             <div class="text-dark text-comment" [innerHTML]="childData.content"></div>
                         </ng-template>
-                        <div>
+                        <!-- <div>
                             <div class="d-flex align-items-center comment-thumb">
                                 <ng-container *ngIf="childData.totalVote == 0;else listVote">
                                     <span class="icon-thumb_up icon-16 text-hover-primary"></span>
@@ -294,7 +294,26 @@
                                 </ng-template>
                                 <span class="ms-1">{{childData.totalVote}}</span>
                             </div>
-                        </div>
+                        </div> -->
+                        <ng-container *ngIf="childData.totalVote==0;else childDataVote">
+                            <div class="d-flex align-items-center comment-thumb">
+                                <span class="icon-thumb_up icon-16 text-hover-primary"></span>
+                                <span class="ms-1">{{childData.totalVote}}</span>
+                            </div>
+                        </ng-container>
+                        <ng-template #childDataVote>
+                            <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(childData)">
+                                <div *ngFor="let vote of childData.votes">
+                                    <a class="me-2" >
+                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                                    </a>
+                                </div>
+                                <div>
+                                    <span class="ms-2">{{childData.totalVote}}</span>
+                                </div>
+                            </div>
+                        </ng-template>
                         <div class="d-flex mod icon-like">
                             <ng-container *ngFor="let item of lstData">
                                 <a class="mod-icon" (click)="votePost(childData, item.value)">

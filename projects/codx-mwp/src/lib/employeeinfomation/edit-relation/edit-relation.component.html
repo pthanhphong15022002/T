@@ -1,193 +1,159 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template popup adde #body>
-        <div class="row">
-            <div class="col-xl-8 col-md-8">
-                <div class="d-flex flex-row">
-                    <div class="user-detail-update">
-                        <div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Tên người thân</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.relationName" /> -->
-                                        <codx-label fiedName="RelationName" default="Tên người thân">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text" [crrValue]="dataBind.relationName"
-                                            field="relationName" (valueChange)="dataChange($event, 'relationName')">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Ngày sinh</label>
-                                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind.birthday">
-                                        </kendo-datepicker> -->
-
-                                        <codx-label fiedName="Birthday" default="Ngày sinh"></codx-label>
-                                        <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                            format="d" field="birthday" (valueChange)="dataChange($event, 'birthday')"
-                                            [crrValue]="dataBind.birthday">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Quan hệ</label>
-                                        <lvInput type="select" class="form-control noBorder cotrol-vll"
-                                            [value]="dataBind.relationType" (valueChange)="valueChange($event)"
-                                            field="relationType" ngDefaultControl refValue="L06731"></lvInput> -->
-
-                                        <codx-label fiedName="RelationType" default="Quan hệ">
-                                        </codx-label>
-                                        <codx-input name="relationType" type="valuelist" field="relationType"
-                                            placeholder="" [crrValue]="dataBind.relationType"
-                                            (valueChange)="dataChange($event, 'relationType')" refValue="L06731">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Phone</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.phone" /> -->
-
-                                        <codx-label fiedName="Phone" default="Phone">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text" field="phone"
-                                            (valueChange)="dataChange($event, 'phone')" [crrValue]="dataBind.phone">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Email</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.email" /> -->
-
-                                        <codx-label fiedName="Email" default="Email"></codx-label>
-                                        <codx-input class="form-control" type="text" field="email"
-                                            (valueChange)="dataChange($event, 'email')" [crrValue]="dataBind.email">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Địa chỉ</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.street" /> -->
-
-                                        <codx-label fiedName="Street" default="Địa chỉ">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text" field="street"
-                                            (valueChange)="dataChange($event, 'street')" [crrValue]="dataBind.street">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group text-primary mb-3 fw-bold">
-                                        <codx-label name="lblPersonalInfo" default="Thông tin cá nhân">
-                                        </codx-label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>CMND/CCCD</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.idCardNo" /> -->
-
-                                        <codx-label fiedName="IdCardNo" default="CMND/CCCD">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text" field="idCardNo"
-                                            (valueChange)="dataChange($event, 'idCardNo')"
-                                            [crrValue]="dataBind.idCardNo">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Ngày cấp</label>
-                                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind.issuedOn">
-                                        </kendo-datepicker> -->
-
-                                        <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
-                                        <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                            format="d" [crrValue]="dataBind.issuedOn" field="issuedOn"
-                                            (valueChange)="dataChange($event, 'issuedOn')">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <!-- <label>Nghề nghiệp</label>
-                                        <input class="form-control" type="text" [(ngModel)]="dataBind.occupation" /> -->
-
-                                        <codx-label fiedName="Occupation" default="Nghề nghiệp">
-                                        </codx-label>
-                                        <codx-input class="form-control" type="text" field="occupation"
-                                            (valueChange)="dataChange($event, 'occupation')"
-                                            [crrValue]="dataBind.occupation">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group text-primary mb-3 fw-bold">
-                                        <!-- <label class="text-primary">Phụ thuộc</label>
-                                        <label class="checkbox checkbox-square">
-                                            <input type="checkbox" [(ngModel)]="dataBind.dependent" />
-                                            <span class="mr-3"></span>Là người phụ thuộc
-                                        </label> -->
-
-                                        <codx-label name="lblPersonalInfo" default="Phụ thuộc">
-                                        </codx-label>
-                                        <codx-input type="checkbox" label="Là người phụ thuộc" labelPosition="after"
-                                            field="dependent" class="test-check"
-                                            (valueChange)="dataChange($event, 'dependent')"
-                                            [crrValue]="dataBind.dependent">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Số đăng ký</label>
-                                        <input class="form-control" type="text" [disabled]="!dataBind.dependent"
-                                            [(ngModel)]="dataBind.registerNo" />
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Ngày đăng ký</label>
-                                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind.registeredOn"
-                                            [disabled]="!dataBind.dependent">
-                                        </kendo-datepicker>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <ng-template #body>
+        <div class="user-detail-update">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="RelationName" default="Tên người thân">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" [crrValue]="dataBind?.relationName"
+                            field="relationName" (valueChange)="dataChange($event, 'relationName')">
+                        </codx-input>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-md-4 text-center">
-                <div class="form-group">
-                    <div class="image-input image-input-outline mt-7" id="kt_user_add_avatar">
-                        <div class="image-input-wrapper">
-                            <codx-img #imageAvatar
-                                class="symbol symbol-40 symbol-circle mr-2 image-input-wrapper fullImage"
-                                [objectId]="dataBind.recID" objectType="HR_EmployeeRelations">
-                            </codx-img>
-                        </div>
-                        <!-- <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Birthday" default="Ngày sinh"></codx-label>
+                        <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
+                            field="birthday" (valueChange)="dataChange($event, 'birthday')"
+                            [crrValue]="dataBind?.birthday">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="RelationType" default="Quan hệ">
+                        </codx-label>
+                        <codx-input name="relationType" type="valuelist" field="relationType" placeholder=""
+                            [crrValue]="dataBind?.relationType" (valueChange)="dataChange($event, 'relationType')"
+                            refValue="L06731">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Phone" default="Phone">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" field="phone"
+                            (valueChange)="dataChange($event, 'phone')" [crrValue]="dataBind?.phone">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Email" default="Email"></codx-label>
+                        <codx-input class="form-control" type="text" field="email"
+                            (valueChange)="dataChange($event, 'email')" [crrValue]="dataBind?.email">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Street" default="Địa chỉ">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" field="street"
+                            (valueChange)="dataChange($event, 'street')" [crrValue]="dataBind?.street">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group text-primary mb-3 fw-bold">
+                        <codx-label name="lblPersonalInfo" default="Thông tin cá nhân">
+                        </codx-label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="IdCardNo" default="CMND/CCCD">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" field="idCardNo"
+                            (valueChange)="dataChange($event, 'idCardNo')" [crrValue]="dataBind?.idCardNo">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
+                        <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
+                            [crrValue]="dataBind?.issuedOn" field="issuedOn"
+                            (valueChange)="dataChange($event, 'issuedOn')">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Occupation" default="Nghề nghiệp">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" field="occupation"
+                            (valueChange)="dataChange($event, 'occupation')" [crrValue]="dataBind?.occupation">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group text-primary mb-3 fw-bold">
+                        <codx-label name="lblPersonalInfo" default="Phụ thuộc">
+                        </codx-label>
+                        <codx-input type="checkbox" label="Là người phụ thuộc" labelPosition="after" field="dependent"
+                            class="test-check" (valueChange)="dataChange($event, 'dependent')"
+                            [crrValue]="dataBind?.dependent">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <!-- <label>Số đăng ký</label>
+                        <input class="form-control" type="text" [disabled]="!dataBind?.dependent"
+                            [(ngModel)]="dataBind?.registerNo" /> -->
+
+                            <codx-label fiedName="RegisterNo" default="Số đăng ký">
+                            </codx-label>
+                            <codx-input type="text" field="registerNo"
+                                class="form-control" (valueChange)="dataChange($event, 'registerNo')"
+                                [crrValue]="dataBind?.registerNo" [disabled]="!dataBind?.dependent">
+                            </codx-input>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <!-- <label>Ngày đăng ký</label>
+                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind?.registeredOn"
+                            [disabled]="!dataBind?.dependent">
+                        </kendo-datepicker> -->
+
+                        <codx-label fiedName="registeredOn" default="Ngày đăng ký"></codx-label>
+                        <codx-input type="datetime" class="test-datetime" field="registeredOn" format="d"
+                            placeholder="datetime" [crrValue]="dataBind?.joinedOn" [disabled]="!dataBind?.dependent"
+                            (valueChange)="changeTime($event)">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-xl-4 col-md-4 text-center">
+            <div class="form-group">
+                <div class="image-input image-input-outline mt-7" id="kt_user_add_avatar">
+                    <div class="image-input-wrapper">
+                        <codx-imgs #imageAvatar class="symbol symbol-40 symbol-circle mr-2 image-input-wrapper fullImage"
+                            [objectId]="dataBind?.recID" objectType="HR_EmployeeRelations">
+                        </codx-imgs>
+                    </div>
+                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                             data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
                             <span class="icon-edit icon-18 text-dark-50"></span>
                             <input id="fileAvatar" type="file" name="profile_avatar" (change)="handleFileInput($event)"
@@ -197,11 +163,10 @@
                         <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                             data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
                             <span class="icon-close icon-20 text-dark-50"></span>
-                        </span> -->
-                    </div>
+                        </span>
                 </div>
             </div>
-        </div>
+        </div> -->
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">

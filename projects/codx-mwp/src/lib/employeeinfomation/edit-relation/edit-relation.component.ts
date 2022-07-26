@@ -7,10 +7,11 @@ import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-
   styleUrls: ['./edit-relation.component.css']
 })
 export class EditRelationComponent implements OnInit {
-  title = "Cập nhật thông tin";
+  title = "Thêm mới";
   dataBind: any = {};
   dialog: any;
   data: any;
+  action = '';
 
   constructor(
     private notiService: NotificationsService,
@@ -25,6 +26,14 @@ export class EditRelationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.action==='edit'){
+      this.title = 'Cập nhật thông tin';
+    }
+  }
+
+  changeTime(data){
+    if (!data.field || !data.data) return;
+    this.dataBind[data.field] = data.data?.fromDate;
   }
 
   dataChange(e: any, field: string) {

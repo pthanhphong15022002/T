@@ -128,8 +128,7 @@ export class PopupAddUpdate implements OnInit {
   }
 
   fileAdded(e) {
-   // if (e)
-    //  this.attachment.saveFiles();
+    debugger;
   }
 
   valueChangeTag(e) {
