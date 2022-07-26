@@ -1,6 +1,6 @@
 <div class="main">
   <ng-container *ngIf="file_img_video.length > 0">
-    <div [ngSwitch]="file_img_video.length" class="position-relative">
+    <div [ngSwitch]="file_img_video.length" class="position-relative1">
       <!-- <ng-container *ngIf="showBtnRemove">
           <label (click)="removeFileAll()"
             class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -128,7 +128,7 @@
               </ng-container>
             </div>
             <div class="row row-custom mt-2 mx-0">
-              <div class="col-6 ps-0 pe-2 position-relative">
+              <div class="col-6 ps-0 position-relative">
                 <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                 </ng-container>
@@ -142,7 +142,7 @@
                   </ng-container>
                 </ng-container>
               </div>
-              <div class="col-6 px-0 position-relative">
+              <div class="col-6 px-0 ps-2 position-relative">
                 <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
                 </ng-container>
@@ -177,7 +177,7 @@
               </ng-container>
             </div>
             <div class="row row-custom mt-2 mx-0">
-              <div class="col-6 ps-0 pe-2 position-relative">
+              <div class="col-6 pe-0 ps-0 position-relative">
                 <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                 </ng-container>
@@ -191,7 +191,7 @@
                   </ng-container>
                 </ng-container>
               </div>
-              <div class="col-6 px-0 position-relative">
+              <div class="col-6 ms-2 px-0 position-relative">
                 <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
                 </ng-container>
@@ -221,9 +221,9 @@
                 <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }"></ng-container>
               </ng-container>
             </div>
-            <div class="position-relative">
+            <div class="position-relative mt-2">
               <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
-                <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
+                <img class="w-100 rounded h-150px" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
               </ng-container>
               <ng-template #video_n_4>
                 <video #video controls class="w-100 h-150px">
@@ -261,7 +261,7 @@
 <ng-template #removeFile let-file>
   <div class="remove-file">
     <a href="javascript:void(0)" class="h-100" (click)="removeFiles(file)">
-      <i class="icon-close icon-24"></i>
+      <i class="icon-close icon-18 text-danger"></i>
     </a>
   </div>
 </ng-template>

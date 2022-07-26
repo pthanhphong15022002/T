@@ -33,32 +33,51 @@ import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
 
 export const routes: Routes = [
+  // {
+  //   path: '',
+  //   component: Layout2Component,
+  //   children: [
+  //     {
+  //       path:'companyinfo/:funcID',
+  //       component: CompanyInforComponent
+  //     },
+  //     {
+  //       path:'approvals/:funcID',
+  //       component: ApproveComponent
+  //     },
+  //     {
+  //       path:'news/:funcID/:category',
+  //       component: NewsComponent
+  //     },
+  //     {
+  //       path:'news/:funcID/:category/:recID',
+  //       component: ViewDetailComponent
+  //     },
+  //     {
+  //       path:'',
+  //       redirectTo:'news/WPT02/home',
+  //       pathMatch: 'full'
+  //     }
+  //   ],
+  // },
   {
-    path: '',
+    path:'news',
     component: Layout2Component,
     children: [
       {
-        path:'companyinfo/:funcID',
-        component: CompanyInforComponent
-      },
-      {
-        path:'approvals/:funcID',
-        component: ApproveComponent
-      },
-      {
-        path:'news/:funcID/:category',
+        path:':funcID/:category',
         component: NewsComponent
       },
       {
-        path:'news/:funcID/:category/:recID',
+        path:':funcID/:category/:recID',
         component: ViewDetailComponent
       },
       {
-        path:'',
-        redirectTo:'news/WPT02/home',
+        path:'**',
+        redirectTo:'WPT02/home',
         pathMatch: 'full'
       }
-    ],
+    ]
   },
   {
     path: 'portal',
@@ -67,6 +86,11 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent
+      },
+      {
+        path:'**',
+        redirectTo:'portal/wp',
+        pathMatch: 'full'
       }
     ],
   },

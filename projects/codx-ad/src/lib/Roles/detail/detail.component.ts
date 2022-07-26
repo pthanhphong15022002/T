@@ -39,6 +39,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   active = false;
   dataPermission: any = {};
   sub: Subscription;
+  funcID: any;
   constructor(
     private tempService: TempService,
     private df: ChangeDetectorRef,
@@ -47,6 +48,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
     private tenantStore: TenantStore,
+    private route: ActivatedRoute,
     injector: Injector,
   ) {
     // super(
@@ -61,6 +63,10 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     //   injector
     // );
     super(injector);
+    this.route.params.subscribe(params => {
+      if (params)
+        this.funcID = params['funcID'];
+    })
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
@@ -85,6 +91,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     }
 
     this.RolesService.LoadDataPermission.subscribe((data: any) => {
+      console.log("check RolesService", data)
       if (!data) return;
       var d = data[0] || {};
 

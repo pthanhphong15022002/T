@@ -28,7 +28,7 @@
             <div *ngFor="let item of view.dataService.data">
                 <div class="pw-card delay-500" (click)="openStorageDetail(item)">
                     <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"
-                        icoTitleCss="icon-assignment icon-16" [title]="item.title" [desc2]="item.memo"
+                        icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
                         [imageObjType]="'WP_Storages'" [formModel]="formModel" (clickMF)="clickMF($event,item)"
                         [dataItem]="item">
                     </codx-card-img>

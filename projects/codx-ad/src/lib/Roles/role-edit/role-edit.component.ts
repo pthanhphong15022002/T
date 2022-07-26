@@ -38,6 +38,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
   dataUpdate: AD_Roles = new AD_Roles();
   urlDetailRoles = '';
   gridViewSetup: any = [];
+  empty = '';
 
   @Input() modelPage: any;
 
@@ -55,7 +56,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     this.dialog = dialog;
     this.tenant = this.tenantStore.get()?.tenant;
     this.cache.moreFunction(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe(res => {
-      this.urlDetailRoles = res?.url;
+      this.urlDetailRoles = res[0]?.url;
     })
     this.cache.gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe(res => {
       if(res) this.gridViewSetup = res;
