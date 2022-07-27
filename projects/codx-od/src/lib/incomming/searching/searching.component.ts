@@ -12,7 +12,7 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
-  funcID = "ODT6";
+  funcID = "ODT3";
   constructor(  
     private cache: CacheService,
     private hideToolbar : CodxOdService
