@@ -31,8 +31,9 @@ export class SelectweekComponent implements OnInit {
   @Output() onChangeWeek = new EventEmitter();
   isGenerateWeek = false;
   constructor(private changdefect: ChangeDetectorRef) {
-    this.generateDateInWeek(this.today);
+   
   }
+
   changeDaySelected(date: Date, changeWeek = false) {
     this.isGenerateWeek = true;
     this.daySelected = date;
@@ -54,11 +55,11 @@ export class SelectweekComponent implements OnInit {
       daySelectedTo: this.daySelectedTo,
     });
     this.fullDateName =
-      moment(date).format('dd') +
+      moment(date).locale('vn').format('dd') +
       ', ' +
-      moment(date).format('MMM') +
+      moment(date).locale('vn').format('MMM') +
       ', ' +
-      moment(date).format('YYYY');
+      moment(date).locale('vn').format('YYYY');
 
   }
 
@@ -78,7 +79,10 @@ export class SelectweekComponent implements OnInit {
       this.isGenerateWeek = false;
     else this.generateDateInWeek(data.data);
   }
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.generateDateInWeek(this.today);
+  }
+
   changeWeek(numberDay) {
     this.isFinished = false;
     this.isChangeWeek = true;
