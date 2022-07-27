@@ -5,6 +5,7 @@ import {
   DialogRef,
   UIComponent,
   AuthStore,
+  CodxScheduleComponent,
 } from 'codx-core';
 import {
   AfterViewInit,
@@ -12,6 +13,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormGroup } from '@angular/forms';
@@ -26,6 +28,7 @@ export class PopupAddEventComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddEvent: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
@@ -35,6 +38,7 @@ export class PopupAddEventComponent
   dayOff: any;
   set = false;
   data: any;
+  isAdd: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -47,7 +51,8 @@ export class PopupAddEventComponent
     this.user = this.authService.get();
     this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
   }
 
   onInit(): void {
@@ -80,7 +85,7 @@ export class PopupAddEventComponent
           }
         }
       });
-    //  this.schedule.reloadDataSource();
+    this.schedule.refresh();
   }
 
   valueChange(event) {

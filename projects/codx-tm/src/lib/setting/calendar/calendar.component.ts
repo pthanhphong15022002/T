@@ -16,8 +16,6 @@ import {
   DialogRef,
   UIComponent,
 } from 'codx-core';
-import { environment } from 'src/environments/environment';
-import * as moment from 'moment';
 
 import { CalendarModel, CalendarWeekModel } from '../../models/calendar.model';
 import { APICONSTANT } from '@shared/constant/api-const';
@@ -44,19 +42,15 @@ export class CalendarComponent
   modelCalendar = new CalendarModel();
   model = new DataRequest();
   today: Date = new Date();
-  startDate: Date = undefined;
-  endDate: Date = undefined;
   daySelected: Date;
   user: any;
   minHeight = 525;
   height: number;
   gridView: any;
-  dayWeeks = [];
-  dayoff = [];
+  dayWeek = [];
+  daysoff = [];
   calendateDate: any;
-  dayOff: any;
   scheduleObj: any = undefined;
-  dayOffId: string;
   vlls: any;
   funcID: string;
   param: any = 'STD';
@@ -64,7 +58,7 @@ export class CalendarComponent
   viewBase: any;
   formModel: any;
   cbxName: any;
-
+  currentView = 'TimelineYear';
   constructor(
     private injector: Injector,
     private tmService: CodxTMService,
@@ -77,13 +71,15 @@ export class CalendarComponent
   }
 
   onInit(): void {
-    this.getParams();
     this.cache.valueList('L1481').subscribe((res) => {
       this.vlls = res.datas;
     });
-    this.cache.functionList(this.funcID).subscribe((res) => {
+    this.tmService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
+      const { formName, gridViewName } = this.formModel;
+      this.tmService.getComboboxName(formName, gridViewName).then((res) => {});
     });
+    this.getParams();
   }
 
   ngAfterViewInit(): void {
@@ -93,9 +89,9 @@ export class CalendarComponent
   getParams() {
     this.api
       .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        APICONSTANT.SERVICES.SYS,
+        APICONSTANT.ASSEMBLY.CM,
+        APICONSTANT.BUSINESS.CM.Parameters,
         'GetOneField',
         ['TM_Parameters', null, 'CalendarID']
       )
@@ -103,50 +99,49 @@ export class CalendarComponent
         if (res) {
           this.param = res;
           this.calendarID = res.fieldValue;
-          this.getDayOff(this.calendarID);
+          this.getDayWeek(this.calendarID);
+          this.getDaysOff(this.calendarID);
           this.detectorRef.detectChanges();
         }
       });
   }
 
-  getDayOff(id = null) {
-    if (id) this.calendarID = id;
+  getDayWeek(id) {
     this.api
       .execSv<any>(
-        'BS',
-        'ERM.Business.BS',
-        'CalendarsBusiness',
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
         'GetDayWeekAsync',
-        [this.calendarID]
+        [id]
       )
       .subscribe((res) => {
         if (res) {
-          res.forEach(() => {
-            this.dayoff = res;
-          });
+          this.dayWeek = res;
         }
       });
   }
 
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
+  getDaysOff(id) {
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'GetDateOffAsync',
+        [id]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.daysoff = res;
+        }
+      });
   }
 
   getCellContent(evt: any) {
-    if (this.dayoff.length > 0) {
-      for (let i = 0; i < this.dayoff.length; i++) {
-        let day = new Date(this.dayoff[i].startDate);
+    if (this.daysoff.length > 0) {
+      for (let i = 0; i < this.daysoff.length; i++) {
+        let day = new Date(this.daysoff[i].calendarDate);
         if (
           day &&
           evt.getFullYear() == day.getFullYear() &&
@@ -159,17 +154,14 @@ export class CalendarComponent
           );
           if (ele.length > 0) {
             ele.forEach((item) => {
-              (item as any).style.backgroundColor = this.dayoff[i].color;
+              (item as any).style.backgroundColor = this.daysoff[i].color;
             });
           }
-          return (
-            '<icon class="' +
-            this.dayoff[i].symbol +
-            '"></icon>' +
-            '<span>' +
-            this.dayoff[i].note +
-            '</span>'
-          );
+          return `<div class="d-flex justify-content-around">
+              <div>${this.daysoff[i].note}</div>
+              <div class="${this.daysoff[i].symbol}"
+            [ngStyle]="{'color': ${this.daysoff[i].dayoffColor}}"></div>
+            </div>`;
         }
       }
     }
