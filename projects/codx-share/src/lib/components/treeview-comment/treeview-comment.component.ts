@@ -89,7 +89,7 @@ export class TreeviewCommentComponent implements OnInit {
         .execSv<any>(
           'WP',
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'PublishCommentAsync',
           [post.recID, value, this.dataComment.recID, type]
         )
@@ -119,7 +119,7 @@ export class TreeviewCommentComponent implements OnInit {
         .execSv<any>(
           'WP',
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'PublishCommentAsync',
           [post.recID, value, post.recID, type]
         )
@@ -197,7 +197,7 @@ export class TreeviewCommentComponent implements OnInit {
     this.api.execSv(
       'WP',
       'ERM.Business.WP',
-      'CommentBusiness',
+      'CommentsBusiness',
       "GetSubCommentAsync",
       [data.recID, 0]
     ).subscribe((res: any) => {
@@ -329,7 +329,7 @@ export class TreeviewCommentComponent implements OnInit {
     else {
       this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
         if (res.event.status == "Y") {
-          this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "DeletePostAsync", comment)
+          this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "DeletePostAsync", comment)
             .subscribe((res: number) => {
               if (res) {
                 this.removeNodeTree(comment.recID);
@@ -355,7 +355,7 @@ export class TreeviewCommentComponent implements OnInit {
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
-      "CommentBusiness",
+      "CommentsBusiness",
       "UpdateCommentPostAsync",
       [comment.recID, value])
       .subscribe((res: boolean) => {
