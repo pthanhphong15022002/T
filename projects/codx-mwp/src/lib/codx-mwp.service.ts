@@ -40,7 +40,6 @@ export class CodxMwpService {
   employee: any;
 
   modeEdit = new BehaviorSubject<boolean>(false);
-
   constructor(
     private auth: AuthService,
     private api: ApiHttpService
