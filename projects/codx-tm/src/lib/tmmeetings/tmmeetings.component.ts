@@ -70,15 +70,15 @@ export class TMMeetingsComponent extends UIComponent {
         model: {
           panelLeftRef: this.templateLeft,
         },
-      },
+      },   
       {
-        type: ViewType.kanban,
-        active: false,
+        type: ViewType.card,
+        active: true,
         sameData: true,
-        request2: this.resourceKanban,
         model: {
+          // panelLeftRef: this.panelLeftRef,
           template: this.cardKanban,
-        },
+        }
       },
     ]
 
