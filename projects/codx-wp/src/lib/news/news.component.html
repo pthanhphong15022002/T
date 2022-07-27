@@ -14,57 +14,33 @@ idField="recID"
       <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
         <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
       </div>
-      <div class="row" >
+      <div class="row h-450px">
         <div class="col-6">
           <ng-container *ngIf="listNews[0];else empty1">
-            <div class="news-card news-hot">
-              <codx-img imageType="square" width="200" imgCss="w-250px" (click)="clickViewDeital(listNews[0])" class="h-250px" [objectId]="listNews[0].recID"
-              [objectType]="entityName">
-              </codx-img>
-              <!-- <div>
-                <codx-file [objectID]="newsItem.recID" [objectType]="entityName" [edit]="false"></codx-file>
-              </div> -->
-              <div class="fs-4 fw-bolder mt-2 news-title">
-                {{ listNews[0].subject }}
-              </div>
-              <div class="text-gray-700 mt-1" >
-                {{listNews[0].subContent | maxlenght:200}}
-              </div>
-              <div class="fs-7 text-gray-400 mt-1">
-                {{ listNews[0].createdOn | fmDT }}
-              </div>
+            <codx-img 
+            imageType="square" 
+            [cssClass]="'image-250 w-100'"
+            [width]="250"
+            (click)="clickViewDeital(listNews[0])" 
+            [objectId]="listNews[0].recID"
+            [objectType]="entityName">
+            </codx-img>
+            <div class="fs-4 fw-bolder mt-2 news-title">
+              {{ listNews[0].subject }}
+            </div>
+            <div class="text-gray-700 mt-1" >
+              {{listNews[0].subContent | maxlenght:200}}
+            </div>
+            <div class="fs-7 text-gray-400 mt-1">
+              {{ listNews[0].createdOn | fmDT }}
             </div>
           </ng-container>
         </div>
-        <div class="col-6 ps-9 hotnews-right">
-          <!-- <ng-container *ngIf="listNews;else empty">
-            <div *ngFor="let item of listNews" class="row" (click)="clickViewDeital(item)">
-              <div class="col-4">
-                <div class="news-card-img" >
-                  <codx-img width="100" imageType="square" class="w-100" [objectId]="item.recID" objectType="WP_News"></codx-img>
-                  <div class="news-category">
-                    <span class="badge badge-danger">
-                      <codx-label formName="News" name="lblCategory" [default]="item.category"></codx-label>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-8" >
-                <div class="fs-5 fw-bolder news-title">
-                  {{ item.subject }}
-                </div>
-                <div class="text-gray-700 news-des">
-                    {{item.subContent | maxlenght:100}}
-                </div>
-                <div class="fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
-              </div>
-            </div>
-          </ng-container> -->
-
+        <div class="col-6">
           <div *ngIf="listNews[1];else empty2" class="row" (click)="clickViewDeital(listNews[1])">
             <div class="col-4">
-              <div class="news-card-img" >
-                <codx-img width="100" imageType="square" class="w-100" [objectId]="listNews[1].recID" objectType="WP_News"></codx-img>
+              <div class="w-100">
+                <codx-img  imageType="square" [width]="100" [cssClass]="'image w-100'" [objectId]="listNews[1].recID" [objectType]="entityName"></codx-img>
                 <div class="news-category">
                   <span class="badge badge-danger">
                     <codx-label formName="News" name="lblCategory" [default]="listNews[1].category"></codx-label>
@@ -73,10 +49,10 @@ idField="recID"
               </div>
             </div>
             <div class="col-8" >
-              <div class="fs-5 fw-bolder news-title">
+              <div class="fs-5 fw-bolder">
                 {{ listNews[1].subject }}
               </div>
-              <div class="text-gray-700 news-des">
+              <div class="text-gray-700">
                   {{listNews[1].subContent | maxlenght:100}}
               </div>
               <div class="fs-7 text-gray-400 mt-1">{{ listNews[1].createdOn | fmDT }}</div>
@@ -84,8 +60,8 @@ idField="recID"
           </div>
           <div *ngIf="listNews[2];else empty2" class="row" (click)="clickViewDeital(listNews[2])">
             <div class="col-4">
-              <div class="news-card-img" >
-                <codx-img width="100" imageType="square" class="w-100" [objectId]="listNews[2].recID" objectType="WP_News"></codx-img>
+              <div class="w-100" >
+                <codx-img [width]="100" imageType="square" [cssClass]="'image w-100'" [objectId]="listNews[2].recID" [objectType]="entityName"></codx-img>
                 <div class="news-category">
                   <span class="badge badge-danger">
                     <codx-label formName="News" name="lblCategory" [default]="listNews[2].category"></codx-label>
@@ -105,8 +81,8 @@ idField="recID"
           </div>
           <div *ngIf="listNews[3];else empty2" class="row" (click)="clickViewDeital(listNews[3])">
             <div class="col-4">
-              <div class="news-card-img" >
-                <codx-img width="100" imageType="square" class="w-100" [objectId]="listNews[3].recID" objectType="WP_News"></codx-img>
+              <div class="w-100" >
+                <codx-img [width]="100" imageType="square" [cssClass]="'image w-100'" [objectId]="listNews[3].recID" [objectType]="entityName"></codx-img>
                 <div class="news-category">
                   <span class="badge badge-danger">
                     <codx-label formName="News" name="lblCategory" [default]="listNews[3].category"></codx-label>
@@ -199,9 +175,7 @@ idField="recID"
 <ng-template #empty2>
   <div class="row my-2">
     <div class="col-4">
-      <div class="news-card-img" >
         <img class="w-100 h-100px" src="../assets/demos/svg/pic-avata.png" />
-      </div>
     </div>
     <div class="col-8" >
       <img class="w-100 h-100px" src="../assets/demos/svg/template-kanban.png" />

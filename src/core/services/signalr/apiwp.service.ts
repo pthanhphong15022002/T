@@ -18,27 +18,27 @@ export class WPService {
   }
 
   getPost(id) {
-    return this.api.exec<Post>('WP', 'CommentBusiness', 'GetPostByIDAsync', id);
+    return this.api.exec<Post>('WP', 'CommentsBusiness', 'GetPostByIDAsync', id);
   }
 
   getData(pageIndex = 0, pageSize = 10, search?) {
-    return this.api.exec<Post>('ERM.Business.WP', 'CommentBusiness', 'GetListPostAsync', [pageSize, pageIndex, search]);
+    return this.api.exec<Post>('ERM.Business.WP', 'CommentsBusiness', 'GetListPostAsync', [pageSize, pageIndex, search]);
   }
 
   getPostDetail(id) {
-    return this.api.call('ERM.Business.WP', 'CommentBusiness', 'GetListPostDetailAsync', id);
+    return this.api.call('ERM.Business.WP', 'CommentsBusiness', 'GetListPostDetailAsync', id);
   }
 
   loadPageComment(id, pageIndex) {
-    return this.api.exec<Post>('ERM.Business.WP', 'CommentBusiness', 'LoadPageCommentAsync', [id, pageIndex]);
+    return this.api.exec<Post>('ERM.Business.WP', 'CommentsBusiness', 'LoadPageCommentAsync', [id, pageIndex]);
   }
 
   loadSubComment(id, pageIndex) {
-    return this.api.exec<Post>('ERM.Business.WP', 'CommentBusiness', 'GetSubCommentAsync', [id, pageIndex]);
+    return this.api.exec<Post>('ERM.Business.WP', 'CommentsBusiness', 'GetSubCommentAsync', [id, pageIndex]);
   }
 
   updateContent(data) {
-    return this.api.exec<any>('ERM.Business.WP', 'CommentBusiness', 'UpdateAsync', data);
+    return this.api.exec<any>('ERM.Business.WP', 'CommentsBusiness', 'UpdateAsync', data);
   }
 
   getVoted(id) {
@@ -46,17 +46,17 @@ export class WPService {
   }
 
   postComment(id, content, parentId, type = "WP_Comments") {
-    return this.post('api/wp/comment', 'CommentBusiness', 'PublishCommentAsync', [id, content, parentId, type]);
+    return this.post('api/wp/comment', 'CommentsBusiness', 'PublishCommentAsync', [id, content, parentId, type]);
   }
 
   createPost(data) {
     const url = "api/wp/post";
-    return this.post(url, 'CommentBusiness', 'PublishPostAsync', data);
+    return this.post(url, 'CommentsBusiness', 'PublishPostAsync', data);
   }
 
   share(data) {
     const url = "api/wp/share";
-    return this.post(url, 'CommentBusiness', 'ShareForAsync', data);
+    return this.post(url, 'CommentsBusiness', 'ShareForAsync', data);
   }
 
   votePost(id) {
@@ -69,11 +69,11 @@ export class WPService {
   }
 
   deletePost(id) {
-    return this.post('api/wp/deletePost', 'CommentBusiness', 'DeletePostAsync', id);
+    return this.post('api/wp/deletePost', 'CommentsBusiness', 'DeletePostAsync', id);
   }
 
   shared(id, type) {
-    return this.post('api/wp/shar', 'CommentBusiness', 'FeedBackPostAsync', [id, type]);
+    return this.post('api/wp/shar', 'CommentsBusiness', 'FeedBackPostAsync', [id, type]);
   }
 
   post(url, className, methodName, data?): Observable<any> {

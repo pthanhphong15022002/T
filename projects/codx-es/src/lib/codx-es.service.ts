@@ -632,7 +632,17 @@ export class CodxEsService {
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'AddNewSignFile',
+      'AddNewSignFileAsync',
+      [data]
+    );
+  }
+
+  editSignFile(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'EditSignFileAsync',
       [data]
     );
   }

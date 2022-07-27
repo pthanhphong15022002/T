@@ -280,7 +280,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     //           this.dialogRef.close();
     //         }
     // })
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
           if (this.listFileUpload.length > 0) {
@@ -347,7 +347,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
-        'CommentBusiness',
+        'CommentsBusiness',
         'EditPostAsync',
         [this.dataEdit]
       )
@@ -427,7 +427,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       post.isUpload = true;
       post.files = this.listFileUpload;
     }
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
           this.dialogRef.DataService as CRUDService;

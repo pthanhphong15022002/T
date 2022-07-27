@@ -16,7 +16,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
   // override toolbar = false;
 
-  constructor(inject: Injector , private hideToolbar: CodxOdService) {
+  constructor(inject: Injector, private hideToolbar: CodxOdService) {
     super(inject);
   }
 
@@ -24,8 +24,8 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   onAfterViewInit() {
     this.hideToolbar.SetLayout.subscribe(res => {
-      if (res != null)
-        this.setToolbar(res);
+      /*  if (res != null)
+         this.setToolbar(res); */
     })
   }
 }
