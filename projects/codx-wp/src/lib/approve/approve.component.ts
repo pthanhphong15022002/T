@@ -300,7 +300,7 @@ export class ApproveComponent implements OnInit {
         }
         else //WP_Comments
         {
-          this.api.execSv(this.service,this.assemblyName,"CommentBusiness","DeletePostAsync",data.recID)
+          this.api.execSv(this.service,this.assemblyName,"CommentsBusiness","DeletePostAsync",data.recID)
           .subscribe((res:boolean) => {
             if(res){
               this.notifySvr.notifyCode('E0026');

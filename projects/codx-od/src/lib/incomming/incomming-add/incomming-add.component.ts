@@ -69,8 +69,6 @@ export class IncommingAddComponent implements OnInit {
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID =   this.formModel?.funcID;
 
-    this.dispatch.dispatchType = this.data?.dispatchType;
-
     if(this.type == "add" || this.type == "copy")
     {
       this.dispatch.copies = 1;
@@ -78,7 +76,10 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.dispatchOn = new Date();
       this.dispatch.owner = null;
       if(this.type == "add")
+      {
+        this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
+      }
       this.dispatch.createdOn = new Date();
     }
     else if(this.type == "edit")

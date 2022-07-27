@@ -61,20 +61,20 @@ export const routes: Routes = [
   //   ],
   // },
   {
-    path:'news',
+    path: 'news',
     component: Layout2Component,
     children: [
       {
-        path:':funcID/:category',
+        path: ':funcID/:category',
         component: NewsComponent
       },
       {
-        path:':funcID/:category/:recID',
+        path: ':funcID/:category/:recID',
         component: ViewDetailComponent
       },
       {
-        path:'**',
-        redirectTo:'WPT02/home',
+        path: '**',
+        redirectTo: 'WPT02/home',
         pathMatch: 'full'
       }
     ]
@@ -88,38 +88,43 @@ export const routes: Routes = [
         component: HomeComponent
       },
       {
-        path:'**',
-        redirectTo:'portal/wp',
+        path: '**',
+        redirectTo: 'portal/wp',
         pathMatch: 'full'
       }
     ],
   },
+  {
+    path: '',
+    redirectTo: 'portal/wp',
+    pathMatch: 'full'
+  }
 ];
 
-const Component: Type<any>[] = 
-[
-  LayoutComponent, 
-  Layout2Component,
-  CodxWpComponent,
-  NewsComponent,
-  PopupAddComponent,
-  ViewDetailComponent,
-  CompanyInforComponent,
-  PopupEditComponent,
-  ApproveComponent,
-  PopupSearchComponent,
-  ElecticSearchComponent,
-  ApproveDetailComponent,
-  DashboardComponent,
-  HomeComponent,
-  AddNoteComponent,
-  SaveNoteComponent,
-  ListPostComponent,
-  AddPostComponent,
-  MyTeamComponent,
-  UpdateNotePinComponent,
+const Component: Type<any>[] =
+  [
+    LayoutComponent,
+    Layout2Component,
+    CodxWpComponent,
+    NewsComponent,
+    PopupAddComponent,
+    ViewDetailComponent,
+    CompanyInforComponent,
+    PopupEditComponent,
+    ApproveComponent,
+    PopupSearchComponent,
+    ElecticSearchComponent,
+    ApproveDetailComponent,
+    DashboardComponent,
+    HomeComponent,
+    AddNoteComponent,
+    SaveNoteComponent,
+    ListPostComponent,
+    AddPostComponent,
+    MyTeamComponent,
+    UpdateNotePinComponent,
 
-];
+  ];
 
 @NgModule({
   imports: [
@@ -134,7 +139,7 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     RouterModule.forChild(routes),
-    
+
   ],
   exports: [
     RouterModule

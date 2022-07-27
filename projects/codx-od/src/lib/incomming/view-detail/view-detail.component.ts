@@ -69,8 +69,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     }
   }
   ngOnInit(): void {
-    debugger;
-    var a = this.dataItem;
     this.active = 1;
     this.formModel = this.view.formModel;
         //this.data = this.view.dataService.dataSelected;
@@ -286,7 +284,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     switch (funcID) {
       case "edit":
         {
-          var a = this.formModel;
           this.view.dataService.edit(datas).subscribe((res: any) => {
             let option = new SidebarModel();
             option.DataService = this.view?.currentView?.dataService;
@@ -306,11 +303,15 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
                 
                   this.view.dataService.update(x.event).subscribe();
-                  if(x.event.recID == this.view.dataService.dataSelected.recID)
+                  this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
+                    this.data = item;
+                    this.data.lstUserID = getListImg(item.relations);
+                  });
+                 /*  if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                       this.data = item;
                       this.data.lstUserID = getListImg(item.relations);
-                    });
+                    }); */
                 //});
               }
             });

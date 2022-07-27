@@ -133,7 +133,7 @@ export class ViewDetailComponent implements OnInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareOwnerListAsync',
           [commentID]
         )
@@ -144,7 +144,7 @@ export class ViewDetailComponent implements OnInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareUserListAsync',
           [commentID]
         )

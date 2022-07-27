@@ -136,6 +136,7 @@ export class IncommingComponent
     this.button = {
       id: 'btnAdd',
     };
+    this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
     switch (evt.id) {
