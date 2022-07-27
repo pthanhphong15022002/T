@@ -59,7 +59,7 @@
     </div>
   </div>
   <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
-    <div class="form-group row mt-3">
+    <div class="form-group row ">
       <div class="col-5">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
@@ -83,7 +83,7 @@
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
         </div>
-        <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ "
+        <codx-input type="number" [disabled]="readOnly" field="estimated" placeholder="Số giờ "
           [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)">
         </codx-input>
 
@@ -224,11 +224,11 @@
                 {{item?.departmentName}}</span></div>
 
             <div class="text-dark" *ngIf="item?.memo == null">
-              <codx-input type="text"  (valueChange)="changeMemo2($event,item?.resourceID)"
+              <codx-input class="" type="text"  (valueChange)="changeMemo2($event,item?.resourceID)"
                 placeholder="Ghi chú phân công..." [readOnly]="readOnly"></codx-input>
             </div>
             <div class="text-dark" *ngIf="item?.memo != null">
-              <codx-input type="text" [crrValue]="item?.memo"
+              <codx-input class="" type="text" [crrValue]="item?.memo"
                 (valueChange)="changeMemo2($event,item?.resourceID)" placeholder="Ghi chú phân công..."
                 [readOnly]="readOnly"></codx-input>
             </div>
