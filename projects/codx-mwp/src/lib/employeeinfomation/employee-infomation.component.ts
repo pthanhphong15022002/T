@@ -327,7 +327,7 @@ export class EmployeeInfomationComponent implements OnInit {
         id: '1',
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef,
@@ -478,23 +478,39 @@ export class EmployeeInfomationComponent implements OnInit {
 
   }
 
-  beforeDel(opt: RequestOption) {
-    // var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteEmployeeHobby';
-
-    opt.data = this.itemSelected.employeeID;
-    return true;
-  }
-
   deleteHobby(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDel(opt)).subscribe((res) => {
-        if (res[0]) {
-          this.employeeHobbie = this.view.dataService.data[0];
-        }
-      }
-      );
+    // this.systemDialogService.confirm("Question", "Bạn có muốn xóa ?")
+    //   .then((confirmed) => {
+    //     if (confirmed) {
+          this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeHobby', data.recID)
+            .subscribe((o: any) => {
+              const index = this.employeeHobbie.indexOf(data);
+              if (index > -1) {
+                this.employeeHobbie.splice(index, 1);
+                this.employeeHobbieCategory = [];
+                var obj: any = {};
+                for (let index = 0; index < this.employeeHobbie.length; index++) {
+                  const element = this.employeeHobbie[index];
+                  if (!obj[element.catagory]) {
+                    obj[element.catagory] = 1;
+                    this.employeeHobbieCategory.push(element.catagory);
+                  }
+                }
+                this.dt.detectChanges();
+              }
+            });
+         
+              // this.view.dataService.dataSelected = data;
+              // this.view.dataService
+              //   .delete([this.view.dataService.dataSelected], true, (opt) =>
+              //     this.beforeDel(opt)
+              //   )
+              //   .subscribe(res => {
+              //     if (res) this.notiService.notifyCode('TM004');
+              //   })
+            
+      // }
+      // )
   }
 
   deleteExperences(data) {

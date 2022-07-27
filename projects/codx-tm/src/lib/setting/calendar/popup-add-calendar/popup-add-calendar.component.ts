@@ -48,7 +48,7 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.cache.functionList(this.data[0].functionID).subscribe((res) => {
+    this.cache.functionList('TMS021').subscribe((res) => {
       this.formModel = new FormModel();
       this.formModel = res;
       this.initForm();
@@ -78,21 +78,20 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
   }
 
   saveCalendar() {
-    // const { calendarName, description } = this.dialogAddCalendar.value;
-    // this.api
-    //   .execSv<any>(
-    //     APICONSTANT.SERVICES.BS,
-    //     APICONSTANT.ASSEMBLY.BS,
-    //     APICONSTANT.BUSINESS.BS.Calendars,
-    //     'SaveCalendarAsync',
-    //     [{ calendarName: calendarName, description: description }]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.notiService.notify('Thêm thành công');
-    //       this.dialog.close();
-    //     }
-    //   });
-    console.log(this.dialogAddCalendar.value);
+    const { calendarName, description } = this.dialogAddCalendar.value;
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'SaveCalendarAsync',
+        [{ calendarName: calendarName, description: description }]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notify('Thêm thành công');
+          this.dialog.close();
+        }
+      });
   }
 }

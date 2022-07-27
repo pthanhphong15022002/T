@@ -143,9 +143,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 
-  onSaveForm() {}
+  onSaveForm() { }
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -156,11 +156,11 @@ export class PopupAddSignFileComponent implements OnInit {
       .addNewSignFile(this.dialogSignFile.value)
       .subscribe((res) => {
         if (res != null) {
-          debugger;
           console.log(res);
 
           this.dialogSignFile.patchValue(res);
           this.dialogSignFile.addControl('recID', new FormControl(res.recID));
+          this.dialogSignFile.addControl('id', new FormControl(res.id));
           if (this.dmSV.fileUploadList.length > 0) {
             this.attachment.objectId = res.recID;
             console.log(this.attachment.data);
@@ -239,7 +239,7 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
     }
     if (currentTab == 1) {
-      this.transID = '629de1080d7d066f90f975a3';
+      //this.transID = '629de1080d7d066f90f975a3';
       // this.api
       //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
       //     this.dialogSignFile.value,
