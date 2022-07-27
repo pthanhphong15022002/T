@@ -8,7 +8,13 @@ import {
   Optional,
 } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { AuthStore, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  UIComponent,
+} from 'codx-core';
 import {
   CalendarDateModel,
   CalendarWeekModel,
@@ -62,7 +68,7 @@ export class PopupEditCalendarComponent
 
   onInit(): void {
     this.getParams();
-    this.cache.valueList('L1481').subscribe((res) => {
+    this.cache.valueList('L0012').subscribe((res) => {
       this.vlls = res.datas;
     });
     this.api
@@ -75,6 +81,7 @@ export class PopupEditCalendarComponent
       )
       .subscribe((res) => {
         if (res) {
+          console.log(res);
           this.dayOff = res[0];
           this.handleWeekDay(res[1]);
           this.calendateDate = res[2];
@@ -156,14 +163,25 @@ export class PopupEditCalendarComponent
     this.evtData.month = data?.month || 1;
     this.evtData.color = data?.color || '#0078ff';
     this.getDayOff();
-    this.callfc.openForm(
-      PopupAddEventComponent,
-      'Thêm Lễ/Tết/Sự kiện',
-      800,
-      800,
-      '',
-      this.evtData
-    );
+    if (this.dayOffId) {
+      this.callfc.openForm(
+        PopupAddEventComponent,
+        'Chỉnh sửa Lễ/Tết/Sự kiện',
+        800,
+        800,
+        '',
+        [this.evtData, true]
+      );
+    } else {
+      this.callfc.openForm(
+        PopupAddEventComponent,
+        'Thêm Lễ/Tết/Sự kiện',
+        800,
+        800,
+        '',
+        [this.evtData, false]
+      );
+    }
   }
 
   removeDayOff(item) {

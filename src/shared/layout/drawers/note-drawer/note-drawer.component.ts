@@ -1,14 +1,14 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService, AuthStore } from 'codx-core';
-import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
-import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
-import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
+import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
+import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
+import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 
 @Component({
   selector: 'app-note-drawer',
