@@ -213,13 +213,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService
       .delete([deleteItem], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
-        debugger;
         console.log(res);
       });
   }
 
   beforeDel(opt: RequestOption) {
-    debugger;
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteCategoryAsync';
 

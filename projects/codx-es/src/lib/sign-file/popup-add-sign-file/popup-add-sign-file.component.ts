@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FileService } from '@shared/services/file.service';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   CallFuncService,
@@ -48,6 +48,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   dialog: DialogRef;
   data;
+  autoNo;
 
   showPlan: boolean = true;
   constructor(
@@ -100,6 +101,7 @@ export class PopupAddSignFileComponent implements OnInit {
               'CategoryID'
             )
             .subscribe((dt: any) => {
+              this.autoNo = dt;
               this.objectIDFile = dt;
               this.dialogSignFile.patchValue({
                 refNo: dt,
@@ -149,7 +151,13 @@ export class PopupAddSignFileComponent implements OnInit {
       .addNewSignFile(this.dialogSignFile.value)
       .subscribe((res) => {
         if (res != null) {
+          debugger;
           console.log(res);
+
+          this.dialogSignFile.patchValue(res);
+          if (this.currentTab == 1) {
+            this.currentTab++;
+          }
         }
       });
     // this.api
@@ -192,20 +200,29 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
+  close() {
+    this.dialog && this.dialog.close();
+  }
+
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event?.component) {
       if (event?.data === Object(event?.data))
-        this.dialogSignFile.patchValue({ [event['field']]: event.data.value });
+        this.dialogSignFile.patchValue({ [event['field']]: event.data[0] });
       else this.dialogSignFile.patchValue({ [event['field']]: event.data });
 
       if (event.field == 'categoryID' && this.dialogSignFile.value != null) {
         this.dialogSignFile.patchValue({ approveControl: '1' });
+        this.esService
+          .getAutoNumberByCategory(this.dialogSignFile.value.categoryID)
+          .subscribe((res) => {
+            if (res != null) {
+              this.dialogSignFile.patchValue({ refNo: res });
+            } else {
+              this.dialogSignFile.patchValue({ refNo: this.autoNo });
+            }
+          });
       }
     }
-  }
-
-  getJSONString(data) {
-    return JSON.stringify(data);
   }
 
   openFilePopup() {
@@ -225,9 +242,8 @@ export class PopupAddSignFileComponent implements OnInit {
         if (this.dialogSignFile.invalid) {
           break;
         }
-        this.transID = '629de1080d7d066f90f975a3';
         this.onSaveSignFile();
-        this.currentTab++;
+        // this.currentTab++;
         break;
       case 2:
         break;
