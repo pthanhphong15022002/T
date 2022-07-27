@@ -72,13 +72,13 @@ export class DetailNoteBooksComponent extends UIComponent {
       field: 'title',
       headerText: 'Tiêu đề',
       template: '',
-      width: 150
+      width: 300
     },
     {
       field: 'Tag#',
       headerText: 'Tag#',
       template: this.tag,
-      width: 100
+      width: 200
     },
     {
       field: 'memo',
