@@ -2,6 +2,7 @@ import { Component, Injector } from '@angular/core';
 import {
   LayoutBaseComponent
 } from 'codx-core';
+import { CodxOdService } from '../codx-od.service';
 
 @Component({
   selector: 'codx-layout',
@@ -15,13 +16,16 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
   // override toolbar = false;
 
-  constructor(inject: Injector) {
+  constructor(inject: Injector , private hideToolbar: CodxOdService) {
     super(inject);
   }
 
   onInit() { }
 
   onAfterViewInit() {
-
+    this.hideToolbar.SetLayout.subscribe(res => {
+      if (res != null)
+        this.setToolbar(res);
+    })
   }
 }

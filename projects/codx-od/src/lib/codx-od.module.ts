@@ -80,8 +80,8 @@ const routes: Routes = [
     SendEmailComponent,
     ViewDetailComponent,
     IncommingAddComponent,
-    FolderComponent
-    
+    FolderComponent,
+    SearchingComponent
   ],
   imports: [RouterModule.forChild(routes),
   CodxCoreModule.forRoot({ environment }),
