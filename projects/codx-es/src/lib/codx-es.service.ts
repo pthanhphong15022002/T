@@ -513,7 +513,7 @@ export class CodxEsService {
     );
   }
 
-  addNewApprovalStep(id: string): Observable<any> {
+  addNewApprovalStep(): Observable<any> {
     let lstDataNew = null;
     this.approvalStep.subscribe((res) => {
       lstDataNew = res;
@@ -523,7 +523,7 @@ export class CodxEsService {
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstDataNew, id]
+      [lstDataNew]
     );
   }
 
@@ -618,15 +618,25 @@ export class CodxEsService {
 
   //#region ES_SignFiles
 
+  getAutoNumberByCategory(categoryID): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      categoryID
+    );
+  }
+
   addNewSignFile(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'AddNewSignFile',
+      'AddNewSignFileAsync',
       [data]
     );
   }
+
   //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(

@@ -19,10 +19,6 @@
                             <codx-label name="lblFile" formName="NoteBooks" default="Tài liệu đính kèm"></codx-label>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-light-primary" (click)="popup()">
-                        <i class="icon-add fs-5 me-1"></i>
-                        <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
-                    </button>
                 </div>
                 <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
                     hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="functionList.funcID" [objectId]="note?.recID"
@@ -39,8 +35,9 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button class="btn btn-light-primary" (click)="dialog.close()">
-                <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
+            <button class="btn btn-light-primary" (click)="popup()">
+                <i class="icon-add fs-5 me-1"></i>
+                <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
             </button>
             <button type="button" class="btn btn-primary ms-1" (click)="saveNoteBookDetails()" *ngIf="!readOnly">
                 <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>

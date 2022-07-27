@@ -203,7 +203,8 @@
         <div class="d-flex align-items-top">
           <!-- <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img> -->
-          <div style=" position: relative">
+          <div style=" position: relative"  popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
+          (mouseenter)="showPopover(p,item.resourceID)"  autoClose="outside">
             <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
             </codx-img>
             <div style="position: absolute; right: 0px;bottom: 0px">
@@ -381,6 +382,17 @@
       </span>
     </a>
   </ng-container>
+</ng-template>
+
+<ng-template #popoverSelectRoles >
+  <div class="d-flex">
+  <ng-container *ngFor="let item of listRoles">
+    <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4" (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
+      <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+      <div class="fs-8 text-gray-500">{{item.text}}</div>
+    </div>
+  </ng-container>
+</div>
 </ng-template>
 
 <!-- <ng-template #popEmpTitle>

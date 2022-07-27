@@ -1,0 +1,214 @@
+<codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
+    <ng-template popup add #body>
+        <div class="d-flex flex-column">
+            <div class="notes">
+                <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                    gridViewName="'grvNotes'" service="WP" type="listView" [predicate]="predicate"
+                    [dataValue]="dataValue" [dataService]="dtService">
+                </codx-listview>
+            </div>
+            <ng-template #template let-item>
+                <div class="pd-note">
+                    <div class="p-3 note-content mb-3">
+                        <div class="checkbox-list">
+                            <div *ngIf="item.isPin == true">
+                                <div *ngIf="item.memo != null">
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <span [innerHTML]="item.memo"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.memo == null">
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <div *ngFor="let itemList of item.checkList">
+                                            <div *ngIf="itemList.status == null">
+                                                <div class="my-1 note-list">
+                                                    <ul>
+                                                        <li>{{itemList.listNote}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="item.isPin == false">
+                                <div *ngIf="item.memo != null">
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <span [innerHTML]="item.memo"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.memo == null">
+                                    <div class="action-menu d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <a class="action-item" (click)="openFormUpdateNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="editMF?.largeIcon"
+                                                        [style.color]="editMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" (click)="onDeleteNote(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span [class]="deleteMF?.largeIcon"
+                                                        [style.color]="deleteMF?.color"></span>
+                                                </div>
+                                            </a>
+                                            <a class="action-item" placement="bottom" [ngbPopover]="popMoreFunc"
+                                                [autoClose]="'outside'" (click)="getMoreF(item)">
+                                                <div class="d-flex align-items-center btn-tooltip icon-18">
+                                                    <span class="icon-more_vert icon-20 text-dark-75"></span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+                                        <span class="icon-push_pin1 icon-16" type="button"></span>
+                                    </div>
+                                    <div class="note-date d-flex justify-content-end align-items-center format-date">
+                                        <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                                    </div>
+                                    <br>
+                                    <div class="d-flex flex-column note-option ms-3">
+                                        <div *ngFor="let itemList of item.checkList">
+                                            <div *ngIf="itemList.status == null">
+                                                <div class="my-1 note-list">
+                                                    <ul>
+                                                        <li>{{itemList.listNote}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div *ngIf="itemList.status != null">
+                                                    <div class="my-1 note-list">
+                                                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
+                                                            label="{{itemList.listNote}}"
+                                                            [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+                                                            labelPosition="After" [disabled]="false" class="test-check"
+                                                            (valueChange)="valueChange($event)"></codx-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </ng-template>
+    <ng-template #subheader>
+        <span class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
+            (click)="openFormAddNote()">
+        </span>
+    </ng-template>
+
+    <ng-template #popMoreFunc let-modal>
+        <div class="flex align-items-center mb-1" (click)="checkNumberNotePin(dataUpdate)">
+            <span [class]="pinMF?.largeIcon" [style.color]="pinMF?.color"></span>
+            <div class="show-customName ms-2">
+                <span>{{pinMF?.customName}}</span>
+            </div>
+        </div>
+        <div class="flex align-items-center" (click)="openFormNoteBooks(dataUpdate)">
+            <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
+            <div class="show-customName ms-2">
+                <span>{{saveMF?.customName}}</span>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>

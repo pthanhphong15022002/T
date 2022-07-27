@@ -276,7 +276,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event.component) {
       if (event.data === Object(event.data)) {
         this.dialogApprovalStep.patchValue({
           [event['field']]: event.data,
@@ -287,15 +287,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
 
     this.cr.detectChanges();
-  }
-
-  parseInt(data) {
-    let leadtime = parseInt(data);
-    if (leadtime) {
-      return leadtime;
-    } else {
-      return 0;
-    }
   }
 
   valueModeChange(event, item) {
