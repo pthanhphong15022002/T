@@ -1,21 +1,46 @@
-import { ApiHttpService, AuthStore, CodxCardCenterComponent, CodxService, ResourceModel, ViewsComponent, ViewType, FormModel, ButtonModel, SidebarModel, DialogRef, CallFuncService, UIComponent, CodxListviewComponent, CRUDService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CodxCardCenterComponent,
+  CodxService,
+  ResourceModel,
+  ViewsComponent,
+  ViewType,
+  FormModel,
+  ButtonModel,
+  SidebarModel,
+  DialogRef,
+  CallFuncService,
+  UIComponent,
+  CodxListviewComponent,
+  CRUDService,
+} from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ViewContainerRef, TemplateRef, Input, Injector, AfterViewInit } from '@angular/core';
-import { PersonalsComponent } from '../personals.component';
-import { LayoutModel } from '@shared/models/layout.model';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  ViewContainerRef,
+  TemplateRef,
+  Input,
+  Injector,
+  AfterViewInit,
+} from '@angular/core';
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
-import { sort } from '@syncfusion/ej2-angular-charts';
-import { ListPostComponent } from '@pages/home/list-post/list-post.component';
 import { StorageServices } from '../../services/storage.services';
+import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 @Component({
   selector: 'app-storage',
   templateUrl: './storage.component.html',
-  styleUrls: ['./storage.component.scss']
+  styleUrls: ['./storage.component.scss'],
 })
-export class StorageComponent extends UIComponent implements OnInit, AfterViewInit {
-
+export class StorageComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @Input() formModel: FormModel;
   user: any;
   dataValue = '';
@@ -42,18 +67,19 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
 
-  constructor(inject: Injector,
+  constructor(
+    inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private storageService: StorageServices,
+    private storageService: StorageServices
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
-    })
+    });
   }
 
   onInit(): void {
@@ -61,7 +87,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     //   if (res) {
     //     var data = res[0]?.data;
     //     var type = res[0]?.type;
-
     //     if (type == 'add') {
     //       debugger;
     //       this.view.dataService.add(data).subscribe();
@@ -71,11 +96,10 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit() {
-    this.formModel = this.view.formModel
+    this.formModel = this.view.formModel;
   }
 
-  testdate(dr) {
-  }
+  testdate(dr) {}
 
   openFormMoreFunc(e) {
     if (e) {
@@ -108,7 +132,11 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       option.DataService = this.view.dataService as CRUDService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.data, 'add'], option);
+      this.dialog = this.callfc.openSide(
+        AddUpdateStorageComponent,
+        [this.view.dataService.data, 'add'],
+        option
+      );
     });
   }
 
@@ -117,13 +145,19 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
       this.view.dataService.dataSelected = data;
     }
     this.dataSort = [];
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService as CRUDService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateStorageComponent, [this.view.dataService.dataSelected, 'edit'], option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService as CRUDService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddUpdateStorageComponent,
+          [this.view.dataService.dataSelected, 'edit'],
+          option
+        );
+      });
   }
 
   formUpdateStorage(e) {
@@ -137,7 +171,12 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
 
   delete(data) {
     this.api
-      .exec<any>('ERM.Business.WP', 'StoragesBusiness', 'DeleteStorageAsync', data.recID)
+      .exec<any>(
+        'ERM.Business.WP',
+        'StoragesBusiness',
+        'DeleteStorageAsync',
+        data.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.view.dataService.remove(data).subscribe();
@@ -157,21 +196,22 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
     }
     var a = this.detail.createComponent(ListPostComponent);
     a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-    a.instance.dataValue = `[${arr.join(';')}]`;   
+    a.instance.dataValue = `[${arr.join(';')}]`;
     a.instance.isShowCreate = false;
     this.detectorRef.detectChanges();
   }
 
-  onUpdateBackground(e) {
-
-  }
+  onUpdateBackground(e) {}
 
   back() {
     this.checkFormComment = false;
   }
 
   sortStorage() {
-    this.view.dataService.data = this.view.dataService.data.sort(function (a, b) {
+    this.view.dataService.data = this.view.dataService.data.sort(function (
+      a,
+      b
+    ) {
       var dateA = new Date(a.createdOn).toLocaleDateString();
       var dateB = new Date(b.createdOn).toLocaleDateString();
       return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
