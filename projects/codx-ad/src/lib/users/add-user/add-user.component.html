@@ -1,5 +1,5 @@
-<codx-layout-add #view [title]="title" [tabInfo]="tabInfo" [formModel]="view.formModel" [footer]="footer"
-  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" (setTitle)="setTitle($event)"
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" (setTitle)="setTitle($event)" 
   (buttonClick)="buttonClick($event)"></codx-layout-add>
 
 
@@ -26,13 +26,13 @@
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-6">
-        <codx-label fiedName="UserID" formName="Users" gridViewName="grvUsers" default="Mã người dùng">
+        <codx-label fiedName="UserID" formName="Users"  gridViewName="grvUsers" default="Mã người dùng">
         </codx-label>
         <codx-input field="userID" type="text" [attr.disabled]="!data?.isNew() ? '' : null" [crrValue]="adUser.userID">
         </codx-input>
       </div>
       <div class="form-group col-6">
-        <codx-label fiedName="EmployeeID" formName="Users" gridViewName="grvUsers" default="Nhân viên">
+        <codx-label fiedName="EmployeeID" formName="Users"  gridViewName="grvUsers" default="Nhân viên">
         </codx-label>
         <codx-input type="combobox" refValue="EmployeeUser" [disabled]="readOnly" field="employeeID"
           [crrValue]="adUser.employeeID" (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="form-group mt-3">
-      <codx-label name="UserName" formName="Users" gridViewName="grvUsers" default="Tên người dùng">
+      <codx-label name="UserName" formName="Users"  gridViewName="grvUsers" default="Tên người dùng">
       </codx-label>
       <codx-input type="text" field="userName" [crrValue]="adUser.userName" (valueChange)="valueChange($event)">
       </codx-input>
@@ -54,7 +54,7 @@
       </codx-input>
     </div>
     <div class="form-group row mt-3">
-      <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
+    <codx-label fiedName="BUID" formName="Users"  gridViewName="grvUsers" default="Bộ phận">
       </codx-label>
       <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
         (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">

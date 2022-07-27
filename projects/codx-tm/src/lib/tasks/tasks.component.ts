@@ -68,8 +68,14 @@ export class TasksComponent extends UIComponent {
   iterationID: string = '';
   listTaskResousce = [];
   searchField = '';
-  popover: any;
-  taskResoucesInfo ={}
+  listTaskResousceSearch = [];
+  listRoles = [];
+  vllRole = 'TM002';
+  countResource = 0;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatusTasks ='TM004'
+  vllStatusAssignTasks ='TM007'
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -88,6 +94,11 @@ export class TasksComponent extends UIComponent {
     );
     var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.dataObj = JSON.stringify(dataObj);
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   clickMF(e: any, data?: any) {
@@ -354,10 +365,14 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status >= 8) {
-      this.notiService.notifyCode('TM007');
+    if (data && data.status >10 ) {
+      this.notiService.notifyCode('TM013');
+      return;
+    }else if(data.category =="1" && data.verifyControl != '0' && data.status !='00'){
+      this.notiService.notifyCode('TM014');
       return;
     }
+
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -657,15 +672,65 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
-  
-  openViewListTaskResource(data){
+
+  openViewListTaskResource(data) {
     this.dialog = this.callfc.openForm(
       PopupViewTaskResourceComponent,
       '',
       400,
       500,
       '',
-      [data,this.funcID]
+      [data, this.funcID]
     );
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResousceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResousce = res;
+          this.listTaskResousceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+          // this.titlePopover =
+          //   'Danh sách được phân công (' + this.countResource + ')';
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResousceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResousceSearch = this.listTaskResousce;
+      return;
+    }
+    this.listTaskResousce.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResousceSearch.push(res);
+      }
+    });
+    this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+
+  hoverPopover(p:any){
+    this.popoverDataSelected = p
   }
 }

@@ -1,6 +1,6 @@
 <div *ngIf="checkFormComment == false">
     <div class="pw-storgae">
-        <div class="d-flex align-items-center justify-content-between pw-header mb-3">
+        <div class="d-flex align-items-center justify-content-between pw-header mb-5">
             <div class="pw-search">
                 <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
             </div>
@@ -28,7 +28,7 @@
             <div *ngFor="let item of view.dataService.data">
                 <div class="pw-card delay-500" (click)="openStorageDetail(item)">
                     <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"
-                        icoTitleCss="icon-assignment icon-16" [title]="item.title" [desc2]="item.memo"
+                        icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
                         [imageObjType]="'WP_Storages'" [formModel]="formModel" (clickMF)="clickMF($event,item)"
                         [dataItem]="item">
                     </codx-card-img>
@@ -54,6 +54,6 @@
     </div>
 </div>
 
-<codx-views #view [funcID]="funcID" service="WP" entityName="WP_Storages" [views]="views" [predicate]="predicate"
+<codx-views #view [funcID]="'MWP0095'" service="WP" entityName="WP_Storages" [views]="views" [predicate]="predicate"
     [dataValue]="dataValue" idField="recID">
 </codx-views>

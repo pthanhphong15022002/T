@@ -1,26 +1,25 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
 import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
 import { A, I } from '@angular/cdk/keycodes';
-import { NoteServices } from '@pages/services/note.services';
 import { NoteBookServices } from '../../services/notebook.services';
 
 @Component({
   selector: 'app-note-books',
   templateUrl: './note-books.component.html',
-  styleUrls: ['./note-books.component.scss']
+  styleUrls: ['./note-books.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NoteBooksComponent extends UIComponent implements OnInit, AfterViewInit {
 
   predicate = "CreatedBy=@0";
   dataValue = "";
   user: any;
-  funcID = "";
   data: any;
   onUpdate = false;
   recID: any;
@@ -39,15 +38,10 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   constructor(inject: Injector,
     private authStore: AuthStore,
-    private route: ActivatedRoute,
     private modalService: NgbModal,
     private noteBookService: NoteBookServices,
   ) {
     super(inject);
-    this.route.params.subscribe(params => {
-      this.funcID = params['funcID'];
-    })
-
     this.cache.functionList('MWP00941').subscribe(res => {
       this.urlDetailNoteBook = res?.url;
     })
@@ -184,6 +178,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
     this.view.onSearch(e);
+    debugger;
     this.detectorRef.detectChanges();
   }
 

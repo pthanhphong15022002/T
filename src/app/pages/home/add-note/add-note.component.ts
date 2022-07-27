@@ -27,10 +27,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
-import { NoteServices } from '@pages/services/note.services';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
+import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',

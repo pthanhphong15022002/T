@@ -2,26 +2,18 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Injector,
   Input,
   OnInit,
   Optional,
-  Output,
   ViewChild,
 } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CodxListviewComponent, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import * as mime from 'mime-types'
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 
 @Component({
@@ -280,7 +272,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     //           this.dialogRef.close();
     //         }
     // })
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
           if (this.listFileUpload.length > 0) {
@@ -347,7 +339,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
-        'CommentBusiness',
+        'CommentsBusiness',
         'EditPostAsync',
         [this.dataEdit]
       )
@@ -427,7 +419,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       post.isUpload = true;
       post.files = this.listFileUpload;
     }
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
           this.dialogRef.DataService as CRUDService;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, DataRequest, ViewType, SidebarModel, DialogRef, DialogModel } from 'codx-core';
@@ -8,7 +8,9 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 @Component({
   selector: 'lib-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']
+  styleUrls: ['./news.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class NewsComponent implements OnInit {
   dialogRef: any;
@@ -119,10 +121,10 @@ export class NewsComponent implements OnInit {
         'GetListNewsAsync',
         model1
       )
-      .subscribe((res1) => {
+      .subscribe((res1:any[]) => {
         if (res1) {
           this.listNews = res1[0];
-          this.newsItem = this.listNews.shift();
+          this.changedt.detectChanges();
         }
 
       });
@@ -151,7 +153,6 @@ export class NewsComponent implements OnInit {
       )
       .subscribe((res2) => {
         if (res2) {
-          this.listSlider = [];
           if (res2[0].length <= this.countCarousel) {
             this.isAllowNavigationArrows = false;
             this.carousel?.pause();

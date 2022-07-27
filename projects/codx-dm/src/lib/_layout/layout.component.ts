@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
 import { AuthService, CacheService, CallFuncService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { Observable, of } from 'rxjs';
@@ -9,6 +9,7 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
   selector: 'codx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
   // Public variables

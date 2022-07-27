@@ -1,13 +1,26 @@
 .h-320px {
     height: 307px !important;
 }
-.removeImg{
-    top:10px;
+
+.removeImg {
+    top: 10px;
     right: 10px;
 }
-.remove-file{
+
+.remove-file {
     position: absolute;
     top: 6px;
     right: 6px;
     z-index: 999;
+    border-radius: 30px;
+    background-color: #fff;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-file a {
+    padding-top: 3px;
 }

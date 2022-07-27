@@ -15,7 +15,17 @@ export class ViewDetailComponent implements OnInit {
   @Input() formModel?: FormModel;
   @Input() itemSelected?: any
   @Input() param?: any
+  @Input() listRoles ? : any;
+  @Input() popoverCrr :any
+  popoverDataSelected : any
+  searchField =''
+  listTaskResousceSearch = []
+  listTaskResousce = []
+  vllRole = 'TM002';
+  countResource = 0;
+ 
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() hoverPopover = new EventEmitter<any>();
   constructor(
     private api: ApiHttpService,
     private callfc : CallFuncService,
@@ -39,6 +49,55 @@ export class ViewDetailComponent implements OnInit {
       '',
       [data,this.formModel.funcID]
     );
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResousceSearch=[]
+    this.countResource= 0
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskResourcesBusiness',
+          'GetListTaskResourcesByTaskIDAsync',
+           task.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.listTaskResousce = res;
+            this.listTaskResousceSearch = res;
+            this.countResource = res.length;
+            p.open();
+            this.popoverDataSelected = p;
+            this.hoverPopover.emit(p)
+            // this.titlePopover =
+            //   'Danh sách được phân công (' + this.countResource + ')';
+          }
+        });
+  }
+
+  searchName(e) {
+    var listTaskResousceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim()=='') {
+      this.listTaskResousceSearch = this.listTaskResousce;
+      return;
+    }
+
+    this.listTaskResousce.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResousceSearch.push(res);
+      }
+    });
+    this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
 }

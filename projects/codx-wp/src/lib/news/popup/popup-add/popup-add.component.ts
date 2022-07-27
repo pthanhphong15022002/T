@@ -142,7 +142,6 @@ export class PopupAddComponent implements OnInit {
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
-    objNews.tags = this.tagName;
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
@@ -228,7 +227,7 @@ export class PopupAddComponent implements OnInit {
       post.permissions = data.permissions;
       post.approveControl = "0";
       post.createdBy = data.createdBy;
-      this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync", [post, null]).subscribe();
+      this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
     }
   }
   clearData(){
@@ -402,5 +401,8 @@ export class PopupAddComponent implements OnInit {
           this.notifSV.notify("Vui lòng chọn file video.")
         }
     }
+  }
+  clickClosePopup(){
+    this.dialogRef.close();
   }
 }

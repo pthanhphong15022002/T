@@ -24,6 +24,7 @@ import { StatusTaskGoal } from '../../models/enum/enum';
 import { TaskGoal } from '../../models/task.model';
 import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
+import { AnyARecord } from 'dns';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -34,7 +35,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   user: any;
   readOnly = false;
   listUser: any[] = [];
-  listMemo2OfUser: Array<{ userID: string; memo2: string }> = [];
   listUserDetail: any[] = [];
   listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
@@ -67,8 +67,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
-  listRoles : any
-  vllRole ='TM001'
+  listRoles: any;
+  vllRole = 'TM001';
+
+  empInfo: any = {};
+  popoverList: any;
+  popoverEmpInfo: any;
+  listEmpInfo = [];
+  listUserDetailSearch: any[] = [];
+  idUserSelected :any
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -80,13 +87,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   @ViewChild('tabAssignTo') tabAssignTo: TemplateRef<any>;
   @ViewChild('tabListToDo') tabListToDo: TemplateRef<any>;
   @ViewChild('tabReference') tabReference: TemplateRef<any>;
-  
 
   task: TM_Tasks = new TM_Tasks();
   dialog: any;
   taskCopy: any;
   newID: string;
-  paramControlReference = true
+  paramControlReference = true;
   menuDes = {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -116,7 +122,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
-  titleAction =  'Thêm'
+  titleAction = 'Thêm';
+  paramByCategory: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -129,9 +136,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
     this.getParam();
-    
+
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -142,8 +148,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
-    this.paramControlReference =this.param?.ProjectControl != '0'|| this.param?.LocationControl != '0' || this.param?.ReferenceControl != '0' || this.param?.ActivityControl != '0' || this.param?.ActivityControl == null  
+    if (this.functionID == 'TMT0203') {
+      this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+      this.task.category = '3';
+    } else {
+      this.task.category = '1';
+      
+    }
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -153,73 +164,70 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      this.titleAction ='Thêm'
+      this.titleAction = 'Thêm';
       this.openTask();
     } else if (this.action == 'copy') {
-      this.titleAction ='Copy'
-      this.getTaskCoppied(this.taskCopy.taskID); //nếu alowCopy = false thì bật cái này lên
+      this.titleAction = 'Copy';
+      this.getTaskCoppied(this.taskCopy.taskID);
     } else {
-      this.titleAction ='Chỉnh sửa'
+      this.titleAction = 'Chỉnh sửa';
       this.openInfo(this.task.taskID, this.action);
     }
-   
   }
 
   ngAfterViewInit(): void {
     if (this.showAssignTo) {
-      this.tabInfo = [this.menuDes,this.menuJobDes,this.menuAssign,this.menuListTaskGoal];
-       this.tabContent =[this.tabDescription,this.tabJob,this.tabAssignTo,this.tabListToDo]
-    }else{
-      this.tabInfo = [this.menuDes,this.menuJobDes,this.menuListTaskGoal];
-      this.tabContent =[this.tabDescription,this.tabJob,this.tabListToDo]
-    }
-    if(this.paramControlReference){
-      this.tabInfo = this.tabInfo.concat(this.menuRef)
-      this.tabContent =this.tabContent.concat(this.tabReference)
+      this.tabInfo = [
+        this.menuDes,
+        this.menuJobDes,
+        this.menuAssign,
+        this.menuListTaskGoal,
+        this.menuRef,
+      ];
+      this.tabContent = [
+        this.tabDescription,
+        this.tabJob,
+        this.tabAssignTo,
+        this.tabListToDo,
+        this.tabReference,
+      ];
+    } else {
+      this.tabInfo = [
+        this.menuDes,
+        this.menuJobDes,
+        this.menuListTaskGoal,
+        this.menuRef,
+      ];
+      this.tabContent = [
+        this.tabDescription,
+        this.tabJob,
+        this.tabListToDo,
+        this.tabReference,
+      ];
     }
   }
 
   getParam(callback = null) {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = JSON.parse(res.dataValue);
-          this.paramControlReference =this.param?.ProjectControl != '0'|| this.param?.LocationControl != '0' || this.param?.ReferenceControl != '0' || this.param?.ActivityControl != '0' || this.param?.ActivityControl == null  
-          return callback && callback(true);
-        }
-      });
-  }
-
-  changeMemo2OfUser(message, id) {
-    var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
-    if (index != -1) {
-      this.listMemo2OfUser.forEach((obj) => {
-        if (obj.userID == id) {
-          obj.memo2 = message;
-          return;
-        }
-      });
-    } else {
-      var memo2OfUser = {
-        userID: id,
-        memo2: message,
-      };
-      this.listMemo2OfUser.push(memo2OfUser);
-    }
+  this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.SYS',
+          'SettingValuesBusiness',
+          'GetByModuleWithCategoryAsync',
+          ['TM_Parameters', '1',null]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.param = JSON.parse(res.dataValue);
+          }
+        });
   }
 
   changeMemo(event: any) {
-    var field = event.field;
-    if (event?.data) {
-      this.task[field] = event?.data;
+    if (event.field) {
+      this.task[event.field] = event?.data ?event?.data :"";
     }
+    this.changeDetectorRef.detectChanges ;
   }
 
   onAddToDo(evt: any) {
@@ -280,7 +288,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   openTask(): void {
-    // this.title = 'Tạo mới công việc';
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
@@ -294,7 +301,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   openInfo(id, action) {
     this.readOnly = action === 'edit' ? false : true;
-    // this.title = 'Chỉnh sửa công việc';
     this.disableAddToDo = true;
 
     this.tmSv.getTask(id).subscribe((res) => {
@@ -302,7 +308,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.task = res[0] as TM_Tasks;
         this.listUserDetail = res[1] || [];
         this.listTodo = res[2];
-        this.listMemo2OfUser = res[3];
+        this.listTaskResources = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
         this.api
           .execSv<any[]>(
@@ -322,13 +328,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   getTaskCoppied(id) {
     const t = this;
-    this.title = 'Copy công việc ';
     this.listUser = [];
     this.listUserDetail = [];
-    this.listMemo2OfUser = [];
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
-        //  this.beforeCopy(res[0]);
         this.copyListTodo(res[2]);
       }
     });
@@ -349,8 +352,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   beforeCopy(data) {
     const t = this;
-    // t.task = data as TM_Tasks;
-    // t.task.taskID = this.newID;
     t.task.dueDate = moment(new Date(data.dueDate)).toDate();
     if (data.startDate != null)
       t.task.startDate = moment(new Date(data.startDate)).toDate();
@@ -360,8 +361,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     t.task.assignTo = null;
     t.task.completedOn = null;
     this.listUser = [];
+    this.listTaskResources = []
     this.listUserDetail = [];
-    this.listMemo2OfUser = [];
     t.changeDetectorRef.detectChanges();
   }
 
@@ -422,15 +423,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-    if (this.showAssignTo) {
-      if (this.task.assignTo == null || this.task.assignTo == '') {
-        //  this.notiService.notifyCode('code nao vao day ??');
-        this.notiService.notify('Thêm người được giao việc !');
-        return;
-      }
-    }
+    // if (this.showAssignTo) {
+    //   if (this.task.assignTo == null || this.task.assignTo == '') {
+    //      this.notiService.notifyCode('TM011');
+    //     return;
+    //   }
+    // }
 
-    this.convertToListTaskResources();
+    // if(this.task.category=='1'&& this.param.VerifyControl !=0){
+    //   this.task.verifyControl = this.param.VerifyControl ;
+    //   this.task.verifyStatus = '1'  ///(vll TM008)
+    // //  this.task.verifyBy = hoi laji thung cai nay
+    //   this.task.status =  '00'
+    // }
     this.task.taskType = this.param['TaskType'];
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
@@ -563,20 +568,20 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(data) {
-    if (data.data) {
-      this.task[data.field] = data.data;
+    if (data.field) {
+      this.task[data.field] = data?.data;
     }
   }
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = Number.parseFloat(data.data);
-    if (!num) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
-      this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
-      this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (!num) {
+    //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
+    //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
+    //   this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
+    //   this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
       this.notiService.notify(
@@ -586,23 +591,28 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.data && num) {
-      this.task[data.field] = data.data;
-      var estimated = num * 3600000;
-      if (!this.task.startDate) {
-        var crrDay = new Date();
-        this.task.startDate = moment(crrDay).toDate();
-        var time = crrDay.getTime();
-        var timeEndDate = time + estimated;
-        this.task.endDate = moment(new Date(timeEndDate)).toDate();
-        this.crrEstimated = this.crrEstimated
-          ? this.crrEstimated
-          : this.task.estimated;
-      } else if (!this.crrEstimated) {
-        var timeEndDate = this.task.startDate.getTime() + estimated;
-        this.task.endDate = moment(new Date(timeEndDate)).toDate();
-      }
+    if(this.param.MaxHoursControl !=0 && num > this.param.MaxHours ){
+        num = this.param.MaxHours
     }
+
+    //xử lý nhập estimated thay đổi thời gian
+    // if (data.data && num) {
+    //   this.task[data.field] = data.data;
+    //   var estimated = num * 3600000;
+    //   if (!this.task.startDate) {
+    //     var crrDay = new Date();
+    //     this.task.startDate = moment(crrDay).toDate();
+    //     var time = crrDay.getTime();
+    //     var timeEndDate = time + estimated;
+    //     this.task.endDate = moment(new Date(timeEndDate)).toDate();
+    //     this.crrEstimated = this.crrEstimated
+    //       ? this.crrEstimated
+    //       : this.task.estimated;
+    //   } else if (!this.crrEstimated) {
+    //     var timeEndDate = this.task.startDate.getTime() + estimated;
+    //     this.task.endDate = moment(new Date(timeEndDate)).toDate();
+    //   }
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -611,7 +621,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   changeTime(data) {
-    //debugger
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -732,10 +741,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
-    arrUser.forEach((u) => {
-      var obj = { userID: u.userID, memo2: null };
-      this.listMemo2OfUser.push(obj);
-    });
+    // arrUser.forEach((u) => {
+    //   var obj = new tmpTaskResource() ;
+    //   obj.resourceID = u.userID ;
+    //   obj.roleType = 'R' ;
+    //   obj.memo = null ;
+    //   // var obj = { userID: u.userID, memo2: null };
+    //   this.listTaskResources.push(obj);
+    // });
     this.api
       .execSv<any>(
         'TM',
@@ -746,6 +759,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var taskResource = new tmpTaskResource();
+            taskResource.resourceID = emp?.userID;
+            taskResource.resourceName = emp?.userName;
+            taskResource.positionName = emp?.positionName;
+            taskResource.departmentName = emp?.departmentName;
+            taskResource.roleType = 'R';
+            this.listTaskResources.push(taskResource);
+          }
+        }
       });
   }
 
@@ -758,7 +783,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   onDeleteUser(userID) {
     var listUser = [];
-    var listMemo2OfUser = [];
+    // var listMemo2OfUser = [];
+    var listTaskResources = [];
     var listUserDetail = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
       if (this.listUser[i] != userID) {
@@ -767,13 +793,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (this.listUserDetail[i].userID != userID) {
         listUserDetail.push(this.listUserDetail[i]);
       }
-      if (this.listMemo2OfUser[i]?.userID != userID) {
-        listMemo2OfUser.push(this.listMemo2OfUser[i]);
+      if (this.listTaskResources[i]?.resourceID != userID) {
+        listTaskResources.push(this.listTaskResources[i]);
       }
     }
     this.listUser = listUser;
     this.listUserDetail = listUserDetail;
-    this.listMemo2OfUser = listMemo2OfUser;
+    this.listTaskResources = listTaskResources;
 
     var assignTo = '';
     if (listUser.length > 0) {
@@ -785,34 +811,34 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else this.task.assignTo = '';
   }
 
-  convertToListTaskResources() {
-    var listTaskResources: tmpTaskResource[] = [];
-    this.listMemo2OfUser.forEach((obj) => {
-      var tmpTR = new tmpTaskResource();
-      tmpTR.resourceID = obj.userID;
-      tmpTR.memo = obj.memo2;
-      tmpTR.roleType = 'R';
-      listTaskResources.push(tmpTR);
-    });
-    this.listTaskResources = listTaskResources;
-  }
+  // convertToListTaskResources() {
+  //   var listTaskResources: tmpTaskResource[] = [];
+  //   this.listMemo2OfUser.forEach((obj) => {
+  //     var tmpTR = new tmpTaskResource();
+  //     tmpTR.resourceID = obj.userID;
+  //     tmpTR.memo = obj.memo2;
+  //     tmpTR.roleType = 'R';
+  //     listTaskResources.push(tmpTR);
+  //   });
+  //   this.listTaskResources = listTaskResources;
+  // }
 
   changeMemo2(e, id) {
     var message = e?.data;
-    var index = this.listMemo2OfUser.findIndex((obj) => obj.userID == id);
+    var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listMemo2OfUser.forEach((obj) => {
-        if (obj.userID == id) {
-          obj.memo2 = message;
+      this.listTaskResources.forEach((obj) => {
+        if (obj.resourceID == id) {
+          obj.memo = message;
           return;
         }
       });
     } else {
-      var memo2OfUser = {
-        userID: id,
-        memo2: message,
-      };
-      this.listMemo2OfUser.push(memo2OfUser);
+      var tmpRes = new tmpTaskResource();
+      tmpRes.memo = message;
+      tmpRes.resourceID = id;
+      // tmpRes.roleType = 'R'
+      this.listTaskResources.push(tmpRes);
     }
   }
   addFile(evt: any) {
@@ -833,7 +859,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   setTitle(e: any) {
-    this.title = this.titleAction + " " + e;
+    this.title = this.titleAction + ' ' + e;
     this.changeDetectorRef.detectChanges();
     console.log(e);
   }
@@ -841,4 +867,59 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   buttonClick(e: any) {
     console.log(e);
   }
+
+  // popoverEmp(p: any, emp) {
+  //   if (this.popoverList) {
+  //     if (this.popoverList.isOpen()) this.popoverList.close();
+  //   }
+  //   if (emp) {
+  //     this.empInfo = this.listUserDetail.find((e) => e.userID === emp);
+  //     p.open();
+  //   } else {
+  //     p.close();
+  //     this.empInfo = {};
+  //   }
+  // }
+
+  // popoverEmpList(p: any, listUserDetail) {
+  //   this.listUserDetailSearch = listUserDetail;
+  //   this.popoverList = p;
+
+  //   p.open();
+  // }
+
+  searchName(e) {
+    var listUserDetailSearch = [];
+    var searchField = e;
+    if (searchField.trim() == '') {
+      this.listUserDetailSearch = this.listUserDetail;
+      return;
+    }
+    this.listUserDetail.forEach((res) => {
+      var name = res.userName;
+      if (name.toLowerCase().includes(searchField.toLowerCase())) {
+        listUserDetailSearch.push(res);
+      }
+    });
+    this.listUserDetailSearch = listUserDetailSearch;
+  }
+
+  showPopover(p, userID) {
+    if(this.popover)
+    this.popover.close() ;
+    if(userID)
+    this.idUserSelected = userID;
+    p.open();
+    this.popover = p ;
+  }
+
+  selectRoseType(idUserSelected,value) {
+ 
+    this.listTaskResources.forEach(res=>{
+       if(res.resourceID ==idUserSelected)res.roleType=value;
+     })
+     this.changeDetectorRef.detectChanges()
+
+   this.popover.close() ;
+   }
 }

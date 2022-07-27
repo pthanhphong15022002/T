@@ -1,168 +1,171 @@
-<codx-form [dialog]="dialogRef"  [body]="body"  [footer]="footer" [subHeader]="subheader">
-    <ng-template #subheader>
-        <div class="row">
-            <div class="col-5 d-flex align-items-center">
-                <div class="me-3">
-                    <codx-label class="fw-bolder" [formModel]="dialogRef.formModel" name="lblHeaderText" default="Soạn thảo văn bản"></codx-label>
-                </div>
-                <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center" (click)="openFormShare(controlShare)">
-                    <span>
-                        <img src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901' : 'icon' | async)}}" />
-                    </span>
-                    <span class="text-gray-700 fs-6 ms-1">
-                        {{shareControl | vll:'L1901' : 'text' | async}}
-                    </span>
-                    <i class="icon-arrow_drop_down icon-18 text-dark"></i>
-                </div>
+
+<div class="p-6">
+    <!-- header -->
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex">
+            <div class="me-3">
+                <codx-label class="fw-bolder fs-1"  [formModel]="dialogRef.formModel" name="lblHeaderText" default="Soạn thảo văn bản"></codx-label>
+            </div>
+            <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center h-24px" (click)="openFormShare(controlShare)">
+                <span>
+                    <img src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901' : 'icon' | async)}}" />
+                </span>
+                <span class="text-gray-700 fs-6 ms-1">
+                    {{shareControl | vll:'L1901' : 'text' | async}}
+                </span>
+                <i class="icon-arrow_drop_down icon-18 text-dark"></i>
             </div>
         </div>
-    </ng-template>
-    <ng-template #body>
-        <div class="row">
-            <div class="col-5 h-100">
-                <div class="card w-100 rounded-0 border-0">
-                    <div class="">
-                        <codx-tag
-                            entityName="WP_News"
-                            [isEdit]="false"
-                            field="Tags"
-                            [value]="tagName"
-                            (valueChange)="valueChange($event)"
-                            >
-                        </codx-tag>
+        <div class="">
+            <button class="btn" (click)="clickClosePopup()">
+                <i class="icon-close"></i>
+            </button>
+        </div>
+    </div>
+    <!-- body -->
+    <div class="row">
+        <div class=" my-2">
+            <codx-tag
+                entityName="WP_News"
+                [isEdit]="false"
+                field="Tags"
+                [value]="tagName"
+                (valueChange)="valueChange($event)"
+                >
+            </codx-tag>
+        </div>
+        <div class="col-5 h-100">
+            <div class="card w-100 rounded-0 border-0">
+                <div class="">
+                    <div class="my-2">
+                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblCategory" default="Phân loại"></codx-label>
                     </div>
-                    <div class="">
+                    <codx-input type="valuelist" name="valuelist" ngDefaultControl refValue="L1492" field="Category"
+                        [crrValue]="formGroup.controls['Category'].value" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+                <div class="row">
+                    <div class="col-6">
                         <div class="my-2">
-                            <codx-label [formModel]="dialogRef.formModel" name="lblCategory" default="Phân loại"></codx-label>
+                            <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
                         </div>
-                        <codx-input type="valuelist" name="valuelist" ngDefaultControl refValue="L1492" field="Category"
-                            [crrValue]="formGroup.controls['Category'].value" (valueChange)="valueChange($event)"></codx-input>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="my-2">
-                                <codx-label [formModel]="dialogRef.formModel" name="lblStartDate" default="Ngày bắt đầu"></codx-label>
-                            </div>
-                            <codx-input type="datetime" class="test-datetime" field="StartDate"
-                                [crrValue]="formGroup.controls['StartDate'].value" format="F" (valueChange)="valueChange($event)">
-                            </codx-input>
-                        </div>
-                        <div class="col-6">
-                            <div class="my-2">
-                                <codx-label [formModel]="dialogRef.formModel" name="lblEndDate" default="Ngày kết thúc"></codx-label>
-                            </div>
-                            <codx-input type="datetime" class="test-datetime" field="EndDate"
-                                [crrValue]="formGroup.controls['EndDate'].value" format="F"
-                                (valueChange)="valueChange($event)"></codx-input>
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="my-2">
-                            <codx-label [formModel]="dialogRef.formModel"name="lblSubtitle" default="Tiêu đề"></codx-label>
-                        </div>
-                        <codx-input type="text" class="form-control" placeholder="Tiêu đề" field="Subject"
-                            [crrValue]="formGroup.controls['Subject'].value" (valueChange)="valueChange($event)" ngDefaultControl>
+                        <codx-input type="datetime" class="test-datetime" field="StartDate"
+                            [crrValue]="formGroup.controls['StartDate'].value" format="F" (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
-                    <div class="">
+                    <div class="col-6">
                         <div class="my-2">
-                            <codx-label [formModel]="dialogRef.formModel" name="lblDesciption" default="Mô tả"></codx-label>
+                            <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblEndDate" default="Ngày kết thúc"></codx-label>
                         </div>
-                        <codx-input type="textarea" format="ed2" [rows]="'4'"  placeholder="Mô tả"
-                            field="SubContent" [crrValue]="formGroup.controls['SubContent'].value"
-                            (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
-                    </div>
-            
-                    <div class="row">
-                        <div class="w-100 my-2">
-                                <codx-label [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
-                        </div>
-                        <div class="w-100">
-                            <div *ngIf="fileImage.length > 0">
-                                <img  class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
-                            </div>
-                            <div >
-                                <codx-attachment #codxAttachment 
-                                    [functionID]="dialogRef?.formModel.funcID" 
-                                    [objectType]="dialogRef?.formModel.entityName" 
-                                    [allowMultiFile]="0"
-                                    [hideImageUpload]="'1'"
-                                    [hideUploadBtn]="0"
-                                    (fileCount)="addImage($event)">
-                                </codx-attachment>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="my-2 me-6">
-                                <codx-label [formModel]="dialogRef.formModel" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
-                            </div>
-                            <codx-input type="switch" [checked]="false" [disabled]="false" id="switchShared" labelPosition="Before"
-                                field="AllowShare" [crrValue]="formGroup.controls['AllowShare'].value" class="test-switch"
-                                (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="my-2 me-6">
-                                <codx-label [formModel]="dialogRef.formModel" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
-                            </div>
-                            <codx-input type="switch" [checked]="false" [disabled]="false" id="switchCreated" labelPosition="Before"
-                                field="CreatePost" [crrValue]="formGroup.controls['CreatePost'].value" class="test-switch"
-                                (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
-                        </div>
+                        <codx-input type="datetime" class="test-datetime" field="EndDate"
+                            [crrValue]="formGroup.controls['EndDate'].value" format="F"
+                            (valueChange)="valueChange($event)"></codx-input>
                     </div>
                 </div>
-            </div>
-            <div class="col-7">
-                <ng-container *ngIf="newsType == NEWSTYPE.POST; else video">
+                <div class="">
                     <div class="my-2">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblContents" default="Nội dung"></codx-label>
+                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel"name="lblSubtitle" default="Tiêu đề"></codx-label>
                     </div>
-                    <codx-input [height]="'600'" type="textarea" class="test-textarea" field="textarea" field="Contents"
-                        [crrValue]="formGroup.controls['Contents'].value" placeholder="Nội dung" (valueChange)="valueChange($event)" ngDefaultControl>
+                    <codx-input type="text" class="form-control" placeholder="Tiêu đề" field="Subject"
+                        [crrValue]="formGroup.controls['Subject'].value" (valueChange)="valueChange($event)" ngDefaultControl>
                     </codx-input>
-                </ng-container>
-                <ng-template #video>
-                    <div class="w-100 border h-500px">
-                        <div class="w-100" *ngIf="fileVideo.length > 0">
-                            <video controls class="w-100 h-300px">
-                                <source [src]="fileVideo[0].data || fileVideo[0].srcVideo" alt="" />
-                            </video>
+                </div>
+                <div class="">
+                    <div class="my-2">
+                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblDesciption" default="Mô tả"></codx-label>
+                    </div>
+                    <codx-input type="textarea" format="ed2" [rows]="'4'"  placeholder="Mô tả"
+                        field="SubContent" [crrValue]="formGroup.controls['SubContent'].value"
+                        (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
+                </div>
+        
+                <div class="row">
+                    <div class="w-100 my-2">
+                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblImage" default="Hình hiển thị"></codx-label>
+                    </div>
+                    <div class="w-100">
+                        <div *ngIf="fileImage.length > 0">
+                            <img  class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
                         </div>
-                        <div class="w-100">
-                            <codx-attachment #codxATMVideo 
+                        <div >
+                            <codx-attachment #codxAttachment 
                                 [functionID]="dialogRef?.formModel.funcID" 
                                 [objectType]="dialogRef?.formModel.entityName" 
                                 [allowMultiFile]="0"
                                 [hideImageUpload]="'1'"
                                 [hideUploadBtn]="0"
-                                (fileCount)="addVideo($event)">
+                                (fileCount)="addImage($event)">
                             </codx-attachment>
                         </div>
                     </div>
-                </ng-template>
+                    
+                </div>
+                <div class="my-2">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="my-2 me-6">
+                            <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblAllowShare" default="Cho phép chia sẻ MXH nội bộ"></codx-label>
+                        </div>
+                        <codx-input type="switch" [checked]="false" [disabled]="false" id="switchShared" labelPosition="Before"
+                            field="AllowShare" [crrValue]="formGroup.controls['AllowShare'].value" class="test-switch"
+                            (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="my-2 me-6">
+                            <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblOutoCreated" default="Tạo bài viết MXH nội bộ tự động"></codx-label>
+                        </div>
+                        <codx-input type="switch" [checked]="false" [disabled]="false" id="switchCreated" labelPosition="Before"
+                            field="CreatePost" [crrValue]="formGroup.controls['CreatePost'].value" class="test-switch"
+                            (valueChange)="valueChange($event)" ngDefaultControl></codx-input>
+                    </div>
+                </div>
             </div>
         </div>
-    </ng-template>
-    <ng-template #footer>
-        <div class="card-footer pt-4">
-            <div class="d-flex align-items-center justify-content-end">
-                <div class="me-3">
-                    <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
-                    </button>
+        <div class="col-7">
+            <ng-container *ngIf="newsType == NEWSTYPE.POST; else video">
+                <div class="my-2">
+                    <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblContents" default="Nội dung"></codx-label>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-primary">
-                        <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Phát hành"></codx-label>
-                    </button>
+                <codx-input [height]="'600'" type="textarea" class="test-textarea" field="textarea" field="Contents"
+                    [crrValue]="formGroup.controls['Contents'].value" placeholder="Nội dung" (valueChange)="valueChange($event)" ngDefaultControl>
+                </codx-input>
+            </ng-container>
+            <ng-template #video>
+                <div class="w-100 border h-500px">
+                    <div class="w-100" *ngIf="fileVideo.length > 0">
+                        <video controls class="w-100 h-300px">
+                            <source [src]="fileVideo[0].data || fileVideo[0].srcVideo" alt="" />
+                        </video>
+                    </div>
+                    <div class="w-100">
+                        <codx-attachment #codxATMVideo 
+                            [functionID]="dialogRef?.formModel.funcID" 
+                            [objectType]="dialogRef?.formModel.entityName" 
+                            [allowMultiFile]="0"
+                            [hideImageUpload]="'1'"
+                            [hideUploadBtn]="0"
+                            (fileCount)="addVideo($event)">
+                        </codx-attachment>
+                    </div>
                 </div>
+            </ng-template>
+        </div>
+    </div>
+    <!-- footer -->
+    <div class="card-footer pt-4">
+        <div class="d-flex align-items-center justify-content-end">
+            <div class="me-3">
+                <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
+                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary">
+                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Phát hành"></codx-label>
+                </button>
             </div>
         </div>
-    </ng-template>
-</codx-form>
-
+    </div>
+</div>
+<!-- templateshare -->
 <ng-template #controlShare let-dialog>
     <codx-share 
         [dialog]="dialog" 
