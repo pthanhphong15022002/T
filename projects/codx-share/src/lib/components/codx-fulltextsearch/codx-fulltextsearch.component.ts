@@ -172,7 +172,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       functionID:  this.funcID,
       entityName: "OD_Dispatches",
       page: 1,
-      pageSize: 5
+      pageSize: 2
     }).subscribe((item) => {
       if(item)
       {

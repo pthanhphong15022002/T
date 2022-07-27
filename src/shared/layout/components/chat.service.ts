@@ -38,7 +38,7 @@ export class ChatService{
     }
 
     public searchGroup(opts: DataRequest){
-        return this.api.exec<Post>('WP', 'CommentBusiness', 'GetPostByIDAsync', opts);
+        return this.api.exec<Post>('WP', 'CommentsBusiness', 'GetPostByIDAsync', opts);
     }
 
     public openChatBox(opts: any){
