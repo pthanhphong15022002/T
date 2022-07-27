@@ -1,3 +1,4 @@
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddCarsComponent } from './../cars/popup-add-cars/popup-add-cars.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -14,7 +15,7 @@ import { PopupAddRoomsComponent } from '../rooms/popup-add-rooms/popup-add-rooms
     PopupAddCarsComponent,
     PopupAddRoomsComponent,
   ],
-  imports: [FormsModule, ReactiveFormsModule, SharedModule, TabModule],
+  imports: [FormsModule, ReactiveFormsModule, SharedModule, TabModule, CodxShareModule],
   exports: [RouterModule],
 })
-export class LayoutModule {}
+export class LayoutModule { }

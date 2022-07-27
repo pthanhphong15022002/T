@@ -10,29 +10,23 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MessengerDrawerComponent } from './layout/drawers/messenger-drawer/messenger-drawer.component';
 import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner/chat-inner.component';
 import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
-import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
 import { ChatListComponent } from './layout/components/chat-list/chat-list.component';
 import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
 import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
 import { ERMModule } from './erm.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
-import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { CoreModule } from '@core/core.module';
-import { TagsComponent } from './layout/tags/tags.component';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
   ChatInnerComponent,
   NotifyDrawerComponent,
-  UserInnerComponent,
   ChatListComponent,
   ListChatBoxComponent,
   ChatBoxComponent,
-  QuickLinksInnerComponent,
-  NoteDrawerComponent,
-  TagsComponent
+  NoteDrawerComponent
 ];
 
 const T_Moudule: Type<any>[] = [

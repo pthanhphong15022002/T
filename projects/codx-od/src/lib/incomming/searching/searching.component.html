@@ -1,1 +1,29 @@
-<button (click)="aaa()">aa</button>
+<!-- <codx-img [objectId]="'c544f9b5-9f85-4356-a4ca-6f8914b60acb'" [objectType]="'WP_News'"></codx-img> -->
+<codx-fulltextsearch [centerTmp]="centerTmp" [widthLeft]="500" [funcID]="funcID"  [widthRight]="500"></codx-fulltextsearch>
+
+<ng-template #centerTmp let-data>
+    <codx-temp-full [content]="extractContent(data.title)"
+    [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
+    [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+    cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
+    [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+    [bookmark]="data.isBookmark" [titleLine]="2" [baseHeaderRightTmp]="headerRight" [dataItem]="data" >
+    </codx-temp-full>
+</ng-template>
+
+<ng-template #headerRight let-data>
+    <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" ControlName="recID">
+    </codx-input>
+</ng-template>
+
+<ng-template #rightTmp>
+    <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
+    <div class="mt-2">
+        <span class="text-muted">Công văn về việc</span>
+    </div>
+    <div class="mt-2 pt-8">
+        <span>Kéo thả liên kết vào vùng này</span>
+    </div>
+</ng-template>

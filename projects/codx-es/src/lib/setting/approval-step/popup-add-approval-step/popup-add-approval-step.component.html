@@ -1,8 +1,9 @@
 <!-- <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [formControl]="dialogApprovalStep" *ngIf="isAfterRender"> -->
-<codx-layout-add *ngIf="type == '1'" [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel"
-  [subHeader]="subHeader" [dialog]="dialog" [openMore]="true" [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]"
-  (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false">
+<codx-layout-add *ngIf="type == '1' && isAfterRender" [title]="header1" [tabInfo]="tabInfo"
+  [formModel]="dialog.formModel" [subHeader]="subHeader" [dialog]="dialog" [openMore]="true"
+  [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]" (setTitle)="setTitle($event)"
+  (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false">
 </codx-layout-add>
 
 <ng-template #subHeader>
@@ -45,8 +46,8 @@
       <div class="col-4">
         <codx-label class="fw-bolder" default="Thời gian xử lí (giờ)" fiedName="Leadtime" [formModel]="formModel">
         </codx-label>
-        <codx-input type="text" ControlName="leadtime" placeholder="0" [Group]="dialogApprovalStep"
-          (valueChange)="valueChange($event)" [crrValue]="parseInt(dialogApprovalStep.value.leadtime)">
+        <codx-input type="number" field="leadtime" [Group]="dialogApprovalStep" (valueChange)="valueChange($event)"
+          [min]="0" placeholder="0" [crrValue]="dialogApprovalStep.value?.leadtime ?? 0" [showSpinButton]="false">
         </codx-input>
       </div>
     </div>
