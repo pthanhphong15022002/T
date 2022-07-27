@@ -17,7 +17,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
 export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
   assemblyName = "ERM.Business.WP"
-  className = "CommentBusiness"
+  className = "CommentsBusiness"
   method = "GetListPostAsync";
   totalPage: number = 0;
   pageIndex = 0;
@@ -81,8 +81,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     }]
     this.getGridViewSetUp();
-    this.codxViews.dataService.methodSave = "PublishPostAsync";
-    this.codxViews.dataService.methodDelete = "DeletePostAsync";
     console.log(this.codxViews.dataService);
   }
 
@@ -100,15 +98,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   }
 
-  beforDelete(option: RequestOption): RequestOption {
+  beforDelete(option:any,data:any){
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
-    option.className = "CommentBusiness";
-    option.methodName = "DeletePostAsync";
-    return option;
+    option.className = "CommentsBusiness";
+    option.method = "DeletePostAsync";
+    option.data = data;
+    return true;
   }
   removePost(data: any) {
-    (this.codxViews.dataService as CRUDService).delete([data]).subscribe((res) => {
+    (this.listview.dataService as CRUDService).delete([data],true,(op:any)=>this.beforDelete(op,data)).subscribe((res) => {
       if (res) {
           this.api.execSv("DM",
           "ERM.Business.DM",
@@ -117,7 +116,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
           [data.recID, 'WP_Comments', true]
         ).subscribe();
       }
-      this.dt.detectChanges();
     });
 
   }
@@ -193,7 +191,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   getTagUser(id) {
     this.api
-      .execSv("WP","ERM.Business.WP", "CommentBusiness", "GetTagUserListAsync", id)
+      .execSv("WP","ERM.Business.WP", "CommentsBusiness", "GetTagUserListAsync", id)
       .subscribe((res) => {
         if (res) this.tagUsers = res;
       });
@@ -204,7 +202,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareOwnerListAsync',
           [commentID]
         )
@@ -216,7 +214,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareUserListAsync',
           [commentID]
         )
@@ -238,7 +236,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
 
   naviagte(data: any) {
-    let funcID = "WPT02"
     this.api
       .execSv(
         'WP',
@@ -249,7 +246,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       )
       .subscribe(res => {
         if (res) {
-          this.codxService.navigate('', "wp/" + data.category + "/view-detail/" + data.recID + "/" + funcID);
+          this.codxService.navigate('', "wp/news/WPT02/" + data.category + '/' + data.recID);
         }
       });
 

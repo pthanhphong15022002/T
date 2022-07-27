@@ -17,7 +17,7 @@ import { AddPostComponent } from './popup-add/addpost/addpost.component';
 export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
   assemblyName = "ERM.Business.WP"
-  className = "CommentBusiness"
+  className = "CommentsBusiness"
   method = "GetListPostAsync";
   totalPage: number = 0;
   pageIndex = 0;
@@ -103,7 +103,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   beforDelete(option: RequestOption): RequestOption {
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
-    option.className = "CommentBusiness";
+    option.className = "CommentsBusiness";
     option.methodName = "DeletePostAsync";
     return option;
   }
@@ -193,7 +193,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   getTagUser(id) {
     this.api
-      .execSv("WP","ERM.Business.WP", "CommentBusiness", "GetTagUserListAsync", id)
+      .execSv("WP","ERM.Business.WP", "CommentsBusiness", "GetTagUserListAsync", id)
       .subscribe((res) => {
         if (res) this.tagUsers = res;
       });
@@ -204,7 +204,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareOwnerListAsync',
           [commentID]
         )
@@ -216,7 +216,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.api
         .exec<any>(
           'ERM.Business.WP',
-          'CommentBusiness',
+          'CommentsBusiness',
           'GetShareUserListAsync',
           [commentID]
         )
