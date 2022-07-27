@@ -1,7 +1,7 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
 import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
@@ -12,7 +12,8 @@ import { NoteBookServices } from '../../services/notebook.services';
 @Component({
   selector: 'app-note-books',
   templateUrl: './note-books.component.html',
-  styleUrls: ['./note-books.component.scss']
+  styleUrls: ['./note-books.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NoteBooksComponent extends UIComponent implements OnInit, AfterViewInit {
 
