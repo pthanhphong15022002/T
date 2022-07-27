@@ -1,5 +1,5 @@
 <div class="d-flex flex-row flex-column-fluid page page-detail" id="form-ad">
-    <app-header></app-header>
+    <!-- <app-header></app-header> -->
     <div class="d-flex flex-row-fluid wrapper wrapper-detail" id="kt_wrapper">
         <div class="content d-flex flex-column-fluid" id="kt_content">
             <div class="d-flex flex-column-fluid" id="erm_content">
@@ -7,15 +7,16 @@
                     <div class="d-flex">
                         <div class="aside-detail flex-row-auto w-300px">
                             <div class="aside-menu">
-                                <app-asideroledetail (onChangeSelected)="onChangeSelectedFunction($event)"
-                                    [treeData]="myTree"></app-asideroledetail>
+                                <!-- <app-asideroledetail (onChangeSelected)="onChangeSelectedFunction($event)"
+                                    [treeData]="myTree"></app-asideroledetail> -->
                             </div>
                         </div>
                         <div class="d-flex flex-grow-1 flex-column px-6">
                             <div class="d-flex align-items-center justify-content-between setting-sticky">
                                 <!-- <h2>Phân quyền vai trò {{roleName}}</h2> -->
                                 <h2>
-                                    <codx-label name="lblRoleAuthorize" formName="AD_Roles" [default]="'Phân quyền vai trò' + roleName">
+                                    <codx-label name="lblRoleAuthorize" formName="AD_Roles"
+                                        [default]="'Phân quyền vai trò' + roleName">
                                     </codx-label>
                                 </h2>
                                 <div>
@@ -29,7 +30,8 @@
                                 <div class="list-group">
                                     <div class="list-title">
                                         <h4 class="text-dark">
-                                            <codx-label name="lblDataAuthorize" formName="AD_Roles" default="Phân quyền dữ liệu">
+                                            <codx-label name="lblDataAuthorize" formName="AD_Roles"
+                                                default="Phân quyền dữ liệu">
                                             </codx-label>
                                         </h4>
                                     </div>
@@ -54,8 +56,9 @@
                                                 <div class="text-muted">Hiển thị thông tin lên danh sách</div>
                                             </div>
                                             <div class="lv-control">
-                                                <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                                    ngDefaultControl refValue="L0001" [disabled]="!active"
+                                                <codx-input type="select" name="select" class="cotrol-vll"
+                                                    placeholder="" ngDefaultControl refValue="L0001"
+                                                    [disabled]="!active"
                                                     [value]="dataPermission?.read ? dataPermission?.read : 0"
                                                     field="read" (valueChange)="valueChange($event)">
                                                 </codx-input>
@@ -68,8 +71,9 @@
                                                 <div class="text-muted">Lưu dữ liệu chỉnh sửa vào cơ sở dữ liệu</div>
                                             </div>
                                             <div class="lv-control">
-                                                <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                                    [disabled]="!active" ngDefaultControl refValue="L0001" field="write"
+                                                <codx-input type="select" name="select" class="cotrol-vll"
+                                                    placeholder="" [disabled]="!active" ngDefaultControl
+                                                    refValue="L0001" field="write"
                                                     [value]="dataPermission?.write ? dataPermission?.write : 0"
                                                     (valueChange)="valueChange($event)">
                                                 </codx-input>
@@ -82,9 +86,9 @@
                                                 <div class="text-muted">Xóa đối tượng được chọn ra khỏi danh sách</div>
                                             </div>
                                             <div class="lv-control">
-                                                <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                                    [disabled]="!active" ngDefaultControl refValue="L0001"
-                                                    field="delete"
+                                                <codx-input type="select" name="select" class="cotrol-vll"
+                                                    placeholder="" [disabled]="!active" ngDefaultControl
+                                                    refValue="L0001" field="delete"
                                                     [value]="dataPermission?.delete ? dataPermission?.delete : 0"
                                                     (valueChange)="valueChange($event)">
                                                 </codx-input>
@@ -97,8 +101,9 @@
                                                 <div class="text-muted">Người dùng xem dữ liệu trên combobox</div>
                                             </div>
                                             <div class="lv-control">
-                                                <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                                    [disabled]="!active" ngDefaultControl refValue="L0001" field="refer"
+                                                <codx-input type="select" name="select" class="cotrol-vll"
+                                                    placeholder="" [disabled]="!active" ngDefaultControl
+                                                    refValue="L0001" field="refer"
                                                     [value]="dataPermission?.refer ? dataPermission?.refer : 0"
                                                     (valueChange)="valueChange($event)">
                                                 </codx-input>
@@ -109,7 +114,8 @@
                                 <div *ngIf="dataBasic && dataBasic.length>0" class="list-group">
                                     <div class="list-title d-flex align-items-center justify-content-between">
                                         <h4 class="text-dark">
-                                            <codx-label name="lblBasicFunction" formName="AD_Roles" default="Chức năng cơ bản">
+                                            <codx-label name="lblBasicFunction" formName="AD_Roles"
+                                                default="Chức năng cơ bản">
                                             </codx-label>
                                         </h4>
                                         <codx-input type="checkbox" name="checkbox" class="check-sys d-block text-right"
@@ -142,9 +148,10 @@
                                                 </div>
                                                 <span class="switch switch-sm">
                                                     <label>
-                                                        <input [attr.data-funcID]="item.functionID"
+                                                        <codx-input [attr.data-funcID]="item.functionID"
                                                             (change)="inputChange($event)" class="role-function"
-                                                            type="checkbox" name="select" />
+                                                            type="checkbox" name="select">
+                                                        </codx-input>
                                                         <span></span>
                                                     </label>
                                                 </span>
@@ -196,12 +203,13 @@
                                 <div *ngIf="dataMore && dataMore.length>0" class="list-group">
                                     <div class="list-title d-flex align-items-center justify-content-between">
                                         <h4 class="text-dark">
-                                            <codx-label name="lblExtendedFunction" formName="AD_Roles" default="Chức năng mở rộng">
+                                            <codx-label name="lblExtendedFunction" formName="AD_Roles"
+                                                default="Chức năng mở rộng">
                                             </codx-label>
                                         </h4>
-                                        <codx-input type="checkbox" name="checkbox" class="check-more d-block text-right"
-                                            placeholder="" ngDefaultControl field="more"
-                                            (valueChange)="valueChange($event)" label="chọn tất cả"
+                                        <codx-input type="checkbox" name="checkbox"
+                                            class="check-more d-block text-right" placeholder="" ngDefaultControl
+                                            field="more" (valueChange)="valueChange($event)" label="chọn tất cả"
                                             labelPosition="before" [disabled]="!active">
                                         </codx-input>
                                         <!-- <span class="switch switch-sm">

@@ -51,7 +51,7 @@ export class PopupRequestStationeryComponent implements OnInit {
   ngOnInit(): void {
     this.bookingService
       .getComboboxName(
-        this.dialog.formModel.formName,
+        this.dialog.formModel.folderName,
         this.dialog.formModel.gridViewName
       )
       .then((res) => {

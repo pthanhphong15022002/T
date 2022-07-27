@@ -4,27 +4,32 @@
             <div class="row">
                 <div class="col-xl-12 col-md-12">
                     <div class="form-group">
-                        <codx-label name="lblRoleName" [formName]="dialog.formModel.entityName" default="Tên vai trò"></codx-label>
-                        <codx-input type="text" class="form-control" id="roleName"
-                            name="roleName" [placeholder]="gridViewSetup?.RoleName?.headerText" [crrValue]="dataUpdate?.roleName">
+                        <codx-label name="lblRoleName" [formName]="dialog.formModel.entityName" default="Tên vai trò">
+                        </codx-label>
+                        <codx-input type="text" class="form-control" id="roleName" name="roleName"
+                            [placeholder]="gridViewSetup?.RoleName?.headerText" [crrValue]="dataUpdate?.roleName">
                         </codx-input>
                     </div>
                 </div>
                 <div class="col-xl-12 col-md-12">
                     <div class="form-group">
-                        <codx-label name="lblDescription" [formName]="dialog.formModel.entityName" default="Mô tả"></codx-label>
+                        <codx-label name="lblDescription" [formName]="dialog.formModel.entityName" default="Mô tả">
+                        </codx-label>
                         <codx-input type="textarea" class="test-textarea" name="description" rows="5"
-                            style="width: 100%;" [crrValue]="dataUpdate?.description" format="ed2" 
-                            [placeholder]="gridViewSetup?.RoleName?.description">
+                            [crrValue]="formType == 'edit' ? dataUpdate?.description : empty" format="ed2"
+                            [placeholder]="gridViewSetup?.Description?.headerText">
                         </codx-input>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-end">
-                <div
-                    [class]="'d-flex align-items-center' + (dataUpdate.roleType == '1' || dataUpdate.roleType == '2' || dataUpdate.roleID=='ADMIN' || dataUpdate.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
-                    <a (click)="viewRoleDetail()" class="text-primary disabled">{{'Phân quyền chi tiết' | lang:
-                        'Roles':'lblRolesDetail' | async}}</a>
+                <div [class]="'d-flex align-items-center' + (dataUpdate.roleType == '1' || dataUpdate.roleType == '2' 
+                    || dataUpdate.roleID=='ADMIN' || dataUpdate.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
+                    <a (click)="viewRoleDetail()" class="text-primary disabled">
+                        <codx-label name="lblRolesDetail" [formName]="dialog.formModel.entityName"
+                            default="Phân quyền chi tiết">
+                        </codx-label>
+                    </a>
                     <i class="icon-keyboard_arrow_right icon-18 mr-1 text-primary"></i>
                 </div>
             </div>

@@ -33,26 +33,24 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   views = [];
   button?: ButtonModel;
   dialog: DialogRef;
+  urlDetailRoles: any;
 
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
   constructor(
     private injector: Injector,
-    private temp: TempService,
     private tenantStore: TenantStore,
     private tempService: TempService,
-    private changeDR: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private rolesService: RolesService,
-    private adsv: CodxAdService,
-    private auth: AuthStore,
+    private changedt: ChangeDetectorRef,
     private route: ActivatedRoute,
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
     })
-    const user = this.auth.get();
+    this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
+      this.urlDetailRoles = res[0]?.url;
+    })
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
@@ -110,6 +108,10 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.tempService.roleName = roleName;
     this.tempService.isSystem = isSystem;
 
+    this.urlDetailRoles
+    recID
+    debugger;
+    this.codxService.navigate('', this.urlDetailRoles, { recID: recID })
     //TEMP
     // this.router.navigate([`${this.tenant}/ad/roledetail/${recID}`]);
     //TEMP

@@ -217,7 +217,7 @@ export class EmployeesComponent implements OnInit {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteAsync';
 
-    opt.data = itemSelected.taskGroupID;
+    opt.data = itemSelected.employeeID;
     return true;
   }
 

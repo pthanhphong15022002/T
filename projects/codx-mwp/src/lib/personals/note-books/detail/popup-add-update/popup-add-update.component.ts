@@ -124,10 +124,12 @@ export class PopupAddUpdate implements OnInit {
 
   popup() {
     this.attachment.uploadFile();
+   // this.attachment.data
     this.checkFile = true;
   }
 
   fileAdded(e) {
+    console.log("check fileAdded", e)
     debugger;
   }
 

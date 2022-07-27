@@ -157,8 +157,7 @@
               <td class="text-center">{{ item.day }}/{{ item.month }}</td>
 
               <td class="text-center">
-                <codx-colorpicker [value]="item.color ? item.color : '#0078FF'">
-                </codx-colorpicker>
+                <div class="badge badge-square badge-md me-3" [style.background]="item.color"></div>
               </td>
               <td class="text-center">
                 <span class="{{ item.symbol }}"></span>

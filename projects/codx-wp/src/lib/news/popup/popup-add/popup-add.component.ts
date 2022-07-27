@@ -142,7 +142,6 @@ export class PopupAddComponent implements OnInit {
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
-    objNews.tags = this.tagName;
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
