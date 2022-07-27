@@ -16,33 +16,39 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row">
       <div class="col-8">
-        <codx-label class="fw-bolder" default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
-          [Group]="dialogCategory" ControlName="categoryName">
-        </codx-input>
+        <div class="form-group">
+          <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
+            [Group]="dialogCategory" ControlName="categoryName">
+          </codx-input>
+        </div>
       </div>
       <div class="col-4">
-        <codx-label class="fw-bolder" default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
-          [Group]="dialogCategory" ControlName="categoryID" disabled="true">
-        </codx-input>
+        <div class="form-group">
+          <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
+            [Group]="dialogCategory" ControlName="categoryID" disabled="true">
+          </codx-input>
+        </div>
       </div>
     </div>
     <div class="d-flex align-items-center mt-3">
+
       <codx-input #checkbox type="switch" id="switch" [checked]="dialogCategory.value.eSign" labelPosition="After"
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label class="fw-bolder" fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
+        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
       </label>
+
     </div>
     <div class="row mt-3">
       <div class="col-6">
-        <codx-label class="fw-bolder" default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
+        <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['SignatureType']"
           [crrValue]="dialogCategory.value.signatureType" field="signatureType" (valueChange)="valueChange($event)">
@@ -52,7 +58,7 @@
       </div>
     </div>
     <div class="mt-3">
-      <codx-label class="fw-bolder" default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
+      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
       </codx-label>
       <codx-input type="textarea" format="ed2" rows="3" class="test-textarea" field="memo" ControlName="memo"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.memo??''">
@@ -105,8 +111,8 @@
                   [desc]="approver.positionName ?? 'Vị trí công việc'">
                 </codx-temp-full>
                 <codx-temp-full *ngIf="approver.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
-                (item.icon ? item.icon : 'share_default.svg')" imgCss="me-4 symbol symbol-40px symbol-circle"
-                  [imageWidth]="40" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
+                (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-2 user-mini-icon" [imageWidth]="20"
+                  [title]="(approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.approver |vll: 'ES014': 'text'|async">
                 </codx-temp-full>
 

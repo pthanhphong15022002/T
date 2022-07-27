@@ -1,3 +1,5 @@
+import { CodxShareService } from './../../../../../../../codx-share/src/lib/codx-share.service';
+import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel, CacheService } from 'codx-core';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
@@ -6,9 +8,10 @@ import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
-  styleUrls: ['./detail-note-books.component.scss']
+  styleUrls: ['./detail-note-books.component.scss'],
+  providers: [CodxShareService]
 })
-export class DetailNoteBooksComponent extends UIComponent {
+export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
 
   views = [];
   recID: any;
@@ -45,6 +48,7 @@ export class DetailNoteBooksComponent extends UIComponent {
 
   constructor(injector: Injector,
     private route: ActivatedRoute,
+    private codxShareService: CodxShareService
   ) {
     super(injector);
     this.route.params.subscribe(params => {
@@ -59,6 +63,10 @@ export class DetailNoteBooksComponent extends UIComponent {
         this.functionList.entityName = res.entityName;
       }
     })
+    this.codxShareService.hideAside.next(false);
+  }
+  ngOnDestroy(): void {
+    this.codxShareService.hideAside.next(true);
   }
 
   onInit(): void {
@@ -72,13 +80,13 @@ export class DetailNoteBooksComponent extends UIComponent {
       field: 'title',
       headerText: 'Tiêu đề',
       template: '',
-      width: 150
+      width: 300
     },
     {
       field: 'Tag#',
       headerText: 'Tag#',
       template: this.tag,
-      width: 100
+      width: 200
     },
     {
       field: 'memo',

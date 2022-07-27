@@ -134,10 +134,8 @@
                         <ng-template #dataVote>
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                                 <div *ngFor="let vote of data.votes">
-                                    <a class="me-2" >
-                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                    </a>
+                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                                 </div>
                                 <div>
                                     <span class="ms-2">{{data.totalVote}}</span>
@@ -220,11 +218,11 @@
                     </ng-container>
                 </ng-container>
                 <ng-container *ngIf="data.showReply">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center mt-4">
                         <div class="me-3">
                             <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
                         </div>
-                        <div class="position-relative cmt feed-box cmt-cmt mt-4 c3 w-100"
+                        <div class="position-relative cmt feed-box cmt-cmt c3 w-100"
                             (keyup.enter)="replyComment(data,repComment)">
                             <codx-input type="text" placeholder="Trả lời" [crrValue]="repComment"
                                 (valueChange)="valueChange($event,'repComment')">
@@ -304,10 +302,8 @@
                         <ng-template #childDataVote>
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(childData)">
                                 <div *ngFor="let vote of childData.votes">
-                                    <a class="me-2" >
-                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                    </a>
+                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                                 </div>
                                 <div>
                                     <span class="ms-2">{{childData.totalVote}}</span>

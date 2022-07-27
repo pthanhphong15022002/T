@@ -39,6 +39,8 @@ import { LayoutNoAsideComponent } from './_layoutNoAside/layoutNoAside.component
 import { LayoutOnlyHeaderComponent } from './_layoutOnlyHeader/layoutOnlyHeader.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
+import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
+import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -64,6 +66,8 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
+  QuickLinksInnerComponent,
+  UserInnerComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -86,7 +90,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
   ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule {}
+export class CodxShareModule { }
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,
 //   CodxCoreModule,

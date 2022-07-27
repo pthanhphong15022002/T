@@ -13,6 +13,7 @@ export class Notes {
     createdOn: string;
     createdBy: string;   
     tag: string;
+    fileCount: string;
 }
 
 export class TempNote {

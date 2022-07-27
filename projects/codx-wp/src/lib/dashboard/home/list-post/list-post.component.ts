@@ -1,8 +1,37 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Post } from '@shared/models/post';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { UploadFile, CodxListviewComponent, AuthStore, TenantStore, CacheService, ApiHttpService, CallFuncService, NotificationsService, DialogRef, DialogModel, CRUDService, ViewModel, ViewType, ViewsComponent, RequestOption, CodxService, Util } from 'codx-core';
+import {
+  UploadFile,
+  CodxListviewComponent,
+  AuthStore,
+  TenantStore,
+  CacheService,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
+  DialogRef,
+  DialogModel,
+  CRUDService,
+  ViewModel,
+  ViewType,
+  ViewsComponent,
+  RequestOption,
+  CodxService,
+  Util,
+} from 'codx-core';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -26,23 +55,24 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   // lstType = this.env.jsonType;
   dataVll = [];
-  title:string = "";
+  title: string = '';
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate = "  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ";
-  dataValue: any = "0;1;5;false";
+  predicate =
+    '  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ';
+  dataValue: any = '0;1;5;false';
 
   modal: DialogRef;
-  headerText = "";
+  headerText = '';
   views: Array<ViewModel> | any = [];
 
-  @Input() predicates = "";
-  @Input() dataValues = "";
+  @Input() predicates = '';
+  @Input() dataValues = '';
   @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxFile') codxFile:ImageGridComponent;
+  @ViewChild('codxFile') codxFile: ImageGridComponent;
   @Input() isShowCreate = true;
 
   constructor(
@@ -55,47 +85,47 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private codxService: CodxService
   ) {
     this.user = this.authStore.get();
-    this.cache.valueList('L1901').subscribe((res:any) => {
+    this.cache.valueList('L1901').subscribe((res: any) => {
       if (res) {
         this.dataVll = res.datas;
         this.dt.detectChanges();
       }
     });
-    this.cache.message('WP011').subscribe((mssg:any)=>{
-      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
-      this.dt.detectChanges();  
-    })
+    this.cache.message('WP011').subscribe((mssg: any) => {
+      // this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.dt.detectChanges();
+    });
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.content,
-      active: true,
-      sameData:false,
-      model: {
-        panelLeftRef: this.panelLeftRef
-      }
-    }]
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
     this.getGridViewSetUp();
     console.log(this.codxViews.dataService);
   }
 
-
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
   getGridViewSetUp() {
-    this.cache.functionList(this.codxViews.formModel.funcID).subscribe((func) => {
-      this.cache.gridViewSetup(func.formName, func.gridViewName)
-        .subscribe((grd: any) => {
-          this.headerText = grd['Comments']['headerText'];
-          this.dt.detectChanges();
-        })
-    })
-
+    this.cache
+      .functionList(this.codxViews.formModel.funcID)
+      .subscribe((func) => {
+        this.cache
+          .gridViewSetup(func.formName, func.gridViewName)
+          .subscribe((grd: any) => {
+            this.headerText = grd['Comments']['headerText'];
+            this.dt.detectChanges();
+          });
+      });
   }
 
   beforDelete(option:any,data:any){
@@ -137,47 +167,71 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   openCreateModal() {
     var obj = {
-      status: "create",
-      headerText: "Tạo bài viết",
+      status: 'create',
+      headerText: 'Tạo bài viết',
       title: this.title,
-      lstView: this.listview
-    }
+      lstView: this.listview,
+    };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 700, 550, "", obj, '', option);
-    this.modal.closed.subscribe(res=>{
-
-    })
+    this.modal = this.callfc.openForm(
+      AddPostComponent,
+      '',
+      700,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    this.modal.closed.subscribe((res) => {});
   }
   openEditModal(data: any) {
-    let dataEdit = { ...data }; 
+    let dataEdit = { ...data };
     let obj = {
       post: dataEdit,
-      status: "edit",
-      headerText: "Chỉnh sửa bài viết",
+      status: 'edit',
+      headerText: 'Chỉnh sửa bài viết',
       title: this.title,
-    }
+    };
     console.log(this.codxFile);
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
-
+    this.modal = this.callfc.openForm(
+      AddPostComponent,
+      '',
+      650,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
   }
 
   openModalShare(data: any) {
     var obj = {
       post: data,
-      status: "share",
-      headerText: "Chia sẻ bài viết",
+      status: 'share',
+      headerText: 'Chia sẻ bài viết',
       title: this.title,
-    }
-    this.dt.detectChanges()
+    };
+    this.dt.detectChanges();
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(AddPostComponent, "", 650, 550, "", obj, '', option);
+    this.modal = this.callfc.openForm(
+      AddPostComponent,
+      '',
+      650,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
   }
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {
@@ -185,9 +239,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         p.listComment.push(data);
         return;
       }
-    })
+    });
   }
-
 
   getTagUser(id) {
     this.api
@@ -228,12 +281,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   clickClose() {
-    var modal = this.callfc.openForm(AddPostComponent, "")
+    var modal = this.callfc.openForm(AddPostComponent, '');
   }
   clickShowItem(data: any) {
     console.log('clickShowItem: ', data);
   }
-
 
   naviagte(data: any) {
     this.api
@@ -244,14 +296,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         'UpdateViewNewsAsync',
         data.recID
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res) {
           this.codxService.navigate('', "wp/news/WPT02/" + data.category + '/' + data.recID);
         }
       });
-
   }
-  getFiles(event:any,data:any){
+  getFiles(event: any, data: any) {
     data.files = event;
   }
 }
