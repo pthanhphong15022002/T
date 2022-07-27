@@ -1,3 +1,4 @@
+import { CodxTMService } from './../codx-tm.service';
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
@@ -41,7 +42,8 @@ export class TMMeetingsComponent extends UIComponent {
   constructor(inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,) {
+    private activedRouter: ActivatedRoute,
+    private tmService: CodxTMService) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -82,9 +84,9 @@ export class TMMeetingsComponent extends UIComponent {
       },
     ]
 
-      this.view.dataService.methodSave = 'AddMeetingsAsync';
+    this.view.dataService.methodSave = 'AddMeetingsAsync';
 
-      this.dt.detectChanges();
+    this.dt.detectChanges();
 
   }
   clickMF(e: any, data?: any) {
@@ -112,7 +114,6 @@ export class TMMeetingsComponent extends UIComponent {
         break;
     }
   }
-
 
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {

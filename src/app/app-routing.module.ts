@@ -88,7 +88,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
       },
-      
+
       { path: '**', redirectTo: 'error/404' }
     ],
   }
