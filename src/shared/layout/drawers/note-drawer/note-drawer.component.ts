@@ -1,13 +1,14 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef } from 'codx-core';
+import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService } from 'codx-core';
 import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { NoteServices } from '@pages/services/note.services';
+import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
 
 @Component({
   selector: 'app-note-drawer',
@@ -21,38 +22,45 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   data: any;
   message: any;
   listNote: any[] = [];
-  messageOld: any;
-  listNoteOld: any[] = [];
   type: any;
-  isCalendar = false;
-  isCalendarOld: any;
-  noteTypeOld: any;
   itemUpdate: any;
   recID: any;
-  recIdOld: any;
-  isPin: any;
-  isPinOld: any;
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  TM_Tasks: any;
-  WP_Notes: any;
-  TM_TasksParam: any;
-  WP_NotesParam: any;
-  param: any;
-  countIsPin = 0;
-  countNotPin = 0;
   typeList = "note-drawer";
   header = 'Ghi chú';
   dialog: DialogRef;
+  predicate = '';
+  dataValue = '';
+  editMF: any;
+  deleteMF: any;
+  pinMF: any;
+  saveMF: any;
+  dtService: CRUDService;
+  dataUpdate: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
+
   constructor(private injector: Injector,
-    private modalService: NgbModal,
     private changeDetectorRef: ChangeDetectorRef,
     private noteService: NoteServices,
+    @Optional() dialog: DialogRef,
+    @Optional() dt: DialogData,
   ) {
-    super(injector)
+    super(injector);
+    this.dialog = dialog;
+    this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
+    })
+    var dataSv = new CRUDService(injector);
+    dataSv.request.pageSize = 10;
+    this.dtService = dataSv;
   }
 
   onInit(): void {
@@ -72,7 +80,14 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               today.click();
             }
           } else {
-            (this.lstView.dataService as CRUDService).update(data).subscribe();
+            (this.lstView.dataService as CRUDService).update(data).subscribe((res)=>{
+          
+              var dt = this.lstView?.dataService.data;
+              dt.sort(function(a, b) {
+                return Number(b.isPin) - Number(a.isPin);
+            });
+              dt = [...dt, ...[]];
+            });
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -82,8 +97,19 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.onCountNotePin();
-    this.getNumberNotePin();
+    this.lstView.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded') {
+        this.data = data;
+        if (this.data?.length != 0) {
+          this.data.forEach((res) => {
+            if (res?.isPin == true || res?.isPin == '1') {
+              this.countNotePin += 1;
+            }
+          })
+        }
+        (this.lstView.dataService as CRUDService).page = 5;
+      }
+    }
   }
 
   getMaxPinNote() {
@@ -143,20 +169,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.recID = data?.recID;
   }
 
-  getNumberNotePin() {
-    var that = this;
-    var dt = that.lstView.dataService.data;
-    if (dt?.length != 0) {
-      dt.forEach((res) => {
-        if (res?.isPin == true || res?.isPin == '1') {
-          that.countNotePin += 1;
-        }
-      })
-    }
-  }
-
   checkNumberNotePin(data) {
-    debugger;
     if (data?.isPin == '1' || data?.isPin == true) {
       this.countNotePin -= 1;
       this.checkUpdateNotePin = false;
@@ -206,6 +219,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         data
       ])
       .subscribe((res) => {
+        this.dataValue = '';
+       // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
         var object = [{ data: data, type: 'edit' }]
         this.noteService.data.next(object);
         this.changeDetectorRef.detectChanges();
@@ -235,20 +250,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'edit':
-        this.openFormUpdateNote(data);
-        break;
-      case 'delete':
-        this.onDeleteNote(data)
-        break;
-      case 'WPT0801':
-        this.checkNumberNotePin(data);
-        break;
-      case 'WPT0802':
-        this.openFormNoteBooks(data);
-        break;
-    }
+  getMoreF(item) {
+    this.dataUpdate = item;
   }
 }

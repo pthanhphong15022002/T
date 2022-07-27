@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FileService } from '@shared/services/file.service';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   CallFuncService,
@@ -14,8 +14,10 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
   ViewsComponent,
 } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
@@ -31,14 +33,14 @@ export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('content') content;
   @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
+  headerText = 'Thêm mới tài liệu';
+
   currentTab = 0;
   formModel: FormModel;
   isAfterRender = false;
   objectIDFile: String;
-  dialogSignature: FormGroup;
   cbxName;
   dialogSignFile: FormGroup;
-  dialogAutoNum: FormGroup;
   lstDataFile = [];
   isAdd: boolean = true;
   processID: String = '';
@@ -46,6 +48,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   dialog: DialogRef;
   data;
+  autoNo;
 
   showPlan: boolean = true;
   constructor(
@@ -54,12 +57,13 @@ export class PopupAddSignFileComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
     private api: ApiHttpService,
-    private fileService: FileService,
+    private dmSV: CodxDMService,
+    private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formModel = data?.data[0].formModel;
+    this.formModel = data?.data.formModel;
     console.log(this.formModel);
 
     this.data = data;
@@ -71,6 +75,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.esService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
+        console.log('cbName', res);
         if (res) this.cbxName = res;
       });
   }
@@ -96,6 +101,7 @@ export class PopupAddSignFileComponent implements OnInit {
               'CategoryID'
             )
             .subscribe((dt: any) => {
+              this.autoNo = dt;
               this.objectIDFile = dt;
               this.dialogSignFile.patchValue({
                 refNo: dt,
@@ -114,7 +120,11 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  fileAdded(event, currentTab) {
+  closeDialogTmp(dialogTmp: DialogRef) {
+    dialogTmp && dialogTmp.close();
+  }
+
+  fileAdded(event) {
     this.lstDataFile = event?.data;
     let files = [];
     this.lstDataFile.forEach((element) => {
@@ -128,62 +138,91 @@ export class PopupAddSignFileComponent implements OnInit {
     this.dialogSignFile.patchValue({ files: files });
   }
 
-  onSaveForm() {
+  getfileCount(event) {}
+
+  onSaveForm() {}
+
+  onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
       return;
     }
-    this.api
-      .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
-        this.dialogSignFile.value,
-        this.isAdd,
-        this.transID,
-      ])
+
+    this.esService
+      .addNewSignFile(this.dialogSignFile.value)
       .subscribe((res) => {
-        // if (res && res.msgBodyData[0]) {
-        //   if (
-        //     this.lstDataFile != undefined &&
-        //     this.lstDataFile != null &&
-        //     this.lstDataFile.length > 0
-        //   ) {
-        //     this.lstDataFile.forEach((elm) => {
-        //       this.fileService
-        //         .updateFileByObjectIDType(
-        //           elm.objectId,
-        //           res?.msgBodyData[0].recID,
-        //           'ES_SignFiles'
-        //         )
-        //         .subscribe((item) => {
-        //           //console.log(item);
-        //         });
-        //     });
-        //   }
-        // }
+        if (res != null) {
+          debugger;
+          console.log(res);
+
+          this.dialogSignFile.patchValue(res);
+          if (this.currentTab == 1) {
+            this.currentTab++;
+          }
+        }
       });
+    // this.api
+    //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
+    //     this.dialogSignFile.value,
+    //     this.isAdd,
+    //     this.transID,
+    //   ])
+    //   .subscribe((res) => {
+    // if (res && res.msgBodyData[0]) {
+    //   if (
+    //     this.lstDataFile != undefined &&
+    //     this.lstDataFile != null &&
+    //     this.lstDataFile.length > 0
+    //   ) {
+    //     this.lstDataFile.forEach((elm) => {
+    //       this.fileService
+    //         .updateFileByObjectIDType(
+    //           elm.objectId,
+    //           res?.msgBodyData[0].recID,
+    //           'ES_SignFiles'
+    //         )
+    //         .subscribe((item) => {
+    //           //console.log(item);
+    //         });
+    //     });
+    //   }
+    // }
+    // });
   }
 
-  onSaveProcessID() {
+  onSaveProcessID(dialogTmp: DialogRef) {
     if (this.processID != '') {
       this.dialogSignFile.patchValue({
         processID: this.processID,
         approveControl: '2',
       });
+
+      dialogTmp && dialogTmp.close();
     }
   }
 
+  close() {
+    this.dialog && this.dialog.close();
+  }
+
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event?.component) {
       if (event?.data === Object(event?.data))
-        this.dialogSignFile.patchValue({ [event['field']]: event.data.value });
+        this.dialogSignFile.patchValue({ [event['field']]: event.data[0] });
       else this.dialogSignFile.patchValue({ [event['field']]: event.data });
 
       if (event.field == 'categoryID' && this.dialogSignFile.value != null) {
         this.dialogSignFile.patchValue({ approveControl: '1' });
+        this.esService
+          .getAutoNumberByCategory(this.dialogSignFile.value.categoryID)
+          .subscribe((res) => {
+            if (res != null) {
+              this.dialogSignFile.patchValue({ refNo: res });
+            } else {
+              this.dialogSignFile.patchValue({ refNo: this.autoNo });
+            }
+          });
       }
     }
-  }
-
-  getJSONString(data) {
-    return JSON.stringify(data);
   }
 
   openFilePopup() {
@@ -191,27 +230,48 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   continue(currentTab) {
-    if (currentTab == 1) {
-      this.transID = '629de0560d7d066f90f9758e';
-      this.api
-        .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
-          this.dialogSignFile.value,
-          this.isAdd,
-          this.transID,
-        ])
-        .subscribe((res) => {
-          if (res && res.msgBodyData != null) {
-            this.dialogSignFile.patchValue(res.msgBodyData[0]);
-            this.transID = res.msgBodyData[0].recID;
-            this.currentTab = currentTab + 1;
-            this.viewApprovalStep.setTransID(this.transID);
-            this.cr.detectChanges();
-          }
-        });
-    } else {
-      this.currentTab = currentTab + 1;
+    switch (currentTab) {
+      case 0:
+        if (this.dmSV.fileUploadList.length > 0) {
+          this.currentTab++;
+        } else {
+          this.notify.notify('Yêu cầu thêm file');
+        }
+        break;
+      case 1:
+        if (this.dialogSignFile.invalid) {
+          break;
+        }
+        this.onSaveSignFile();
+        // this.currentTab++;
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
     }
-    this.cr.detectChanges();
+    // if (currentTab == 1) {
+    //   this.transID = '629de1080d7d066f90f975a3';
+    //   // this.api
+    //   //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
+    //   //     this.dialogSignFile.value,
+    //   //     this.isAdd,
+    //   //     this.transID,
+    //   //   ])
+    //   //   .subscribe((res) => {
+    //   //     if (res && res.msgBodyData != null) {
+    //   //       this.dialogSignFile.patchValue(res.msgBodyData[0]);
+    //   //       this.transID = res.msgBodyData[0].recID;
+    //   //       this.currentTab = currentTab + 1;
+    //   //       this.viewApprovalStep.setTransID(this.transID);
+    //   //       this.cr.detectChanges();
+    //   //     }
+    //   //   });
+    //   this.currentTab = currentTab + 1;
+    // } else {
+    //   this.currentTab = currentTab + 1;
+    // }
+    // this.cr.detectChanges();
   }
 
   openFormAdd(event) {
@@ -219,7 +279,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   openPopup(content) {
-    this.callfuncService.openForm(content, 'Qui trình mẫu', 700, 300);
+    this.callfuncService.openForm(content, 'Qui trình mẫu', 400, 250);
   }
 
   extendShowPlan() {

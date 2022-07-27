@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:max": "cross-env NODE_OPTIONS='--max-old-space-size=8192' ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "ngserve": "set NODE_OPTIONS=--max_old_space_size=8192 & ng serve --open"

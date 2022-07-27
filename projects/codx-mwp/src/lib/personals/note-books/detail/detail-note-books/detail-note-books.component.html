@@ -1,6 +1,5 @@
-<codx-views #view [views]="views" [button]="button" [funcID]="funcID" [toolbar]="true"
-    (buttonClick)="openFormCreateDetail($event)" idField="recID" entityName="WP_Notes" service="WP"
-    entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue" >
+<codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
+    idField="recID" [entityName]="functionList.entityName" service="WP" [predicate]="predicate" [dataValue]="dataValue">
 </codx-views>
 
 <!-- <ng-container *ngIf="recID"> -->
@@ -14,17 +13,9 @@
     <span [innerHTML]="item.memo"></span>
 </ng-template>
 
-<ng-template #iconMoreFunc let-item>
-    <div style="width: 100px;height: 200px;margin-left: -90px;">
-        <codx-mfunc [formModel]="formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-        [dataItem]="item">
-        </codx-mfunc>
-    </div>
-</ng-template>
 
-<ng-template #tag>
-    <span class="badge badge-primary me-1">Project</span>
-    <span class="badge badge-success me-1">Customize</span>
+<ng-template #tag let-item>
+    <codx-tag [entityName]="functionList.entityName" [isEdit]="false" [disabled]="true" [value]="item?.tag"></codx-tag>
 </ng-template>
 
 <ng-template #createdOn let-item>
@@ -32,5 +23,19 @@
 </ng-template>
 
 <ng-template #modifiedOn let-item>
-    <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+    <div class="has-action-menu">
+        <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+        <div class="action-menu">
+            <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+                [dataItem]="item" type="hover">
+            </codx-mfunc>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #fileCount let-item>
+    <div class="flex">
+        <span class="">6</span>
+        <span class="icon-attach_file"></span>
+    </div>
 </ng-template>

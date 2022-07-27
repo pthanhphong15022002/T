@@ -70,17 +70,18 @@
             <div class="float-left me-6">
               <div class="fw-bold me-1">
                 <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
-                </codx-label>: 
+                </codx-label>:
               </div>
               <span *ngIf="itemSelected.dueDate " class="text-gray-700">{{
                 itemSelected.dueDate | date: "dd/MM/yyyy"
                 }}</span>
-                <span #dueDate *ngIf="!itemSelected?.dueDate " >{{ itemSelected.dueDate | formatvalue: formModel:"dueDate":dueDate | async }}</span>
+              <span #dueDate *ngIf="!itemSelected?.dueDate ">{{ itemSelected.dueDate | formatvalue:
+                formModel:"dueDate":dueDate | async }}</span>
             </div>
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
                 <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
-                </codx-label>: 
+                </codx-label>:
               </div>
               <!--<span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
               itemSelected?.priority | vll: 'L0186':'textColor' | async
@@ -105,7 +106,7 @@
             <div class="float-left">
               <div class="fw-bold me-1">
                 <codx-label name="lblTaskGroupName" formName="Tasks" default="Nhóm công việc">
-                </codx-label>: 
+                </codx-label>:
               </div>
               <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">{{
                 itemSelected?.taskGroupName
@@ -120,7 +121,7 @@
             <div class="float-left me-6">
               <div class="fw-bold me-1">
                 <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
-                </codx-label>: 
+                </codx-label>:
               </div>
               <!-- <span [ngClass]="
                   itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
@@ -134,7 +135,7 @@
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
                 <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
-                </codx-label>: 
+                </codx-label>:
               </div>
               <!-- <span [ngClass]="
               itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
@@ -168,7 +169,7 @@
             <span class="fw-bold me-2">
               <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label> -->
-              <codx-label name="lblProjectName" formName="Projects" default="Dự án"></codx-label>: 
+              <codx-label name="lblProjectName" formName="Projects" default="Dự án"></codx-label>:
             </span>
             <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{ itemSelected?.projectName}}</span>
             <span *ngIf="!itemSelected?.projectName" #projectname>{{ itemSelected?.projectName| formatvalue :
@@ -178,7 +179,7 @@
           <div class="d-flex" *ngIf="param?.LocationControl!='0'">
             <span class="fw-bold me-2">
               <codx-label fiedName="Location" formName="Tasks" gridViewName="grvTasks" default="Địa điểm">
-              </codx-label>: 
+              </codx-label>:
             </span>
             <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
             <span *ngIf="itemSelected?.location" class="text-gray-700">{{itemSelected?.location}}</span>
@@ -195,17 +196,48 @@
     <ng-template #body>
       <div class="mt-6 mb-3 text-primary fw-bold">
         <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện">
-        </codx-label>: 
+        </codx-label>:
       </div>
       <div class="">
-        <div *ngIf="itemSelected.category == '3'" class="">
+        <!-- <div *ngIf="itemSelected.category == '3'" class="" (click)="openViewListTaskResource(itemSelected)">
           <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" >
+          </codx-imgs>
+        </div>-->
+        <div *ngIf="itemSelected.category == '3'" class="" >
+          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" (mouseenter)="popoverEmpList(popoverList,itemSelected)"
+          [ngbPopover]="popEmpList" popoverClass="empPopoverClass" 
+          #popoverList="ngbPopover" placement="right bottom" container="body" autoClose="outside" [openDelay]="500">
           </codx-imgs>
         </div>
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
-          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10">
+          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10" >
           </codx-imgs>
         </div>
+
+<!-- 
+        <div *ngIf="itemSelected?.category=='1'||itemSelected?.category=='2'">
+          <codx-img [width]="35" [objectId]="itemSelected?.owner" objectType="AD_Users">
+          </codx-img>
+        </div>
+        <div *ngIf="itemSelected?.category=='3'|| itemSelected?.category=='4'"
+          (click)="openViewListTaskResource(itemSelected)">
+            <div *ngIf="itemSelected.assignTo.split(';').length <= 3">
+              <ng-container *ngFor="let item of itemSelected.assignTo.split(';')">
+                <codx-img [width]="35" [objectId]="item" objectType="AD_Users">
+                </codx-img>
+              </ng-container>
+            </div>
+            <div *ngIf="itemSelected.assignTo.split(';').length > 3">
+              <ng-container *ngFor="let item of itemSelected?.assignTo.split(';'); index as i">
+                <codx-img *ngIf="i < 9" [width]="35" [objectId]="item" objectType="AD_Users">
+                </codx-img>
+                <div *ngIf="i == 9" class="symbol symbol-35px symbol-circle">
+                  <span  class="symbol-label "
+                    style="background-color : #d0e41c;">+{{itemSelected?.assignTo.split(';')?.length-9}}</span>
+                </div>
+              </ng-container>
+            </div>
+        </div> -->
       </div>
       <div class="mt-6 mb-3 text-primary fw-bold">
         <!-- <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">
@@ -237,3 +269,58 @@
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
+
+<ng-template #popEmpList>
+  <div class="fw-bold">
+    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho" ></codx-label><span>{{'('+countResource +')'}}</span>
+  </div>
+  <div>
+    <codx-searchbar *ngIf="countResource>0"  (searchEvent)="searchName($event)"></codx-searchbar>
+  </div>
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
+    <div class="me-3">
+      <div style=" position: relative">
+        <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+        </codx-img>
+        <div style="position: absolute; right: 0px;bottom: 0px">
+          <ng-container *ngFor="let role of listRoles">
+            <ng-container *ngIf="role.value== item.roleType">
+              <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
+            </ng-container>
+            </ng-container>   
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold">{{item?.resourceName}}</div>
+      <div class="text-gray-600 fs-7">{{item?.positionName}}</div>
+      <div class="text-dark">
+        {{item?.memo}}
+      </div>
+      <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
+        <div class="d-flex align-items-end me-2 codx-badge">
+          <span>
+            <div class="d-status">
+              <div class="badge badge-danger me-2 label-status" [style.border-color]="
+                  (item?.status | vll: 'L0614':'textColor' | async) +
+                  '30'
+                " [style.background-color]="
+                  (item?.status | vll: 'L0614':'textColor' | async) +
+                  '30'
+                " [style.color]="
+                item?.status | vll: 'L0614':'textColor' | async
+                " style="border: none">
+                {{ item?.status | vll: "L0614":"text" | async }}
+              </div>
+            </div>
+          </span>
+          <span>
+            <span class="text-gray-700">{{
+              item.dueDate | date: "dd/MM/yyyy"
+              }}</span>
+          </span>
+          </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -60,6 +60,33 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApprover: any = [];
 
   headerText1;
+  type = '1';
+
+  title = '';
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
+    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabInfo2' },
+    {
+      icon: 'icon-email',
+      text: 'Email/thông báo',
+      name: 'tabInfo3',
+    },
+    {
+      icon: 'icon-tune',
+      text: 'Thông tin khác',
+      name: 'tabInfo4',
+    },
+  ];
+
+  setTitle(e: any) {
+    // this.title = 'Thêm ' + e;
+    // this.cr.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
+  }
 
   constructor(
     private esService: CodxEsService,
@@ -79,6 +106,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
     this.vllShare = data?.data.vllShare ?? 'ES014';
+    this.type = data?.data.type ?? '1';
   }
 
   ngAfterViewInit(): void {
@@ -110,7 +138,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 }
               }
             }
-            console.log(this.cbxName);
+            console.log('cbxName', this.cbxName);
 
             if (this.cbxName) {
               this.cache.valueList('ES016').subscribe((vllMode) => {
@@ -158,7 +186,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
-          this.lstApprover = this.dialogApprovalStep.value.approvers;
+          this.lstApprover = JSON.parse(
+            JSON.stringify(this.dialogApprovalStep.value.approvers)
+          );
           this.currentMode = this.dataEdit?.approveMode;
           this.dialogApprovalStep.addControl(
             'id',
@@ -246,7 +276,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event.component) {
       if (event.data === Object(event.data)) {
         this.dialogApprovalStep.patchValue({
           [event['field']]: event.data,
@@ -257,15 +287,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
 
     this.cr.detectChanges();
-  }
-
-  parseInt(data) {
-    let leadtime = parseInt(data);
-    if (leadtime) {
-      return leadtime;
-    } else {
-      return 0;
-    }
   }
 
   valueModeChange(event, item) {
@@ -322,6 +343,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+
+      console.log(this.lstApprover);
+      console.log(this.dataEdit);
+      console.log(this.lstStep);
     }
   }
 }

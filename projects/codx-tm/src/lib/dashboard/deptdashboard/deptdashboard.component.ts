@@ -31,6 +31,17 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
+  availability: number = 0;
+  performance: number = 0;
+  quality: number = 0;
+  kpi: number = 0;
+  tasksByGroup: object;
+  tasksByOrgUnit: object;
+  status: any = {
+    doneTasks: 0,
+    overdueTasks: 0,
+  };
+  dataBarChart: any = {};
   vlWork = [];
   hrWork = [];
   user: any;
@@ -156,7 +167,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   };
   //#endregion chartcolumn
 
-  public headerText: Object = [
+  headerText: Object = [
     { text: 'Khối lượng công việc' },
     { text: 'Thời gian thực hiện' },
   ];
@@ -181,47 +192,39 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.getGeneralData();
     this.top3 = [
-      { name: 'Lê Phạm Hoài Thương', role: 'BA', kpi: 123 },
-      { name: 'Nguyễn Hoàng Bửu', role: 'Dev', kpi: 120 },
-      { name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
+      { id: 'ADMIN', name: 'Lê Phạm Hoài Thương', role: 'BA', kpi: 123 },
+      { id: 'NHBUU', name: 'Nguyễn Hoàng Bửu', role: 'Dev', kpi: 120 },
+      { id: 'NNPSY',name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
     ];
     this.groups = [
-      { id: '', name: 'Nhóm kiểm tra chất lượng', rate: 70 },
-      { id: '', name: 'Nhóm phát triển web', rate: 95 },
-      { id: '', name: 'Nhóm phát triển mobile', rate: 50 },
+      { id: 'QC', name: 'Nhóm kiểm tra chất lượng', rate: 70 },
+      { id: 'WEB', name: 'Nhóm phát triển web', rate: 95 },
+      { id: 'MOBILE', name: 'Nhóm phát triển mobile', rate: 50 },
     ];
   }
 
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
       console.log(res);
-      this.piedata1 = res?.tasksByGroup;
-      this.piedata2 = [
-        {
-          x: 'Chưa thực hiện',
-          y: res?.status.newTasks,
-        },
-        {
-          x: 'Đang thực hiên',
-          y: res?.status.processingTasks,
-        },
-        {
-          x: 'Hoàn tất',
-          y: res?.status.doneTasks,
-        },
-        {
-          x: 'Hoãn lại',
-          y: res?.status.postponeTasks,
-        },
-        {
-          x: 'Bị huỷ',
-          y: res?.status.canceledTasks,
-        },
-      ];
-      this.dataColumn = res?.dataBarChart.barChart;
-      this.dataLine = res?.dataBarChart.lineChart;
-      //this.data = res?.tasksByGroup;
-      res.vltasksByOrgUnit.map((data) => {
+      const {
+        efficiency,
+        tasksByGroup,
+        tasksByOrgUnit,
+        status,
+        dataBarChart,
+        rateDoneOnTime,
+        vltasksByOrgUnit,
+        hoursByOrgUnit,
+      } = res;
+      this.availability = efficiency.availability.toFixed(2);
+      this.performance = efficiency.performance.toFixed(2);
+      this.quality = efficiency.quality.toFixed(2);
+      this.kpi = efficiency.kpi.toFixed(2);
+      this.tasksByGroup = tasksByGroup;
+      this.tasksByOrgUnit = tasksByOrgUnit;
+      this.status = status;
+      this.dataBarChart = dataBarChart;
+      vltasksByOrgUnit.map((data) => {
         let newTasks = 0;
         let processingTasks = 0;
         let doneTasks = 0;
@@ -258,6 +261,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
           },
         });
       });
+      this.hrWork = hoursByOrgUnit;
       this.detectorRef.detectChanges();
     });
   }
@@ -272,9 +276,9 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   }
 
   sort() {
-    debugger;
     this.isDesc = !this.isDesc;
     this.vlWork = this.vlWork.reverse();
+    this.hrWork = this.hrWork.reverse();
     this.detectorRef.detectChanges();
   }
 }

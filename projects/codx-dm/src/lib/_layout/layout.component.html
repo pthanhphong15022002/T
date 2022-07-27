@@ -1,28 +1,32 @@
 <ng-container *ngIf="user">
-  <div class="d-flex flex-column flex-root">    
+  <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [asideMenuHeader]="header" [asideMenuFooter]="footer" [hasSecond]="false">        
-      </codx-aside>      
+      <codx-aside *ngIf="asideDisplay" [asideMenuHeader]="header" [asideMenuFooter]="footer" [hasSecond]="false">
+      </codx-aside>
       <ng-template #header>
-        <div class="menu-item">
-          <a class="menu-link without-sub" href="javascript:;">
-            <button (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" data-toggle="tooltip">
+        <div class="px-6">
+          <a class="btn-add without-sub" href="javascript:;">
+            <button [disabled]="disableInput" (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg"
+              id="kt_demo_panel_toggle" data-toggle="tooltip">
               <i class="icon-add"></i>
-              <span class="font-size-lg">{{titleAddFolder}}</span>
+              <span class="fs-5">{{ titleAddFolder }}</span>
             </button>
           </a>
         </div>
       </ng-template>
       <ng-template #footer>
-        <div class="menu-item">      
-          <div  class="progress mx-6 mt-2" style="height: 1px;">
-            <div role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar" style="width: 0.4%;">
-            </div>
+        <div class="menu-item progress-line">
+          <div class="progress mx-6 mt-2" style="height: 6px">
+            <div role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar"
+              style="width: 40%"></div>
           </div>
-          <div class="mt-2 mx-5 mr-10 text-light">{{titleHddUsed}}</div>    
+          <div class="mt-2 mx-6 text-light fw-normal fs-7">{{ titleHddUsed }}</div>
+        </div>
+        <div class="progress-circle px-4">
+          <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="--value:40"></div>
         </div>
       </ng-template>
-      
+
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
           [headerRightBar]="headerRightBar" #codxHeader>
@@ -55,8 +59,9 @@
       <!-- begin::Menu wrapper -->
       <div class="btn btn-icon btn-active-light-primary position-relative"
         [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
-        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'" class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+        <span [inlineSVG]="
+            './assets/themes/sys/default/img/header_notifications.svg'
+          " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
         <!-- <span
           class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span> -->
       </div>
@@ -68,7 +73,7 @@
       <div class="btn btn-icon btn-active-light-primary" [ngClass]="codxService.toolbarButtonHeightClass"
         data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom">
-        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon"
+        <span [inlineSVG]="'./assets/themes/sys/default/img/header_app_module.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
       <!-- <erm-quick-links-inner></erm-quick-links-inner> -->
@@ -85,8 +90,8 @@
       <!-- <codx-user-inner (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner> -->
     </div>
     <!-- end::User -->
-    
-    <ng-container *ngIf="headerLeft === 'menu'">      
+
+    <ng-container *ngIf="headerLeft === 'menu'">
       <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
         <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
           id="kt_header_menu_mobile_toggle">
@@ -94,11 +99,8 @@
         </div>
       </div>
     </ng-container>
-
-    
   </ng-template>
 </ng-container>
-
 
 <!-- <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
@@ -128,7 +130,7 @@
     <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <div class="btn btn-icon btn-active-light-primary position-relative"
         [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
-        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'" class="svg-icon"
+        <span [inlineSVG]="'./assets/themes/sys/default/img/header_notifications.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
         <span
           class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
@@ -139,7 +141,7 @@
       <div class="btn btn-icon btn-active-light-primary" [ngClass]="codxService.toolbarButtonHeightClass"
         data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom">
-        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon"
+        <span [inlineSVG]="'./assets/themes/sys/default/img/header_app_module.svg'" class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
       <erm-quick-links-inner></erm-quick-links-inner>

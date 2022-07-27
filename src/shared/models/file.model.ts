@@ -38,6 +38,7 @@ export class FileInfo {
     isSystem: boolean;
     isSharing: boolean;
     fileName: string;
+    folderName: string;
     extension: string;
     pathDisk: string;
     highlight: string;
@@ -92,6 +93,7 @@ export class FileUpload {
     thumbnail: string;
     uploadId: string;
     createdBy: string;
+    referType: string;
     createdOn: any;
     extension: string;
     category: string;

@@ -1,10 +1,10 @@
 <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formModel]="formModel">
+  [formModel]="formModel" *ngIf="type =='1'">
   <ng-template #body>
     <div class="app-container container-xxl mw-900px py-lg-10 px-lg-10">
       <div class="card border-0 radius-0 ">
         <div class="card-body py-lg-5 px-lg-5">
-          <div *ngIf=" lstStep==0">
+          <div *ngIf="lstStep?.length == 0 || lstStep == null">
             <div class="card-px text-center pt-15 pb-1">
               <div class="text-center mb-5">
                 <h1 class="mb-3">
@@ -52,7 +52,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="lstStep != 0">
+          <div *ngIf="lstStep?.length > 0">
             <div class="text-center pt-5 pb-5">
               <h1 class="mb-3">
                 <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
@@ -68,12 +68,12 @@
                 <div class="timeline timeline-3">
                   <div class="timeline-items">
                     <ng-container *ngFor="let item of lstStep; let index=index">
-                      <div class="timeline-item ">
+                      <div class="timeline-item has-action-menu">
                         <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                           <div class=" timeline-media w-40px h-40px me-4">
                             <span class="stepper-number">{{item.stepNo}}</span>
                           </div>
-                          <div class="stepper-label has-action-menu">
+                          <div class="stepper-label">
                             <h3 class="stepper-title line-clamp  line-clamp-3">
                               {{item.stepName}}
                             </h3>
@@ -132,7 +132,8 @@
 
           </div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="onSaveForm()" *ngIf="lstStep != 0 || isDeleteAll">
+            <button type="button" class="btn btn-primary" (click)="onSaveForm()"
+              *ngIf="lstStep?.length > 0 || isDeleteAll">
               <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
             </button>
           </div>
@@ -146,3 +147,91 @@
     </button> -->
   </ng-template>
 </codx-form>
+
+
+<ng-container *ngIf="type == '0'">
+  <div *ngIf="lstStep != 0">
+    <div class="text-center pt-5 pb-5">
+      <h1 class="mb-3">
+        <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+        </codx-label>
+      </h1>
+      <!-- <div class="text-muted fw-bold fs-5">
+      <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+      </codx-label>
+    </div> -->
+    </div>
+    <div class="hover-scroll-y min-h-200px mh-400px">
+      <div class=" mx-5 mx-xl-4 pt-0 pb-5">
+        <div class="timeline timeline-3">
+          <div class="timeline-items">
+            <ng-container *ngFor="let item of lstStep; let index=index">
+              <div class="timeline-item has-action-menu">
+                <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
+                  <div class=" timeline-media w-40px h-40px me-4">
+                    <span class="stepper-number">{{item.stepNo}}</span>
+                  </div>
+                  <div class="stepper-label">
+                    <h3 class="stepper-title line-clamp  line-clamp-3">
+                      {{item.stepName}}
+                    </h3>
+                    <div class="stepper-desc">
+                      {{(item.stepType | vll:'ES002':'text'|async)}}
+                    </div>
+                    <div class="action-menu">
+                      <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
+                        [dataItem]="item">
+                      </codx-mfunc>
+                    </div>
+                  </div>
+                </div>
+                <div class="timeline-content mx-auto">
+                  <div class="d-flex flex-wrap">
+                    <ng-container *ngFor="let approver of item.approvers">
+                      <div class="border border-gray-300 rounded min-w-250px mw-250px me-6 mb-3">
+                        <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType=='U'"
+                          [imageId]="approver.approver" [title]="approver.approverName"
+                          [subTitle]="approver.positionName ?? 'Vị trí công việc'" [status]="lstStep.status"
+                          [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                          [dataItem]="item">
+                        </codx-temp-full>
+
+                        <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType!='U'"
+                          [imageSrc]="'./assets/themes/sys/default/img/'+(item.icon ? item.icon : 'share_default.svg')"
+                          imgCss="me-4 symbol symbol-40px symbol-circle"
+                          [title]="(approver.approver|vll: 'ES014': 'text'|async)"
+                          [subTitle]="approver.approver|vll: 'ES014': 'text'|async" [status]="lstStep.status"
+                          [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                          [dataItem]="item">
+                        </codx-temp-full>
+
+                        <ng-template #footer1 let-data>
+
+                          <div class="d-flex align-items-center justify-content-end"><span
+                              class="icon-access_time icon-14 me-1"></span>{{data.leadtime}} giờ</div>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item" *ngIf="index==lstStep.length-1">
+                <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                  <div class="step-add cursor-pointer " ngbTooltip="Thêm mới" (click)="add()">
+                    <span class="icon-add_circle_outline icon-30 text-muted"></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSaveForm()" *ngIf="lstStep != 0 || isDeleteAll">
+      <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+    </button>
+  </div> -->
+</ng-container>

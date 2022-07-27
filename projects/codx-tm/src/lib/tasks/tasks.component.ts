@@ -23,8 +23,10 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
   selector: 'test-views',
@@ -48,7 +50,7 @@ export class TasksComponent extends UIComponent {
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
-  resourceTree:ResourceModel;
+  resourceTree: ResourceModel;
   dialog!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
@@ -62,10 +64,19 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
-  dataObj:any
-  iterationID: string =''
+  dataObj: any;
+  iterationID: string = '';
+  listTaskResousce = [];
+  searchField = '';
+  listTaskResousceSearch = [];
+  listRoles = [];
+  vllRole = 'TM002';
+  countResource = 0;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatusTasks ='TM004'
+  vllStatusAssignTasks ='TM007'
   @Input() calendarID: string;
-
   @Input() viewPreset: string = 'weekAndDay';
 
   constructor(
@@ -83,6 +94,11 @@ export class TasksComponent extends UIComponent {
     );
     var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.dataObj = JSON.stringify(dataObj);
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   clickMF(e: any, data?: any) {
@@ -316,7 +332,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion schedule
 
-   //#region CRUD
+  //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -370,10 +386,10 @@ export class TasksComponent extends UIComponent {
         );
         this.dialog.closed.subscribe((e) => {
           if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
           if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
@@ -468,10 +484,9 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
-//#endregion
+  //#endregion
 
-
-  sendemail(data) { }
+  sendemail(data) {}
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -486,7 +501,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = 'Auto';
+    option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose],
@@ -518,7 +533,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -560,16 +575,17 @@ export class TasksComponent extends UIComponent {
             this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
           } else {
             var completedOn = moment(new Date()).toDate();
-            var completed = "0";
-            if(taskAction.estimated > 0){
-              completed=taskAction.estimated
-            }else{
+            var completed = '0';
+            if (taskAction.estimated > 0) {
+              completed = taskAction.estimated;
+            } else {
               var timeStart = moment(
                 new Date(
                   taskAction.startOn
                     ? taskAction.startOn
-                    : (taskAction.startDate
-                      ? taskAction.startDate : taskAction.createdOn)
+                    : taskAction.startDate
+                    ? taskAction.startDate
+                    : taskAction.createdOn
                 )
               ).toDate();
               var time = (
@@ -578,7 +594,7 @@ export class TasksComponent extends UIComponent {
               ).toFixed(2);
               completed = Number.parseFloat(time).toFixed(2);
             }
-           
+
             var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
 
             this.tmSv
@@ -612,7 +628,7 @@ export class TasksComponent extends UIComponent {
       fieldValue: fieldValue,
       moreFunc: moreFunc,
       taskAction: taskAction,
-      funcID: this.funcID
+      funcID: this.funcID,
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
@@ -651,5 +667,66 @@ export class TasksComponent extends UIComponent {
           return callback && callback(true);
         }
       });
+  }
+
+  openViewListTaskResource(data) {
+    this.dialog = this.callfc.openForm(
+      PopupViewTaskResourceComponent,
+      '',
+      400,
+      500,
+      '',
+      [data, this.funcID]
+    );
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResousceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResousce = res;
+          this.listTaskResousceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+          // this.titlePopover =
+          //   'Danh sách được phân công (' + this.countResource + ')';
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResousceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResousceSearch = this.listTaskResousce;
+      return;
+    }
+    this.listTaskResousce.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResousceSearch.push(res);
+      }
+    });
+    this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+
+  hoverPopover(p:any){
+    this.popoverDataSelected = p
   }
 }

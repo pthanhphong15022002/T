@@ -1,122 +1,88 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template popup adde #body>
-        <!-- <div class="offcanvas-content">
-            <div class="offcanvas-wrapper"> -->
-                <div class="user-detail-update">
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <codx-label fiedName="CompanyName" default="Tên công ty">
-                                </codx-label>
-                                <codx-input class="form-control" type="text" [crrValue]="dataBind.companyName"
-                                    field="companyName" (valueChange)="dataChange($event, 'companyName')">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <codx-label fiedName="RoleName" default="Vai trò">
-                                </codx-label>
-                                <codx-input class="form-control" type="text" [crrValue]="dataBind.roleName"
-                                    field="roleName" (valueChange)="dataChange($event, 'roleName')">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <!-- <label>Lĩnh Vực</label>
-                                <lvInput type="combobox" class="form-control borderless p-0"
-                                    [value]="dataBind.industryID" field="industryID" refValue="Industries" service="BS"
-                                     ngDefaultControl loadFull="true">
-                                </lvInput> -->
-
-                                <codx-label fiedName="IndustryID" default="Lĩnh Vực">
-                                </codx-label>
-                                <codx-input type="combobox" class="form-control borderless p-0"
-                                    [crrValue]="dataBind.industryID" field="industryID" refValue="Industries"
-                                    service="BS" (valueChange)="dataChange($event, 'industryID')">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <!-- <label>Location</label>
-                                <lvInput type="combobox" class="form-control borderless p-0" [value]="dataBind.location"
-                                    field="location" refValue="Provinces" service="BS"
-                                    [popupSettings]="{ width: '300px' }" ngDefaultControl loadFull="true">
-                                </lvInput> -->
-
-                                <codx-label fiedName="Location" default="Location">
-                                </codx-label>
-                                <codx-input type="combobox" class="form-control borderless p-0"
-                                    [crrValue]="dataBind.location" field="location" refValue="Provinces"
-                                    service="BS" (valueChange)="dataChange($event, 'location')">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <!-- <label>Từ ngày</label>
-                                <kendo-datepicker class="form-control" [(ngModel)]="dataBind.fromDate">
-                                </kendo-datepicker> -->
-
-                                <codx-label fiedName="FromDate" default="Từ ngày"></codx-label>
-                                    <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" field="fromDate" (valueChange)="dataChange($event, 'fromDate')"
-                                        [crrValue]="dataBind.fromDate">
-                                    </codx-input>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <!-- <label>Đến ngày</label>
-                                <kendo-datepicker class="form-control" [(ngModel)]="dataBind.toDate">
-                                </kendo-datepicker> -->
-
-                                <codx-label fiedName="ToDate" default="Đến ngày"></codx-label>
-                                    <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" field="toDate" (valueChange)="dataChange($event, 'toDate')"
-                                        [crrValue]="dataBind.toDate">
-                                    </codx-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <!-- <label>Ghi chú</label>
-                                <textarea name="description" rows="3" style="width: 100%;"
-                                    [(ngModel)]="dataBind.memo"></textarea> -->
-                                    <codx-label fiedName="Memo"  default="Ghi chú">
-                                    </codx-label>
-                      
-                                    <codx-input type="textarea" field="memo" [crrValue]="dataBind.memo" class="form-control"
-                                      (valueChange)="dataChange($event, 'memo')"></codx-input>
-                            </div>
-                        </div>
+    <ng-template #body>
+        <div class="user-detail-update">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="CompanyName" default="Tên công ty">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" [crrValue]="dataBind?.companyName"
+                            field="companyName" (valueChange)="dataChange($event, 'companyName')">
+                        </codx-input>
                     </div>
                 </div>
-            <!-- </div> -->
-            <!-- <div class="offcanvas-footer">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="d-flex">
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="RoleName" default="Vai trò">
+                        </codx-label>
+                        <codx-input class="form-control" type="text" [crrValue]="dataBind?.roleName" field="roleName"
+                            (valueChange)="dataChange($event, 'roleName')">
+                        </codx-input>
                     </div>
-                    <button (click)="Save()" type="button" *ngIf="!isSaving" class="btn btn-primary">Lưu</button>
                 </div>
-            </div> -->
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="IndustryID" default="Lĩnh Vực">
+                        </codx-label>
+                        <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="dataBind?.industryID"
+                            field="industryID" refValue="Industries" service="BS"
+                            (valueChange)="dataChange($event, 'industryID')">
+                        </codx-input>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Location" default="Location">
+                        </codx-label>
+                        <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="dataBind?.location"
+                            field="location" refValue="Provinces" service="BS"
+                            (valueChange)="dataChange($event, 'location')">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="FromDate" default="Từ ngày"></codx-label>
+                        <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
+                            field="fromDate" (valueChange)="changeTime($event)" [crrValue]="dataBind?.fromDate">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="ToDate" default="Đến ngày"></codx-label>
+                        <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
+                            field="toDate" (valueChange)="changeTime($event)" [crrValue]="dataBind?.toDate">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <codx-label fiedName="Memo" default="Ghi chú">
+                        </codx-label>
+                        <codx-input type="textarea" field="memo" [crrValue]="dataBind?.memo" class="form-control"
+                            (valueChange)="dataChange($event, 'memo')"></codx-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
         <!-- </div> -->
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">
-            <!-- <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button> -->
+            <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+                <codx-label name="Save" default="Lưu"></codx-label>
+            </button>
         </div>
     </ng-template>
 </codx-form>

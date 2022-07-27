@@ -20,7 +20,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   predicate = "CreatedBy=@0";
   dataValue = "";
   user: any;
-  funcID = "";
   data: any;
   onUpdate = false;
   recID: any;
@@ -35,20 +34,14 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   @ViewChild('lstCardNoteBooks') lstCardNoteBooks: CodxCardImgComponent;
   @ViewChild('lstNoteBook') lstNoteBook: AddUpdateNoteBookComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('inputSearch') inputSearch: CodxSearchBarComponent;
   @Output() loadData = new EventEmitter();
 
   constructor(inject: Injector,
     private authStore: AuthStore,
-    private route: ActivatedRoute,
     private modalService: NgbModal,
     private noteBookService: NoteBookServices,
   ) {
     super(inject);
-    this.route.params.subscribe(params => {
-      this.funcID = params['funcID'];
-    })
-
     this.cache.functionList('MWP00941').subscribe(res => {
       this.urlDetailNoteBook = res?.url;
     })
@@ -76,7 +69,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
         var data = res[0]?.data;
         var type = res[0]?.type;
 
-        if(type == 'edit') {
+        if (type == 'edit') {
           this.view.dataService.update(data).subscribe();
         }
       }
@@ -85,7 +78,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   ngAfterViewInit() {
     this.formModel = this.view.formModel;
-    console.log("check data note-books", this.view.dataService.data)
   }
 
   clickMF(e: any, data?: any) {
@@ -96,6 +88,8 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       case 'delete':
         this.delete(data);
         break;
+      case 'MWP00941':
+        this.openDetailPage(data);
     }
   }
 
@@ -125,7 +119,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.data = this.view.dataService.data.filter(x => x.recID != data.recID);
+          this.view.dataService.remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -141,9 +135,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
-      // this.dialog.closed.subscribe(x => {
-      //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      // });
     });
   }
 
@@ -172,9 +163,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
-      this.dialog.closed.subscribe(x => {
-        this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-      });
     });
   }
 
@@ -190,6 +178,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
     this.view.onSearch(e);
+    debugger;
     this.detectorRef.detectChanges();
   }
 

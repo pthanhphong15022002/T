@@ -46,14 +46,14 @@
               </div>
               <div class="text-dark fw-bold">
                 <codx-label
-                  name="lblOverdueTask"
-                  default="Đã quá hạn"
+                  name="lblNewTask"
+                  default="Chưa thực hiện"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ data?.status.overdueTasks }}
+            {{ data?.status.newTasks }}
           </div>
         </div>
       </div>
@@ -74,14 +74,14 @@
               </div>
               <div class="text-dark fw-bold">
                 <codx-label
-                  name="lblOverdueTask"
-                  default="Đã quá hạn"
+                  name="lblPostponeTask"
+                  default="Hoãn lại"
                 ></codx-label>
               </div>
             </div>
           </div>
           <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-            {{ data?.status.overdueTasks }}
+            {{ data?.status.postponeTasks }}
           </div>
         </div>
       </div>
@@ -329,8 +329,8 @@
         </div>
       </div>
     </div>
-    <div class="rounded-2 d-flex mb-3">
-      <div style="position: relative; width: 50%">
+    <div class="d-flex mb-3">
+      <div class="rounded-2 bg-body" style="position: relative; width: 50%">
         <ejs-accumulationchart
           id="chart-task-group"
           [legendSettings]="legendSettings2"
@@ -359,7 +359,7 @@
           </div>
         </div>
       </div>
-      <div class="ms-3 bg-body" style="position: relative; width: 50%">
+      <div class="bg-body rounded-2" style="position: relative; width: 50%">
         <div class="row">
           <div class="col-5">
             <ejs-circulargauge
@@ -466,7 +466,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-body rounded-2 mb-3">
+    <div class="bg-body rounded-2 mb-1">
       <ejs-chart
         style="display: block"
         background="transparent"
@@ -479,7 +479,7 @@
       >
       </ejs-chart>
     </div>
-    <div class="row bg-body mb-3">
+    <div class="rounded-2 bg-body mb-3">
       <ejs-chart
         style="display: block"
         background="transparent"

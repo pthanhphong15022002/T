@@ -1,32 +1,32 @@
 <div class="main">
   <ng-container *ngIf="file_img_video.length > 0">
-    <div [ngSwitch]="file_img_video.length" class="position-relative">
+    <div [ngSwitch]="file_img_video.length" class="position-relative1">
       <!-- <ng-container *ngIf="showBtnRemove">
-        <label (click)="removeFileAll()"
-          class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-          data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
-          <span class="icon-close icon-14 "></span>
-        </label>
-      </ng-container> -->
+          <label (click)="removeFileAll()"
+            class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+            data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
+            <span class="icon-close icon-14 "></span>
+          </label>
+        </ng-container> -->
       <ng-container *ngSwitchCase="1">
         <div class="feed-1pic position-relative">
-          <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_1_0">
+          <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
             <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
           </ng-container>
           <ng-template #video_1_0>
-            <video #video controls class="w-100 rounded min-h-250px" >
+            <video #video controls class="w-100 rounded min-h-250px">
               <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
             </video>
           </ng-template>
           <ng-container *ngIf="edit">
-            <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
+            <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
           </ng-container>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="2">
         <div class="row row-custom feed-2pic m-0 ">
           <div class="col-7 pe-2 ps-0 position-relative">
-            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_2_0">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_2_0">
               <img class="w-100 rounded h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_2_0>
@@ -35,11 +35,11 @@
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
-              <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
+              <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
             </ng-container>
           </div>
           <div class="col-5 px-0 h-250px bg-secondary d-flex algin-items-center position-relative">
-            <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_2_1">
+            <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_2_1">
               <img class="w-100 rounded h-250px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
             </ng-container>
             <ng-template #video_2_1>
@@ -48,7 +48,7 @@
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
-              <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
+              <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
             </ng-container>
           </div>
         </div>
@@ -56,7 +56,7 @@
       <ng-container *ngSwitchCase="3">
         <div class="row row-custom feed-3pic m-0">
           <div class="col-7 ps-0 pe-2 position-relative">
-            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_3_0">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_3_0">
               <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_3_0>
@@ -65,12 +65,12 @@
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
-              <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
+              <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
             </ng-container>
           </div>
           <div class="col-5 px-0 ">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_3_1">
+              <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_3_1">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
               </ng-container>
               <ng-template #video_3_1>
@@ -79,11 +79,11 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
               </ng-container>
             </div>
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_3_2">
+              <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_3_2">
                 <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
               </ng-container>
               <ng-template #video_3_2>
@@ -92,7 +92,7 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }"></ng-container>
               </ng-container>
             </div>
           </div>
@@ -100,8 +100,8 @@
       </ng-container>
       <ng-container *ngSwitchCase="4">
         <div class="row row-custom feed-4pic m-0">
-          <div class="col-5 pe-2 position-relative">
-            <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_4_0">
+          <div class="col-5 pe-2 ps-0 position-relative">
+            <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_4_0">
               <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-container>
             <ng-template #video_4_0>
@@ -110,12 +110,12 @@
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
-              <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
+              <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
             </ng-container>
           </div>
           <div class="col-7 px-0">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_4_1">
+              <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_4_1">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
               </ng-container>
               <ng-template #video_4_1>
@@ -124,12 +124,12 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
               </ng-container>
             </div>
             <div class="row row-custom mt-2 mx-0">
-              <div class="col-6 ps-0 pe-2 position-relative">
-                <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_4_2">
+              <div class="col-6 ps-0 position-relative">
+                <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                 </ng-container>
                 <ng-template #video_4_2>
@@ -138,11 +138,12 @@
                   </video>
                 </ng-template>
                 <ng-container *ngIf="edit">
-                  <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }"></ng-container>
+                  <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }">
+                  </ng-container>
                 </ng-container>
               </div>
-              <div class="col-6 px-0 position-relative">
-                <ng-container *ngIf="file_img_video[3].category == FILE_CATEGORY.IMAGE; else video_4_3">
+              <div class="col-6 px-0 ps-2 position-relative">
+                <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
                 </ng-container>
                 <ng-template #video_4_3>
@@ -151,7 +152,8 @@
                   </video>
                 </ng-template>
                 <ng-container *ngIf="edit">
-                  <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }"></ng-container>
+                  <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }">
+                  </ng-container>
                 </ng-container>
               </div>
             </div>
@@ -161,8 +163,8 @@
       <ng-container *ngSwitchDefault>
         <div class="row row-custom feed-5pic m-0">
           <div class="col-7 ps-0 pe-2">
-            <div class="position-relative"> 
-              <ng-container *ngIf="file_img_video[0].category == FILE_CATEGORY.IMAGE; else video_n_0">
+            <div class="position-relative">
+              <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_n_0">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
               </ng-container>
               <ng-template #video_n_0>
@@ -171,12 +173,12 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
               </ng-container>
             </div>
             <div class="row row-custom mt-2 mx-0">
-              <div class="col-6 ps-0 pe-2 position-relative">
-                <ng-container  *ngIf="file_img_video[1].category == FILE_CATEGORY.IMAGE; else video_n_1">
+              <div class="col-6 pe-0 ps-0 position-relative">
+                <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                 </ng-container>
                 <ng-template #video_n_1>
@@ -185,27 +187,29 @@
                   </video>
                 </ng-template>
                 <ng-container *ngIf="edit">
-                  <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
+                  <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }">
+                  </ng-container>
                 </ng-container>
               </div>
-              <div class="col-6 px-0 position-relative">
-                <ng-container *ngIf="file_img_video[2].category == FILE_CATEGORY.IMAGE; else video_n_2">
+              <div class="col-6 ms-2 px-0 position-relative">
+                <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
                 </ng-container>
                 <ng-template #video_n_2>
                   <video #video controls class="w-100 h-150px">
-                    <source [src]="file_img_video[2].srcVideo || file_img_video[2].data"type="video/mp4">
+                    <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
                   </video>
                 </ng-template>
                 <ng-container *ngIf="edit">
-                  <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }"></ng-container>
+                  <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[2] }">
+                  </ng-container>
                 </ng-container>
               </div>
             </div>
           </div>
           <div class="col-5 px-0">
             <div class="position-relative">
-              <ng-container *ngIf="file_img_video[3].category == FILE_CATEGORY.IMAGE; else video_n_3">
+              <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_n_3">
                 <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail ||file_img_video[3].data " />
               </ng-container>
               <ng-template #video_n_3>
@@ -214,12 +218,12 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }"></ng-container>
               </ng-container>
             </div>
-            <div class="position-relative">
-              <ng-container *ngIf="file_img_video[4].category == FILE_CATEGORY.IMAGE; else video_n_4">
-                <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
+            <div class="position-relative mt-2">
+              <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
+                <img class="w-100 rounded h-150px" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
               </ng-container>
               <ng-template #video_n_4>
                 <video #video controls class="w-100 h-150px">
@@ -227,7 +231,7 @@
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
-                <ng-container  *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[4] }"></ng-container>
+                <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[4] }"></ng-container>
               </ng-container>
             </div>
             <ng-container *ngIf="file_img_video.length > 5">
@@ -240,24 +244,24 @@
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="files.length > 0">
-    <div class="mt-2">
-      <div class="my-3" *ngFor="let file of files">
-        <codx-temp-full  
-            imageSrc="{{file.extension | avtFile}}" 
-            imgCss="w-20px me-3 cursor-pointer" 
-            title="{{file.fileName}}"        
-            [descLine]="1">
+  <ng-container *ngIf="file_application.length > 0">
+    <div class="mt-2 d-flex " *ngFor="let file of file_application">
+      <div class="me-2">
+        <codx-temp-full imageSrc="{{file.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+          title="{{file.fileName}}" [descLine]="1">
         </codx-temp-full>
-    </div>
+      </div>
+      <ng-container *ngIf="edit">
+        <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file }"></ng-container>
+      </ng-container>
     </div>
   </ng-container>
 </div>
 
 <ng-template #removeFile let-file>
   <div class="remove-file">
-    <a href="javascript:void(0)" (click)="removeFiles(file)">
-      <i class="icon-close icon-24"></i>
+    <a href="javascript:void(0)" class="h-100" (click)="removeFiles(file)">
+      <i class="icon-close icon-18 text-danger"></i>
     </a>
   </div>
 </ng-template>

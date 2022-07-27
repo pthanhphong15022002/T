@@ -2,7 +2,7 @@
     background-color: #d7d7d7;
     height: 150px;
     border-radius: 12px 12px 0 0 !important;
-    padding: 25px 60px;
+    padding: 25px 40px;
     background-size: cover;
 }
 
@@ -10,16 +10,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+
 }
 
-.personal-container>div {
+.personal-container .pw-menu {
     max-width: 900px;
-    margin: 0 auto;
-    margin-top: 20px;
+
 }
 
 .personal-container>div.pw-lg {
-    max-width: 1000px;
+    max-width: 100%
 }
 
 .pw-menu {
@@ -29,7 +29,7 @@
     background-color: var(--bs-body-bg);
     width: 100%;
     margin: 0 auto;
-    margin-top: -24px !important;
+    margin-top: -28px !important;
     position: relative;
     z-index: 99;
     justify-content: space-around;
@@ -40,9 +40,10 @@
 }
 
 .pw-content {
-    border-radius: 6px !important;
-    //background-color: var(--bs-body-bg);
     margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
 
 .pw-menu div.active a,

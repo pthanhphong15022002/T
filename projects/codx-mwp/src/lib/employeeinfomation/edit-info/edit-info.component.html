@@ -1,4 +1,5 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form #form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+    [formModel]="dialog.formModel" [dialog]="dialog">
     <ng-template popup adde #body>
         <div class="d-flex flex-row edit-info">
             <div class="updateuser-nav w-200px min-w-200px">
@@ -68,7 +69,8 @@
 
                                     <codx-input name="gender" type="valuelist" field="Gender" placeholder=""
                                         [crrValue]="employee?.gender" (valueChange)="dataChange($event, 'gender')"
-                                        refValue="L0068"></codx-input>
+                                        refValue="L0068">
+                                    </codx-input>
                                 </div>
                             </div>
                             <div class="col">
@@ -206,11 +208,6 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
-                                    <!-- <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" field="joinedOn" (valueChange)="dataChange($event, 'joinedOn')"
-                                        [crrValue]="employee?.joinedOn">
-                                    </codx-input> -->
-
                                     <codx-input type="datetime" class="test-datetime" field="joinedOn" format="d"
                                         placeholder="datetime" [crrValue]="employee?.joinedOn"
                                         (valueChange)="changeTime($event)">
@@ -221,11 +218,6 @@
                                 <div class="form-group">
                                     <codx-label fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
                                     </codx-label>
-                                    <!-- <codx-input type="datetime" class="form-control" placeholder="datetime"
-                                        format="d" [crrValue]="employee?.hiredOn" field="hiredOn"
-                                        (valueChange)="dataChange($event, 'hiredOn')">
-                                    </codx-input> -->
-
                                     <codx-input type="datetime" class="test-datetime" field="hiredOn" format="d"
                                         placeholder="datetime" [crrValue]="employee?.hiredOn"
                                         (valueChange)="changeTime($event)">

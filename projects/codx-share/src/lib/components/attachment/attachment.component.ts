@@ -52,6 +52,7 @@ export class AttachmentComponent implements OnInit {
   titleDialog = "Thêm file";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
+  titleUpload = 'Upload';
   //fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
@@ -110,15 +111,15 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != null) {
-      this.objectType = data?.data.objectType;
-      this.objectId = data?.data.objectId;
-      this.folderType = data?.data.folderType;
-      this.functionID = data?.data.functionID;
-      this.type = data?.data.type;
-      this.popup = data?.data.popup;
-      this.hideBtnSave = data?.data.hideBtnSave;
-    }
+    // if (data != null) {
+    //   this.objectType = data?.data.objectType;
+    //   this.objectId = data?.data.objectId;
+    //   this.folderType = data?.data.folderType;
+    //   this.functionID = data?.data.functionID;
+    //   this.type = data?.data.type;
+    //   this.popup = data?.data.popup;
+    //   this.hideBtnSave = data?.data.hideBtnSave;
+    // }
 
     this.dmSV.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")

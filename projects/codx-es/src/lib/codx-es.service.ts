@@ -11,24 +11,24 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import {
-  BehaviorSubject,
-  Observable,
-  map,
-  catchError,
-  finalize,
-  of,
-} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { debug } from 'util';
-import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 
+export class GridModels {
+  pageSize: number;
+  entityName: string;
+  entityPermission: string;
+  formName: string;
+  gridViewName: string;
+  funcID: string;
+  dataValue: string;
+  predicate: string;
+}
 export class AddGridData {
   dataItem: any = null;
   isAdd: boolean = false;
   key: String = '';
 }
-
 export class Item {
   header: string;
   content: string;
@@ -225,6 +225,7 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region  EP
   execEP(
     className: string,
     methodName: string,
@@ -306,16 +307,6 @@ export class CodxEsService {
     );
   }
 
-  addSignFile(data, isAdd) {
-    this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'AddEditAsync',
-      [data, isAdd]
-    );
-  }
-
   getApprovalTrans(recID: string) {
     // let data = new DataRequest();
     // data.formName = 'ApprovalTrans';
@@ -329,9 +320,20 @@ export class CodxEsService {
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'GetByProcessIDAsync',
-      recID
+      [recID]
     );
   }
+
+  getApprovedSignatures(recID, userID) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovedSignTransAsync',
+      [recID, userID]
+    );
+  }
+  //#endregion
 
   //#region  AutoNumbers
   public setupAutoNumber = new BehaviorSubject<any>(null);
@@ -501,17 +503,17 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(recID): Observable<any> {
+  getApprovalSteps(model: GridModels): Observable<any> {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
       'ApprovalStepsBusiness',
       'GetListApprovalStepAsync',
-      recID
+      [model]
     );
   }
 
-  addNewApprovalStep(id: string): Observable<any> {
+  addNewApprovalStep(): Observable<any> {
     let lstDataNew = null;
     this.approvalStep.subscribe((res) => {
       lstDataNew = res;
@@ -521,7 +523,7 @@ export class CodxEsService {
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstDataNew, id]
+      [lstDataNew]
     );
   }
 
@@ -581,6 +583,17 @@ export class CodxEsService {
   //#endregion
 
   //#region EmailTemplate
+  public lstTmpEmail = [];
+  deleteEmailTemplate(): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'DeleteEmailTemplateAsync',
+      [this.lstTmpEmail]
+    );
+  }
+
   getEmailTemplate(templateID: string): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -601,12 +614,46 @@ export class CodxEsService {
     );
   }
 
+  //#endregion
+
+  //#region ES_SignFiles
+
+  getAutoNumberByCategory(categoryID): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      categoryID
+    );
+  }
+
+  addNewSignFile(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'AddNewSignFile',
+      [data]
+    );
+  }
+
+  //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignAreasBusiness',
       'AddOrEditAsync',
+      data
+    );
+  }
+
+  deleteAreaById(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignAreasBusiness',
+      'DeleteAreaAsync',
       data
     );
   }
@@ -636,7 +683,6 @@ export class CodxEsService {
       httpOptions
     );
   }
-  //#endregion
 }
 export class LayoutModel {
   isChange: boolean = false;

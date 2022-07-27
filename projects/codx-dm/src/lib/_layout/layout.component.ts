@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
 import { AuthService, CacheService, CallFuncService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { Observable, of } from 'rxjs';
@@ -9,6 +9,7 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
   selector: 'codx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
   // Public variables
@@ -18,6 +19,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   headerLeft: string = 'menu';
   asideDisplay: boolean = false;
   asideCSSClasses?: string;
+  disableInput = true;
   module = 'DM';
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
@@ -44,7 +46,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     public codxService: CodxService,
     public cache: CacheService,
     private callfc: CallFuncService,
-    private dmSV: CodxDMService
+    private dmSV: CodxDMService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     this.codxService.init('DM');
     //  this.funcs$= this.codxService.getFuncs('OD');
@@ -58,6 +61,16 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
+    this.dmSV.isSetRight.subscribe(res => {
+      //if (this.dmSV.parentFull || this.dmSV.parentCreate) {
+      if (this.dmSV.parentCreate) {
+        this.disableInput = false;
+      }
+      else
+        this.disableInput = true;
+
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -69,6 +82,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         }
       }
     }
+  }
+
+  disable() {
+    return this.disableInput;
   }
 
   //   onAfterViewInit(): void {

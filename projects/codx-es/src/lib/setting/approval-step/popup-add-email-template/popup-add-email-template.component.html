@@ -81,11 +81,6 @@
           <span class="btn btn-sm fw-bold"
             *ngIf="!showCC && !showBCC && !(showCC || lstCc.length >0) && !(showBCC || lstBcc.length >0)"
             (click)="changeSendType('bcc')">Bcc</span>
-          <!-- <span>
-            <codx-input [showInput]="false" [multiple]="true" type="share" refValue="ES014" field="to"
-              (valueChange)="valueSentoChange($event, 2)">
-            </codx-input>
-          </span> -->
           <span class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
             (click)="testdata(controlShare2)"></span>
         </div>
@@ -243,9 +238,8 @@
       </codx-attachment>
     </div>
     <div class="request-box mt-4">
-      <!-- <textarea class="form-control" rows="12" placeholder="Nhập nội dung..."></textarea> -->
-      <codx-input type="textarea" field="message" [Group]="dialogETemplate" placeholder="textarea"
-        [crrValue]="dialogETemplate.value.message"></codx-input>
+      <codx-input type="textarea" field="message" [Group]="dialogETemplate" placeholder="textarea" format="ed"
+        [crrValue]="dialogETemplate.value.message" height="250"></codx-input>
     </div>
 
 

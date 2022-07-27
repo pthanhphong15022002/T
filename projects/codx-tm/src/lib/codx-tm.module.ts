@@ -60,6 +60,7 @@ import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.
 import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
 import { TreeViewComponent } from './tasks/tree-view/tree-view.component';
 import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
+import { PopupViewTaskResourceComponent } from './tasks/popup-view-task-resource/popup-view-task-resource.component';
 
 export const routes: Routes = [
   {
@@ -135,7 +136,7 @@ export const routes: Routes = [
             component: ProjectgroupsComponent,
           },
           {
-            path: 'calendar/:funcID',
+            path: 'settingcalendar/:funcID',
             component: CalendarComponent,
           },
         ],
@@ -205,7 +206,8 @@ const T_Component: Type<any>[] = [
   TMMeetingsComponent,
   PopupAddMeetingComponent,
   TreeViewComponent,
-  ViewListMeetComponent
+  ViewListMeetComponent,
+  PopupViewTaskResourceComponent,
 ];
 @NgModule({
   imports: [

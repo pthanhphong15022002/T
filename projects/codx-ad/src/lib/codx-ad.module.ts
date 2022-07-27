@@ -1,3 +1,4 @@
+import { DetailComponent } from './../../../codx-dm/src/lib/views/detail/detail.component';
 import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
@@ -61,6 +62,10 @@ export const routes: Routes = [
       ,{
         path: 'roles/:funcID',
         component: RolesComponent,
+      }
+      ,{
+        path: 'roledetails/:funcID',
+        component: DetailComponent,
       }
 
     ]
