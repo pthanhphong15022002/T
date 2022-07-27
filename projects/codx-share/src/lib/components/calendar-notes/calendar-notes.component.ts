@@ -1,4 +1,3 @@
-import { NoteServices } from './../../../../../../src/app/pages/services/note.services';
 import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
 import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,10 +13,11 @@ import {
   Injector,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
-import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
-import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import moment from 'moment';
+import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
+import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
+import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
+import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',

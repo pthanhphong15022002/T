@@ -7,7 +7,6 @@ import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
 import { A, I } from '@angular/cdk/keycodes';
-import { NoteServices } from '@pages/services/note.services';
 import { NoteBookServices } from '../../services/notebook.services';
 
 @Component({
