@@ -80,3 +80,8 @@
     bottom: 50px;
     overflow: auto;
 }
+
+.e-richtexteditor .e-rte-content,
+.e-richtexteditor .e-source-content {
+    border: 1px solid #dee2e6 !important;
+}

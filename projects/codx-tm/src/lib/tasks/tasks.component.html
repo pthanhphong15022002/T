@@ -27,7 +27,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
-    [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614" [date]="data.dueDate"
+    [content]="data.memo||'memo'" [status]="data.status" [statusVll]="(data.category=='1' || data.category=='2')?vllStatusTasks:vllStatusAssignTasks" [date]="data.dueDate"
     [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
     [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
@@ -100,15 +100,15 @@
       <span>
         <div class="d-status">
           <div class="badge badge-danger me-2 label-status" [style.border-color]="
-              (data?.status | vll: 'L0614':'textColor' | async) +
+              (data?.status | vll:((data.category=='1' || data.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async) +
               '30'
             " [style.background-color]="
-              (data?.status | vll: 'L0614':'textColor' | async) +
+              (data?.status | vll: ((data.category=='1' || data.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async) +
               '30'
             " [style.color]="
-            data?.status | vll: 'L0614':'textColor' | async
+            data?.status | vll: ((data.category=='1' || data.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async
             " style="border: none">
-            {{ data?.status | vll: "L0614":"text" | async }}
+            {{ data?.status | vll: ((data.category=='1' || data.category=='2')?vllStatusTasks:vllStatusAssignTasks ):"text" | async }}
           </div>
         </div>
       </span>
@@ -186,15 +186,15 @@
           <span>
             <div class="d-status">
               <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
+                  (item?.status | vll: ((item.category=='1' || item.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async) +
                   '30'
                 " [style.background-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
+                  (item?.status | vll: ((item.category=='1' || item.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async) +
                   '30'
                 " [style.color]="
-                item?.status | vll: 'L0614':'textColor' | async
+                item?.status | vll: ((item.category=='1' || item.category=='2')?vllStatusTasks:vllStatusAssignTasks):'textColor' | async
                 " style="border: none">
-                {{ item?.status | vll: "L0614":"text" | async }}
+                {{ item?.status | vll: ((item.category=='1' || item.category=='2')?vllStatusTasks:vllStatusAssignTasks):"text" | async }}
               </div>
             </div>
           </span>

@@ -30,42 +30,29 @@
     height="100%"
     #schedule
     [eventTemplate]="eventTemplate"
-    service="TM"
-    assemblyName="TM"
     [templateResourceHeader]="resourceHeader"
-    className="TaskBusiness"
-    method="GetListDetailTasksAsync"
-    methodResource="GetUserByTasksAsync"
-    [cellFooterTemplate]="cellFooter"
-    [fields]="fields"
     [selectedDate]="selectedDate"
     [StartDate]="startDate"
     [EndDate]="endDate"
     [options]="model"
     [optionsResource]="model"
-    entityName="TM_Tasks"
-    funcId=""
     (onViewChange)="viewChange($event)"
     [viewPreset]="viewPreset"
     [minHeight]="minHeight"
     eventStyle="colored"
     [resourceTooltipTemplate]="resourceTootip"
-    (onEventClick)="onCellDblClickScheduler($event)"
-    (onDelete)="deleteTask($event)"
-    [statusColor]="status"
     [eventEditFeature]="false"
     [readOnly]="true"
-    [resourceField]="resourceField"
     [templateCell]="cellTemplate"
     currentView="Month"
     isTimelineView="false"
   >
   </codx-schedule>
-   
+
   <ng-template #cellTemplate let-data>
     <div [innerHtml]="getCellContent(data.date)"></div>
   </ng-template>
-  
+
   <ng-template #eventTemplate let-data>
     <div class="symbol symbol-40px symbol-circle me-4">
       <codx-img
@@ -92,27 +79,4 @@
       <div class="type">{{ data.resourceData.positionName }}</div>
     </div>
   </ng-template>
-
-  <ng-template #cellFooter let-data>
-    <div class="row border">
-      <button
-        ejs-button
-        id="more-details"
-        cssClass="e-flat"
-        (click)="edit(data)"
-      >
-        sửa
-      </button>
-      <button
-        ejs-button
-        id="delete"
-        cssClass="e-flat"
-        [isPrimary]="true"
-        (click)="deleteTask(data)"
-      >
-        xóa
-      </button>
-    </div>
-  </ng-template>
 </div>
-
