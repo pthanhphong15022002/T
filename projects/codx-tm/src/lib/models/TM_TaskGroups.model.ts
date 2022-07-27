@@ -20,22 +20,23 @@ export class TM_TaskGroups {
   verifyControl: string;
   verifyByType: string;
   verifyBy: string;
-  projectControl: String;
-  attachmentControl: String;
-  checkListControl: String;
-  checkList: String;
-  category: String;
-  carentID: String;
+  editControl:string
+  projectControl: string;
+  attachmentControl: string;
+  checkListControl: string;
+  checkList: string;
+  category: string;
+  carentID: string;
   createdOn: Date;
-  createBy: String;
-  divisionID: String;
-  orgUnitID: String;
-  positionID: String;
-  employeeID: String;
-  modifiedBy: String;
+  createBy: string;
+  divisionID: string;
+  orgUnitID: string;
+  positionID: string;
+  employeeID: string;
+  modifiedBy: string;
   modifiedOn: Date;
-  bUID: String;
-  owner: String;
+  bUID: string;
+  owner: string;
   stop: boolean;
-  createName: String;
+  createName: string;
 }
