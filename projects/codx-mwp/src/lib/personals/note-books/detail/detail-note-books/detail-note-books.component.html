@@ -24,12 +24,10 @@
 
 <ng-template #modifiedOn let-item>
     <div class="has-action-menu">
+        <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+            [dataItem]="item" type="hover">
+        </codx-mfunc>
         <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
-        <div class="action-menu">
-            <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-                [dataItem]="item" type="hover">
-            </codx-mfunc>
-        </div>
     </div>
 </ng-template>
 
