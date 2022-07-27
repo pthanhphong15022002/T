@@ -24,7 +24,8 @@ export class CodxTMService {
   user: UserModel;
   myTaskComponent = false;
   taskGroupComponent = false;
-
+  aside = new BehaviorSubject<any>(null);
+  toolbar = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,

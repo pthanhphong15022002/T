@@ -24,18 +24,16 @@
 
 <ng-template #modifiedOn let-item>
     <div class="has-action-menu">
+        <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+            [dataItem]="item" type="hover">
+        </codx-mfunc>
         <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
-        <div class="action-menu">
-            <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-                [dataItem]="item" type="hover">
-            </codx-mfunc>
-        </div>
     </div>
 </ng-template>
 
 <ng-template #fileCount let-item>
     <div class="flex">
-        <span class="">6</span>
+        <span class="">{{item.fileCount}}</span>
         <span class="icon-attach_file"></span>
     </div>
 </ng-template>

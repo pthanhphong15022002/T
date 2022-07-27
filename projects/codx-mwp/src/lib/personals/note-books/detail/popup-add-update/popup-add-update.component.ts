@@ -34,6 +34,9 @@ export class PopupAddUpdate implements OnInit {
     funcID: '',
   }
   transID = '';
+  fileCount: any = 0;
+  checkUpload = false;
+  dataAdd: any = '';
 
   note: Notes = new Notes();
 
@@ -42,6 +45,7 @@ export class PopupAddUpdate implements OnInit {
   constructor(
     public atSV: AttachmentService,
     private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -75,6 +79,7 @@ export class PopupAddUpdate implements OnInit {
   }
 
   saveNoteBookDetails() {
+    // this.attachment.saveFiles();
     if (this.formType == 'add') this.addNoteBookDetails();
     else this.updateNote();
   }
@@ -84,11 +89,13 @@ export class PopupAddUpdate implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
+          var dt = res.save;
+          this.dataAdd = dt;
           if (this.checkFile == true) {
-            this.attachment.objectId = res.recID;
+            this.attachment.objectId = dt.recID;
             this.attachment.saveFiles();
+            this.checkUpload = true;
           }
-          this.dialog && this.dialog.close();
         }
       });
   }
@@ -102,13 +109,31 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
-          this.dialog && this.dialog.close();
+          this.dialog.close();
         }
       })
   }
 
+  updateNote2(item = null) {
+    this.note.fileCount = this.fileCount;
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'NoteBooksBusiness',
+        'UpdateNoteBookDetailAsync',
+        [item?.recID, this.note]
+      )
+      .subscribe((res) => {
+        if (res) {
+          (this.dialog.dataService as CRUDService).update(res).subscribe();
+          this.dialog.close();
+        }
+      });
+  }
+
   beforeSave(option: any) {
     this.note.transID = this.transID;
+    // this.note.fileCount = this.fileCount;
     if (this.formType == 'add') {
       option.method = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
@@ -119,18 +144,31 @@ export class PopupAddUpdate implements OnInit {
     }
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'NoteBooksBusiness';
+    if(this.checkUpload == true) {
+
+    }
     return true;
   }
 
   popup() {
     this.attachment.uploadFile();
-   // this.attachment.data
     this.checkFile = true;
   }
 
   fileAdded(e) {
-    console.log("check fileAdded", e)
-    debugger;
+    if (e) {
+      var dt = e.data;
+      var count = 0;
+      dt.forEach((res) => {
+        if (res.status == '0') {
+          count++;
+        }
+      })
+      this.fileCount = count;
+      this.updateNote2(this.dataAdd);
+      // if (this.formType == 'add') this.addNoteBookDetails();
+      // else this.updateNote();
+    }
   }
 
   valueChangeTag(e) {

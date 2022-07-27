@@ -1,0 +1,31 @@
+.listView {
+    width: 0px;
+    height: 0px;
+}
+
+.pd-note {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.active [class*="icon-"] {
+    color: var(--primary-dark);
+}
+
+.btn-add {
+    margin-left: 21%;
+}
+
+.notes {
+    height: 670px !important;
+}
+
+.note-list {
+    margin-left: -8px;
+}
+
+.show-customName {
+    margin-left: 3%;
+    width: 130px;
+    margin-top: 1%;
+}

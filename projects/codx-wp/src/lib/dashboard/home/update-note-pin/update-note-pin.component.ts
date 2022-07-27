@@ -1,7 +1,7 @@
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { NoteServices } from '@pages/services/note.services';
+import { NoteServices } from '../../../services/note.services';
 
 @Component({
   selector: 'app-update-note-pin',
