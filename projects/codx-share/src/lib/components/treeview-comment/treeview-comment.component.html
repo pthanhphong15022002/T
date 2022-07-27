@@ -134,10 +134,8 @@
                         <ng-template #dataVote>
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                                 <div *ngFor="let vote of data.votes">
-                                    <a class="me-2">
-                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                    </a>
+                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                                 </div>
                                 <div>
                                     <span class="ms-2">{{data.totalVote}}</span>
@@ -304,10 +302,8 @@
                         <ng-template #childDataVote>
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(childData)">
                                 <div *ngFor="let vote of childData.votes">
-                                    <a class="me-2">
-                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                    </a>
+                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                                 </div>
                                 <div>
                                     <span class="ms-2">{{childData.totalVote}}</span>
