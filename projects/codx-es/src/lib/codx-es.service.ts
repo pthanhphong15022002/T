@@ -632,7 +632,7 @@ export class CodxEsService {
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'AddNewSignFile',
+      'AddNewSignFileAsync',
       [data]
     );
   }
