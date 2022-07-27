@@ -91,7 +91,7 @@
 </ng-template>
 
 <ng-template #itemContact let-data>
-    <!-- <div class="d-flex flex-column employee-add">
+    <div class="d-flex flex-column employee-add">
         <div class="d-flex align-items-center">
             <span class="icon-email icon-16 text-gray-800 me-1"></span>
             <span class="text-dark fw-bold">
@@ -111,7 +111,7 @@
                 <span #street>{{ data.street | formatvalue: view.formModel:"street":street | async }}</span>
             </span>
         </div>
-    </div> -->
+    </div>
 </ng-template>
 
 <ng-template #itemInfoPersonal let-data>
@@ -173,7 +173,7 @@
                 </codx-label>
             </span>
             <span *ngIf="!data?.senioritydate"></span>
-            <span *ngIf="data?.senioritydate">{{data?.senioritydate }}</span>
+            <span *ngIf="data?.senioritydate">{{senioritydate(data) }}</span>
         </div>
     </div>
 </ng-template>
