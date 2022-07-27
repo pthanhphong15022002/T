@@ -136,7 +136,7 @@ export const routes: Routes = [
             component: ProjectgroupsComponent,
           },
           {
-            path: 'calendar/:funcID',
+            path: 'settingcalendar/:funcID',
             component: CalendarComponent,
           },
         ],
@@ -207,7 +207,7 @@ const T_Component: Type<any>[] = [
   PopupAddMeetingComponent,
   TreeViewComponent,
   ViewListMeetComponent,
-  PopupViewTaskResourceComponent
+  PopupViewTaskResourceComponent,
 ];
 @NgModule({
   imports: [

@@ -129,7 +129,11 @@
             </ng-template>
 
             <ng-template #content>
-              <div class="row position-relative" style="margin-top: 10px">
+              <div
+                class="row position-relative"
+                style="margin-top: 10px"
+                *ngIf="!isApprover"
+              >
                 <codx-label
                   name="lblChooseSigner"
                   [formModel]=""

@@ -41,6 +41,8 @@ export class PopupAddComponent implements OnInit {
   dataEdit:any;
   isUpload:boolean = false;
   fileUpload:any[] = [];
+  fileImage:any[] = [];
+  fileVideo:any[] = [];
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -77,6 +79,8 @@ export class PopupAddComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
+  @ViewChild('codxATMVideo') codxAttachmentVideo: AttachmentComponent;
+
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   constructor(
     private api: ApiHttpService,
@@ -138,7 +142,6 @@ export class PopupAddComponent implements OnInit {
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
-    objNews.tags = this.tagName;
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
@@ -189,9 +192,19 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          if(this.fileUpload.length > 0){
+          // if(this.fileUpload.length > 0){
+          //   this.codxAttachment.objectId = data.recID;
+          //   this.codxAttachment.saveFiles();
+          // }
+          if(this.newsType == this.NEWSTYPE.POST && this.fileImage.length > 0){
             this.codxAttachment.objectId = data.recID;
+            this.dmSV.fileUploadList = [...this.fileImage];
             this.codxAttachment.saveFiles();
+          }
+          if(this.newsType == this.NEWSTYPE.VIDEO && this.fileVideo.length > 0){
+            this.codxAttachmentVideo.objectId = data.recID;
+            this.dmSV.fileUploadList = [...this.fileVideo];
+            this.codxAttachmentVideo.saveFiles();
           }
           this.initForm();
           this.shareControl = this.SHARECONTROLS.EVERYONE;
@@ -340,6 +353,7 @@ export class PopupAddComponent implements OnInit {
       this.fileUpload = [];
     }
   }
+
   addFiles(file:any){
     if(file && file.data.length > 0 ){
       file.data.map(f => {
@@ -360,7 +374,32 @@ export class PopupAddComponent implements OnInit {
       this.changedt.detectChanges();
     }
   }
-  clickUploadFile(){
-    this.codxAttachment.uploadFile();
+
+  addImage(file){
+    this.dmSV.fileUploadList = [];
+    if(file && file.data.length > 0 ){
+        if(file.data[0].mimeType.indexOf("image") >= 0 ){
+          file.data[0]['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.fileImage = [...file.data];
+          this.changedt.detectChanges();
+        }
+        else {
+          this.notifSV.notify("Vui lòng chọn file image.")
+        }
+    }
+  }
+  addVideo(file){
+    this.dmSV.fileUploadList = [];
+    if(file && file.data.length > 0 ){
+         if(file.data[0].mimeType.indexOf("video") >= 0)
+        {
+          file.data[0]['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.fileVideo = [...file.data];
+          this.changedt.detectChanges();
+        }
+        else{
+          this.notifSV.notify("Vui lòng chọn file video.")
+        }
+    }
   }
 }
