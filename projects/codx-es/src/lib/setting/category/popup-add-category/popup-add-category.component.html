@@ -105,19 +105,19 @@
         <div class="codx-approval-step step-test pb-1">
           <div class="codx-approval-header d-flex align-items-center">
             <div class="step-number">{{item.stepNo}}</div>
-            <div class="step-title text-gray-800 fw-bold fs-4">{{item.stepName}}</div>
+            <div class="step-title text-gray-800 fw-bold fs-5">{{item.stepName}}</div>
           </div>
           <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item.approvers">
               <div class="d-flex align-items-top justify-content-between mb-2">
                 <codx-temp-full *ngIf="approver.roleType == 'U'" [imageId]="approver.approver"
-                  [imageObjType]="'AD_Users'" [imageWidth]="40"
+                  [imageObjType]="'AD_Users'" [imageWidth]="35"
                   [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.positionName ?? 'Vị trí công việc'">
                 </codx-temp-full>
                 <codx-temp-full *ngIf="approver.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
-                (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-2 user-mini-icon" [imageWidth]="20"
-                  [title]="(approver.approver |vll: 'ES014': 'text'|async)"
+                (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon"
+                  [imageWidth]="20" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.approver |vll: 'ES014': 'text'|async">
                 </codx-temp-full>
 
