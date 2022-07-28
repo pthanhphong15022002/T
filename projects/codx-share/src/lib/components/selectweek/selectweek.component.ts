@@ -6,6 +6,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import * as moment from 'moment';
+// import 'moment/locale/vi';
 @Component({
   selector: 'selectweek',
   templateUrl: './selectweek.component.html',
@@ -30,9 +31,7 @@ export class SelectweekComponent implements OnInit {
   @Output() onChangeValue = new EventEmitter();
   @Output() onChangeWeek = new EventEmitter();
   isGenerateWeek = false;
-  constructor(private changdefect: ChangeDetectorRef) {
-   
-  }
+  constructor(private changdefect: ChangeDetectorRef) {}
 
   changeDaySelected(date: Date, changeWeek = false) {
     this.isGenerateWeek = true;
@@ -60,16 +59,14 @@ export class SelectweekComponent implements OnInit {
       moment(date).locale('vn').format('MMM') +
       ', ' +
       moment(date).locale('vn').format('YYYY');
-
   }
 
   LoadFinished(i) {
     // if (this.isChangeWeek == true && this.isFinished == false) {
-      this.isFinished = true;
-      this.onChangeWeek.emit();
+    this.isFinished = true;
+    this.onChangeWeek.emit();
     // }
     // this.isChangeWeek == false;
-
   }
 
   changeTimeByControl(data) {
@@ -79,7 +76,7 @@ export class SelectweekComponent implements OnInit {
       this.isGenerateWeek = false;
     else this.generateDateInWeek(data.data);
   }
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.generateDateInWeek(this.today);
   }
 
