@@ -74,8 +74,8 @@ export class TasksComponent extends UIComponent {
   countResource = 0;
   popoverCrr: any;
   popoverDataSelected: any;
-  vllStatusTasks ='TM004'
-  vllStatusAssignTasks ='TM007'
+  vllStatusTasks = 'TM004'
+  vllStatusAssignTasks = 'TM007'
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -365,10 +365,10 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status >= 8) {
-      this.notiService.notifyCode('TM007');
-      return;
-    }
+    // if (data && data.status >= 8) {
+    //   this.notiService.notifyCode('TM007');
+    //   return;
+    // }
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -385,11 +385,6 @@ export class TasksComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
           if (e?.event && e?.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
@@ -486,7 +481,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
@@ -533,7 +528,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -584,8 +579,8 @@ export class TasksComponent extends UIComponent {
                   taskAction.startOn
                     ? taskAction.startOn
                     : taskAction.startDate
-                    ? taskAction.startDate
-                    : taskAction.createdOn
+                      ? taskAction.startDate
+                      : taskAction.createdOn
                 )
               ).toDate();
               var time = (
@@ -726,7 +721,7 @@ export class TasksComponent extends UIComponent {
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
-  hoverPopover(p:any){
+  hoverPopover(p: any) {
     this.popoverDataSelected = p
   }
 }
