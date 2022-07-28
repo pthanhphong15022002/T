@@ -138,13 +138,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.getParam();
     this.task = {
       ...this.task,
       ...dt?.data[0],
     };
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    } else this.getParam();
+    } 
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
@@ -699,23 +700,23 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkLogicWithTaskGroup() {
-    if (this.isCheckCheckListControl) {
-      this.isCheckCheckListTrue =
-        this.isCheckCheckListControl && this.listTodo.length > 0;
-    } else this.isCheckCheckListTrue = true;
+  // checkLogicWithTaskGroup() {
+  //   if (this.isCheckCheckListControl) {
+  //     this.isCheckCheckListTrue =
+  //       this.isCheckCheckListControl && this.listTodo.length > 0;
+  //   } else this.isCheckCheckListTrue = true;
 
-    if (this.param?.ProjectControl != '0') {
-      if (this.isCheckProjectControl) {
-        this.isCheckProjectTrue =
-          this.task.projectID && this.isCheckProjectControl;
-      } else this.isCheckProjectTrue = true;
-    }
-    if (this.isCheckAttachmentControl) {
-      this.isCheckAttachmentTrue =
-        this.isCheckAttachmentControl && this.isHaveFile;
-    } else this.isCheckAttachmentTrue = true;
-  }
+  //   if (this.param?.ProjectControl != '0') {
+  //     if (this.isCheckProjectControl) {
+  //       this.isCheckProjectTrue =
+  //         this.task.projectID && this.isCheckProjectControl;
+  //     } else this.isCheckProjectTrue = true;
+  //   }
+  //   if (this.isCheckAttachmentControl) {
+  //     this.isCheckAttachmentTrue =
+  //       this.isCheckAttachmentControl && this.isHaveFile;
+  //   } else this.isCheckAttachmentTrue = true;
+  // }
 
   logicTaskGroup(idTaskGroup) {
     this.api
@@ -729,9 +730,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = res;
-          // this.isCheckProjectControl = res.projectControl != '0';
-          // this.isCheckAttachmentControl = res.attachmentControl != '0';
-          // this.isCheckCheckListControl = res.checkListControl != '0';
         }
       });
   }
