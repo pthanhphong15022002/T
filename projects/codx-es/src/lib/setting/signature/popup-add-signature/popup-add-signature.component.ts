@@ -6,16 +6,13 @@ import {
   OnInit,
   Optional,
   Output,
-  QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   AuthService,
-  CacheService,
   CallFuncService,
   CodxService,
   DialogData,
@@ -24,9 +21,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment';
-import { isBuffer } from 'util';
-import { AddGridData, CodxEsService } from '../../../codx-es.service';
+import { CodxEsService } from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
 @Component({
@@ -161,12 +156,23 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+      .subscribe((res) => {
+        if (res) {
+          console.log(res);
+        }
+      });
   }
 
   valueChange(event: any) {
-    if (event?.field) {
-      if (event?.data === Object(event?.data))
+    if (event?.field && event?.component) {
+      if (event?.field == 'userID') {
+        this.dialogSignature.patchValue({
+          [event['field']]: event?.data.value[0],
+        });
+        this.dialogSignature.patchValue({
+          fullName: event?.data.dataSelected[0].text,
+        });
+      } else if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
     }

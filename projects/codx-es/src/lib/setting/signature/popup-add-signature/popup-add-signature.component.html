@@ -13,7 +13,7 @@
         </button>
       </span>
     </div>
-    <div class="form-group mt-3">
+    <div class="form-group">
       <codx-label fiedName="Email" default="Email" [formModel]="dialog.formModel">
       </codx-label>
       <div class="d-flex">
@@ -21,12 +21,15 @@
           <codx-input type="text" name="text" cssClass="form-control" ControlName="email" [Group]="dialogSignature">
           </codx-input>
         </div>
-        <button class="btn btn-primary">
-          <codx-label name="lblTitleAdd" default="Add" [formModel]="dialog.formModel"></codx-label>
-        </button>
+        <!-- <codx-input [showInput]="false" [multiple]="true" type="share" refValue="Users" field="cc"
+          (valueChange)="valueChange($event)">
+        </codx-input> -->
+        <codx-input type="Combobox" name="combobox" [refValue]="'Users'" refType="P" field="userID" [showInput]="false"
+          (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
     </div>
-    <div class="form-group mt-3">
+    <div class="form-group">
       <codx-label fiedName="UserID" default="Tên" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input type="text" name="text" cssClass="form-control" ControlName="fullName" [Group]="dialogSignature">
@@ -48,7 +51,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group mt-3">
+    <div class="form-group">
       <div class="d-flex flex-stack fs-6 py-2">
         <div class="fw-bolder ">
           <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="dialog.formModel"></codx-label>
@@ -108,14 +111,14 @@
         <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="number" field="spanTime" value="5" [crrValue]="dialogSignature.value.spanTime" [min]="0"
-          max="50" (valueChange)="valueChange($event)">
+          max="50" (valueChange)="valueChange($event)" [showSpinButton]="false">
         </codx-input>
       </div>
     </div>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
       </button>
     </div>
