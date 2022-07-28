@@ -53,18 +53,31 @@
               }
             ],
             "styles": [
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+
+              "./node_modules/codemirror/lib/codemirror.css",
+              "./node_modules/codemirror/addon/hint/show-hint.css",
               "node_modules/codx-core/assets/sass/style.scss",
-              "src/styles.scss",
-              "node_modules/@ctrl/ngx-emoji-mart/picker.css"
+              "src/styles.scss"
+
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/codemirror/lib/codemirror.js",
+              "node_modules/codemirror/addon/hint/show-hint.js",
+              "node_modules/codemirror/addon/hint/sql-hint.js",
+              "node_modules/codemirror/mode/vb/vb.js"
+            ],
             "allowedCommonJsDependencies": [
               "crypto-js",
               "object-path",
               "clipboard.js",
               "jquery",
               "moment",
-              "jquery.orgchart.js"
+              "jquery.orgchart.js",
+              "@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min",
+              "@boldreports/javascript-reporting-controls/Scripts/bold.report-designer.min",
+              "@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min",
+              "@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min"
             ]
           },
           "configurations": {

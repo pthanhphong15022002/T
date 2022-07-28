@@ -657,6 +657,17 @@ export class CodxEsService {
     );
   }
 
+  deleteSignFile(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'DeleteSignFileAsync',
+      [data]
+    );
+  }
+
+  //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',

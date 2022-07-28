@@ -49,7 +49,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   contentTodoEdit = '';
   recIDTodoDelete = '';
   indexEditTodo = -1;
-  countTodoByGroup = 0 ;
+  countTodoByGroup = 0;
   isConfirm = true;
   isCheckTime = true;
   isCheckProjectControl = false;
@@ -77,7 +77,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listEmpInfo = [];
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
-  
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -139,24 +138,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
-
     this.task = {
       ...this.task,
       ...dt?.data[0],
     };
-    if(this.task.taskGroupID!=null){
+    if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    }else this.getParam();
-   
+    } else this.getParam();
+
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.taskCopy = dt?.data[3];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if (this.functionID == 'TMT0203') 
-      this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -174,6 +170,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
+      this.task.status = "10" ;
+      if (this.functionID == 'TMT0203') {
+        this.task.category = '3';
+      } else {
+        this.task.category = '1';
+      }
       this.titleAction = 'Copy';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
@@ -226,7 +228,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = JSON.parse(res.dataValue);
-          this.paramModule = this.param ;
+          this.paramModule = this.param;
         }
       });
   }
@@ -482,6 +484,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       ])
       .subscribe((res) => {
         if (res && res.length > 0) {
+          this.dialog.dataService.addDatas.clear();
           this.dialog.close(res);
         }
       });
@@ -494,17 +497,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.dataService
             .save((option: any) => this.beforeSave(option))
             .subscribe((res) => {
+              this.dialog.dataService.addDatas.clear();
               if (res.update) {
                 this.dialog.close(res.update);
               }
             });
-        }else{this.dialog.close()}
+        } else {
+          this.dialog.close();
+        }
       });
     } else {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           if (res.update) {
+            this.dialog.dataService.addDatas.clear();
             this.dialog.close(res.update);
           }
         });
@@ -658,24 +665,25 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
       if (data.field === 'taskGroupID') {
-        this.logicTaskGroup(data.data);}
-      return
+        this.logicTaskGroup(data.data);
+      }
+      return;
     }
-    if(data.field=="taskGroupID"){
-      this.param = this.paramModule
+    if (data.field == 'taskGroupID') {
+      this.param = this.paramModule;
     }
   }
 
   checkLogicTime() {
-    if (!this.task.startDate && !this.task.endDate) {
+    if (!this.task.startDate || !this.task.endDate) {
       this.isCheckTime = true;
       return;
     }
-    if (!this.task.startDate && this.task.endDate) {
-      this.notiService.notify('Phải nhập ngày bắt đầu công việc !');
-      this.isCheckTime = false;
-      return;
-    }
+    // if (!this.task.startDate && this.task.endDate) {
+    //   this.notiService.notify('Phải nhập ngày bắt đầu công việc !');
+    //   this.isCheckTime = false;
+    //   return;
+    // }
     if (this.task.startDate > this.task.endDate) {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
@@ -713,8 +721,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res ;
-         // if (this.param?.ProjectControl != '0')
+          this.param = res;
           this.isCheckProjectControl = res.projectControl != '0';
           this.isCheckAttachmentControl = res.attachmentControl != '0';
           this.isCheckCheckListControl = res.checkListControl != '0';
@@ -755,14 +762,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
-    // arrUser.forEach((u) => {
-    //   var obj = new tmpTaskResource() ;
-    //   obj.resourceID = u.userID ;
-    //   obj.roleType = 'R' ;
-    //   obj.memo = null ;
-    //   // var obj = { userID: u.userID, memo2: null };
-    //   this.listTaskResources.push(obj);
-    // });
     this.api
       .execSv<any>(
         'TM',
@@ -791,18 +790,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   valueChangeTags(e) {
     this.task.tags = e.data;
   }
-  closePanel() {
-    this.dialog.close();
-  }
 
   onDeleteUser(item) {
-    if(item?.status && item.status !="00"&& item.status !="10"){
-      this.notiService.notifyCode("TM012")
-      return ;
+    if (item?.status && item.status != '00' && item.status != '10') {
+      this.notiService.notifyCode('TM012');
+      return;
     }
     var userID = item.resourceID;
     var listUser = [];
-    // var listMemo2OfUser = [];
     var listTaskResources = [];
     var listUserDetail = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
@@ -830,18 +825,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else this.task.assignTo = '';
   }
 
-  // convertToListTaskResources() {
-  //   var listTaskResources: tmpTaskResource[] = [];
-  //   this.listMemo2OfUser.forEach((obj) => {
-  //     var tmpTR = new tmpTaskResource();
-  //     tmpTR.resourceID = obj.userID;
-  //     tmpTR.memo = obj.memo2;
-  //     tmpTR.roleType = 'R';
-  //     listTaskResources.push(tmpTR);
-  //   });
-  //   this.listTaskResources = listTaskResources;
-  // }
-
   changeMemo2(e, id) {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
@@ -852,13 +835,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           return;
         }
       });
-    } else {
-      var tmpRes = new tmpTaskResource();
-      tmpRes.memo = message;
-      tmpRes.resourceID = id;
-      // tmpRes.roleType = 'R'
-      this.listTaskResources.push(tmpRes);
     }
+    // else {
+    //   var tmpRes = new tmpTaskResource();
+    //   tmpRes.memo = message;
+    //   tmpRes.resourceID = id;
+    //   tmpRes.roleType = 'R'
+    //   this.listTaskResources.push(tmpRes);
+    // }
   }
   addFile(evt: any) {
     this.attachment.uploadFile();
@@ -923,6 +907,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.listUserDetailSearch = listUserDetailSearch;
   }
 
+  //#region popver select RolType
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
@@ -938,4 +923,5 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.popover.close();
   }
+  //#endregion
 }

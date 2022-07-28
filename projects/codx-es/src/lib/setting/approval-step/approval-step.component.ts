@@ -43,7 +43,7 @@ export class ApprovalStepComponent implements OnInit {
   isDeleteAll = false;
 
   model: any;
-  type = '1';
+  type = '0';
 
   constructor(
     private cfService: CallFuncService,
@@ -151,7 +151,7 @@ export class ApprovalStepComponent implements OnInit {
       lstStep: this.lstStep,
       isAdd: false,
       dataEdit: approvalStep,
-      type: this.type,
+      type: '0',
     };
     this.openPopupAddAppStep(data);
   }

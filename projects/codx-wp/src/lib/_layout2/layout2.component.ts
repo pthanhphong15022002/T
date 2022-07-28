@@ -10,6 +10,7 @@ export class Layout2Component extends LayoutBaseComponent {
   module = 'WP';
   override toolbar = false;
   override aside = false;
+  override asideFixed = false;
   valueList: [];
   category:string = "home";
   funcID:string | null = "";

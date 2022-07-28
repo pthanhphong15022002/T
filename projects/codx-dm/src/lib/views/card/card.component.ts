@@ -39,8 +39,7 @@ export class CardComponent implements OnInit {
   loadedFile: boolean;
   loadedFolder: boolean;
   setting: any;
-  titleCopy = 'Sao chép';
-  titleRename = 'Thay đổi tên';
+  
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -188,19 +187,19 @@ export class CardComponent implements OnInit {
    // alert(file.folderName);
   }
 
-  clickMF($event, data, type) {
-    switch($event.functionID) {
-      case "copy": // copy file hay thu muc
-        var title = `${this.titleCopy} ${type}`;
-        this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
-        break;
+  // clickMF($event, data, type) {
+  //   switch($event.functionID) {
+  //     case "copy": // copy file hay thu muc
+  //       var title = `${this.titleCopy} ${type}`;
+  //       this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+  //       break;
 
-      case "rename": // copy file hay thu muc
-        var title = `${this.titleRename} ${type}`;
-        this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
-        break;
-    }  
-  }
+  //     case "rename": // copy file hay thu muc
+  //       var title = `${this.titleRename} ${type}`;
+  //       this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+  //       break;
+  //   }  
+  // }
 
   getViews(data: HistoryFile[]) {
     if (data != null) {
@@ -390,7 +389,6 @@ export class CardComponent implements OnInit {
         this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
       }
     }
-
   }
 
   getDataString(data) {
