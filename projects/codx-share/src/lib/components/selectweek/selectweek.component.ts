@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { AuthStore } from 'codx-core';
 import * as moment from 'moment';
-// import 'moment/locale/vi';
+import 'moment/locale/vi';
 @Component({
   selector: 'selectweek',
   templateUrl: './selectweek.component.html',
@@ -66,11 +66,11 @@ export class SelectweekComponent implements OnInit {
       daySelectedTo: this.daySelectedTo,
     });
     this.fullDateName =
-      moment(date).locale('vn').format('dd') +
+      moment(date).locale(this.locale).format('dd') +
       ', ' +
-      moment(date).locale('vn').format('MMM') +
+      moment(date).locale(this.locale).format('MMM') +
       ', ' +
-      moment(date).locale('vn').format('YYYY');
+      moment(date).locale(this.locale).format('YYYY');
   }
 
   LoadFinished(i) {
