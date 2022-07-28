@@ -144,9 +144,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 
-  onSaveForm() {}
+  onSaveForm() { }
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -157,7 +157,6 @@ export class PopupAddSignFileComponent implements OnInit {
       .addNewSignFile(this.dialogSignFile.value)
       .subscribe((res) => {
         if (res != null) {
-          debugger;
           console.log(res);
 
           this.dialogSignFile.patchValue(res);
