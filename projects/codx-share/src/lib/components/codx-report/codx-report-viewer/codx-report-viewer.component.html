@@ -1,0 +1,14 @@
+<div class="h-100">
+  <bold-reportviewer
+      #viewer
+      [locale]="locale"
+      [toolbarSettings]="toolbarViewSettings"
+      [reportServiceUrl]="serviceViewUrl"
+      [parameters]="parameters"
+      [id]="reportUUID"
+      [autoRender]="true"
+      (toolBarItemClick)="onToolbarViewerClick($event)"
+      style="width: 100%; height: 770px"
+    >
+    </bold-reportviewer>
+</div>

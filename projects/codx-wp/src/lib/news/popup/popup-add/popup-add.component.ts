@@ -142,7 +142,6 @@ export class PopupAddComponent implements OnInit {
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
-    objNews.tags = this.tagName;
     objNews.createdBy = this.user.userID;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
@@ -193,16 +192,12 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          // if(this.fileUpload.length > 0){
-          //   this.codxAttachment.objectId = data.recID;
-          //   this.codxAttachment.saveFiles();
-          // }
-          if(this.newsType == this.NEWSTYPE.POST && this.fileImage.length > 0){
-            this.codxAttachment.objectId = data.recID;
+          if(this.fileImage.length > 0){
+          this.codxAttachment.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileImage];
             this.codxAttachment.saveFiles();
           }
-          if(this.newsType == this.NEWSTYPE.VIDEO && this.fileVideo.length > 0){
+          if(this.fileVideo.length > 0){
             this.codxAttachmentVideo.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileVideo];
             this.codxAttachmentVideo.saveFiles();
@@ -211,6 +206,7 @@ export class PopupAddComponent implements OnInit {
           this.shareControl = this.SHARECONTROLS.EVERYONE;
           this.lstRecevier = [];
           this.notifSV.notifyCode('E0026');
+          this.dialogRef.close();
           this.insertWPComment(data);
         }
       });
@@ -228,7 +224,7 @@ export class PopupAddComponent implements OnInit {
       post.permissions = data.permissions;
       post.approveControl = "0";
       post.createdBy = data.createdBy;
-      this.api.execSv("WP","ERM.Business.WP","CommentBusiness","PublishPostAsync", [post, null]).subscribe();
+      this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
     }
   }
   clearData(){
@@ -402,5 +398,8 @@ export class PopupAddComponent implements OnInit {
           this.notifSV.notify("Vui lòng chọn file video.")
         }
     }
+  }
+  clickClosePopup(){
+    this.dialogRef.close();
   }
 }

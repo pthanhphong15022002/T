@@ -12,8 +12,8 @@
         </div>
         <div class="d-flex align-items-center note-btn">
             <div class="pw-save ms-2" (click)="openFormNoteBooks()" ngbPopover="Lưu ghi chú vào sổ tay"
-                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'">
-                <span class="icon-download icon-20 btn btn-icon btn-active-light-primary position-relative"
+                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'" container="body">
+                <span class="icon-save_alt icon-20 btn btn-icon btn-active-light-primary position-relative"
                     type="button"></span>
             </div>
             <span class="icon-close icon-20 btn btn-icon" (click)="close()"></span>
@@ -29,16 +29,14 @@
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
                     <div class="flex align-items-center">
-                        <div class="me-2">
-                            <ng-container *ngIf="type == 'check'; else list">
-                                <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
-                                    labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
-                                </codx-input>
-                            </ng-container>
-                            <ng-template #list>
-                                <li></li>
-                            </ng-template>
-                        </div>
+                        <ng-container *ngIf="type == 'check'; else list">
+                            <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
+                                labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
+                            </codx-input>
+                        </ng-container>
+                        <ng-template #list>
+                            <span class="dot-black"></span>
+                        </ng-template>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
                             <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
                                 class="test-textbox border-0 input-note" (keyUpEnter)="onUpdateNote($event)"
@@ -59,7 +57,7 @@
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
                 <ng-container *ngFor="let item of note?.checkList; index as i">
                     <div class="flex align-items-center">
-                        <div class="me-2">
+                        <div>
                             <ng-container *ngIf="note?.noteType == 'check'; else list">
                                 <codx-input #noteAddText type="checkbox"
                                     [checked]="item?.status == '1' || item?.status == 'true'" field="status"
@@ -67,7 +65,7 @@
                                 </codx-input>
                             </ng-container>
                             <ng-template #list>
-                                <li></li>
+                                <span class="dot-black"></span>
                             </ng-template>
                         </div>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">

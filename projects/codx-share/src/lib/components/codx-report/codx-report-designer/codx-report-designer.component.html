@@ -1,0 +1,17 @@
+<div class="h-100">
+  <bold-reportdesigner
+  id="designer"
+  #designer
+  (ajaxBeforeLoad)="onAjaxBeforeLoad($event)"
+  [serviceUrl]="serviceDesignUrl"
+  [toolbarSettings]="toolbarDesignSettings"
+  [permissionSettings]="permissionSettings"
+  (toolbarRendering)="onToolbarDesignerRendering($event)"
+  (toolbarClick)="onToolbarDesignerClick({ event: $event, designerInst: designer })"
+  (previewReport)="onPreview($event)"
+  (saveReportClick)="onPreview($event)"
+  [locale]="locale"
+  style="position: absolute; height: 770px; width: 100%"
+>
+</bold-reportdesigner>
+</div>

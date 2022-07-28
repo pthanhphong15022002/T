@@ -1,3 +1,4 @@
+import { CodxTMService } from './../codx-tm.service';
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
@@ -31,7 +32,9 @@ export class TMMeetingsComponent extends UIComponent {
   startDate: Date;
   endDate: Date;
   dayoff = [];
-
+  month: any;
+  day: any;
+  startTime: any;
   eventStatus: any;
   itemSelected: any;
   user: any;
@@ -41,7 +44,8 @@ export class TMMeetingsComponent extends UIComponent {
   constructor(inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,) {
+    private activedRouter: ActivatedRoute,
+    private tmService: CodxTMService) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -72,21 +76,42 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.kanban,
-        active: false,
+        type: ViewType.card,
+        active: true,
         sameData: true,
-        request2: this.resourceKanban,
         model: {
+          // panelLeftRef: this.panelLeftRef,
           template: this.cardKanban,
-        },
+        }
       },
     ]
 
-      this.view.dataService.methodSave = 'AddMeetingsAsync';
+    this.view.dataService.methodSave = 'AddMeetingsAsync';
 
-      this.dt.detectChanges();
+    this.dt.detectChanges();
 
   }
+
+  getDate(data) {
+    if (data.startDate) {
+      var date = new Date(data.startDate);
+      this.month = this.addZero(date.getMonth() + 1);
+      this.day = this.addZero(date.getDate());
+      var endDate = new Date(data.endDate);
+      let start = this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end = this.addZero(endDate.getHours()) + ':' + this.addZero(endDate.getMinutes());
+      this.startTime = start + ' - ' + end;
+    }
+    return this.startTime;
+  }
+
+  addZero(i){
+    if(i<10){
+      i = '0' + i;
+    }
+    return i;
+  }
+
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {
@@ -112,7 +137,6 @@ export class TMMeetingsComponent extends UIComponent {
         break;
     }
   }
-
 
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {

@@ -71,6 +71,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
     private codxService: CodxService,
+    private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -145,13 +146,17 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             'id',
             new FormControl(this.data.id ?? '')
           );
+          this.dialogCategory.addControl(
+            'recID',
+            new FormControl(this.data.recID)
+          );
           if (!this.isAdd) {
             this.dialogCategory.patchValue(this.data);
             this.esService.getFormModel('EST04').then((res) => {
-              if (res) {
+              if (res && this.data.countStep > 0) {
                 let fmApprovalStep = res;
                 let gridModels = new GridModels();
-                gridModels.dataValue = this.data.id;
+                gridModels.dataValue = this.data.recID;
                 gridModels.predicate = 'TransID=@0';
                 gridModels.funcID = fmApprovalStep.funcID;
                 gridModels.entityName = fmApprovalStep.entityName;
@@ -216,13 +221,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.isSaved = true;
           this.updateAutonumber();
           if (res.save) {
-            this.updateApprovalStep(res.save.id);
+            this.updateApprovalStep(true);
           } else {
-            this.updateApprovalStep();
+            this.updateApprovalStep(false);
           }
-
           this.dialog && this.dialog.close();
-        }
+        } else this.notify.notifyCode('E0011');
       });
   }
 
@@ -234,8 +238,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateApprovalStep(id = null) {
-    if (id == null) {
+  updateApprovalStep(isAddNew) {
+    if (!isAddNew) {
       this.esService.editApprovalStep().subscribe((res) => {
         console.log('result edit appp', res);
       });
@@ -245,7 +249,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     } else {
       //Them moi
-      this.esService.addNewApprovalStep(id).subscribe((res) => {
+      this.esService.addNewApprovalStep().subscribe((res) => {
         console.log('result add new appp', res);
       });
     }
@@ -253,20 +257,20 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   beforeSave(option: any) {
     let itemData = this.dialogCategory.value;
-    let countStep = 0;
+    let countStep = this.lstStep?.length ?? 0;
     if (this.isAdd) {
       option.method = 'AddNewAsync';
     } else {
       option.method = 'EditCategoryAsync';
     }
 
-    this.esService.approvalStep.subscribe((res) => {
-      if (res) {
-        countStep = res.length;
-      }
-    });
+    // this.esService.approvalStep.subscribe((res) => {
+    //   if (res) {
+    //     countStep = res.length;
+    //   }
+    // });
 
-    option.data = [itemData, this.isAdd, this.lstApproval, countStep];
+    option.data = [itemData, countStep];
     return true;
   }
 
@@ -287,10 +291,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopupApproval() {
-    let transID = '';
-    if (!this.isAdd) {
-      transID = this.dialogCategory.value.id;
-    }
+    let transID = this.dialogCategory.value.recID;
     let data = {
       type: '1',
       transID: transID,

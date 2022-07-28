@@ -6,8 +6,8 @@
                     <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
                     </codx-img>
                 </div>
-                <div class="ms-2 ">
-                    <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center mb-1">
                         <div class="user-name fw-bold">{{user.userName}}</div>
                         <div class="ms-2">
                             <ng-container *ngIf="dialogData.status == STATUS.EDIT;else noPermission">
@@ -45,7 +45,7 @@
                                     </ng-template>
                                 </ng-container>
                                 <ng-template #shareName>
-                                    <span class="me-2 fw-bolder">{{dataEdit.shareName}}</span>
+                                    <span class="me-2 fw-bolder" [innerHTML]="dataEdit.shareName"></span>
                                 </ng-template>
                             </ng-container>
                             <ng-template #noPermission>
@@ -92,7 +92,7 @@
                                 <img
                                     src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901' : 'icon' | async)}}" />
                             </span>
-                            <span class="text-gray-700 fs-6 ms-1">
+                            <span class="fs-7 ms-1">
                                 {{shareControl | vll:'L1901' : 'text' | async}}
                             </span>
                             <i class="icon-arrow_drop_down icon-18 text-dark"></i>
@@ -104,7 +104,7 @@
                                 </codx-share>
                             </ng-container>
                             <ng-template #creat_share>
-                                <codx-share [dialog]="dialog" [multiple]="false" (eventApply)="eventApply($event)">
+                                <codx-share [dialog]="dialog" [multiple]="false" listName="WP001"  (eventApply)="eventApply($event)">
                                 </codx-share>
                             </ng-template>
                         </ng-template>

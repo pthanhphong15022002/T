@@ -119,10 +119,9 @@
           <thead>
             <tr>
               <th scope="col" class="w-30 min-w-350px">Lễ/Tết/Sự kiện</th>
+              <th scope="col" class="w-10 text-center">Ngày/Tháng</th>
               <th scope="col" class="w-10 text-center">Dương lịch</th>
               <th scope="col" class="w-10 text-center">Âm lịch</th>
-              <th scope="col" class="w-10 text-center">Ngày/Tháng</th>
-              <th scope="col" class="w-10 text-center">Màu</th>
               <th scope="col" class="w-10 text-center">Icon</th>
               <th scope="col" class="w-10 text-center"></th>
             </tr>
@@ -132,6 +131,7 @@
               <td>
                 <div class="text-dark" [innerHTML]="item.note"></div>
               </td>
+              <td class="text-center">{{ item.day }}/{{ item.month }}</td>
               <td class="text-center">
                 <codx-input
                   class="text-check"
@@ -140,6 +140,7 @@
                   [disable]="true"
                   filed="dayOff"
                   [checked]="item.calendar == '1'"
+                  [disabled]="item.calendar == '2'"
                 >
                 </codx-input>
               </td>
@@ -150,18 +151,16 @@
                   name="checkbox"
                   [disable]="true"
                   filed="dayOff"
-                  [checked]="item.calendar == '2' ? true : false"
+                  [checked]="item.calendar == '2'"
+                  [disabled]="item.calendar == '1'"
                 >
                 </codx-input>
               </td>
-              <td class="text-center">{{ item.day }}/{{ item.month }}</td>
-
               <td class="text-center">
-                <codx-colorpicker [value]="item.color ? item.color : '#0078FF'">
-                </codx-colorpicker>
-              </td>
-              <td class="text-center">
-                <span class="{{ item.symbol }}"></span>
+                <span
+                  [ngStyle]="{ color: item.color }"
+                  class="{{ item.symbol }}"
+                ></span>
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">

@@ -5,34 +5,6 @@
         <div class="row">
             <div class="col-8">
                 <div class="fs-2 fw-bolder text-dark news-title mb-3" [innerHTML]="dataItem?.subject"></div>
-                <div class="text-info-date">
-                    <!-- <span *ngIf="dataItem.shareControl == 'D' ||
-                        dataItem.shareControl == 'P' || dataItem.shareControl == 'R' || dataItem.shareControl == 'G' ||
-                        dataItem.shareControl == 'U'; else other_option" class="ml-1 cursor-pointer" placement="bottom"
-                        [popoverTitle]="popTitleOfShare" [ngbPopover]="popContentOfShare" [autoClose]='"outside"'
-                        (click)="getShareUser(dataItem.shareControl, dataItem.recID)">
-                        <span class="mr-2 text-primary text-underline" (click)="dataItem.shared > 0 "
-                            href="javascript:void(0)">
-                            <ng-container *ngIf="dataItem.shareControl == 'U'; else notU">
-                                <ng-container *ngIf="dataItem.shared == 1;else multipleShared">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblShareWith" default="cùng với "></codx-label>
-                                    <span class="ms-2 me-2">{{dataItem.shareName}}</span>
-                                </ng-container>
-                                
-                            </ng-container>
-                            <ng-template #notU>
-                                <ng-container *ngIf="dataItem.shared == 1;else multipleShared">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblShareWith" default="cùng với phòng ban "></codx-label>
-                                    <span class="ms-2 me-2">{{dataItem.shareName}}</span>
-                                </ng-container>
-                            </ng-template>
-                            <ng-template #multipleShared>
-                                <span class="ms-2 me-2">{{dataItem.shareName}}</span>
-                            </ng-template>
-                        </span>
-                    </span>
-                    <ng-template #other_option></ng-template> -->
-                </div>
                 <div class=" justify-content-between news-header border-bottom px-2 py-1">
                     <div class="d-flex flex-center justify-content-between news-header border-bottom px-2 py-1">
                         <div class="d-flex flex-center">
@@ -61,19 +33,7 @@
                                 class="icon-share"></span></button>
                     </div>
                     <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.video;else news">
-                        <!-- <div *ngIf="srcVideo;else novideo" class="py-3 news-cont w-100">
-                            <video controls class="w-100 h-450px">
-                                <source [src]="srcVideo" type="video/mp4">
-                            </video>
-                        </div>
-                        <ng-template #novideo>
-                            <div class="py-3 news-cont w-100">
-                                <video controls class="w-100 h-450px">
-                                    <source  type="video/mp4">
-                                </video>
-                            </div>
-                        </ng-template> -->
-                        <codx-file [objectID]="dataItem.recID"></codx-file>
+                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" ObjectType="WP_Comments"></app-view-file>
                     </ng-contianer>
                     <ng-template #news>
                         <div class="py-3 news-cont " [innerHTML]="dataItem?.subContent"></div>
@@ -121,7 +81,11 @@
                     <div class="news-items my-2" *ngFor="let item of listViews" (click)="clickViewDeital(item)">
                         <div class="row">
                             <div class="col-3">
-                                <codx-img  imageType="square" [cssClass]="'img'"  [objectId]="item.recID"
+                                <codx-img
+                                    [width]="70"  
+                                    imageType="square" 
+                                    [cssClass]="'img'"  
+                                    [objectId]="item.recID"
                                     [objectType]="'WP_News'">
                                 </codx-img>
                             </div>

@@ -36,17 +36,17 @@
             </div>
             <div class="form-group row mt-3">
               <div class="form-group col-8">
-                <codx-label fiedName="ApprovalControl" default="Xét duyệt" formName="TaskGroups"
+                <codx-label fiedName="ApproveControl" default="Xét duyệt" formName="TaskGroups"
                   gridViewName="grvTaskGroups"></codx-label>
                 <div>
-                  <codx-label fiedName="ApprovalControl" default="Kiểm soát xét duyệt khi tạo mới công việc"
+                  <codx-label fiedName="ApproveControl" default="Kiểm soát xét duyệt khi tạo mới công việc"
                     formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
                 </div>
               </div>
               <div class="col-4">
-                <codx-input name="approvalControl" type="valuelist" field="approvalControl" placeholder=""
-                  [crrValue]="taskGroups.approvalControl" (valueChange)="valueApp($event)"
-                  [refValue]="gridViewSetup.ApprovalControl.referedValue">
+                <codx-input name="approveControl" type="valuelist" field="approveControl" placeholder=""
+                  [crrValue]="taskGroups.approveControl" (valueChange)="valueApp($event)"
+                  [refValue]="gridViewSetup.approveControl.referedValue">
                 </codx-input>
               </div>
             </div>

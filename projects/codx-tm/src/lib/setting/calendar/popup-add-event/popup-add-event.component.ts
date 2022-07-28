@@ -1,33 +1,62 @@
-import { ApiHttpService, DialogData, FormModel, DialogRef } from 'codx-core';
-import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
+import {
+  ApiHttpService,
+  DialogData,
+  FormModel,
+  DialogRef,
+  UIComponent,
+  AuthStore,
+  CodxScheduleComponent,
+} from 'codx-core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormGroup } from '@angular/forms';
+import { CodxTMService } from '../../../codx-tm.service';
 
 @Component({
   selector: 'popup-add-event',
   templateUrl: './popup-add-event.component.html',
   styleUrls: ['./popup-add-event.component.scss'],
 })
-export class PopupAddEventComponent implements OnInit, AfterViewInit {
+export class PopupAddEventComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddEvent: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
+  user: any;
+  funcID: string;
   evtData: any;
   dayOff: any;
   set = false;
   data: any;
+  isAdd: boolean = false;
 
   constructor(
-    private api: ApiHttpService,
+    private injector: Injector,
+    private tmService: CodxTMService,
+    private authService: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
+    this.user = this.authService.get();
+    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
   }
 
-  ngOnInit(): void {
-   console.log(this.data)
+  onInit(): void {
+    console.log(this.data);
   }
 
   ngAfterViewInit(): void {}
@@ -56,7 +85,7 @@ export class PopupAddEventComponent implements OnInit, AfterViewInit {
           }
         }
       });
-    //  this.schedule.reloadDataSource();
+    this.schedule.refresh();
   }
 
   valueChange(event) {

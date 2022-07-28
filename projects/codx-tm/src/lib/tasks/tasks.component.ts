@@ -68,8 +68,15 @@ export class TasksComponent extends UIComponent {
   iterationID: string = '';
   listTaskResousce = [];
   searchField = '';
-  popover: any;
-  taskResoucesInfo ={}
+  listTaskResousceSearch = [];
+  listRoles = [];
+  vllRole = 'TM002';
+  countResource = 0;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatusTasks = 'TM004';
+  vllStatusAssignTasks = 'TM007';
+  vllStatus ="" ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -83,11 +90,21 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if(this.funcID=="TMT0203"){
+      this.vllStatus =this.vllStatusAssignTasks
+    }else{
+      this.vllStatus = this.vllStatusTasks
+    }
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
     var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.dataObj = JSON.stringify(dataObj);
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   clickMF(e: any, data?: any) {
@@ -354,40 +371,46 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status >= 8) {
-      this.notiService.notifyCode('TM007');
+    if (data && !("00,07,09,10").includes(data.status)) {
+      this.notiService.notifyCode('TM013');
+      return;
+    } else if (
+      data.category == '1' && 
+      data.verifyControl == '1' &&
+      data.status != '00'
+    ) {
+      this.notiService.notifyCode('TM014');
       return;
     }
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
-          }
-          this.detectorRef.detectChanges();
-        });
-      });
+    // if (data.category == '1' || data.category == '2') {
+    //   this.editConfirm(data);
+    //   return;
+    // }
+    this.editConfirm(data)
+    // var isCanEdit = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListTaskChildDetailAsync',
+    //     data.taskID
+    //   )
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       res.forEach((element) => {
+    //         if (element.status != '00' && element.status != '10') {
+    //           isCanEdit = false;
+    //           return;
+    //         }
+    //       });
+    //       if (!isCanEdit) {
+    //         this.notiService.notifyCode('TM016');
+    //       } else {
+    //         this.editConfirm(data);
+    //       }
+    //     }
+    //   });
   }
 
   copy(data) {
@@ -425,8 +448,16 @@ export class TasksComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    if (data.status == 9) {
-      this.notiService.notifyCode('TM001');
+    if (data.status == '90') {
+      this.notiService.notifyCode('TM017');
+      return;
+    }
+    if (data.category == '2') {
+      this.notiService.notifyCode('TM018');
+      return;
+    }
+    if (data.category == '1') {
+      this.deleteConfirm(data);
       return;
     }
     var isCanDelete = true;
@@ -441,7 +472,7 @@ export class TasksComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           res.forEach((element) => {
-            if (element.status != '1') {
+            if (element.status != '00' && element.status != '10') {
               isCanDelete = false;
               return;
             }
@@ -449,26 +480,7 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.notiService.alertCode('TM003').subscribe((confirm) => {
-              if (confirm?.event && confirm?.event?.status == 'Y') {
-                this.tmSv.deleteTask(data.taskID).subscribe((res) => {
-                  if (res) {
-                    var listTaskDelete = res[0];
-                    var parent = res[1];
-                    listTaskDelete.forEach((x) => {
-                      this.view.dataService.remove(x).subscribe();
-                    });
-                    this.notiService.notify('Xóa công việc thành công !');
-                    //  this.notiService.notifyCode('cần code');
-                    if (parent) {
-                      this.view.dataService.update(parent).subscribe();
-                    }
-                    this.itemSelected = this.view.dataService.data[0];
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              }
-            });
+            this.deleteConfirm(data);
           }
         }
       });
@@ -477,7 +489,62 @@ export class TasksComponent extends UIComponent {
 
   sendemail(data) {}
 
-  beforeDel(opt: RequestOption) {
+  editConfirm(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddComponent,
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
+      });
+  }
+
+  deleteConfirm(data) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+          if (res) {
+            var listTaskDelete = res[0];
+            var parent = res[1];
+            listTaskDelete.forEach((x) => {
+              this.view.dataService.remove(x).subscribe();
+            });
+            this.notiService.notifyCode('TM004');
+            if (parent) {
+              this.view.dataService.update(parent).subscribe();
+            }
+            this.itemSelected = this.view.dataService.data[0];
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
+  beforDelete(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
     opt.data = this.itemSelected.taskID;
     return true;
@@ -546,7 +613,25 @@ export class TasksComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
+    if(taskAction.owner != this.user.userID){
+      this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
+      return ;
+    }
+    if(taskAction.status ="05"){
+      this.notiService.notifyCode("TM020")
+      return ;
+    }
+    if(taskAction.approveStatus=="3"){
+      this.notiService.notifyCode("TM024")
+      return ;
+    }
+    if(taskAction.approveStatus=="4" || taskAction.approveStatus=="5" ){
+      this.notiService.notifyCode("TM025")
+      return ;
+    }
+
     const fieldName = 'UpdateControl';
     this.api
       .execSv<any>(
@@ -657,15 +742,65 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
-  
-  openViewListTaskResource(data){
+
+  openViewListTaskResource(data) {
     this.dialog = this.callfc.openForm(
       PopupViewTaskResourceComponent,
       '',
       400,
       500,
       '',
-      [data,this.funcID]
+      [data, this.funcID]
     );
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResousceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResousce = res;
+          this.listTaskResousceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+          // this.titlePopover =
+          //   'Danh sách được phân công (' + this.countResource + ')';
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResousceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResousceSearch = this.listTaskResousce;
+      return;
+    }
+    this.listTaskResousce.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResousceSearch.push(res);
+      }
+    });
+    this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+
+  hoverPopover(p: any) {
+    this.popoverDataSelected = p;
   }
 }

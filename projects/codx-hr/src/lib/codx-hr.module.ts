@@ -50,7 +50,7 @@ export const routes: Routes = [
         component: PositionsComponent
       },
       {
-        path: 'employeeinfo/:funcID',
+        path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
       },
       {

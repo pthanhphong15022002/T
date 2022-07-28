@@ -5,7 +5,9 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
+import { AuthStore } from 'codx-core';
 import * as moment from 'moment';
+import 'moment/locale/vi';
 @Component({
   selector: 'selectweek',
   templateUrl: './selectweek.component.html',
@@ -27,12 +29,22 @@ export class SelectweekComponent implements OnInit {
   daySelectedTo;
   beginMonth: Date;
   endMonth: Date;
+  user: any;
+  locale = "en";
   @Output() onChangeValue = new EventEmitter();
   @Output() onChangeWeek = new EventEmitter();
   isGenerateWeek = false;
-  constructor(private changdefect: ChangeDetectorRef) {
-    this.generateDateInWeek(this.today);
+  constructor(private changdefect: ChangeDetectorRef, private auth: AuthStore) {
+    this.user = this.auth.get();
+
+    if(this.user && this.user.language)
+    {
+      var lang =this.user.language;
+      if(lang === "VN")
+        this.locale = 'vi';
+    }
   }
+
   changeDaySelected(date: Date, changeWeek = false) {
     this.isGenerateWeek = true;
     this.daySelected = date;
@@ -54,21 +66,19 @@ export class SelectweekComponent implements OnInit {
       daySelectedTo: this.daySelectedTo,
     });
     this.fullDateName =
-      moment(date).format('dd') +
+      moment(date).locale(this.locale).format('dd') +
       ', ' +
-      moment(date).format('MMM') +
+      moment(date).locale(this.locale).format('MMM') +
       ', ' +
-      moment(date).format('YYYY');
-
+      moment(date).locale(this.locale).format('YYYY');
   }
 
   LoadFinished(i) {
     // if (this.isChangeWeek == true && this.isFinished == false) {
-      this.isFinished = true;
-      this.onChangeWeek.emit();
+    this.isFinished = true;
+    this.onChangeWeek.emit();
     // }
     // this.isChangeWeek == false;
-
   }
 
   changeTimeByControl(data) {
@@ -78,7 +88,10 @@ export class SelectweekComponent implements OnInit {
       this.isGenerateWeek = false;
     else this.generateDateInWeek(data.data);
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.generateDateInWeek(this.today);
+  }
+
   changeWeek(numberDay) {
     this.isFinished = false;
     this.isChangeWeek = true;

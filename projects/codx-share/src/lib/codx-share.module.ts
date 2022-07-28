@@ -39,6 +39,23 @@ import { LayoutNoAsideComponent } from './_layoutNoAside/layoutNoAside.component
 import { LayoutOnlyHeaderComponent } from './_layoutOnlyHeader/layoutOnlyHeader.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
+import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
+import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
+import { CodxReportComponent } from './components/codx-report/codx-report.component';
+import { CodxReportDesignerComponent } from './components/codx-report/codx-report-designer/codx-report-designer.component';
+import { BoldReportDesignerModule, BoldReportsModule, BoldReportViewerModule } from '@boldreports/angular-reporting-components';
+
+// Report viewer
+import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
+// Report Designer
+import '@boldreports/javascript-reporting-controls/Scripts/bold.report-designer.min';
+
+// data-visualization
+import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
+import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
+import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
+import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
+import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -64,6 +81,11 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
+  QuickLinksInnerComponent,
+  UserInnerComponent,
+  CodxReportComponent,
+  CodxReportViewerComponent,
+  CodxReportDesignerComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -83,10 +105,13 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     UploaderModule,
     PickerModule,
     ChartAllModule,
+    BoldReportsModule,
+    BoldReportDesignerModule,
+    BoldReportViewerModule
   ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule {}
+export class CodxShareModule { }
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,
 //   CodxCoreModule,

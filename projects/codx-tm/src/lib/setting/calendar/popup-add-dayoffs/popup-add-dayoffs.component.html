@@ -14,8 +14,7 @@
           type="datetime"
           format="d"
           field="calendarDate"
-          [crrValue]="evtCDDate?.calendarDate"
-          (valueChange)="changeTime($event, 'calendarDate')"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -30,7 +29,6 @@
           class="form-control text-white color-large"
           field="dayoffColor"
           dataformat="hex"
-          [crrValue]="evtCDDate?.dayoffColor"
         >
         </codx-colorpicker>
       </div>
@@ -45,7 +43,7 @@
           type="vllicon"
           refValue="L1470"
           field="symbolCld"
-          [crrValue]="evtCDDate?.symbol ? evtCDDate.symbol : ''"
+          
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -60,9 +58,8 @@
         <codx-input
           type="textarea"
           field="note2"
-          dataformat="ed2"
+          format="ed3"
           ngDefaultControl
-          [crrValue]="evtCDDate?.note ? evtCDDate.note : ''"
           (valueChange)="valueChange($event)"
           placeholder="Diễn giải"
         >

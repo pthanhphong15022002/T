@@ -1,3 +1,5 @@
+import { TM_Sprints } from "./TM_Sprints.model";
+
 export class TM_Tasks {
   recID:string;
   taskID: string;
@@ -7,8 +9,6 @@ export class TM_Tasks {
   category: string;
   taskGroupID: string;
   parentID: string;
-  sourceID: string;
-  sourceType: string;
   projectID: string;
   activityID: string;
   iterationID: string;
@@ -20,7 +20,7 @@ export class TM_Tasks {
   location: string;
   objectID: string;
   objectType: string;
-  status: string = '1';
+  status: string = '10';
   statusCode: string;
   reasonCode: string;
   priority: string;
@@ -51,17 +51,34 @@ export class TM_Tasks {
   owner: string;
   bUID: string;
   attachment: string;
-  approvalRule: string;
+  approveControl :string
   approveStatus: string;
   approvers: string;
   approvedOn: any;
   approvedBy: string;
+  isAssign:boolean;
+  isOverdue:boolean;
   privateTask: boolean;
   remainder: boolean;
   remainderDays: number;
   reOpens: number;
   splitedNo: number;
-  closed: boolean;
+  attachments: number;
+  comments : number;
+  avatar :string;
+  confirmControl: string;
+  confirmStatus: string;
+  confirmDate: Date;
+  confirmComment:string
+  verifyControl:string ;
+  verifyStatus:string ;
+  verifyDate:Date ;
+	verifyBy :string;
+	verifyComment:string
+  extends : number ;
+  extendStatus:string;
+  autoCompleted:string;
+  closed : boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: any;
@@ -72,10 +89,8 @@ export class TM_Tasks {
   divisionID: string;
   departmentID: string
   companyID :string
-  write: boolean;
-  extended :boolean;
-  isAssign:boolean;
-  isOverdue:boolean;
+  write: boolean;	
+	tempSprints: TM_Sprints
 }
 
 export class tmpTaskResource {

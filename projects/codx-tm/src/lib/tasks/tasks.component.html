@@ -1,7 +1,7 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected"
-    (clickMoreFunction)="receiveMF($event)">
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles" [popoverCrr]="popoverCrr" [vllStatus]="vllStatus"
+    (clickMoreFunction)="receiveMF($event)" (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
 </ng-template>
 
@@ -27,7 +27,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event,data)" [typeMF]="'hover'"
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
-    [content]="data.memo||'memo'" [status]="data.status" statusVll="L0614" [date]="data.dueDate"
+    [content]="data.memo||'memo'" [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate"
     [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
     [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
@@ -100,15 +100,15 @@
       <span>
         <div class="d-status">
           <div class="badge badge-danger me-2 label-status" [style.border-color]="
-              (data?.status | vll: 'L0614':'textColor' | async) +
+              (data?.status | vll:vllStatus:'textColor' | async) +
               '30'
             " [style.background-color]="
-              (data?.status | vll: 'L0614':'textColor' | async) +
+              (data?.status | vll: vllStatus:'textColor' | async) +
               '30'
             " [style.color]="
-            data?.status | vll: 'L0614':'textColor' | async
+            data?.status | vll: vllStatus:'textColor' | async
             " style="border: none">
-            {{ data?.status | vll: "L0614":"text" | async }}
+            {{ data?.status | vll: vllStatus:"text" | async }}
           </div>
         </div>
       </span>
@@ -118,8 +118,10 @@
           }}</span>
       </span>
     </div>
-    <div *ngIf="data.category == '3'" class="" (click)="openViewListTaskResource(data)">
-      <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
+    <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList,data)" 
+    [ngbPopover]="popEmpList" popoverClass="empPopoverClass" 
+    #popoverList="ngbPopover" placement="right bottom" container="body" autoClose="outside">
+      <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
     <div *ngIf="data.category == '1' || data.category == '2'" class="">
@@ -149,5 +151,60 @@
             </ng-container>
           </div> 
       </div>    -->
+  </div>
+</ng-template>
+
+<ng-template #popEmpList>
+  <div class="fw-bold">
+    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho" ></codx-label><span>{{'('+countResource +')'}}</span>
+  </div>
+  <div>
+    <codx-searchbar *ngIf="countResource>0"  (searchEvent)="searchName($event)"></codx-searchbar>
+  </div>
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
+    <div class="me-3">
+      <div style=" position: relative">
+        <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+        </codx-img>
+        <div style="position: absolute; right: 0px;bottom: 0px">
+          <ng-container *ngFor="let role of listRoles">
+            <ng-container *ngIf="role.value== item.roleType">
+              <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
+            </ng-container>
+            </ng-container>   
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold">{{item?.resourceName}}</div>
+      <div class="text-gray-600 fs-7">{{item?.positionName}}</div>
+      <div class="text-dark">
+        {{item?.memo}}
+      </div>
+      <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
+        <div class="d-flex align-items-end me-2 codx-badge">
+          <span>
+            <div class="d-status">
+              <div class="badge badge-danger me-2 label-status" [style.border-color]="
+                  (item?.status | vll: vllStatus:'textColor' | async) +
+                  '30'
+                " [style.background-color]="
+                  (item?.status | vll: vllStatus:'textColor' | async) +
+                  '30'
+                " [style.color]="
+                item?.status | vll: vllStatus:'textColor' | async
+                " style="border: none">
+                {{ item?.status | vll: vllStatus:"text" | async }}
+              </div>
+            </div>
+          </span>
+          <span>
+            <span class="text-gray-700">{{
+              item.dueDate | date: "dd/MM/yyyy"
+              }}</span>
+          </span>
+          </div>
+      </div>
+    </div>
   </div>
 </ng-template>

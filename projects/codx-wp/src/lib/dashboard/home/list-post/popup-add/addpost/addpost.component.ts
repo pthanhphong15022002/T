@@ -66,7 +66,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     MYDEPARMENTS: "4",
     MYDIVISION: "5",
     MYCOMPANY: "6",
-    ADMINISTRATOR: "7",
     EVERYONE: "9",
     OGRHIERACHY: "O",
     DEPARMENTS: "D",
@@ -89,7 +88,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   objectName = '';
   dataShare: Post = null;
   dataEdit: Post = null;
-  myPermission: Permission;
+  myPermission: Permission = null;
+  adminPermission:Permission = null;
 
   sets = [
     'native',
@@ -149,6 +149,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
     this.shareControl = this.SHARECONTROLS.OWNER;
+    this.adminPermission = new Permission();
+    this.adminPermission.objectType = "7";
+    this.adminPermission.memberType = this.MEMPERTPE.TAGS;
+    this.adminPermission.objectID = 'ADMIN';
+    this.adminPermission.delete = true;
+    this.adminPermission.read = true;
+    this.adminPermission.isActive = true;
+    this.adminPermission.createdBy = this.user.userID;
+    this.adminPermission.createdOn = new Date();
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
@@ -192,9 +201,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     var data = event[0];
     var objectType = data.objectType;
-    this.objectType = objectType;
     this.shareControl = objectType;
-
+    
     if (isNaN(Number(objectType))) {
       this.lstRecevier = data.dataSelected;
       if (objectType == this.SHARECONTROLS.USER) {
@@ -229,6 +237,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.refType = this.entityName;
     post.permissions = [];
     post.permissions.push(this.myPermission);
+    post.permissions.push(this.adminPermission);
     if (this.lstRecevier.length > 0) {
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
@@ -263,41 +272,22 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         post.permissions.push(per);
       })
     }
-    // upload file
-    if (this.listFileUpload.length > 0) {
-      post.isUpload = true;
-      post.files = this.listFileUpload;
-    }
-    // this.dialogRef.dataService.save((opt:any)=> this.beforSave(opt,post)).subscribe((res:any) => {
-    //   if(res){
-    //           if(this.listFileUpload.length > 0){
-    //             this.atmCreate.objectId = res.recID;
-    //             this.dmSV.fileUploadList =  this.codxFileCreated.getFiles();
-    //             res.files = [...this.listFileUpload];
-    //             this.atmCreate.saveFiles();
-    //           }
-    //           this.notifySvr.notifyCode('E0026');
-    //           this.dialogRef.close();
-    //         }
-    // })
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
-            this.dmSV.fileUploadList = this.codxFileCreated.getFiles();
+            this.dmSV.fileUploadList = [...this.listFileUpload];
             res.files = [...this.listFileUpload];
             this.atmCreate.saveFiles();
           }
-          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe((res2) => { console.log(res2) });
+          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
           this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
-          this.dt.detectChanges();
         }
 
       });
   }
-
 
   editPost() {
     if (!this.message) {
@@ -305,10 +295,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       return;
     }
     this.dataEdit.content = this.message;
-    this.dataEdit.shareControl = this.shareControl;
+    let lstPermission: any[] = [];
+    lstPermission.push(this.myPermission);
+    lstPermission.push(this.adminPermission);
+    if(this.dataEdit.shareControl != this.shareControl){
+      this.dataEdit.shareControl = this.shareControl;
+      this.dataEdit.permissions = lstPermission;
+    }
     if (this.lstRecevier.length > 0) {
-      let lstPermission: any[] = [];
-      lstPermission.push(this.myPermission);
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
         switch (this.objectType) {
@@ -347,7 +341,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
-        'CommentBusiness',
+        'CommentsBusiness',
         'EditPostAsync',
         [this.dataEdit]
       )
@@ -363,8 +357,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
               this.deleteFile(f.recID, true);
             });
           }
-          res.files = this.codxFileEdit.lstFile;
-          (this.dialogRef.dataService as CRUDService).edit(res).subscribe();
+          res.files = this.codxFileEdit.getFiles();
+          (this.dialogRef.dataService as CRUDService).update(res).subscribe();
           this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
         }
@@ -387,6 +381,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.shares = this.dataShare;
     var lstPermissions: Permission[] = [];
     lstPermissions.push(this.myPermission);
+    lstPermissions.push(this.adminPermission);
     if (this.lstRecevier.length > 0) {
       this.lstRecevier.forEach((item) => {
         var per = new Permission();
@@ -427,16 +422,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       post.isUpload = true;
       post.files = this.listFileUpload;
     }
-    this.api.execSv("WP", "ERM.Business.WP", "CommentBusiness", "PublishPostAsync", [post])
+    this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
-          this.dialogRef.DataService as CRUDService;
-          this.dialogRef.dataService.add(res, 0).subscribe();
+          (this.dialogRef.dataService as CRUDService).add(post, 0).subscribe();
+          this.dialogRef.close();
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
             this.atmCreate.saveFiles();
           }
-          this.dialogRef.close();
         }
       });
   }

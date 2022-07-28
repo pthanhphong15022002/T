@@ -1,19 +1,19 @@
 import 'lodash';
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
+  Injector,
   Input,
   OnInit,
   Optional,
 } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
+  AuthStore,
   DialogData,
   DialogRef,
+  NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import {
   CalendarDateModel,
@@ -22,6 +22,7 @@ import {
 } from '../../../models/calendar.model';
 import { PopupAddDayoffsComponent } from '../popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from '../popup-add-event/popup-add-event.component';
+import { CodxTMService } from '../../../codx-tm.service';
 
 declare var _;
 
@@ -30,10 +31,16 @@ declare var _;
   templateUrl: './popup-edit-calendar.component.html',
   styleUrls: ['./popup-edit-calendar.component.scss'],
 })
-export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
+export class PopupEditCalendarComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @Input() calendarID: string = 'STD';
   stShift = new CalendarWeekModel();
   ndShift = new CalendarWeekModel();
+  user: any;
+  funcID: string;
+  data: any;
   dayOffId: string;
   calendateDate: any;
   dayOff: any;
@@ -45,19 +52,23 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
   evtData: any;
 
   constructor(
-    private api: ApiHttpService,
-    private callfc: CallFuncService,
-    private cache: CacheService,
-    private df: ChangeDetectorRef,
+    private injector: Injector,
+    private tmService: CodxTMService,
+    private authService: AuthStore,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
+    this.user = this.authService.get();
+    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
+    this.data = dt?.data;
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.getParams();
-    this.cache.valueList('L1481').subscribe((res) => {
+    this.cache.valueList('L0012').subscribe((res) => {
       this.vlls = res.datas;
     });
     this.api
@@ -70,6 +81,7 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          console.log(res);
           this.dayOff = res[0];
           this.handleWeekDay(res[1]);
           this.calendateDate = res[2];
@@ -93,7 +105,7 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
           this.param = res;
           this.calendarID = res.fieldValue;
           this.getDayOff(this.calendarID);
-          this.df.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -139,7 +151,7 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
         shiftType: 2,
       });
     });
-    this.df.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   //Modal event dayoff
@@ -151,32 +163,43 @@ export class PopupEditCalendarComponent implements OnInit, AfterViewInit {
     this.evtData.month = data?.month || 1;
     this.evtData.color = data?.color || '#0078ff';
     this.getDayOff();
-    this.callfc.openForm(
-      PopupAddEventComponent,
-      'Thêm Lễ/Tết/Sự kiện',
-      800,
-      800,
-      '',
-      this.evtData
-    );
+    if (this.dayOffId) {
+      this.callfc.openForm(
+        PopupAddEventComponent,
+        'Chỉnh sửa Lễ/Tết/Sự kiện',
+        800,
+        800,
+        '',
+        [this.evtData, true]
+      );
+    } else {
+      this.callfc.openForm(
+        PopupAddEventComponent,
+        'Thêm Lễ/Tết/Sự kiện',
+        800,
+        800,
+        '',
+        [this.evtData, false]
+      );
+    }
   }
 
   removeDayOff(item) {
-    // this.api
-    //   .exec(
-    //     APICONSTANT.ASSEMBLY.BS,
-    //     APICONSTANT.BUSINESS.BS.DaysOff,
-    //     'DeleteAsync',
-    //     item
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.dayOff = _.filter(this.dayOff, function (o) {
-    //         return o.recID != item.recID;
-    //       });
-    //       this.notiService.notifyCode('E0408');
-    //     }
-    //   });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.DaysOff,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayOff = _.filter(this.dayOff, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
 
   //Modal calendarDate
