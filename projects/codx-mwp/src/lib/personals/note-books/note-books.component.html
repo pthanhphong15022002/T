@@ -2,7 +2,7 @@
     [dataValue]="dataValue" idField="recID">
 </codx-views>
 
-<div class="pw-note">
+<div class="pw-note card">
     <div class="d-flex align-items-center justify-content-between pw-header mb-5">
         <div class="pw-search">
             <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="pw-listcard">
+    <div class="pw-listcard scroll-y card-body">
         <div *ngFor="let item of view.dataService.data">
             <div class="pw-card delay-500" (click)="openDetailPage(item)">
                 <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
@@ -36,6 +36,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <ng-template #footerCard let-item>

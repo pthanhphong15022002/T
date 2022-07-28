@@ -160,7 +160,6 @@ ejs-listview .e-ul>li {
 }
 
 .e-richtexteditor .e-rte-content .e-content {
-    border: 1px #eee solid;
     margin-bottom: 10px;
 }
 
@@ -169,9 +168,12 @@ ejs-listview .e-ul>li {
 }
 
 .remove-file {
-    visibility: hidden;
+    //visibility: hidden;
+    visibility: visible;
+    opacity: 0.3;
 }
 
 .position-relative:hover .remove-file {
-    visibility: visible;
+    //visibility: visible;
+    opacity: 1;
 }

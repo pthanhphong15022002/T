@@ -128,7 +128,7 @@
               </ng-container>
             </div>
             <div class="row row-custom mt-2 mx-0">
-              <div class="col-6 ps-0 position-relative">
+              <div class="col-6 ps-0 pe-0 position-relative">
                 <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
                   <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                 </ng-container>
@@ -247,11 +247,8 @@
   <ng-container *ngIf="file_application.length > 0">
     <div class="mt-2 d-flex " *ngFor="let file of file_application">
       <div class="me-2">
-        <codx-temp-full 
-          imageSrc="{{file.extension | avtFile}}" 
-          imgCss="w-20px me-3 cursor-pointer"
-          title="{{file.fileName}}" 
-          [descLine]="1">
+        <codx-temp-full imageSrc="{{file.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+          title="{{file.fileName}}" [descLine]="1">
         </codx-temp-full>
       </div>
       <ng-container *ngIf="edit">

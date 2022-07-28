@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   Injector,
   Input,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -32,6 +33,7 @@ import { UpdateStatusPopupComponent } from './update-status-popup/update-status-
   selector: 'test-views',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TasksComponent extends UIComponent {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -369,7 +371,7 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
-      data.category == '1' && 
+      data.category == '1' &&
       data.verifyControl == '1' &&
       data.status != '00'
     ) {
@@ -480,7 +482,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   editConfirm(data) {
     if (data) {
@@ -582,7 +584,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -608,13 +610,13 @@ export class TasksComponent extends UIComponent {
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
-    if(taskAction.owner != this.user.userID){
+    if (taskAction.owner != this.user.userID) {
       this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
-      return ;
+      return;
     }
-    if(taskAction.status ="05"){
+    if (taskAction.status = "05") {
       this.notiService.notifyCode("TM020")
-      return ;
+      return;
     }
     const fieldName = 'UpdateControl';
     this.api
@@ -642,8 +644,8 @@ export class TasksComponent extends UIComponent {
                   taskAction.startOn
                     ? taskAction.startOn
                     : taskAction.startDate
-                    ? taskAction.startDate
-                    : taskAction.createdOn
+                      ? taskAction.startDate
+                      : taskAction.createdOn
                 )
               ).toDate();
               var time = (
