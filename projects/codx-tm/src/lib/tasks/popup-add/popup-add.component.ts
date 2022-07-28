@@ -70,7 +70,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   planholderTaskGoal = 'Add to do list…';
   listRoles: any;
   vllRole = 'TM001';
-
+  countFile = 0;
   empInfo: any = {};
   popoverList: any;
   popoverEmpInfo: any;
@@ -170,7 +170,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
-      this.task.status = "10" ;
+      this.task.status = '10';
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
@@ -233,13 +233,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       });
   }
 
-  changeMemo(event: any) {
-    if (event.field) {
-      this.task[event.field] = event?.data ? event?.data : '';
-    }
-    this.changeDetectorRef.detectChanges;
-  }
-
+  //#region To Do List
   onAddToDo(evt: any) {
     if (!this.todoAddText || this.todoAddText.trim() == '') {
       this.todoAddText = '';
@@ -296,6 +290,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           : this.STATUS_TASK_GOAL.Checked;
     }
   }
+  //#endregion
 
   openTask(): void {
     this.task.estimated = 0;
@@ -390,6 +385,38 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM011');
       return;
     }
+    if (this.param?.ProjectControl == '2' && !this.task.projectID) {
+      this.notiService.notifyCode('TM012');
+      return;
+    }
+    if (
+      this.param?.LocationCotrol == '2' &&
+      (!this.task.location || this.task.location.trim() != '')
+    ) {
+      this.notiService.notifyCode('TM012');
+      return;
+    }
+    // if(this.param?.PlanControl == "2" && (!this.task.location || this.task.location.trim() !="" )){
+    //   this.notiService.notifyCode('TM012');
+    //   return;
+    // }
+    if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
+      // this.notiService.notifyCode('TM012');
+      this.notiService.notify(
+        'Ngày hết hạn không được phép nhỏ hơn ngày hiện hành !'
+      );
+      return;
+    }
+    if (this.task.taskGroupID) {
+      if (this.param?.checkListControl != '0' && this.listTodo.length == 0) {
+        this.notiService.notify('Danh sách việc cần làm không được để trống');
+        return;
+      }
+      // if (this.param?.attachmentControl == '1' && this.countFile == 0) {
+      //   this.notiService.notify('File tài liệu không được để trống');
+      //   return;
+      // }
+    }
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -414,27 +441,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    if (this.task.taskGroupID) {
-      this.checkLogicWithTaskGroup();
-      var checkLogic =
-        this.isCheckProjectTrue &&
-        this.isCheckCheckListTrue &&
-        this.isCheckAttachmentTrue;
-
-      if (!checkLogic) {
-        if (!this.isCheckAttachmentTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('File tài liệu không được để trống');
-        if (!this.isCheckProjectTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('Dự án không được để trống');
-        if (!this.isCheckCheckListTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('Danh sách việc cần làm không được để trống');
-        return;
-      }
-    }
-
     this.task.taskType = this.param['TaskType'];
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
@@ -518,9 +524,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openInputMemo2() {
-    this.openMemo2 = !this.openMemo2;
-  }
+  // openInputMemo2() {
+  //   this.openMemo2 = !this.openMemo2;
+  // }
 
   eventApply(e: any) {
     var assignTo = '';
@@ -692,6 +698,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.isCheckTime = true;
     }
   }
+
   checkLogicWithTaskGroup() {
     if (this.isCheckCheckListControl) {
       this.isCheckCheckListTrue =
@@ -722,9 +729,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = res;
-          this.isCheckProjectControl = res.projectControl != '0';
-          this.isCheckAttachmentControl = res.attachmentControl != '0';
-          this.isCheckCheckListControl = res.checkListControl != '0';
+          // this.isCheckProjectControl = res.projectControl != '0';
+          // this.isCheckAttachmentControl = res.attachmentControl != '0';
+          // this.isCheckCheckListControl = res.checkListControl != '0';
         }
       });
   }
@@ -825,6 +832,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else this.task.assignTo = '';
   }
 
+  changeMemo(event: any) {
+    if (event.field) {
+      this.task[event.field] = event?.data ? event?.data : '';
+    }
+    this.changeDetectorRef.detectChanges;
+  }
   changeMemo2(e, id) {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
