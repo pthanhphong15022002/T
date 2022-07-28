@@ -667,15 +667,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   checkLogicTime() {
-    if (!this.task.startDate && !this.task.endDate) {
+    if (!this.task.startDate || !this.task.endDate) {
       this.isCheckTime = true;
       return;
     }
-    if (!this.task.startDate && this.task.endDate) {
-      this.notiService.notify('Phải nhập ngày bắt đầu công việc !');
-      this.isCheckTime = false;
-      return;
-    }
+    // if (!this.task.startDate && this.task.endDate) {
+    //   this.notiService.notify('Phải nhập ngày bắt đầu công việc !');
+    //   this.isCheckTime = false;
+    //   return;
+    // }
     if (this.task.startDate > this.task.endDate) {
       var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
@@ -755,14 +755,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
-    // arrUser.forEach((u) => {
-    //   var obj = new tmpTaskResource() ;
-    //   obj.resourceID = u.userID ;
-    //   obj.roleType = 'R' ;
-    //   obj.memo = null ;
-    //   // var obj = { userID: u.userID, memo2: null };
-    //   this.listTaskResources.push(obj);
-    // });
     this.api
       .execSv<any>(
         'TM',
@@ -791,9 +783,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   valueChangeTags(e) {
     this.task.tags = e.data;
   }
-  closePanel() {
-    this.dialog.close();
-  }
 
   onDeleteUser(item) {
     if(item?.status && item.status !="00"&& item.status !="10"){
@@ -802,7 +791,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     var userID = item.resourceID;
     var listUser = [];
-    // var listMemo2OfUser = [];
     var listTaskResources = [];
     var listUserDetail = [];
     for (var i = 0; i < this.listUserDetail.length; i++) {
@@ -830,17 +818,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else this.task.assignTo = '';
   }
 
-  // convertToListTaskResources() {
-  //   var listTaskResources: tmpTaskResource[] = [];
-  //   this.listMemo2OfUser.forEach((obj) => {
-  //     var tmpTR = new tmpTaskResource();
-  //     tmpTR.resourceID = obj.userID;
-  //     tmpTR.memo = obj.memo2;
-  //     tmpTR.roleType = 'R';
-  //     listTaskResources.push(tmpTR);
-  //   });
-  //   this.listTaskResources = listTaskResources;
-  // }
 
   changeMemo2(e, id) {
     var message = e?.data;
@@ -851,14 +828,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           obj.memo = message;
           return;
         }
-      });
-    } else {
-      var tmpRes = new tmpTaskResource();
-      tmpRes.memo = message;
-      tmpRes.resourceID = id;
-      // tmpRes.roleType = 'R'
-      this.listTaskResources.push(tmpRes);
-    }
+      });}
+    // else {
+    //   var tmpRes = new tmpTaskResource();
+    //   tmpRes.memo = message;
+    //   tmpRes.resourceID = id;
+    //   tmpRes.roleType = 'R'
+    //   this.listTaskResources.push(tmpRes);
+    // }
   }
   addFile(evt: any) {
     this.attachment.uploadFile();
@@ -923,6 +900,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.listUserDetailSearch = listUserDetailSearch;
   }
 
+  //#region popver select RolType
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
@@ -938,4 +916,5 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.popover.close();
   }
+  //#endregion
 }
