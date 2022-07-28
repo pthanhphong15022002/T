@@ -32,11 +32,11 @@
     <td class="rowphoto">
       <div class="padding">
         <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+        (data?.approveControl | vll: 'L1433':'color' | async) + '30'
       " [style.background-color]="
-        (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-      " [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
-          {{data?.approvalControl|vll:"L1433":"text"|async}}
+        (data?.approveControl | vll: 'L1433':'color' | async) + '30'
+      " [style.color]="data?.approveControl | vll: 'L1433':'color' | async" style="border: none">
+          {{data?.approveControl|vll:"L1433":"text"|async}}
         </div>
       </div>
     </td>
@@ -164,10 +164,10 @@
   </div>
 </ng-template>
 
-<ng-template #itemApprovalControl let-data>
+<ng-template #itemApproveControl let-data>
   <div class="padding">
 
-    <codx-label fiedName="ApprovalControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Xét duyệt?">
+    <codx-label fiedName="ApproveControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Xét duyệt?">
     </codx-label>
   </div>
 </ng-template>
@@ -247,13 +247,13 @@
 <ng-template #itemCreate let-data>
   {{data.createdOn | date: 'dd/MM/yyyy'}}
 </ng-template>
-<ng-template #itemApprovalControlVll let-data>
+<ng-template #itemApproveControlVll let-data>
   <div class="badge badge-danger me-2" [style.border-color]="
-  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
+  (data?.approveControl | vll: 'L1433':'color' | async) + '30'
 " [style.background-color]="
-  (data?.approvalControl | vll: 'L1433':'color' | async) + '30'
-" [style.color]="data?.approvalControl | vll: 'L1433':'color' | async" style="border: none">
-    {{data?.approvalControl|vll:"L1433":"text"|async}}
+  (data?.approveControl | vll: 'L1433':'color' | async) + '30'
+" [style.color]="data?.approveControl | vll: 'L1433':'color' | async" style="border: none">
+    {{data?.approveControl|vll:"L1433":"text"|async}}
   </div>
 </ng-template>
 <ng-template #itemProjectControlVll let-data>
