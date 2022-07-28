@@ -51,8 +51,7 @@ export class TM_Tasks {
   owner: string;
   bUID: string;
   attachment: string;
-  approvalRule: string;
-  approvalControl :string
+  approveControl :string
   approveStatus: string;
   approvers: string;
   approvedOn: any;

@@ -121,9 +121,9 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
   valueApp(data) {
 
-    this.taskGroups.approvalControl = data.data;
+    this.taskGroups.approveControl = data.data;
 
-    console.log(this.taskGroups.approvalControl);
+    console.log(this.taskGroups.approveControl);
   }
   valuePro(data) {
     this.taskGroups.projectControl = data.data;

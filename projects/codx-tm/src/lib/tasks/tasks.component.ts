@@ -74,8 +74,8 @@ export class TasksComponent extends UIComponent {
   countResource = 0;
   popoverCrr: any;
   popoverDataSelected: any;
-  vllStatusTasks ='TM004'
-  vllStatusAssignTasks ='TM007'
+  vllStatusTasks = 'TM004';
+  vllStatusAssignTasks = 'TM007';
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -365,39 +365,44 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status >= 8) {
-      this.notiService.notifyCode('TM007');
+    if (data && data.status > 10) {
+      this.notiService.notifyCode('TM013');
+      return;
+    } else if (
+      data.category == '1' && 
+      data.verifyControl == '1' &&
+      data.status != '00'
+    ) {
+      this.notiService.notifyCode('TM014');
       return;
     }
-    if (data) {
-      this.view.dataService.dataSelected = data;
+    if (data.category == '1' || data.category == '2') {
+      this.editConfirm(data);
+      return;
     }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+    var isCanEdit = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
       .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '00' && element.status != '10') {
+              isCanEdit = false;
+              return;
+            }
+          });
+          if (!isCanEdit) {
+            this.notiService.notifyCode('TM016');
+          } else {
+            this.editConfirm(data);
           }
-          this.detectorRef.detectChanges();
-        });
+        }
       });
   }
 
@@ -436,8 +441,16 @@ export class TasksComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    if (data.status == 9) {
-      this.notiService.notifyCode('TM001');
+    if (data.status == '90') {
+      this.notiService.notifyCode('TM017');
+      return;
+    }
+    if (data.category == '2') {
+      this.notiService.notifyCode('TM018');
+      return;
+    }
+    if (data.category == '1') {
+      this.deleteConfirm(data);
       return;
     }
     var isCanDelete = true;
@@ -452,7 +465,7 @@ export class TasksComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           res.forEach((element) => {
-            if (element.status != '1') {
+            if (element.status != '00' && element.status != '10') {
               isCanDelete = false;
               return;
             }
@@ -460,26 +473,7 @@ export class TasksComponent extends UIComponent {
           if (!isCanDelete) {
             this.notiService.notifyCode('TM001');
           } else {
-            this.notiService.alertCode('TM003').subscribe((confirm) => {
-              if (confirm?.event && confirm?.event?.status == 'Y') {
-                this.tmSv.deleteTask(data.taskID).subscribe((res) => {
-                  if (res) {
-                    var listTaskDelete = res[0];
-                    var parent = res[1];
-                    listTaskDelete.forEach((x) => {
-                      this.view.dataService.remove(x).subscribe();
-                    });
-                    this.notiService.notify('Xóa công việc thành công !');
-                    //  this.notiService.notifyCode('cần code');
-                    if (parent) {
-                      this.view.dataService.update(parent).subscribe();
-                    }
-                    this.itemSelected = this.view.dataService.data[0];
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              }
-            });
+            this.deleteConfirm(data);
           }
         }
       });
@@ -488,7 +482,62 @@ export class TasksComponent extends UIComponent {
 
   sendemail(data) {}
 
-  beforeDel(opt: RequestOption) {
+  editConfirm(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddComponent,
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
+      });
+  }
+
+  deleteConfirm(data) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.tmSv.deleteTask(data.taskID).subscribe((res) => {
+          if (res) {
+            var listTaskDelete = res[0];
+            var parent = res[1];
+            listTaskDelete.forEach((x) => {
+              this.view.dataService.remove(x).subscribe();
+            });
+            this.notiService.notifyCode('TM004');
+            if (parent) {
+              this.view.dataService.update(parent).subscribe();
+            }
+            this.itemSelected = this.view.dataService.data[0];
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
+  beforDelete(opt: RequestOption) {
     opt.methodName = 'DeleteTaskAsync';
     opt.data = this.itemSelected.taskID;
     return true;
@@ -557,7 +606,16 @@ export class TasksComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
+    if(taskAction.owner != this.user.userID){
+      this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
+      return ;
+    }
+    if(taskAction.status ="05"){
+      this.notiService.notifyCode("TM020")
+      return ;
+    }
     const fieldName = 'UpdateControl';
     this.api
       .execSv<any>(
@@ -726,7 +784,7 @@ export class TasksComponent extends UIComponent {
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
-  hoverPopover(p:any){
-    this.popoverDataSelected = p
+  hoverPopover(p: any) {
+    this.popoverDataSelected = p;
   }
 }

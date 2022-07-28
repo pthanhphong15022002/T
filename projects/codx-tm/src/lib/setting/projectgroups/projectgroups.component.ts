@@ -26,8 +26,8 @@ export class ProjectgroupsComponent implements OnInit {
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
-  @ViewChild('itemApprovalControlVll', { static: true })
-  itemApprovalControlVll: TemplateRef<any>;
+  @ViewChild('itemApproveControlVll', { static: true })
+  itemApproveControlVll: TemplateRef<any>;
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('form') form: any;
   @ViewChild('view') view!: ViewsComponent;

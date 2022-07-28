@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxMwpService } from '../../codx-mwp.service';
 
 @Component({
   selector: 'lib-edit-experence',
@@ -17,6 +18,7 @@ export class EditExperenceComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private api: ApiHttpService,
+    private codxMwp: CodxMwpService,  
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) { 
@@ -52,6 +54,7 @@ export class EditExperenceComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.method = 'UpdateEmployeeExperiencesAsync';
+    op.service = 'HR';
     data = [
       this.dataBind,
    
@@ -61,20 +64,29 @@ export class EditExperenceComponent implements OnInit {
   }
 
   OnSaveForm(){
-    // this.dialog.dataService
-    // .save((option: any) => this.beforeSave(option))
-    // .subscribe((res) => {
-    //   if (res.save) {
-    //     this.dialog.close();
-    //     this.notiService.notify('Thêm thành công'); 
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option))
+    .subscribe((res) => {
+      if (res.save) {
+        this.dialog.close();
+        this.notiService.notifyCode('MWP00201'); 
+      }
+    });
+
+    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
+    // .subscribe((res: any) => {
+    //   console.log(res);    
+    //   if (res) {
+    //     res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
+    //     res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
+
+    //     this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
+    //     this.dialog.close(this.dataBind);
+    //   }
+    //   else {
+    //     this.notiService.notify("Error");
     //   }
     // });
-
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
-    .subscribe((o: any) => {
-      console.log(o);    
-     
-    });
-    this.dialog.close(this.dataBind);
+    // this.dialog.close(this.dataBind);
   }
 }

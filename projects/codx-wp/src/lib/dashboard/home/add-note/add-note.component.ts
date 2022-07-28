@@ -26,10 +26,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes, NoteFile, NoteType } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
-import { NoteServices } from '@pages/services/note.services';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
+import { NoteServices } from '../../../services/note.services';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -329,8 +329,8 @@ export class AddNoteComponent implements OnInit {
 
     if (this.checkPin == true)
       this.note.isPin = this.pin;
+    this.listNote.shift();
     this.note.checkList = this.listNote;
-    this.note.checkList.shift()
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
