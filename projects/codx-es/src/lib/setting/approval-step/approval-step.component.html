@@ -10,12 +10,12 @@
         <i class="icon-close icon-18" (click)="close()"></i>
       </div>
     </div>
-    <div class="stepper-body p-0 w-100">
+    <div class="stepper-body p-6 w-100">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-900px h-100">
         <div class="card-body p-0 ">
-          <div class="card-px text-center pt-15 pb-15">
+          <div class="text-center p-10">
             <div *ngIf="lstStep?.length == 0 || lstStep == null">
-              <div class="d-flex align-items-center">
+              <div class="mb-10 text-center">
                 <h2 class="h2-title">
                   <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
                   </codx-label>
@@ -91,7 +91,7 @@
                           <div class="timeline-content mx-auto">
                             <div class="d-flex flex-wrap">
                               <ng-container *ngFor="let approver of item.approvers">
-                                <div class="border border-gray-300 rounded min-w-250px mw-250px me-6 mb-3">
+                                <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                                   <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType=='U'"
                                     [imageId]="approver.approver" [title]="approver.approverName"
                                     [subTitle]="approver.positionName ?? 'Vị trí công việc'" [status]="lstStep.status"
@@ -180,7 +180,7 @@
                 <div class="timeline-content mx-auto">
                   <div class="d-flex flex-wrap">
                     <ng-container *ngFor="let approver of item.approvers">
-                      <div class="border border-gray-300 rounded min-w-250px mw-250px me-6 mb-3">
+                      <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                         <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType=='U'"
                           [imageId]="approver.approver" [title]="approver.approverName"
                           [subTitle]="approver.positionName ?? 'Vị trí công việc'" [status]="lstStep.status"
@@ -307,7 +307,7 @@
                         <div class="timeline-content mx-auto">
                           <div class="d-flex flex-wrap">
                             <ng-container *ngFor="let approver of item.approvers">
-                              <div class="border border-gray-300 rounded min-w-250px mw-250px me-6 mb-3">
+                              <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                                 <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType=='U'"
                                   [imageId]="approver.approver" [title]="approver.approverName"
                                   [subTitle]="approver.positionName ?? 'Vị trí công việc'" [status]="lstStep.status"

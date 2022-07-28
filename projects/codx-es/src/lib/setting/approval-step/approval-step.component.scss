@@ -17,7 +17,7 @@
       width: 2px;
       position: absolute;
       top: 0;
-      left: 19px;
+      left: 18px;
       bottom: 0;
       z-index: 9;
     }
@@ -37,8 +37,8 @@
         //  line-height: 0;
         //  position: relative;
         //  z-index: 10;
-        width: 36px;
-        height: 36px;
+        width: 36px!important;
+        height: 36px!important;
         border: 2px #1BC5BD solid;
         line-height: 32px;
         text-align: center;
@@ -52,13 +52,13 @@
         z-index: 999;
      }
      .stepper-number{
-        font-weight: 600;
-        font-size: 18px;
-        line-height: 22px;
-        /* identical to box height, or 122% */
-        display: flex;
-        align-items: center;
-        text-align: center;
+        // font-weight: 600;
+        // font-size: 18px;
+        // line-height: 22px;
+        // /* identical to box height, or 122% */
+        // display: flex;
+        // align-items: center;
+        // text-align: center;
      }
      .stepper-title{
       font-weight: 500;
