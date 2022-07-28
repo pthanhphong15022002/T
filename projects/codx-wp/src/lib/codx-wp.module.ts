@@ -29,6 +29,7 @@ import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
 import { ElecticSearchComponent } from './news/popup/popup-search/electic-search/electic-search.component';
 import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
 import { ViewDetailComponent } from './news/view-detail/view-detail.component';
+import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
 
@@ -123,6 +124,7 @@ const Component: Type<any>[] =
     AddPostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
+    ViewVideoComponent
 
   ];
 

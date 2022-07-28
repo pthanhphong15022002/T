@@ -283,21 +283,27 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
+          post.recID = res.recID;
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
             this.dmSV.fileUploadList = this.codxFileCreated.getFiles();
             res.files = [...this.listFileUpload];
             this.atmCreate.saveFiles();
           }
-          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe((res2) => { console.log(res2) });
+          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
           this.notifySvr.notifyCode('E0026');
           this.dialogRef.close();
-          this.dt.detectChanges();
         }
 
       });
   }
+  
 
+  fileAdded(data:any){
+    if(data){
+      
+    }
+  }
 
   editPost() {
     if (!this.message) {
@@ -430,13 +436,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
-          this.dialogRef.DataService as CRUDService;
-          this.dialogRef.dataService.add(res, 0).subscribe();
+          (this.dialogRef.dataService as CRUDService).add(post, 0).subscribe();
+          this.dialogRef.close();
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
             this.atmCreate.saveFiles();
           }
-          this.dialogRef.close();
         }
       });
   }

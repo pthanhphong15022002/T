@@ -59,8 +59,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate =
-    '  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ';
+  predicate ='  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ';
   dataValue: any = '0;1;5;false';
 
   modal: DialogRef;
@@ -92,7 +91,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     this.cache.message('WP011').subscribe((mssg: any) => {
-      // this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
       this.dt.detectChanges();
     });
   }

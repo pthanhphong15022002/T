@@ -247,8 +247,11 @@
   <ng-container *ngIf="file_application.length > 0">
     <div class="mt-2 d-flex " *ngFor="let file of file_application">
       <div class="me-2">
-        <codx-temp-full imageSrc="{{file.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-          title="{{file.fileName}}" [descLine]="1">
+        <codx-temp-full 
+          imageSrc="{{file.extension | avtFile}}" 
+          imgCss="w-20px me-3 cursor-pointer"
+          title="{{file.fileName}}" 
+          [descLine]="1">
         </codx-temp-full>
       </div>
       <ng-container *ngIf="edit">
