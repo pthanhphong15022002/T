@@ -109,15 +109,17 @@
                             </div>
                         </div>
                         <ng-container *ngIf="data.isEditComment;else comment">
-                            <div class="text-dark text-comment">
-                                <codx-input type="text" format="ed3" [crrValue]="data.content"
-                                    (valueChange)="valueChangeComment($event,data)"></codx-input>
-                            </div>
-                            <div class="feed-icon btn-send">
-                                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                                    (click)="editComment(data.content,data)">
-                                    <span class="icon-send icon-18"></span>
-                                </span>
+                            <div class="edit-comment position-relative w-100 mt-1">
+                                <div class="text-dark text-comment w-100">
+                                    <codx-input type="text" format="ed3" [crrValue]="data.content"
+                                        (valueChange)="valueChangeComment($event,data)"></codx-input>
+                                </div>
+                                <div class="feed-icon btn-send" style="position: absolute; top:3px; right:5px">
+                                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+                                        (click)="editComment(data.content,data)">
+                                        <span class="icon-send icon-18"></span>
+                                    </span>
+                                </div>
                             </div>
                         </ng-container>
                         <ng-template #comment>
