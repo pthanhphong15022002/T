@@ -171,7 +171,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       });
   }
   loadSource() {
-    this.recid;
     var formName = this.RolesService.formName;
     var gridViewName = this.RolesService.gridViewName;
     this.api

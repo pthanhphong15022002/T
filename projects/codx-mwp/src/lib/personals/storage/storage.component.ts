@@ -191,14 +191,16 @@ export class StorageComponent
     this.detectorRef.detectChanges();
 
     var arr = [];
-    for (let i = 0; i < e?.details.length; i++) {
-      arr.push(e?.details[i].refID);
+    if (e?.details) {
+      for (let i = 0; i < e?.details?.length; i++) {
+        arr.push(e?.details[i].refID);
+      }
+      var a = this.detail.createComponent(ListPostComponent);
+      a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      a.instance.dataValue = `[${arr.join(';')}]`;
+      a.instance.isShowCreate = false;
+      this.detectorRef.detectChanges();
     }
-    var a = this.detail.createComponent(ListPostComponent);
-    a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-    a.instance.dataValue = `[${arr.join(';')}]`;
-    a.instance.isShowCreate = false;
-    this.detectorRef.detectChanges();
   }
 
   onUpdateBackground(e) {}
