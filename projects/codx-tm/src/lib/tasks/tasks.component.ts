@@ -78,6 +78,7 @@ export class TasksComponent extends UIComponent {
   popoverDataSelected: any;
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
+  vllStatus ="" ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -91,6 +92,11 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if(this.funcID=="TMT0203"){
+      this.vllStatus =this.vllStatusAssignTasks
+    }else{
+      this.vllStatus = this.vllStatusTasks
+    }
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
@@ -367,7 +373,7 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status > 10) {
+    if (data && !("00,07,09,10").includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
@@ -378,34 +384,35 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM014');
       return;
     }
-    if (data.category == '1' || data.category == '2') {
-      this.editConfirm(data);
-      return;
-    }
-    var isCanEdit = true;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTaskChildDetailAsync',
-        data.taskID
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCanEdit = false;
-              return;
-            }
-          });
-          if (!isCanEdit) {
-            this.notiService.notifyCode('TM016');
-          } else {
-            this.editConfirm(data);
-          }
-        }
-      });
+    // if (data.category == '1' || data.category == '2') {
+    //   this.editConfirm(data);
+    //   return;
+    // }
+    this.editConfirm(data)
+    // var isCanEdit = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListTaskChildDetailAsync',
+    //     data.taskID
+    //   )
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       res.forEach((element) => {
+    //         if (element.status != '00' && element.status != '10') {
+    //           isCanEdit = false;
+    //           return;
+    //         }
+    //       });
+    //       if (!isCanEdit) {
+    //         this.notiService.notifyCode('TM016');
+    //       } else {
+    //         this.editConfirm(data);
+    //       }
+    //     }
+    //   });
   }
 
   copy(data) {
@@ -618,6 +625,15 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode("TM020")
       return;
     }
+    if(taskAction.approveStatus=="3"){
+      this.notiService.notifyCode("TM024")
+      return ;
+    }
+    if(taskAction.approveStatus=="4" || taskAction.approveStatus=="5" ){
+      this.notiService.notifyCode("TM025")
+      return ;
+    }
+
     const fieldName = 'UpdateControl';
     this.api
       .execSv<any>(

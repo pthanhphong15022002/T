@@ -137,7 +137,7 @@
                         <div class="col-9">
                             <codx-input placeholder="{{titleFile}}..."                                
                                 class="form-control"
-                                type="text"
+                                type="text"                                
                                 style="width:100%"
                                 [crrValue]="fileEditing.title"    
                                 (valueChange)="txtValue($event, 'title')" 
@@ -188,7 +188,8 @@
                             <codx-input placeholder="{{titleExcerpts}}..."
                                 class="form-control test-datetime"
                                 type="textarea" 
-                                style="width:100%" dataformat="d"                               
+                                format="ed2"
+                                style="width:100%"
                                 [crrValue]="fileEditing.excerpts"    
                                 (valueChange)="txtValue($event, 'excerpts')" 
                             ></codx-input> 

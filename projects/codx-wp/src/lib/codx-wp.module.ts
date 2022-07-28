@@ -75,7 +75,7 @@ export const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'WPT02/home',
+        redirectTo: 'WPT02P/home',
         pathMatch: 'full'
       }
     ]
