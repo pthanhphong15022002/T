@@ -38,6 +38,7 @@ export class PopupAddSignFileComponent implements OnInit {
   headerText = 'Thêm mới tài liệu';
 
   currentTab = 0;
+  processTab = 0;
   formModel: FormModel;
   isAfterRender = false;
   objectIDFile: String;
@@ -215,13 +216,68 @@ export class PopupAddSignFileComponent implements OnInit {
     this.attachment.openPopup();
   }
 
+  clickTab(tabNo) {
+    debugger;
+    let nodes = Array.from(
+      (this.status.nativeElement as HTMLElement).childNodes
+    );
+
+    if (tabNo <= this.processTab && tabNo != this.currentTab) {
+      let className = (nodes[tabNo] as HTMLElement).className.toString();
+      switch (className) {
+        case 'stepper-item':
+          (nodes[tabNo] as HTMLElement).classList.add('active');
+
+          break;
+        case 'stepper-item approve-disabled':
+          (nodes[tabNo] as HTMLElement).classList.remove('approve-disabled');
+          (nodes[tabNo] as HTMLElement).classList.add('approve');
+          break;
+      }
+
+      let oldClassName = (
+        nodes[this.currentTab] as HTMLElement
+      ).className.toString();
+      switch (oldClassName) {
+        case 'stepper-item approve':
+          (nodes[this.currentTab] as HTMLElement).classList.remove('approve');
+          (nodes[this.currentTab] as HTMLElement).classList.add(
+            'approve-disabled'
+          );
+          break;
+        case 'stepper-item active':
+          (nodes[this.currentTab] as HTMLElement).classList.remove('active');
+          break;
+      }
+      this.currentTab = tabNo;
+    }
+  }
+
   continue(currentTab) {
-    //console.log((this.status.nativeElement as HTMLElement).childNodes);
+    console.log((this.status.nativeElement as HTMLElement).childNodes);
+    let nodes = Array.from(
+      (this.status.nativeElement as HTMLElement).childNodes
+    );
+
+    if (currentTab < nodes.length - 1) {
+      if (
+        (nodes[currentTab] as HTMLElement).classList.contains(
+          'approve-disabled'
+        )
+      ) {
+        (nodes[currentTab] as HTMLElement).classList.remove('approve-disabled');
+        (nodes[currentTab] as HTMLElement).classList.add('approve');
+      }
+      (nodes[currentTab] as HTMLElement).classList.add('approve-disabled');
+      (nodes[currentTab] as HTMLElement).classList.remove('active');
+      (nodes[currentTab + 1] as HTMLElement).classList.add('active');
+    }
 
     switch (currentTab) {
       case 0:
         if (this.dmSV.fileUploadList.length > 0) {
           this.currentTab++;
+          this.processTab++;
         } else {
           this.notify.notify('Yêu cầu thêm file');
         }

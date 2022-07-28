@@ -29,4 +29,12 @@
 .note-option {
     max-height: 80px;
     overflow: auto;
+    width: 100%;
+}
+
+.icon-edit-one {
+    position: absolute;
+    right: 48px;
+    top: 8px;
+    border-radius: 30px !important;
 }
