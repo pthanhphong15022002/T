@@ -1,5 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { ApiHttpService, DialogData, DialogRef, ImageViewerComponent, CRUDService } from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef, ImageViewerComponent, CRUDService, CacheService, CodxFormComponent } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, Input, EventEmitter, ViewChild, Output, Optional } from '@angular/core';
 import { NoteBooks } from '../../../model/NoteBooks.model';
 import { NoteBookServices } from '../../../services/notebook.services';
@@ -19,15 +19,22 @@ export class AddUpdateNoteBookComponent implements OnInit {
   formModel: any;
   data: any;
   header = 'Thêm mới sổ tay';
+  empty = '';
+  gridViewSetup = {
+    title: '',
+    memo: '',
+  }
 
   noteBooks: NoteBooks = new NoteBooks();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('form') form : CodxFormComponent;
   @Output() loadData = new EventEmitter();
 
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private noteBookService: NoteBookServices,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -39,9 +46,20 @@ export class AddUpdateNoteBookComponent implements OnInit {
       this.noteBooks = JSON.parse(JSON.stringify(this.dialog.dataService?.dataSelected));
       this.data = JSON.parse(JSON.stringify(this.dialog.dataService?.dataSelected));
     }
+    this.cache.gridViewSetup('NoteBooks', 'grvNoteBooks').subscribe((res) => {
+      if(res) {
+        this.gridViewSetup.title = res?.Title?.headerText;
+        this.gridViewSetup.memo = res?.Memo?.headerText;
+      }
+    })
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    console.log("check codx-form", this.form)
+    console.log("check formModel", this.formModel)
   }
 
   valueChange(e) {
