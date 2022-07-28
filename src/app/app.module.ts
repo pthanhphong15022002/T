@@ -25,6 +25,7 @@ import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
 import { CodxEpModule } from 'projects/codx-ep/src/public-api';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 //import { ReportComponent } from './modules/report/report.component';
@@ -99,6 +100,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       animation: 'pulse',
       loadingText: 'This item is actually loading...',
     }),
+    NgbModule,
   ],
   exports: [],
   providers: [
