@@ -25,8 +25,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Output() evtGetFiles = new EventEmitter();
   @Output() removeFile = new EventEmitter();
   @Output() addFile = new EventEmitter();
-
-  @ViewChild('atm') atm:AttachmentComponent;
   FILE_REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -220,13 +218,9 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       'z':             'application/x-compress',
       'zip':           'application/zip'
     };
-    
-  private subscription: Subscription = new Subscription();
   constructor(
     private injector: Injector,
     private auth:AuthService,
-    private dmSV:CodxDMService,
-    private notifiSV: NotificationsService,
     private dt: ChangeDetectorRef
   ) {
     super(injector);
@@ -243,8 +237,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
   }
   getFiles(){
-    let files = this.file_img_video.concat(this.file_application);
-    return this.lstFile.concat(this.file_img_video,this.file_application);
+    return this.lstFile =this.file_img_video.concat(this.file_application);
   }
   getFileByObjectID() {
     this.api.execSv(

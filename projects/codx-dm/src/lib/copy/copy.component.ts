@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
-import { FileInfo } from '@shared/models/file.model';
+import { FileInfo, ItemInterval } from '@shared/models/file.model';
 
 @Component({
   selector: 'copy',
@@ -44,6 +44,7 @@ export class CopyComponent implements OnInit {
   loadedFile: boolean;
   loadedFolder: boolean;
   setting: any;  
+  title = 'Thông báo';
   titleFullName = 'Tên';
   titleSave = "Save";
   titleMessage = "Tên bắt buộc.";
@@ -52,6 +53,8 @@ export class CopyComponent implements OnInit {
   dialog: any;
   data: FileInfo;  
   objectType: string;
+  copy = false;
+  interval: ItemInterval[];
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -76,7 +79,9 @@ export class CopyComponent implements OnInit {
       this.titleDialog = data.data.title;
       this.objectType = data.data[0];
       this.data = data.data[1];
+      this.id = this.data.recID;
       this.titleDialog = data.data[2];
+      this.copy = data.data[3];
       if (this.data != null) {
         if (this.objectType == "file") {
           this.fullName = this.data.fileName;
@@ -92,8 +97,197 @@ export class CopyComponent implements OnInit {
     this.user = this.auth.get();
   }
 
-  SaveData() {
+  displayThumbnail(id, pathDisk) {
+    var that = this;
+    if (this.interval == null)
+      this.interval = [];
+    var files = this.dmSV.listFiles.getValue();
+    var index = setInterval(() => {
+      that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
+        if (item != null && item != "") {
+          let index = files.findIndex(d => d.recID.toString() === id);
+          if (index != -1) {
+            files[index].thumbnail = item;
+            that.dmSV.listFiles.next(files);
+            that.changeDetectorRef.detectChanges();
+          }
+          let indexInterval = this.interval.findIndex(d => d.id === id);
+          if (indexInterval > -1) {
+            clearInterval(this.interval[indexInterval].instant);
+            this.interval.splice(indexInterval, 1);
+          }
+        }
+      })
+    }, 3000);
 
+    var interval = new ItemInterval();
+    interval.id = id;
+    interval.instant = index;
+    this.interval.push(Object.assign({}, interval));
+  }
+
+  SaveData() {
+    var that = this;
+    if (this.fullName === "") {
+      this.changeDetectorRef.detectChanges();
+      return;      
+    }
+
+    if (this.objectType == 'file') {
+      // doi ten file   
+      if (this.copy) {
+        this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
+          if (res.status == 0) {
+            var files = that.dmSV.listFiles.getValue();
+            if (files == null) files = [];
+            res.data.thumbnail = "../../../assets/img/loader.gif";
+            files.push(Object.assign({}, res.data));
+            this.dmSV.listFiles.next(files);
+            that.displayThumbnail(res.data.recID, res.data.pathDisk);
+            this.modalService.dismissAll();
+          }
+          else {       
+            this.titleMessage = res.message;
+            this.errorshow = true;
+          }
+
+          if (res.status == 6) 
+          {         
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
+              if(x.event.status == "Y") {
+                that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
+                  if (item.status == 0) {
+                    var files = that.dmSV.listFiles.getValue();
+                    if (files == null) files = [];
+
+                    let index = files.findIndex(d => d.recID.toString() === item.data.recID);
+                    if (index != -1) {
+                      item.data.thumbnail = "../../../assets/img/loader.gif";
+                      files[index] = item.data;
+                      that.displayThumbnail(item.data.recID, item.data.pathDisk);
+                      that.dmSV.listFiles.next(files);
+                    }
+
+                    this.changeDetectorRef.detectChanges();  
+                    this.dialog.close();                  
+                  }
+                  that.notificationsService.notify(item.message);
+                });
+              }
+            });         
+          }
+        });
+      }
+      else {
+        // rename
+        this.fileService.renameFile(that.id, that.fullName).subscribe(async res => {
+          if (res.status == 0) {
+            var files = that.dmSV.listFiles.getValue();
+            let index = files.findIndex(d => d.recID.toString() === this.id);
+            if (index != -1) {
+              files[index].fileName = this.fullName;
+            }
+            this.dmSV.listFiles.next(files);
+            this.dialog.close();         
+          }
+          else {          
+            this.titleMessage = res.message;
+            this.errorshow = true;
+          }
+
+          if (res.status == 6) {     
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
+              that.fileService.renameFile(that.id, res.data.fileName).subscribe(async item => {
+                if (item.status == 0) {
+                  var files = that.dmSV.listFiles.getValue();
+                  let index = files.findIndex(d => d.recID.toString() === this.id);
+                  if (index != -1) {
+                    files[index].fileName = item.data.fileName;
+                  }
+                  that.dmSV.listFiles.next(files);
+                  that.modalService.dismissAll();
+                  that.changeDetectorRef.detectChanges();
+                }
+                that.notificationsService.notify(item.message);
+              });
+            });
+          }
+          else {
+            this.notificationsService.notify(res.message);
+            this.dialog.close();         
+          }
+        });
+      }
+    }
+    else {
+      this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
+        if (res.status == 0) {
+          let folder = new FolderInfo();
+          folder.recID = that.id;
+          folder.folderName = that.fullName;
+          //    that.dmSV.nodeChange.next(folder);
+          var folders = that.dmSV.listFolder.getValue();
+          //folders.forEach(item => )
+          let index = folders.findIndex(d => d.recID.toString() === that.id);
+          if (index != -1) {
+            folders[index].folderName = that.fullName;
+            that.dmSV.nodeChange.next(folders[index]);
+          }
+          that.dmSV.listFolder.next(folders);
+          that.changeDetectorRef.detectChanges();
+          this.dialog.close();
+         // this.modalService.dismissAll();
+        }
+        else {
+       //   $('#fullName').addClass('form-control is-invalid');
+      //    $('#fullName').focus();
+          this.titleMessage = res.message;
+          this.errorshow = true;
+        }
+
+        // thu muc da cc 
+        if (res.status == 2) {
+          that.fullName = res.data.folderName;
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
+            var id = '';
+            this.folderService.copyFolder(that.id, res.data.folderName, "", 1, 1).subscribe(async item => {
+              if (item.status == 0) {
+                // id = item.data.recID; 
+                that.dmSV.isTree = false;
+                that.dmSV.currentNode = '';
+                that.dmSV.folderId.next(item.data.parentId);
+                var folders = this.dmSV.listFolder.getValue();
+                let index = folders.findIndex(d => d.recID.toString() === that.id);
+                if (index > -1) {
+                  folders[index] = item.data;
+                  that.dmSV.nodeChange.next(folders[index]);
+                }
+                that.dmSV.listFolder.next(folders);                    
+              //  that.modalService.dismissAll();                      
+                that.changeDetectorRef.detectChanges();
+                this.dialog.close();
+              }
+              else {
+                that.titleMessage = item.message;
+                that.errorshow = true;
+                that.notificationsService.notify(item.message);
+              }
+            });
+          });
+        }
+        else {
+          this.notificationsService.notify(res.message);
+          this.dialog.close();
+        //  this.modalService.dismissAll();
+        }
+      });
+    }
   }
 
   checkFolderName() {     
@@ -113,8 +307,6 @@ export class CopyComponent implements OnInit {
         else {
           return "w-100";      
         }
-
-        break;
     }  
     return "";    
   }
@@ -122,8 +314,8 @@ export class CopyComponent implements OnInit {
   changeValue($event, type) {
     console.log($event);
     switch(type) {
-      case "folderName":
-        this.fullName = $event.data;
+      case "fullName":
+        this.fullName = $event.data;    
      //   alert(this.folderName);
         break;
     }

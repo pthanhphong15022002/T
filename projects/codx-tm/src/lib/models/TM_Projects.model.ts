@@ -19,7 +19,6 @@ export class TM_Projects {
     startDate: Date;
     endDate: Date;
     estimated: number;
-
     finishDate: Date;
     memo: String;
     status: String= '1';
