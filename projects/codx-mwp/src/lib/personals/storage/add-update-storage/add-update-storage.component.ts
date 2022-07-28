@@ -1,5 +1,5 @@
 import { Storages } from './../../../model/Storages.model';
-import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService, CRUDService } from 'codx-core';
+import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService, CRUDService, CacheService } from 'codx-core';
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, Optional } from '@angular/core';
 import { StorageServices } from '../../../services/storage.services';
 
@@ -16,6 +16,12 @@ export class AddUpdateStorageComponent implements OnInit {
   data: any = [];
   funcID = '';
   header = 'Thêm mới kho lưu trữ'
+  empty = '';
+  gridViewSetup = {
+    title: '',
+    memo: '',
+  }
+  formModel: any;
 
   storage: Storages = new Storages();
 
@@ -26,9 +32,11 @@ export class AddUpdateStorageComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private api: ApiHttpService,
     private storageService: StorageServices,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
     this.funcID = dialog?.formModel?.funcID;
+    this.formModel = dialog?.formModel;
     this.dialog = dialog;
     this.formType = dt?.data[1];
     if (this.formType == 'edit') {
@@ -36,6 +44,12 @@ export class AddUpdateStorageComponent implements OnInit {
       this.storage = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     }
+    this.cache.gridViewSetup('Storages', 'grvStorages').subscribe((res) => {
+      if(res) {
+        this.gridViewSetup.title = res?.Title?.headerText;
+        this.gridViewSetup.memo = res?.Memo?.headerText;
+      }
+    })
   }
 
   ngOnInit(): void {

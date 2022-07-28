@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   Injector,
   Input,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -32,6 +33,7 @@ import { UpdateStatusPopupComponent } from './update-status-popup/update-status-
   selector: 'test-views',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TasksComponent extends UIComponent {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -386,7 +388,7 @@ export class TasksComponent extends UIComponent {
       this.editConfirm(data);
       return;
     }
-   
+
     var isCanEdit = true;
     this.api
       .execSv<any>(
@@ -487,7 +489,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   editConfirm(data) {
     if (data) {
@@ -589,7 +591,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -646,7 +648,7 @@ export class TasksComponent extends UIComponent {
         .subscribe((res) => {
           if (res) {
             this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
-          }else{
+          } else {
             this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
           }
         });
@@ -669,8 +671,8 @@ export class TasksComponent extends UIComponent {
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
