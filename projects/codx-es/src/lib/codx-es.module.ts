@@ -35,7 +35,6 @@ import { ApprovalStepComponent } from './setting/approval-step/approval-step.com
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
 import { ApprovalComponent } from './sign-file/approval/approval.component';
 import {
-  PdfViewerComponent,
   LinkAnnotationService,
   BookmarkViewService,
   MagnificationService,

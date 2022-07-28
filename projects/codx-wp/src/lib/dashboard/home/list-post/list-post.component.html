@@ -63,7 +63,9 @@
                         </span>
                     </span>
 
-                    <span class="ms-2 me-2" [innerHTML]="item.shareName" ></span>
+                    <ng-container *ngIf="item.shareName">
+                        <span class="ms-2 me-2" [innerHTML]="item.shareName" ></span>
+                    </ng-container>
 
                 </div>
             </div>
@@ -273,6 +275,8 @@
     </div>
 </ng-template>
 <!-- tooltip -->
+
+
 
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content;">
