@@ -60,7 +60,7 @@ app-notes-home {
 }
 
 .checkbox-list {
-    padding: 2px 10px;
+    padding: 5px 10px;
 }
 
 .note-content {
@@ -90,8 +90,8 @@ app-notes-home {
     color: var(--primary-dark);
 }
 
-.note-option {
-    margin-top: 5px;
+.note-content .active {
+    margin-top: 3px;
 }
 
 .note-list {
@@ -124,5 +124,5 @@ app-notes-home {
 }
 
 ejs-listview .e-ul>li {
-    margin-bottom: 0;
+    margin-bottom: 5px;
 }

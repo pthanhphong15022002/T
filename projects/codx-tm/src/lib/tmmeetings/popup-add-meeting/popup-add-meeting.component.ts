@@ -31,6 +31,7 @@ export class PopupAddMeetingComponent implements OnInit {
   endDate: any;
   action: any;
   linkURL = '';
+  resources = [];
 
   selectedDate = new Date();
   constructor(
@@ -107,6 +108,17 @@ export class PopupAddMeetingComponent implements OnInit {
     this.dialog.close();
   }
 
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-playlist_add_check', text: 'Người tham gia', name: 'Resources' },
+    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
+
+  ];
+
+  setTitle(e: any) {
+    this.title = 'Thêm ' + e;
+    this.changDetec.detectChanges();
+  }
 
 
   valueChange(event) {
@@ -223,5 +235,18 @@ export class PopupAddMeetingComponent implements OnInit {
 
   eventApply(e){
     console.log(e);
+    var listUserID = '';
+    e?.data?.forEach((obj) => {
+      switch (obj.objectType) {
+        case 'U':
+          listUserID += obj.id + ';';
+          break;        
+      }
+    });
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    
+    this.resources = listUserID.split(';');
+    
   }
 }

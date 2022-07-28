@@ -32,7 +32,9 @@ export class TMMeetingsComponent extends UIComponent {
   startDate: Date;
   endDate: Date;
   dayoff = [];
-
+  month: any;
+  day: any;
+  startTime: any;
   eventStatus: any;
   itemSelected: any;
   user: any;
@@ -74,13 +76,13 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.kanban,
-        active: false,
+        type: ViewType.card,
+        active: true,
         sameData: true,
-        request2: this.resourceKanban,
         model: {
+          // panelLeftRef: this.panelLeftRef,
           template: this.cardKanban,
-        },
+        }
       },
     ]
 
@@ -89,6 +91,27 @@ export class TMMeetingsComponent extends UIComponent {
     this.dt.detectChanges();
 
   }
+
+  getDate(data) {
+    if (data.startDate) {
+      var date = new Date(data.startDate);
+      this.month = this.addZero(date.getMonth() + 1);
+      this.day = this.addZero(date.getDate());
+      var endDate = new Date(data.endDate);
+      let start = this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end = this.addZero(endDate.getHours()) + ':' + this.addZero(endDate.getMinutes());
+      this.startTime = start + ' - ' + end;
+    }
+    return this.startTime;
+  }
+
+  addZero(i){
+    if(i<10){
+      i = '0' + i;
+    }
+    return i;
+  }
+
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {

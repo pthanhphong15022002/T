@@ -26,7 +26,7 @@ import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { I } from '@angular/cdk/keycodes';
+import * as moment from 'moment';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
@@ -114,6 +114,9 @@ export class AssignInfoComponent implements OnInit {
   }
 
   openInfo() {
+    this.task.dueDate = moment(new Date())
+      .set({ hour: 23, minute: 59, second: 59 })
+      .toDate();
     this.listUser = [];
     this.listTaskResources = [];
     if (this.task.memo == null) this.task.memo = '';
@@ -164,29 +167,10 @@ export class AssignInfoComponent implements OnInit {
     this.task.memo = dt?.value ? dt.value : dt;
   }
 
-  // changeUser(e) {
-  //   this.listTaskResources = [];
-  //   this.listUser = [];
-  //   var assignTo = e.data.join(';')
-  //   if (e.data.length == 0) {
-  //     this.task.assignTo = '';
-  //     return ;
-  //   } else if (this.task.assignTo != null && this.task.assignTo != '') {
-  //     this.task.assignTo += ';' + assignTo;
-  //   } else this.task.assignTo = assignTo;
-
-  //   this.listUser = this.task.assignTo.split(';');
-  //   this.listUser.forEach((u) => {
-  //      var taskResource = new tmpTaskResource() ;
-  //      taskResource.resourceID = u;
-  //      taskResource.roleType ="R" ;
-  //     this.listTaskResources.push(taskResource);
-  //   });
-  // }
 
   saveAssign(id, isContinue) {
     if (this.task.assignTo == null || this.task.assignTo == '') {
-      this.notiService.notify('Phải thêm người được giao việc !');
+      this.notiService.notifyCode('TM011');
       return;
     }
     if (this.isHaveFile)

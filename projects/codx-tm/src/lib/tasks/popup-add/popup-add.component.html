@@ -2,7 +2,7 @@
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="tabContent" (setTitle)="setTitle($event)"
   (buttonClick)="buttonClick($event)" #form></codx-layout-add>
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="task?.tags || ''"
+  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="readOnly" [value]="task?.tags || ''"
     (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
@@ -12,7 +12,7 @@
       <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
       </codx-label>
     </div>
-    <codx-input field="taskName" type="text" [crrValue]="task?.taskName" placeholder="Tên công việc"
+    <codx-input field="taskName" type="text" [crrValue]="task?.taskName" placeholder="Tên công việc" [disabled]="readOnly"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -33,7 +33,7 @@
         </codx-label>
       </div>
       <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
-        [crrValue]="task?.dueDate" (valueChange)="changeTime($event)">
+        [crrValue]="task?.dueDate" (valueChange)="changeTime($event)" [disabled]="disableDueDate">
       </codx-input>
     </div>
     <div class="col-6">
@@ -42,7 +42,7 @@
         </codx-label>
       </div>
       <codx-input type="valuelist" ngDefaultControl field="priority" [crrValue]="task?.priority" refValue="TM005"
-        placeholder="Độ ưu tiên" (valueChange)="changeVLL($event)">
+        placeholder="Độ ưu tiên" (valueChange)="changeVLL($event)" [disabled]="readOnly">
       </codx-input>
     </div>
   </div>
@@ -59,32 +59,32 @@
     </div>
   </div>
   <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
-    <div class="form-group row mt-3">
-      <div class="col-5">
+    <div class="form-group row ">
+      <div class="col-4">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
         </div>
         <codx-input type="datetime" class="test-datetime" field="startDate" placeholder="datetime"
-          [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)">
+          [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-5">
+      <div class="col-4">
         <div>
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
         </div>
         <codx-input type="datetime" class="test-datetime" field="endDate" placeholder="datetime"
-          [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)">
+          [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-2">
+      <div class="col-4">
         <div>
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
         </div>
-        <codx-input type="text" [disabled]="readOnly" field="estimated" placeholder="Số giờ "
-          [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)">
+        <codx-input type="number" field="estimated" placeholder="Số giờ "
+          [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)" [disabled]="readOnly">
         </codx-input>
 
       </div>
@@ -96,7 +96,7 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
         </codx-label>
       </div>
-      <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" (valueChange)="changeMemo($event)">
+      <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" (valueChange)="changeMemo($event)" [disabled]="readOnly">
       </codx-input>
     </div>
   </ng-container>
@@ -110,7 +110,7 @@
         </div>
       </div>
       <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
-        [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
+        [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly"></codx-input>
     </div>
     <div class="">
       <ng-container *ngIf="listUser.length > 0">
@@ -170,7 +170,7 @@
       </codx-label>
     </div>
     <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" height="650"
-      (valueChange)="changeMemo($event)"></codx-input>
+      (valueChange)="changeMemo($event)" [disabled]="readOnly"></codx-input>
   </div>
 </ng-template>
 
@@ -194,7 +194,7 @@
       </div>
     </div>
     <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
-      [showInput]="false" (valueChange)="eventApply($event)">
+      [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly">
     </codx-input>
   </div>
   <div>
@@ -224,18 +224,18 @@
                 {{item?.departmentName}}</span></div>
 
             <div class="text-dark" *ngIf="item?.memo == null">
-              <codx-input type="text"  (valueChange)="changeMemo2($event,item?.resourceID)"
-                placeholder="Ghi chú phân công..." [readOnly]="readOnly"></codx-input>
+              <codx-input class="" type="text"  (valueChange)="changeMemo2($event,item?.resourceID)"
+                placeholder="Ghi chú phân công..." [disabled]="readOnly"></codx-input>
             </div>
             <div class="text-dark" *ngIf="item?.memo != null">
-              <codx-input type="text" [crrValue]="item?.memo"
+              <codx-input class="" type="text" [crrValue]="item?.memo"
                 (valueChange)="changeMemo2($event,item?.resourceID)" placeholder="Ghi chú phân công..."
-                [readOnly]="readOnly"></codx-input>
+                [disabled]="readOnly"></codx-input>
             </div>
           </div>
         </div>
         <div *ngIf="!readOnly">
-          <a (click)="onDeleteUser(item.resourceID)" style="cursor: pointer">
+          <a (click)="onDeleteUser(item)" style="cursor: pointer">
             <div class="d-flex align-item-center">
               <span class="icon-close icon-16 text-danger me-2"></span>
               <span class="text-hover-danger">
@@ -272,7 +272,7 @@
             <div class="flex" *ngIf="i != indexEditTodo">
               <div class="">
                 <span>
-                  <input #checkShareRight1 type="checkbox" [disabled]="readOnly"
+                  <input #checkShareRight1 type="checkbox"
                     [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
                     (change)="updateStatusTodoList(i)">
                 </span>
@@ -288,8 +288,7 @@
               <div class="flex">
                 <div class="">
                   <span>
-                    <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
-
+                    <input #checkShareRight1 type="checkbox"  id="checkShareRight1">
                   </span>
                   <span class="">
                     <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus [value]="contentTodoEdit"
@@ -303,7 +302,7 @@
         </div>
       </div>
     </ng-container>
-    <div class="d-flex justify-content-between align-items-center checkbox-item " *ngIf="!readOnly">
+    <div class="d-flex justify-content-between align-items-center checkbox-item " >
       <div class="checkbox-list">
         <div class="d-flex flex-column flex-grow-1 w-100">
           <div class="row">
@@ -328,8 +327,8 @@
       </codx-label>
     </div>
     <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án" ngDefaultControl
-      refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" [disabled]="readOnly"
-      [crrValue]="task?.projectID">
+      refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" 
+      [crrValue]="task?.projectID" [disabled]="readOnly">
     </codx-input>
   </div>
   <div class="form-group mt-3" *ngIf="param?.LocationControl != '0'">
@@ -338,7 +337,7 @@
       </codx-label>
     </div>
     <codx-input field="location" type="text" [crrValue]="task?.location" placeholder="Địa điểm"
-      (valueChange)="valueChange($event)">
+      (valueChange)="valueChange($event)" [disabled]="readOnly">
     </codx-input>
   </div>
   <div class="form-group mt-3" >
@@ -347,8 +346,8 @@
       </codx-label>
     </div>
     <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0" style="border: none"
-      placeholder="Tham chiếu" ngDefaultControl refValue="" [disabled]="readOnly" loadFull="true" field="refNo"
-      (valueChange)="cbxChange($event)"></codx-input>
+      placeholder="Tham chiếu" ngDefaultControl refValue=""  loadFull="true" field="refNo"
+      (valueChange)="cbxChange($event)" [disabled]="readOnly"></codx-input>
   </div>
   <!-- <div class="form-group mt-3" >
     <div>
@@ -364,10 +363,10 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between ">
-    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
-      <i class="icon-cloud_upload fs-5"></i>Upload file
+    <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
+     <i  class="icon-cloud_upload fs-5"></i><span><codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label></span>
     </button>
-    <button type="button" class="btn btn-primary ms-1" (click)="saveData(task?.taskID)" *ngIf="!readOnly">
+    <button type="button" class="btn btn-primary ms-1" (click)="saveData(task?.taskID)" >
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
@@ -385,7 +384,7 @@
 </ng-template>
 
 <ng-template #popoverSelectRoles >
-  <div class="d-flex">
+  <div class="d-flex" *ngIf="!readOnly">
   <ng-container *ngFor="let item of listRoles">
     <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4" (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
       <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>

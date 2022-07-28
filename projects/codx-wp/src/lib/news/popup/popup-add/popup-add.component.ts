@@ -192,16 +192,12 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          // if(this.fileUpload.length > 0){
-          //   this.codxAttachment.objectId = data.recID;
-          //   this.codxAttachment.saveFiles();
-          // }
-          if(this.newsType == this.NEWSTYPE.POST && this.fileImage.length > 0){
-            this.codxAttachment.objectId = data.recID;
+          if(this.fileImage.length > 0){
+          this.codxAttachment.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileImage];
             this.codxAttachment.saveFiles();
           }
-          if(this.newsType == this.NEWSTYPE.VIDEO && this.fileVideo.length > 0){
+          if(this.fileVideo.length > 0){
             this.codxAttachmentVideo.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileVideo];
             this.codxAttachmentVideo.saveFiles();
@@ -210,6 +206,7 @@ export class PopupAddComponent implements OnInit {
           this.shareControl = this.SHARECONTROLS.EVERYONE;
           this.lstRecevier = [];
           this.notifSV.notifyCode('E0026');
+          this.dialogRef.close();
           this.insertWPComment(data);
         }
       });

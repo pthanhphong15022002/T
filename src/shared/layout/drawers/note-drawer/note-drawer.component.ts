@@ -1,14 +1,14 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService, AuthStore } from 'codx-core';
-import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
 
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
-import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
-import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
-import { NoteServices } from '@pages/services/note.services';
 import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
+import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
+import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
+import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
+import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 
 @Component({
   selector: 'app-note-drawer',
@@ -31,7 +31,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   typeList = "note-drawer";
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0 and TransID=@1';
+  predicate = 'CreatedBy=@0 and TransID=null';
   dataValue = '';
   editMF: any;
   deleteMF: any;
@@ -52,8 +52,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.user = this.authStore.get();
-    this.dataValue = `[${this.user?.userID};null]`;
-    debugger;
+    this.dataValue = `${this.user?.userID}`;
     this.dialog = dialog;
     this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
       if (res) {

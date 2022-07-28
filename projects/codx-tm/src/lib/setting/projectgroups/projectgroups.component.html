@@ -65,7 +65,7 @@
   <ng-template #itemCreate let-data>
     {{data.createdOn | date:'dd/MM/yyyy'}}
   </ng-template>
-  <ng-template #itemApprovalControlVll let-data>
+  <ng-template #itemApproveControlVll let-data>
       <div class="label label-xxs label-inline label-pill" [style.color]="data?.projectCategory|vll:'L0607':'color'|async"
           [style.background-color]="(data?.projectCategory|vll:'L0607':'color'|async)+'30'">
           {{data?.projectCategory|vll:"L0607":"text"|async}}</div>
