@@ -33,7 +33,7 @@
 
 <ng-template #fileCount let-item>
     <div class="flex">
-        <span class="">{{item.fileCount}}</span>
+        <span class="">{{item.fileCount ? item.fileCount : 0}}</span>
         <span class="icon-attach_file"></span>
     </div>
 </ng-template>

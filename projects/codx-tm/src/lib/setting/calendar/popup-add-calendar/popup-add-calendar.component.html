@@ -27,10 +27,12 @@
       >
       </codx-label>
       <codx-input
-        type="text"
+        type="textarea"
         field="description"
-        placeholder="Diễn giải"
+        format="ed3"
+        ngDefaultControl
         (valueChange)="valueChange($event)"
+        placeholder="Diễn giải"
       >
       </codx-input>
     </div>

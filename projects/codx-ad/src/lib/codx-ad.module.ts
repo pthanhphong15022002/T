@@ -29,6 +29,7 @@ import { GroupUsersComponent } from './group-users/group-users.component';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
+import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
 
 export const routes: Routes = [
   {
@@ -84,6 +85,7 @@ const T_Component: Type<any>[] = [
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
+  AsideroledetailComponent,
 ];
 @NgModule({
   imports: [

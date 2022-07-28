@@ -49,6 +49,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
       this.funcID = params['funcID'];
     })
     this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
+      debugger;
       this.urlDetailRoles = res[0]?.url;
     })
     this.tenant = this.tenantStore.get()?.tenant;

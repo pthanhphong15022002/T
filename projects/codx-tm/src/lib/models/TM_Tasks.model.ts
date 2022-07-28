@@ -90,7 +90,7 @@ export class TM_Tasks {
   departmentID: string
   companyID :string
   write: boolean;	
-	tempSprints: TM_Sprints
+	sprints: TM_Sprints
 }
 
 export class tmpTaskResource {
