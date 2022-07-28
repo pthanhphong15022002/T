@@ -56,6 +56,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('editRoomBooking') editRoomBooking: TemplateRef<any>;
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
+  @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('sidebarLeft') sidebarLeft: TemplateRef<any>;
   @ViewChild('cardTemplate') eventTemplate?: TemplateRef<any>;
   @ViewChild('Devices') Devices: TemplateRef<any>;
@@ -189,10 +190,23 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
       {
         sameData: true,
         id: '3',
-        type: ViewType.chart,
+        type: ViewType.content,
         active: false,
+        text: 'Chart nè',
+        icon: 'icon-bar_chart',
         model: {
           panelLeftRef: this.chart,
+        },
+      },
+      {
+        sameData: true,
+        id: '4',
+        type: ViewType.content,
+        active: false,
+        text: 'report nè',
+        icon: 'icon-assignment',
+        model: {
+          panelLeftRef: this.report,
         },
       },
     ];

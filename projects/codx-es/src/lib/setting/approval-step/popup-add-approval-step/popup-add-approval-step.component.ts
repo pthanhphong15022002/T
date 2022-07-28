@@ -54,13 +54,15 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   tmpData: any;
   lstStep;
   isSaved = false;
-  header1 = 'Thiết lập qui trình duyệt';
+  header1 = 'Thiết lập quy trình duyệt';
   subHeaderText = 'Qui trình duyệt';
+
+  showPlan = true;
 
   lstApprover: any = [];
 
   headerText1;
-  type = '1';
+  type = null;
 
   title = '';
   tabInfo: any[] = [
@@ -82,6 +84,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     // this.title = 'Thêm ' + e;
     // this.cr.detectChanges();
     console.log(e);
+  }
+
+  extendShowPlan() {
+    this.showPlan = !this.showPlan;
   }
 
   buttonClick(e: any) {

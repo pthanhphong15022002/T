@@ -33,7 +33,7 @@
                                 class="icon-share"></span></button>
                     </div>
                     <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.video;else news">
-                        <codx-file [objectID]="dataItem.recID"></codx-file>
+                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" ObjectType="WP_Comments"></app-view-file>
                     </ng-contianer>
                     <ng-template #news>
                         <div class="py-3 news-cont " [innerHTML]="dataItem?.subContent"></div>

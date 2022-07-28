@@ -128,7 +128,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             },
             {
               field: 'processID',
-              headerText: 'Qui trình duyệt',
+              headerText: 'Quy trình duyệt',
               template: this.process,
               width: 220,
             },
