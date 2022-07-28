@@ -201,7 +201,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event?.component) {
       if (event?.data === Object(event?.data))
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
       else this.dialogCategory.patchValue({ [event['field']]: event.data });
