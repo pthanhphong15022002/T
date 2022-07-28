@@ -109,7 +109,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       },
     ];
     this.getGridViewSetUp();
-    console.log(this.codxViews.dataService);
   }
 
   ngOnDestroy() {}
