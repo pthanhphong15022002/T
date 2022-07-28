@@ -188,13 +188,13 @@
 
         </div>
         <div class="d-flex justify-content-between card-footer border-0  px-6 px-lg-10 pt-0 pb-6 pb-lg-10 ">
-          <button type="button" class="btn btn-outline-primary me-3" *ngIf="currentTab != 0"
+          <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
             (click)="openPopup(processTemplate)">
             <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
             </codx-label>
           </button>
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-outline-primary" (click)="continue(currentTab)">
+          <button type="button" class="btn btn-primary" (click)="continue(currentTab)">
             <codx-label name="lblContinue" [formModel]="formModel" default="Tiếp tục"></codx-label>
           </button>
         </div>

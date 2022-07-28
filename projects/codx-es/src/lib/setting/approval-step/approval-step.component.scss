@@ -7,6 +7,9 @@
   //   box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
   // }
   //timeline
+  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit;  
+}
   .timeline{
     .timeline-item::after {
       content: "";
