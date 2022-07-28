@@ -4,7 +4,13 @@
             <div class="form-group">
                 <div class="d-flex justify-content-between">
                     <div class="mr-2 flex-grow-1">
-                        <codx-input placeholder="{{titleFullName}}"                                    
+                        <!-- <codx-input [placeholder]="titleFolderName"                                    
+                            [class]="validate('folderName')"
+                            type="text"
+                            [crrValue]="folderName"
+                            (valueChange)="changeValue($event, 'folderName')"                                        
+                        ></codx-input>     -->
+                        <codx-input [placeholder]="titleFullName"                                    
                             [class]="validate('fullName')"
                             type="text"
                             [crrValue]="fullName"
