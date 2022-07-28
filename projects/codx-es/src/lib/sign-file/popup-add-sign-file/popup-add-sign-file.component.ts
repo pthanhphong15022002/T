@@ -144,9 +144,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
-  onSaveForm() { }
+  onSaveForm() {}
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -171,6 +171,7 @@ export class PopupAddSignFileComponent implements OnInit {
           }
           if (this.currentTab == 1) {
             this.currentTab++;
+            this.processTab++;
           }
         }
       });
@@ -217,36 +218,43 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   clickTab(tabNo) {
-    debugger;
+    let newNo = 0;
+    if (tabNo > 0) {
+      newNo = tabNo * 2;
+    }
+
+    let oldNo = this.currentTab;
+    if (this.currentTab > 0) {
+      oldNo = this.currentTab * 2;
+    }
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );
 
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      let className = (nodes[tabNo] as HTMLElement).className.toString();
+      let className = (nodes[newNo] as HTMLElement).className.toString();
       switch (className) {
         case 'stepper-item':
-          (nodes[tabNo] as HTMLElement).classList.add('active');
+          (nodes[newNo] as HTMLElement).classList.add('active');
 
           break;
         case 'stepper-item approve-disabled':
-          (nodes[tabNo] as HTMLElement).classList.remove('approve-disabled');
-          (nodes[tabNo] as HTMLElement).classList.add('approve');
+          (nodes[newNo] as HTMLElement).classList.remove('approve-disabled');
+          (nodes[newNo] as HTMLElement).classList.add('approve');
           break;
       }
 
-      let oldClassName = (
-        nodes[this.currentTab] as HTMLElement
-      ).className.toString();
+      if (tabNo < this.currentTab) {
+        oldNo++;
+      }
+      let oldClassName = (nodes[oldNo] as HTMLElement).className.toString();
       switch (oldClassName) {
         case 'stepper-item approve':
-          (nodes[this.currentTab] as HTMLElement).classList.remove('approve');
-          (nodes[this.currentTab] as HTMLElement).classList.add(
-            'approve-disabled'
-          );
+          (nodes[oldNo] as HTMLElement).classList.remove('approve');
+          (nodes[oldNo] as HTMLElement).classList.add('approve-disabled');
           break;
         case 'stepper-item active':
-          (nodes[this.currentTab] as HTMLElement).classList.remove('active');
+          (nodes[oldNo] as HTMLElement).classList.remove('active');
           break;
       }
       this.currentTab = tabNo;
@@ -254,6 +262,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   continue(currentTab) {
+    let currentNode = 0;
+    if (currentTab > 0) {
+      currentNode = currentTab + 1;
+    }
     console.log((this.status.nativeElement as HTMLElement).childNodes);
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
@@ -261,16 +273,18 @@ export class PopupAddSignFileComponent implements OnInit {
 
     if (currentTab < nodes.length - 1) {
       if (
-        (nodes[currentTab] as HTMLElement).classList.contains(
+        (nodes[currentNode] as HTMLElement).classList.contains(
           'approve-disabled'
         )
       ) {
-        (nodes[currentTab] as HTMLElement).classList.remove('approve-disabled');
-        (nodes[currentTab] as HTMLElement).classList.add('approve');
+        (nodes[currentNode] as HTMLElement).classList.remove(
+          'approve-disabled'
+        );
+        (nodes[currentNode] as HTMLElement).classList.add('approve');
       }
-      (nodes[currentTab] as HTMLElement).classList.add('approve-disabled');
-      (nodes[currentTab] as HTMLElement).classList.remove('active');
-      (nodes[currentTab + 1] as HTMLElement).classList.add('active');
+      (nodes[currentNode] as HTMLElement).classList.add('approve-disabled');
+      (nodes[currentNode] as HTMLElement).classList.remove('active');
+      (nodes[currentNode + 2] as HTMLElement).classList.add('active');
     }
 
     switch (currentTab) {
@@ -319,11 +333,11 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   openFormAdd(event) {
-    this.callfuncService.openForm(this.content, 'Qui trình mẫu', 700, 1000);
+    this.callfuncService.openForm(this.content, 'Quy trình mẫu', 700, 1000);
   }
 
   openPopup(content) {
-    this.callfuncService.openForm(content, 'Qui trình mẫu', 400, 250);
+    this.callfuncService.openForm(content, 'Quy trình mẫu', 400, 250);
   }
 
   extendShowPlan() {
