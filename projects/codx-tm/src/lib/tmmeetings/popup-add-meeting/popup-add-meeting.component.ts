@@ -31,6 +31,7 @@ export class PopupAddMeetingComponent implements OnInit {
   endDate: any;
   action: any;
   linkURL = '';
+  resources = [];
 
   selectedDate = new Date();
   constructor(
@@ -244,5 +245,8 @@ export class PopupAddMeetingComponent implements OnInit {
     });
     if (listUserID != '')
       listUserID = listUserID.substring(0, listUserID.length - 1);
+    
+    this.resources = listUserID.split(';');
+    
   }
 }
