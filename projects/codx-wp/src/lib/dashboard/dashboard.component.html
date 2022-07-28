@@ -33,7 +33,9 @@
       <div class="btn btn-icon btn-active-light-primary position-relative"
         [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
         <!-- <span [ngClass]="codxService.toolbarButtonIconSizeClass"></span> -->
-        <img src="./assets/demos/svg/header_notes.svg" alt="" />
+        <span [inlineSVG]="
+        './assets/themes/sys/default/img/header_notes.svg'
+      " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
       <!-- end::Menu wrapper -->
     </div>
