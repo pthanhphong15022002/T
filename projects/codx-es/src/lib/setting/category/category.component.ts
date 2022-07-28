@@ -114,12 +114,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.icon,
               width: 80,
             },
-            {
-              field: 'color',
-              headerText: gv['Color'].headerText,
-              template: this.color,
-              width: 120,
-            },
+            // {
+            //   field: 'color',
+            //   headerText: gv['Color'].headerText,
+            //   template: this.color,
+            //   width: 120,
+            // },
             {
               field: 'memo',
               headerText: gv['Memo'].headerText,

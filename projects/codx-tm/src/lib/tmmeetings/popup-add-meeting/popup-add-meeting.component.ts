@@ -1,4 +1,4 @@
-import { CO_Meetings } from './../../models/CO_Meetings.model';
+import { CO_Meetings, Resources } from './../../models/CO_Meetings.model';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
 import moment from 'moment';
@@ -31,7 +31,7 @@ export class PopupAddMeetingComponent implements OnInit {
   endDate: any;
   action: any;
   linkURL = '';
-  resources = [];
+  resources: Resources[] = [];
 
   selectedDate = new Date();
   constructor(
@@ -57,7 +57,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.openFormMeeting()
-    if(this.action === 'add'){
+    if (this.action === 'add') {
       this.title = 'Thêm họp định kì'
       this.meeting.meetingType = '1';
     }
@@ -83,6 +83,7 @@ export class PopupAddMeetingComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action === 'add') {
+      
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       data = [
@@ -132,7 +133,7 @@ export class PopupAddMeetingComponent implements OnInit {
         this.startTime = null;
       }
     } else if (event?.field) {
-      if (event?.field === 'resourceID') {
+      if (event?.field === 'resources') {
         this.meeting.resources = event.data[0];
       } else {
         if (event.data instanceof Object) {
@@ -160,12 +161,12 @@ export class PopupAddMeetingComponent implements OnInit {
   //     console.log(this.meeting.endDate);
 
   //   } 
-    
+
   // }
 
   valueDateChange(event: any) {
     this.selectedDate = event.data.fromDate;
-    if(this.selectedDate)
+    if (this.selectedDate)
       this.meeting[event.field] = this.selectedDate;
     this.setDate();
   }
@@ -213,7 +214,7 @@ export class PopupAddMeetingComponent implements OnInit {
         console.log(this.endDate);
       }
       if (this.beginHour >= this.endHour) {
-        if(this.beginMinute >= this.endMinute)
+        if (this.beginMinute >= this.endMinute)
           this.notiService.notify('Thời gian không hợp lệ!', 'error');
       }
     }
@@ -225,7 +226,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   changeLink(event) {
     this.linkURL = event.data;
-    if(this.linkURL)
+    if (this.linkURL)
       this.meeting.link = this.linkURL;
   }
 
@@ -233,20 +234,55 @@ export class PopupAddMeetingComponent implements OnInit {
     this.meeting.tags = e.data
   }
 
-  eventApply(e){
+  eventApply(e) {
     console.log(e);
-    var listUserID = '';
-    e?.data?.forEach((obj) => {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;        
-      }
+    var resourceID = '';
+    e?.data?.forEach(element => {
+      resourceID += element.id + ';';
     });
-    if (listUserID != '')
-      listUserID = listUserID.substring(0, listUserID.length - 1);
-    
-    this.resources = listUserID.split(';');
-    
+    if (resourceID != '') {
+      resourceID = resourceID.substring(0, resourceID.length - 1);
+
+    }
+    this.getListUser(resourceID);
+    if (this.resources != null)
+        this.meeting.resources = this.resources;
   }
+
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    this.api
+      .execSv<any>(
+        'CO',
+        'ERM.Business.CO',
+        'MeetingsBusiness',
+        'GetListUserAsync',
+        resource
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource = new Resources();
+            tmpResource.resourceID = emp?.userID;
+            tmpResource.resourceName = emp?.userName;
+            tmpResource.positionName = emp?.positionName;
+            tmpResource.roleType = 'R';
+            this.resources.push(tmpResource);
+
+          }
+
+        }
+      });
+  }
+
+  onDeleteUser(item) {
+    this.resources.splice(item, 1);//remove element from array
+    console.log(this.resources);
+    this.changDetec.detectChanges();
+  }
+
+
 }
