@@ -1,12 +1,18 @@
 import { ChangeDetectorRef, Injectable, NgModule, OnInit } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
-import { DataItem, FolderInfo, NodeTree } from "@shared/models/folder.model";
+import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
-import { AuthService, CallFuncService, FormModel, NotificationsService } from "codx-core";
+import { AlertConfirmInputConfig, AuthService, CallFuncService, FormModel, NotificationsService, SidebarModel } from "codx-core";
 import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
 import { CopyComponent } from "./copy/copy.component";
+import { EditFileComponent } from "./editFile/editFile.component";
+import { RolesComponent } from "./roles/roles.component";
+import { CreateFolderComponent } from "./createFolder/createFolder.component";
+import { ViewFileDialogComponent } from "projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component";
+import { PropertiesComponent } from "./properties/properties.component";
+import { MoveComponent } from "./move/move.component";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +21,14 @@ import { CopyComponent } from "./copy/copy.component";
 export class CodxDMService {    
     public dataTree: NodeTree[];
     public data = new BehaviorSubject<any>(null);
-
+    title = 'Thông báo';
+    titleCopy = 'Sao chép';
+    titleRename = 'Thay đổi tên';
+    titleUpdateFolder = 'Cập nhật thư mục';
+    titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+    titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
+    titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
+    titleNoRight = "Bạn không có quyền download file này";
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -61,6 +74,7 @@ export class CodxDMService {
     public loadedFolder: boolean;
     public fileUploadList: FileUpload[];
     public dataFileEditing: FileUpload;
+    itemRight: ItemRight;
     // public confirmationDialogService: ConfirmationDialogService;
     
     public Location = new BehaviorSubject<string>(null);
@@ -346,23 +360,247 @@ export class CodxDMService {
         this.parentAssign = true;
         this.setRight.next(true);
     }
-
+   
     getFolderId() {
         if (this.folderId == null) return "";
         else return this.folderId.getValue();
     }    
     
-    clickMF($event, title, data, type) {
+    checkDownloadRight(file) {
+        return file.download;;
+    }
+    
+    base64ToArrayBuffer(base64) {
+        var binaryString = window.atob(base64);
+        var binaryLen = binaryString.length;
+        var bytes = new Uint8Array(binaryLen);
+        for (var i = 0; i < binaryLen; i++) {
+            var ascii = binaryString.charCodeAt(i);
+            bytes[i] = ascii;
+        }
+        return bytes;
+    }
+      
+    checkDeleteRight(data: any) {    
+        if (data.isSystem && data.folderName != null) {          
+            return false;
+        }
+        else
+            return data.delete;// && this.isSystem.toString() === "false";
+    }
+
+    async deleteFile(data: FileInfo, type: any): Promise<void> {
+        var fullName = '';
+        if (type == 'file')
+            fullName = data.fileName;
+        else
+            fullName = data.folderName;
+
+        var message = data.isDelete ? this.titleDeleteeMessage : this.titleTrashmessage;
+        message = message.replace("{0}", fullName);
+        
+        var config = new AlertConfirmInputConfig();
+        config.type = "YesNo";
+        this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x=>{
+            if(x.event.status == "Y")
+            {
+                if (this.checkDeleteRight(data)) { 
+                var id = data.recID;                
+               // this.isDelete = true;
+                if (this.type == 'file') {
+                  this.fileService.deleteFileToTrash(id, this.folderId.getValue(), false).subscribe(async res => {
+                    let list = this.listFiles.getValue();
+                    //list = list.filter(item => item.recID != id);
+                    let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                    if (index > -1) {
+                      list.splice(index, 1);//remove element from array
+                      this.changeData(null, list, id);   
+                      this.listFiles.next(list);
+                    //  this.changeDetectorRef.detectChanges();
+                    }
+    
+                    this.fileService.getTotalHdd().subscribe(i => {
+                      this.updateHDD.next(i.messageHddUsed);
+                   //   this.changeDetectorRef.detectChanges();
+                    })
+                  });
+                }
+                else {
+                  this.folderService.deleteFolderToTrash(id, false).subscribe(async res => {
+                    let list = this.listFolder.getValue();
+                    //list = list.filter(item => item.recID != id);
+                    let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                    this.nodeDeleted.next(id);
+                    if (index > -1) {
+                      list.splice(index, 1);//remove element from array
+                      this.nodeDeleted.next(id);
+                      this.listFolder.next(list);
+                      //  this.dmSV.changeData(list, null, id);                       
+                    //  this.changeDetectorRef.detectChanges();
+                    }
+    
+                    this.fileService.getTotalHdd().subscribe(i => {
+                      this.updateHDD.next(i.messageHddUsed);
+                    //  this.changeDetectorRef.detectChanges();
+                    })
+                  });
+                }
+                }
+            }
+        });
+    }
+     
+    setBookmark(data: FileInfo, type: string) {
+        var id = data.recID;
+        var that = this;       
+        if (type === 'file') {
+          this.fileService.bookmarkFile(id).subscribe(async res => {
+            if (res) {
+              let list = that.listFiles.getValue();
+              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+    
+              if (that.idMenuActive == "DMT04") {
+                if (index > -1) {
+                  list.splice(index, 1);//remove element from array            
+                }
+              }
+              else {
+                list[index] = res;
+              }
+            //  this.isBookmark = !this.isBookmark;
+              that.listFiles.next(list);
+           //   that.changeDetectorRef.detectChanges();
+            }
+          });
+        }
+        else {
+          // folder
+          // alert('bookmarks');
+          this.folderService.bookmarkFolder(id).subscribe(async res => {
+            if (res) {
+              let list = that.listFolder.getValue();
+              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+              if (that.idMenuActive == "DMT04") {
+                if (index > -1) {
+                  if (list[index].isBookmark == false || list[index].isBookmark == "false") {
+                    that.nodeDeleted.next(id);
+                  }
+                  list.splice(index, 1);//remove element from array            
+                }
+              }
+              else {
+                list[index] = res;
+                if (that.idMenuActive == "DMT02" || that.idMenuActive == "DMT02") {
+                  that.nodeChange.next(list[index]);
+                }
+              }
+             // this.isBookmark = !this.isBookmark;
+              that.listFolder.next(list);
+              //that.changeDetectorRef.detectChanges();
+            }
+          });
+        }
+      }
+
+    clickMF($event, item: any, type) {
+        var data: any;
+        data = item;
         switch($event.functionID) {
-          case "copy": // copy file hay thu muc
-            title = `${title} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+          case "DMT0210": //view file
+            this.fileService.getFile(item.recID).subscribe(data => {
+                this.callfc.openForm(ViewFileDialogComponent, item.fileName, 1000, 800, "", item, "");
+            });
+            break;
+
+          case "DMT0211": // download
+            this.fileService.getFile(item.recID).subscribe(file => {      
+                var id = file.recID;
+                var that = this;
+                if (this.checkDownloadRight(file)) {
+                this.fileService.downloadFile(id).subscribe(async res => {
+                    if (res && res.content != null) {
+                    let json = JSON.parse(res.content);
+                    var bytes = that.base64ToArrayBuffer(json);
+                    let blob = new Blob([bytes], { type: res.mimeType });
+                    let url = window.URL.createObjectURL(blob);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", res.fileName);
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    }
+                });
+                }
+                else {
+                this.notificationsService.notify(this.titleNoRight);
+                }
+             });
+            break;
+            
+          case "DMT0222": // properties file
+            let opt = new SidebarModel();
+            opt.DataService = this.dataService;
+            opt.FormModel = this.formModel;
+            opt.Width = '550px';
+            // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(PropertiesComponent, data, opt);            
+            break;
+
+          case "DMT0206":  // xoa thu muc
+          case "DMT0219": // xoa file
+             this.deleteFile(item, type);            
+            break;
+
+          case "DMT0202": // chinh sua thu muc  
+          case "DMT0209":          
+            let option = new SidebarModel();
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+           // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(CreateFolderComponent, data, option);            
+            break;
+
+        case "DMT0213":  // chinh sua file   
+            this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
+            break;
+
+          case "DMT0207":  // permission
+          case "DMT0220":
+            this.dataFileEditing = data;            
+            this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
+            break;
+
+          case "DMT0205":  // bookmark
+          case "DMT0217":
+            this.setBookmark(data, type);
+            break;
+
+          case "DMT0204": // di chuyen
+          case "DMT0216": // di chuyen
+            var title = `${this.titleCopy} ${type}`;
+            this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
+            break;  
+
+          case "DMT0214": //"copy": // copy file hay thu muc
+            var title = `${this.titleCopy} ${type}`;
+            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
             break;
     
-          case "rename": // copy file hay thu muc
-            title = `${title} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title], "");   
+          case "DMT0203": //"rename": // copy file hay thu muc
+          case "DMT0215":
+            var title = `${this.titleRename} ${type}`;
+            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
             break;
+
+          default:
+            break;    
         }  
       }
 

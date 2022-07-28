@@ -123,6 +123,8 @@ export class PopupSignatureComponent implements OnInit {
     }
   }
 
+  fileCount(event, currentTab) {}
+
   changeTab(tab) {
     this.currentTab = tab;
   }

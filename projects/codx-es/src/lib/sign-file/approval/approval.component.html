@@ -92,7 +92,6 @@
           #pdfviewer
           id="pdfViewer"
           [serviceUrl]="service"
-          [documentPath]="recID"
           [enableToolbar]="false"
           [enableNavigationToolbar]="false"
           [enableAnnotationToolbar]="false"
@@ -134,7 +133,7 @@
                 style="margin-top: 10px"
                 *ngIf="!isApprover"
               >
-                <codx-label
+                <!-- <codx-label
                   name="lblChooseSigner"
                   [formModel]=""
                   default="Chọn người kí cần thiết lập"
@@ -146,7 +145,14 @@
                   [dataSource]="lstSigners"
                   [fields]="person"
                   (change)="changeSigner($event)"
-                ></ejs-dropdownlist>
+                ></ejs-dropdownlist> -->
+                <codx-input
+                  class="form-control mr-2"
+                  type="valuelist"
+                  field="vllOrganize"
+                  refValue="ES015"
+                  (valueChange)="changeSigner($event)"
+                ></codx-input>
               </div>
 
               <codx-label

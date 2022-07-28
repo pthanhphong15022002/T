@@ -3,11 +3,19 @@
     right: 0;
     bottom: 0px;
 }
-.image-250 > img {
+.image-300 > img {
     width: 100%;
-    height: 250px;
+    height: 320px;
+}
+.image-200 > img {
+    width: 100%;
+    height: 200px;
+}
+.image-180 > img{
+    width: 100%;
+    height: 200px;
 }
 .image > img{
     width: 100%;
-    height: auto;
+    height: 150px;
 }

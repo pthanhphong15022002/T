@@ -56,7 +56,6 @@ export class TasksComponent extends UIComponent {
   startDate: Date;
   endDate: Date;
   dayoff = [];
-  // resourceField: any;
   eventStatus: any;
   itemSelected: any;
   user: any;
@@ -64,6 +63,7 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
+  paramModule: any;
   dataObj: any;
   iterationID: string = '';
   listTaskResousce = [];
@@ -76,6 +76,7 @@ export class TasksComponent extends UIComponent {
   popoverDataSelected: any;
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
+  vllStatus = '';
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -89,6 +90,11 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else {
+      this.vllStatus = this.vllStatusTasks;
+    }
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
@@ -365,11 +371,11 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status > 10) {
+    if (data && !'00,07,09,10'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
-      data.category == '1' && 
+      data.category == '1' &&
       data.verifyControl == '1' &&
       data.status != '00'
     ) {
@@ -380,6 +386,7 @@ export class TasksComponent extends UIComponent {
       this.editConfirm(data);
       return;
     }
+   
     var isCanEdit = true;
     this.api
       .execSv<any>(
@@ -608,79 +615,95 @@ export class TasksComponent extends UIComponent {
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
-    if(taskAction.owner != this.user.userID){
-      this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
-      return ;
+    if (taskAction.owner != this.user.userID) {
+      this.notiService.notify(
+        'Bạn không thể cập nhật công việc của người khác !'
+      );
+      return;
     }
-    if(taskAction.status ="05"){
-      this.notiService.notifyCode("TM020")
-      return ;
+    if ((taskAction.status == '05')) {
+      this.notiService.notifyCode('TM020');
+      return;
+    }
+    if (taskAction.approveStatus == '3') {
+      this.notiService.notifyCode('TM024');
+      return;
+    }
+    if (taskAction.approveStatus == '4' || taskAction.approveStatus == '5') {
+      this.notiService.notifyCode('TM025');
+      return;
     }
     const fieldName = 'UpdateControl';
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          var param = JSON.parse(res.dataValue);
-          var fieldValue = param[fieldName];
-          if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
-          } else {
-            var completedOn = moment(new Date()).toDate();
-            var completed = '0';
-            if (taskAction.estimated > 0) {
-              completed = taskAction.estimated;
-            } else {
-              var timeStart = moment(
-                new Date(
-                  taskAction.startOn
-                    ? taskAction.startOn
-                    : taskAction.startDate
-                    ? taskAction.startDate
-                    : taskAction.createdOn
-                )
-              ).toDate();
-              var time = (
-                (completedOn.getTime() - timeStart.getTime()) /
-                3600000
-              ).toFixed(2);
-              completed = Number.parseFloat(time).toFixed(2);
-            }
-
-            var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
-
-            this.tmSv
-              .setStatusTask(
-                this.funcID,
-                taskAction.taskID,
-                status,
-                completedOn,
-                completed,
-                ''
-              )
-              .subscribe((res) => {
-                if (res && res.length > 0) {
-                  res.forEach((obj) => {
-                    this.view.dataService.update(obj).subscribe();
-                  });
-                  this.itemSelected = res[0];
-                  this.detectorRef.detectChanges();
-                  this.notiService.notifyCode('tm009');
-                } else {
-                  this.notiService.notifyCode('tm008');
-                }
-              });
+    if (taskAction.taskGroupID) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskGroupBusiness',
+          'GetAsync',
+          taskAction.taskGroupID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
+          }else{
+            this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
           }
-        }
-      });
+        });
+    } else {
+      this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
+    }
   }
 
+  actionUpdateStatus(fieldValue, moreFunc, taskAction) {
+    if (fieldValue != '0') {
+      this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
+    } else {
+      var completedOn = moment(new Date()).toDate();
+      var completed = '0';
+      if (taskAction.estimated > 0) {
+        completed = taskAction.estimated;
+      } else {
+        var timeStart = moment(
+          new Date(
+            taskAction.startOn
+              ? taskAction.startOn
+              : taskAction.startDate
+              ? taskAction.startDate
+              : taskAction.createdOn
+          )
+        ).toDate();
+        var time = (
+          (completedOn.getTime() - timeStart.getTime()) /
+          3600000
+        ).toFixed(2);
+        completed = Number.parseFloat(time).toFixed(2);
+      }
+      var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
+
+      this.tmSv
+        .setStatusTask(
+          this.funcID,
+          taskAction.taskID,
+          status,
+          completedOn,
+          completed,
+          ''
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            res.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = res[0];
+            this.detectorRef.detectChanges();
+            this.notiService.notifyCode('tm009');
+          } else {
+            this.notiService.notifyCode('tm008');
+          }
+        });
+    }
+  }
   openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
@@ -722,6 +745,7 @@ export class TasksComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.param = JSON.parse(res.dataValue);
+          this.paramModule = this.param;
           return callback && callback(true);
         }
       });

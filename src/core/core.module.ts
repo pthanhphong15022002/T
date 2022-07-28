@@ -23,7 +23,7 @@ import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
     FormatDatetimePipe,
     SharedControlPipe,
     FunctionPipe,
-    BackgroundImagePipe,
+    BackgroundImagePipe  
   ],
   imports: [CommonModule, FormsModule],
   providers: [
