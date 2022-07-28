@@ -45,7 +45,7 @@
                                     </ng-template>
                                 </ng-container>
                                 <ng-template #shareName>
-                                    <span class="me-2 fw-bolder">{{dataEdit.shareName}}</span>
+                                    <span class="me-2 fw-bolder" [innerHTML]="dataEdit.shareName"></span>
                                 </ng-template>
                             </ng-container>
                             <ng-template #noPermission>
@@ -104,7 +104,7 @@
                                 </codx-share>
                             </ng-container>
                             <ng-template #creat_share>
-                                <codx-share [dialog]="dialog" [multiple]="false" (eventApply)="eventApply($event)">
+                                <codx-share [dialog]="dialog" [multiple]="false" listName="WP001"  (eventApply)="eventApply($event)">
                                 </codx-share>
                             </ng-template>
                         </ng-template>
