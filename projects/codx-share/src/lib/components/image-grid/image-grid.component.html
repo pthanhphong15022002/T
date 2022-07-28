@@ -238,7 +238,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="file_application.length > 0">
-    <div class="mt-2 d-flex " *ngFor="let file of file_application">
+    <div class="mt-2 d-flex position-relative" *ngFor="let file of file_application">
       <div class="me-2">
         <codx-temp-full 
           imageSrc="{{file.extension | avtFile}}" 
