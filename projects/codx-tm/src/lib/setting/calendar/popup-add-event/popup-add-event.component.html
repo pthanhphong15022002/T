@@ -1,4 +1,9 @@
-<codx-form [headerText]="'Thêm Lễ/Tết/Sự kiện'" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form
+  [headerText]="'Thêm Lễ/Tết/Sự kiện'"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
   <ng-template #body>
     <div class="form-group row">
       <label class="col-2 col-form-label">
@@ -16,7 +21,7 @@
           field="calendar"
           refValue="L1461"
           placeholder=""
-          [crrValue]="evtData?.calendar"
+          [crrValue]="data?.calendar"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -32,7 +37,7 @@
           type="text"
           field="month"
           placeholder=""
-          [crrValue]="evtData?.month"
+          [crrValue]="data?.month"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -48,7 +53,7 @@
           type="text"
           field="day"
           placeholder=""
-          [crrValue]="evtData?.day"
+          [crrValue]="data?.day"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -61,11 +66,11 @@
       </label>
       <div class="col-4">
         <codx-colorpicker
-          #elm
+          type="colorpicker"
           class="form-control text-white color-large"
           field="color"
-          dataformat="hex"
-          [crrValue]="evtData?.color"
+          format="hex"
+          [value]="data?.color"
           (valueChange)="valueChange($event)"
         >
         </codx-colorpicker>
@@ -80,8 +85,8 @@
         <codx-input
           type="vllicon"
           refValue="L1470"
-          field="symbolDayOff"
-          [crrValue]="evtData?.symbol"
+          field="symbol"
+          [crrValue]="data?.symbol"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -95,9 +100,9 @@
       <div class="col-10">
         <codx-input
           type="textarea"
-          field="note1"
+          field="note"
           format="ed3"
-          [crrValue]="evtData?.note ? evtData.note : ''"
+          [crrValue]="data?.note"
           (valueChange)="valueChange($event)"
           placeholder="Diễn giải"
         >
@@ -111,7 +116,7 @@
           name="checkbox"
           class="text-dark"
           label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
-          [disabled]="evtData?.recID ? true : false"
+          [disabled]="data?.recID ? true : false"
           field="set"
           [checked]="set"
           (valueChange)="valueChange($event)"
@@ -122,7 +127,7 @@
   </ng-template>
   <ng-template #footer>
     <button type="button" class="btn btn-primary" (click)="saveDayOff()">
-      Save
+      Lưu
     </button>
   </ng-template>
 </codx-form>

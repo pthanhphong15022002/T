@@ -29,7 +29,7 @@
 
     <ng-template #dataPara let-item>
         <div class="d-flex flex-column top-2" *ngIf="(checkWP_NotesParam == true || checkWP_NotesParam == '1')
-        && (item.type == 'WP_Notes' || item?.type == undefined)">
+        && (item.type == 'WP_Notes' || !item?.type)">
             <div class="note-content">
                 <div class="checkbox-list">
                     <div *ngIf="item.memo != null">
@@ -109,7 +109,7 @@
             </div>
         </div>
         <div
-            *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && (item.type == 'TM_Tasks')">
+            *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && (item?.type == 'TM_Tasks' || !item?.type)">
             <div class="task-content">
                 <div class="checkbox-list">
                     <div class="d-flex flex-column note-option">

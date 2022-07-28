@@ -169,9 +169,12 @@ ejs-listview .e-ul>li {
 }
 
 .remove-file {
-    visibility: hidden;
+    //visibility: hidden;
+    visibility: visible;
+    opacity: 0.3;
 }
 
 .position-relative:hover .remove-file {
-    visibility: visible;
+    //visibility: visible;
+    opacity: 1;
 }

@@ -1,15 +1,14 @@
 import {
-  AfterViewInit,
   Component,
   Injector,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
 import {
-  ApiHttpService,
-  AuthStore,
+  CodxScheduleComponent,
   DialogData,
   DialogRef,
   FormModel,
@@ -23,26 +22,24 @@ import { CodxTMService } from '../../../codx-tm.service';
   styleUrls: ['./popup-add-dayoffs.component.scss'],
 })
 export class PopupAddDayoffsComponent extends UIComponent implements OnInit {
+  @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddDayoffs: FormGroup;
   formModel: FormModel;
   dialog!: DialogRef;
-  isAfterRender: boolean = false;
+  isAdd: boolean = false;
   user: any;
-  funcID: string;
   data: any;
- 
+
   constructor(
     private injector: Injector,
     private tmService: CodxTMService,
-    private authService: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    this.user = this.authService.get();
-    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
   }
 
   onInit(): void {
@@ -54,51 +51,74 @@ export class PopupAddDayoffsComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    // this.tmService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((res) => {
-    //     if (res) {
-    //       console.log(res)
-    //       this.dialogAddDayoffs = res;
-    //       this.isAfterRender = true;
-    //     }
-    //   });
+    this.tmService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.dialogAddDayoffs = res;
+          this.dialogAddDayoffs.addControl('calendarID', new FormControl(true));
+          this.dialogAddDayoffs.addControl(
+            'calendarDate',
+            new FormControl(true)
+          );
+          this.dialogAddDayoffs.addControl('symbol', new FormControl(true));
+          this.dialogAddDayoffs.addControl('note', new FormControl(true));
+
+          if (this.isAdd) {
+            this.dialogAddDayoffs.patchValue({
+              calendarID: this.data.calendarID,
+              calendarDate: new Date(),
+              symbol: '',
+              note: '',
+            });
+          } else {
+            const { recID, calendarID, calendarDate, symbol, note } = this.data;
+            this.dialogAddDayoffs.addControl('recID', new FormControl(true));
+            this.dialogAddDayoffs.patchValue({
+              recID: recID,
+              calendarID: calendarID,
+              calendarDate: calendarDate,
+              symbol: symbol,
+              note: note,
+            });
+          }
+        }
+      });
   }
 
-  valueChange(event: any, field: string = '') {
-    if (!field) field = event?.field;
-    if (field && event.component) {
-      if (event?.data === Object(event?.data))
-        this.dialogAddDayoffs.patchValue({
-          [event['field']]: event.data.value,
-        });
-      else this.dialogAddDayoffs.patchValue({ [event['field']]: event.data });
+  valueChange(event) {
+    if (event?.field) {
+      if (event?.data === Object(event?.data)) {
+        if (event.data.value) {
+          this.dialogAddDayoffs.patchValue({
+            [event['field']]: event.data.value,
+          });
+        } else {
+          this.dialogAddDayoffs.patchValue({
+            [event['field']]: event.data.fromDate,
+          });
+        }
+      } else this.dialogAddDayoffs.patchValue({ [event['field']]: event.data });
     }
+    this.detectorRef.detectChanges();
   }
 
   saveCalendarDate() {
-    // const t = this;
-    // this.api
-    //   .execSv<any>(
-    //     APICONSTANT.SERVICES.BS,
-    //     APICONSTANT.ASSEMBLY.BS,
-    //     APICONSTANT.BUSINESS.BS.CalendarDate,
-    //     'SaveCalendarDateAsync',
-    //     this.evtCDDate
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       if (res.isAdd) {
-    //         t.calendateDate.push(res.data);
-    //       } else {
-    //         var index = t.calendateDate.findIndex(
-    //           (p) => p.recID == t.evtCDDate.recID
-    //         );
-    //         t.calendateDate[index] = t.evtCDDate;
-    //       }
-    //       this.dialog.close();
-    //     }
-    //   });
-    console.log(this.dialogAddDayoffs.value)
+    console.log(this.dialogAddDayoffs.value);
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'SaveCalendarDateAsync',
+        this.dialogAddDayoffs.value
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close();
+          this.detectorRef.detectChanges();
+        }
+      });
+    this.schedule.refresh();
   }
 }
