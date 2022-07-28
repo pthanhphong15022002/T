@@ -388,7 +388,7 @@ export class TasksComponent extends UIComponent {
       this.editConfirm(data);
       return;
     }
-   
+
     var isCanEdit = true;
     this.api
       .execSv<any>(
@@ -618,13 +618,6 @@ export class TasksComponent extends UIComponent {
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
     if (taskAction.owner != this.user.userID) {
-<<<<<<< HEAD
-      this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
-      return;
-    }
-    if (taskAction.status = "05") {
-      this.notiService.notifyCode("TM020")
-=======
       this.notiService.notify(
         'Bạn không thể cập nhật công việc của người khác !'
       );
@@ -632,7 +625,6 @@ export class TasksComponent extends UIComponent {
     }
     if ((taskAction.status == '05')) {
       this.notiService.notifyCode('TM020');
->>>>>>> fdb2707de1d0f1ca195ac0e9a411b381e37eac6d
       return;
     }
     if (taskAction.approveStatus == '3') {
@@ -644,67 +636,6 @@ export class TasksComponent extends UIComponent {
       return;
     }
     const fieldName = 'UpdateControl';
-<<<<<<< HEAD
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          var param = JSON.parse(res.dataValue);
-          var fieldValue = param[fieldName];
-          if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
-          } else {
-            var completedOn = moment(new Date()).toDate();
-            var completed = '0';
-            if (taskAction.estimated > 0) {
-              completed = taskAction.estimated;
-            } else {
-              var timeStart = moment(
-                new Date(
-                  taskAction.startOn
-                    ? taskAction.startOn
-                    : taskAction.startDate
-                      ? taskAction.startDate
-                      : taskAction.createdOn
-                )
-              ).toDate();
-              var time = (
-                (completedOn.getTime() - timeStart.getTime()) /
-                3600000
-              ).toFixed(2);
-              completed = Number.parseFloat(time).toFixed(2);
-            }
-
-            var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
-
-            this.tmSv
-              .setStatusTask(
-                this.funcID,
-                taskAction.taskID,
-                status,
-                completedOn,
-                completed,
-                ''
-              )
-              .subscribe((res) => {
-                if (res && res.length > 0) {
-                  res.forEach((obj) => {
-                    this.view.dataService.update(obj).subscribe();
-                  });
-                  this.itemSelected = res[0];
-                  this.detectorRef.detectChanges();
-                  this.notiService.notifyCode('tm009');
-                } else {
-                  this.notiService.notifyCode('tm008');
-                }
-              });
-=======
     if (taskAction.taskGroupID) {
       this.api
         .execSv<any>(
@@ -717,9 +648,8 @@ export class TasksComponent extends UIComponent {
         .subscribe((res) => {
           if (res) {
             this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
-          }else{
+          } else {
             this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
->>>>>>> fdb2707de1d0f1ca195ac0e9a411b381e37eac6d
           }
         });
     } else {
@@ -741,8 +671,8 @@ export class TasksComponent extends UIComponent {
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
