@@ -215,7 +215,12 @@ export class ApprovalComponent extends UIComponent {
     this.pdfviewerControl.zoomValue = 50;
     if (!this.isApprover) {
       this.esService
-        .getSignAreas([this.recID, this.fileInfo?.fileID])
+        .getSignAreas([
+          this.recID,
+          this.fileInfo?.fileID,
+          this.isApprover,
+          this.user?.userID,
+        ])
         .subscribe((res) => {
           if (res) {
             this.lstRenderAnnotation = res;
@@ -284,15 +289,15 @@ export class ApprovalComponent extends UIComponent {
                 );
                 switch (item.labelType) {
                   case '1': {
-                    anno.stampAnnotationPath = curSignerInfo.authorSignature;
+                    anno.stampAnnotationPath = curSignerInfo?.authorSignature;
                     break;
                   }
                   case '2': {
-                    anno.stampAnnotationPath = curSignerInfo.authorStamp;
+                    anno.stampAnnotationPath = curSignerInfo?.authorStamp;
                     break;
                   }
                   case '8': {
-                    anno.stampAnnotationPath = curSignerInfo.fileQRCode;
+                    anno.stampAnnotationPath = curSignerInfo?.fileQRCode;
                     break;
                   }
                 }
@@ -372,15 +377,15 @@ export class ApprovalComponent extends UIComponent {
     //           );
     //           switch (item.labelType) {
     //             case '1': {
-    //               anno.stampAnnotationPath = curSignerInfo.authorSignature;
+    //               anno.stampAnnotationPath = curSignerInfo?.authorSignature;
     //               break;
     //             }
     //             case '2': {
-    //               anno.stampAnnotationPath = curSignerInfo.authorStamp;
+    //               anno.stampAnnotationPath = curSignerInfo?.authorStamp;
     //               break;
     //             }
     //             case '8': {
-    //               anno.stampAnnotationPath = curSignerInfo.fileQRCode;
+    //               anno.stampAnnotationPath = curSignerInfo?.fileQRCode;
     //               break;
     //             }
     //           }
