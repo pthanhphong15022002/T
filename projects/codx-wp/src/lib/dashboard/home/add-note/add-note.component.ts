@@ -409,6 +409,7 @@ export class AddNoteComponent implements OnInit {
 
     var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
     this.listNote.push(Object.assign({}, dt));
+    // this.listNote.push(this.listNote.shift());
     // for (let i = this.listNote.length - 1; i > 0; i--) {
     //   for (let y = i - 2; y >= 0; y--) {
     //     if (this.listNote[i].listNote == this.listNote[y].listNote) {

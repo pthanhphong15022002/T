@@ -29,16 +29,14 @@
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
                     <div class="flex align-items-center">
-                        <div>
-                            <ng-container *ngIf="type == 'check'; else list">
-                                <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
-                                    labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
-                                </codx-input>
-                            </ng-container>
-                            <ng-template #list>
-                                <span class="dot-black"></span>
-                            </ng-template>
-                        </div>
+                        <ng-container *ngIf="type == 'check'; else list">
+                            <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
+                                labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item)">
+                            </codx-input>
+                        </ng-container>
+                        <ng-template #list>
+                            <span class="dot-black"></span>
+                        </ng-template>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
                             <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
                                 class="test-textbox border-0 input-note" (keyUpEnter)="onUpdateNote($event)"

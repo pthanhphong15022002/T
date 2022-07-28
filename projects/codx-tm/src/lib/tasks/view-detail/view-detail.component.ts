@@ -17,12 +17,14 @@ export class ViewDetailComponent implements OnInit {
   @Input() param?: any
   @Input() listRoles ? : any;
   @Input() popoverCrr :any
+  @Input() vllStatus :any
   popoverDataSelected : any
   searchField =''
   listTaskResousceSearch = []
   listTaskResousce = []
   vllRole = 'TM002';
   countResource = 0;
+
  
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
