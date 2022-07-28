@@ -48,6 +48,8 @@ export class Post {
   isPortal:boolean;
   tmp: any;
   share: any;
+  shareIcon:string;
+  shareText:string;
   shareName: string;
   shortConent: string;
   createdBy:string;

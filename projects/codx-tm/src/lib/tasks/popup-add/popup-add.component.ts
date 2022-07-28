@@ -170,6 +170,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
+      this.task.status = "10" ;
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
@@ -483,6 +484,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       ])
       .subscribe((res) => {
         if (res && res.length > 0) {
+          this.dialog.dataService.addDatas.clear();
           this.dialog.close(res);
         }
       });
@@ -495,6 +497,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.dataService
             .save((option: any) => this.beforeSave(option))
             .subscribe((res) => {
+              this.dialog.dataService.addDatas.clear();
               if (res.update) {
                 this.dialog.close(res.update);
               }
@@ -508,6 +511,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           if (res.update) {
+            this.dialog.dataService.addDatas.clear();
             this.dialog.close(res.update);
           }
         });
@@ -718,7 +722,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = res;
-          // if (this.param?.ProjectControl != '0')
           this.isCheckProjectControl = res.projectControl != '0';
           this.isCheckAttachmentControl = res.attachmentControl != '0';
           this.isCheckCheckListControl = res.checkListControl != '0';
