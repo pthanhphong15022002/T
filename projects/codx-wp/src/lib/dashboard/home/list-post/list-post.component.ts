@@ -71,7 +71,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxFile') codxFile: ImageGridComponent;
   @Input() isShowCreate = true;
 
   constructor(
@@ -184,7 +183,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       '',
       option
     );
-    this.modal.closed.subscribe((res) => {});
+
   }
   openEditModal(data: any) {
     let dataEdit = { ...data };
@@ -194,14 +193,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       headerText: 'Chỉnh sửa bài viết',
       title: this.title,
     };
-    console.log(this.codxFile);
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(
       AddPostComponent,
       '',
-      650,
+      700,
       550,
       '',
       obj,

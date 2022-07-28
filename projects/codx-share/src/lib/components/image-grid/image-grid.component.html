@@ -1,13 +1,6 @@
 <div class="main">
   <ng-container *ngIf="file_img_video.length > 0">
     <div [ngSwitch]="file_img_video.length" class="position-relative1">
-      <!-- <ng-container *ngIf="showBtnRemove">
-          <label (click)="removeFileAll()"
-            class="btn btn-icon btn-circle position-absolute removeImg btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-            data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Remove avatar">
-            <span class="icon-close icon-14 "></span>
-          </label>
-        </ng-container> -->
       <ng-container *ngSwitchCase="1">
         <div class="feed-1pic position-relative">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">

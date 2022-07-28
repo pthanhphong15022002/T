@@ -89,7 +89,6 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (res) {
         var data = res[0]?.data;
         var type = res[0]?.type;
-        debugger;
         if (this.lstView) {
           if (type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
