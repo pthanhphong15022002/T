@@ -41,7 +41,6 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
-import { HeaderRightComponent } from './components/header-right/header-right.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -68,13 +67,13 @@ const T_Component: Type<any>[] = [
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
   QuickLinksInnerComponent,
-  UserInnerComponent
+  UserInnerComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, HeaderRightComponent],
+  declarations: [T_Component, T_Pipe],
   imports: [
     CommonModule,
     NgbModule,

@@ -365,17 +365,17 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && data.status > 10) {
-      this.notiService.notifyCode('TM013');
-      return;
-    } else if (
-      data.category == '1' &&
-      data.verifyControl == '1' &&
-      data.status != '00'
-    ) {
-      this.notiService.notifyCode('TM014');
-      return;
-    }
+    // if (data && data.status > 10) {
+    //   this.notiService.notifyCode('TM013');
+    //   return;
+    // } else if (
+    //   data.category == '1' &&
+    //   data.verifyControl == '1' &&
+    //   data.status != '00'
+    // ) {
+    //   this.notiService.notifyCode('TM014');
+    //   return;
+    // }
     if (data.category == '1' || data.category == '2') {
       this.editConfirm(data);
       return;
