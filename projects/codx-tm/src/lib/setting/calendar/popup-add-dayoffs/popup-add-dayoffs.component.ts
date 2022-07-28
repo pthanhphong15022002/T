@@ -54,15 +54,15 @@ export class PopupAddDayoffsComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    this.tmService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          console.log(res)
-          this.dialogAddDayoffs = res;
-          this.isAfterRender = true;
-        }
-      });
+    // this.tmService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((res) => {
+    //     if (res) {
+    //       console.log(res)
+    //       this.dialogAddDayoffs = res;
+    //       this.isAfterRender = true;
+    //     }
+    //   });
   }
 
   valueChange(event: any, field: string = '') {

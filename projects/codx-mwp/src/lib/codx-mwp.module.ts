@@ -61,7 +61,7 @@ export const routes: Routes = [
         component: PersonalsComponent,
       },
       {
-        path: 'employeeinfo/:funcID',
+        path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
       },
       // {

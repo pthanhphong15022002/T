@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import moment from 'moment';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
@@ -107,6 +108,13 @@ export class EmployeesComponent implements OnInit {
         console.log(e);
       })
     });
+  }
+
+  senioritydate(value: string) {
+    if (!value) {
+      return value;
+    }
+    return moment(value).fromNow(true);
   }
 
   changeView(evt: any) { }

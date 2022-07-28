@@ -329,8 +329,8 @@ export class AddNoteComponent implements OnInit {
 
     if (this.checkPin == true)
       this.note.isPin = this.pin;
+    this.listNote.shift();
     this.note.checkList = this.listNote;
-    this.note.checkList.shift()
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
