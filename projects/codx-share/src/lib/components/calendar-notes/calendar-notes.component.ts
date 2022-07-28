@@ -89,12 +89,12 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       if (res) {
         var data = res[0]?.data;
         var type = res[0]?.type;
+        debugger;
         if (this.lstView) {
           if (type == 'add-otherDate') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'add-currentDate') {
-            debugger;
             (this.lstView.dataService as CRUDService).add(data).subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'delete') {

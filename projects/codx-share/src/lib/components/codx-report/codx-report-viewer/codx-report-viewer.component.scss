@@ -1,0 +1,52 @@
+::ng-deep{
+  $background-color_1: #bdbdbd;
+
+  .e-rptdesigner-itempanel-textitem {
+    color: #212121;
+    margin-top: 10px;
+    font-size: 12px !important;
+    font-weight: 500;
+  }
+
+  .e-vscroll{
+    &.e-box{
+      padding-left: 0 !important;
+      margin: 0 -5px;
+    }
+  }
+
+  .e-scroller {
+    .e-vscroll {
+      .e-vup.e-button {
+        background-color: $background-color_1;
+        padding-left: 2px;
+        height: 15px !important;
+      }
+      .e-vdown.e-button {
+        background-color: $background-color_1;
+        padding-left: 2px;
+        height: 15px !important;
+      }
+    }
+    .e-hscroll {
+      .e-hup.e-button {
+        background-color: $background-color_1;
+        padding-left: 7px;
+      }
+      .e-hdown.e-button {
+        background-color: $background-color_1;
+        padding-left: 7px;
+      }
+    }
+  }
+
+
+.e-reportdesigner-scroller {
+	.e-vscrollbar {
+		border-top: 1px solid #e0e0e0;
+		margin-right: -10px;
+	}
+}
+
+
+}

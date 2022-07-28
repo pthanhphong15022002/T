@@ -33,7 +33,7 @@ export class NewsComponent implements OnInit {
   userPermission: any;
   isAllowNavigationArrows = true;
   views: Array<ViewModel> = [];
-  funcID = "";
+  funcID = "WPT02";
   countCarousel = 3;
   NEWSTYPE = {
     POST: "1",
@@ -52,6 +52,7 @@ export class NewsComponent implements OnInit {
   @ViewChild('carousel', { static: true }) carousel: NgbCarousel;
   @ViewChild('listView') listViewNews: any;
   @ViewChild('listCategory') listCategory: CodxListviewComponent;
+  @ViewChild('itemTemplate') itemTemplate:TemplateRef<any>;
 
   constructor(
     private api: ApiHttpService,
@@ -83,13 +84,13 @@ export class NewsComponent implements OnInit {
       this.funcID = this.route.snapshot.params["funcID"];
       switch (category) {
         case "home":
-          this.dataValue ="0;1;5;2;comanyinfo";
-          this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus =@2 )) && Status =@3 && Category !=@4";
+          this.dataValue = "1;0;1;5;2;comanyinfo";
+          this.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
           break;
         default:
           this.isHome = false;
-          this.dataValue ="0;1;5;2;"+category;
-          this.predicate = "(ApproveControl=@0 || (ApproveControl=@1 && ApproveStatus = @2)) && Status =@3 && Category =@4";
+          this.dataValue ="1;0;1;5;2;"+category;
+          this.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus = @3)) && Status =@4 && Category =@5";
           break
       }
       this.loadData();
@@ -98,12 +99,10 @@ export class NewsComponent implements OnInit {
 
 
   loadData() {
-    var model1 = new DataRequest();
+    let model1 = new DataRequest();
     model1.funcID = this.functionID;
-    model1.predicate = this.predicate;
-    model1.dataValue = this.dataValue;
-    model1.predicates = 'NewsType = @0';
-    model1.dataValues = '1';
+    model1.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
+    model1.dataValue = "1;0;1;5;2;comanyinfo";
     model1.pageLoading = true;
     model1.page = 1;
     model1.pageSize = 4;
@@ -128,28 +127,17 @@ export class NewsComponent implements OnInit {
         }
 
       });
-    var model2 = new DataRequest();
-    model2.funcID = this.functionID;
-    model2.predicate = this.predicate;
-    model2.dataValue = this.dataValue;
-    model2.predicates = 'NewsType = @0';
-    model2.dataValues = '2';
-    model2.pageLoading = true;
-    model2.page = 1;
-    model2.pageSize = 6;
-    model2.formName = this.fromName;
-    model2.gridViewName = this.gridViewName;
-    model2.entityName = this.entityName;
-    model2.srtColumns = this.sortColumns;
-    model2.srtDirections = this.sortDirections;
-    model2.dataObj = 'list';
+    model1.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
+    model1.dataValue = "2;0;1;5;2;comanyinfo";
+    model1.page = 1;
+    model1.pageSize = 6;
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'GetListNewsAsync',
-        model2
+        model1
       )
       .subscribe((res2) => {
         if (res2) {
