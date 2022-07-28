@@ -6,7 +6,14 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "typeRoots": [
+      "../../node_modules/@types",
+      "../../node_modules/@boldreports/types"
+    ],
+    "types": [
+      "jquery",
+      "reports.all"
+    ]
   },
   "exclude": [
     "src/test.ts",
