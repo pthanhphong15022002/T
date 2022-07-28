@@ -177,7 +177,7 @@ export class CalendarComponent
       500,
       400,
       '',
-      [this.formModel]
+      [this.formModel, this.calendarID]
     );
   }
 
@@ -187,14 +187,15 @@ export class CalendarComponent
       PopupEditCalendarComponent,
       'Lịch làm việc chuẩn',
       1200,
-      1000
+      1000,
+      '',
+      [this.formModel, this.calendarID]
     );
   }
 
   changeCombobox(e) {
-    // e['data'][0] == ''
-    //   ? this.calendarID == 'STD'
-    //   : (this.calendarID = e['data'][0]);
-    //this.getDayOff(this.calendarID);
+    e['data'][0] == ''
+      ? this.calendarID == 'STD'
+      : (this.calendarID = e['data'][0]);
   }
 }

@@ -47,4 +47,5 @@ export class Resources{
     createBy: string;
     modifiedOn: Date;
     modifiedBy: string;
+    positionName: string;
 }

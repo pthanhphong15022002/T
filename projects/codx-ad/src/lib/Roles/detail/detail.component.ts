@@ -81,61 +81,61 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   // action(para: ActionArg): void { }
 
   ngOnDestroy(): void {
-    // if (this.sub) this.sub.unsubscribe();
-    // this.RolesService.appendPesmission(null);
+    if (this.sub) this.sub.unsubscribe();
+    this.RolesService.appendPesmission(null);
   }
   onChangeSelectedFunction(data) {
-    // this.roleName = this.tempService.roleName + " - " + data.nameFunction;
+    this.roleName = this.tempService.roleName + " - " + data.nameFunction;
   }
   onInit(): void {
-    // var rid = this.at.snapshot.paramMap.get("id");
-    // if (rid) {
-    //   this.recid = rid;
-    //   this.LoadAsside();
-    //   this.RolesService._dataChanged = false;
-    //   this.RolesService._activeSysFuction = false;
-    //   this.RolesService._activeMoreFuction = false;
-    // }
+    var rid = this.at.snapshot.queryParams.recID;
+    if (rid) {
+      this.recid = rid;
+      this.LoadAsside();
+      this.RolesService._dataChanged = false;
+      this.RolesService._activeSysFuction = false;
+      this.RolesService._activeMoreFuction = false;
+    }
 
-    // this.RolesService.LoadDataPermission.subscribe((data: any) => {
-    //   if (!data) return;
-    //   var d = data[0] || {};
+    this.RolesService.LoadDataPermission.subscribe((data: any) => {
+      if (!data) return;
+      var d = data[0] || {};
 
-    //   this.dataBasic = d.Basic || [];
-    //   this.dataMore = d.More || [];
-    //   this.dataExport = d.Export || [];
+      this.dataBasic = d.Basic || [];
+      this.dataMore = d.More || [];
+      this.dataExport = d.Export || [];
 
-    //   this.dataPermission = d.Data || {};
+      this.dataPermission = d.Data || {};
 
-    //   this.df.detectChanges();
+      this.df.detectChanges();
 
-    //   var funcExp: Array<string> = d.Adv || [];
-    //   // if (!this.tempService.isSystem)
-    //   this.active = true;
-    //   // else
-    //   //   this.active = false;
-    //   this.checkAndLock("exp", false);
+      var funcExp: Array<string> = d.Adv || [];
+      // if (!this.tempService.isSystem)
+      this.active = true;
+      // else
+      //   this.active = false;
+      this.checkAndLock("exp", false);
 
-    //   this.activeSys = this.RolesService._activeSysFuction;
-    //   this.checkAndLock("sys", this.activeSys);
+      this.activeSys = this.RolesService._activeSysFuction;
+      this.checkAndLock("sys", this.activeSys);
 
-    //   this.activeMore = this.RolesService._activeMoreFuction;
-    //   this.checkAndLock("more", this.activeMore);
+      this.activeMore = this.RolesService._activeMoreFuction;
+      this.checkAndLock("more", this.activeMore);
 
-    //   var sysfunc = $("input[data-funcID]");
+      var sysfunc = $("input[data-funcID]");
 
-    //   var t = this;
+      var t = this;
 
-    //   $.each(sysfunc, function (i, elm) {
-    //     var funcID = $(elm).data("funcid");
-    //     if (funcExp.indexOf(funcID) >= 0) {
-    //       elm.checked = true;
-    //     } else {
-    //       elm.checked = false;
-    //     }
-    //   });
-    //   this.df.detectChanges();
-    // });
+      $.each(sysfunc, function (i, elm) {
+        var funcID = $(elm).data("funcid");
+        if (funcExp.indexOf(funcID) >= 0) {
+          elm.checked = true;
+        } else {
+          elm.checked = false;
+        }
+      });
+      this.df.detectChanges();
+    });
   }
 
   ngAfterViewInit() {
@@ -152,42 +152,41 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   }
 
   LoadAsside() {
-    // $('#kt_aside_menu').empty();
-    // this.api
-    //   .call(
-    //     "ERM.Business.SYS",
-    //     "FunctionListBusiness",
-    //     "GetFunctionRoleAsync",
-    //     [this.recid]
-    //   )
-    //   .subscribe((res) => {
-    //     console.log("check GetFunctionRoleAsync", res)
-    //     if (res && res.msgBodyData[0]) {
-    //       var data = res.msgBodyData[0];
-    //       this.myTree = data;
-    //       this.df.detectChanges();
-    //       this.loadSource();
-    //     }
-    //   });
+    $('#kt_aside_menu').empty();
+    this.api
+      .call(
+        "ERM.Business.SYS",
+        "FunctionListBusiness",
+        "GetFunctionRoleAsync",
+        [this.recid]
+      )
+      .subscribe((res) => {
+        console.log("check GetFunctionRoleAsync", res)
+        if (res && res.msgBodyData[0]) {
+          var data = res.msgBodyData[0];
+          this.myTree = data;
+          this.df.detectChanges();
+          this.loadSource();
+        }
+      });
   }
   loadSource() {
-    // this.recid;
-    // var formName = this.RolesService.formName;
-    // var gridViewName = this.RolesService.gridViewName;
-    // this.api
-    //   .call("ERM.Business.AD", "RolesBusiness", "GetModelFromRolesAsync", [
-    //     formName,
-    //     gridViewName,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       var data = res.msgBodyData[0];
-    //       this.dataBasic = data.Basic;
-    //       this.dataMore = data.More;
-    //       this.dataExport = data.Export;
-    //       this.df.detectChanges();
-    //     }
-    //   });
+    var formName = this.RolesService.formName;
+    var gridViewName = this.RolesService.gridViewName;
+    this.api
+      .call("ERM.Business.AD", "RolesBusiness", "GetModelFromRolesAsync", [
+        formName,
+        gridViewName,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          var data = res.msgBodyData[0];
+          this.dataBasic = data.Basic;
+          this.dataMore = data.More;
+          this.dataExport = data.Export;
+          this.df.detectChanges();
+        }
+      });
   }
 
   reloadComponent() {
@@ -201,12 +200,12 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   }
 
   valueChange(e) {
-    // if (e.field == "sys" || e.field == "exp" || e.field == "more")
-    //   this.checkAndLock(e.field, e.data);
-    // else {
-    //   this.dataPermission[e.field] = e.data.value;
-    //   this.RolesService._dataChanged = true;
-    // }
+    if (e.field == "sys" || e.field == "exp" || e.field == "more")
+      this.checkAndLock(e.field, e.data);
+    else {
+      this.dataPermission[e.field] = e.data.value;
+      this.RolesService._dataChanged = true;
+    }
   }
   inputChange($event) {
     this.RolesService._dataChanged = true;
@@ -281,65 +280,65 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       }
     });
 
-    // this.api
-    //   .call("ERM.Business.AD", "RolesBusiness", "SaveRolePermissionAsync", [
-    //     roleID,
-    //     create,
-    //     view,
-    //     edit,
-    //     deleted,
-    //     sys,
-    //     more,
-    //     funcID,
-    //     formName,
-    //     this.dataFuncRole,
-    //   ])
-    //   .subscribe((res) => {
-    //     t.dataFuncRole = [];
-    //     if (res && res.msgBodyData[0]) {
-    //       $('.check-per[data-id="' + funcID + '"]').addClass(
-    //         "far fa-check-square"
-    //       );
-    //       this.RolesService._dataChanged = false;
-    //       this.notificationsService.notify("Hệ thống thực thi thành công!");
-    //     }
-    //   });
+    this.api
+      .call("ERM.Business.AD", "RolesBusiness", "SaveRolePermissionAsync", [
+        roleID,
+        create,
+        view,
+        edit,
+        deleted,
+        sys,
+        more,
+        funcID,
+        formName,
+        this.dataFuncRole,
+      ])
+      .subscribe((res) => {
+        t.dataFuncRole = [];
+        if (res && res.msgBodyData[0]) {
+          $('.check-per[data-id="' + funcID + '"]').addClass(
+            "far fa-check-square"
+          );
+          this.RolesService._dataChanged = false;
+          this.notificationsService.notify("Hệ thống thực thi thành công!");
+        }
+      });
   }
 
   Delete() {
-    // var funcID = this.RolesService.funcID;
-    // var formName = this.RolesService.formName;
-    // var funcID = this.RolesService.funcID;
-    // var roleID = this.recid;
-    // if (!funcID || !roleID) return;
-    // this.api
-    //   .call("ERM.Business.AD", "RolesBusiness", "DeleteRolePermissionAsync", [
-    //     roleID,
-    //     funcID,
-    //     formName,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res && res.msgBodyData[0]) {
-    //       $('.check-per[data-id="' + funcID + '"]').removeClass(
-    //         "far fa-check-square"
-    //       );
-    //       this.notificationsService.notify("Hệ thống thực thi thành công!");
-    //       this.RolesService._dataChanged = false;
+    var funcID = this.RolesService.funcID;
+    var formName = this.RolesService.formName;
+    var funcID = this.RolesService.funcID;
+    var roleID = this.recid;
+    if (!funcID || !roleID) return;
+    this.api
+      .call("ERM.Business.AD", "RolesBusiness", "DeleteRolePermissionAsync", [
+        roleID,
+        funcID,
+        formName,
+      ])
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          $('.check-per[data-id="' + funcID + '"]').removeClass(
+            "far fa-check-square"
+          );
+          this.notificationsService.notify("Hệ thống thực thi thành công!");
+          this.RolesService._dataChanged = false;
 
-    //       this.api
-    //         .call("ERM.Business.AD", "RolesBusiness", "GetPermissionAsync", [
-    //           funcID,
-    //           formName,
-    //           "",
-    //           this.recid,
-    //         ])
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             var data = res.msgBodyData;
-    //             this.RolesService.appendPesmission(data);
-    //           }
-    //         });
-    //     }
-    //   });
+          this.api
+            .call("ERM.Business.AD", "RolesBusiness", "GetPermissionAsync", [
+              funcID,
+              formName,
+              "",
+              this.recid,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                var data = res.msgBodyData;
+                this.RolesService.appendPesmission(data);
+              }
+            });
+        }
+      });
   }
 }
