@@ -67,6 +67,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger;
     this.dialog = dialog;
     this.data = data?.data[0];
     this.isAdd = data?.data[1];
@@ -134,6 +135,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(option: any) {
+    debugger;
     let itemData = this.dialogSignature.value;
     if (this.isAdd) {
       option.method = 'AddNewAsync';

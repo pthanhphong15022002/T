@@ -263,13 +263,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     } else {
       option.method = 'EditCategoryAsync';
     }
-
-    // this.esService.approvalStep.subscribe((res) => {
-    //   if (res) {
-    //     countStep = res.length;
-    //   }
-    // });
-
     option.data = [itemData, countStep];
     return true;
   }
