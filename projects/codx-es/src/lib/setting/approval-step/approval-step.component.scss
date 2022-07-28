@@ -22,24 +22,37 @@
       z-index: 9;
     }
     .timeline-media {
-         border: 4px solid  #1BC5BD;
-         border-radius: 100%;
-         display: -webkit-box;
-         display: -ms-flexbox;
-         display: flex;
-         -webkit-box-pack: center;
-         -ms-flex-pack: center;
-         justify-content: center;
-         -webkit-box-align: center;
-         -ms-flex-align: center;
-         align-items: center;
-         background-color: #ffffff;
-         line-height: 0;
-         position: relative;
-         z-index: 10;
+        //  border: 4px solid  #1BC5BD;
+        //  border-radius: 100%;
+        //  display: -webkit-box;
+        //  display: -ms-flexbox;
+        //  display: flex;
+        //  -webkit-box-pack: center;
+        //  -ms-flex-pack: center;
+        //  justify-content: center;
+        //  -webkit-box-align: center;
+        //  -ms-flex-align: center;
+        //  align-items: center;
+        //  background-color: #ffffff;
+        //  line-height: 0;
+        //  position: relative;
+        //  z-index: 10;
+        width: 36px;
+        height: 36px;
+        border: 2px #1BC5BD solid;
+        line-height: 32px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1BC5BD;
+        background-color: #fff;
+        border-radius: 36px;
+        margin-right: 15px;
+        position: relative;
+        z-index: 999;
      }
      .stepper-number{
-        font-weight: 700;
+        font-weight: 600;
         font-size: 18px;
         line-height: 22px;
         /* identical to box height, or 122% */
@@ -48,8 +61,8 @@
         text-align: center;
      }
      .stepper-title{
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 500;
+      font-size: 16px;
       margin-bottom: 3px;
       max-width: 120px;
      }
