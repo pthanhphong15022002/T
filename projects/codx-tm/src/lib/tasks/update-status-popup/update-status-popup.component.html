@@ -6,13 +6,13 @@
             <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
             <codx-input class="form-control" type="text"  [crrValue]="moreFunc.customName" [disabled]="true"></codx-input>
         </div>
-        <div class="col-6" *ngIf="status =='9'">
+        <div class="col-6" *ngIf="status =='90'">
             <codx-label fiedName ="CompletedOn" formName="Tasks"  default="Ngày cập nhật"></codx-label>
             <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
                 [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
             </codx-input>
         </div>
-        <div class="col-6" *ngIf="status =='9'">
+        <div class="col-6" *ngIf="status =='90'">
             <codx-label fiedName="Estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
             <codx-input class="form-control" type="number" field="estimated" [crrValue]="completed"  (valueChange)="changeEstimated($event)" ></codx-input> 
           

@@ -63,7 +63,7 @@ export class EditRelationComponent implements OnInit {
     .subscribe((res) => {
       if (res.save) {
         this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
+        this.notiService.notifyCode('MWP00206'); 
       }
     });
   }

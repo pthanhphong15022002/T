@@ -15,7 +15,7 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild('itemTaskGroupName', { static: true }) itemTaskGroupName: TemplateRef<any>;
   @ViewChild('itemTaskGroupName2', { static: true }) itemTaskGroupName2: TemplateRef<any>;
   @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild('itemApprovalControl', { static: true }) itemApprovalControl: TemplateRef<any>;
+  @ViewChild('itemApproveControl', { static: true }) itemApproveControl: TemplateRef<any>;
   @ViewChild('itemProjectControl', { static: true }) itemProjectControl: TemplateRef<any>;
   @ViewChild('itemAttachmentControl', { static: true }) itemAttachmentControl: TemplateRef<any>;
   @ViewChild('itemCheckListControl', { static: true }) itemCheckListControl: TemplateRef<any>;
@@ -62,7 +62,7 @@ export class TaskGroupComponent implements OnInit {
       { headerTemplate: this.itemTaskGroupName, width: 200 },
       { headerTemplate: this.itemTaskGroupName2, width: 200 },
       { headerTemplate: this.itemNote, width: 200 },
-      { headerTemplate: this.itemApprovalControl, width: 140 },
+      { headerTemplate: this.itemApproveControl, width: 140 },
       { headerTemplate: this.itemProjectControl, width: 140 },
       { headerTemplate: this.itemAttachmentControl, width: 140 },
       { headerTemplate: this.itemCheckListControl, width: 180 },

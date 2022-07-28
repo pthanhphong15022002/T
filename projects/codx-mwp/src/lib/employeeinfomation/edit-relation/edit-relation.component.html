@@ -16,8 +16,8 @@
                 <div class="col">
                     <div class="form-group">
                         <codx-label fiedName="Birthday" default="Ngày sinh"></codx-label>
-                        <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
-                            field="birthday" (valueChange)="dataChange($event, 'birthday')"
+                        <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
+                            field="birthday" (valueChange)="changeTime($event)"
                             [crrValue]="dataBind?.birthday">
                         </codx-input>
                     </div>
@@ -84,9 +84,9 @@
                 <div class="col">
                     <div class="form-group">
                         <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
-                        <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
+                        <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
                             [crrValue]="dataBind?.issuedOn" field="issuedOn"
-                            (valueChange)="dataChange($event, 'issuedOn')">
+                            (valueChange)="changeTime($event)">
                         </codx-input>
                     </div>
                 </div>

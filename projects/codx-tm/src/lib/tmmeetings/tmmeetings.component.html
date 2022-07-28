@@ -7,3 +7,22 @@
   <lib-view-list-meet [formModel]="view.formModel" [data]="data" >
   </lib-view-list-meet>
 </ng-template>
+
+<ng-template #cardKanban let-data>
+  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" 
+      [title]="title" [subTitle]="data.meetingName" [dataItem]="data"
+      [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" [typeMF]="'hover'"
+      (clickMF)="clickMF($event, data)">
+  </codx-card-center>
+</ng-template>
+
+<ng-template #footer let-data>
+
+</ng-template>
+
+<ng-template #title let-data>
+<div>
+  áaaaaaa
+</div>
+</ng-template>
+

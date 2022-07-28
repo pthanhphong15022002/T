@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  module = 'HR1';
+  module = 'HR';
   constructor(inject: Injector) {
     super(inject);
   }
