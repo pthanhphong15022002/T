@@ -12,6 +12,7 @@ import { RolesComponent } from "./roles/roles.component";
 import { CreateFolderComponent } from "./createFolder/createFolder.component";
 import { ViewFileDialogComponent } from "projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component";
 import { PropertiesComponent } from "./properties/properties.component";
+import { MoveComponent } from "./move/move.component";
 
 @Injectable({
     providedIn: 'root'
@@ -580,6 +581,12 @@ export class CodxDMService {
           case "DMT0217":
             this.setBookmark(data, type);
             break;
+
+          case "DMT0204": // di chuyen
+          case "DMT0216": // di chuyen
+            var title = `${this.titleCopy} ${type}`;
+            this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
+            break;  
 
           case "DMT0214": //"copy": // copy file hay thu muc
             var title = `${this.titleCopy} ${type}`;

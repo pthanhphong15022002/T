@@ -205,9 +205,12 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-     console.log($data.data);
+   //  console.log($data.data);
    // alert(1);
     //let data = $event.data;
+    if ($data.data == null)
+      return;
+      
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {

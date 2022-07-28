@@ -25,6 +25,9 @@ import { SubFolderComponent } from './createFolder/subFolder/subFolder.component
 import { DetailComponent } from './views/detail/detail.component';
 import { CopyComponent } from './copy/copy.component';
 import { PropertiesComponent } from './properties/properties.component';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { CoreModule } from '@core/core.module';
+import { MoveComponent } from './move/move.component';
 
 export const routes: Routes = [
   {
@@ -64,7 +67,8 @@ const T_Component: Type<any>[] = [
   PhysicalComponent,
   SubFolderComponent,
   CopyComponent,
-  PropertiesComponent
+  PropertiesComponent,
+  MoveComponent
 ]
 @NgModule({
   imports: [
@@ -82,14 +86,23 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     DatePickerModule,
     TabModule,
-    FormsModule
+    FormsModule,
+    NgbModule,
+    CoreModule    
   ],
   exports: [
     RouterModule
-  ],
+  ], 
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
+
+// @NgModule({
+//   imports: [BrowserModule, NgbModule, FormsModule, ReactiveFormsModule],
+//   declarations: [NgbdRatingBasic],
+//   exports: [NgbdRatingBasic],
+//   bootstrap: [NgbdRatingBasic]
+// })
 
 export class CodxDmModule {
   public static forRoot(
