@@ -79,7 +79,7 @@
               <div class="text-center">
                 <codx-attachment #attachment objectType="ES_SignFiles" [objectId]="" hideBtnSave="1" hideFolder="1"
                   hideUploadBtn="0" [functionID]="formModel.funcID" type="inline" (fileAdded)="fileAdded($event)"
-                  (fileCount)="getfileCount($event)">
+                  (fileCount)="getfileCount($event)" hideImageUpload="0">
                 </codx-attachment>
               </div>
               <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
