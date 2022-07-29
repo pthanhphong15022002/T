@@ -23,6 +23,8 @@ import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import * as mime from 'mime-types'
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import {  Observable, of, Subscriber } from 'rxjs';
+import { Observer } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'app-addpost',
@@ -414,11 +416,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  beforSave(opt:any,data:any):boolean{
-    opt.method = 'PublishPostAsync';
-    opt.data = data;
-    return true;
-  }
   publishPost() {
     if (!this.message && this.listFileUpload.length < 0) {
       this.notifySvr.notifyCode('E0315');
@@ -432,19 +429,37 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.refType = this.entityName;
     post.permissions = this.permissions;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
-      .subscribe((res: any) => {
-        if (res) {
+      .subscribe((result: any) => {
+        if (result) {
           if (this.listFileUpload.length > 0) {
-            this.atmCreate.objectId = res.recID;
+            this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
-            res.files = [...this.listFileUpload];
-            this.atmCreate.saveFiles();
+            result.files = [...this.listFileUpload];
+            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
+              if(res){
+                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+                this.notifySvr.notifyCode('WP014');
+                this.dialogRef.close();
+              }
+              else
+              {
+                this.notifySvr.notifyCode('WP013');
+                return;
+              }
+            });
           }
-          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
-          this.notifySvr.notifyCode('E0026');
-          this.dialogRef.close();
+          else
+          {
+            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+            this.notifySvr.notifyCode('WP014');
+            this.dialogRef.close();
+          }
         }
-
+        else
+        {
+          this.notifySvr.notifyCode('WP013');
+          return;
+        }
       });
   }
 
@@ -459,32 +474,48 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dataEdit.shareText = this.shareText;
     this.dataEdit.permissions = this.permissions;
     this.dataEdit.shareName = this.shareWith;
-    this.api
-      .execSv<any>(
+    if (this.listFileUpload.length > 0) {
+      this.atmEdit.objectId = this.dataEdit.recID;
+      this.dmSV.fileUploadList = this.listFileUpload;
+      this.atmEdit.saveFilesObservable().subscribe((res:any) => {
+        if(!res)
+        {
+          this.notifySvr.notifyCode('WP013');
+          return;
+        }
+      });
+    }
+    if (this.codxFileEdit.filesDelete.length > 0) {
+      let filesDeleted = this.codxFileEdit.filesDelete;
+      filesDeleted.forEach((f: any) => {
+        this.deleteFile(f.recID, true);
+      });
+      // this.deleteFiles(filesDeleted).subscribe((res) => {
+      //   if(res){
+      //     isSuccess++;
+      //   }
+      // })
+    }
+    this.api.execSv<any>(
         'WP',
         'ERM.Business.WP',
         'CommentsBusiness',
         'EditPostAsync',
         [this.dataEdit]
-      )
-      .subscribe((res: any) => {
+      ).subscribe((res: any) => {
         if (res) {
-          if (this.listFileUpload.length > 0) {
-            this.atmEdit.objectId = this.dataEdit.recID;
-            this.dmSV.fileUploadList = this.listFileUpload;
-            this.atmEdit.saveFiles();
-          }
-          if (this.codxFileEdit.filesDelete.length > 0) {
-            this.codxFileEdit.filesDelete.forEach((f: any) => {
-              this.deleteFile(f.recID, true);
-            });
-          }
-          res.files = this.codxFileEdit.getFiles();
-          (this.dialogRef.dataService as CRUDService).update(res).subscribe();
-          this.notifySvr.notifyCode('E0026');
+          this.dataEdit = res;
+          this.dataEdit.files = this.codxFileEdit.getFiles();
+          (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
           this.dialogRef.close();
+          this.notifySvr.notifyCode('WP016');
+        }
+        else {
+          this.notifySvr.notifyCode('WP013');
+          return;
         }
       });
+        
   }
 
 
@@ -501,57 +532,23 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.refID = this.dataShare.recID;
     post.refType = this.entityName;
     post.shares = this.dataShare;
-    var lstPermissions: Permission[] = [];
-    lstPermissions.push(this.myPermission);
-    lstPermissions.push(this.adminPermission);
-    if (this.lstRecevier.length > 0) {
-      this.lstRecevier.forEach((item) => {
-        var per = new Permission();
-        switch (this.objectType) {
-          case this.SHARECONTROLS.USER:
-            per.objectID = item.UserID;
-            per.objectName = item.UserName;
-            break;
-          case this.SHARECONTROLS.POSITIONS:
-            per.objectID = item.PositionID;
-            per.objectName = item.PositionName;
-            break
-          case this.SHARECONTROLS.DEPARMENTS:
-            per.objectID = item.OrgUnitID;
-            per.objectName = item.OrgUnitName;
-            break;
-          case this.SHARECONTROLS.GROUPS:
-            per.objectID = item.UserID;
-            per.objectName = item.UserName;
-            break;
-          case this.SHARECONTROLS.ROLES:
-            per.objectID = item.RoleID;
-            per.objectName = item.RoleName;
-            break
-        }
-        per.memberType = this.MEMBERTYPE.TAGS;
-        per.objectType = this.objectType;
-        per.read = true;
-        per.isActive = true;
-        per.createdBy = this.user.userID;
-        per.createdOn = new Date();
-        post.permissions.push(per);
-      });
-    }
-    post.permissions = lstPermissions;
-    // upload file
-    if (this.listFileUpload.length > 0) {
-      post.isUpload = true;
-      post.files = this.listFileUpload;
-    }
+    post.permissions = this.permissions;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((res: any) => {
         if (res) {
-          (this.dialogRef.dataService as CRUDService).add(post, 0).subscribe();
-          this.dialogRef.close();
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
-            this.atmCreate.saveFiles();
+            this.atmCreate.saveFilesObservable().subscribe((res2:any) => {
+              if(res2) {
+                this.notifySvr.notifyCode('WP014');
+              }
+              else this.notifySvr.notifyCode('WP013');
+            });
+          }
+          else{
+            (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
+            this.dialogRef.close();
+            this.notifySvr.notifyCode("WP014");
           }
         }
       });
@@ -612,6 +609,24 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         "DeleteFileAsync",
         [fileID, deleted]).subscribe();
     }
+  }
+  deleteFiles(files: any[]) :  Observable<Boolean> {
+    let isSuccess = true;
+    files.forEach((f:any) => {
+      if (f) {
+        this.api.execSv(
+          "DM",
+          "ERM.Business.DM",
+          "FileBussiness",
+          "DeleteFileAsync",
+          [f.recID, true]).subscribe((res:boolean) => {
+            if(!res){
+              isSuccess = false;
+            }
+          });
+      }
+    });
+    return of(isSuccess);
   }
   addFile(files: any) {
     if (this.listFileUpload.length == 0) {

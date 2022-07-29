@@ -30,14 +30,16 @@ export class NewsComponent implements OnInit {
   lstVideo:any[] = [];
   lstGroup:any[] = []
   userPermission: any;
-  isAllowNavigationArrows = true;
+  isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
-  countCarousel = 3;
+  silderNumber = 3;
+  category:string = "home";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
   }
   CATEGORY = {
+    HOME: "home",
     COMPANYINFO:"0",
     EVENTS: "1",
     INTERNAL: "2",
@@ -79,8 +81,8 @@ export class NewsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.funcID = this.route.snapshot.params["funcID"];
-      var category = params["category"];
-      this.loadDataAync(this.funcID,category);
+      this.category = params["category"];
+      this.loadDataAync(this.funcID,this.category);
       this.changedt.detectChanges();
     })
   }
@@ -90,10 +92,20 @@ export class NewsComponent implements OnInit {
     .subscribe((res:any[]) => 
     {
       if(res){
-        this.lstHotNew = res[0]; // tin mới nhất
-        this.lstVideo = res[1]; // video
-        this.lstGroup = res[2]; // tin cũ hơn
-        this.listSlider = this.lstVideo.splice(0,3);
+        this.lstHotNew = [...res[0]]; // tin mới nhất
+        this.lstVideo = [...res[1]]; // video
+        this.lstGroup = [...res[2]]; // tin cũ hơn
+        if (res[1].length <= this.silderNumber) {
+          this.carousel?.pause();
+          this.listSlider = [...this.lstVideo];
+        }
+        else
+        {
+          this.isAllowNavigationArrows = true;
+          this.carousel?.cycle();
+          this.listSlider.push(res[1].splice(0, 3));
+          this.listSlider.push(res[1]);
+        }
         this.changedt.detectChanges();
       }
     });
