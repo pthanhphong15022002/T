@@ -18,12 +18,50 @@ ul.navi li {
 .dropzone.dropzone-default {
     padding: 20px;
     text-align: center;
-    cursor: pointer;
-    // border: 2px dashed #EBEDF3;
-    border: 1.5px dashed #1BC5BD;
+    cursor: pointer; 
+    border:0.5px dashed #6C757D;
     border-radius: 0.42rem;
-    height: 240px;
+    height: 200px;
+    background: #F5F8FA;
 }
 .dropzone.dropzone-default.dropzone-primary {
     border-color: #3699FF;
 }
+.dropzone-msg-title{  
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* Text/Muted */
+    color: #6C757D;
+}
+.dropzone-msg-desc{   
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* Text/Muted */
+    color: #6C757D;
+}
+.e-upload {
+    border: 0px dashed #adb5bd;
+}
+.e-btn, .e-css.e-btn {
+    color: #FFFFFF;
+    border-color: #3699ff;
+    background-color: #3699ff;    
+  }
+  .e-btn:hover, .e-css.e-btn:hover{
+    color: #FFFFFF;
+  border-color: #187DE4;
+  background-color: #187DE4 !important;
+  }
+  .e-btn:focus, .e-css.e-btn:focus{
+    color: #FFFFFF;
+    border-color: #187DE4;
+    background-color: #187DE4 !important;
+  }
