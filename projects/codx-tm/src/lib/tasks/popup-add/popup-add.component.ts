@@ -144,7 +144,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    } 
+    }
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
@@ -225,7 +225,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetByModuleWithCategoryAsync',
+        'GetParameterByModuleWithCategoryAsync',
         ['TM_Parameters', '1']
       )
       .subscribe((res) => {
@@ -399,7 +399,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM012');
       return;
     }
-    if(this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)){
+    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
       this.notiService.notifyCode('TM012');
       return;
     }
@@ -668,8 +668,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  cbxChange(data) {  
-    if (data.data && data.data!="") {
+  cbxChange(data) {
+    if (data.data && data.data != "") {
       this.task[data.field] = data.data;
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
@@ -746,7 +746,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res ;
+          this.param = res;
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;

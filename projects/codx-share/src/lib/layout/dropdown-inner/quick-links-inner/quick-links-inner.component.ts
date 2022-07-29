@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { CodxService } from 'codx-core';
 
 @Component({
@@ -8,6 +8,8 @@ import { CodxService } from 'codx-core';
 export class QuickLinksInnerComponent {
   @HostBinding('class') class = 'd-flex align-items-center';
   // @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
-
+  @Input() buttonMarginClass: any;
+  @Input() buttonIconClass: any;
+  @Input() buttonHeightClass: any;
   constructor(public codxService: CodxService) { }
 }

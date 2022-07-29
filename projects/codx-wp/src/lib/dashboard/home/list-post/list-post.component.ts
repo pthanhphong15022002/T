@@ -136,12 +136,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   removePost(data: any) {
     (this.listview.dataService as CRUDService).delete([data],true,(op:any)=>this.beforDelete(op,data)).subscribe((res) => {
       if (res) {
+        if(data.files){
           this.api.execSv("DM",
           "ERM.Business.DM",
           "FileBussiness",
           "DeleteByObjectIDAsync",
           [data.recID, 'WP_Comments', true]
         ).subscribe();
+        }
       }
     });
 
