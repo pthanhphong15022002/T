@@ -157,14 +157,12 @@ export class ApprovalComponent extends UIComponent {
       fileQRCode: qr,
     });
 
-    console.log('recID', this.recID);
     this.esService
-
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
         console.log(res);
+        let sf = res.result?.signFile;
 
-        let sf = res.result.signFile;
         if (sf) {
           if (!this.isApprover) {
             sf.files.forEach((file) => {
@@ -182,6 +180,9 @@ export class ApprovalComponent extends UIComponent {
 
         this.df.detectChanges();
       });
+    this.esService.getSignFormat().subscribe((res) => {
+      console.log('format', res);
+    });
   }
   ngDoCheck() {
     let addToDBQueueChange = this.saveToDBQueueChange.diff(

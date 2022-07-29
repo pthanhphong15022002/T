@@ -9,7 +9,6 @@ import { Component, OnInit, ChangeDetectorRef, TemplateRef, ViewChild } from '@a
   styleUrls: ['./personals.component.scss']
 })
 export class PersonalsComponent implements OnInit {
-  @ViewChild('view') view: ViewsComponent;
   formName: any;
   gridViewName: any;
   employeeInfo: any;
@@ -18,7 +17,6 @@ export class PersonalsComponent implements OnInit {
   icon: any;
   funcID = "";
   default = true;
-  views = [];
   showHeader: boolean = true;
   moreFunc: any[] = [
     { functionID: `MWP0091`, description: "Bài viết", smallIcon: "mwp_post" },
@@ -52,16 +50,16 @@ export class PersonalsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-        },
-      },
-    ]
+    // this.views = [
+    //   {
+    //     type: ViewType.content,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       panelLeftRef: this.panelLeftRef,
+    //     },
+    //   },
+    // ]
     this.changedt.detectChanges(); 
   }
 
