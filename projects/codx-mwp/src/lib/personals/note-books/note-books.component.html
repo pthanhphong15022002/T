@@ -22,20 +22,20 @@
             </div>
         </div>
     </div>
-    <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
-        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks" funcId="MWP0094"
-        service="WP">
-    </codx-listview>
+    <div class="scroll-y">
+        <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
+            [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks"
+            funcId="MWP0094" service="WP">
+        </codx-listview>
+    </div>
 </div>
 
 <ng-template #templateListCard let-item>
-    <div class="pw-listcard">
-        <div class="pw-card delay-500" (click)="openDetailPage(item)">
-            <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
-                imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
-                [imgOn]="item?.modifiedOn" [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'"
-                [formModel]="listView.formModel" [dataItem]="item">
-            </codx-card-img>
-        </div>
+    <div (click)="openDetailPage(item)">
+        <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
+            imgCss="h-100px" icoTitleCss="icon-assignment icon-16" [title]="item.title" [imgOn]="item?.modifiedOn"
+            [desc2]="item.memo" imageWidth="150" [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel"
+            [dataItem]="item">
+        </codx-card-img>
     </div>
 </ng-template>

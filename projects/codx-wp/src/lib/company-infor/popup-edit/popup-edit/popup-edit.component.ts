@@ -80,7 +80,6 @@ export class PopupEditComponent implements OnInit {
     this.dataOld = dialog.data
     this.dataNew.contents = this.dataOld.contents;
     this.user = this.auth.userValue;
-    this.dt.detectChanges();
   }
 
   ngOnInit(): void {
@@ -135,7 +134,7 @@ export class PopupEditComponent implements OnInit {
         if(res)
         {
           this.dataOld = res;
-          this.dialogRef.close();
+          this.dialogRef.close(res);
           this.dt.detectChanges();
           this.notifySvr.notifyCode('E0026');
         }
