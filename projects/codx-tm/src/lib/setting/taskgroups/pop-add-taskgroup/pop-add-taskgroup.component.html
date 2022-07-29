@@ -5,7 +5,7 @@
 <ng-template #tabDescip>
   <div class="form-group">
     <div class="form-group mt-3">
-      <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Mã nhóm công việc">
+      <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
       </codx-label>
       <codx-input field="taskGroupID" [attr.disabled]="!data?.isNew() ? '' : null" type="text"
         [crrValue]="taskGroups.taskGroupID">
@@ -13,14 +13,14 @@
 
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="TaskGroupName" [formModel]="form.formModel" default="Nhóm công việc">
+      <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
       </codx-label>
       <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text" loadFull="true"
         [crrValue]="taskGroups.taskGroupName" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="Note" [formModel]="form.formModel" default="Ghi chú">
+      <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
       </codx-label>
 
       <codx-input type="textarea" field="note" [crrValue]="taskGroups.note" class="form-control"

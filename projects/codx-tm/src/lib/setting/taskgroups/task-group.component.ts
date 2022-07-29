@@ -98,7 +98,7 @@ export class TaskGroupComponent implements OnInit {
       case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -168,7 +168,7 @@ export class TaskGroupComponent implements OnInit {
       case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -197,11 +197,13 @@ export class TaskGroupComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, 'add', option);
+      this.dialog.closed.subscribe((x) => {
 
+      });
     });
   }
 
