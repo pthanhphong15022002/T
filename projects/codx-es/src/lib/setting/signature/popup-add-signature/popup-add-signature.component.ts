@@ -10,6 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   AuthService,
@@ -57,51 +58,29 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   subHeaderText = 'Tạo & upload file văn bản';
 
   constructor(
-    private api: ApiHttpService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notification: NotificationsService,
     private cfService: CallFuncService,
     private codxService: CodxService,
-    private readonly auth: AuthService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.dialog = dialog;
     this.data = data?.data[0];
     this.isAdd = data?.data[1];
     this.formModel = this.dialog.formModel;
-    console.log(this.data);
     if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
   }
 
-  initForm() {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.dialogSignature = item;
-        this.dialogSignature.patchValue({
-          signatureType: '1',
-          supplier: '1',
-          oTPControl: '0',
-          spanTime: 0,
-          stop: false,
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
+        this.dialog.closed.subscribe((res: any) => {
+          this.dialog.dataService.saveFailed.next(null);
         });
-        if (!this.isAdd) {
-          this.dialogSignature.patchValue(this.data);
-          this.dialogSignature.addControl(
-            'recID',
-            new FormControl(this.data.recID)
-          );
-        }
-        this.isAfterRender = true;
-        this.Signature1 = null;
-        this.Signature2 = null;
-        this.Stamp = null;
-
-        console.log(this.dialogSignature);
-      });
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -124,44 +103,40 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit(): void {
-    if (this.dialog) {
-      if (!this.isSaveSuccess) {
-        this.dialog.closed.subscribe((res: any) => {
-          this.dialog.dataService.saveFailed.next(null);
+  initForm() {
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        this.dialogSignature = item;
+        this.dialogSignature.patchValue({
+          signatureType: '1',
+          supplier: '1',
+          oTPControl: '0',
+          spanTime: 0,
+          stop: false,
         });
-      }
-    }
-  }
+        this.dialogSignature.addControl('id', new FormControl(this.data?.id));
+        if (!this.isAdd) {
+          this.dialogSignature.patchValue(this.data);
+          this.dialogSignature.addControl(
+            'recID',
+            new FormControl(this.data?.recID)
+          );
 
-  beforeSave(option: any) {
-    debugger;
-    let itemData = this.dialogSignature.value;
-    if (this.isAdd) {
-      option.method = 'AddNewAsync';
-    } else {
-      option.method = 'EditAsync';
-    }
-
-    option.data = [itemData, this.isAdd];
-    return true;
-  }
-
-  onSaveForm() {
-    if (this.dialogSignature.invalid == true) {
-      this.notification.notifyCode('E0016');
-      return;
-    }
-
-    this.data = this.dialogSignature.value;
-
-    this.dialog.dataService.dataSelected = this.data;
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res) {
-          console.log(res);
+          console.log(this.dialogSignature.value);
+        } else {
+          this.dialogSignature.addControl(
+            'recID',
+            new FormControl(this.data?.recID)
+          );
+          console.log(this.dialogSignature.value);
         }
+        this.isAfterRender = true;
+        this.Signature1 = null;
+        this.Signature2 = null;
+        this.Stamp = null;
+
+        console.log(this.dialogSignature);
       });
   }
 
@@ -180,15 +155,41 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
+  beforeSave(option: any) {
+    let itemData = this.dialogSignature.value;
+    if (this.isAdd) {
+      option.method = 'AddNewAsync';
+    } else {
+      option.method = 'EditAsync';
+    }
+
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
+
+  onSaveForm() {
+    if (this.dialogSignature.invalid == true) {
+      this.notification.notifyCode('E0016');
+      return;
+    }
+
+    console.log(this.dialogSignature.value);
+
+    this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        if (res.update || res.save) {
+          this.isSaveSuccess = true;
+          console.log(res);
+        }
+      });
+  }
+
   onSavePopup() {
     if (this.content) {
       this.attachment.onMultiFileSave();
     }
-  }
-
-  closeForm(data) {
-    this.initForm();
-    this.closeSidebar.emit(data);
   }
 
   openPopup(content) {

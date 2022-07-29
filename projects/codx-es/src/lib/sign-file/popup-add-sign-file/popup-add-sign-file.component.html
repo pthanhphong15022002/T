@@ -67,10 +67,10 @@
         <i class="icon-close icon-18" (click)="close(templateClose)"></i>
       </div>
     </div>
-    <div class="stepper-body p-6 w-100">
+    <div class="stepper-body p-6 w-100" *ngIf="currentTab < 3">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-900px h-100">
-        <div class="card-body p-0">
-          <div class="tab-content p-10">
+        <div class="card-body px-6 px-lg-10 py-6 py-lg-10 overflow-auto">
+          <div class="tab-content py-5">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
               <div class="mb-10 text-center">
                 <h2 class="h2-title">
@@ -169,13 +169,12 @@
               </app-approval-steps>
             </div>
             <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 3 ? 'active show' : ''">
-              <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID" *ngIf="
-                  dialogSignFile.value.files?.length > 0 && currentTab == 3
-                "></lib-approval>
+
             </div>
           </div>
         </div>
-        <div class="d-flex justify-content-between card-footer border-0 p-10 pt-0">
+
+        <div class="d-flex justify-content-between card-footer border-0 px-6 px-lg-10 pt-0 pb-6 pb-lg-10">
           <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
             (click)="openPopup(processTemplate)">
             <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
@@ -188,12 +187,14 @@
         </div>
       </div>
     </div>
+    <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID"
+      *ngIf="dialogSignFile.value.files?.length > 0 && currentTab == 3"></lib-approval>
   </div>
 </div>
 
 <ng-template #footer> </ng-template>
 
-<ng-template #processTemplate let-dialog1>
+<ng-template #processTemplate let-dialogTemplate>
   <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
@@ -205,7 +206,7 @@
         </div>
         <div class="card-toolbar">
           <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeDialogTmp(dialog1)">
+            (click)="closeDialogTmp(dialogTemplate)">
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -223,7 +224,7 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a class="btn btn-primary" (click)="onSaveProcessID(dialog1)">
+        <a class="btn btn-primary" (click)="onSaveProcessID(dialogTemplate)">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>

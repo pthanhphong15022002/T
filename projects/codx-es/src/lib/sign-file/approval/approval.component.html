@@ -97,7 +97,7 @@
                 <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
                   (change)="changeSigner($event)"></ejs-dropdownlist>
                 <!-- <codx-input
-                  class="form-control mr-2"
+                  class="form-control me-2"
                   type="valuelist"
                   field="vllOrganize"
                   refValue="ES015"
@@ -132,6 +132,10 @@
                 <codx-label name="lblSignEndPage" default="Ký cuối trang" class="ms-1 fw-bold"></codx-label>
                 <codx-input type="switch" field="autoSignEndPage" [crrValue]="autoSignState"
                   (valueChange)="changeAutoSignState($event, 1)"></codx-input>
+              </div>
+              <div class="buttons w-50 d-flex flex-column justify-content-between">
+                <button (click)="show($event)">Show</button>
+                <button (click)="testFunc($event)">Test Func</button>
               </div>
 
             </ng-template>

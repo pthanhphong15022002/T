@@ -9,12 +9,12 @@
             <div class="container">
                 <div class="d-flex mb-3 mt-2">
                     <div class="aside-detail flex-row-auto w-300px">
-                        <div class="aside-menu mr-6">
+                        <div class="aside-menu me-6">
                             <ul class="menu-nav">
                                 <li class="menu-item" [class.menu-item-active]="currentActive == 1">
                                     <a class="menu-link d-flex align-items-center" (click)="scroll(itemCategory,1)"
                                         [attr.data-fid]="'HR0121'">
-                                        <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                                        <i class="icon-format_list_bulleted icon-20 me-2"></i>
                                         <codx-label name="lblCategory" default="Danh mục"></codx-label>
                                     </a>
                                 </li>
@@ -29,7 +29,7 @@
                             <div class="list-content" *ngFor="let item of func['HRS02']">
                                 <div class="d-flex align-items-top list-item" style="cursor: pointer;"
                                     (click)="codxService.navigate(item.functionID)" routerLinkActive="active"> 
-                                    <span class="icon-settings icon-20 mr-3"></span>
+                                    <span class="icon-settings icon-20 me-3"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="font-weight-bold text-dark mb-2">
                                             {{item.customName}}</div>

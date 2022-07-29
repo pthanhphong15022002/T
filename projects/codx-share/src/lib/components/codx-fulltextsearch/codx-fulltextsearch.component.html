@@ -1,50 +1,66 @@
-<div class="home-container bg-white p-5">
-  <div class="my-5  d-flex justify-content-center">
-    <codx-searchbar  (searchEvent)="searchText($event)" style="width:500px"></codx-searchbar>
+<div class="h-100 d-flex">
+  <div class="d-flex flex-column bg-white p-5 me-5 rounded" [style.width.px]="widthLeft">
+    <ng-container *ngIf="gridViewSetup">
+      <div *ngFor="let item of dataGroup" class="my-2">
+          <codx-label [default]="item.headerText" class="fw-bold"></codx-label>
+          <ng-container [ngSwitch]="item?.dataType">
+            <ng-container *ngSwitchCase="'String'">
+              <div class="my-2"><codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input></div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Bool'">
+              <div class="my-2"><codx-input type="switch" (valueChange)="changeValueText(item?.view , $event)"></codx-input></div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'DateTime'">
+              <div class="my-2">
+                <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100" (change)="changeValueDate(item?.view , $event)"></codx-dropdown-calendar>
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Int'">
+              <div class="my-2"><codx-input type="number" (valueChange)="changeValueText(item?.view , $event)"></codx-input></div>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="item?.data">
+            <ng-container *ngFor="let item2 of item?.data">
+              <div class="my-2"><codx-input type="checkbox" [label]="item2?.name" (valueChange)="changeValueCbb(item2?.id, item2?.view , $event)"></codx-input></div>
+            </ng-container>
+          </ng-container>
+      </div>
+    </ng-container>
   </div>
-  <div class="d-flex">
-    <div class="px-5" [style.width.px]="widthLeft">
-      <ng-container *ngIf="gridViewSetup">
-        <div *ngFor="let item of dataGroup" class="my-2">
-            <codx-label [default]="item.headerText" class="fw-bolder"></codx-label>
-            <ng-container [ngSwitch]="item?.dataType">
-              <ng-container *ngSwitchCase="'String'">
-                <div class="my-2"><codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input></div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'Bool'">
-                <div class="my-2"><codx-input type="switch" ></codx-input></div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'DateTime'">
-                <div class="my-2">
-                  <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100" (change)="aaa($event)"></codx-dropdown-calendar>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'Int'">
-                <div class="my-2"><codx-input type="number" ></codx-input></div>
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="item?.data">
-              <ng-container *ngFor="let item2 of item?.data">
-                <div class="my-2"><codx-input type="checkbox" [label]="item2?.name" (valueChange)="changeValueCbb(item2?.id, item2?.view , $event)"></codx-input></div>
-              </ng-container>
-            </ng-container>
-        </div>
-      </ng-container>
-    </div>
-    <div class="px-5" class="w-100">
+  <div class="d-flex bg-white w-100 rounded p-5">
+    <div class="d-flex flex-column justify-content-start w-100">
+      <div class="d-flex justify-content-center py-2 w-100">
+        <codx-searchbar  (searchEvent)="searchText($event)" class="text" style="width:300px" ></codx-searchbar>
+      </div>
       <div class="py-2">
         <span class="fs-6 text-muted">Khoảng {{count}} kết quả được tìm thấy</span>
       </div>
-      <ng-container *ngIf="searchData && searchData[0]">
-        <ng-container *ngFor="let data of searchData[0]">
-          <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
-            <!-- [icoDateCss]="'icon-access_alarm'" -->
-            <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
+      <div class="overflow-auto pe-5 h-searchtmp"  >
+        <ng-container *ngIf="searchData && searchData[0]">
+          <ng-container *ngFor="let data of searchData[0]">
+            <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
+              <!-- [icoDateCss]="'icon-access_alarm'" -->
+              <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
+          </ng-container>
         </ng-container>
-    </ng-container>
+      </div>
+      <div *ngIf="!hideN" class="py-3">
+        <ul class="pagination">
+          <li class="paginate_button cursor-pointer page-item previous" [class.disabled]="activePage == 1" id="kt_ecommerce_products_table_previous" (click)="previewPage()">
+            <a aria-controls="kt_ecommerce_products_table" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a>
+          </li>
+          <ng-container *ngFor="let item of arrayPaging">
+            <li class="paginate_button cursor-pointer page-item"  [class.active]="activePage==item" (click)="changePage(item)">
+              <a aria-controls="kt_ecommerce_products_table" data-dt-idx="1" tabindex="0" class="page-link">{{item}}</a>
+            </li>
+          </ng-container>
+          <li class="paginate_button cursor-pointer page-item next" [class.disabled]="activePage == pageTotal" id="kt_ecommerce_products_table_next" (click)="nextPage()">
+            <a aria-controls="kt_ecommerce_products_table" data-dt-idx="6" tabindex="0" class="page-link"><i class="next"></i></a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="px-5" [style.width.px]="widthRight">
-      <ng-container *ngTemplateOutlet="rightTmp "></ng-container>
+    <div [style.width.px]="widthRight">
     </div>
   </div>
 </div>

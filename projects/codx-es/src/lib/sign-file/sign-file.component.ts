@@ -97,6 +97,7 @@ export class SignFileComponent implements OnInit {
         },
       },
     ];
+    this.df.detectChanges();
   }
 
   clickChangeTaskViewStatus(stt) {

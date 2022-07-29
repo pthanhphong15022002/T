@@ -42,8 +42,8 @@ import { M, T } from '@angular/cdk/keycodes';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID;
-  @Input() isApprover = false;
+  @Input() recID = '8a001e01-0d9f-11ed-977b-509a4c39550b';
+  @Input() isApprover = true;
   isActiveToSign: boolean = false;
 
   @Output() canSend = new EventEmitter<any>();
@@ -160,29 +160,26 @@ export class ApprovalComponent extends UIComponent {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
-        console.log(res);
-        let sf = res.result?.signFile;
+        let sf = res?.signFile;
 
         if (sf) {
-          if (!this.isApprover) {
-            sf.files.forEach((file) => {
-              this.lstFiles.push({
-                fileName: file.fileName,
-                fileRefNum: sf.refNo,
-                fileID: file.fileID,
-                signers: res.result.approvers,
-              });
+          sf.files.forEach((file) => {
+            this.lstFiles.push({
+              fileName: file.fileName,
+              fileRefNum: sf.refNo,
+              fileID: file.fileID,
+              signers: res?.approvers,
             });
-          } else {
-            this.signerInfo = res.result?.approvers[0];
+          });
+          if (this.isApprover) {
+            this.signerInfo = res?.approvers;
           }
         }
-
         this.df.detectChanges();
       });
-    this.esService.getSignFormat().subscribe((res) => {
-      console.log('format', res);
-    });
+    // this.esService.getSignFormat().subscribe((res) => {
+    //   console.log('format', res);
+    // });
   }
   ngDoCheck() {
     let addToDBQueueChange = this.saveToDBQueueChange.diff(
@@ -825,7 +822,7 @@ export class ApprovalComponent extends UIComponent {
       });
 
     if (!signed) {
-      if ([1, 2, 8].includes(type)) {
+      if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
           customStampImageSource: this.url,
@@ -833,6 +830,15 @@ export class ApprovalComponent extends UIComponent {
         this.pdfviewerControl.customStamp = [stamp];
       } else {
         switch (type) {
+          case 1:
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.signerInfo.authorName + 'chưa có chữ ký';
+            break;
+          case 2:
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.signerInfo.authorName + 'chưa có con dấu';
+
+            break;
           case 3:
             this.pdfviewerControl.freeTextSettings.defaultText =
               'Tên đầy đủ: ' + this.signerInfo.authorName;
@@ -851,7 +857,11 @@ export class ApprovalComponent extends UIComponent {
             this.pdfviewerControl.freeTextSettings.defaultText =
               'Số văn bản: ' + this.fileInfo.fileRefNum;
             break;
+          case 8:
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.signerInfo.authorName + 'QR Code';
 
+            break;
           default:
             this.pdfviewerControl.freeTextSettings.defaultText = 'Ghi chú';
             break;
