@@ -1,15 +1,16 @@
-<codx-form [body]="body" [footer]="footer" [dialog]="dialogRef" >
+<codx-form [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
-        <div class="P-9">
-            <codx-input 
-            type="textarea" 
-            class="test-textarea" 
-            field="textarea" 
-            [crrValue]="dataNew.contents"
-            (valueChange)="valueChange($event)"
-            ngDefaultControl
-            >
-            </codx-input>
+        <div class="container">
+            <div class="row">
+                <codx-input 
+                    type="textarea" 
+                    class="test-textarea" 
+                    field="textarea" 
+                    [crrValue]="dataNew.contents"
+                    (valueChange)="valueChange($event)"
+                    ngDefaultControl>
+                </codx-input>
+            </div>
         </div>
     </ng-template>
     <ng-template #footer>
