@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
 import { Resources } from '../models/CO_Meetings.model';
+import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 
 @Component({
   selector: 'lib-tmmeetings',
@@ -61,7 +62,7 @@ export class TMMeetingsComponent extends UIComponent {
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, e.data);
   }
 
   ngAfterViewInit(): void {
@@ -146,16 +147,16 @@ export class TMMeetingsComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
       case 'TMT05011':
@@ -237,6 +238,41 @@ export class TMMeetingsComponent extends UIComponent {
   }
 
   viewDetail(data){
-
+    this.view.dataService.dataSelected = data;
+    var vllControlShare = 'TM003';
+    var vllRose = 'TM001';
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '800px';
+    this.dialog = this.callfc.openSide(
+      MeetingDetailComponent,
+      [this.view.dataService.dataSelected, vllControlShare, vllRose],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
+      if (e?.event && e?.event != null) {
+        let listTask = e?.event;
+        let newTasks = [];
+        for (var i = 0; i < listTask.length; i++) {
+          if (listTask[i].taskID == data.taskID) {
+            this.view.dataService.update(listTask[i]).subscribe();
+            this.view.dataService.setDataSelected(e?.event[0]);
+          } else newTasks.push(listTask[i]);
+        }
+        if (newTasks.length > 0) {
+          this.view.dataService.data = newTasks.concat(
+            this.dialog.dataService.data
+          );
+          this.view.dataService.afterSave.next(newTasks);
+        }
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 }

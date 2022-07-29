@@ -65,7 +65,13 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    this.callc.openForm(PopupEditComponent,"",0,0,"",this.data,"",option);
+    let popup = this.callc.openForm(PopupEditComponent,"",0,0,"",this.data,"",option);
+    popup.closed.subscribe((res:any)=>{
+      if(res){
+        this.data = res.event;
+        this.changedt.detectChanges();
+      }
+    })
   }
 }
 

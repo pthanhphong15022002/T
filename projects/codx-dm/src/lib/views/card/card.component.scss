@@ -46,3 +46,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+codx-view-tree-detail .e-pane.e-static-pane + .e-pane {
+    overflow: auto !important;
+}
