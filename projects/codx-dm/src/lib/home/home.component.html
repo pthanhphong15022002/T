@@ -45,7 +45,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </ng-template>
 
 <ng-template #templateCard>
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
@@ -73,7 +73,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       displayThumb="full"
     > 
   </codx-attachment>
-  
+   -->
   <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
     <i class="icon-add"></i>
