@@ -75,7 +75,9 @@ export class ApprovalStepComponent implements OnInit {
     console.log('transID', this.transId);
   }
 
-  close() {}
+  close() {
+    this.dialog && this.dialog.close();
+  }
 
   initForm() {
     this.esService.isSetupApprovalStep.subscribe((res) => {

@@ -1,4 +1,3 @@
-import { DetailComponent } from './../../../codx-dm/src/lib/views/detail/detail.component';
 import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
@@ -30,6 +29,7 @@ import { GroupUsersComponent } from './group-users/group-users.component';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
+import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
 
 export const routes: Routes = [
   {
@@ -65,7 +65,7 @@ export const routes: Routes = [
       }
       ,{
         path: 'roledetails/:funcID',
-        component: DetailComponent,
+        component: RoleDetailComponent,
       }
 
     ]
@@ -85,6 +85,7 @@ const T_Component: Type<any>[] = [
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
+  AsideroledetailComponent,
 ];
 @NgModule({
   imports: [

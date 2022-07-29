@@ -70,14 +70,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   planholderTaskGoal = 'Add to do list…';
   listRoles: any;
   vllRole = 'TM001';
-
+  countFile = 0;
   empInfo: any = {};
   popoverList: any;
   popoverEmpInfo: any;
   listEmpInfo = [];
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
-
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -139,8 +138,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
-
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -155,8 +152,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-    if (this.functionID == 'TMT0203')
-      this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -174,6 +170,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
+      this.task.status = '10';
+      if (this.functionID == 'TMT0203') {
+        this.task.category = '3';
+      } else {
+        this.task.category = '1';
+      }
       this.titleAction = 'Copy';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
@@ -231,13 +233,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       });
   }
 
-  changeMemo(event: any) {
-    if (event.field) {
-      this.task[event.field] = event?.data ? event?.data : '';
-    }
-    this.changeDetectorRef.detectChanges;
-  }
-
+  //#region To Do List
   onAddToDo(evt: any) {
     if (!this.todoAddText || this.todoAddText.trim() == '') {
       this.todoAddText = '';
@@ -294,6 +290,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           : this.STATUS_TASK_GOAL.Checked;
     }
   }
+  //#endregion
 
   openTask(): void {
     this.task.estimated = 0;
@@ -388,6 +385,38 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM011');
       return;
     }
+    if (this.param?.ProjectControl == '2' && !this.task.projectID) {
+      this.notiService.notifyCode('TM012');
+      return;
+    }
+    if (
+      this.param?.LocationCotrol == '2' &&
+      (!this.task.location || this.task.location.trim() != '')
+    ) {
+      this.notiService.notifyCode('TM012');
+      return;
+    }
+    // if(this.param?.PlanControl == "2" && (!this.task.location || this.task.location.trim() !="" )){
+    //   this.notiService.notifyCode('TM012');
+    //   return;
+    // }
+    if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
+      // this.notiService.notifyCode('TM012');
+      this.notiService.notify(
+        'Ngày hết hạn không được phép nhỏ hơn ngày hiện hành !'
+      );
+      return;
+    }
+    if (this.task.taskGroupID) {
+      if (this.param?.checkListControl != '0' && this.listTodo.length == 0) {
+        this.notiService.notify('Danh sách việc cần làm không được để trống');
+        return;
+      }
+      // if (this.param?.attachmentControl == '1' && this.countFile == 0) {
+      //   this.notiService.notify('File tài liệu không được để trống');
+      //   return;
+      // }
+    }
 
     this.checkLogicTime();
     if (!this.isCheckTime) {
@@ -412,27 +441,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    if (this.task.taskGroupID) {
-      this.checkLogicWithTaskGroup();
-      var checkLogic =
-        this.isCheckProjectTrue &&
-        this.isCheckCheckListTrue &&
-        this.isCheckAttachmentTrue;
-
-      if (!checkLogic) {
-        if (!this.isCheckAttachmentTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('File tài liệu không được để trống');
-        if (!this.isCheckProjectTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('Dự án không được để trống');
-        if (!this.isCheckCheckListTrue)
-          //  this.notiService.notifyCode('code nao vao day ??');
-          this.notiService.notify('Danh sách việc cần làm không được để trống');
-        return;
-      }
-    }
-
     this.task.taskType = this.param['TaskType'];
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
@@ -495,26 +503,30 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.dataService
             .save((option: any) => this.beforeSave(option))
             .subscribe((res) => {
+              this.dialog.dataService.addDatas.clear();
               if (res.update) {
                 this.dialog.close(res.update);
               }
             });
-        } else { this.dialog.close() }
+        } else {
+          this.dialog.close();
+        }
       });
     } else {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           if (res.update) {
+            this.dialog.dataService.addDatas.clear();
             this.dialog.close(res.update);
           }
         });
     }
   }
 
-  openInputMemo2() {
-    this.openMemo2 = !this.openMemo2;
-  }
+  // openInputMemo2() {
+  //   this.openMemo2 = !this.openMemo2;
+  // }
 
   eventApply(e: any) {
     var assignTo = '';
@@ -661,10 +673,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (data.field === 'taskGroupID') {
         this.logicTaskGroup(data.data);
       }
-      return
+      return;
     }
-    if (data.field == "taskGroupID") {
-      this.param = this.paramModule
+    if (data.field == 'taskGroupID') {
+      this.param = this.paramModule;
     }
   }
 
@@ -686,6 +698,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.isCheckTime = true;
     }
   }
+
   checkLogicWithTaskGroup() {
     if (this.isCheckCheckListControl) {
       this.isCheckCheckListTrue =
@@ -716,10 +729,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = res;
-          // if (this.param?.ProjectControl != '0')
-          this.isCheckProjectControl = res.projectControl != '0';
-          this.isCheckAttachmentControl = res.attachmentControl != '0';
-          this.isCheckCheckListControl = res.checkListControl != '0';
+          // this.isCheckProjectControl = res.projectControl != '0';
+          // this.isCheckAttachmentControl = res.attachmentControl != '0';
+          // this.isCheckCheckListControl = res.checkListControl != '0';
         }
       });
   }
@@ -787,8 +799,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteUser(item) {
-    if (item?.status && item.status != "00" && item.status != "10") {
-      this.notiService.notifyCode("TM012")
+    if (item?.status && item.status != '00' && item.status != '10') {
+      this.notiService.notifyCode('TM012');
       return;
     }
     var userID = item.resourceID;
@@ -820,7 +832,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else this.task.assignTo = '';
   }
 
-
+  changeMemo(event: any) {
+    if (event.field) {
+      this.task[event.field] = event?.data ? event?.data : '';
+    }
+    this.changeDetectorRef.detectChanges;
+  }
   changeMemo2(e, id) {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);

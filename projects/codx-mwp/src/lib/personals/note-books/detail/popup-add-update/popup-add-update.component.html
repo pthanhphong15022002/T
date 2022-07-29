@@ -20,10 +20,13 @@
                         </div>
                     </div>
                 </div>
-                <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
-                    hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="functionList.funcID" [objectId]="note?.recID"
-                    [allowMultiFile]="1" [idBrowse]="'add'" (fileAdded)="fileAdded($event)">
-                </codx-attachment>
+                <div class="file">
+                    <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
+                        hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="1"
+                        [functionID]="functionList.funcID" [objectId]="note?.recID" [allowMultiFile]="1"
+                        [idBrowse]="'add'" (fileAdded)="fileAdded($event)">
+                    </codx-attachment>
+                </div>
             </div>
             <div class="col-8">
                 <codx-input type="textarea" field="memo" placeholder="" [crrValue]="note?.memo" class="test-area"

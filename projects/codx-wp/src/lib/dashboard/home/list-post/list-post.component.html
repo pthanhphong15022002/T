@@ -63,7 +63,9 @@
                         </span>
                     </span>
 
-                    <span class="ms-2 me-2" [innerHTML]="item.shareName" ></span>
+                    <ng-container *ngIf="item.shareName">
+                        <span class="ms-2 me-2" [innerHTML]="item.shareName" ></span>
+                    </ng-container>
 
                 </div>
             </div>
@@ -156,6 +158,7 @@
         <ng-template #shareTemplate>
             <div class="content">
                 <div [innerHTML]="item.content"></div>
+                
             </div>
             <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
         </ng-template>
@@ -168,11 +171,17 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
     <ng-container *ngIf="!item.isPortal;else category2">
-
         <div class="pic-feed">
-            <div class="pic-feed-img">
-                <codx-file #codxFile [objectID]="item.recID" (evtGetFiles)="getFiles($event,item)"></codx-file>
-            </div>
+            <ng-container *ngIf="item.files;else get">
+                <div>
+                    <codx-file  [lstFile]="item.files" (evtGetFiles)="getFiles($event,item)"></codx-file>
+                </div>
+            </ng-container>
+            <ng-template #get>
+                <div class="pic-feed-img">
+                    <codx-file  [objectID]="item.recID" (evtGetFiles)="getFiles($event,item)"></codx-file>
+                </div>
+            </ng-template>
         </div>
     </ng-container>
     <ng-template #category2>
@@ -266,6 +275,8 @@
     </div>
 </ng-template>
 <!-- tooltip -->
+
+
 
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content;">

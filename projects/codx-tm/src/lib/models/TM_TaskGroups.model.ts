@@ -11,7 +11,7 @@ export class TM_TaskGroups {
   locationControl: string;
   planControl: string;
   updateControl: string;
-  autoUpdateStatus: string;
+  autoCompleted: string;
   completedControl: string;
   dueDateControl: string;
   extendControl: string;

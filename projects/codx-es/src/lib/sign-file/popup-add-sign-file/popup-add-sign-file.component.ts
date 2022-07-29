@@ -188,8 +188,10 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  close() {
-    this.dialog && this.dialog.close();
+  close(dialogClose) {
+    if (this.processTab > 0) {
+      this.callfuncService.openForm(dialogClose, '', 400, 250);
+    }
   }
 
   valueChange(event) {
@@ -308,27 +310,27 @@ export class PopupAddSignFileComponent implements OnInit {
       case 3:
         break;
     }
-    if (currentTab == 1) {
-      //this.transID = '629de1080d7d066f90f975a3';
-      // this.api
-      //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
-      //     this.dialogSignFile.value,
-      //     this.isAdd,
-      //     this.transID,
-      //   ])
-      //   .subscribe((res) => {
-      //     if (res && res.msgBodyData != null) {
-      //       this.dialogSignFile.patchValue(res.msgBodyData[0]);
-      //       this.transID = res.msgBodyData[0].recID;
-      //       this.currentTab = currentTab + 1;
-      //       this.viewApprovalStep.setTransID(this.transID);
-      //       this.cr.detectChanges();
-      //     }
-      //   });
-      this.currentTab = currentTab + 1;
-    } else {
-      this.currentTab = currentTab + 1;
-    }
+    // if (currentTab == 1) {
+    //   //this.transID = '629de1080d7d066f90f975a3';
+    //   // this.api
+    //   //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
+    //   //     this.dialogSignFile.value,
+    //   //     this.isAdd,
+    //   //     this.transID,
+    //   //   ])
+    //   //   .subscribe((res) => {
+    //   //     if (res && res.msgBodyData != null) {
+    //   //       this.dialogSignFile.patchValue(res.msgBodyData[0]);
+    //   //       this.transID = res.msgBodyData[0].recID;
+    //   //       this.currentTab = currentTab + 1;
+    //   //       this.viewApprovalStep.setTransID(this.transID);
+    //   //       this.cr.detectChanges();
+    //   //     }
+    //   //   });
+    //   this.currentTab = currentTab + 1;
+    // } else {
+    //   this.currentTab = currentTab + 1;
+    // }
     this.cr.detectChanges();
   }
 
@@ -344,17 +346,19 @@ export class PopupAddSignFileComponent implements OnInit {
     this.showPlan = !this.showPlan;
   }
 
-  deleteSignFile() {
-    if (this.dialogSignFile.value.recID != null) {
-      this.api
-        .execSv(
-          'ES',
-          'ERM.Business.ES',
-          'SignFilesBusiness',
-          'DeleteSignFileAsync',
-          [this.dialogSignFile.value.recID]
-        )
+  clickIsSave(isSave, dialogClose: DialogRef) {
+    if (isSave) {
+      if (this.processTab == 1) {
+        this.onSaveForm();
+      }
+      dialogClose && dialogClose.close();
+      this.dialog && this.dialog.close();
+    } else {
+      this.esService
+        .deleteSignFile(this.dialogSignFile.value.recID)
         .subscribe((res) => {
+          console.log(res);
+
           if (res) {
           }
         });

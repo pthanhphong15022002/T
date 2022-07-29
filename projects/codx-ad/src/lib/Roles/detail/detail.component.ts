@@ -4,10 +4,12 @@ import {
   Injector,
   OnDestroy,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { NotificationsService, TenantStore, UIComponent } from "codx-core";
+import { NotificationsService, TenantStore, UIComponent, ViewType } from "codx-core";
 import { Subscription } from "rxjs";
 import { RolesService } from "../services/roles.service";
 import { TempService } from "../services/temp.service";
@@ -40,6 +42,11 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   dataPermission: any = {};
   sub: Subscription;
   funcID: any;
+  views = [];
+
+  @ViewChild('template') template: TemplateRef<any>;
+
+
   constructor(
     private tempService: TempService,
     private df: ChangeDetectorRef,
@@ -81,7 +88,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     this.roleName = this.tempService.roleName + " - " + data.nameFunction;
   }
   onInit(): void {
-    var rid = this.at.snapshot.paramMap.get("id");
+    var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
       this.recid = rid;
       this.LoadAsside();
@@ -91,7 +98,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     }
 
     this.RolesService.LoadDataPermission.subscribe((data: any) => {
-      console.log("check RolesService", data)
       if (!data) return;
       var d = data[0] || {};
 
@@ -131,8 +137,22 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       this.df.detectChanges();
     });
   }
+
+  ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.template,
+        },
+      },
+    ];
+  }
+
   LoadAsside() {
-    // $('#kt_aside_menu').empty();
+    $('#kt_aside_menu').empty();
     this.api
       .call(
         "ERM.Business.SYS",
@@ -141,6 +161,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
         [this.recid]
       )
       .subscribe((res) => {
+        console.log("check GetFunctionRoleAsync", res)
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0];
           this.myTree = data;
@@ -153,7 +174,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     this.recid;
     var formName = this.RolesService.formName;
     var gridViewName = this.RolesService.gridViewName;
-    //if (!formName) return;
     this.api
       .call("ERM.Business.AD", "RolesBusiness", "GetModelFromRolesAsync", [
         formName,
@@ -162,10 +182,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       .subscribe((res) => {
         if (res) {
           var data = res.msgBodyData[0];
-          // this.dataPermissions = data[0];
-          // this.dataAdvances = data[1];
-          // this.dataMoreFuntions = data[2];
-          // this.vll = data[3];
           this.dataBasic = data.Basic;
           this.dataMore = data.More;
           this.dataExport = data.Export;
@@ -175,7 +191,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   }
 
   reloadComponent() {
-    let currentUrl = this.router.url;
+    // let currentUrl = this.router.url;
 
     //TEMP
     // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -281,7 +297,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       .subscribe((res) => {
         t.dataFuncRole = [];
         if (res && res.msgBodyData[0]) {
-          // this.notificationsService.notify("Hệ thống thực thi thành công!");
           $('.check-per[data-id="' + funcID + '"]').addClass(
             "far fa-check-square"
           );
@@ -305,7 +320,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          // this.notificationsService.notify("Hệ thống thực thi thành công!");
           $('.check-per[data-id="' + funcID + '"]').removeClass(
             "far fa-check-square"
           );
