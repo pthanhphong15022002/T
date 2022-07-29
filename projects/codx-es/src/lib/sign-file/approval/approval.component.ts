@@ -35,6 +35,7 @@ import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { M, T } from '@angular/cdk/keycodes';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
@@ -66,7 +67,8 @@ export class ApprovalComponent extends UIComponent {
     private cacheSv: CacheService,
     private df: ChangeDetectorRef,
     private actionCollectionsChanges: IterableDiffers,
-    private saveToDBChanges: IterableDiffers
+    private saveToDBChanges: IterableDiffers,
+    private datePipe: DatePipe
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -241,6 +243,8 @@ export class ApprovalComponent extends UIComponent {
         if (res) {
           this.lstRenderAnnotation = res;
           this.lstRenderAnnotation.forEach((item: any) => {
+            console.log(item);
+
             let anno = {
               annotationId: item.recID,
               annotationSelectorSettings: {
@@ -276,13 +280,16 @@ export class ApprovalComponent extends UIComponent {
               fontSize: item.fontSize,
               isPrint: true,
               isReadonly: false,
-              modifiedDate: item.ModifiedOn,
+              modifiedDate: this.datePipe.transform(
+                new Date(),
+                'M/d/yy, h:mm a'
+              ),
               opacity: 1,
+              note: '',
               pageNumber: item.location.pageNumber,
               review: {
                 state: 'Unmarked',
                 stateModel: 'None',
-                modifiedDate: Date(),
                 version: undefined,
               },
               customData: item.signer + ':' + item.labelType,
@@ -504,7 +511,6 @@ export class ApprovalComponent extends UIComponent {
       comments: [],
       note: mode.toString(),
       isPrint: true,
-      modifiedDate: Date(),
       opacity: 1,
       pageNumber: 0,
       shapeAnnotationType: 'stamp',
@@ -868,7 +874,8 @@ export class ApprovalComponent extends UIComponent {
               this.signerInfo.authorPosition;
             break;
           case 5:
-            this.pdfviewerControl.freeTextSettings.defaultText = Date();
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              new Date().toLocaleDateString();
             break;
           case 6:
             this.pdfviewerControl.freeTextSettings.defaultText =
@@ -952,9 +959,7 @@ export class ApprovalComponent extends UIComponent {
       FontSize: null,
       SignatureType: 1,
       Comment: '',
-      CreatedOn: new Date(),
       CreatedBy: user.userID,
-      ModifiedOn: new Date(),
       ModifiedBy: user.userID,
     };
     console.log('save area', area);
@@ -1103,7 +1108,9 @@ export class ApprovalComponent extends UIComponent {
     this.zoomValue = this.pdfviewerControl.zoomValue;
   }
 
-  clickPrint() {}
+  clickPrint() {
+    this.pdfviewerControl.download();
+  }
 }
 
 class Guid {
