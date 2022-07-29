@@ -1,5 +1,5 @@
 <codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
-   [formModel]="view.formModel">
+  [formModel]="view.formModel">
 </codx-views>
 
 <ng-template #panelRightRef>
@@ -178,7 +178,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="idCardNo" formName="Employees"
                           gridViewName="grvEmployees" default="CMND/CCCD:">
                         </codx-label>
-                        <span class="text-dark mr-15">{{employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                        <span class="text-dark me-15">{{employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
                           null}}</span>
                       </div>
                     </div>
@@ -187,7 +187,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="issuedOn" formName="Employees"
                           gridViewName="grvEmployees" default="Cấp ngày:">
                         </codx-label>
-                        <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
+                        <span class="text-dark me-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
                           null}}</span>
                       </div>
                     </div>
@@ -196,7 +196,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="issuedBy" formName="Employees"
                           gridViewName="grvEmployees" default="Tại:">
                         </codx-label>
-                        <span class="text-dark mr-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
+                        <span class="text-dark me-15">{{employeeInfo?.issuedOn != "" ? employeeInfo?.issuedOn :
                           null}}</span>
                       </div>
                     </div>
@@ -428,15 +428,15 @@
                           <div class="d-flex flex-column mt-4">
                             <div class="text-dark mb-1">{{item.organizationName}}</div>
                             <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-check_circle icon-16 mr-2"></span>
+                              <span class="text-dark-50 icon-check_circle icon-16 me-2"></span>
                               <span class="text-dark-50">{{item.certificateName}}</span>
                             </div>
                             <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-class icon-16 mr-2"></span>
+                              <span class="text-dark-50 icon-class icon-16 me-2"></span>
                               <span class="text-dark-50">{{item.memo}}</span>
                             </div>
                             <div class="d-flex mt-4">
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary mr-2" *ngIf="editMode"
+                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-2" *ngIf="editMode"
                                 (click)="editDataEdu(item)">
                                 <span class="icon-edit icon-18"></span>
                               </a>
@@ -507,12 +507,12 @@
                     <div [style.color]="getContrastYIQ(item)">
                       {{item.hobbyName}}
                     </div>
-                    <a class="text-white text-hover-danger mt-1 ms-2" *ngIf="editMode" (click)="deleteHobby(item)">
-                      <span class="icon-close icon-16"></span>
+                    <a class="text-dark text-hover-danger mt-1 ms-1" *ngIf="editMode" (click)="deleteHobby(item)">
+                      <span class="icon-close icon-14"></span>
                     </a>
                   </div>
                   <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
-                    <span class="icon-add icon-18"></span>
+                    <span class="icon-add icon-16"></span>
                     <a (click)="popupAddHobbi()" class="text-primary">Thêm mới</a>
                   </div>
                 </div>

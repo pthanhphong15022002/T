@@ -266,6 +266,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
   }
   openFormFuncID(val: any , datas:any = null) {
    
+    debugger;
     var funcID = val?.functionID;
     if(!datas)
       datas = this.data;
@@ -282,7 +283,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     delete datas.hasChildren;
     delete datas.includeTables;
     switch (funcID) {
-      case "edit":
+      //Sửa
+      case "SYS03":
         {
           this.view.dataService.edit(datas).subscribe((res: any) => {
             let option = new SidebarModel();
@@ -302,7 +304,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 //this.view.dataService.update(x.event).subscribe();
                 //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
                 
-                  this.view.dataService.update(x.event).subscribe();
+                  //this.view.dataService.update(x.event).subscribe();
                   this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                     this.data = item;
                     this.data.lstUserID = getListImg(item.relations);
@@ -318,7 +320,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           });
           break;
         }
-      case "delete":
+      //Xóa
+      case "SYS02":
         {
           this.view.dataService.dataSelected = datas;
           this.view.dataService.delete([datas],true,(opt) => this.beforeDel(opt)).subscribe((item:any)=>{
@@ -333,7 +336,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           });
           break;
         }
-      case "copy":
+      //Copy
+      case "SYS04":
       {
         this.view.dataService.dataSelected = datas ;
         this.view.dataService.copy(0).subscribe((res: any) => {

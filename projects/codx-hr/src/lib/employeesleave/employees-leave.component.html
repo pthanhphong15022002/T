@@ -7,28 +7,28 @@
 
 <ng-template #cardTemp let-data>
     <codx-card-center cardCss="border h-100" [imageId]="data.employeeID" [title]="data.employeeName"
-    [subTitle]="(data.positionName || 'Bộ phận')" [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/mm/yyyy'"
-    [footer]="footer">
+        [subTitle]="(data.positionName || 'Bộ phận')" [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/mm/yyyy'"
+        [footer]="footer">
     </codx-card-center>
 
     <ng-template #footer>
         <div class="d-flex align-items-top mt-2">
-          <span class="icon-email icon-16 mr-2"> </span>
-          <div class="text-dark-75 font-size-sm flex-wrap text-email" *ngIf="data.email != '---'">
-            {{ data.email }}</div>
-          <div class="text-muted font-size-sm flex-wrap" *ngIf="data.email == '---'">
-            <codx-label name="lblEmail" formName="Employees" default="Email"></codx-label>
-          </div>
+            <span class="icon-email icon-16 me-2"> </span>
+            <div class="text-dark-75 font-size-sm flex-wrap text-email" *ngIf="data.email != '---'">
+                {{ data.email }}</div>
+            <div class="text-muted font-size-sm flex-wrap" *ngIf="data.email == '---'">
+                <codx-label name="lblEmail" formName="Employees" default="Email"></codx-label>
+            </div>
         </div>
         <div class="d-flex align-items-center">
-          <span class="icon-phone_android icon-16 mr-2"></span>
-          <div class="text-dark-75 font-size-sm" *ngIf="data.phone != '---'">{{ data.phone }}
-          </div>
-          <div class="text-muted font-size-sm" *ngIf="data.phone == '---'">
-            <codx-label name="lblPhone" formName="Employees" default="Số điện thoại"></codx-label>
-          </div>
+            <span class="icon-phone_android icon-16 me-2"></span>
+            <div class="text-dark-75 font-size-sm" *ngIf="data.phone != '---'">{{ data.phone }}
+            </div>
+            <div class="text-muted font-size-sm" *ngIf="data.phone == '---'">
+                <codx-label name="lblPhone" formName="Employees" default="Số điện thoại"></codx-label>
+            </div>
         </div>
-      </ng-template>
+    </ng-template>
 </ng-template>
 
 <!-- <ng-template #grid let-data>

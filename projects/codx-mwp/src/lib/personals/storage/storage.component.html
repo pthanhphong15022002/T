@@ -23,19 +23,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="pw-listcard">
-            <div *ngFor="let item of view.dataService.data">
-                <div class="pw-card delay-500" (click)="openStorageDetail(item)">
-                    <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"
-                        icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo" [imgOn]="item?.modifiedOn"
-                        [imageObjType]="'WP_Storages'" [formModel]="formModel" (clickMF)="clickMF($event,item)"
-                        [dataItem]="item">
-                    </codx-card-img>
-                </div>
-            </div>
-        </div>
     </div>
+    <codx-listview #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
+        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="Storages" funcId="MWP0095"
+        service="WP">
+    </codx-listview>
 </div>
 
 <div *ngIf="checkFormComment == true">
@@ -54,6 +46,14 @@
     </div>
 </div>
 
-<codx-views #view [funcID]="'MWP0095'" service="WP" entityName="WP_Storages" [views]="views" [predicate]="predicate"
-    [dataValue]="dataValue" idField="recID">
-</codx-views>
+<ng-template #templateListCard let-item>
+    <div class="pw-listcard">
+        <div class="pw-card delay-500" (click)="openStorageDetail(item)">
+            <codx-card-img cardCss="border rounded-4 " [imageId]="item.recID" imgCss="h-150px w-100"
+                icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo" [imgOn]="item?.modifiedOn"
+                [imageObjType]="'WP_Storages'" [formModel]="listView.formModel" (clickMF)="clickMF($event,item)"
+                [dataItem]="item">
+            </codx-card-img>
+        </div>
+    </div>
+</ng-template>

@@ -1,7 +1,7 @@
 import { CodxTMService } from './../codx-tm.service';
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
 import { Resources } from '../models/CO_Meetings.model';
 
@@ -95,6 +95,7 @@ export class TMMeetingsComponent extends UIComponent {
 
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
+    this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
 
     this.dt.detectChanges();
 
@@ -148,7 +149,7 @@ export class TMMeetingsComponent extends UIComponent {
       case 'btnAdd':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
       case 'copy':
@@ -156,6 +157,9 @@ export class TMMeetingsComponent extends UIComponent {
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'TMT05011':
+        this.viewDetail(data);
         break;
     }
   }
@@ -214,6 +218,25 @@ export class TMMeetingsComponent extends UIComponent {
 
   }
   delete(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteMeetingsAsync';
+
+    opt.data = itemSelected.meetingID;
+    return true;
+  }
+
+  viewDetail(data){
 
   }
 }
