@@ -285,7 +285,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   openPopupApproval() {
     let transID = this.dialogCategory.value.recID;
     let data = {
-      type: '1',
+      type: '0',
       transID: transID,
       model: this.dialogCategory,
     };
