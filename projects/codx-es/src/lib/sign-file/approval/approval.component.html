@@ -19,12 +19,8 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div
-        class="showArrow"
-        [class.icon-arrow_back]="!hideThumbnail"
-        [class.icon-arrow_forward]="hideThumbnail"
-        (click)="changeShowThumbnailState()"
-      ></div>
+      <div class="showArrow" [class.icon-arrow_back]="!hideThumbnail" [class.icon-arrow_forward]="hideThumbnail"
+        (click)="changeShowThumbnailState()"></div>
     </div>
     <div class="col-7 flex-grow-1">
       <div class="row">
@@ -36,13 +32,8 @@
                 </e-item>
               </e-items>
             </ejs-toolbar>
-            <ejs-dropdownlist
-              style="width: 20%"
-              id="zoomValuesDropdownList"
-              [dataSource]="lstZoomValue"
-              [placeholder]="zoomValue"
-              (change)="clickZoom('to', $event)"
-            ></ejs-dropdownlist>
+            <ejs-dropdownlist style="width: 20%" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
+              [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
             <ejs-toolbar>
               <e-items>
                 <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
@@ -52,31 +43,18 @@
 
             <ejs-toolbar>
               <e-items>
-                <e-item
-                  prefixIcon="e-chevron-up-double"
-                  (click)="pdfviewerControl?.navigation?.goToFirstPage()"
-                >
+                <e-item prefixIcon="e-chevron-up-double" (click)="pdfviewerControl?.navigation?.goToFirstPage()">
                 </e-item>
-                <e-item
-                  [text]="pdfviewerControl?.currentPageNumber"
-                  [disabled]="true"
-                ></e-item>
-                <e-item
-                  prefixIcon="e-chevron-down-double"
-                  (click)="pdfviewerControl?.navigation?.goToLastPage()"
-                >
+                <e-item [text]="pdfviewerControl?.currentPageNumber" [disabled]="true"></e-item>
+                <e-item prefixIcon="e-chevron-down-double" (click)="pdfviewerControl?.navigation?.goToLastPage()">
                 </e-item>
               </e-items>
             </ejs-toolbar>
           </div>
 
           <div class="chooseSignFile w-100 d-flex justify-content-center">
-            <ejs-dropdownlist
-              id="signfilesDropdownList"
-              [dataSource]="lstFiles"
-              [fields]="file"
-              (change)="changeSignFile($event)"
-            ></ejs-dropdownlist>
+            <ejs-dropdownlist id="signfilesDropdownList" [dataSource]="lstFiles" [fields]="file"
+              (change)="changeSignFile($event)"></ejs-dropdownlist>
           </div>
           <div class="right_Toolbar d-flex justify-content-end">
             <ejs-toolbar>
@@ -88,34 +66,19 @@
         </div>
       </div>
       <div class="row h-100 pdfviewer_Space">
-        <ejs-pdfviewer
-          #pdfviewer
-          id="pdfViewer"
-          [serviceUrl]="service"
-          [enableToolbar]="false"
-          [enableNavigationToolbar]="false"
-          [enableAnnotationToolbar]="false"
-          [enableThumbnail]="true"
-          (created)="onCreated($event)"
-          (annotationAdd)="addAnnoEvent($event)"
-          (annotationMove)="resetTime($event)"
-          (annotationRemove)="removeAnnot($event)"
-          (annotationResize)="resetTime($event)"
-          (annotationSelect)="selectedAnnotation($event)"
-          (annotationPropertiesChange)="resetTime($event)"
-          (documentLoad)="loadingAnnot($event)"
-          (pageChange)="pageChange($event)"
-          [zoomValue]="zoomValue"
-          (zoomChange)="changeZoomValue($event)"
-          [ajaxRequestSettings]="ajaxSetting"
-          style="
+        <ejs-pdfviewer #pdfviewer id="pdfViewer" [serviceUrl]="service" [enableToolbar]="false"
+          [enableNavigationToolbar]="false" [enableAnnotationToolbar]="false" [enableThumbnail]="true"
+          (created)="onCreated($event)" (annotationAdd)="addAnnoEvent($event)" (annotationMove)="resetTime($event)"
+          (annotationRemove)="removeAnnot($event)" (annotationResize)="resetTime($event)"
+          (annotationSelect)="selectedAnnotation($event)" (annotationPropertiesChange)="resetTime($event)"
+          (documentLoad)="loadingAnnot($event)" (pageChange)="pageChange($event)" [zoomValue]="zoomValue"
+          (zoomChange)="changeZoomValue($event)" [ajaxRequestSettings]="ajaxSetting" style="
             height: 100% !important;
             width: 100% !important;
 
             position: relative;
             display: block;
-          "
-        >
+          ">
         </ejs-pdfviewer>
       </div>
     </div>
@@ -128,24 +91,11 @@
             </ng-template>
 
             <ng-template #content>
-              <div
-                class="row position-relative"
-                style="margin-top: 10px"
-                *ngIf="!isApprover"
-              >
-                <codx-label
-                  name="lblChooseSigner"
-                  [formModel]=""
-                  default="Chọn người kí cần thiết lập"
-                  class="ms-2 fw-bold"
-                ></codx-label>
-                <ejs-dropdownlist
-                  #inputAuthor
-                  id="signatureDropdownList"
-                  [dataSource]="lstSigners"
-                  [fields]="person"
-                  (change)="changeSigner($event)"
-                ></ejs-dropdownlist>
+              <div class="row position-relative" style="margin-top: 10px" *ngIf="!isApprover">
+                <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
+                  class="ms-2 fw-bold"></codx-label>
+                <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
+                  (change)="changeSigner($event)"></ejs-dropdownlist>
                 <!-- <codx-input
                   class="form-control mr-2"
                   type="valuelist"
@@ -155,87 +105,35 @@
                 ></codx-input> -->
               </div>
 
-              <codx-label
-                name="lblDragAction"
-                [formModel]=""
-                default="Kéo thả"
-                class="ms-2 fw-bold"
-              ></codx-label>
+              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="ms-2 fw-bold"></codx-label>
               <div class="card-group">
-                <div
-                  class="card-item me-3 mb-3"
-                  *ngFor="let action of actionsButton; let index = index"
-                  [class.active]="holding == index + 1"
-                  (click)="changeAnnotationItem(index + 1)"
-                >
-                  <codx-card-center
-                    cardCss="border h-100 min-w-100px w-100px"
-                    icoCss="icon-20  {{
+                <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
+                  [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
+                  <codx-card-center cardCss="border h-100 min-w-100px w-100px" icoCss="icon-20  {{
                       index + 1 | vll: 'ES015':'icon' | async
-                    }}"
-                    content="{{ index + 1 | vll: 'ES015':'text' | async }}"
-                  >
+                    }}" content="{{ index + 1 | vll: 'ES015':'text' | async }}">
                   </codx-card-center>
                 </div>
               </div>
 
-              <div
-                class="autoSign_Space d-flex d-flex align-items-center justify-content-between"
-                style="width: 160px"
-              >
-                <codx-label
-                  name="lblSuggestSignArea"
-                  default="Gợi ý vị trí ký"
-                  class="ms-1 fw-bold"
-                ></codx-label>
-                <codx-input
-                  type="switch"
-                  field=""
-                  [crrValue]="needSuggest"
-                  (valueChange)="changeSuggestState($event)"
-                >
+              <div class="autoSign_Space d-flex d-flex align-items-center justify-content-between" style="width: 160px">
+                <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="ms-1 fw-bold"></codx-label>
+                <codx-input type="switch" field="" [crrValue]="needSuggest" (valueChange)="changeSuggestState($event)">
                 </codx-input>
               </div>
 
-              <div
-                class="autoSign_Space d-flex align-items-center justify-content-between"
-                style="width: 160px"
-              >
-                <codx-label
-                  name="lblSignLastLine"
-                  default="Ký dòng cuối cùng"
-                  class="ms-1 fw-bold"
-                ></codx-label>
-                <codx-input
-                  type="switch"
-                  field="autoSignLastLine"
-                  [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 0)"
-                ></codx-input>
+              <div class="autoSign_Space d-flex align-items-center justify-content-between" style="width: 160px">
+                <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="ms-1 fw-bold"></codx-label>
+                <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
+                  (valueChange)="changeAutoSignState($event, 0)"></codx-input>
               </div>
 
-              <div
-                class="autoSign_Space d-flex align-items-center justify-content-between"
-                style="width: 160px"
-              >
-                <codx-label
-                  name="lblSignEndPage"
-                  default="Ký cuối trang"
-                  class="ms-1 fw-bold"
-                ></codx-label>
-                <codx-input
-                  type="switch"
-                  field="autoSignEndPage"
-                  [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 1)"
-                ></codx-input>
+              <div class="autoSign_Space d-flex align-items-center justify-content-between" style="width: 160px">
+                <codx-label name="lblSignEndPage" default="Ký cuối trang" class="ms-1 fw-bold"></codx-label>
+                <codx-input type="switch" field="autoSignEndPage" [crrValue]="autoSignState"
+                  (valueChange)="changeAutoSignState($event, 1)"></codx-input>
               </div>
-              <div
-                class="buttons w-50 d-flex flex-column justify-content-between"
-              >
-                <button (click)="show($event)">Show</button>
-                <button (click)="testFunc($event)">Test Func</button>
-              </div>
+
             </ng-template>
           </e-tabitem>
 
@@ -254,12 +152,8 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div
-        class="showArrow reverse"
-        [class.icon-arrow_back]="hideActions"
-        [class.icon-arrow_forward]="!hideActions"
-        (click)="changeShowActionsState()"
-      ></div>
+      <div class="showArrow reverse" [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
+        (click)="changeShowActionsState()"></div>
     </div>
   </div>
 </div>
