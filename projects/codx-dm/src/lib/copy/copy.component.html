@@ -1,25 +1,19 @@
-<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">           
-    <ng-template #body>      
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template #body>
         <form name="frm_renamebox1">
             <div class="form-group">
                 <div class="d-flex justify-content-between">
-                    <div class="mr-2 flex-grow-1">
+                    <div class="me-2 flex-grow-1">
                         <!-- <codx-input [placeholder]="titleFolderName"                                    
                             [class]="validate('folderName')"
                             type="text"
                             [crrValue]="folderName"
                             (valueChange)="changeValue($event, 'folderName')"                                        
                         ></codx-input>     -->
-                        <codx-input [placeholder]="titleFullName"                                    
-                            [class]="validate('fullName')"
-                            type="text"
-                            [crrValue]="fullName"
-                            (valueChange)="changeValue($event, 'fullName')"                                        
-                        ></codx-input>       
-                        <div id="folderError" autofocus *ngIf="fullName === ''"
-                            class="d-flex mb-4 invalid-feedback">
-                            <div
-                                *ngIf="fullName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
+                        <codx-input [placeholder]="titleFullName" [class]="validate('fullName')" type="text"
+                            [crrValue]="fullName" (valueChange)="changeValue($event, 'fullName')"></codx-input>
+                        <div id="folderError" autofocus *ngIf="fullName === ''" class="d-flex mb-4 invalid-feedback">
+                            <div *ngIf="fullName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
                             </div>
                             <ng-template #thenBlockErrorFolder>{{titleRequired}}</ng-template>
                             <ng-template #thenBlockErrorElseFolder>{{titleMessage}}</ng-template>
@@ -39,8 +33,8 @@
                 </div>
             </div>
         </form>
-    </ng-template>    
+    </ng-template>
     <ng-template #footer>
-        <button type="button" id="btnRename" class="btn btn-primary" (click)="SaveData()">{{titleSave}}</button>        
+        <button type="button" id="btnRename" class="btn btn-primary" (click)="SaveData()">{{titleSave}}</button>
     </ng-template>
 </codx-form>
