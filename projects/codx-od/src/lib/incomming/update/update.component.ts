@@ -17,13 +17,14 @@ export class UpdateExtendComponent implements OnInit {
   submitted = false
   dialog      : any
   data : any
-  formModel: any
+  formModel: any 
   @ViewChild('attachment') attachment: AttachmentComponent
   @Input() view : any
   @Output() save = new EventEmitter<any>();
   dtDisUpdate = new updateDis();
   currentDate = new Date();
   updateForm :FormGroup;
+  fileCount: 0
   constructor(
     private odService: DispatchService,
     private notifySvr : NotificationsService,
@@ -46,6 +47,7 @@ export class UpdateExtendComponent implements OnInit {
         reporting: false
       }
     )
+ 
     /* updateOn: new FormControl(),
     percentage : new FormControl(),
     percentage100 : new FormControl(),
@@ -55,6 +57,11 @@ export class UpdateExtendComponent implements OnInit {
     this.updateForm.get("reporting").setValue(false);
     this.updateForm.get("percentage").setValue(this.data?.percentage);
     if(this.data?.percentage == 100) this.updateForm.get("percentage100").setValue(true); */
+  }
+  valueChangePercentage100(e:any)
+  {
+    /* if()
+    this.updateForm.value.percentage */
   }
   get f(): { [key: string]: AbstractControl } {
     return this.updateForm.controls;
@@ -74,11 +81,12 @@ export class UpdateExtendComponent implements OnInit {
   fileAdded(event) { 
     console.log(event);
   }
-  addFile() {
-    this.attachment.openPopup();  
-  }
-  close()
+  getfileCount(e:any)
   {
-    this.dialog.close();
+    this.fileCount = e.data.length;
+  }
+  openFormUploadFile()
+  {
+    this.attachment.uploadFile();
   }
 }

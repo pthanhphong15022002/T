@@ -1,34 +1,324 @@
-<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
-  [dialog]="dialog">  
+<codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [footer]="footer" [dialog]="dialog"
+  [openMore]="true" [tabContent]="[tabDescip, tabControl,tabJob]" (setTitle)="setTitle($event)" #form [data]="data">
+</codx-layout-add>
+
+<ng-template #tabDescip>
+  <div class="form-group">
+    <div class="form-group mt-3">
+      <codx-label fiedName="TaskGroupID" [formModel]="form.formModel" default="Mã nhóm công việc">
+      </codx-label>
+      <codx-input field="taskGroupID" [attr.disabled]="!data?.isNew() ? '' : null" type="text"
+        [crrValue]="taskGroups.taskGroupID">
+      </codx-input>
+
+    </div>
+    <div class="form-group mt-3">
+      <codx-label fiedName="TaskGroupName" [formModel]="form.formModel" default="Nhóm công việc">
+      </codx-label>
+      <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text" loadFull="true"
+        [crrValue]="taskGroups.taskGroupName" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group mt-3">
+      <codx-label fiedName="Note" [formModel]="form.formModel" default="Ghi chú">
+      </codx-label>
+
+      <codx-input type="textarea" field="note" [crrValue]="taskGroups.note" class="form-control"
+        (valueChange)="changeMemo($event)"></codx-input>
+    </div>
+  </div>
+</ng-template>
+<ng-template #tabControl>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="ProjectControl" default="Dự án" formName="TaskGroups" gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="ProjectControl" default="Ràng buộc chọn thông tin dự án khi tạo công việc"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="projectControl" type="valuelist" field="projectControl" placeholder=""
+        [crrValue]="taskGroups.projectControl" (valueChange)="valueList($event)"
+        [refValue]="gridViewSetup.ProjectControl.referedValue">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="LocationControl" default="Địa điểm" formName="TaskGroups" gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="LocationControl" default="Ràng buộc nhập địa điểm khi thêm thông tin"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="locationControl" type="valuelist" field="locationControl" placeholder=""
+        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" refValue="TM012">
+        <!-- [refValue]="gridViewSetup.LocationControl.referedValue" -->
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="PlanControl" default="Kế hoạch thực hiện công việc" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="PlanControl" default="Ngày bắt đầu, Ngày kết thúc, Thời gian ước tính"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="planControl" type="valuelist" field="planControl" placeholder=""
+        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" refValue="TM012">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="UpdateControl" default="Cập nhật tình trạng công việc" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="UpdateControl" default="Kiểm soát nhập thông tin khi cập nhật tình trạng"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="updateControl" type="valuelist" field="updateControl" placeholder=""
+        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" refValue="TM013">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="VerifyControl" default="Duyệt cho phép thực hiện công việc cá nhân tự tạo"
+        formName="TaskGroups" gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="VerifyControl" default="Công việc do cá nhân tự tạo được duyệt bởi người giao việc"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4 row">
+      <div class="col-6">
+        <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
+          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" refValue="TM006">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <span class="icon-edit text-primary icon-18"></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="ApproveControl" default="Đánh giá công việc khi hoàn tất" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="ApproveControl" default="Công việc hoàn tất được đánh giá bởi người giao việc"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4 row">
+      <div class="col-6">
+        <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
+          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" refValue="TM014">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <span class="icon-edit text-primary icon-18"></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="MaxHoursControl" default="Thời gian tối đa hoàn thành" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="MaxHoursControl" default="Số giờ tối đa để hoàn thành công việc là 8"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4 row">
+      <div class="col-6">
+        <codx-input name="maxHoursControl" type="switch" class="test-switch" field="maxHoursControl"
+          [crrValue]="taskGroups.maxHoursControl" (valueChange)="valueWitch($event)">
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <span class="icon-edit text-primary icon-18"></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="EditControl" default="Chỉnh sửa nội dung công việc được phân công" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="EditControl" default="Cho phép chỉnh sửa nội dung công việc"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
+        [crrValue]="taskGroups.editControl" (valueChange)="valueWitch($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="DueDateControl" default="Được phép thêm công việc quá khứ" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="DueDateControl" default="Thêm công việc có ngày hết hạn ở quá khứ"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
+        [crrValue]="taskGroups.dueDateControl" (valueChange)="valueWitch($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="AutoCompleted" default="Cập nhật hoàn thành tự động đối với giao việc" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="AutoCompleted" default="Cập nhật công việc cha khi công việc con kết thúc hoàn tất"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
+        [crrValue]="taskGroups.autoCompleted" (valueChange)="valueWitch($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="ExtendControl" default="Gia hạn công việc" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="ExtendControl" default="Được phép gia hạn công việc khi chưa bị quá hạn"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
+        [crrValue]="taskGroups.extendControl" (valueChange)="valueWitch($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="ConfirmControl" default="Xác nhận thực hiện công việc" formName="TaskGroups"
+        gridViewName="grvTaskGroups">
+      </codx-label>
+      <div>
+        <codx-label fiedName="ConfirmControl" default="Được phép từ chối thực hiện công việc được giao"
+          formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
+        [crrValue]="taskGroups.confirmControl" (valueChange)="valueWitch($event)">
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+<ng-template #tabJob>
+  <div class="form-group row mt-3">
+    <div class="form-group col-8">
+      <codx-label fiedName="CheckListControl" default="Nhập việc cần làm" formName="TaskGroups"
+        gridViewName="grvTaskGroups"></codx-label>
+      <div>
+        <codx-label fiedName="CheckListControl" default="Kiểm soát nhập liệu checklist" formName="TaskGroups"
+          gridViewName="grvTaskGroups">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-input name="checkListControl" type="valuelist" [refValue]="gridViewSetup.CheckListControl.referedValue"
+        field="CheckListControl" placeholder="" [crrValue]="taskGroups.checkListControl"
+        (valueChange)="valueCheck($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="workToDo" *ngIf="taskGroups.checkListControl == '2'">
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+      <div class="d-flex align-items-center">
+        <codx-label default="Công việc cần làm" formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+        <span class="text-primary font-weight-bold"></span>
+      </div>
+      <div class="d-flex mt-2">
+        <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
+          <i class="icon-add icon-16 text-dark-75"></i>
+          <codx-label default="Add to do list" formName="TaskGroups" gridViewName="grvTaskGroups">
+          </codx-label>
+        </a>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-list">
+        <ng-container *ngFor="let item of listTodo; index as i;">
+          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+            <label class="checkbox checkbox-square checkbox-sm mb-0">
+              <input #checkShareRight1 type="checkbox" [checked]="item.status" id="checkShareRight1"
+                (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
+              <span></span>{{item.text}}
+            </label>
+            <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="add-control mt-2" *ngIf="enableAddtodolist">
+        <div class="input-group">
+          <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
+            [ngModelOptions]="{standalone: true}" required matInput class="form-control" placeholder="Add..." />
+          <div class="input-group-append">
+            <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
+              <span class="icon-add icon-20"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- <codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
+  [dialog]="dialog">
   <ng-template #body>
     <div >
       <form>
         <div class="row">
-          <div class="form-group">
-            <div class="form-group mt-3">
-              <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups"
-                default="Mã nhóm công việc">
-              </codx-label>
-              <codx-input field="taskGroupID"  [attr.disabled]="!data?.isNew() ? '' : null" type="text"
-                [crrValue]="taskGroups.taskGroupID">
-              </codx-input>
 
-            </div>
-            <div class="form-group mt-3">
-              <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups"
-                default="Nhóm công việc">
-              </codx-label>
-              <codx-input placeholder="Nhóm công việc" field="taskGroupName" type="text" loadFull="true"
-                [crrValue]="taskGroups.taskGroupName" (valueChange)="valueChange($event)">
-              </codx-input>
-            </div>
-            <div class="form-group mt-3">
-              <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
-              </codx-label>
 
-              <codx-input type="textarea" field="note" [crrValue]="taskGroups.note" class="form-control"
-                (valueChange)="changeMemo($event)"></codx-input>
-            </div>
             <div class="d-flex align-items-center justify-content-between mt-4">
               <div class="d-flex align-items-center">
                 <div class="fw-bold fs-6 text-primary">Kiểm soát nhập dữ liệu</div>
@@ -50,24 +340,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="form-group row mt-3">
-              <div class="form-group col-8">
-                <codx-label fiedName="ProjectControl" default="Chọn dự án" formName="TaskGroups"
-                  gridViewName="grvTaskGroups"></codx-label>
-                <div>
-                  <codx-label fiedName="ProjectControl" default="Ràng buộc chọn thông tin dự án khi tạo công việc"
-                    formName="TaskGroups" gridViewName="grvTaskGroups">
-                  </codx-label>
-                </div>
-              </div>
-              <div class="col-4">
-                <codx-input name="projectControl" type="valuelist" field="projectControl" placeholder=""
-                  [crrValue]="taskGroups.projectControl" (valueChange)="valuePro($event)"
-                  [refValue]="gridViewSetup.ProjectControl.referedValue">
-                </codx-input>
 
-              </div>
-            </div>
             <div class="form-group row mt-3">
               <div class="form-group col-8">
                 <codx-label fiedName="AttachmentControl" default="Đính kèm file" formName="TaskGroups"
@@ -85,77 +358,17 @@
                 </codx-input>
               </div>
             </div>
-            <div class="form-group row mt-3">
-              <div class="form-group col-8">
-                <!-- <codx-label fiedName="checkListControl" default="Nhập việc cần làm" [formModel]="formModel"></codx-label>
-                <codx-input fiedName="checkListControl" bind-data="data.checkListControl" [formModel]="formModel"></codx-input> -->
-                <codx-label fiedName="CheckListControl" default="Nhập việc cần làm" formName="TaskGroups"
-                  gridViewName="grvTaskGroups"></codx-label>
-                <div>
-                  <codx-label fiedName="CheckListControl" default="Kiểm soát nhập liệu checklist" formName="TaskGroups"
-                    gridViewName="grvTaskGroups">
-                  </codx-label>
-                </div>
-              </div>
-              <div class="col-4">
-                <codx-input name="checkListControl" type="valuelist"
-                  [refValue]="gridViewSetup.CheckListControl.referedValue" field="CheckListControl" placeholder=""
-                  [crrValue]="taskGroups.checkListControl" (valueChange)="valueCheck($event)">
-                </codx-input>
-              </div>
-            </div>
-            <div class="workToDo" *ngIf="taskGroups.checkListControl == '2'">
-              <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
-                <div class="d-flex align-items-center">
-                  <codx-label default="Công việc cần làm" formName="TaskGroups" gridViewName="grvTaskGroups">
-                  </codx-label>
-                  <span class="text-primary font-weight-bold"></span>
-                </div>
-                <div class="d-flex mt-2">
-                  <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
-                    <i class="icon-add icon-16 text-dark-75"></i>
-                    <codx-label default="Add to do list" formName="TaskGroups" gridViewName="grvTaskGroups">
-                    </codx-label>
-                  </a>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="checkbox-list">
-                  <ng-container *ngFor="let item of listTodo; index as i;">
-                    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
-                      <label class="checkbox checkbox-square checkbox-sm mb-0">
-                        <input #checkShareRight1 type="checkbox" [checked]="item.status" id="checkShareRight1"
-                          (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
 
-                        <!-- <input type="checkbox" checked="checked" name="Checkboxes1" /> -->
-                        <span></span>{{item.text}}
-                      </label>
-                      <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
-                    </div>
-                  </ng-container>
-                </div>
-                <div class="add-control mt-2" *ngIf="enableAddtodolist">
-                  <div class="input-group">
-                    <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
-                      [ngModelOptions]="{standalone: true}" required matInput class="form-control"
-                      placeholder="Add..." />
-                    <div class="input-group-append">
-                      <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
-                        <span class="icon-add icon-20"></span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </form>
     </div>
   </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
-    </div>
-  </ng-template>
-</codx-form>
+
+</codx-form> -->
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+  </div>
+</ng-template>

@@ -54,11 +54,11 @@
     <td class="rowphoto">
       <div class="padding">
         <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
+        (data?.locationControl | vll: 'L1462':'color' | async) + '30'
       " [style.background-color]="
-        (data?.attachmentControl | vll: 'L1462':'color' | async) + '30'
-      " [style.color]="data?.attachmentControl | vll: 'L1462':'color' | async" style="border: none">
-          {{data?.attachmentControl|vll:"L1462":"text"|async}}
+        (data?.locationControl | vll: 'L1462':'color' | async) + '30'
+      " [style.color]="data?.locationControl | vll: 'L1462':'color' | async" style="border: none">
+          {{data?.locationControl|vll:"L1462":"text"|async}}
         </div>
       </div>
 
@@ -87,7 +87,7 @@
               <span *ngIf="!data.checkList" class="b text-start">Không có CheckList</span>
           </button>
         </div>
-       
+
       </div>
 
 
@@ -113,8 +113,8 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-          (clickMF)="clickMF($event,data)" [dataItem]="data">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+        [isBookMark]="false" [dataItem]="data">
         </codx-mfunc>
       </div>
     </td>
@@ -183,7 +183,7 @@
 <ng-template #itemAttachmentControl let-data>
   <div class="padding">
 
-    <codx-label fiedName="AttachmentControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Đính kèm file">
+    <codx-label fiedName="LocationControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Kế hoạch">
     </codx-label>
   </div>
 </ng-template>

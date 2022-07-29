@@ -12,7 +12,7 @@
 </ng-template>
 <ng-template popup adde #body>
   <div>
-    <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
       hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
       [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'">
     </codx-attachment>
@@ -176,7 +176,7 @@
     <codx-label default='Người chịu trách nhiệm'></codx-label>
     <div class="d-flex">
       <codx-input type="Combobox" name="combobox"
-        [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [crrValue]="this.dispatch.owner"
+        [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [multiple]="false" [crrValue]="this.dispatch.owner"
         [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input>
     </div>

@@ -95,7 +95,7 @@ export class TaskGroupComponent implements OnInit {
       case 'btnAdd':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
       case 'delete':
@@ -165,7 +165,7 @@ export class TaskGroupComponent implements OnInit {
 
   moreFuncClick(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
       case 'delete':
@@ -200,7 +200,7 @@ export class TaskGroupComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, null, option);
+      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, 'add', option);
 
     });
   }
