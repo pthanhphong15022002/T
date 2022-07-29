@@ -98,71 +98,68 @@
                   </codx-label>
                 </h2>
               </div>
-
-              <div class="w-100 rounded-0 border-0">
-                <div class="scroll-hover-y my-7">
-                  <div class="form-group">
-                    <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
-                    </codx-label>
-                    <codx-input type="text" name="text" cssClass="form-control" ControlName="title"
-                      [Group]="dialogSignFile">
-                    </codx-input>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
-                        </codx-label>
-                        <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['CategoryID']"
-                          field="categoryID" (valueChange)="valueChange($event)" [multiple]="false">
-                        </codx-input>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <codx-label default="Mức độ ưu tiên" fiedName="Priority" [formModel]="formModel">
-                        </codx-label>
-                        <codx-input type="valuelist" name="valuelist" ngDefaultControl field="priority"
-                          (valueChange)="valueChange($event)" [refValue]="cbxName['Priority']">
-                        </codx-input>
-                      </div>
+              <div class="w-100 form-content">
+                <div class="form-group">
+                  <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
+                  </codx-label>
+                  <codx-input type="text" name="text" cssClass="form-control" ControlName="title"
+                    [Group]="dialogSignFile">
+                  </codx-input>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
+                      </codx-label>
+                      <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['CategoryID']"
+                        field="categoryID" (valueChange)="valueChange($event)" [multiple]="false">
+                      </codx-input>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
-                        </codx-label>
-                        <codx-input type="text" name="text" ngDefaultControl [Group]="dialogSignFile" field="refNo"
-                          [crrValue]="dialogSignFile.value?.refNo">
-                        </codx-input>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <codx-label fiedName="Pages" default="Số trang" [formModel]="formModel">
-                        </codx-label>
-                        <codx-input type="number" name="number" ngDefaultControl field="pages" [Group]="dialogSignFile"
-                          (valueChange)="valueChange($event)" [min]="0" placeholder="0"
-                          [crrValue]="dialogSignFile.value?.pages" [showSpinButton]="false">
-                        </codx-input>
-                      </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label default="Mức độ ưu tiên" fiedName="Priority" [formModel]="formModel">
+                      </codx-label>
+                      <codx-input type="valuelist" name="valuelist" ngDefaultControl field="priority"
+                        (valueChange)="valueChange($event)" [refValue]="cbxName['Priority']">
+                      </codx-input>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <codx-label fiedName="EmployeeID" [formModel]="formModel" default="Người yêu cầu">
-                    </codx-label>
-                    <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['EmployeeID']"
-                      field="employeeID" (valueChange)="valueChange($event)">
-                    </codx-input>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
+                      </codx-label>
+                      <codx-input type="text" name="text" ngDefaultControl [Group]="dialogSignFile" field="refNo"
+                        [crrValue]="dialogSignFile.value?.refNo">
+                      </codx-input>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <codx-label fiedName="OrgUnitID" [formModel]="formModel" default="Phòng ban">
-                    </codx-label>
-                    <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['OrgUnitID']"
-                      field="orgUnitID" (valueChange)="valueChange($event)" class="form-control">
-                    </codx-input>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="Pages" default="Số trang" [formModel]="formModel">
+                      </codx-label>
+                      <codx-input type="number" name="number" ngDefaultControl field="pages" [Group]="dialogSignFile"
+                        (valueChange)="valueChange($event)" [min]="0" placeholder="0"
+                        [crrValue]="dialogSignFile.value?.pages" [showSpinButton]="false">
+                      </codx-input>
+                    </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <codx-label fiedName="EmployeeID" [formModel]="formModel" default="Người yêu cầu">
+                  </codx-label>
+                  <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['EmployeeID']"
+                    field="employeeID" (valueChange)="valueChange($event)">
+                  </codx-input>
+                </div>
+                <div class="form-group">
+                  <codx-label fiedName="OrgUnitID" [formModel]="formModel" default="Phòng ban">
+                  </codx-label>
+                  <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['OrgUnitID']"
+                    field="orgUnitID" (valueChange)="valueChange($event)" class="form-control">
+                  </codx-input>
                 </div>
               </div>
             </div>
@@ -184,7 +181,7 @@
             </codx-label>
           </button>
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-outline-primary" (click)="continue(currentTab)">
+          <button type="button" class="btn btn-primary" (click)="continue(currentTab)">
             <codx-label name="lblContinue" [formModel]="formModel" default="Tiếp tục"></codx-label>
           </button>
         </div>

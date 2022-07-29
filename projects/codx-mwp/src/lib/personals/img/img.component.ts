@@ -15,6 +15,7 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
 export class ImgComponent implements OnInit, AfterViewInit {
 
   data: any = [];
+  user: any;
   functionList = {
     entityName: '',
     funcID: '',
@@ -24,6 +25,12 @@ export class ImgComponent implements OnInit, AfterViewInit {
     VIDEO: "video",
   }
   file_img: any[] = [];
+  predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
+  dataValue: any;
+  // x =>  x.ObjectType == objectType && x.IsDelete == false &&
+  //          x.CreatedBy == UserID && (x.ReferType == "image" || x.ReferType == "video"
+
+  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private api: ApiHttpService,
@@ -31,33 +38,37 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private dt: ChangeDetectorRef,
     private fileService: FileService,
     private callfc: CallFuncService,
+    private auth: AuthStore,
   ) {
     this.cache.functionList('WP').subscribe(res => {
       this.functionList.entityName = res.entityName;
       this.functionList.funcID = res.functionID;
-    })
+    });
+    this.user = this.auth.get();
+    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
   }
 
   ngOnInit(): void {
-    this.getFile();
+    // this.getFile();
   }
 
   ngAfterViewInit() {
+    console.log("check listView", this.listView)
   }
 
-  getFile() {
-    this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
-      subscribe((files: any[]) => {
-        if (files.length > 0) {
-          files.forEach((f: any) => {
-            if (f.referType == this.FILE_REFERTYPE.IMAGE && (f.thumbnail != '' || f.thumbnail != null)) {
-              this.file_img.push(f);
-            }
-          });
-          this.dt.detectChanges();
-        }
-      })
-  }
+  // getFile() {
+  //   this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
+  //     subscribe((files: any[]) => {
+  //       if (files.length > 0) {
+  //         files.forEach((f: any) => {
+  //           if (f.referType == this.FILE_REFERTYPE.IMAGE && (f.thumbnail != '' || f.thumbnail != null)) {
+  //             this.file_img.push(f);
+  //           }
+  //         });
+  //         this.dt.detectChanges();
+  //       }
+  //     })
+  // }
 
   openImg(item) {
     this.fileService.getFile(item.recID).subscribe(data => {

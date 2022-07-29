@@ -27,6 +27,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
@@ -54,6 +55,7 @@ export class TasksComponent extends UIComponent {
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
   dialog!: DialogRef;
+  dialogConFirmTask!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
@@ -699,9 +701,9 @@ export class TasksComponent extends UIComponent {
             });
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
-            this.notiService.notifyCode('tm009');
+            this.notiService.notifyCode('TM009');
           } else {
-            this.notiService.notifyCode('tm008');
+            this.notiService.notifyCode('TM008');
           }
         });
     }
@@ -813,4 +815,27 @@ export class TasksComponent extends UIComponent {
   hoverPopover(p: any) {
     this.popoverDataSelected = p;
   }
+
+  //#region ConfirmControl 
+   openConfirmControl(moreFunc,data){
+    if (data.owner != this.user.userID) {
+      this.notiService.notify(
+        'Bạn không thể xác nhận công việc của người khác !'
+      );
+      return;
+    }
+    var obj ={
+      moreFunc : moreFunc ,
+      data : data,
+      funcID : this.funcID
+    }
+    this.dialogConFirmTask = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+   }
 }

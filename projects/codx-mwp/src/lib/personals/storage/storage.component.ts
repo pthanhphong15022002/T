@@ -14,6 +14,7 @@ import {
   UIComponent,
   CodxListviewComponent,
   CRUDService,
+  CacheService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +42,6 @@ export class StorageComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input() formModel: FormModel;
   user: any;
   dataValue = '';
   predicate = 'CreatedBy=@0';
@@ -72,7 +72,6 @@ export class StorageComponent
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private storageService: StorageServices
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -96,7 +95,6 @@ export class StorageComponent
   }
 
   ngAfterViewInit() {
-    this.formModel = this.view.formModel;
   }
 
   testdate(dr) {}
@@ -121,20 +119,20 @@ export class StorageComponent
 
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
-    this.view.onSearch(e);
+    this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 
   formAddNoteBook() {
     this.dataSort = [];
-    this.view.dataService.addNew().subscribe((res: any) => {
+    (this.listView.dataService as CRUDService).addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view.dataService as CRUDService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.listView.dataService as CRUDService;
+      option.FormModel = this.listView?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         AddUpdateStorageComponent,
-        [this.view.dataService.data, 'add'],
+        [this.listView.dataService.data, 'add'],
         option
       );
     });
@@ -142,19 +140,19 @@ export class StorageComponent
 
   edit(data: any) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.listView.dataService.dataSelected = data;
     }
     this.dataSort = [];
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+    (this.listView.dataService as CRUDService)
+      .edit(this.listView.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.dataService as CRUDService;
-        option.FormModel = this.view?.formModel;
+        option.DataService = this.listView?.dataService as CRUDService;
+        option.FormModel = this.listView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
-          [this.view.dataService.dataSelected, 'edit'],
+          [this.listView.dataService.dataSelected, 'edit'],
           option
         );
       });
@@ -179,7 +177,7 @@ export class StorageComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.remove(data).subscribe();
+          (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -210,7 +208,7 @@ export class StorageComponent
   }
 
   sortStorage() {
-    this.view.dataService.data = this.view.dataService.data.sort(function (
+    this.listView.dataService.data = this.listView.dataService.data.sort(function (
       a,
       b
     ) {

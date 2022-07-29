@@ -21,7 +21,8 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   user: any;
   STATUS_TASK_GOAL = StatusTaskGoal;
-
+  param: any;
+  paramModule: any;
   functionID: string;
   data: any;
   gridViewSetup: any;
@@ -44,14 +45,14 @@ export class PopAddTaskgroupComponent implements OnInit {
     private api: ApiHttpService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,) {
-
+    this.getParam();
     // this.taskGroups = {
     //   ...this.taskGroups,
     //   ...dt?.data,
     // };
     this.data = dialog.dataService!.dataSelected;
     this.taskGroups = this.data;
-    // this.action = dt.data[1];
+    this.action = dt.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
   }
@@ -75,6 +76,23 @@ export class PopAddTaskgroupComponent implements OnInit {
     }
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
+  }
+
+  getParam(callback = null) {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetParameterByModuleWithCategoryAsync',
+        ['TM_Parameters', '1']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.param = JSON.parse(res.dataValue);
+          this.paramModule = this.param;
+        }
+      });
   }
 
   onDeleteTodo(index) {
@@ -119,19 +137,25 @@ export class PopAddTaskgroupComponent implements OnInit {
       this.taskGroups.taskGroupName = data.data;
     }
   }
-  valueApp(data) {
-
-    this.taskGroups.approveControl = data.data;
-
-    console.log(this.taskGroups.approveControl);
-  }
-  valuePro(data) {
-    this.taskGroups.projectControl = data.data;
-  }
-  valueAtt(data) {
-    this.taskGroups.attachmentControl = data.data;
+  valueList(data) {
+    this.taskGroups[data.field] = data.data;
 
   }
+
+  valueWitch(data){
+    if(data.data == true){
+      this.taskGroups[data.field] = '1';
+    }else{
+      this.taskGroups[data.field] = '0';
+    }
+  }
+  // valuePro(data) {
+  //   this.taskGroups.projectControl = data.data;
+  // }
+  // valueAtt(data) {
+  //   this.taskGroups.attachmentControl = data.data;
+
+  // }
   valueCheck(data) {
     this.taskGroups.checkListControl = data.data
   }
@@ -167,8 +191,25 @@ export class PopAddTaskgroupComponent implements OnInit {
     // this.renderer.addClass(popup, 'drawer-on');
   }
 
-  //save
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-playlist_add_check', text: 'Kiểm soát nhập liệu', name: 'Control' },
+    { icon: 'icon-playlist_add_check', text: 'Việc cần làm', name: 'Job' },
 
+  ];
+
+  setTitle(e: any) {
+    if(this.action=='add'){
+      this.title = 'Thêm ' + e;
+
+    }else if(this.action == 'edit'){
+      this.title = 'Sửa ' + e;
+
+    }
+    this.changDetec.detectChanges();
+  }
+
+  //save
 
   beforeSave(op: any) {
     var data = [];
