@@ -410,19 +410,10 @@ export class AddNoteComponent implements OnInit {
     var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
     this.listNote.push(Object.assign({}, dt));
     // this.listNote.push(this.listNote.shift());
-    // for (let i = this.listNote.length - 1; i > 0; i--) {
-    //   for (let y = i - 2; y >= 0; y--) {
-    //     if (this.listNote[i].listNote == this.listNote[y].listNote) {
-    //       this.listNote[i] = {
-    //         status: this.type == 'check' ? 0 : null,
-    //         listNote: '',
-    //       }
-    //     }
-    //   }
-    // }
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');
     if (ele) {
+
       let htmlEle = ele[0] as HTMLElement;
       htmlEle.focus();
     }

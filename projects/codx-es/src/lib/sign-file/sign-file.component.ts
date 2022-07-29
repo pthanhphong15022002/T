@@ -97,6 +97,7 @@ export class SignFileComponent implements OnInit {
         },
       },
     ];
+    this.df.detectChanges();
   }
 
   clickChangeTaskViewStatus(stt) {
@@ -111,7 +112,7 @@ export class SignFileComponent implements OnInit {
   }
 
   changeItemDetail(event) {
-    this.itemDetail = event.data;
+    this.itemDetail = event?.data;
   }
 
   editSignFile(e) {

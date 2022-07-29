@@ -972,8 +972,7 @@ export class AttachmentComponent implements OnInit {
   }
 
 
-  uploadFile() {
-    console.log(this.uploadObj);
+  uploadFile() {    
     var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
     if (ctrl != null)
       ctrl.click();

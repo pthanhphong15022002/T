@@ -53,13 +53,12 @@
               }
             ],
             "styles": [
-              "node_modules/codx-core/assets/sass/style.scss",
-              "src/styles.scss",
               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
-              "./node_modules/@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reports.all.min.css",
-              "./node_modules/@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reportdesigner.min.css",
-              "./node_modules/codemirror/lib/codemirror.css",
-              "./node_modules/codemirror/addon/hint/show-hint.css"
+
+              "./node_modules/codx-core/assets/sass/style.scss",
+              "src/styles.scss"
+
+
             ],
             "scripts": [
               "node_modules/codemirror/lib/codemirror.js",

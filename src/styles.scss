@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+
 // Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
 :root {
     --primary: #3699ff;
@@ -195,68 +196,87 @@ ngb-popover-window[role="tooltip"] {
 .max-h-25px {
     max-height: 18px !important;
 }
-.codx-card-custom{
-    .stepper-body{
+
+.codx-card-custom {
+    .stepper-body {
         background: rgba(229, 229, 229, 0.67);
         box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+        height: calc(100% - 60px);
     }
-    .codx-stepper{
-        .stepper-item{
-            .stepper-default{
+
+    .codx-stepper {
+        .stepper-item {
+            .stepper-default {
                 display: block;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
-        .stepper-item.active{
-            .stepper-default{
+
+        .stepper-item.active {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: block;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
-        .stepper-item.approve-disabled{
-            .stepper-default{
+
+        .stepper-item.approve-disabled {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: block;
             }
         }
-        .stepper-item.approve{
-            .stepper-default{
+
+        .stepper-item.approve {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: block;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
+
         .stepper-item .stepper-icon {
             display: flex;
             align-items: center;
@@ -266,15 +286,17 @@ ngb-popover-window[role="tooltip"] {
             border-radius: 0;
             width: auto;
             height: auto;
-            background-color: transparent;      
+            background-color: transparent;
         }
-        .stepper-line{
+
+        .stepper-line {
             border: 0.5px dashed #ccc;
         }
-      }
+    }
 }
 
 
+<<<<<<< HEAD
 .card-item {
     position: relative;
 }
@@ -336,3 +358,13 @@ ngb-popover-window[role="tooltip"] {
     color: #ffa800!important;
 }
 
+=======
+input.e-input,
+textarea.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+    font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 13px;
+    font-weight: 400;
+}
+>>>>>>> a9738133a3a9cd4b8e9d4208a84b306512cefb33

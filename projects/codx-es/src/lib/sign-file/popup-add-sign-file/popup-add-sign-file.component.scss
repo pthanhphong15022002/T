@@ -1,14 +1,7 @@
 ::ng-deep  {
-  // .e-dlg-content{
-  //   background: rgba(229, 229, 229, 0.67);
-  //   box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
-  // }
-  // .radius-0{
-  //   border-radius:0;
-  // }
-  // .app-container .card{
-  //   box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
-  // }
+  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit;  
+}
   popup-add-sign-file{
     height: 100%;
     display: block;
@@ -32,5 +25,12 @@
         height: calc(100% - 60px);
       }
     }
+    .e-btn, .e-css.e-btn {
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      background-color: #0d6dc2;
+      border-color: #1386ec;
+      color: #fff;
+      transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
   }
 }

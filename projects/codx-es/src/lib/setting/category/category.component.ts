@@ -6,7 +6,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
   CacheService,
@@ -72,17 +71,16 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
 
+    this.button = {
+      id: 'btnAdd',
+    };
     this.esService.getFormModel(this.funcID).then((formModel) => {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -113,12 +111,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               headerText: gv['Icon'].headerText,
               template: this.icon,
               width: 80,
-            },
-            {
-              field: 'color',
-              headerText: gv['Color'].headerText,
-              template: this.color,
-              width: 120,
             },
             {
               field: 'memo',

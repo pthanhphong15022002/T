@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   CallFuncService,
@@ -19,6 +20,7 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { isBuffer } from 'util';
 import { File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
@@ -96,6 +98,10 @@ export class PopupAddSignFileComponent implements OnInit {
             approveControl: '1',
             approveStatus: '1',
           });
+          this.dialogSignFile.addControl(
+            'approveControl',
+            new FormControl('3')
+          );
 
           this.codxService
             .getAutoNumber(
@@ -144,9 +150,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
-  onSaveForm() { }
+  onSaveForm() {}
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -188,8 +194,10 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  close() {
-    this.dialog && this.dialog.close();
+  close(dialogClose) {
+    if (this.processTab > 0) {
+      this.callfuncService.openForm(dialogClose, '', 400, 250);
+    }
   }
 
   valueChange(event) {
@@ -264,7 +272,7 @@ export class PopupAddSignFileComponent implements OnInit {
   continue(currentTab) {
     let currentNode = 0;
     if (currentTab > 0) {
-      currentNode = currentTab + 1;
+      currentNode = currentTab * 2;
     }
     console.log((this.status.nativeElement as HTMLElement).childNodes);
     let nodes = Array.from(
@@ -301,34 +309,15 @@ export class PopupAddSignFileComponent implements OnInit {
           break;
         }
         this.onSaveSignFile();
-        // this.currentTab++;
         break;
       case 2:
+        this.currentTab++;
+        if (this.processTab == 1) this.processTab++;
         break;
       case 3:
         break;
     }
-    // if (currentTab == 1) {
-    //   //this.transID = '629de1080d7d066f90f975a3';
-    //   // this.api
-    //   //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
-    //   //     this.dialogSignFile.value,
-    //   //     this.isAdd,
-    //   //     this.transID,
-    //   //   ])
-    //   //   .subscribe((res) => {
-    //   //     if (res && res.msgBodyData != null) {
-    //   //       this.dialogSignFile.patchValue(res.msgBodyData[0]);
-    //   //       this.transID = res.msgBodyData[0].recID;
-    //   //       this.currentTab = currentTab + 1;
-    //   //       this.viewApprovalStep.setTransID(this.transID);
-    //   //       this.cr.detectChanges();
-    //   //     }
-    //   //   });
-    //   this.currentTab = currentTab + 1;
-    // } else {
-    //   this.currentTab = currentTab + 1;
-    // }
+
     this.cr.detectChanges();
   }
 
@@ -344,18 +333,22 @@ export class PopupAddSignFileComponent implements OnInit {
     this.showPlan = !this.showPlan;
   }
 
-  deleteSignFile() {
-    if (this.dialogSignFile.value.recID != null) {
-      this.api
-        .execSv(
-          'ES',
-          'ERM.Business.ES',
-          'SignFilesBusiness',
-          'DeleteSignFileAsync',
-          [this.dialogSignFile.value.recID]
-        )
+  clickIsSave(isSave, dialogClose: DialogRef) {
+    if (isSave) {
+      if (this.processTab == 1) {
+        this.onSaveForm();
+      }
+      dialogClose && dialogClose.close();
+      this.dialog && this.dialog.close();
+    } else {
+      this.esService
+        .deleteSignFile(this.dialogSignFile.value.recID)
         .subscribe((res) => {
+          console.log(res);
+
           if (res) {
+            dialogClose && dialogClose.close();
+            this.dialog && this.dialog.close();
           }
         });
     }

@@ -66,7 +66,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   constructor(
     private esService: CodxEsService,
-    private api: ApiHttpService,
     private cache: CacheService,
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -135,8 +134,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
-            icon: 'icon-category',
-            color: '#000000',
+            icon: 'fa-solid fa-file-lines',
+            color: '#0078FF',
           });
           this.dialogCategory.addControl(
             'countStep',
@@ -201,12 +200,24 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event?.component) {
       if (event?.data === Object(event?.data))
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
       else this.dialogCategory.patchValue({ [event['field']]: event.data });
     }
     this.cr.detectChanges();
+  }
+
+  beforeSave(option: any) {
+    let itemData = this.dialogCategory.value;
+    let countStep = this.lstStep?.length ?? 0;
+    if (this.isAdd) {
+      option.method = 'AddNewAsync';
+    } else {
+      option.method = 'EditCategoryAsync';
+    }
+    option.data = [itemData, countStep];
+    return true;
   }
 
   onSaveForm() {
@@ -255,25 +266,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforeSave(option: any) {
-    let itemData = this.dialogCategory.value;
-    let countStep = this.lstStep?.length ?? 0;
-    if (this.isAdd) {
-      option.method = 'AddNewAsync';
-    } else {
-      option.method = 'EditCategoryAsync';
-    }
-
-    // this.esService.approvalStep.subscribe((res) => {
-    //   if (res) {
-    //     countStep = res.length;
-    //   }
-    // });
-
-    option.data = [itemData, countStep];
-    return true;
-  }
-
   openAutoNumPopup() {
     this.cfService.openForm(
       PopupAddAutoNumberComponent,
@@ -316,14 +308,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   closePopup() {
     this.esService.setupAutoNumber.next(null);
     this.dialog && this.dialog.close();
-  }
-
-  getCount(countStep) {
-    let lstNumber = [];
-    for (let i = 0; i < countStep; i++) {
-      lstNumber.push(i + 1);
-    }
-    return lstNumber;
   }
 
   setViewAutoNumber(modelAutoNumber) {

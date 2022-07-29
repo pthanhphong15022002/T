@@ -19,6 +19,7 @@ import {
   NotificationsService,
   SidebarModel,
   DialogRef,
+  CRUDService,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -102,7 +103,7 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnUpload',            
+      id: 'btnUpload',
     };
   }
 
@@ -175,10 +176,7 @@ export class HomeComponent extends UIComponent {
 
   clickMF($event, data, type) {
     if (type == 'file') {
-
-    }
-    else {
-
+    } else {
     }
   }
 
@@ -209,12 +207,11 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-   //  console.log($data.data);
-   // alert(1);
+    //  console.log($data.data);
+    // alert(1);
     //let data = $event.data;
-    if ($data.data == null)
-      return;
-      
+    if ($data.data == null) return;
+
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {
@@ -253,11 +250,11 @@ export class HomeComponent extends UIComponent {
           //  this.dmSV.isTree = true;
           if (res != null) {
             //var datas = new Map<string, any>();
-          //  datas.set(id, res[0]);
-            //cdxView            
+            //  datas.set(id, res[0]);
+            //cdxView
             var data = res[0];
-           // this.view.dataService.addNew(data);            
-            this.listFolders = data;            
+            // this.view.dataService.addNew(data);
+            this.listFolders = data;
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
             tree.addChildNodes(item, data);
@@ -272,7 +269,7 @@ export class HomeComponent extends UIComponent {
         });
       } else {
         //this.dmSV.isTree = true;
-      //  alert(1);
+        //  alert(1);
         this.dmSV.listFolder.next(item.items);
         this.listFolders = item.items;
         this.changeDetectorRef.detectChanges();
@@ -285,13 +282,9 @@ export class HomeComponent extends UIComponent {
       // });
     } else {
       this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(
-        this.titleAccessDenied
-      );
+      this.notificationsService.notify(this.titleAccessDenied);
     }
   }
-
- 
 
   // checkUserForder(data) {
   //   return false;
@@ -343,6 +336,7 @@ export class HomeComponent extends UIComponent {
         },
       },
     ];
+    this.codxview.dataService.parentIdField = 'ParentID';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
@@ -352,16 +346,16 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-   // alert(1);
+    // alert(1);
     // for(var i=0; i<this.views.length; i++) {
     //   if (this.view.funcID == "DMT02" || this.view.funcID == "DMT03")
-    //     this.views[i].type = ViewType.treedetail; 
+    //     this.views[i].type = ViewType.treedetail;
     //   else
-    //     this.views[i].type = ViewType.content; 
+    //     this.views[i].type = ViewType.content;
     // }
-    // this.views[0].type = ViewType.content; 
-    // this.views[1].type = ViewType.content; 
-    // this.views[2].type = ViewType.content; 
+    // this.views[0].type = ViewType.content;
+    // this.views[1].type = ViewType.content;
+    // this.views[2].type = ViewType.content;
 
     this.folderService.options.funcID = this.view.funcID;
     if (this.dmSV.folderType != this.view.funcID)
@@ -369,8 +363,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.folderType = this.view.funcID;
     this.dmSV.idMenuActive = this.view.funcID;
     this.dmSV.loadedFile = false;
-    
-   // this.dmSV.loadedFolder = false;
+
+    // this.dmSV.loadedFolder = false;
     // if (this.listFolders == null)
     //   this.listFolders = this.view.dataService.data;
     this.dmSV.loadedFolder = true;
@@ -384,12 +378,14 @@ export class HomeComponent extends UIComponent {
     // });
 
     this.fileService.options.funcID = this.view.funcID;
-    this.fileService.getListActiveFiles('', this.view.funcID).subscribe(async (res) => {
-      if (res != null) {
-        this.listFiles = res;
-        this.dmSV.loadedFile = true;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    this.fileService
+      .getListActiveFiles('', this.view.funcID)
+      .subscribe(async (res) => {
+        if (res != null) {
+          this.listFiles = res;
+          this.dmSV.loadedFile = true;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
 }
