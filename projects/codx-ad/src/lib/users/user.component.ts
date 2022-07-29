@@ -76,13 +76,13 @@ export class UserComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }

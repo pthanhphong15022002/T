@@ -64,12 +64,12 @@ export class AddUserComponent implements OnInit {
       }
     })
   }
- // initForm() 
- // {
-    // this.view.entityName = 'AD_Users';
-    // this.view.formName = 'Users';
-    // this.view.gridViewName = 'grvUsers';
- // }
+  // initForm()
+  // {
+  // this.view.entityName = 'AD_Users';
+  // this.view.formName = 'Users';
+  // this.view.gridViewName = 'grvUsers';
+  // }
 
   // openPopup(item: any) {
   //   this.view.dataService.addNew().subscribe((res: any) => {
@@ -202,18 +202,18 @@ export class AddUserComponent implements OnInit {
 
   valueEmp(data) {
     if (data.data) {
-      this.adUser.employeeID = data.data[0];
+      this.adUser.employeeID = data.data;
     }
   }
 
   valueUG(data) {
     if (data.data) {
-      this.adUser.userGroup = data.data[0];
+      this.adUser.userGroup = data.data;
     }
   }
   valueBU(data) {
     if (data.data) {
-      this.adUser[data.field] = data.data[0];
+      this.adUser[data.field] = data.data;
     }
   }
 
@@ -229,7 +229,7 @@ export class AddUserComponent implements OnInit {
   }
 
   buttonClick(e: any) {
-   
+
   }
 
   // getFormGroup(formName, gridView): Promise<FormGroup> {
