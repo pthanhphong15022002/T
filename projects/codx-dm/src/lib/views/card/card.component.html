@@ -1,4 +1,10 @@
-<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home">
+<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home hover-scroll-overlay-y" style="overflow: auto !important"
+  data-kt-scroll="true" 
+  data-kt-scroll-activate="{default: true}"
+  data-kt-scroll-max-height="auto"
+  attr.data-kt-scroll-dependencies=''
+  attr.data-kt-scroll-wrappers='.dms-viewcard'
+  attr.data-kt-scroll-offset="'0px'">
     <div class="dms dms-viewcard">
         <div class="card-group">                
             <div
