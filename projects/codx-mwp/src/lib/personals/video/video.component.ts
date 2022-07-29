@@ -46,12 +46,13 @@ export class VideoComponent implements OnInit {
     this.dataValue = `WP_Comments;false;${this.user?.userID};video`;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
     this.listview.dataService.requestEnd = (t, d) => {
-      if (d) this.getFile(d);
+      if (t == 'loaded') {
+        if (d) this.getFile(d);
+      }
     };
   }
 
@@ -59,12 +60,12 @@ export class VideoComponent implements OnInit {
     if (data.length > 0) {
       data.forEach((f: any) => {
         if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-          f['srcVideo'] = 
-          `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+          f[
+            'srcVideo'
+          ] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
           this.file_video.push(f);
         }
       });
-      console.log("cheeck video", this.file_video);
       this.dt.detectChanges();
     }
   }
