@@ -313,8 +313,7 @@ export class AddNoteComponent implements OnInit {
     }
     this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj)
     this.noteService.dataUpdate.subscribe((res) => {
-      this.countNotePin = 0;
-      this.getNumberNotePin();
+      this.countNotePin--;
     })
   }
 
@@ -337,7 +336,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   checkPinWithFormAdd() {
-    debugger;
     if (this.checkPin == true) {
       if (this.countNotePin + 1 > this.maxPinNotes)
         this.openFormUpdateIsPin(this.note, 'updateNoteNew');

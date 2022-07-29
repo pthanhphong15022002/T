@@ -60,6 +60,11 @@ export class UpdateNotePinComponent implements OnInit {
     }
   }
 
+  onCheckEdit() {
+    if (this.typeUpdate != undefined) this.onEditIsPin();
+    else this.onEditNote();
+  }
+
   onEditIsPin() {
     var isPin = !this.dataOld.isPin;
     this.dataOld.isPin = isPin;
@@ -72,7 +77,8 @@ export class UpdateNotePinComponent implements OnInit {
         this.dialog.close();
         var object = [{ data: res, type: 'edit' }];
         this.noteService.data.next(object);
-        this.noteService.dataUpdate.next(object);
+        if (this.typeUpdate != undefined)
+          this.noteService.dataUpdate.next(object);
         for (let i = 0; i < this.data.length; i++) {
           if (this.data[i].recID == this.dataOld?.recID) {
             this.data[i].isPin = res?.isPin;
@@ -83,10 +89,7 @@ export class UpdateNotePinComponent implements OnInit {
 
   onEditNote() {
     if (this.checkEditIsPin == true) {
-      if (this.typeUpdate != undefined) {
-        this.onEditIsPin();
-        return;
-      }
+      this.onEditIsPin();
       var isPin = !this.itemUpdate.isPin;
       this.itemUpdate.isPin = isPin;
       this.api
