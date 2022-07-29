@@ -10,6 +10,7 @@ import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, ItemInterval } from '@shared/models/file.model';
+import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 
 @Component({
   selector: 'move',
@@ -24,7 +25,7 @@ export class MoveComponent implements OnInit {
   @Input() type: any;
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
-  selection = true;
+  selection = 0;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
   html: string;
@@ -61,6 +62,7 @@ export class MoveComponent implements OnInit {
   data: FileInfo;  
   objectType: string;
   copy = false;
+  selectId: string;
   interval: ItemInterval[];
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
@@ -106,7 +108,7 @@ export class MoveComponent implements OnInit {
     this.folderService.getFolders("").subscribe(async res => {    
       if (res != null) {
         this.listNodeMove = res[0].filter(item => item.read && item.recID.toString() != this.id);      
-        this.selection = true; 
+        this.selection = 0; 
         this.changeDetectorRef.detectChanges();
       }        
     });
@@ -115,10 +117,10 @@ export class MoveComponent implements OnInit {
   onSaveRightChanged($event, ctrl) { 
     switch(ctrl) {
       case "copyto":
-        this.selection = true;
+        this.selection = 0;
         break;
       case "move":
-        this.selection = false;
+        this.selection = 1;
         break;
     }
     this.changeDetectorRef.detectChanges();    
@@ -358,177 +360,156 @@ export class MoveComponent implements OnInit {
     return fullText;
   }
   
-
-  onSelectionChanged($data, tree) {
-    // var id = $data.dataItem.recID;
-    // this.selectId = id;
-    // var that = this;
-    // if (this.folderId == id) {
-    //   this.dmSV.setDisableSave.next(true);
-    // }
-    // else this.dmSV.setDisableSave.next(false);
-
-    // if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
-    //   this.folderService.getFolders(id, this.dmSV.idMenuActive).subscribe(async res => {
-    //     tree.addChildNodes($data.dataItem, res);
-    //     //that.tree.addChildNodes();        
-    //     that.changeDetectorRef.detectChanges();
-    //   });
-    // }
-    // else {
-    //   this.dmSV.listFolder.next($data.dataItem.items);
-    //   this.changeDetectorRef.detectChanges();
-    // }
+  onSelectionAddChanged($node, tree) {
+    var id = $node.data.recID;
+    this.selectId = id;       
+    if ($node.data.items && $node.data.items.length <= 0) {
+      this.folderService.getFolders(id).subscribe(async res => {
+        tree.addChildNodes($node.data, res[0]);
+        this.changeDetectorRef.detectChanges();
+      });
+    }    
   }
 
   CopyDataTo() {
-    // var that = this;
-    // if (this.type == 'file') {
-    //   this.fileService.copyFile(that.id, that.fullName, that.selectId, that.selection).subscribe(async res => {
-    //     if (res.status == 0) {
-    //       let list = that.dmSV.listFiles.getValue();
-    //       if (list == null) list = [];
-    //       // move
-    //       if (that.selection == 1) {
-    //         let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-    //         if (index > -1) {
-    //           list.splice(index, 1);//remove element from array             
-    //           that.dmSV.listFiles.next(list);
-    //           that.changeDetectorRef.detectChanges();
-    //         }
-    //       }
-    //       else {
-    //         if (res.data.folderId == that.id) {
-    //           list.push(Object.assign({}, res.data));
-    //           that.dmSV.listFiles.next(list);
-    //           that.changeDetectorRef.detectChanges();
-    //         }
-    //       }
-    //       this.modalService.dismissAll();
-    //     }
-    //     else {
-    //       $('#fullNameMove').addClass('form-control is-invalid');
-    //       $('#fullNameMove').focus();
-    //       that.message = res.message;
-    //       that.errorshow = true;
-    //     }
+    var that = this;
+    if (this.objectType == 'file') {
+      this.fileService.copyFile(this.id, this.fullName, that.selectId, this.selection).subscribe(async res => {
+        if (res.status == 0) {
+          let list = that.dmSV.listFiles.getValue();
+          if (list == null) list = [];
+          // move
+          if (that.selection == 1) {
+            let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array             
+              that.dmSV.listFiles.next(list);
+              that.changeDetectorRef.detectChanges();
+            }
+          }
+          else {
+            if (res.data.folderId == that.id) {
+              list.push(Object.assign({}, res.data));
+              that.dmSV.listFiles.next(list);
+              that.changeDetectorRef.detectChanges();
+            }
+          }          
+          this.dialog.close();
+        }
+        else {      
+          that.notificationsService.notify(res.message);
+          that.errorshow = true;
+        }
 
-    //     if (res.status == 6) {
-    //       //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
-    //       this.confirmationDialogService.confirm(this.titlemessage, res.message)
-    //         .then((confirmed) => {
-    //           if (confirmed) {
-    //             that.fileService.copyFile(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
-    //               if (item.status == 0) {
-    //                 let files = that.dmSV.listFiles.getValue();
-    //                 if (files == null) files = [];
+        if (res.status == 6) {
+          //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
+          var config = new AlertConfirmInputConfig();
+          config.type = "checkBox";
+          
+          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+            if(x.event.status == "Y") {
+              that.fileService.copyFile(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
+                if (item.status == 0) {
+                  let files = that.dmSV.listFiles.getValue();
+                  if (files == null) files = [];
 
-    //                 if (that.selection == 1) {
-    //                   let index = files.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-    //                   if (index > -1) {
-    //                     files.splice(index, 1);//remove element from array             
-    //                     that.dmSV.listFiles.next(files);
-    //                     that.changeDetectorRef.detectChanges();
-    //                   }
-    //                 }
-    //                 else {
-    //                   if (item.data.folderId == that.selectId) {
-    //                     files.push(Object.assign({}, item.data));
-    //                     that.dmSV.listFiles.next(files);
-    //                     that.changeDetectorRef.detectChanges();
-    //                   }
-    //                 }
-    //                 that.modalService.dismissAll();
-    //               }
-    //               that.notificationsService.notify(item.message);
-    //             });
-    //           }
-    //         })
-    //         .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
+                  if (that.selection == 1) {
+                    let index = files.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
+                    if (index > -1) {
+                      files.splice(index, 1);//remove element from array             
+                      that.dmSV.listFiles.next(files);
+                      that.changeDetectorRef.detectChanges();
+                    }
+                  }
+                  else {
+                    if (item.data.folderId == that.selectId) {
+                      files.push(Object.assign({}, item.data));
+                      that.dmSV.listFiles.next(files);
+                      that.changeDetectorRef.detectChanges();
+                    }
+                  }
+                  this.dialog.close();                  
+                }
+                this.notificationsService.notify(item.message);
+              });
+            }
+          });
+        }
+        else {
+          that.notificationsService.notify(res.message);
+        }        
+      });
+    }
+    else {
+      this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 2).subscribe(async res => {
+        if (res.status == 0) {
+          var list = that.dmSV.listFolder.getValue();
+          if (list == null)
+            list = [];
+          // move
+          if (that.selection == 1) {
+            // let list = this.dmSV.listFolder.getValue();
+            this.dmSV.nodeDeleted.next(that.id);
+            this.dmSV.addFolder.next(res.data); // them node con
+            let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              that.dmSV.listFolder.next(list);
+              that.changeDetectorRef.detectChanges();
+            }
+          }
 
-    //     }
-    //     else {
-    //       that.notificationsService.notify(res.message);
-    //     }
-    //     // that.changeDetectorRef.detectChanges();
-    //     // this.notificationsService.notify(res.message);
-    //   });
-    // }
-    // else {
-    //   this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 2).subscribe(async res => {
-    //     if (res.status == 0) {
-    //       var list = that.dmSV.listFolder.getValue();
-    //       if (list == null)
-    //         list = [];
-    //       // move
-    //       if (that.selection == 1) {
-    //         // let list = this.dmSV.listFolder.getValue();
-    //         this.dmSV.nodeDeleted.next(that.id);
-    //         this.dmSV.addFolder.next(res.data); // them node con
-    //         let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
-    //         if (index > -1) {
-    //           list.splice(index, 1);//remove element from array
-    //           that.dmSV.listFolder.next(list);
-    //           that.changeDetectorRef.detectChanges();
-    //         }
-    //       }
+          that.changeDetectorRef.detectChanges();
+          that.dialog.close();         
+        }
+        else {        
+          that.notificationsService.notify(res.message);
+          that.errorshow = true;
+        }
+        // thu muc da ce 
+        if (res.status == 2) {
 
-    //       // if (that.selectId == "3" || that.selectId == "4") {
-    //       //   // alert(that.selectId);
-    //       //   that.dmSV.refreshTree.next(that.selectId);
-    //       // }
+          var config = new AlertConfirmInputConfig();
+          config.type = "checkBox";
+          
+          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+            if(x.event.status == "Y") {
+              this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
+                if (item.status == 0) {
+                  that.dmSV.isTree = false;
+                  this.dmSV.currentNode = '';
+                  this.dmSV.folderId.next(item.data.recID);
+                  var folders = this.dmSV.listFolder.getValue();
+                  let index = folders.findIndex(d => d.recID.toString() === that.id);
+                  if (index > -1 && that.selection == 1) {
+                    folders.splice(index, 1);//remove element from array
+                    that.dmSV.nodeDeleted.next(that.id);
+                  }
+                  that.dmSV.listFolder.next(folders);
+                  // that.dmSV.nodeSelect.next(item.data);
+                  // this.dmSV.changeData(folders, null, that.dmSV.getFolderId());
+                  that.changeDetectorRef.detectChanges();
+                  //this.modalService.dismissAll();
+                  that.dialog.close();
+                }
+                else {
+                //  $('#fullNameMove').addClass('form-control is-invalid');
+                //  $('#fullNameMove').focus();
+                //  that.message = item.message;
+                  that.errorshow = true;
+                }
+                that.changeDetectorRef.detectChanges();
+                that.notificationsService.notify(item.message);
+              });
+            }
+          });
 
-    //       that.changeDetectorRef.detectChanges();
-
-    //       that.modalService.dismissAll();
-    //     }
-    //     else {
-    //       $('#fullNameMove').addClass('form-control is-invalid');
-    //       $('#fullNameMove').focus();
-    //       this.message = res.message;
-    //       this.errorshow = true;
-    //     }
-    //     // thu muc da ce 
-    //     if (res.status == 2) {
-    //       this.confirmationDialogService.confirm(this.titlemessage, res.message)
-    //         .then((confirmed) => {
-    //           if (confirmed) {
-    //             this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
-    //               if (item.status == 0) {
-    //                 that.dmSV.isTree = false;
-    //                 this.dmSV.currentNode = '';
-    //                 this.dmSV.folderId.next(item.data.recID);
-    //                 var folders = this.dmSV.listFolder.getValue();
-    //                 let index = folders.findIndex(d => d.recID.toString() === that.id);
-    //                 if (index > -1 && that.selection == 1) {
-    //                   folders.splice(index, 1);//remove element from array
-    //                   that.dmSV.nodeDeleted.next(that.id);
-    //                 }
-    //                 that.dmSV.listFolder.next(folders);
-    //                 // that.dmSV.nodeSelect.next(item.data);
-    //                 // this.dmSV.changeData(folders, null, that.dmSV.getFolderId());
-    //                 that.changeDetectorRef.detectChanges();
-    //                 this.modalService.dismissAll();
-    //               }
-    //               else {
-    //                 $('#fullNameMove').addClass('form-control is-invalid');
-    //                 $('#fullNameMove').focus();
-    //                 that.message = item.message;
-    //                 that.errorshow = true;
-    //               }
-    //               that.changeDetectorRef.detectChanges();
-    //               that.notificationsService.notify(item.message);
-    //             });
-    //           }
-    //         })
-    //         .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-
-    //     }
-    //     else {
-    //       that.notificationsService.notify(res.message);
-    //       //this.modalService.dismissAll();
-    //     }
-    //   });
-    // }
+        }
+        else {
+          that.notificationsService.notify(res.message);
+          that.dialog.close();
+        }
+      });
+    }
   }
 }

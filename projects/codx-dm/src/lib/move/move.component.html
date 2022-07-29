@@ -17,7 +17,7 @@
                             class="test-check"
                             type="radio" 
                             style="width:100%"                                          
-                            [checked]="selection == true ? true : false"                          
+                            [checked]="selection == 0 ? true : false"                          
                             [label]="titleCopyTo"
                             (valueChange)="onSaveRightChanged($event, 'copyto')"                                                             
                         ></codx-input>  
@@ -28,7 +28,7 @@
                             class="test-check"
                             type="radio" 
                             style="width:100%"                                          
-                            [checked]="selection == false ? true : false"                            
+                            [checked]="selection == 1 ? true : false"                            
                             [label]="titleMove"        
                             (valueChange)="onSaveRightChanged($event, 'move')"                                                             
                         ></codx-input>   
@@ -47,7 +47,7 @@
             <div class="mt-6 moveto">
                 <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree"  [data]="listNodeMove" entityName="DM_FolderInfo"
                 service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false idField="recID"
-                parentIdField="parentId" (selectionChange)="onSelectionChanged($event, treeAdd)" [autoLoad]="false"
+                parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
                 [isOutput]="true" [isLoadChild]="false">
               </codx-treeview>
               <ng-template #templatetree let-data>
