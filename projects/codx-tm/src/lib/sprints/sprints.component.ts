@@ -181,20 +181,20 @@ export class SprintsComponent extends UIComponent {
   clickMF(e: any, data: any) {
     this.itemSelected = data;
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
-        if (data.iterationID != this.user.userID)
-          this.edit(data);
-        break;
-      case 'copy':
-        if (data.iterationID != this.user.userID)
-          this.copy(data);
-        break;
-      case 'delete':
+      case 'SYS02':
         if (data.iterationID != this.user.userID)
           this.delete(data);
+        break;
+      case 'SYS03':
+        if (data.iterationID != this.user.userID)
+        this.edit(data);
+        break;
+      case 'SYS04':
+        if (data.iterationID != this.user.userID)
+        this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);

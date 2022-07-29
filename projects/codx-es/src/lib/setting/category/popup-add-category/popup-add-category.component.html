@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center mt-3">
+    <div class="d-flex align-items-center">
 
       <codx-input #checkbox type="switch" id="switch" [checked]="dialogCategory.value.eSign" labelPosition="After"
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
@@ -68,12 +68,12 @@
 
       <codx-label default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
       </codx-label>
-      <codx-input type="textarea" format="ed2" rows="3" class="test-textarea" field="memo" ControlName="memo"
+      <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" ControlName="memo"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.memo??''">
       </codx-input>
     </div>
-    <div class=" row mt-3">
-      <div class="d-flex flex-stack mt-3">
+    <div class="row mt-3">
+      <div class="d-flex flex-stack">
         <div class="fw-bold text-primary">
           <codx-label default="Đánh số văn bản" fiedName="AutoNumber" [formModel]="form.formModel">
           </codx-label>

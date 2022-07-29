@@ -210,7 +210,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   MFClick(event, data) {
-    if (event?.functionID == 'delete') {
+    if (event?.functionID == 'SYS02') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       this.notifySvr

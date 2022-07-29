@@ -29,6 +29,7 @@ export class Approver {}
 })
 export class ApprovalStepComponent implements OnInit {
   @Input() transId = '';
+  @Input() type = '0';
   @Output() addEditItem = new EventEmitter();
 
   headerText = 'Qui trình duyệt';
@@ -43,7 +44,6 @@ export class ApprovalStepComponent implements OnInit {
   isDeleteAll = false;
 
   model: any;
-  type = '0';
 
   constructor(
     private cfService: CallFuncService,
@@ -61,7 +61,7 @@ export class ApprovalStepComponent implements OnInit {
       this.model = dialogData?.data.model;
       this.dialog = dialog;
     } else {
-      this.type = '0';
+      this.type = '1';
     }
   }
 
@@ -124,10 +124,10 @@ export class ApprovalStepComponent implements OnInit {
 
   clickMF(event: any, data) {
     switch (event.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -153,7 +153,7 @@ export class ApprovalStepComponent implements OnInit {
       lstStep: this.lstStep,
       isAdd: false,
       dataEdit: approvalStep,
-      type: '0',
+      type: this.type,
     };
     this.openPopupAddAppStep(data);
   }

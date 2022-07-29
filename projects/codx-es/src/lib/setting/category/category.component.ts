@@ -202,19 +202,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     if (evt) {
       deleteItem = evt;
     }
-    this.viewBase.dataService
-      .delete([deleteItem], true, (opt) => this.beforeDel(opt))
-      .subscribe((res) => {
-        console.log(res);
-      });
-  }
-
-  beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteCategoryAsync';
-
-    opt.data = itemSelected;
-    return true;
+    this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   closeEditForm(event) {
@@ -223,10 +213,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   clickMF(event, data) {
     switch (event?.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
