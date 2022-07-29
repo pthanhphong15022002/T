@@ -14,10 +14,8 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 })
 export class NewsComponent implements OnInit {
   dialogRef: any;
-  functionID = 'WPT02';
+  funcID = "WPT02P";
   entityName = 'WP_News';
-  gridViewName = 'grvNews';
-  fromName = 'News';
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness"
@@ -26,14 +24,14 @@ export class NewsComponent implements OnInit {
   dataValue = "5;null;2;";
   sortColumns = 'CreatedOn';
   sortDirections = 'desc';
-  newsItem: any;
   listNews = [];
   listSlider = [];
-  isHome = true;
+  lstHotNew:any[] = [];
+  lstVideo:any[] = [];
+  lstGroup:any[] = []
   userPermission: any;
   isAllowNavigationArrows = true;
   views: Array<ViewModel> = [];
-  funcID = "WPT02";
   countCarousel = 3;
   NEWSTYPE = {
     POST: "1",
@@ -80,78 +78,27 @@ export class NewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      var category = params["category"];
       this.funcID = this.route.snapshot.params["funcID"];
-      switch (category) {
-        case "home":
-          this.dataValue = "1;0;1;5;2;comanyinfo";
-          this.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
-          break;
-        default:
-          this.isHome = false;
-          this.dataValue ="1;0;1;5;2;"+category;
-          this.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus = @3)) && Status =@4 && Category =@5";
-          break
-      }
-      this.loadData();
+      var category = params["category"];
+      this.loadDataAync(this.funcID,category);
+      this.changedt.detectChanges();
     })
   }
 
-
-  loadData() {
-    let model1 = new DataRequest();
-    model1.funcID = this.functionID;
-    model1.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
-    model1.dataValue = "1;0;1;5;2;comanyinfo";
-    model1.pageLoading = true;
-    model1.page = 1;
-    model1.pageSize = 4;
-    model1.formName = this.fromName;
-    model1.gridViewName = this.gridViewName;
-    model1.entityName = this.entityName;
-    model1.srtColumns = this.sortColumns;
-    model1.srtDirections = this.sortDirections;
-    model1.dataObj = 'list';
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'GetListNewsAsync',
-        model1
-      )
-      .subscribe((res1:any[]) => {
-        if (res1) {
-          this.listNews = res1[0];
-          this.changedt.detectChanges();
-        }
-
-      });
-    model1.predicate = "NewsType =@0 && (ApproveControl=@1 || (ApproveControl=@2 && ApproveStatus =@3 )) && Status =@4 && Category !=@5";
-    model1.dataValue = "2;0;1;5;2;comanyinfo";
-    model1.page = 1;
-    model1.pageSize = 6;
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'GetListNewsAsync',
-        model1
-      )
-      .subscribe((res2) => {
-        if (res2) {
-          if (res2[0].length <= this.countCarousel) {
-            this.isAllowNavigationArrows = false;
-            this.carousel?.pause();
-          }
-          this.listSlider.push(res2[0].splice(0, 3));
-          this.listSlider.push(res2[0]);
-          this.changedt.detectChanges();
-        }
-      });
-
+  loadDataAync(funcID:string,category:string){
+    this.api.execSv(this.service,this.assemblyName,this.className,"GetDatasNewsAsync",[funcID,category])
+    .subscribe((res:any[]) => 
+    {
+      if(res){
+        this.lstHotNew = res[0]; // tin mới nhất
+        this.lstVideo = res[1]; // video
+        this.lstGroup = res[2]; // tin cũ hơn
+        this.listSlider = this.lstVideo.splice(0,3);
+        this.changedt.detectChanges();
+      }
+    });
   }
+
   searchEvent(event: any) { }
 
   clickViewDeital(data: any) {
@@ -181,9 +128,6 @@ export class NewsComponent implements OnInit {
     this.dialogRef = this.callfc.openForm(PopupSearchComponent, "Tìm kiếm", 900, 700);
   }
 
-  clickClosePopup() {
-    this.loadData();
-  }
 
 
  

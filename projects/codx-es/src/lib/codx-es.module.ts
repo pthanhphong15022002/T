@@ -111,6 +111,7 @@ const routes: Routes = [
     SignFileComponent,
     PopupSignatureComponent,
     ApprovalComponent,
+    SignatureComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
