@@ -44,10 +44,13 @@
 
 
     <!-- Quick links -->
-    <erm-quick-links-inner></erm-quick-links-inner>
+    <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"></erm-quick-links-inner>
     <!-- End: Quick links -->
     <!-- begin::User -->
-    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner>
+    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"></codx-user-inner>
     <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">
