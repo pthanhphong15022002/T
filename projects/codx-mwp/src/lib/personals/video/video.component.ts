@@ -19,7 +19,9 @@ export class VideoComponent implements OnInit {
     VIDEO: "video",
   }
   file_video: any[] = [];
-
+  predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
+  dataValue: any;
+  user: any;
 
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -28,18 +30,22 @@ export class VideoComponent implements OnInit {
     private cache: CacheService,
     private dt: ChangeDetectorRef,
     private auth: AuthService,
+    private authStore: AuthStore,
   ) {
     this.cache.functionList('WP').subscribe(res => {
       this.functionList.entityName = res.entityName;
       this.functionList.funcID = res.functionID;
     })
+    this.user = this.authStore.get();
+    this.dataValue = `WP_Comments;false;${this.user?.userID};video`;
   }
 
   ngOnInit(): void {
-    this.getFile();
+    // this.getFile();
   }
 
   ngAfterViewInit() {
+    // this.listview.dataService.requestEnd = 
   }
 
   getFile() {
