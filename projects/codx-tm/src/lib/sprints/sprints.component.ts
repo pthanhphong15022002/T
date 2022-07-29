@@ -186,15 +186,15 @@ export class SprintsComponent extends UIComponent {
         break;
       case 'SYS02':
         if (data.iterationID != this.user.userID)
-          this.edit(data);
+          this.delete(data);
         break;
       case 'SYS03':
         if (data.iterationID != this.user.userID)
-          this.copy(data);
+        this.edit(data);
         break;
       case 'SYS04':
         if (data.iterationID != this.user.userID)
-          this.delete(data);
+        this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);

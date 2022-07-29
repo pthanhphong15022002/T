@@ -118,13 +118,13 @@ export class TasksComponent extends UIComponent {
         this.add();
         break;
       case 'SYS02':
-        this.edit(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        this.copy(data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.delete(data);
+        this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);
