@@ -45,7 +45,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </ng-template>
 
 <ng-template #templateCard>
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
@@ -59,7 +59,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
       hideFolder="1"  
       hideUploadBtn="0"   
-      hideDes="1" 
+      hideDes="0" 
       type="inline"
       hideImageUpload="0"
       allowExtensions=".jpg,.png"
@@ -70,10 +70,10 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       [functionID]="'ODT3'" 
       (fileAdded)="fileAdded($event)" 
       (fileCount)="getfileCount($event)" 
-      displayThumb="full"
+      displayThumb="simple"
     > 
   </codx-attachment>
-   -->
+  
   <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
     <i class="icon-add"></i>

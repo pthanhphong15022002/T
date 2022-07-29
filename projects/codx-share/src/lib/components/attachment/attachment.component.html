@@ -81,17 +81,31 @@
                             </ng-template>
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
-                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
-                                    subTitle="{{file.createdOn}}{{' | ' + file.createdBy}}"
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"                                  
                                     [subTitleTmp]="cardImgFooter" [descLine]="1">
                                 </codx-temp-full>
+                            </ng-template>
+                            <ng-template #cardImgFooter let-data>
+                                <div class="w-100 float-start">
+                                    <div *ngIf="(displayThumb == 'full')" class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                        {{file.createdOn}}{{' | ' + file.createdBy}}
+                                    </div>
+                                    <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                        <span class="text-dark"></span>
+                                        <div class="d-flex">
+                                            <codx-input placeholder="Mô tả tài liệu" style="width:86%"
+                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                (valueChange)="changeValueAgencyText($event)"> </codx-input>
+                                        </div>
+                                    </div>
+                                </div>
                             </ng-template>
                             <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
                                 title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
                                 [subTitleTmp]="cardImgFooter"
                                 [descLine]="1">
                             </codx-temp-full>-->
-                            <ng-template #cardImgFooter let-data>
+                            <!-- <ng-template #cardImgFooter let-data>
                                 <div class="d-flex flex-column flex-grow-1 file-item">
                                     <span class="text-dark"></span>
                                     <div class="d-flex">
@@ -100,7 +114,7 @@
                                             (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                     </div>
                                 </div>
-                            </ng-template> -->
+                            </ng-template>  -->
                             <div class="action-menu d-flex align-items-center cursor-pointer">
                                 <div class="btn btn-sm btn-icon btn-white cursor-pointer"
                                     (click)="onDeleteUploaded(file.fileName)">
@@ -200,18 +214,22 @@
                             </ng-template>
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-24px me-3 cursor-pointer"
-                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
-                                    subTitle="{{file.createdOn}}{{' | ' + file.createdBy}}"
+                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"                                    
                                     [subTitleTmp]="cardImgFooter" [descLine]="1">
                                 </codx-temp-full>
                             </ng-template>
                             <ng-template #cardImgFooter let-data>
-                                <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item">
-                                    <span class="text-dark"></span>
-                                    <div class="d-flex">
-                                        <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                            class="form-control no-boder" type="text" [crrValue]="file.description"
-                                            (valueChange)="changeValueAgencyText($event)"> </codx-input>
+                                <div class="w-100 float-start">
+                                    <div *ngIf="(displayThumb == 'full')" class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                        {{file.createdOn}}{{' | ' + file.createdBy}}
+                                    </div>
+                                    <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                        <span class="text-dark"></span>
+                                        <div class="d-flex">
+                                            <codx-input placeholder="Mô tả tài liệu" style="width:86%"
+                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                (valueChange)="changeValueAgencyText($event)"> </codx-input>
+                                        </div>
                                     </div>
                                 </div>
                             </ng-template>
