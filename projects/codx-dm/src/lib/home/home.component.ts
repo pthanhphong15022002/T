@@ -40,6 +40,7 @@ import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'home',
@@ -154,7 +155,10 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile() {
-    this.attachment.saveFiles();
+    this.attachment.saveFilesObservable().subscribe(item => {
+      console.log(item);
+    })
+  //  this.attachment.saveFiles();
   }
 
   openFile() {

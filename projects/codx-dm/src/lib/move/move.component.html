@@ -16,10 +16,40 @@
                 [checked]="selection == true ? true : false" [label]="titleCopyTo"
                 (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
             </div>
+<<<<<<< HEAD
+            <div class="form-group">
+                <div class="container">
+                    <div class="row">
+                      <div class="col col-3">
+                        <codx-input 
+                            name="group" 
+                            class="test-check"
+                            type="radio" 
+                            style="width:100%"                                          
+                            [checked]="selection == 0 ? true : false"                          
+                            [label]="titleCopyTo"
+                            (valueChange)="onSaveRightChanged($event, 'copyto')"                                                             
+                        ></codx-input>  
+                      </div>           
+                      <div class="col col-3">
+                        <codx-input 
+                            name="group" 
+                            class="test-check"
+                            type="radio" 
+                            style="width:100%"                                          
+                            [checked]="selection == 1 ? true : false"                            
+                            [label]="titleMove"        
+                            (valueChange)="onSaveRightChanged($event, 'move')"                                                             
+                        ></codx-input>   
+                      </div>                      
+                    </div>
+                  </div>
+=======
             <div class="col col-3">
               <codx-input name="group" class="test-check" type="radio" style="width:100%"
                 [checked]="selection == false ? true : false" [label]="titleMove"
                 (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
+>>>>>>> a9738133a3a9cd4b8e9d4208a84b306512cefb33
             </div>
           </div>
         </div>
@@ -32,17 +62,17 @@
                 <mat-radio-button [value]="0" [checked]='true'>{{titleCopyTo}}</mat-radio-button>
                 <mat-radio-button [value]="1">{{titleMove}}</mat-radio-button>
             </mat-radio-group> -->
-      <div class="mt-6 moveto">
-        <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeMove"
-          entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false
-          idField="recID" parentIdField="parentId" (selectionChange)="onSelectionChanged($event, treeAdd)"
-          [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-        </codx-treeview>
-        <ng-template #templatetree let-data>
-          <div class="d-flex align-items-center mb-2" #item>
-            <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
-          </div>
-        </ng-template>
+            <div class="mt-6 moveto">
+                <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree"  [data]="listNodeMove" entityName="DM_FolderInfo"
+                service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false idField="recID"
+                parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)" [autoLoad]="false"
+                [isOutput]="true" [isLoadChild]="false">
+              </codx-treeview>
+              <ng-template #templatetree let-data>
+                <div class="d-flex align-items-center mb-2" #item>                  
+                  <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
+                </div>
+              </ng-template>
 
         <!-- <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree"  [data]="listNodeMove" entityName="DM_FolderInfo"
                 service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false idField="recID"
