@@ -182,6 +182,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         if (res.update || res.save) {
           this.isSaveSuccess = true;
           console.log(res);
+          this.dialog && this.dialog.close();
         }
       });
   }
