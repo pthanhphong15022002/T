@@ -91,6 +91,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   method = 'GetListAsync';
 
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -184,6 +188,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
+      debugger;
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';

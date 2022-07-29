@@ -623,7 +623,7 @@ export class CodxEsService {
       'ERM.Business.AD',
       'AutoNumbersBusiness',
       'CreateAutoNumberAsync',
-      categoryID
+      [categoryID, null, true, null]
     );
   }
 
