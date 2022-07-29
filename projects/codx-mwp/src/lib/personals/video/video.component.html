@@ -1,3 +1,19 @@
+<codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
+    [dataValue]="dataValue" [itemTemplate]="" type="cardView" formName="FileInfo" service="DM">
+</codx-listview>
+
+<!-- <ng-template #templateListCard let-item>
+    <div class="pw-listcard">
+        <div class="pw-card">
+            <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+                <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
+                    <source [src]="item.srcVideo || item.data" type="video/mp4">
+                </video>
+            </ng-container>
+        </div>
+    </div>
+</ng-template> -->
+
 <div *ngIf="file_video.length > 0">
     <div class="pw-listcard">
         <div *ngFor="let item of file_video">
@@ -11,19 +27,3 @@
         </div>
     </div>
 </div>
-
-<!-- <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
-    [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="FileInfo" service="DM">
-</codx-listview>
-
-<ng-template #templateListCard let-item>
-    <div class="pw-listcard">
-        <div class="pw-card">
-            <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
-                <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
-                    <source [src]="item.srcVideo || item.data" type="video/mp4">
-                </video>
-            </ng-container>
-        </div>
-    </div>
-</ng-template> -->
