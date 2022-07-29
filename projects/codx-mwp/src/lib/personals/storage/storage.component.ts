@@ -119,20 +119,20 @@ export class StorageComponent
 
   onSearch(e) {
     // this.lstCardNoteBooks.onSearch(e);
-    this.view.onSearch(e);
+    this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 
   formAddNoteBook() {
     this.dataSort = [];
-    this.view.dataService.addNew().subscribe((res: any) => {
+    (this.listView.dataService as CRUDService).addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view.dataService as CRUDService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.listView.dataService as CRUDService;
+      option.FormModel = this.listView?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         AddUpdateStorageComponent,
-        [this.view.dataService.data, 'add'],
+        [this.listView.dataService.data, 'add'],
         option
       );
     });
@@ -140,19 +140,19 @@ export class StorageComponent
 
   edit(data: any) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.listView.dataService.dataSelected = data;
     }
     this.dataSort = [];
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+    (this.listView.dataService as CRUDService)
+      .edit(this.listView.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.dataService as CRUDService;
-        option.FormModel = this.view?.formModel;
+        option.DataService = this.listView?.dataService as CRUDService;
+        option.FormModel = this.listView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
-          [this.view.dataService.dataSelected, 'edit'],
+          [this.listView.dataService.dataSelected, 'edit'],
           option
         );
       });
@@ -177,7 +177,7 @@ export class StorageComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.remove(data).subscribe();
+          (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -208,7 +208,7 @@ export class StorageComponent
   }
 
   sortStorage() {
-    this.view.dataService.data = this.view.dataService.data.sort(function (
+    this.listView.dataService.data = this.listView.dataService.data.sort(function (
       a,
       b
     ) {

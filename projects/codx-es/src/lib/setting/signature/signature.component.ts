@@ -6,20 +6,13 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import {
-  ApiHttpService,
   AuthService,
   ButtonModel,
-  CacheService,
   CallFuncService,
-  CodxGridviewComponent,
   DialogRef,
+  FormModel,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -30,6 +23,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { CodxEsService } from '../../codx-es.service';
 
 export class defaultRecource {}
 @Component({
@@ -55,6 +49,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('imageStamp', { static: true }) imageStamp;
   @ViewChild('imageSignature1', { static: true }) imageSignature1;
   @ViewChild('imageSignature2', { static: true }) imageSignature2;
+  isAfterRender = false;
 
   devices: any;
   editform: FormGroup;
@@ -62,23 +57,44 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   columnsGrid;
   dataSelected: any;
   dialog!: DialogRef;
+  formModel: FormModel;
 
   constructor(
-    private api: ApiHttpService,
     private callfunc: CallFuncService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
     private cr: ChangeDetectorRef,
     private readonly auth: AuthService,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private esService: CodxEsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.esService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.isAfterRender = true;
+      }
+    });
   }
 
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  button: ButtonModel;
+  funcID: string;
+  service = 'ES';
+  assemblyName = 'ES';
+  entityName = 'ES_Signatures';
+  predicate = '';
+  dataValue = '';
+  idField = 'recID';
+  className = 'SignaturesBusiness';
+  method = 'GetListAsync';
+
+  ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -134,28 +150,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       },
       { field: 'noName', headerText: '', template: this.noName, width: 30 },
     ];
-  }
-
-  button: ButtonModel;
-  funcID: string;
-  service = 'ES';
-  assemblyName = 'ES';
-  entityName = 'ES_Signatures';
-  predicate = '';
-  dataValue = '';
-  idField = 'recID';
-  className = 'SignaturesBusiness';
-  method = 'GetListAsync';
-
-  ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
-    this.viewBase.dataService.methodSave = 'AddNewAsync';
-    this.viewBase.dataService.methodUpdate = 'EditAsync';
-
     this.views = [
       {
         sameData: true,
-        id: '1',
         type: ViewType.list,
         active: false,
         model: {
@@ -164,7 +161,6 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       },
       {
         sameData: true,
-        id: '1',
         type: ViewType.grid,
         active: true,
         model: {
@@ -174,10 +170,6 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     ];
 
     this.cr.detectChanges();
-  }
-
-  closeEditForm(event) {
-    this.dialog && this.dialog.close();
   }
 
   click(evt: ButtonModel) {
@@ -194,8 +186,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addNew(evt?) {
+  addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
+      debugger;
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
@@ -237,6 +230,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
     });
+  }
+
+  closeEditForm(event) {
+    //this.dialog && this.dialog.close();
   }
 
   clickMF(event: any, data) {

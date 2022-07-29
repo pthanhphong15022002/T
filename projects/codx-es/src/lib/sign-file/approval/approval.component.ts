@@ -30,7 +30,7 @@ import {
   PdfViewerComponent,
   ContextMenuItem,
 } from '@syncfusion/ej2-angular-pdfviewer';
-import { AuthStore, CacheService, UIComponent } from 'codx-core';
+import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
@@ -42,14 +42,11 @@ import { M, T } from '@angular/cdk/keycodes';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID;
+  @Input() recID = '8a001e01-0d9f-11ed-977b-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
   @Output() canSend = new EventEmitter<any>();
-  // service =
-  //   'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
-  // document = 'PDF_Succinctly.pdf';
 
   user?: any;
   url: string = '';
@@ -58,6 +55,9 @@ export class ApprovalComponent extends UIComponent {
   actionCollectionsChange: any;
 
   saveToDBQueueChange: any;
+
+  vllActions: any;
+  notify = ' ';
 
   constructor(
     private inject: Injector,
@@ -75,6 +75,16 @@ export class ApprovalComponent extends UIComponent {
       .find([])
       .create(null);
     this.saveToDBQueueChange = actionCollectionsChanges.find([]).create(null);
+
+    var pipe = new LangPipe(this.cache);
+
+    pipe.transform('Chưa', 'lblNotify', 'Sys').subscribe((res) => {
+      this.notify = res;
+    });
+
+    pipe.transform('Có', 'lblNotify', 'Sys').subscribe((res) => {
+      this.notify += ' ' + res + ' ';
+    });
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -148,7 +158,9 @@ export class ApprovalComponent extends UIComponent {
     };
 
     this.tmpLstSigners.push({
-      authorSignature: signature,
+      // authorSignature: signature,
+      authorSignature: '',
+
       authorStamp: stamp,
       authorName: 'Buu',
       type: '1',
@@ -160,29 +172,31 @@ export class ApprovalComponent extends UIComponent {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
-        console.log(res);
-        let sf = res.result?.signFile;
+        let sf = res?.signFile;
 
         if (sf) {
-          if (!this.isApprover) {
-            sf.files.forEach((file) => {
-              this.lstFiles.push({
-                fileName: file.fileName,
-                fileRefNum: sf.refNo,
-                fileID: file.fileID,
-                signers: res.result.approvers,
-              });
+          sf.files.forEach((file) => {
+            this.lstFiles.push({
+              fileName: file.fileName,
+              fileRefNum: sf.refNo,
+              fileID: file.fileID,
+              // signers: res?.approvers,
+              signers: this.tmpLstSigners,
             });
-          } else {
-            this.signerInfo = res.result?.approvers[0];
+          });
+          if (this.isApprover) {
+            this.signerInfo = res?.approvers;
           }
         }
-
         this.df.detectChanges();
       });
-    this.esService.getSignFormat().subscribe((res) => {
-      console.log('format', res);
+
+    this.cache.valueList('ES015').subscribe((res) => {
+      this.vllActions = res.datas;
     });
+    // this.esService.getSignFormat().subscribe((res) => {
+    //   console.log('format', res);
+    // });
   }
   ngDoCheck() {
     let addToDBQueueChange = this.saveToDBQueueChange.diff(
@@ -242,10 +256,10 @@ export class ApprovalComponent extends UIComponent {
                 isLock: false,
               },
               bounds: {
-                top: item.location.top,
-                left: item.location.left,
-                width: item.location.width,
-                height: item.location.height,
+                top: Number(item.location.top),
+                left: Number(item.location.left),
+                width: Number(item.location.width),
+                height: Number(item.location.height),
               },
               author: item.signer,
               comments: [],
@@ -825,7 +839,9 @@ export class ApprovalComponent extends UIComponent {
       });
 
     if (!signed) {
-      if ([1, 2, 8].includes(type)) {
+      console.log(this.vllActions);
+
+      if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
           customStampImageSource: this.url,
@@ -833,27 +849,38 @@ export class ApprovalComponent extends UIComponent {
         this.pdfviewerControl.customStamp = [stamp];
       } else {
         switch (type) {
+          case 1:
+          case 2:
+          case 8:
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.vllActions[type - 1]?.text;
+            break;
           case 3:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              'Tên đầy đủ: ' + this.signerInfo.authorName;
+              this.vllActions[type - 1]?.text +
+              ': ' +
+              this.signerInfo.authorName;
             break;
           case 4:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              'Chức danh: ' + this.signerInfo.authorPosition;
+              this.vllActions[type - 1]?.text +
+              ': ' +
+              this.signerInfo.authorPosition;
             break;
           case 5:
             this.pdfviewerControl.freeTextSettings.defaultText = Date();
             break;
           case 6:
-            this.pdfviewerControl.freeTextSettings.defaultText = 'Ghi chú';
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.vllActions[type - 1]?.text;
             break;
           case 7:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              'Số văn bản: ' + this.fileInfo.fileRefNum;
+              this.vllActions[type - 1]?.text + ': ' + this.fileInfo.fileRefNum;
             break;
-
           default:
-            this.pdfviewerControl.freeTextSettings.defaultText = 'Ghi chú';
+            this.pdfviewerControl.freeTextSettings.defaultText =
+              this.vllActions[5]?.text;
             break;
         }
         this.pdfviewerControl.freeTextSettings.author =
@@ -930,6 +957,7 @@ export class ApprovalComponent extends UIComponent {
       ModifiedOn: new Date(),
       ModifiedBy: user.userID,
     };
+    console.log('save area', area);
 
     if (!['1', '2', '8'].includes(area.LabelType)) {
       area.LabelType = anno.customData.split(':')[1];

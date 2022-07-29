@@ -7,8 +7,8 @@ import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
 import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
-import { NoteServices } from '@pages/services/note.services';
 import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
+import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 
 @Component({
   selector: 'app-note-drawer',
@@ -36,7 +36,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   editMF: any;
   deleteMF: any;
   pinMF: any;
-  saveMF: any;
+  saveMF: any; 
   dtService: CRUDService;
   dataUpdate: any;
 
