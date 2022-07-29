@@ -12,8 +12,8 @@ export class tmpSignArea {
   FontSize: number;
   SignatureType: number;
   Comment: string;
-  CreatedOn: Date;
+  CreatedOn?: Date;
   CreatedBy: string;
-  ModifiedOn: Date;
+  ModifiedOn?: Date;
   ModifiedBy: string;
 }

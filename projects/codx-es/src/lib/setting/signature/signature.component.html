@@ -1,43 +1,8 @@
-<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+<codx-views #viewBase [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
   [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)" *ngIf="isAfterRender">
+  (requestEnded)="closeEditForm($event)">
 </codx-views>
-
-<ng-template #listItem let-data>
-  <div class="task-row py-3 px-6">
-    <table class="table w-100 table-action-menu">
-      <tbody>
-        <td class="w-25">
-          <div class="d-flex justify-content-center">
-            {{ data.email }}
-          </div>
-        </td>
-        <td class="w-15">
-          <div class="d-flex justify-content-center">
-            {{ data.fullName }}
-          </div>
-        </td>
-        <td class="w-15">
-          <div class="d-flex justify-content-center">
-            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-              data.signatureType | vll: "ES001":"text" | async
-              }}</span>
-          </div>
-        </td>
-        <td class="w-150px">
-          <div class="d-flex justify-content-center">
-            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-              data.supplier | vll: "ES006":"text" | async
-              }}</span>
-          </div>
-        </td>
-      </tbody>
-    </table>
-  </div>
-  <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" (click)="click(data)">
-  </codx-temp-full>
-</ng-template>
 
 <ng-template #signatureType let-data>
   <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{

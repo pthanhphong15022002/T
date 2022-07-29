@@ -1,12 +1,26 @@
 import { CO_Meetings, Resources } from './../../models/CO_Meetings.model';
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  CallFuncService,
+} from 'codx-core';
 import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add-meeting',
   templateUrl: './popup-add-meeting.component.html',
-  styleUrls: ['./popup-add-meeting.component.css']
+  styleUrls: ['./popup-add-meeting.component.css'],
 })
 export class PopupAddMeetingComponent implements OnInit {
   @Input() meeting = new CO_Meetings();
@@ -19,7 +33,7 @@ export class PopupAddMeetingComponent implements OnInit {
   user: any;
   param: any;
   functionID: string;
-  title = ''
+  title = '';
   showPlan = true;
   data: any;
   isFullDay: boolean;
@@ -50,9 +64,9 @@ export class PopupAddMeetingComponent implements OnInit {
     this.user = this.authStore.get();
     this.action = dt.data;
     this.functionID = this.dialog.formModel.funcID;
-    if (this.meeting.startDate) {
-      this.selectedDate = this.meeting.startDate;
-    }
+    // if (this.meeting.startDate) {
+    //   this.selectedDate = this.meeting.startDate;
+    // }
   }
 
   ngOnInit(): void {
@@ -60,10 +74,10 @@ export class PopupAddMeetingComponent implements OnInit {
     if (this.action == 'add') {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
-    }else if(this.action== 'edit'){
+    } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
     }
-    this.isFullDay =false;
+    this.isFullDay = false;
   }
   getParam(callback = null) {
     this.api
@@ -85,19 +99,13 @@ export class PopupAddMeetingComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action == 'add') {
-
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      data = [
-        this.meeting,
-        this.functionID,
-      ];
-    }else if(this.action == 'edit'){
+      data = [this.meeting, this.functionID];
+    } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      data = [
-        this.meeting,
-      ];
+      data = [this.meeting];
     }
 
     op.data = data;
@@ -117,7 +125,7 @@ export class PopupAddMeetingComponent implements OnInit {
     this.dialog.close();
   }
 
-  onUpdate(){
+  onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
@@ -125,34 +133,32 @@ export class PopupAddMeetingComponent implements OnInit {
           this.dialog.dataService.setDataSelected(res.update[0]);
         }
       });
-      this.dialog.close();
-
+    this.dialog.close();
   }
 
-  onSave(){
-    if(this.action==='add')
-      return this.onAdd();
+  onSave() {
+    if (this.action === 'add') return this.onAdd();
     return this.onUpdate();
   }
 
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
-    { icon: 'icon-playlist_add_check', text: 'Người tham gia', name: 'Resources' },
+    {
+      icon: 'icon-playlist_add_check',
+      text: 'Người tham gia',
+      name: 'Resources',
+    },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
-
   ];
 
   setTitle(e: any) {
-    if(this.action=='add'){
+    if (this.action == 'add') {
       this.title = 'Thêm ' + e;
-
-    }else if(this.action == 'edit'){
+    } else if (this.action == 'edit') {
       this.title = 'Sửa ' + e;
-
     }
     this.changDetec.detectChanges();
   }
-
 
   valueChange(event) {
     if (event?.field == 'day') {
@@ -198,8 +204,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   valueDateChange(event: any) {
     this.selectedDate = event.data.fromDate;
-    if (this.selectedDate)
-      this.meeting[event.field] = this.selectedDate;
+    if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
     this.setDate();
   }
 
@@ -240,7 +245,7 @@ export class PopupAddMeetingComponent implements OnInit {
             this.selectedDate.setHours(this.endHour, this.endMinute, 0)
           );
           if (this.endDate) {
-            this.meeting.endDate = this.endDate
+            this.meeting.endDate = this.endDate;
           }
         }
         console.log(this.endDate);
@@ -258,27 +263,52 @@ export class PopupAddMeetingComponent implements OnInit {
 
   changeLink(event) {
     this.linkURL = event.data;
-    if (this.linkURL)
-      this.meeting.link = this.linkURL;
+    if (this.linkURL) this.meeting.link = this.linkURL;
   }
 
   valueChangeTags(e) {
-    this.meeting.tags = e.data
+    this.meeting.tags = e.data;
   }
 
   eventApply(e) {
     console.log(e);
     var resourceID = '';
-    e?.data?.forEach(element => {
+    e?.data?.forEach((element) => {
       resourceID += element.id + ';';
     });
     if (resourceID != '') {
       resourceID = resourceID.substring(0, resourceID.length - 1);
-
     }
-    this.getListUser(resourceID);
-    if (this.resources != null)
-        this.meeting.resources = this.resources;
+    this.valueUser(resourceID);
+    if (this.resources != null) this.meeting.resources = this.resources;
+  }
+
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.meeting.resources != null) {
+        var user = this.meeting.resources;
+        var array = resourceID.split(';');
+        var id = '';
+        var arrayNew = [];
+        user.forEach((e) => {
+          id += e.resourceID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
   }
 
   getListUser(resource) {
@@ -303,17 +333,13 @@ export class PopupAddMeetingComponent implements OnInit {
             tmpResource.positionName = emp?.positionName;
             tmpResource.roleType = 'R';
             this.meeting.resources.push(tmpResource);
-
           }
-
         }
       });
   }
 
   onDeleteUser(item) {
-    this.meeting.resources.splice(item, 1);//remove element from array
+    this.meeting.resources.splice(item, 1); //remove element from array
     this.changDetec.detectChanges();
   }
-
-
 }

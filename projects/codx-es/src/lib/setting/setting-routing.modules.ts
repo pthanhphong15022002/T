@@ -52,7 +52,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     LayoutComponent,
-    SignatureComponent,
     DocCategoryComponent,
     ProcessStepComponent,
     PopupAddApprovalStepComponent,

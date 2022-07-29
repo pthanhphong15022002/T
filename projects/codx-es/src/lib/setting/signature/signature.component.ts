@@ -32,7 +32,7 @@ export class defaultRecource {}
   styleUrls: ['./signature.component.scss'],
 })
 export class SignatureComponent implements OnInit, AfterViewInit {
-  @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('viewBase') viewBase: ViewsComponent;
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('gridView') gridView: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
@@ -91,6 +91,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   method = 'GetListAsync';
 
   ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteSignatureAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -144,7 +148,6 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         template: this.oTPControl,
         width: 150,
       },
-      { field: 'noName', headerText: '', template: this.noName, width: 30 },
     ];
     this.views = [
       {
@@ -233,10 +236,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   clickMF(event: any, data) {
     switch (event?.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
