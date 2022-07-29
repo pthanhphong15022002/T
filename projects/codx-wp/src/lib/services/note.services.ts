@@ -8,6 +8,7 @@ import { BehaviorSubject } from "rxjs";
 export class NoteServices {
 
     data = new BehaviorSubject<any>(null);
+    dataUpdate = new BehaviorSubject<any>(null);
 
     constructor(
     ) { }
