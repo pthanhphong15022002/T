@@ -225,7 +225,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetParameterByModuleWithCategoryAsync',
+        'GetByModuleWithCategoryAsync',
         ['TM_Parameters', '1']
       )
       .subscribe((res) => {
