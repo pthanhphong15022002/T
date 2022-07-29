@@ -135,8 +135,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
-            icon: 'icon-category',
-            color: '#000000',
+            icon: 'fa-solid fa-file-lines',
+            color: '#0078FF',
           });
           this.dialogCategory.addControl(
             'countStep',
@@ -201,7 +201,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field) {
+    if (event?.field && event?.component) {
       if (event?.data === Object(event?.data))
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
       else this.dialogCategory.patchValue({ [event['field']]: event.data });
@@ -263,13 +263,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     } else {
       option.method = 'EditCategoryAsync';
     }
-
-    // this.esService.approvalStep.subscribe((res) => {
-    //   if (res) {
-    //     countStep = res.length;
-    //   }
-    // });
-
     option.data = [itemData, countStep];
     return true;
   }

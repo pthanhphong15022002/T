@@ -12,6 +12,7 @@ import {
   AuthStore,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -35,7 +36,7 @@ export class PopupEditCalendarComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input() calendarID: string = 'STD';
+  calendarID: string;
   stShift = new CalendarWeekModel();
   ndShift = new CalendarWeekModel();
   user: any;
@@ -48,6 +49,7 @@ export class PopupEditCalendarComponent
   vlls: any;
   param: any;
   evtCDDate: any;
+  formModel: FormModel;
   dialog!: DialogRef;
   evtData: any;
 
@@ -63,7 +65,9 @@ export class PopupEditCalendarComponent
     this.user = this.authService.get();
     this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    const [formModel, calendarID] = dt?.data;
+    this.formModel = formModel;
+    this.calendarID = calendarID;
   }
 
   onInit(): void {
@@ -81,7 +85,6 @@ export class PopupEditCalendarComponent
       )
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           this.dayOff = res[0];
           this.handleWeekDay(res[1]);
           this.calendateDate = res[2];
@@ -110,8 +113,7 @@ export class PopupEditCalendarComponent
       });
   }
 
-  getDayOff(id = null) {
-    if (id) this.calendarID = id;
+  getDayOff(id) {
     this.api
       .execSv<any>(
         'BS',
@@ -158,11 +160,8 @@ export class PopupEditCalendarComponent
   openDayOffs(data = null) {
     this.evtData = new DaysOffModel();
     if (data) this.evtData = { ...data };
-    this.evtData.dayoffCode = this.calendarID;
-    this.evtData.day = data?.day || 1;
-    this.evtData.month = data?.month || 1;
-    this.evtData.color = data?.color || '#0078ff';
-    this.getDayOff();
+    this.evtData.calendarID = this.calendarID;
+    this.getDayOff(this.calendarID);
     if (this.dayOffId) {
       this.callfc.openForm(
         PopupAddEventComponent,
@@ -170,7 +169,7 @@ export class PopupEditCalendarComponent
         800,
         800,
         '',
-        [this.evtData, true]
+        [this.evtData, false]
       );
     } else {
       this.callfc.openForm(
@@ -179,7 +178,7 @@ export class PopupEditCalendarComponent
         800,
         800,
         '',
-        [this.evtData, false]
+        [this.evtData, true]
       );
     }
   }
@@ -207,63 +206,44 @@ export class PopupEditCalendarComponent
     this.evtCDDate = new CalendarDateModel();
     if (data) this.evtCDDate = data;
     this.evtCDDate.calendarID = this.calendarID;
-    this.evtCDDate.calendarDate = data?.calendarDate
-      ? new Date(data.calendarDate)
-      : new Date();
-    this.evtCDDate.dayoffColor = data?.dayoffColor || '#0078ff';
-    this.callfc.openForm(
-      PopupAddDayoffsComponent,
-      'Thêm ngày nghỉ',
-      800,
-      800,
-      '',
-      this.evtCDDate
-    );
+    if (!this.evtCDDate) {
+      this.callfc.openForm(
+        PopupAddDayoffsComponent,
+        'Thêm ngày nghỉ',
+        800,
+        800,
+        '',
+        [this.evtCDDate, true]
+      );
+    } else {
+      this.callfc.openForm(
+        PopupAddDayoffsComponent,
+        'Chỉnh sửa ngày nghỉ',
+        800,
+        800,
+        '',
+        [this.evtCDDate, false]
+      );
+    }
   }
 
   removeCalendarDate(item) {
-    // this.api
-    //   .exec(
-    //     APICONSTANT.ASSEMBLY.BS,
-    //     APICONSTANT.BUSINESS.BS.CalendarDate,
-    //     'DeleteAsync',
-    //     item
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.calendateDate = _.filter(this.calendateDate, function (o) {
-    //         return o.recID != item.recID;
-    //       });
-    //       this.notiService.notifyCode('E0408');
-    //     }
-    //   });
-  }
-
-  saveCalendarDate() {
-    const t = this;
     this.api
-      .execSv<any>(
-        APICONSTANT.SERVICES.BS,
+      .exec(
         APICONSTANT.ASSEMBLY.BS,
         APICONSTANT.BUSINESS.BS.CalendarDate,
-        'SaveCalendarDateAsync',
-        this.evtCDDate
+        'DeleteAsync',
+        item
       )
       .subscribe((res) => {
         if (res) {
-          if (res.isAdd) {
-            t.calendateDate.push(res.data);
-          } else {
-            var index = t.calendateDate.findIndex(
-              (p) => p.recID == t.evtCDDate.recID
-            );
-            t.calendateDate[index] = t.evtCDDate;
-          }
-          this.dialog.close();
+          this.calendateDate = _.filter(this.calendateDate, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
         }
       });
   }
-
   weekdayChange(e, item) {
     let model = new CalendarWeekModel();
     model.wKTemplateID = this.calendarID;

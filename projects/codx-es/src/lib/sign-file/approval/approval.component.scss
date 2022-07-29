@@ -1,4 +1,7 @@
 ::ng-deep {
+  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit; 
+}
   .row {
     position: relative;
     .action {
