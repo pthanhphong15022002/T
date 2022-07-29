@@ -14,6 +14,7 @@ import {
   UIComponent,
   CodxListviewComponent,
   CRUDService,
+  CacheService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +42,6 @@ export class StorageComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input() formModel: FormModel;
   user: any;
   dataValue = '';
   predicate = 'CreatedBy=@0';
@@ -72,7 +72,6 @@ export class StorageComponent
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private storageService: StorageServices
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -96,7 +95,6 @@ export class StorageComponent
   }
 
   ngAfterViewInit() {
-    this.formModel = this.view.formModel;
   }
 
   testdate(dr) {}

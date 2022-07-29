@@ -1,0 +1,111 @@
+@import url(@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reports.all.min.css);
+@import url(../../../../../../../node_modules/codemirror/lib/codemirror.css);
+@import url(../../../../../../..//node_modules/codemirror/addon/hint/show-hint.css);
+ @import url(@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reportdesigner.min.css);
+ .e-rptdesigner-itempanel-textitem {
+	width: 70px;
+	height: 30px;
+  overflow: unset;
+  text-overflow: unset;
+	margin-top: 4px;
+	cursor: default;
+}
+ .e-rptdesigner-itempanel-textitem {
+  color: #212121;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+.e-vscroll.e-box {
+  padding-left: 0 !important;
+  margin: 0 -5px;
+}
+.e-scroller .e-vscroll .e-vup.e-button {
+  background-color: #bdbdbd;
+  padding-left: 2px;
+  height: 15px !important;
+}
+.e-scroller .e-vscroll .e-vdown.e-button {
+  background-color: #bdbdbd;
+  padding-left: 2px;
+  height: 15px !important;
+}
+.e-scroller .e-hscroll .e-hup.e-button {
+  background-color: #bdbdbd;
+  padding-left: 7px;
+}
+.e-scroller .e-hscroll .e-hdown.e-button {
+  background-color: #bdbdbd;
+  padding-left: 7px;
+}
+.e-reportdesigner-scroller .e-vscrollbar {
+  border-top: 1px solid #e0e0e0;
+  margin-right: -10px;
+}
+#designer_toolbar_li_Save .e-droparrowright .e-split-btn-div {
+  right: 0;
+  top: 50%;
+  display: none;
+}
+ /*:host{
+  @import "@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reports.all.min";
+  @import "@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reportdesigner.min";
+  $background-color_1: #bdbdbd;
+
+  .e-rptdesigner-itempanel-textitem {
+    color: #212121;
+    margin-top: 10px;
+    font-size: 12px !important;
+    font-weight: 500;
+  }
+
+  .e-vscroll{
+    &.e-box{
+      padding-left: 0 !important;
+      margin: 0 -5px;
+    }
+  }
+
+  .e-scroller {
+    .e-vscroll {
+      .e-vup.e-button {
+        background-color: #bdbdbd;
+        padding-left: 2px;
+        height: 15px !important;
+      }
+      .e-vdown.e-button {
+        background-color: #bdbdbd;
+        padding-left: 2px;
+        height: 15px !important;
+      }
+    }
+    .e-hscroll {
+      .e-hup.e-button {
+        background-color: #bdbdbd;
+        padding-left: 7px;
+      }
+      .e-hdown.e-button {
+        background-color: #bdbdbd;
+        padding-left: 7px;
+      }
+    }
+  }
+
+
+.e-reportdesigner-scroller {
+	.e-vscrollbar {
+		border-top: 1px solid #e0e0e0;
+		margin-right: -10px;
+	}
+}
+
+#designer_toolbar_li_Save{
+  .e-droparrowright {
+    .e-split-btn-div {
+      right: 0;
+      top: 50%;
+      display: none;
+    }
+  }
+}
+}*/
+

@@ -1,8 +1,4 @@
-<codx-views #view [funcID]="'MWP0094'" service="WP" entityName="WP_NoteBooks" [views]="views" [predicate]="predicate"
-    [dataValue]="dataValue" idField="recID">
-</codx-views>
-
-<div class="pw-note card">
+<div class="pw-storgae">
     <div class="d-flex align-items-center justify-content-between pw-header mb-5">
         <div class="pw-search">
             <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
@@ -26,19 +22,20 @@
             </div>
         </div>
     </div>
-    <div class="pw-listcard scroll-y card-body">
-        <div *ngFor="let item of view.dataService.data">
-            <div class="pw-card delay-500" (click)="openDetailPage(item)">
-                <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
-                    imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title" [imgOn]="item?.modifiedOn"
-                    [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'" [formModel]="formModel" [dataItem]="item">
-                </codx-card-img>
-            </div>
-        </div>
-    </div>
-
+    <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
+        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks" funcId="MWP0094"
+        service="WP">
+    </codx-listview>
 </div>
 
-<ng-template #footerCard let-item>
-    <h1>{{item.memo}}</h1>
+<ng-template #templateListCard let-item>
+    <div class="pw-listcard">
+        <div class="pw-card delay-500" (click)="openDetailPage(item)">
+            <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
+                imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
+                [imgOn]="item?.modifiedOn" [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'"
+                [formModel]="listView.formModel" [dataItem]="item">
+            </codx-card-img>
+        </div>
+    </div>
 </ng-template>

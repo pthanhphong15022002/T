@@ -1,5 +1,5 @@
 <codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
-   [formModel]="view.formModel">
+  [formModel]="view.formModel">
 </codx-views>
 
 <ng-template #panelRightRef>
@@ -507,12 +507,12 @@
                     <div [style.color]="getContrastYIQ(item)">
                       {{item.hobbyName}}
                     </div>
-                    <a class="text-white text-hover-danger mt-1 ms-2" *ngIf="editMode" (click)="deleteHobby(item)">
-                      <span class="icon-close icon-16"></span>
+                    <a class="text-dark text-hover-danger mt-1 ms-1" *ngIf="editMode" (click)="deleteHobby(item)">
+                      <span class="icon-close icon-14"></span>
                     </a>
                   </div>
                   <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
-                    <span class="icon-add icon-18"></span>
+                    <span class="icon-add icon-16"></span>
                     <a (click)="popupAddHobbi()" class="text-primary">Thêm mới</a>
                   </div>
                 </div>
