@@ -1,5 +1,5 @@
 /// <reference types="@boldreports/types/reports.all" />
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router, Params } from '@angular/router';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { BoldReportViewerComponent } from '@boldreports/angular-reporting-components/reportviewer.component';
@@ -8,7 +8,8 @@ import { BoldReportViewerComponent } from '@boldreports/angular-reporting-compon
 @Component({
   selector: 'codx-report-viewer',
   templateUrl: './codx-report-viewer.component.html',
-  styleUrls: ['./codx-report-viewer.component.scss']
+  styleUrls: ['./codx-report-viewer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxReportViewerComponent implements OnInit, AfterViewInit {
   @Input() isViewMode: boolean = true;

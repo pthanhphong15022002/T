@@ -1,4 +1,4 @@
-<div *ngIf="file_img.length > 0">
+<!-- <div *ngIf="file_img.length > 0">
     <div class="pw-listcard">
         <div *ngFor="let item of file_img" (click)="openImg(item)">
             <div class="pw-card">
@@ -8,4 +8,12 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
+<codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
+    [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="FileInfo" service="DM">
+</codx-listview>
+
+<ng-template #templateListCard let-item>
+
+</ng-template>

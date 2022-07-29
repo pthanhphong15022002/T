@@ -39,6 +39,7 @@
                             class="test-check"   
                             ControlName="percentage100"
                             [Group]="updateForm" 
+                            (valueChange)="valueChangePercentage100($event)"
                         >
                         </codx-input>
                         <codx-label default="Hoàn thành 100%" class="ms-2 w-150px"></codx-label>
@@ -70,12 +71,18 @@
                     <codx-label default="Báo cáo kết quả" class="ms-2"></codx-label>
                 </div>
             </div>
+            <div class="col-12">
+                <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+                [allowMultiFile]="0" [idBrowse]="'update'">
+              </codx-attachment>
+            </div>
         </div>
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-between">
             <div class="d-flex flex-stack">
-                <button type="button" class="btn btn-light-primary me-3" (click)="addFile()">
+                <button type="button" class="btn btn-light-primary me-3" (click)="openFormUploadFile()">
                     <i class="icon-cloud_upload fs-5"></i>Upload file
                 </button>
             </div>

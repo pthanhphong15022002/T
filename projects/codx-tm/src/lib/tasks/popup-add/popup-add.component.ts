@@ -90,7 +90,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   @ViewChild('tabReference') tabReference: TemplateRef<any>;
 
   task: TM_Tasks = new TM_Tasks();
-  dialog: any;
+  dialog: DialogRef;
   taskCopy: any;
   newID: string;
   paramControlReference = true;
