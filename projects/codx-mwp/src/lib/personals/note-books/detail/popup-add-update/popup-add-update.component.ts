@@ -1,4 +1,11 @@
-import { ApiHttpService, AuthStore, DialogData, DialogRef, CacheService, CRUDService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  CacheService,
+  CRUDService,
+} from 'codx-core';
 import {
   Component,
   OnInit,
@@ -32,7 +39,7 @@ export class PopupAddUpdate implements OnInit {
   functionList = {
     entityName: '',
     funcID: '',
-  }
+  };
   transID = '';
   fileCount: any = 0;
   checkUpload = false;
@@ -57,18 +64,17 @@ export class PopupAddUpdate implements OnInit {
       this.note = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     }
-    this.cache.functionList('MWP00941').subscribe(res => {
+    this.cache.functionList('MWP00941').subscribe((res) => {
       if (res) {
         this.functionList.entityName = res.entityName;
         this.functionList.funcID = res.functionID;
       }
-    })
+    });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   valueChange(e) {
     if (e) {
@@ -96,11 +102,13 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.saveFiles();
             this.checkUpload = true;
           }
+          this.dialog.close();
         }
       });
   }
 
   updateNote() {
+    this.note.fileCount = this.fileCount;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -111,25 +119,25 @@ export class PopupAddUpdate implements OnInit {
           }
           this.dialog.close();
         }
-      })
-  }
-
-  updateNote2(item = null) {
-    this.note.fileCount = this.fileCount;
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NoteBooksBusiness',
-        'UpdateNoteBookDetailAsync',
-        [item?.recID, this.note]
-      )
-      .subscribe((res) => {
-        if (res) {
-          (this.dialog.dataService as CRUDService).update(res).subscribe();
-          this.dialog.close();
-        }
       });
   }
+
+  // updateNote2(item = null) {
+  //   this.note.fileCount = this.fileCount;
+  //   this.api
+  //     .exec<any>(
+  //       'ERM.Business.WP',
+  //       'NoteBooksBusiness',
+  //       'UpdateNoteBookDetailAsync',
+  //       [item?.recID, this.note]
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         (this.dialog.dataService as CRUDService).update(res).subscribe();
+  // this.dialog.close();
+  //       }
+  //     });
+  // }
 
   beforeSave(option: any) {
     this.note.transID = this.transID;
@@ -137,16 +145,12 @@ export class PopupAddUpdate implements OnInit {
     if (this.formType == 'add') {
       option.method = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
-    }
-    else {
+    } else {
       option.method = 'UpdateNoteBookDetailAsync';
       option.data = [this.data?.recID, this.note];
     }
     option.assemblyName = 'ERM.Business.WP';
     option.className = 'NoteBooksBusiness';
-    if(this.checkUpload == true) {
-
-    }
     return true;
   }
 
@@ -156,19 +160,18 @@ export class PopupAddUpdate implements OnInit {
   }
 
   fileAdded(e) {
-    if (e) {
-      var dt = e.data;
-      var count = 0;
-      dt.forEach((res) => {
-        if (res.status == '0') {
-          count++;
-        }
-      })
-      this.fileCount = count;
-      this.updateNote2(this.dataAdd);
-      // if (this.formType == 'add') this.addNoteBookDetails();
-      // else this.updateNote();
-    }
+    // if (e) {
+    //   var dt = e.data;
+    //   var count = 0;
+    //   dt.forEach((res) => {
+    //     if (res.status == '0') {
+    //       count++;
+    //     }
+    //   });
+    //   this.fileCount = count;
+    //   this.updateNote2(this.dataAdd);
+    //   if (this.checkUpdate == true) this.updateNote();
+    // }
   }
 
   valueChangeTag(e) {

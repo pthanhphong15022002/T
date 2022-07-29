@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   Injector,
   Input,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -26,12 +27,14 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
   selector: 'test-views',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TasksComponent extends UIComponent {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -52,11 +55,11 @@ export class TasksComponent extends UIComponent {
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
   dialog!: DialogRef;
+  dialogConFirmTask!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
   dayoff = [];
-  // resourceField: any;
   eventStatus: any;
   itemSelected: any;
   user: any;
@@ -64,6 +67,7 @@ export class TasksComponent extends UIComponent {
   gridView: any;
   isAssignTask = false;
   param: any;
+  paramModule: any;
   dataObj: any;
   iterationID: string = '';
   listTaskResousce = [];
@@ -76,7 +80,7 @@ export class TasksComponent extends UIComponent {
   popoverDataSelected: any;
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
-  vllStatus ="" ;
+  vllStatus = '';
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -90,10 +94,10 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID=="TMT0203"){
-      this.vllStatus =this.vllStatusAssignTasks
-    }else{
-      this.vllStatus = this.vllStatusTasks
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else {
+      this.vllStatus = this.vllStatusTasks;
     }
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
@@ -110,16 +114,16 @@ export class TasksComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS02':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS03':
         this.copy(data);
         break;
-      case 'delete':
+      case 'SYS04':
         this.delete(data);
         break;
       case 'sendemail':
@@ -371,46 +375,46 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && !("00,07,09,10").includes(data.status)) {
+    if (data && !'00,07,09,10'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
-      data.category == '1' && 
+      data.category == '1' &&
       data.verifyControl == '1' &&
       data.status != '00'
     ) {
       this.notiService.notifyCode('TM014');
       return;
     }
-    // if (data.category == '1' || data.category == '2') {
-    //   this.editConfirm(data);
-    //   return;
-    // }
-    this.editConfirm(data)
-    // var isCanEdit = true;
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskBusiness',
-    //     'GetListTaskChildDetailAsync',
-    //     data.taskID
-    //   )
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       res.forEach((element) => {
-    //         if (element.status != '00' && element.status != '10') {
-    //           isCanEdit = false;
-    //           return;
-    //         }
-    //       });
-    //       if (!isCanEdit) {
-    //         this.notiService.notifyCode('TM016');
-    //       } else {
-    //         this.editConfirm(data);
-    //       }
-    //     }
-    //   });
+    if (data.category == '1' || data.category == '2') {
+      this.editConfirm(data);
+      return;
+    }
+
+    var isCanEdit = true;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        data.taskID
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '00' && element.status != '10') {
+              isCanEdit = false;
+              return;
+            }
+          });
+          if (!isCanEdit) {
+            this.notiService.notifyCode('TM016');
+          } else {
+            this.editConfirm(data);
+          }
+        }
+      });
   }
 
   copy(data) {
@@ -487,7 +491,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   editConfirm(data) {
     if (data) {
@@ -589,7 +593,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     if (evt.type == 'read') {
@@ -615,88 +619,95 @@ export class TasksComponent extends UIComponent {
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
-    if(taskAction.owner != this.user.userID){
-      this.notiService.notify("Bạn không thể cập nhật công việc của người khác !")
-      return ;
+    if (taskAction.owner != this.user.userID) {
+      this.notiService.notify(
+        'Bạn không thể cập nhật công việc của người khác !'
+      );
+      return;
     }
-    if(taskAction.status ="05"){
-      this.notiService.notifyCode("TM020")
-      return ;
+    if ((taskAction.status == '05')) {
+      this.notiService.notifyCode('TM020');
+      return;
     }
-    if(taskAction.approveStatus=="3"){
-      this.notiService.notifyCode("TM024")
-      return ;
+    if (taskAction.approveStatus == '3') {
+      this.notiService.notifyCode('TM024');
+      return;
     }
-    if(taskAction.approveStatus=="4" || taskAction.approveStatus=="5" ){
-      this.notiService.notifyCode("TM025")
-      return ;
+    if (taskAction.approveStatus == '4' || taskAction.approveStatus == '5') {
+      this.notiService.notifyCode('TM025');
+      return;
     }
-
     const fieldName = 'UpdateControl';
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          var param = JSON.parse(res.dataValue);
-          var fieldValue = param[fieldName];
-          if (fieldValue != '0') {
-            this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
+    if (taskAction.taskGroupID) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskGroupBusiness',
+          'GetAsync',
+          taskAction.taskGroupID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
           } else {
-            var completedOn = moment(new Date()).toDate();
-            var completed = '0';
-            if (taskAction.estimated > 0) {
-              completed = taskAction.estimated;
-            } else {
-              var timeStart = moment(
-                new Date(
-                  taskAction.startOn
-                    ? taskAction.startOn
-                    : taskAction.startDate
-                    ? taskAction.startDate
-                    : taskAction.createdOn
-                )
-              ).toDate();
-              var time = (
-                (completedOn.getTime() - timeStart.getTime()) /
-                3600000
-              ).toFixed(2);
-              completed = Number.parseFloat(time).toFixed(2);
-            }
-
-            var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
-
-            this.tmSv
-              .setStatusTask(
-                this.funcID,
-                taskAction.taskID,
-                status,
-                completedOn,
-                completed,
-                ''
-              )
-              .subscribe((res) => {
-                if (res && res.length > 0) {
-                  res.forEach((obj) => {
-                    this.view.dataService.update(obj).subscribe();
-                  });
-                  this.itemSelected = res[0];
-                  this.detectorRef.detectChanges();
-                  this.notiService.notifyCode('tm009');
-                } else {
-                  this.notiService.notifyCode('tm008');
-                }
-              });
+            this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
           }
-        }
-      });
+        });
+    } else {
+      this.actionUpdateStatus(this.paramModule[fieldName], moreFunc, taskAction);
+    }
   }
 
+  actionUpdateStatus(fieldValue, moreFunc, taskAction) {
+    if (fieldValue != '0') {
+      this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
+    } else {
+      var completedOn = moment(new Date()).toDate();
+      var completed = '0';
+      if (taskAction.estimated > 0) {
+        completed = taskAction.estimated;
+      } else {
+        var timeStart = moment(
+          new Date(
+            taskAction.startOn
+              ? taskAction.startOn
+              : taskAction.startDate
+                ? taskAction.startDate
+                : taskAction.createdOn
+          )
+        ).toDate();
+        var time = (
+          (completedOn.getTime() - timeStart.getTime()) /
+          3600000
+        ).toFixed(2);
+        completed = Number.parseFloat(time).toFixed(2);
+      }
+      var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
+
+      this.tmSv
+        .setStatusTask(
+          this.funcID,
+          taskAction.taskID,
+          status,
+          completedOn,
+          completed,
+          ''
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            res.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = res[0];
+            this.detectorRef.detectChanges();
+            this.notiService.notifyCode('TM009');
+          } else {
+            this.notiService.notifyCode('TM008');
+          }
+        });
+    }
+  }
   openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
     let obj = {
       fieldValue: fieldValue,
@@ -732,12 +743,13 @@ export class TasksComponent extends UIComponent {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
+        'GetByModuleWithCategoryAsync',
+        ['TM_Parameters', '1']
       )
       .subscribe((res) => {
         if (res) {
           this.param = JSON.parse(res.dataValue);
+          this.paramModule = this.param;
           return callback && callback(true);
         }
       });
@@ -803,4 +815,27 @@ export class TasksComponent extends UIComponent {
   hoverPopover(p: any) {
     this.popoverDataSelected = p;
   }
+
+  //#region ConfirmControl 
+   openConfirmControl(moreFunc,data){
+    if (data.owner != this.user.userID) {
+      this.notiService.notify(
+        'Bạn không thể xác nhận công việc của người khác !'
+      );
+      return;
+    }
+    var obj ={
+      moreFunc : moreFunc ,
+      data : data,
+      funcID : this.funcID
+    }
+    this.dialogConFirmTask = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+   }
 }

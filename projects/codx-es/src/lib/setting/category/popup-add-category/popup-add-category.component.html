@@ -1,13 +1,13 @@
-<codx-form #form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body"
-  [footer]="footer" *ngIf="isAfterRender">
-  <ng-template #body>
+<codx-form #form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader"
+  [body]="body" [footer]="footer" *ngIf="isAfterRender">
+  <ng-template #subHeader>
     <div class="mt-3">
       <div class="fw-bold codx-label">
         <codx-label default="Icon & màu sắc" name="lblIconColor" [formModel]="form.formModel"></codx-label>
       </div>
       <div class="d-flex">
-        <codx-input class="btn btn-icon btn-primary btn-icon btn-icon-md btn-circle me-5" type="vllicon"
-          refValue="L1470" field="icon" [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
+        <codx-input class="me-3 user-mini-icon w-30px me-5" type="vllicon" refValue="L1470" field="icon"
+          [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
         </codx-input>
         <div class="ms-4">
           <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
@@ -16,13 +16,16 @@
         </div>
       </div>
     </div>
+  </ng-template>
+  <ng-template #body>
+
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
           <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
-            [Group]="dialogCategory" ControlName="categoryName">
+            [Group]="dialogCategory">
           </codx-input>
         </div>
       </div>
@@ -31,7 +34,7 @@
           <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
-            [Group]="dialogCategory" ControlName="categoryID" disabled="true">
+            [Group]="dialogCategory" disabled="true">
           </codx-input>
         </div>
       </div>

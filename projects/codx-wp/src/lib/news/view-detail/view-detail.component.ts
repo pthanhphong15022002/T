@@ -7,13 +7,13 @@ import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.css']
+  styleUrls: ['./view-detail.component.scss']
 })
 export class ViewDetailComponent implements OnInit {
 
   NEWSTYPE = {
-    post: "1",
-    video: "2"
+    POST: "1",
+    VIDEO: "2"
   }
   entityName:string = "WP_News";
   category:string ="";
@@ -62,7 +62,6 @@ export class ViewDetailComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
-  srcVideo:string ="";
   loadData(recID:string){
     this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetNewsInforAsync",recID).subscribe(
       (res) => {
@@ -70,19 +69,6 @@ export class ViewDetailComponent implements OnInit {
           this.dataItem = res[0];
           this.listViews = res[1];
           this.listNews = res[2];
-          // this.api.execSv(
-          //   "DM","ERM.Business.DM",
-          //   "FileBussiness",
-          //   "GetFilesByObjectIDImageAsync",
-          //   this.dataItem.recID)
-          // .subscribe((files:any[]) => {
-          //   if(files && files.length > 0){
-          //     files.map((f:any) => {
-          //     this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-          //     });
-          //     this.changedt.detectChanges();
-          //   }
-          // });
         }
       }
     );
@@ -101,12 +87,12 @@ export class ViewDetailComponent implements OnInit {
     this.codxService.navigate('','/wp/tag/'+funcID+'/tagID/'+data.value);
   }
 
-  clickShowPopupCreate(){
+  clickShowPopupCreate(newsType:string){
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent,'',0,0,'',null,'',option);
+    this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
   }
 
   searchField:string ="";

@@ -1,15 +1,15 @@
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, AuthService, CodxService, ViewsComponent, ViewType } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 
 
 @Component({
   selector: 'app-personals',
   templateUrl: './personals.component.html',
-  styleUrls: ['./personals.component.scss']
+  styleUrls: ['./personals.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PersonalsComponent implements OnInit {
-  @ViewChild('view') view: ViewsComponent;
   formName: any;
   gridViewName: any;
   employeeInfo: any;
@@ -18,7 +18,6 @@ export class PersonalsComponent implements OnInit {
   icon: any;
   funcID = "";
   default = true;
-  views = [];
   showHeader: boolean = true;
   moreFunc: any[] = [
     { functionID: `MWP0091`, description: "Bài viết", smallIcon: "mwp_post" },
@@ -52,17 +51,17 @@ export class PersonalsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-        },
-      },
-    ]
-    this.changedt.detectChanges(); 
+    // this.views = [
+    //   {
+    //     type: ViewType.content,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       panelLeftRef: this.panelLeftRef,
+    //     },
+    //   },
+    // ]
+    this.changedt.detectChanges();
   }
 
   getFunctionList() {

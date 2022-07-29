@@ -206,6 +206,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       typeLst: this.typeList,
       formType: 'add',
       component: 'note-drawer',
+      maxPinNotes: this.maxPinNotes,
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;

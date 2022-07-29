@@ -1,8 +1,5 @@
 //signAreas Model
 export class tmpSignArea {
-  RecID: string;
-  TransID: string;
-  FileID: string;
   Signer: string;
   LabelType: string;
   LabelValue: string;

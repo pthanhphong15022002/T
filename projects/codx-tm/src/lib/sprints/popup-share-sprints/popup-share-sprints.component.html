@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-2">
                     <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
-                        <span class="icon-delete  icon-20 text-danger ml-2 mr-2"></span>
+                        <span class="icon-delete  icon-20 text-danger ml-2 me-2"></span>
                     </a>
                     <!-- <button class="btn btn-icon btn-xs" type="button" (click)="showControl(p,item.userID)"
                         [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="bottom"
@@ -35,8 +35,8 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end row">
         <div class="col-6">
-            <codx-input type="Share" refValue="L1906" [dataShared]="[]" multiple="true"
-                [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
+            <codx-input type="Share" refValue="L1906" [dataShared]="[]" multiple="true" [showInput]="false"
+                (valueChange)="eventApply($event)"></codx-input>
         </div>
         <div class="col-6">
             <button style="float: right;" type="button" class="btn btn-primary" (click)="saveData()">

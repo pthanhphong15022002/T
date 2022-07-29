@@ -1,8 +1,9 @@
 import { CodxTMService } from './../codx-tm.service';
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
+import { Resources } from '../models/CO_Meetings.model';
 
 @Component({
   selector: 'lib-tmmeetings',
@@ -40,7 +41,9 @@ export class TMMeetingsComponent extends UIComponent {
   user: any;
   funcID: string;
   gridView: any;
-  param: any
+  param: any;
+  resources: Resources[] = [];
+  resourceID: any;
   constructor(inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
@@ -55,6 +58,10 @@ export class TMMeetingsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+  }
+
+  receiveMF(e: any) {
+    this.clickMF(e.e, this.itemSelected);
   }
 
   ngAfterViewInit(): void {
@@ -87,9 +94,33 @@ export class TMMeetingsComponent extends UIComponent {
     ]
 
     this.view.dataService.methodSave = 'AddMeetingsAsync';
+    this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
+    this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
 
     this.dt.detectChanges();
 
+  }
+
+  convertHtmlAgency(resourceID: any) {
+    var desc = '<div class="d-flex">';
+    if (resourceID)
+      desc += '<codx-imgs [objectId]="getResourceID('+resourceID+')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+
+    return desc + '</div>';
+  }
+
+  getResourceID(data) {
+    var resources = [];
+    resources = data.resources;
+    var id= '';
+
+    resources.forEach((e)=>{
+      id += e.resourceID + ';';
+    });
+    if(id!=''){
+      this.resourceID = id.substring(0, id.length - 1);
+    }
+    return this.resourceID;
   }
 
   getDate(data) {
@@ -118,7 +149,7 @@ export class TMMeetingsComponent extends UIComponent {
       case 'btnAdd':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
       case 'copy':
@@ -126,6 +157,9 @@ export class TMMeetingsComponent extends UIComponent {
         break;
       case 'delete':
         this.delete(data);
+        break;
+      case 'TMT05011':
+        this.viewDetail(data);
         break;
     }
   }
@@ -143,18 +177,66 @@ export class TMMeetingsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(PopupAddMeetingComponent, 'add', option);
 
     });
   }
   edit(data) {
-
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddMeetingComponent,
+          'edit',
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
+      });
   }
   copy(data) {
 
   }
   delete(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+      this.beforeDel(opt)).subscribe((res) => {
+        if (res[0]) {
+          this.itemSelected = this.view.dataService.data[0];
+        }
+      }
+      );
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteMeetingsAsync';
+
+    opt.data = itemSelected.meetingID;
+    return true;
+  }
+
+  viewDetail(data){
 
   }
 }

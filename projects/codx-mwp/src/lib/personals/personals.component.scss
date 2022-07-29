@@ -2,7 +2,7 @@
     background-color: #d7d7d7;
     height: 150px;
     border-radius: 12px 12px 0 0 !important;
-    padding: 25px 40px;
+    padding: 25px 45px;
     background-size: cover;
 }
 
@@ -10,16 +10,27 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-
+    height: auto !important;
 }
 
 .personal-container .pw-menu {
-    max-width: 900px;
+    max-width: 720px;
 
 }
 
 .personal-container>div.pw-lg {
-    max-width: 100%
+    max-width: 100%;
+}
+
+.personal-container>div.pw-md {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+}
+
+.personal-container app-list-post .e-listview .e-list-item {
+    border: 0 !important;
 }
 
 .pw-menu {
@@ -41,7 +52,7 @@
 
 .pw-content {
     margin-top: 20px;
-    padding: 20px;
+    padding: 20px 25px;
     background-color: white;
     box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }

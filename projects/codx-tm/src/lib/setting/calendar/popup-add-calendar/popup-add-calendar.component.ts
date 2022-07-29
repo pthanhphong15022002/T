@@ -1,6 +1,5 @@
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import {
-  AfterViewInit,
   Component,
   Injector,
   OnInit,
@@ -29,6 +28,7 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
   isAfterRender: boolean = false;
   user: any;
   funcID: string;
+  calendarID: string;
   data: any;
   cbxName: object;
 
@@ -44,15 +44,13 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
     this.user = this.authService.get();
     this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    const [formModel, calendarID] = dt?.data;
+    this.formModel = formModel;
+    this.calendarID = calendarID;
   }
 
   onInit(): void {
-    this.cache.functionList('TMS021').subscribe((res) => {
-      this.formModel = new FormModel();
-      this.formModel = res;
-      this.initForm();
-    });
+    this.initForm();
   }
 
   initForm() {
@@ -61,7 +59,6 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
       .then((res) => {
         if (res) {
           this.dialogAddCalendar = res;
-          this.isAfterRender = true;
         }
       });
   }
@@ -78,20 +75,17 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
   }
 
   saveCalendar() {
-    const { calendarName, description } = this.dialogAddCalendar.value;
-    this.api
-      .execSv<any>(
-        APICONSTANT.SERVICES.BS,
-        APICONSTANT.ASSEMBLY.BS,
-        APICONSTANT.BUSINESS.BS.Calendars,
-        'SaveCalendarAsync',
-        [{ calendarName: calendarName, description: description }]
-      )
+    const { description, calendarName } = this.dialogAddCalendar.value
+    this.api.execSv<any>(APICONSTANT.SERVICES.BS, APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.Calendars, 'SaveCalendarAsync', [{
+      calendarName: calendarName,
+      description: description,
+    }])
       .subscribe((res) => {
         if (res) {
           this.notiService.notify('Thêm thành công');
           this.dialog.close();
         }
       });
+    console.log(this.dialogAddCalendar.value);
   }
 }

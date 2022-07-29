@@ -81,16 +81,6 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'notedetails/:funcID',
-  //       component: DetailNoteBooksComponent,
-  //     },
-  //   ],
-  // },
 ];
 
 const Component: Type<any>[] = [

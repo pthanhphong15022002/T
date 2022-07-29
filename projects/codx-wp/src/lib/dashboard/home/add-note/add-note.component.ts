@@ -106,8 +106,8 @@ export class AddNoteComponent implements OnInit {
       this.listFileUploadEdit = this.note.images;
       if (this.note.noteType != 'text')
         this.addFirstObjectInArray();
-      this.getNumberNotePin();
     }
+    this.getNumberNotePin();
     this.noteType.text = true;
     this.cache.gridViewSetup('PersonalNotes', 'grvPersonalNotes').subscribe(res => {
       console.log("check gridViewSetup", res);
@@ -305,12 +305,16 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  openFormUpdateIsPin(data) {
+  openFormUpdateIsPin(data, typeUpdate = null) {
     var obj = {
       data: this.data,
       itemUpdate: data,
+      typeUpdate: typeUpdate,
     }
     this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj)
+    this.noteService.dataUpdate.subscribe((res) => {
+      this.countNotePin--;
+    })
   }
 
   onEditNote() {
@@ -334,7 +338,7 @@ export class AddNoteComponent implements OnInit {
   checkPinWithFormAdd() {
     if (this.checkPin == true) {
       if (this.countNotePin + 1 > this.maxPinNotes)
-        this.openFormUpdateIsPin(this.note);
+        this.openFormUpdateIsPin(this.note, 'updateNoteNew');
       else
         this.onCreateNote();
     } else this.onCreateNote();
@@ -410,19 +414,10 @@ export class AddNoteComponent implements OnInit {
     var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
     this.listNote.push(Object.assign({}, dt));
     // this.listNote.push(this.listNote.shift());
-    // for (let i = this.listNote.length - 1; i > 0; i--) {
-    //   for (let y = i - 2; y >= 0; y--) {
-    //     if (this.listNote[i].listNote == this.listNote[y].listNote) {
-    //       this.listNote[i] = {
-    //         status: this.type == 'check' ? 0 : null,
-    //         listNote: '',
-    //       }
-    //     }
-    //   }
-    // }
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');
     if (ele) {
+
       let htmlEle = ele[0] as HTMLElement;
       htmlEle.focus();
     }

@@ -1,11 +1,10 @@
-<div *ngIf="file_img.length > 0">
-    <div class="pw-listcard">
-        <div *ngFor="let item of file_img" (click)="openImg(item)">
-            <div class="pw-card">
-                <ng-container *ngIf="item.referType == FILE_REFERTYPE.IMAGE">
-                    <img class="w-100 rounded h-150px mh-150px " [src]="item.thumbnail || item.data" />
-                </ng-container>
-            </div>
-        </div>
-    </div>
-</div>
+<codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
+    [dataService]="dtService" [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView"
+    formName="FileInfo" service="DM">
+</codx-listview>
+
+<ng-template #templateListCard let-item>
+    <codx-card-img cardCss="border rounded-4 pw-card delay-500" (click)="openImg(item)" [imageId]="item.objectID"
+        [imageObjType]="item.objectType" imageWidth="100" imgCss="h-150px w-100">
+    </codx-card-img>
+</ng-template>
