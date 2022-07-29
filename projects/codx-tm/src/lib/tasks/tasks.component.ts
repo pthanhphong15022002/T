@@ -114,17 +114,17 @@ export class TasksComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
-        break;
-      case 'delete':
-        this.delete(data);
         break;
       case 'sendemail':
         this.sendemail(data);
@@ -743,8 +743,8 @@ export class TasksComponent extends UIComponent {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
+        'GetByModuleWithCategoryAsync',
+        ['TM_Parameters', '1']
       )
       .subscribe((res) => {
         if (res) {

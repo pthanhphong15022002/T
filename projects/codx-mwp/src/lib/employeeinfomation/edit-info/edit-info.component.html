@@ -44,8 +44,12 @@
                                 <div class="form-group">
                                     <codx-label fiedName="EmployeeID" default="Mã nhân viên">
                                     </codx-label>
-                                    <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID"
+                                    <!-- <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID"
                                         field="employeeID" (valueChange)="dataChange($event, 'employeeID')">
+                                    </codx-input> -->
+
+                                    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
+                                        field="employeeID">
                                     </codx-input>
                                 </div>
                             </div>
@@ -55,7 +59,11 @@
                                 <div class="form-group">
                                     <codx-label fiedName="EmployeeName" default="Tên nhân viên">
                                     </codx-label>
-                                    <codx-input class="form-control" type="text" [crrValue]="employee?.employeeName"
+                                    <!-- <codx-input class="form-control" type="text" [crrValue]="employee?.employeeName"
+                                        field="employeeName">
+                                    </codx-input> -->
+
+                                    <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
                                         field="employeeName">
                                     </codx-input>
                                 </div>
@@ -66,11 +74,14 @@
                                 <div class="form-group gender-control">
                                     <codx-label fiedName="Gender" default="Giới tính">
                                     </codx-label>
-
                                     <codx-input name="gender" type="valuelist" field="Gender" placeholder=""
                                         [crrValue]="employee?.gender" (valueChange)="dataChange($event, 'gender')"
                                         refValue="L0068">
                                     </codx-input>
+
+                                    <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="gender"
+                                        (valueChange)="dataChange($event, 'gender')" refValue="L0068">
+                                    </codx-input> -->
                                 </div>
                             </div>
                             <div class="col">
@@ -246,10 +257,6 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
-                                <!-- <codx-input type="datetime" class="form-control" placeholder="datetime" format="d"
-                                    [crrValue]="employee?.issuedOn" field="issuedOn"
-                                    (valueChange)="dataChange($event, 'issuedOn')">
-                                </codx-input> -->
 
                                 <codx-input type="datetime" class="test-datetime" field="issuedOn" format="d"
                                     placeholder="datetime" [crrValue]="employee?.issuedOn"
@@ -356,10 +363,6 @@
                             <div class="form-group">
                                 <codx-label fiedName="PitIssuedOn" default="Ngày cấp">
                                 </codx-label>
-                                <!-- <codx-input type="datetime" placeholder="datetime" format="d" field="pitIssuedOn"
-                                    (valueChange)="dataChange($event, 'pitIssuedOn')" class="form-control"
-                                    [crrValue]="employee?.pitIssuedOn">
-                                </codx-input> -->
 
                                 <codx-input type="datetime" class="test-datetime" field="pitIssuedOn" format="d"
                                     placeholder="datetime" [crrValue]="employee?.pitIssuedOn"
@@ -383,10 +386,6 @@
                             <div class="form-group">
                                 <codx-label fiedName="SiRegisterOn" default="Ngày cấp">
                                 </codx-label>
-                                <!-- <codx-input type="datetime" placeholder="datetime" format="d" field="siRegisterOn"
-                                    (valueChange)="dataChange($event, 'siRegisterOn')" class="form-control"
-                                    [crrValue]="employee?.siRegisterOn">
-                                </codx-input> -->
 
                                 <codx-input type="datetime" class="test-datetime" field="siRegisterOn" format="d"
                                     placeholder="datetime" [crrValue]="employee?.siRegisterOn"

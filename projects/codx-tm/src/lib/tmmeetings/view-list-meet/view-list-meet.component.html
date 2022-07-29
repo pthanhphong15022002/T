@@ -17,9 +17,9 @@
       {{data.meetingName}}
     </div>
     <div class=" justify-content-start">
-      <codx-temp-full cardCss="card-template"  [imageId]="data.userID" 
-        imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data" 
-        (clickMF)="clickMF($event, data)">
+      <codx-temp-full cardCss="card-template"  [imageId]="data.userID"
+        imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data"
+       >
       </codx-temp-full>
     </div>
   </td>
@@ -35,7 +35,7 @@
   <td class="w-10">
     <div >
       <codx-imgs [objectId]="resourceID" objectType="AD_Users" [numberImages]="4">
-        
+
       </codx-imgs></div>
   </td>
   <td class=" w-5">

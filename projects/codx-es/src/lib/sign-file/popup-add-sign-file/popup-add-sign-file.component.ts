@@ -98,6 +98,10 @@ export class PopupAddSignFileComponent implements OnInit {
             approveControl: '1',
             approveStatus: '1',
           });
+          this.dialogSignFile.addControl(
+            'approveControl',
+            new FormControl('3')
+          );
 
           this.codxService
             .getAutoNumber(
@@ -313,27 +317,7 @@ export class PopupAddSignFileComponent implements OnInit {
       case 3:
         break;
     }
-    // if (currentTab == 1) {
-    //   //this.transID = '629de1080d7d066f90f975a3';
-    //   // this.api
-    //   //   .callSv('ES', 'ES', 'SignFilesBusiness', 'AddEditAsync', [
-    //   //     this.dialogSignFile.value,
-    //   //     this.isAdd,
-    //   //     this.transID,
-    //   //   ])
-    //   //   .subscribe((res) => {
-    //   //     if (res && res.msgBodyData != null) {
-    //   //       this.dialogSignFile.patchValue(res.msgBodyData[0]);
-    //   //       this.transID = res.msgBodyData[0].recID;
-    //   //       this.currentTab = currentTab + 1;
-    //   //       this.viewApprovalStep.setTransID(this.transID);
-    //   //       this.cr.detectChanges();
-    //   //     }
-    //   //   });
-    //   this.currentTab = currentTab + 1;
-    // } else {
-    //   this.currentTab = currentTab + 1;
-    // }
+
     this.cr.detectChanges();
   }
 
@@ -363,6 +347,8 @@ export class PopupAddSignFileComponent implements OnInit {
           console.log(res);
 
           if (res) {
+            dialogClose && dialogClose.close();
+            this.dialog && this.dialog.close();
           }
         });
     }

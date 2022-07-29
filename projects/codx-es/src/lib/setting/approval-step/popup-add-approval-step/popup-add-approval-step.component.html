@@ -1,6 +1,6 @@
 <!-- <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [formControl]="dialogApprovalStep" *ngIf="isAfterRender"> -->
-<codx-layout-add *ngIf="type == '1' && isAfterRender" [title]="header1" [tabInfo]="tabInfo"
+<codx-layout-add *ngIf="type == '0' && isAfterRender" [title]="header1" [tabInfo]="tabInfo"
   [formModel]="dialog.formModel" [subHeader]="subHeader" [dialog]="dialog" [openMore]="true"
   [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]" (setTitle)="setTitle($event)"
   (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false">
@@ -28,28 +28,26 @@
   </div>
 </ng-template>
 <ng-template #tabInfo0>
-  <div class="d-flex flex-column mb-4">
-    <codx-label class="fw-bolder" default="Mô tả" fiedName="StepName" [formModel]="formModel">
+  <div class="form-group">
+    <codx-label default="Mô tả" fiedName="StepName" [formModel]="formModel">
     </codx-label>
     <codx-input type="text" name="text" ControlName="stepName" [Group]="dialogApprovalStep" placeholder=""
       class="form-control"></codx-input>
   </div>
-  <div class="d-flex flex-column mb-4">
-    <div class=" row">
-      <div class="col-6">
-        <codx-label class="fw-bolder" default="Hành động" fiedName="StepType" [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['StepType']" field="stepType"
-          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.stepType">
-        </codx-input>
-      </div>
-      <div class="col-4">
-        <codx-label class="fw-bolder" default="Thời gian xử lí (giờ)" fiedName="Leadtime" [formModel]="formModel">
-        </codx-label>
-        <codx-input type="number" field="leadtime" [Group]="dialogApprovalStep" (valueChange)="valueChange($event)"
-          [min]="0" placeholder="0" [crrValue]="dialogApprovalStep.value?.leadtime ?? 0" [showSpinButton]="false">
-        </codx-input>
-      </div>
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label default="Hành động" fiedName="StepType" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['StepType']" field="stepType"
+        (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.stepType">
+      </codx-input>
+    </div>
+    <div class="col-4 form-group">
+      <codx-label default="Thời gian xử lí (giờ)" fiedName="Leadtime" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="number" field="leadtime" [Group]="dialogApprovalStep" (valueChange)="valueChange($event)"
+        [min]="0" placeholder="0" [crrValue]="dialogApprovalStep.value?.leadtime ?? 0" [showSpinButton]="false">
+      </codx-input>
     </div>
   </div>
 
@@ -67,12 +65,12 @@
       <div class="d-flex align-items-center mb-2 w-100">
         <codx-temp-full cardCss="card-template" *ngIf="item.roleType=='U'" [imageId]="item.approver" [subTitle]=""
           [title]="item.approverName" [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
-          [imageObjType]="'AD_Users'" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)"
-          [dataItem]="item" typeMF="hover">
+          [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3" [formModel]="formModel"
+          (clickMF)="MFClick($event, item)" [dataItem]="item" typeMF="hover">
         </codx-temp-full>
 
         <codx-temp-full cardCss="card-template" *ngIf="item.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
-            (item.icon ? item.icon : 'share_default.svg')" imgCss="me-4 symbol symbol-40px symbol-circle"
+            (item.icon ? item.icon : 'share_default.svg')" [imageWidth]="20" imgCss="w-30px p-3 me-3 user-mini-icon"
           [imageWidth]="30" [subTitle]="(item.approver| vll:'ES014':'text'|async)"
           [title]="(item.approver| vll:'ES014':'text'|async)"
           [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''" [titleLine]="3"
@@ -111,15 +109,15 @@
       </codx-label>
     </div>
     <div class="row">
-      <div class="col-6">
-        <codx-label class="fw-bolder" default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
+      <div class="form-group col-6">
+        <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['ApproveControl']" field="approveControl"
           (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.approveControl">
         </codx-input>
       </div>
-      <div class="col-6">
-        <codx-label class="fw-bolder" default="Cho ý kiến khi từ chối" fiedName="RejectControl" [formModel]="formModel">
+      <div class="form-group col-6">
+        <codx-label default="Cho ý kiến khi từ chối" fiedName="RejectControl" [formModel]="formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['RejectControl']" field="rejectControl"
           (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.rejectControl">
@@ -188,62 +186,45 @@
   </ng-container>
 </ng-template>
 <ng-template #tabInfo3>
-  <div class="d-flex flex-column mb-4">
-    <div class="row">
-      <div class="col-7">
-        <codx-label class="fw-bolder" default="Xử lí động khi quá hạn" fiedName="OverdueControl"
-          [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['OverdueControl']" field="overdueControl"
-          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.overdueControl">
-        </codx-input>
-      </div>
-      <div class="col-4">
-        <codx-label class="fw-bolder" default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
-        </codx-label>
-        <codx-input type="number" name="number" [min]="0" placeholder="0" field="loops"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
+
+  <div class="row">
+    <div class="form-group col-7">
+      <codx-label default="Xử lí động khi quá hạn" fiedName="OverdueControl" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['OverdueControl']" field="overdueControl"
+        (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.overdueControl">
+      </codx-input>
+    </div>
+    <div class="form-group col-4">
+      <codx-label default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="number" name="number" [min]="0" placeholder="0" field="loops"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
   </div>
-  <div class="d-flex flex-column mb-4">
-    <div class="row">
-      <div class="col-7">
-        <codx-label class="fw-bolder" default="Cho phép hủy yêu cầu khi đã duyệt" fiedName="CancelControl"
-          [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['CancelControl']" field="cancelControl"
-          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.cancelControl">
-        </codx-input>
-      </div>
+
+  <div class="row">
+    <div class="form-group col-7">
+      <codx-label default="Cho phép hủy yêu cầu khi đã duyệt" fiedName="CancelControl" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['CancelControl']" field="cancelControl"
+        (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.cancelControl">
+      </codx-input>
     </div>
   </div>
-  <div class="d-flex flex-column mb-4">
-    <div class="row">
-      <div class="col-7">
-        <codx-label class="fw-bolder" class="fw-bolder" default="Thay thế vị trí trống" fiedName="AlterApprovers"
-          [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['AlterApprovers']" field="alterApprovers"
-          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.alterApprovers">
-        </codx-input>
-      </div>
+
+  <div class="row">
+    <div class="form-group col-7">
+      <codx-label class="fw-bolder" default="Thay thế vị trí trống" fiedName="AlterApprovers" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['AlterApprovers']" field="alterApprovers"
+        (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.alterApprovers">
+      </codx-input>
     </div>
   </div>
+
 </ng-template>
-<!-- <ng-template #tabInfo0>
-  0
-</ng-template>
-<ng-template #tabInfo1>
-  1
-</ng-template>
-<ng-template #tabInfo2>
-  2
-</ng-template>
-<ng-template #tabInfo3>
-  3
-</ng-template> -->
 
 
 <ng-template #footer>
@@ -262,7 +243,7 @@
 </ng-template>
 
 <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formControl]="dialogApprovalStep" *ngIf="isAfterRender && type == '0'">
+  [formControl]="dialogApprovalStep" *ngIf="isAfterRender && type == '1'">
 
 </codx-form>
 <ng-template #body>

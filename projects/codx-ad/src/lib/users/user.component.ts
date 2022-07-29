@@ -112,30 +112,30 @@ export class UserComponent extends UIComponent {
   }
 
   add() {
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.dataService;
+    //   option.FormModel = this.view?.formModel;
+    //   option.Width = 'Auto';
+    //   this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
+
+    // });
+
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
-
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null)
+          this.view.dataService
+            .remove(this.view.dataService.dataSelected)
+            .subscribe(x => {
+              this.dt.detectChanges();
+            });
+      });
     });
-
-    // this.view.dataService.addNew(0).subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-    //   this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
-    //   this.dialog.closed.subscribe((x) => {
-    //     if (x.event == null)
-    //       this.view.dataService
-    //         .remove(this.view.dataService.dataSelected)
-    //         .subscribe(x => {
-    //           this.dt.detectChanges();
-    //         });
-    //   });
-    // });
   }
 
   edit(data?) {

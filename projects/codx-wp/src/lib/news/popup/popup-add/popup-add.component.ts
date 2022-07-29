@@ -124,7 +124,6 @@ export class PopupAddComponent implements OnInit {
     // appover 
     this.approverPermission = new Permission();
     this.approverPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
-    this.approverPermission.objectID = 'ADMIN';
     this.approverPermission.read = true;
     this.approverPermission.isActive = true;
     this.approverPermission.createdBy = this.user.userID;

@@ -66,7 +66,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   constructor(
     private esService: CodxEsService,
-    private api: ApiHttpService,
     private cache: CacheService,
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -209,6 +208,18 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cr.detectChanges();
   }
 
+  beforeSave(option: any) {
+    let itemData = this.dialogCategory.value;
+    let countStep = this.lstStep?.length ?? 0;
+    if (this.isAdd) {
+      option.method = 'AddNewAsync';
+    } else {
+      option.method = 'EditCategoryAsync';
+    }
+    option.data = [itemData, countStep];
+    return true;
+  }
+
   onSaveForm() {
     if (this.dialogCategory.invalid == true) {
       return;
@@ -255,18 +266,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforeSave(option: any) {
-    let itemData = this.dialogCategory.value;
-    let countStep = this.lstStep?.length ?? 0;
-    if (this.isAdd) {
-      option.method = 'AddNewAsync';
-    } else {
-      option.method = 'EditCategoryAsync';
-    }
-    option.data = [itemData, countStep];
-    return true;
-  }
-
   openAutoNumPopup() {
     this.cfService.openForm(
       PopupAddAutoNumberComponent,
@@ -286,7 +285,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   openPopupApproval() {
     let transID = this.dialogCategory.value.recID;
     let data = {
-      type: '1',
+      type: '0',
       transID: transID,
       model: this.dialogCategory,
     };
@@ -309,14 +308,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   closePopup() {
     this.esService.setupAutoNumber.next(null);
     this.dialog && this.dialog.close();
-  }
-
-  getCount(countStep) {
-    let lstNumber = [];
-    for (let i = 0; i < countStep; i++) {
-      lstNumber.push(i + 1);
-    }
-    return lstNumber;
   }
 
   setViewAutoNumber(modelAutoNumber) {

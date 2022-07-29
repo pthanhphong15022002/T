@@ -1,12 +1,12 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" [data]="data"
-  (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)"></codx-layout-add>
+  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" (setTitle)="setTitle($event)"
+  (buttonClick)="buttonClick($event)"></codx-layout-add>
 
 
 <ng-template #tabDescription>
   <div class="form-group">
     <div class="form-group row mt-3 pb-5">
-      <codx-img #imageUpload class="symbol symbol-120 symbol-circle mr-2 image-inpt-wrapper fullImage" [width]="150"
+      <codx-img #imageUpload class="symbol symbol-120 symbol-circle me-2 image-inpt-wrapper fullImage" [width]="150"
         funcId="AD006" [objectId]="adUser.userID" [objectName]="adUser.userName" objectType="AD_Users"
         [isAllowEdit]=true data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
         data-kt-menu-flip="bottom" [updateDirect]="false">
@@ -26,55 +26,43 @@
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-6">
-        <codx-label fiedName="UserID" f default="Mã người dùng">
+        <codx-label fiedName="UserID" formName="Users" gridViewName="grvUsers" default="Mã người dùng">
+      </div>
+      <div class="form-group mt-3">
+        <codx-label name="UserName" formName="Users" gridViewName="grvUsers" default="Tên người dùng">
         </codx-label>
-        <codx-input field="userID" type="text" [attr.disabled]="!data?.isNew() ? '' : null" [crrValue]="adUser.userID">
+        <codx-input type="text" field="userName" [crrValue]="adUser.userName" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-      <div class="form-group col-6">
-        <codx-label fiedName="EmployeeID" formName="Users" gridViewName="grvUsers" default="Nhân viên">
+      <div class="form-group row mt-3">
+        <codx-label fiedName="UserGroup" formName="Users" gridViewName="grvUsers" default="Nhóm người dùng">
         </codx-label>
-        <codx-input type="combobox" refValue="EmployeeUser" [disabled]="readOnly" field="employeeID"
-          [crrValue]="adUser.employeeID" (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true">
+        <codx-input type="combobox" field="userGroup" [crrValue]="adUser.userGroup" refValue="UserGroups"
+          (valueChange)="valueUG($event)" [multiple]="false" loadFull="true">
         </codx-input>
       </div>
-    </div>
-
-    <div class="form-group mt-3">
-      <codx-label name="UserName" formName="Users" gridViewName="grvUsers" default="Tên người dùng">
-      </codx-label>
-      <codx-input type="text" field="userName" [crrValue]="adUser.userName" (valueChange)="valueChange($event)">
-      </codx-input>
-    </div>
-    <div class="form-group row mt-3">
-      <codx-label fiedName="UserGroup" formName="Users" gridViewName="grvUsers" default="Nhóm người dùng">
-      </codx-label>
-      <codx-input type="combobox" field="userGroup" [crrValue]="adUser.userGroup" refValue="UserGroups"
-        (valueChange)="valueUG($event)" [multiple]="false" loadFull="true">
-      </codx-input>
-    </div>
-    <div class="form-group row mt-3">
-      <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
-      </codx-label>
-      <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
-        (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
-      </codx-input>
-    </div>
-    <div class="form-group row mt-3">
-      <div class="form-group col-6">
-        <codx-label fiedName="Email" formName="Users" gridViewName="grvUsers" default="Email">
+      <div class="form-group row mt-3">
+        <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
         </codx-label>
-        <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChange($event)">
+        <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
+          (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
         </codx-input>
       </div>
-      <div class="form-group col-6">
-        <codx-label fiedName="Mobile" formName="Users" gridViewName="grvUsers" default="Phone">
-        </codx-label>
-        <codx-input type="text" field="mobile" [crrValue]="adUser.mobile" (valueChange)="valueChange($event)">
-        </codx-input>
+      <div class="form-group row mt-3">
+        <div class="form-group col-6">
+          <codx-label fiedName="Email" formName="Users" gridViewName="grvUsers" default="Email">
+          </codx-label>
+          <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label fiedName="Mobile" formName="Users" gridViewName="grvUsers" default="Phone">
+          </codx-label>
+          <codx-input type="text" field="mobile" [crrValue]="adUser.mobile" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #tabRoles>
   <div class="form-group mt-3">
