@@ -52,6 +52,7 @@ export class TM_Tasks {
   bUID: string;
   attachment: string;
   approveControl :string
+  approveComments :string
   approveStatus: string;
   approvers: string;
   approvedOn: any;

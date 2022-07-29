@@ -6,6 +6,7 @@ export class TM_TaskGroups {
   note: string;
   approveControl: string;
   approvers: string;
+  approveBy:string ;
   maxHoursControl: string;
   maxHours: string;
   locationControl: string;

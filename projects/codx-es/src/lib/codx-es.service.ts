@@ -637,6 +637,15 @@ export class CodxEsService {
     );
   }
 
+  getSignFormat() {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetSignFormatAsync'
+    );
+  }
+
   addNewSignFile(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
