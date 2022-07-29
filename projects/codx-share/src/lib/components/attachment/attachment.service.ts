@@ -12,7 +12,7 @@ import { FileUpload } from "@shared/models/file.model";
 
 export class AttachmentService {
     public data = new BehaviorSubject<any>(null);
-    public fileListAdded: any[];
+    public fileListAdded: any;
     public openAttachment = new BehaviorSubject<boolean>(null);
     isOpenAttachment = this.openAttachment.asObservable();
    

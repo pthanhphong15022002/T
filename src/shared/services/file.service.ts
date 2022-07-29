@@ -145,6 +145,39 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
+    addMultiFileObservable(list: FileUpload[]): Observable<DataReturn[] | null> {
+        //var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        // return this.api
+        // .execSv<Array<any>>(
+        //   this.service,
+        //   this.assemblyName,
+        //   this.className,
+        //   this.method,
+        //   this.request
+        // )
+        // .pipe(
+        //   finalize(() => {
+        //     /*  this.onScrolling = this.loading = false;
+        //     this.loaded = true; */
+        //   }),
+        //   map((response: any) => {
+        //     return response[0]
+        //   })
+        // );
+
+        let data = JSON.stringify(list);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", data).pipe(
+            map(data => {
+                return data;                
+            }),
+            catchError((err) => {
+              return of(undefined);
+            }),
+            finalize(() => null)
+        );
+    }
+
     addMultiFile(list: FileUpload[]): Observable<DataReturn[]> {
         //var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);
@@ -160,6 +193,20 @@ export class FileService implements OnDestroy {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);
         return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateVersionFileAsync", file);
+    }
+
+    updateVersionFileObservable(file: FileUpload): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateVersionFileAsync", file).pipe(
+            map(data => {
+                return data;                
+            }),
+            catchError((err) => {
+              return of(undefined);
+            }),
+            finalize(() => null)
+        );
     }
 
     getChunkFile(file: FileUpload): Observable<any> {
@@ -179,6 +226,20 @@ export class FileService implements OnDestroy {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
         return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
+    }
+
+    addFileObservable(file: FileUpload): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file).pipe(
+            map(data => {
+                return data;                
+            }),
+            catchError((err) => {
+              return of(undefined);
+            }),
+            finalize(() => null)
+        );
+
+      //  return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
     }
 
     addFileTemp(folderID: string, objectID: string, objectType: string, cate: string, fileName: string, data: ArrayBuffer): Observable<any> {
