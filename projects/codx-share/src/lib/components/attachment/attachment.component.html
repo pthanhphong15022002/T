@@ -17,7 +17,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="control-section">
+                        <div class="control-section mb-5">
                             <div class="col-lg-12">
                                 <div class="control_wrapper">
                                     <div class="uploadtemplate">
@@ -144,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="control-section">
+                    <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="control-section mb-5">
                         <div class="col-lg-12">
                             <!-- <div class="control_wrapper">
                                 <div class="uploadtemplate">
@@ -161,14 +161,14 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <div class="dropzone dropzone-default dropzone-primary d-flex justify-content-between"
+                            <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column "
                                 id='dropArea'>
                                 <div class="d-none">
                                     <span id='drop' class="droparea">Drop files here or <a href=""
                                             [id]='idBrowse'><u>Browse</u></a> </span>
                                 </div>
                                 <div class="dropzone-msg dz-message needsclick">
-                                    <h3 class="dropzone-msg-title">Chọn một hay nhiều file từ máy của bạn.</h3>
+                                    <div class="dropzone-msg-title mb-2">Chọn một hay nhiều file từ máy của bạn.</div>
                                     <span class="dropzone-msg-desc">Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây,
                                         hoặc</span>
                                 </div>
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="hideImageUpload == '0'" style="max-height: 100px; overflow-y: auto;">
+                    <div *ngIf="hideImageUpload == '0'" style="max-height: 200px; overflow-y: auto;">
                         <div *ngFor="let file of sortBy();  index as i;"
                             class="d-flex align-items-center mt-2 mb-2 has-action-menu">
                             <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
@@ -197,6 +197,16 @@
                                     title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
                                     [subTitleTmp]="cardImgFooter" [descLine]="1">
                                 </codx-temp-full>
+                                <ng-template #cardImgFooter let-data>
+                                    <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item ư-100">
+                                        <span class="text-dark"></span>
+                                        <div class="d-flex">
+                                            <codx-input placeholder="Mô tả tài liệu" style="width:86%"
+                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                (valueChange)="changeValueAgencyText($event)"> </codx-input>
+                                        </div>
+                                    </div>
+                                </ng-template>
                             </ng-template>
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-24px me-3 cursor-pointer"
@@ -206,7 +216,7 @@
                                 </codx-temp-full>
                             </ng-template>
                             <ng-template #cardImgFooter let-data>
-                                <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item">
+                                <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item ư-100">
                                     <span class="text-dark"></span>
                                     <div class="d-flex">
                                         <codx-input placeholder="Mô tả tài liệu" style="width:86%"
