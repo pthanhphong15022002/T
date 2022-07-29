@@ -21,12 +21,10 @@
       </codx-label>
       <div class="d-flex">
         <div class="w-100 me-2">
-          <codx-input type="text" name="text" cssClass="form-control" ControlName="email" [Group]="dialogSignature">
+          <codx-input type="text" name="text" cssClass="form-control" field="email" [Group]="dialogSignature">
           </codx-input>
         </div>
-        <!-- <codx-input [showInput]="false" [multiple]="true" type="share" refValue="Users" field="cc"
-          (valueChange)="valueChange($event)">
-        </codx-input> -->
+
         <codx-input type="Combobox" name="combobox" [refValue]="'Users'" refType="P" field="userID" [showInput]="false"
           (valueChange)="valueChange($event)">
         </codx-input>
@@ -35,7 +33,7 @@
     <div class="form-group">
       <codx-label fiedName="UserID" default="Tên" [formModel]="form.formModel">
       </codx-label>
-      <codx-input type="text" name="text" cssClass="form-control" ControlName="fullName" [Group]="dialogSignature">
+      <codx-input type="text" name="text" cssClass="form-control" field="fullName" [Group]="dialogSignature">
       </codx-input>
     </div>
     <div class="form-group row mt-3">

@@ -7,7 +7,7 @@ idField="recID"
 >
 </codx-views>
 <ng-template #panelLeftRef>
-  <div class="px-6">
+  <div class="container position-relative">
     <div class="row">
       <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
         <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
@@ -101,7 +101,7 @@ idField="recID"
         </div>
       </div>
     </div>
-    <div class="my-8">
+    <div class="row my-8">
       <ng-container *ngIf="listSlider.length > 0 ;else empty1">
           <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
             [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
@@ -124,17 +124,7 @@ idField="recID"
       </ng-container>
     </div>
     <div class="row">
-      <codx-listview  #listView
-        [itemTemplate]="itemTemplate"
-        [funcID]="funcID" 
-        [entityName]="entityName" 
-        [service]="service"
-        [predicate]="predicate"
-        [dataValue]="dataValue"
-        [assemblyName]="assemblyName"
-        [className]="className"
-        [method]="method">
-      </codx-listview>
+      
     </div>
   </div>
   <div class="more-function">
@@ -152,12 +142,24 @@ idField="recID"
     </div>
   </div>
 </ng-template>
-<ng-template #itemTemplate let-data>
-  <codx-temp-full 
+<ng-template #itemTemplate let-item>
+  <div (click)="clickViewDeital(item)" class="row my-4">
+    <div class="col-2">
+      <codx-img [width]="180" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
+    </div>
+    <div class="col-10">
+      <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
+      <div class="text-gray-700 mt-1">
+        {{item.subContent | maxlenght:500}}
+      </div>
+      <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+    </div>
+  </div>
+  <!-- <codx-temp-full 
     [formModel]="codxViews.formModel"
     [resourceObjType]="entityName"
     [imageId]="data.recID"
-    imgCss="me-2"
+    imgCss="me-2 image-full"
     [imageObjType]="entityName"
     imageType="square"
     cardCss="card-template border-bottom px-2 py-3" 
@@ -165,7 +167,7 @@ idField="recID"
     [desc]="data.subContent"
     [date]="data.createdOn"
     [bookmark]="false">
-  </codx-temp-full>
+  </codx-temp-full> -->
 </ng-template>
 <!-- empty -->
 <ng-template #empty1>
@@ -190,9 +192,13 @@ idField="recID"
 </ng-template>
 <!-- lisst group -->
 <ng-template #listGroup let-item>
-  <!-- <div (click)="clickViewDeital(item)" class="row my-2">
+  <div (click)="clickViewDeital(item)" class="row my-2">
     <div class="col-2">
-      <codx-img [width]="180" [cssClass]="'image-180 w-100'" imageType="square" [objectId]="item.recID" objectType="WP_News"></codx-img>
+      <codx-img [width]="180" 
+      [cssClass]="'image-180 w-100'" 
+      imageType="square" 
+      [objectId]="item.recID" 
+      objectType="WP_News"></codx-img>
     </div>
     <div class="col-10">
       <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
@@ -201,7 +207,7 @@ idField="recID"
       </div>
       <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
     </div>
-  </div> -->
+  </div>
   
 </ng-template>
 
@@ -224,8 +230,8 @@ idField="recID"
 <ng-template #catagory>
   <div class="row">
     <div class="px-12 mt-6">
-      <codx-listview #listCategory [itemTemplate]="listOld" title="" [funcId]="functionID" [entityName]="entityName"
-        [gridViewName]="gridViewName" [predicate]="predicate" [dataValue]="dataValue" [dataObj]="'list'" page="1"
+      <codx-listview #listCategory [itemTemplate]="listOld" title="" [funcId]="funcID" [entityName]="entityName"
+        [predicate]="predicate" [dataValue]="dataValue" [dataObj]="'list'" page="1"
         [pageSize]="6" predicates="NewsType = @0" dataValues="1" method="GetListNewsAsync" service="WP"
         assemblyName="ERM.Business.WP" className="NewsBusiness"></codx-listview>
     </div>
