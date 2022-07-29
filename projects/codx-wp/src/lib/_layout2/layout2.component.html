@@ -2,13 +2,8 @@
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
       <div class="wrapper d-flex flex-column flex-row-fluid">
-        <codx-header
-          [class]="headerCSSClasses"
-          [headerBar]="headerBar"
-          class="header align-items-stretch"
-          [headerRightBar]="headerRightBar"
-          #codxHeader
-        >
+        <codx-header [class]="headerCSSClasses" [headerBar]="headerBar" class="header align-items-stretch"
+          [headerRightBar]="headerRightBar" #codxHeader>
         </codx-header>
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
@@ -30,96 +25,36 @@
   <!-- begin:: TOPBAR -->
   <ng-template #headerRightBar>
     <!-- CHAT -->
-    <div
-      class="d-flex align-items-center"
-      [ngClass]="codxService.toolbarButtonMarginClass"
-    >
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <!-- <codx-chat-list></codx-chat-list> -->
     </div>
     <!-- NOTIFICATIONS -->
-    <div
-      class="d-flex align-items-center"
-      [ngClass]="codxService.toolbarButtonMarginClass"
-    >
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
       <!-- begin::Menu wrapper -->
-      <div
-        class="btn btn-icon btn-active-light-primary position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass"
-        id="kt_drawer_notify_toggle"
-      >
-        <span
-          [inlineSVG]="
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
+        <span [inlineSVG]="
             './assets/themes/sys/default/img/header_notifications.svg'
-          "
-          class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"
-        ></span>
+          " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
         <!-- <span
           class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span> -->
       </div>
       <!-- end::Menu wrapper -->
     </div>
 
-    <!-- Quick links -->
-    <div
-      class="d-flex align-items-center"
-      [ngClass]="codxService.toolbarButtonMarginClass"
-    >
-      <div
-        class="btn btn-icon btn-active-light-primary"
-        [ngClass]="codxService.toolbarButtonHeightClass"
-        data-kt-menu-trigger="click"
-        data-kt-menu-attach="parent"
-        data-kt-menu-placement="bottom-end"
-        data-kt-menu-flip="bottom"
-      >
-        <span
-          [inlineSVG]="'./assets/themes/sys/default/img/header_app_module.svg'"
-          class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"
-        ></span>
-      </div>
-      <!-- <erm-quick-links-inner></erm-quick-links-inner> -->
-    </div>
 
+    <!-- Quick links -->
+    <erm-quick-links-inner></erm-quick-links-inner>
+    <!-- End: Quick links -->
     <!-- begin::User -->
-    <div
-      class="d-flex align-items-center"
-      [ngClass]="codxService.toolbarButtonMarginClass"
-    >
-      <!-- begin::Toggle -->
-      <codx-img
-        #imageViewer
-        *ngIf="user"
-        [ngClass]="codxService.toolbarUserAvatarHeightClass"
-        funcId="AD006"
-        [objectId]="user.userID"
-        [objectName]="user.userName"
-        objectType="AD_Users"
-        data-kt-menu-trigger="click"
-        data-kt-menu-attach="parent"
-        data-kt-menu-placement="bottom-end"
-        data-kt-menu-flip="bottom"
-      >
-      </codx-img>
-      <!-- end::Toggle  -->
-      <!-- <codx-user-inner (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner> -->
-    </div>
+    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner>
     <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">
-      <div
-        class="d-flex align-items-center d-lg-none ms-2 me-n3"
-        title="Show header menu"
-      >
-        <div
-          class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
-          id="kt_header_menu_mobile_toggle"
-        >
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'"
-            class="svg-icon svg-icon-1"
-          ></span>
+      <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+        <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          id="kt_header_menu_mobile_toggle">
+          <span [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'" class="svg-icon svg-icon-1"></span>
         </div>
       </div>
     </ng-container>
@@ -129,97 +64,36 @@
     <div class="menu d-flex align-items-center">
       <div>
         <div class="menu-item me-lg-1">
-          <a
-            [class.isActive]="category == 'home'"
-            routerlinkactive="active"
-            class="menu-link py-3"
-            (click)="navigate('home')"
-          >
+          <a [class.isActive]="category == 'home'" routerlinkactive="active" class="menu-link py-3"
+            (click)="navigate('home')">
             <span class="menu-title">
-              <codx-label
-                formName="News"
-                name="lblHome"
-                default="Tất cả"
-              ></codx-label>
+              <codx-label formName="News" name="lblHome" default="Tất cả"></codx-label>
             </span>
           </a>
         </div>
         <div class="menu-item me-lg-1" *ngFor="let vll of valueList">
-          <a
-            [class.isActive]="category == vll.value"
-            href="javascript:;"
-            routerlinkactive="active"
-            class="menu-link py-3"
-            (click)="navigate(vll.value)"
-          >
+          <a [class.isActive]="category == vll.value" href="javascript:;" routerlinkactive="active"
+            class="menu-link py-3" (click)="navigate(vll.value)">
             <span class="menu-title">
-              <codx-label
-                formName="News"
-                name="lblVLLName"
-                [default]="vll.text"
-              ></codx-label>
+              <codx-label formName="News" name="lblVLLName" [default]="vll.text"></codx-label>
             </span>
           </a>
         </div>
 
         <div class="menu-item me-lg-1">
-          <div
-            [class.isActive]="category == 'approvals'"
-            class="menu-link py-3"
-            ngbDropdown
-          >
-            <span
-              tabindex="0"
-              ngbDropdownToggle
-              id="navbarDropdown1"
-              role="button"
-            >
-              <codx-label
-                formName="News"
-                name="lblADmin"
-                default="Quản trị bài viết"
-              ></codx-label>
+          <div [class.isActive]="category == 'approvals'" class="menu-link py-3" ngbDropdown>
+            <span tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+              <codx-label formName="News" name="lblADmin" default="Quản trị bài viết"></codx-label>
             </span>
-            <div
-              ngbDropdownMenu
-              aria-labelledby="navbarDropdown1"
-              class="dropdown-menu"
-            >
-              <a
-                ngbDropdownItem
-                (click)="navigate('approvals', 'WPT0211')"
-                class="dropdown-item"
-                href="javascript:;"
-              >
-                <codx-label
-                  formName="News"
-                  name="lblMyNews"
-                  default="Tin tức của tôi"
-                ></codx-label>
+            <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
+              <a ngbDropdownItem (click)="navigate('approvals', 'WPT0211')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
               </a>
-              <a
-                ngbDropdownItem
-                (click)="navigate('approvals', 'WPT0212')"
-                class="dropdown-item"
-                href="javascript:;"
-              >
-                <codx-label
-                  formName="News"
-                  name="lblADMinNews"
-                  default="Xét duyệt tin tức - sự kiện"
-                ></codx-label>
+              <a ngbDropdownItem (click)="navigate('approvals', 'WPT0212')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt tin tức - sự kiện"></codx-label>
               </a>
-              <a
-                ngbDropdownItem
-                (click)="navigate('approvals', 'WPT0213')"
-                class="dropdown-item"
-                href="javascript:;"
-              >
-                <codx-label
-                  formName="News"
-                  name="lblADMinNews"
-                  default="Xét duyệt bài viết MXH"
-                ></codx-label>
+              <a ngbDropdownItem (click)="navigate('approvals', 'WPT0213')" class="dropdown-item" href="javascript:;">
+                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt bài viết MXH"></codx-label>
               </a>
             </div>
           </div>
