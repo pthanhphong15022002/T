@@ -124,7 +124,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabInfo: any[] = [];
   tabContent: any[] = [];
   titleAction = 'Thêm';
-  paramByCategory: any;
   disableDueDate = false;
 
   constructor(
@@ -138,13 +137,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.getParam();
     this.task = {
       ...this.task,
       ...dt?.data[0],
     };
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    } else this.getParam();
+    } 
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
@@ -158,6 +158,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
+    // this.cache.viewSettingValues('tm1').subscribe(res=>{
+    //   console.log(res)
+    // })
   }
 
   ngOnInit(): void {
@@ -222,7 +225,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetByModuleWithCategoryAsync',
+        'GetParameterByModuleWithCategoryAsync',
         ['TM_Parameters', '1']
       )
       .subscribe((res) => {
@@ -396,10 +399,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM012');
       return;
     }
-    // if(this.param?.PlanControl == "2" && (!this.task.location || this.task.location.trim() !="" )){
-    //   this.notiService.notifyCode('TM012');
-    //   return;
-    // }
+    if(this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)){
+      this.notiService.notifyCode('TM012');
+      return;
+    }
     if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
       // this.notiService.notifyCode('TM012');
       this.notiService.notify(
@@ -665,14 +668,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  cbxChange(data) {
-    if (data.data) {
+  cbxChange(data) {  
+    if (data.data && data.data!="") {
       this.task[data.field] = data.data;
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
-      if (data.field === 'taskGroupID') {
-        this.logicTaskGroup(data.data);
-      }
       return;
     }
     if (data.field == 'taskGroupID') {
@@ -699,23 +699,23 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkLogicWithTaskGroup() {
-    if (this.isCheckCheckListControl) {
-      this.isCheckCheckListTrue =
-        this.isCheckCheckListControl && this.listTodo.length > 0;
-    } else this.isCheckCheckListTrue = true;
+  // checkLogicWithTaskGroup() {
+  //   if (this.isCheckCheckListControl) {
+  //     this.isCheckCheckListTrue =
+  //       this.isCheckCheckListControl && this.listTodo.length > 0;
+  //   } else this.isCheckCheckListTrue = true;
 
-    if (this.param?.ProjectControl != '0') {
-      if (this.isCheckProjectControl) {
-        this.isCheckProjectTrue =
-          this.task.projectID && this.isCheckProjectControl;
-      } else this.isCheckProjectTrue = true;
-    }
-    if (this.isCheckAttachmentControl) {
-      this.isCheckAttachmentTrue =
-        this.isCheckAttachmentControl && this.isHaveFile;
-    } else this.isCheckAttachmentTrue = true;
-  }
+  //   if (this.param?.ProjectControl != '0') {
+  //     if (this.isCheckProjectControl) {
+  //       this.isCheckProjectTrue =
+  //         this.task.projectID && this.isCheckProjectControl;
+  //     } else this.isCheckProjectTrue = true;
+  //   }
+  //   if (this.isCheckAttachmentControl) {
+  //     this.isCheckAttachmentTrue =
+  //       this.isCheckAttachmentControl && this.isHaveFile;
+  //   } else this.isCheckAttachmentTrue = true;
+  // }
 
   logicTaskGroup(idTaskGroup) {
     this.api
@@ -729,9 +729,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.param = res;
-          // this.isCheckProjectControl = res.projectControl != '0';
-          // this.isCheckAttachmentControl = res.attachmentControl != '0';
-          // this.isCheckCheckListControl = res.checkListControl != '0';
         }
       });
   }
@@ -749,6 +746,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          this.param = res ;
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;

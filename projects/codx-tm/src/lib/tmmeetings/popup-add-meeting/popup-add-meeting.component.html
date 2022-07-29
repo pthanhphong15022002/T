@@ -111,7 +111,7 @@
   <!-- <ng-container>
                 <div class="d-flex align-items-center justify-content-between mt-6">
                   <div class="d-flex align-items-center mb-3">
-  
+
                     <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
                       labelPosition="Before"></codx-input>
                     <div class="ms-2">Họp online</div>
@@ -121,7 +121,7 @@
                 </div>
                 <div class="">
                   <ng-container>
-  
+
                   </ng-container>
                 </div>
               </ng-container> -->
@@ -139,7 +139,7 @@
       </codx-input>
     </div>
     <div class="row">
-      <ng-container *ngFor="let item of resources">
+      <ng-container *ngFor="let item of meeting.resources">
         <div class="col-4">
           <div>
             <codx-img class=" flex symbol-40px " [objectId]="item.resourceID" objectType="AD_Users"></codx-img>
@@ -150,7 +150,7 @@
               <span class="icon-close icon-16 text-danger me-2"></span>
           </a>
           </div>
-          
+
         </div>
       </ng-container>
     </div>
@@ -211,7 +211,7 @@
     <codx-input type="Share" refValue="TM003" field="resources" [dataShared]="[]" multiple="true" [showInput]="false">
     </codx-input>
   </div>
-  <ng-container *ngFor="let item of resources"> 
+  <ng-container *ngFor="let item of meeting.resources">
     <div class="d-flex py-2 border-bottom justify-content-between list-title">
       <div class="d-flex align-items-top">
         <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">

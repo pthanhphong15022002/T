@@ -94,6 +94,7 @@ export class TMMeetingsComponent extends UIComponent {
     ]
 
     this.view.dataService.methodSave = 'AddMeetingsAsync';
+    this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
 
     this.dt.detectChanges();
 
@@ -111,7 +112,7 @@ export class TMMeetingsComponent extends UIComponent {
     var resources = [];
     resources = data.resources;
     var id= '';
-    
+
     resources.forEach((e)=>{
       id += e.resourceID + ';';
     });
@@ -172,7 +173,7 @@ export class TMMeetingsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(PopupAddMeetingComponent, 'add', option);
 
     });
@@ -190,7 +191,7 @@ export class TMMeetingsComponent extends UIComponent {
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          [this.view.dataService.dataSelected, 'edit'],
+          'edit',
           option
         );
         this.dialog.closed.subscribe((e) => {
