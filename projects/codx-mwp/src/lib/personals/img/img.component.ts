@@ -24,6 +24,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     VIDEO: "video",
   }
   file_img: any[] = [];
+  predicate: any;
+  dataValue: any;
+
+  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private api: ApiHttpService,
@@ -43,6 +47,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log("check listView", this.listView)
   }
 
   getFile() {
