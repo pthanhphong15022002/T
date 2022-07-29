@@ -1,8 +1,3 @@
-<codx-listview #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
-    [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="Storages" funcId="MWP0095"
-    service="WP">
-</codx-listview>
-
 <div *ngIf="checkFormComment == false">
     <div class="pw-storgae">
         <div class="d-flex align-items-center justify-content-between pw-header mb-5">
@@ -29,6 +24,11 @@
             </div>
         </div>
     </div>
+    <codx-listview #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
+        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="Storages" funcId="MWP0095"
+        service="WP">
+    </codx-listview>
+
 </div>
 
 <div *ngIf="checkFormComment == true">
