@@ -11,105 +11,53 @@
       </div>
       <div class="d-flex align-items-center stepper">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <div
-            class="stepper-item active"
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            ngbTooltip="Upload file"
-            (click)="clickTab(0)"
-          >
+          <div class="stepper-item active" data-kt-stepper-element="nav" data-kt-stepper-action="step"
+            ngbTooltip="Upload file" (click)="clickTab(0)">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
-                <i
-                  class="stepper-default icon-16 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-20 text-primary icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-approve icon-20 text-primary icon-check_circle"
-                ></i>
-                <i
-                  class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"
-                ></i>
+                <i class="stepper-default icon-16 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-20 text-primary icon-radio_button_checked"></i>
+                <i class="stepper-approve icon-20 text-primary icon-check_circle"></i>
+                <i class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"></i>
               </div>
             </div>
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div
-            class="stepper-item"
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(1)"
-            ngbTooltip="Bổ sung thông tin tài liệu"
-          >
+          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
+            ngbTooltip="Bổ sung thông tin tài liệu">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
-                <i
-                  class="stepper-default icon-16 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-20 text-primary icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-approve icon-20 text-primary icon-check_circle"
-                ></i>
-                <i
-                  class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"
-                ></i>
+                <i class="stepper-default icon-16 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-20 text-primary icon-radio_button_checked"></i>
+                <i class="stepper-approve icon-20 text-primary icon-check_circle"></i>
+                <i class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"></i>
               </div>
             </div>
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div
-            class="stepper-item"
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(2)"
-            ngbTooltip="Quy trình duyệt"
-          >
+          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
+            ngbTooltip="Quy trình duyệt">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
-                <i
-                  class="stepper-default icon-16 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-20 text-primary icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-approve icon-20 text-primary icon-check_circle"
-                ></i>
-                <i
-                  class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"
-                ></i>
+                <i class="stepper-default icon-16 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-20 text-primary icon-radio_button_checked"></i>
+                <i class="stepper-approve icon-20 text-primary icon-check_circle"></i>
+                <i class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"></i>
               </div>
             </div>
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div
-            class="stepper-item"
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(3)"
-            ngbTooltip="Đánh dấu chữ ký"
-          >
+          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
+            ngbTooltip="Đánh dấu chữ ký">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
-                <i
-                  class="stepper-default icon-16 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-20 text-primary icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-approve icon-20 text-primary icon-check_circle"
-                ></i>
-                <i
-                  class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"
-                ></i>
+                <i class="stepper-default icon-16 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-20 text-primary icon-radio_button_checked"></i>
+                <i class="stepper-approve icon-20 text-primary icon-check_circle"></i>
+                <i class="stepper-approve-disabled icon-20 text-gray-400 icon-check_circle"></i>
               </div>
             </div>
           </div>
@@ -119,74 +67,34 @@
         <i class="icon-close icon-18" (click)="close(templateClose)"></i>
       </div>
     </div>
-    <div class="stepper-body p-6 w-100">
-      <div
-        class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-900px h-100"
-      >
+    <div class="stepper-body p-6 w-100" *ngIf="currentTab < 3">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-900px h-100">
         <div class="card-body px-6 px-lg-10 py-6 py-lg-10 overflow-auto">
           <div class="tab-content py-5">
-            <div
-              class="tab-pane fade"
-              id="pane_1"
-              [ngClass]="currentTab == 0 ? 'active show' : ''"
-            >
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
               <div class="mb-10 text-center">
                 <h2 class="h2-title">
-                  <codx-label
-                    name="lblUploadFile"
-                    [formModel]="formModel"
-                    default="Upload file"
-                  ></codx-label>
+                  <codx-label name="lblUploadFile" [formModel]="formModel" default="Upload file"></codx-label>
                 </h2>
               </div>
               <div class="text-center">
-                <codx-attachment
-                  #attachment
-                  objectType="ES_SignFiles"
-                  hideImageUpload="0"
-                  [objectId]=""
-                  hideBtnSave="1"
-                  hideFolder="1"
-                  hideUploadBtn="0"
-                  [functionID]="formModel.funcID"
-                  type="inline"
-                  (fileAdded)="fileAdded($event)"
-                  (fileCount)="getfileCount($event)"
-                >
+                <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="" hideBtnSave="1"
+                  hideFolder="1" hideUploadBtn="0" [functionID]="formModel.funcID" type="inline"
+                  (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)">
                 </codx-attachment>
               </div>
-              <div
-                class="d-flex align-items-center"
-                *ngIf="lstDataFile.length > 0"
-              >
+              <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
                 <div class="text-center"></div>
-                <button
-                  type="button"
-                  class="btn btn-primary me-3"
-                  (click)="popup($event, 0)"
-                >
+                <button type="button" class="btn btn-primary me-3" (click)="popup($event, 0)">
                   <i class="icon-cloud_upload fs-5"></i>
-                  <codx-label
-                    name=""
-                    [formModel]="formModel"
-                    class=""
-                    default="Thêm mới"
-                  ></codx-label>
+                  <codx-label name="" [formModel]="formModel" class="" default="Thêm mới"></codx-label>
                 </button>
               </div>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_2"
-              [ngClass]="currentTab == 1 ? 'active show' : ''"
-            >
+            <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
               <div class="mb-10 text-center">
                 <h2 class="h2-title">
-                  <codx-label
-                    name="lblTitleAddSignFile"
-                    [formModel]="formModel"
-                    default="Bổ sung thông tin tài liệu"
-                  >
+                  <codx-label name="lblTitleAddSignFile" [formModel]="formModel" default="Bổ sung thông tin tài liệu">
                   </codx-label>
                 </h2>
               </div>
@@ -194,58 +102,28 @@
               <div class="w-100 rounded-0 border-0">
                 <div class="scroll-hover-y my-7">
                   <div class="form-group">
-                    <codx-label
-                      fiedName="Title"
-                      default="Tên tài liệu"
-                      [formModel]="formModel"
-                    >
+                    <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
                     </codx-label>
-                    <codx-input
-                      type="text"
-                      name="text"
-                      cssClass="form-control"
-                      ControlName="title"
-                      [Group]="dialogSignFile"
-                    >
+                    <codx-input type="text" name="text" cssClass="form-control" ControlName="title"
+                      [Group]="dialogSignFile">
                     </codx-input>
                   </div>
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <codx-label
-                          fiedName="CategoryID"
-                          [formModel]="formModel"
-                          default="Phân loại"
-                        >
+                        <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
                         </codx-label>
-                        <codx-input
-                          type="combobox"
-                          name="combobox"
-                          ngDefaultControl
-                          [refValue]="cbxName['CategoryID']"
-                          field="categoryID"
-                          (valueChange)="valueChange($event)"
-                          [multiple]="false"
-                        >
+                        <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['CategoryID']"
+                          field="categoryID" (valueChange)="valueChange($event)" [multiple]="false">
                         </codx-input>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <codx-label
-                          default="Mức độ ưu tiên"
-                          fiedName="Priority"
-                          [formModel]="formModel"
-                        >
+                        <codx-label default="Mức độ ưu tiên" fiedName="Priority" [formModel]="formModel">
                         </codx-label>
-                        <codx-input
-                          type="valuelist"
-                          name="valuelist"
-                          ngDefaultControl
-                          field="priority"
-                          (valueChange)="valueChange($event)"
-                          [refValue]="cbxName['Priority']"
-                        >
+                        <codx-input type="valuelist" name="valuelist" ngDefaultControl field="priority"
+                          (valueChange)="valueChange($event)" [refValue]="cbxName['Priority']">
                         </codx-input>
                       </div>
                     </div>
@@ -253,171 +131,85 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <codx-label
-                          fiedName="RefNo"
-                          [formModel]="formModel"
-                          default="Số văn bản"
-                        >
+                        <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
                         </codx-label>
-                        <codx-input
-                          type="text"
-                          name="text"
-                          ngDefaultControl
-                          [Group]="dialogSignFile"
-                          field="refNo"
-                          [crrValue]="dialogSignFile.value?.refNo"
-                        >
+                        <codx-input type="text" name="text" ngDefaultControl [Group]="dialogSignFile" field="refNo"
+                          [crrValue]="dialogSignFile.value?.refNo">
                         </codx-input>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <codx-label
-                          fiedName="Pages"
-                          default="Số trang"
-                          [formModel]="formModel"
-                        >
+                        <codx-label fiedName="Pages" default="Số trang" [formModel]="formModel">
                         </codx-label>
-                        <codx-input
-                          type="number"
-                          name="number"
-                          ngDefaultControl
-                          field="pages"
-                          [Group]="dialogSignFile"
-                          (valueChange)="valueChange($event)"
-                          [min]="0"
-                          placeholder="0"
-                          [crrValue]="dialogSignFile.value?.pages"
-                          [showSpinButton]="false"
-                        >
+                        <codx-input type="number" name="number" ngDefaultControl field="pages" [Group]="dialogSignFile"
+                          (valueChange)="valueChange($event)" [min]="0" placeholder="0"
+                          [crrValue]="dialogSignFile.value?.pages" [showSpinButton]="false">
                         </codx-input>
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <codx-label
-                      fiedName="EmployeeID"
-                      [formModel]="formModel"
-                      default="Người yêu cầu"
-                    >
+                    <codx-label fiedName="EmployeeID" [formModel]="formModel" default="Người yêu cầu">
                     </codx-label>
-                    <codx-input
-                      type="combobox"
-                      name="combobox"
-                      ngDefaultControl
-                      [refValue]="cbxName['EmployeeID']"
-                      field="employeeID"
-                      (valueChange)="valueChange($event)"
-                    >
+                    <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['EmployeeID']"
+                      field="employeeID" (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                   <div class="form-group">
-                    <codx-label
-                      fiedName="OrgUnitID"
-                      [formModel]="formModel"
-                      default="Phòng ban"
-                    >
+                    <codx-label fiedName="OrgUnitID" [formModel]="formModel" default="Phòng ban">
                     </codx-label>
-                    <codx-input
-                      type="combobox"
-                      name="combobox"
-                      ngDefaultControl
-                      [refValue]="cbxName['OrgUnitID']"
-                      field="orgUnitID"
-                      (valueChange)="valueChange($event)"
-                      class="form-control"
-                    >
+                    <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['OrgUnitID']"
+                      field="orgUnitID" (valueChange)="valueChange($event)" class="form-control">
                     </codx-input>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_3"
-              [ngClass]="currentTab == 2 ? 'active show' : ''"
-            >
-              <app-approval-steps
-                *ngIf="currentTab == 2"
-                #viewApprovalStep
-                [transId]="dialogSignFile.value.processID"
-                (addEditItem)="openFormAdd($event)"
-              >
+            <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
+              <app-approval-steps *ngIf="currentTab == 2" #viewApprovalStep [transId]="dialogSignFile.value.processID"
+                (addEditItem)="openFormAdd($event)">
               </app-approval-steps>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pane_4"
-              [ngClass]="currentTab == 3 ? 'active show' : ''"
-            >
-              <lib-approval
-                [isApprover]="false"
-                [recID]="dialogSignFile.value.recID"
-                *ngIf="
-                  dialogSignFile.value.files?.length > 0 && currentTab == 3
-                "
-              ></lib-approval>
+            <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 3 ? 'active show' : ''">
+
             </div>
           </div>
         </div>
-        <div
-          class="d-flex justify-content-between card-footer border-0 px-6 px-lg-10 pt-0 pb-6 pb-lg-10"
-        >
-          <button
-            type="button"
-            class="btn btn-outline-primary me-3"
-            *ngIf="currentTab != 0"
-            (click)="openPopup(processTemplate)"
-          >
-            <codx-label
-              name=""
-              [formModel]="formModel"
-              class=""
-              default="Quy trình mẫu"
-              class=""
-            >
+
+        <div class="d-flex justify-content-between card-footer border-0 px-6 px-lg-10 pt-0 pb-6 pb-lg-10">
+          <button type="button" class="btn btn-outline-primary me-3" *ngIf="currentTab != 0"
+            (click)="openPopup(processTemplate)">
+            <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
             </codx-label>
           </button>
           <div *ngIf="currentTab == 0"></div>
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            (click)="continue(currentTab)"
-          >
-            <codx-label
-              name="lblContinue"
-              [formModel]="formModel"
-              default="Tiếp tục"
-            ></codx-label>
+          <button type="button" class="btn btn-outline-primary" (click)="continue(currentTab)">
+            <codx-label name="lblContinue" [formModel]="formModel" default="Tiếp tục"></codx-label>
           </button>
         </div>
       </div>
     </div>
+    <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID"
+      *ngIf="dialogSignFile.value.files?.length > 0 && currentTab == 3"></lib-approval>
   </div>
 </div>
 
 <ng-template #footer> </ng-template>
 
-<ng-template #processTemplate let-dialog1>
+<ng-template #processTemplate let-dialogTemplate>
   <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
-            <codx-label
-              class="dialog-title line-clamp line-clamp-1"
-              name="lblProcessTemplate"
-              default="Quy trình mẫu"
-              [formModel]="formModel"
-            ></codx-label>
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblProcessTemplate" default="Quy trình mẫu"
+              [formModel]="formModel"></codx-label>
           </div>
         </div>
         <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeDialogTmp(dialog1)"
-          >
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closeDialogTmp(dialogTemplate)">
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -426,28 +218,16 @@
     <div class="card-body">
       <div class="">
         <label class="me-2">
-          <codx-label
-            fiedName=""
-            [formModel]="formModel"
-            default="Qui trình mẫu"
-          ></codx-label>
+          <codx-label fiedName="" [formModel]="formModel" default="Qui trình mẫu"></codx-label>
         </label>
-        <codx-input
-          type="combobox"
-          class="form-control"
-          field="processID"
-          refValue="ProcessTemplate"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input type="combobox" class="form-control" field="processID" refValue="ProcessTemplate"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a
-          class="btn btn-primary font-weight-bold"
-          (click)="onSaveProcessID(dialog1)"
-        >
+        <a class="btn btn-primary font-weight-bold" (click)="onSaveProcessID(dialogTemplate)">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
@@ -462,20 +242,13 @@
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
-            <codx-label
-              class="dialog-title line-clamp line-clamp-1"
-              name="lblIsSave"
-              default="Lưu quy trình"
-              [formModel]="formModel"
-            ></codx-label>
+            <codx-label class="dialog-title line-clamp line-clamp-1" name="lblIsSave" default="Lưu quy trình"
+              [formModel]="formModel"></codx-label>
           </div>
         </div>
         <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeDialogTmp(dialogClose)"
-          >
+          <button type="button" class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closeDialogTmp(dialogClose)">
             <span class="icon-close icon-18"></span>
           </button>
         </div>
@@ -484,27 +257,17 @@
     <div class="card-body">
       <div class="">
         <label class="me-2">
-          <codx-label
-            fiedName=""
-            [formModel]="formModel"
-            default="Bạn có muốn lưu quy trình đã thiết lập"
-          ></codx-label>
+          <codx-label fiedName="" [formModel]="formModel" default="Bạn có muốn lưu quy trình đã thiết lập"></codx-label>
         </label>
       </div>
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a
-          class="btn btn-primary font-weight-bold"
-          (click)="clickIsSave(true, dialogClose)"
-        >
+        <a class="btn btn-primary font-weight-bold" (click)="clickIsSave(true, dialogClose)">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
-        <a
-          class="btn btn-danger font-weight-bold"
-          (click)="clickIsSave(false, dialogClose)"
-        >
+        <a class="btn btn-danger font-weight-bold" (click)="clickIsSave(false, dialogClose)">
           <codx-label name="lblDelete" default="Xóa" [formModel]="formModel">
           </codx-label>
         </a>

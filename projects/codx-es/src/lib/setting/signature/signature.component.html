@@ -1,7 +1,7 @@
-<codx-views #base [funcID]="funcID"  [service]="service" [assemblyName]="assemblyName"
-  [entityName]="entityName" [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button"
-  (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)">
+<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (requestEnded)="closeEditForm($event)" *ngIf="isAfterRender">
 </codx-views>
 
 <ng-template #listItem let-data>
@@ -51,7 +51,8 @@
       data.supplier | vll: "ES006":"text" | async
       }}</span>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover" [dataItem]="data">
+      </codx-mfunc>
     </div>
   </div>
 </ng-template>
