@@ -39,7 +39,7 @@
                                     </codx-input>
                                 </div>
                                 <div class="h-38 w-88 left-5">
-                                    <span class="btn btn-sm btn-outline-secondary mr-1 color-black"
+                                    <span class="btn btn-sm btn-outline-secondary me-1 color-black"
                                         [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
                                         (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
                                         <codx-label name="lblBallotSended" formName="FED_TagObjects"
@@ -88,10 +88,12 @@
                                                     [primaryXAxis]='primaryXAxis' [tooltip]='tooltip' [height]="height"
                                                     [primaryYAxis]='primaryYAxis' [title]='' [width]="width">
                                                     <e-series-collection>
-                                                        <e-series *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'" [dataSource]='dataReceived' fill="#0C51CB"
-                                                            type='Column' xName='cardTypeName' yName='receiveQuanlity'
+                                                        <e-series *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'"
+                                                            [dataSource]='dataReceived' fill="#0C51CB" type='Column'
+                                                            xName='cardTypeName' yName='receiveQuanlity'
                                                             name='Phiếu nhận' width=1> </e-series>
-                                                        <e-series *ngIf="typeBallot == 'sender' || typeBallot == '0'" [dataSource]='dataSended' fill="#00DCB5" type='Column'
+                                                        <e-series *ngIf="typeBallot == 'sender' || typeBallot == '0'"
+                                                            [dataSource]='dataSended' fill="#00DCB5" type='Column'
                                                             xName='cardTypeName' yName='sendQuanlity' name='Phiếu cho'
                                                             width=1> </e-series>
                                                     </e-series-collection>
@@ -155,7 +157,7 @@
                                                             default="Góp ý thay đổi"></codx-label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 mr-2">{{dataCount?.suggest }}
+                                                        <div class="text-dark-75 me-2">{{dataCount?.suggest }}
                                                             <codx-label name="lblBallot" formName="FED_TagObjects"
                                                                 default="Phiếu"></codx-label>
 
@@ -180,7 +182,7 @@
                                                             default="Đề xuất cải tiến"></codx-label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 mr-2">{{dataCount?.improvement }}
+                                                        <div class="text-dark-75 me-2">{{dataCount?.improvement }}
                                                             <codx-label name="lblBallot" formName="FED_TagObjects"
                                                                 default="Phiếu"></codx-label>
                                                         </div>
@@ -205,7 +207,7 @@
                                                             default="Lời cảm ơn"></codx-label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 mr-2">{{dataCount?.thankyou }}
+                                                        <div class="text-dark-75 me-2">{{dataCount?.thankyou }}
                                                             <codx-label name="lblBallot" formName="FED_TagObjects"
                                                                 default="Phiếu"></codx-label>
                                                         </div>
@@ -228,7 +230,7 @@
                                                             default="Tuyên dương"></codx-label>
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 mr-2">{{dataCount?.commendation }}
+                                                        <div class="text-dark-75 me-2">{{dataCount?.commendation }}
                                                             <codx-label name="lblBallot" formName="FED_TagObjects"
                                                                 default="Phiếu"></codx-label>
                                                         </div>

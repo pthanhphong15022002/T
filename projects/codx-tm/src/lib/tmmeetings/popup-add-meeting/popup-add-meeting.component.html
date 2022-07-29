@@ -208,7 +208,7 @@
         </codx-label>
       </div>
     </div>
-    <codx-input type="Share" refValue="TM003" field="resources" [dataShared]="[]" multiple="true" [showInput]="false">
+    <codx-input type="Share" refValue="TM003" field="resources" (valueChange)="eventApply($event)" [dataShared]="[]" multiple="true" [showInput]="false">
     </codx-input>
   </div>
   <ng-container *ngFor="let item of meeting.resources">

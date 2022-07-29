@@ -1,11 +1,12 @@
 /// <reference types="@boldreports/types/reports.all" />
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 
 @Component({
   selector: 'codx-report-designer',
   templateUrl: './codx-report-designer.component.html',
-  styleUrls: ['./codx-report-designer.component.scss']
+  styleUrls: ['./codx-report-designer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @ViewChild('designer') designerInst!: BoldReportDesignerComponent;
