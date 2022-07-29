@@ -60,7 +60,7 @@
   </div>
   <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan ">
     <div class="form-group row ">
-      <div class="col-5">
+      <div class="col-4">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -69,7 +69,7 @@
           [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-5">
+      <div class="col-4">
         <div>
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
@@ -78,7 +78,7 @@
           [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-2">
+      <div class="col-4">
         <div>
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
@@ -96,7 +96,7 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
         </codx-label>
       </div>
-      <codx-input type="textarea" field="memo" [crrValue]="task?.memo" format="ed" (valueChange)="changeMemo($event)" [disabled]="readOnly">
+      <codx-input type="textarea"  field="memo" [crrValue]="task?.memo" format="ed" (valueChange)="changeMemo($event)" [disabled]="readOnly">
       </codx-input>
     </div>
   </ng-container>
