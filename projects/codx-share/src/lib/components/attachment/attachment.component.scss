@@ -14,3 +14,16 @@ ul.navi li {
     border: 0;
     color: #818689!important;
 }
+/*****29.07.2022***/
+.dropzone.dropzone-default {
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    // border: 2px dashed #EBEDF3;
+    border: 1.5px dashed #1BC5BD;
+    border-radius: 0.42rem;
+    height: 240px;
+}
+.dropzone.dropzone-default.dropzone-primary {
+    border-color: #3699FF;
+}

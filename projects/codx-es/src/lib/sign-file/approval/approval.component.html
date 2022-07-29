@@ -92,7 +92,6 @@
           #pdfviewer
           id="pdfViewer"
           [serviceUrl]="service"
-          [documentPath]="recID"
           [enableToolbar]="false"
           [enableNavigationToolbar]="false"
           [enableAnnotationToolbar]="false"
@@ -147,6 +146,13 @@
                   [fields]="person"
                   (change)="changeSigner($event)"
                 ></ejs-dropdownlist>
+                <!-- <codx-input
+                  class="form-control me-2"
+                  type="valuelist"
+                  field="vllOrganize"
+                  refValue="ES015"
+                  (valueChange)="changeSigner($event)"
+                ></codx-input> -->
               </div>
 
               <codx-label
@@ -230,6 +236,7 @@
                 <button (click)="show($event)">Show</button>
                 <button (click)="testFunc($event)">Test Func</button>
               </div>
+
             </ng-template>
           </e-tabitem>
 

@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views"
-  [autoLoad]="false">
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -9,7 +8,7 @@
         <div class="container d-flex pb-0">
           <div class="w-100 pr-9 mt-3">
             <div class="d-flex align-items-top">
-              <div class="mr-3 w-150px">
+              <div class="me-3 w-150px">
                 <div class="d-flex flex-column" #ToDate>
                   <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày" class="font-weight-bold">
                   </codx-label>
@@ -18,12 +17,12 @@
                   </codx-input>
                 </div>
               </div>
-              <div class="mr-3 left-5">
+              <div class="me-3 left-5">
                 <div class="d-flex flex-column" #Organize>
                   <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức"
                     class="font-weight-bold"></codx-label>
                   <div class="d-flex header-combo">
-                    <codx-input class="form-control mr-2" type="valuelist" field="vllOrganize" refValue="L1483"
+                    <codx-input class="form-control me-2" type="valuelist" field="vllOrganize" refValue="L1483"
                       (valueChange)="valueChange($event)">
                     </codx-input>
                     <div class="organize left-5">
@@ -34,7 +33,7 @@
                   </div>
                 </div>
               </div>
-              <div class="mr-3 w-200px left-5">
+              <div class="me-3 w-200px left-5">
                 <div class="d-flex flex-column" #Employee>
                   <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên" class="font-weight-bold">
                   </codx-label>
@@ -45,7 +44,7 @@
               </div>
             </div>
             <div class="d-flex align-items-center mt-3 mb-3 chart-circle">
-              <div class="d-flex mr-9 pd-r-30" *ngFor="let item of chartLabels; let i = index">
+              <div class="d-flex me-9 pd-r-30" *ngFor="let item of chartLabels; let i = index">
                 <span class="square-status" [style.background-color]="colors[0].backgroundColor[i]"></span>
                 <span class="text-dark-75 ml-2 left-5">{{ item ? item : '...' }}</span>
               </div>
@@ -65,13 +64,14 @@
             <div class="mt-6">
               <div class="box-wallets">
                 <div class="text-dark font-size-h4">
-                  <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận" class="font-weight-bold"></codx-label>
+                  <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận"
+                    class="font-weight-bold"></codx-label>
                 </div>
 
                 <!-- <span class="icon-open_in_new icon-20 ml-2"></span> -->
 
                 <div class="d-flex align-items-center mt-3">
-                  <div class="d-flex mr-9 pd-r-30" *ngFor="let item of dataProcess">
+                  <div class="d-flex me-9 pd-r-30" *ngFor="let item of dataProcess">
                     <span class="square-status" [style.background-color]="item.color"></span>
                     <span class="text-dark-75 ml-2 left-5">{{item.breakName}}</span>
                   </div>
@@ -206,10 +206,9 @@
                 </div>
               </div>
               <div class="list-performance">
-                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD"
-                  className="KudosTransBusiness" method="GetDataAchievementAsync" [predicate]="options.predicate"
-                  [dataValue]="options.dataValue" entityName="FD_KudosTrans" [itemTemplate]="TemplateList"
-                  [height]="heightList">
+                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD" className="KudosTransBusiness"
+                  method="GetDataAchievementAsync" [predicate]="options.predicate" [dataValue]="options.dataValue"
+                  entityName="FD_KudosTrans" [itemTemplate]="TemplateList" [height]="heightList">
                 </codx-listview>
               </div>
             </div>
@@ -223,8 +222,8 @@
 
 <ng-template #TemplateList let-item>
   <div class="d-flex align-items-center user-card list-item mb-3">
-    <div class="symbol symbol-40 symbol-circle with-number mr-4">
-      <codx-img class="symbol symbol-40 symbol-circle mr-2" [objectId]="item?.userID" [objectName]="item?.employeeName"
+    <div class="symbol symbol-40 symbol-circle with-number me-4">
+      <codx-img class="symbol symbol-40 symbol-circle me-2" [objectId]="item?.userID" [objectName]="item?.employeeName"
         objectType="AD_Users">
       </codx-img>
       <span class="list-number top-premium">{{ item?.rate }}</span>

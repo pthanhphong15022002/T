@@ -32,6 +32,9 @@ export class CO_Meetings{
     createBy: string;
     modifiedBy: Date;
     online: boolean;
+    startTime: any = null;
+    endTime: any = null;
+    isFullDay = false;
 }
 
 export class Resources{
@@ -47,4 +50,5 @@ export class Resources{
     createBy: string;
     modifiedOn: Date;
     modifiedBy: string;
+    positionName: string;
 }

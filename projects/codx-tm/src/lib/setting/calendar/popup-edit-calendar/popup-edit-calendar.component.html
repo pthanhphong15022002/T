@@ -6,11 +6,7 @@
           <thead>
             <tr>
               <th scope="col" class="w-20 min-w-200px"></th>
-              <th
-                scope="col"
-                class="w-10 text-center"
-                *ngFor="let item of vlls"
-              >
+              <th scope="col" class="w-10 text-center" *ngFor="let item of vlls">
                 {{ item.text }}
               </th>
             </tr>
@@ -19,27 +15,16 @@
             <tr>
               <td>
                 <div class="d-flex align-items-center">
-                  <span
-                    class="icon-brightness_5 icon-18 mr-2 text-warning"
-                  ></span>
+                  <span class="icon-brightness_5 icon-18 me-2 text-warning"></span>
                   <div class="text-dark-75">
                     {{ stShift?.startTime }} - {{ stShift?.endTime }}
                   </div>
                   <div class="dropdown ml-2 dropdown-customv2">
-                    <button
-                      class="btn btn-icon btn-xs"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
+                    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
-                    <div
-                      class="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton"
-                    >
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
@@ -51,38 +36,24 @@
                 </div>
               </td>
               <td class="text-center" *ngFor="let item of stShift?.data">
-                <codx-input
-                  class="test-check"
-                  type="checkbox"
-                  field="stweekday"
-                  [checked]="item.checked || true"
-                  (valueChange)="weekdayChange($event, item)"
-                >
+                <codx-input class="test-check" type="checkbox" field="stweekday" [checked]="item.checked || true"
+                  (valueChange)="weekdayChange($event, item)">
                 </codx-input>
               </td>
             </tr>
             <tr>
               <td>
                 <div class="d-flex align-items-center">
-                  <span class="icon-brightness_6 icon-18 mr-2 text-info"></span>
+                  <span class="icon-brightness_6 icon-18 me-2 text-info"></span>
                   <div class="text-dark-75">
                     {{ ndShift?.startTime }} - {{ ndShift.endTime }}
                   </div>
                   <div class="dropdown ml-2 dropdown-customv2">
-                    <button
-                      class="btn btn-icon btn-xs"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
+                    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
-                    <div
-                      class="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton"
-                    >
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <a class="dropdown-item">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
@@ -94,13 +65,8 @@
                 </div>
               </td>
               <td class="text-center" *ngFor="let item of ndShift?.data">
-                <codx-input
-                  class="text-check"
-                  type="checkbox"
-                  field="ndweekday"
-                  [checked]="item.checked"
-                  (valueChange)="weekdayChange($event, item)"
-                >
+                <codx-input class="text-check" type="checkbox" field="ndweekday" [checked]="item.checked"
+                  (valueChange)="weekdayChange($event, item)">
                 </codx-input>
               </td>
             </tr>
@@ -133,47 +99,23 @@
               </td>
               <td class="text-center">{{ item.day }}/{{ item.month }}</td>
               <td class="text-center">
-                <codx-input
-                  class="text-check"
-                  type="checkbox"
-                  name="checkbox"
-                  [disable]="true"
-                  filed="dayOff"
-                  [checked]="item.calendar == '1'"
-                  [disabled]="item.calendar == '2'"
-                >
+                <codx-input class="text-check" type="checkbox" name="checkbox" [disable]="true" filed="dayOff"
+                  [checked]="item.calendar == '1'" [disabled]="true">
                 </codx-input>
               </td>
               <td class="text-center">
-                <codx-input
-                  class="text-check"
-                  type="checkbox"
-                  name="checkbox"
-                  [disable]="true"
-                  filed="dayOff"
-                  [checked]="item.calendar == '2'"
-                  [disabled]="item.calendar == '1'"
-                >
+                <codx-input class="text-check" type="checkbox" name="checkbox" [disable]="true" filed="dayOff"
+                  [checked]="item.calendar == '2'" [disabled]="true">
                 </codx-input>
               </td>
               <td class="text-center">
-                <span
-                  [ngStyle]="{ color: item.color }"
-                  class="{{ item.symbol }}"
-                ></span>
+                <span [ngStyle]="{ color: item.color }" class="{{ item.symbol }}"></span>
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
                   <div class="dropdown ml-2">
-                    <button
-                      class="btn btn-icon btn-xs"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      (click)="toggleMoreFunc(item.recID)"
-                    >
+                    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" (click)="toggleMoreFunc(item.recID)">
                       <span class="icon-more_vert icon-18"></span>
                     </button>
                     <div *ngIf="dayOffId == item.recID">
@@ -209,7 +151,6 @@
             <tr>
               <th scope="col" class="w-60 min-w-350px">Diễn giải</th>
               <th scope="col" class="w-10 text-center">Ngày</th>
-              <th scope="col" class="w-10 text-center">Màu</th>
               <th scope="col" class="w-10 text-center">Icon</th>
               <th scope="col" class="w-10 text-center"></th>
             </tr>
@@ -221,43 +162,30 @@
               </td>
               <td class="text-center">
                 <!-- <div class="text-dark">{{ item.calendarDate | fmDT: "dmy" }}</div> -->
-                <div class="text-dark">{{ item.calendarDate }}</div>
+                <div class="text-dark">
+                  {{ item.calendarDate | date: "dd/MM/yyyy" }}
+                </div>
               </td>
               <td class="text-center">
-                <span
-                  class="pic-color h-20 w-20"
-                  [style.background-color]="
-                    item.dayOffColor ? item.dayOffColor : '#0078FF'
-                  "
-                ></span>
-              </td>
-              <td class="text-center">
-                <span class="{{ item.symbol }}"></span>
+                <span [ngStyle]="{
+                    color: item.dayoffColor ? item.dayoffColor : '#0078FF'
+                  }" class="{{ item.symbol }}"></span>
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
                   <div class="dropdown ml-2">
-                    <button
-                      class="btn btn-icon btn-xs"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
+                    <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false" (click)="toggleMoreFunc(item.recID)">
                       <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div>
+                    <div *ngIf="dayOffId == item.recID">
                       <a class="dropdown-item" (click)="openCalendarDate(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
                           <span class="ml-3">Chỉnh sửa</span>
                         </div>
                       </a>
-                      <a
-                        class="dropdown-item"
-                        (click)="removeCalendarDate(item)"
-                      >
+                      <a class="dropdown-item" (click)="removeCalendarDate(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-delete icon-16"></span>
                           <span class="ml-3">Xóa</span>

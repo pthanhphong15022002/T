@@ -20,6 +20,18 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   searchData:any;
   count = 0;
   txtSearch = "";
+  pageTotal:any = 0;
+  pageDraw:any = 5;
+  pageShow:any = 5;
+  pageStart: any = 0;
+  pageEnd: any = 0;
+  pageCenter: any = 0;
+  pagedistance : any = 0;
+  activePage = 1;
+  arrayPaging = [];
+  hideN = false;
+  @Input() page = 1;
+  @Input() pageSize = 2;
   @Input() widthLeft = 300;
   @Input() widthRight : any;
   @Input() centerTmp?: TemplateRef<any>;
@@ -47,9 +59,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
-
   getGridViewSetup(){
-   
     this.cache.functionList(this.funcID).subscribe((fuc) => {
       this.cache
       .gridViewSetup(fuc?.formName, fuc?.gridViewName)
@@ -143,7 +153,6 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   }
   changeValueText(view: any , e: any)
   {
-   
     var data = e?.data; 
     this.filter[view]=[data];
     this.searchText(this.txtSearch);
@@ -162,28 +171,98 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
     //debugger;
     this.searchText(this.txtSearch);
   }
-  searchText(val:any)
+  changeValueDate(view: any , e: any)
+  {
+
+  }
+  searchText(val:any , changePage = false)
   {
     this.txtSearch = val;
+    if(changePage == false) this.page = 1;
     this.api.execSv<any>("OD","OD", "DispatchesBusiness", "SearchFullTextAdvAsync",
     {
       query: val,
       filter: this.filter,
       functionID:  this.funcID,
       entityName: "OD_Dispatches",
-      page: 1,
-      pageSize: 2
+      page: this.page,
+      pageSize: this.pageSize
     }).subscribe((item) => {
       if(item)
       {
         this.count = 0;
+        this.hideN = false;
         this.searchData = item;
-        if(item[1]) this.count = item[1];
+        if(item[1]) 
+        {
+          this.count = item[1];
+          if(!changePage)
+          {
+            this.activePage = 1;
+            this.pageDraw = this.pageShow;
+            this.pagingLayout(item[1]);
+          }
+        }
+      }
+      else
+      {
+        this.count = 0;
+        this.searchData = [];
+        this.hideN = true;
       }
     });
   }
   aaa(e:any)
   {
     debugger;
+  }
+  pagingLayout(count:any)
+  {
+    this.arrayPaging= [];
+    this.pageTotal = Number((count / this.pageSize).toFixed(0));
+    if(this.pageTotal < this.pageDraw) this.pageDraw = this.pageTotal;
+    this.pageStart = 0 ;
+    this.pageEnd = this.pageDraw;
+    this.pageCenter = Number(this.pageDraw / 2).toFixed(0) ;
+    this.pagedistance = this.pageDraw - Number(this.pageCenter);
+    for(var i = 1 ; i<= this.pageDraw ; i++)
+      this.arrayPaging.push(i);
+  }
+  changePage(index:any)
+  {
+    this.activePage = index;
+    if((index == this.pageStart || index == this.pageEnd) && this.pageDraw < this.pageTotal && this.pageEnd <= this.pageTotal )
+    {
+      this.pageStart = index -  this.pagedistance
+      this.pageEnd = index + this.pagedistance; 
+      if(this.pageEnd > this.pageTotal) this.pageEnd = this.pageTotal;
+      if((this.pageEnd - this.pageStart) < this.pageDraw) this.pageStart = this.pageEnd - this.pageDraw + 1;
+      if(this.pageStart < 1) 
+      {
+        this.pageStart = 1;
+        this.pageEnd = this.pageDraw;
+      }
+      this.arrayPaging = [];
+      for(var i = Number(this.pageStart) ; i<= Number(this.pageEnd)  ; i++)
+        this.arrayPaging.push(i);
+    }
+    this.page = index;
+    this.searchText(this.txtSearch , true);
+  }
+  nextPage()
+  {
+    if(this.activePage < this.pageTotal)
+    {
+      var next = this.activePage + 1;
+      this.changePage(next);
+    }
+  }
+  previewPage()
+  {
+    if(this.activePage >1)
+    {
+      var per = this.activePage - 1;
+      this.changePage(per);
+    }
   }
 }

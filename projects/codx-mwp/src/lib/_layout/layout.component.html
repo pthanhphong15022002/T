@@ -44,27 +44,10 @@
     </div>
 
     <!-- Quick links -->
-    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
-      <div class="btn btn-icon btn-active-light-primary" [ngClass]="codxService.toolbarButtonHeightClass"
-        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-        data-kt-menu-flip="bottom">
-        <span [inlineSVG]="'./assets/themes/sys/default/img/header_app_module.svg'" class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-      </div>
-      <erm-quick-links-inner></erm-quick-links-inner>
-    </div>
-
+    <erm-quick-links-inner></erm-quick-links-inner>
+    <!-- End: Quick links -->
     <!-- begin::User -->
-    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
-      <!-- begin::Toggle -->
-      <codx-img #imageViewer *ngIf="user" [ngClass]="codxService.toolbarUserAvatarHeightClass"
-        class="cursor-pointer symbol" funcId="AD006" [objectId]="user.userID" [objectName]="user.userName"
-        objectType="AD_Users" [width]="35" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-        data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
-      </codx-img>
-      <!-- end::Toggle  -->
-      <codx-user-inner (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner>
-    </div>
+    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"></codx-user-inner>
     <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">

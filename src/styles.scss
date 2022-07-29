@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+
 // Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
 :root {
     --primary: #3699ff;
@@ -195,68 +196,87 @@ ngb-popover-window[role="tooltip"] {
 .max-h-25px {
     max-height: 18px !important;
 }
-.codx-card-custom{
-    .stepper-body{
+
+.codx-card-custom {
+    .stepper-body {
         background: rgba(229, 229, 229, 0.67);
         box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+        height: calc(100% - 60px);
     }
-    .codx-stepper{
-        .stepper-item{
-            .stepper-default{
+
+    .codx-stepper {
+        .stepper-item {
+            .stepper-default {
                 display: block;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
-        .stepper-item.active{
-            .stepper-default{
+
+        .stepper-item.active {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: block;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
-        .stepper-item.approve-disabled{
-            .stepper-default{
+
+        .stepper-item.approve-disabled {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: none;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: block;
             }
         }
-        .stepper-item.approve{
-            .stepper-default{
+
+        .stepper-item.approve {
+            .stepper-default {
                 display: none;
             }
-            .stepper-active{
+
+            .stepper-active {
                 display: none;
             }
-            .stepper-approve{
+
+            .stepper-approve {
                 display: block;
             }
-            .stepper-approve-disabled{
+
+            .stepper-approve-disabled {
                 display: none;
             }
         }
+
         .stepper-item .stepper-icon {
             display: flex;
             align-items: center;
@@ -266,10 +286,82 @@ ngb-popover-window[role="tooltip"] {
             border-radius: 0;
             width: auto;
             height: auto;
-            background-color: transparent;      
+            background-color: transparent;
         }
-        .stepper-line{
+
+        .stepper-line {
             border: 0.5px dashed #ccc;
         }
-      }
+    }
+}
+
+
+.card-item {
+    position: relative;
+}
+.card-item {
+    width: 180px;
+    margin-right: 20px;
+    float: left;
+}
+
+.mt-2, .my-2 {
+    margin-top: 0.5rem!important;
+}
+.align-items-center {
+    align-items: center!important;
+}
+
+.dms-card-footer {
+    padding: 8px;
+}
+.dms-card-footer {
+    height: 60px;
+}
+
+.dms-card-footer .text-dark-75 {
+    font-weight: 400!important;
+}
+.text-dark-75 {
+    color: #3e4347!important;
+}
+
+.mr-1, .mx-1 {
+    margin-right: 0.25rem!important;
+}
+
+.mr-3, .mx-3 {
+    margin-right: 0.75rem!important;
+}
+
+.font-weight-bold {
+    font-weight: 500!important;
+}
+
+.dms-card-footer .d-flex.mr-3 {
+    align-items: center!important;
+}
+
+.d-flex {
+    display: flex!important;
+}
+
+.icon-16 {
+    font-size: 16px!important;
+    line-height: 16px!important;
+    height: 16px!important;
+    width: 16px!important;
+}
+
+.text-warning {
+    color: #ffa800!important;
+}
+
+input.e-input,
+textarea.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+    font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 13px;
+    font-weight: 400;
 }

@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views"
-    [autoLoad]="false">
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -9,7 +8,7 @@
                 <div class="container d-flex pb-0 pd-r-0">
                     <div class="w-100 pr-6 mt-3 left-20 pd-r-10">
                         <div class="d-flex align-items-top">
-                            <div class="mr-3 w-150px">
+                            <div class="me-3 w-150px">
                                 <div class="d-flex flex-column mb-3">
                                     <codx-label name="lblfirstDay" formName="FD_KudosTrans" default="Từ ngày">
                                     </codx-label>
@@ -19,7 +18,7 @@
                                     </codx-input>
                                 </div>
                             </div>
-                            <div class="mr-3 w-150px left-5">
+                            <div class="me-3 w-150px left-5">
                                 <div class="d-flex flex-column mb-3" #ToDate>
                                     <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày">
                                     </codx-label>
@@ -28,7 +27,7 @@
                                     </codx-input>
                                 </div>
                             </div>
-                            <div class="mr-3 left-5">
+                            <div class="me-3 left-5">
                                 <div class="d-flex flex-column mb-3" #Organize>
                                     <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức">
                                     </codx-label>
@@ -49,7 +48,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mr-3 w-200px left-5">
+                            <div class="me-3 w-200px left-5">
                                 <div class="d-flex flex-column mb-3" #Employee>
                                     <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên">
                                     </codx-label>
@@ -248,8 +247,8 @@
 
 <ng-template #TemplateList let-item>
     <div class="d-flex align-items-center user-card list-item mb-4" (click)="codxService.navigate('FDR021')">
-        <div class="symbol symbol-40 symbol-circle with-number mr-4">
-            <codx-img class="symbol symbol-40 symbol-circle mr-2" [objectId]="item?.userID"
+        <div class="symbol symbol-40 symbol-circle with-number me-4">
+            <codx-img class="symbol symbol-40 symbol-circle me-2" [objectId]="item?.userID"
                 [objectName]="item?.employeeName" objectType="AD_Users">
             </codx-img>
             <div *ngIf="item?.rate == 1">
