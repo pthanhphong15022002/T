@@ -1,9 +1,11 @@
+
 <codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
     [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="FileInfo" service="DM">
 </codx-listview>
 
 <ng-template #templateListCard let-item>
+
     <codx-card-img cardCss="border rounded-4 pw-card delay-500" (click)="openImg(item)" [imageId]="item.objectID" 
-        [imageObjType]="item.objectType" [imageWidth]="100">
+        [imageObjType]="item.objectType" imageWidth="100" imgCss="h-150px w-100">
     </codx-card-img>
 </ng-template>
