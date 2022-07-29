@@ -442,7 +442,8 @@ export class AttachmentComponent implements OnInit {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
   }
   //fetch () : Observable<any[]> 
-  saveFilesObservable(): Observable<any[]> {    
+  saveFilesObservable(): Observable<any[]> {  
+    this.atSV.fileListAdded = [];  
     return this.onMultiFileSaveObservable();    
   };
 
@@ -455,7 +456,7 @@ export class AttachmentComponent implements OnInit {
     for (var i = 0; i < total; i++) {
       this.dmSV.fileUploadList[i].objectId = this.objectId;
     }
-    this.atSV.fileListAdded = [];
+   
     if (total > 1) {
       return this.fileService.addMultiFileObservable(this.dmSV.fileUploadList).pipe(
         map(res => {
@@ -466,6 +467,7 @@ export class AttachmentComponent implements OnInit {
   
             for (var i = 0; i < addList.length; i++) {
               this.data.push(Object.assign({}, addList[i]));
+              this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
             }
   
             if (addList.length == this.dmSV.fileUploadList.length) {
@@ -475,7 +477,7 @@ export class AttachmentComponent implements OnInit {
                 this.notificationsService.notify(this.title);
               //this.closePopup();
               this.dmSV.fileUploadList = [];
-              return this.data;
+              return this.atSV.fileListAdded;
             }
             else {
               var item = newlist[0];
@@ -491,7 +493,7 @@ export class AttachmentComponent implements OnInit {
               if (newlistNot.length > 0) {
                 this.notificationsService.notify(newlistNot[0].message);
                 //this.closePopup();
-                return this.data;                
+                return this.atSV.fileListAdded;//this.data;                
               }
               else {
                 this.dmSV.fileUploadList = newUploadList;
@@ -510,12 +512,12 @@ export class AttachmentComponent implements OnInit {
                           for (var i = 0; i < result.length; i++) {
                             var f = result[i];
                             mess = mess + (mess != "" ? "<br/>" : "") + f.message;
-    
+                            this.atSV.fileListAdded.push(Object.assign({}, result[i]));
                           }
                           if (this.showMessage == "1")
                             this.notificationsService.notify(mess);
                           this.dmSV.fileUploadList = [];
-                          return this.data;
+                          return this.atSV.fileListAdded;//this.data;
                           //this.closePopup();
                         });
                       }
@@ -530,7 +532,7 @@ export class AttachmentComponent implements OnInit {
                       // cancel all
                       if (x.event.data) {
                         this.dmSV.fileUploadList = [];
-                        return this.data;
+                        return this.atSV.fileListAdded;//this.data;
                         //this.closePopup();
                       }
                       else {
