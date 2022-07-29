@@ -1,20 +1,19 @@
 import {
-  ApiHttpService,
   DialogData,
   FormModel,
   DialogRef,
   UIComponent,
-  AuthStore,
+  CodxScheduleComponent,
 } from 'codx-core';
 import {
-  AfterViewInit,
   Component,
   Injector,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { CodxTMService } from '../../../codx-tm.service';
 
 @Component({
@@ -22,10 +21,8 @@ import { CodxTMService } from '../../../codx-tm.service';
   templateUrl: './popup-add-event.component.html',
   styleUrls: ['./popup-add-event.component.scss'],
 })
-export class PopupAddEventComponent
-  extends UIComponent
-  implements OnInit, AfterViewInit
-{
+export class PopupAddEventComponent extends UIComponent implements OnInit {
+  @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddEvent: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
@@ -35,59 +32,110 @@ export class PopupAddEventComponent
   dayOff: any;
   set = false;
   data: any;
+  isAdd: boolean = false;
 
   constructor(
     private injector: Injector,
     private tmService: CodxTMService,
-    private authService: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    this.user = this.authService.get();
-    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
   }
 
   onInit(): void {
-    console.log(this.data);
+    this.cache.functionList('TMS021').subscribe((res) => {
+      this.formModel = new FormModel();
+      this.formModel = res;
+      this.initForm();
+    });
   }
 
-  ngAfterViewInit(): void {}
+  initForm() {
+    this.tmService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.dialogAddEvent = res;
+          this.dialogAddEvent.addControl('calendar', new FormControl(true));
+          this.dialogAddEvent.addControl('day', new FormControl(true));
+          this.dialogAddEvent.addControl('month', new FormControl(true));
+          this.dialogAddEvent.addControl('color', new FormControl(true));
+          this.dialogAddEvent.addControl('symbol', new FormControl(true));
+          this.dialogAddEvent.addControl('note', new FormControl(true));
+          this.dialogAddEvent.addControl('set', new FormControl(true));
+          if (this.isAdd) {
+            this.dialogAddEvent.patchValue({
+              calendar: '',
+              day: 1,
+              month: 1,
+              color: '',
+              symbol: '',
+              note: '',
+            });
+          } else {
+            const {
+              calendar,
+              day,
+              month,
+              color,
+              symbol,
+              note,
+            } = this.data;
+            this.dialogAddEvent.addControl('recID', new FormControl(true));
+            this.dialogAddEvent.patchValue({
+              recID: this.data.recID,
+              calendar: calendar,
+              day: day,
+              month: month,
+              color: color,
+              symbol: symbol,
+              note: note,
+            });
+          }
+        }
+      });
+  }
 
   saveDayOff() {
-    this.evtData.day = 1;
-    this.evtData.month = 5;
-    this.evtData.note = 'Quốc tế Lao động';
-    let data = this.evtData;
+    console.log(this.dialogAddEvent.value)
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,
         APICONSTANT.ASSEMBLY.BS,
         APICONSTANT.BUSINESS.BS.DaysOff,
         'SaveDayOffAsync',
-        [data, this.set]
+        [this.dialogAddEvent.value, this.set]
       )
       .subscribe((res) => {
         if (res) {
-          if (res.isAdd) {
-            this.dayOff.push(res.data);
-          } else {
-            this.dayOff.filter(function (o, i) {
-              if (o.recID == data.recID) this.dayOff[i] = data;
-            });
-          }
+          this.dialog.close();
+          this.detectorRef.detectChanges();
         }
       });
-    //  this.schedule.reloadDataSource();
+    this.schedule.refresh();
   }
 
   valueChange(event) {
     if (event?.field) {
-      if (event?.data === Object(event?.data))
-        this.dialogAddEvent.patchValue({ [event['field']]: event.data.value });
-      else this.dialogAddEvent.patchValue({ [event['field']]: event.data });
+      if (event?.data === Object(event?.data)) {
+        if (event.data.value) {
+          this.dialogAddEvent.patchValue({
+            [event['field']]: event.data.value,
+          });
+        } else {
+          this.dialogAddEvent.patchValue({
+            [event['field']]: event.data.fromDate,
+          });
+        }
+      } else this.dialogAddEvent.patchValue({ [event['field']]: event.data });
+      if (event?.field == 'set') {
+        this.set = event.data;
+      }
     }
+    this.detectorRef.detectChanges();
   }
 }

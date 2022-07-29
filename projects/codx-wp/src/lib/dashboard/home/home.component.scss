@@ -26,3 +26,13 @@
 #kt_aside_menu {
     margin-top: 20px;
 }
+
+.aside.aside-transparent {
+    width: 22%;
+    min-width: 280px;
+    //border: 1px red solid;
+}
+
+.aside.aside-transparent .aside-menu {
+    width: 100%;
+}

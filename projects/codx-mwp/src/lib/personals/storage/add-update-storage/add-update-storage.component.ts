@@ -1,5 +1,5 @@
 import { Storages } from './../../../model/Storages.model';
-import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService, CRUDService } from 'codx-core';
+import { ImageViewerComponent, AuthStore, CodxService, ApiHttpService, DialogRef, DialogData, NotificationsService, DataService, CRUDService, CacheService } from 'codx-core';
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, Optional } from '@angular/core';
 import { StorageServices } from '../../../services/storage.services';
 
@@ -16,6 +16,12 @@ export class AddUpdateStorageComponent implements OnInit {
   data: any = [];
   funcID = '';
   header = 'Thêm mới kho lưu trữ'
+  empty = '';
+  gridViewSetup = {
+    title: '',
+    memo: '',
+  }
+  formModel: any;
 
   storage: Storages = new Storages();
 
@@ -26,9 +32,11 @@ export class AddUpdateStorageComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private api: ApiHttpService,
     private storageService: StorageServices,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
     this.funcID = dialog?.formModel?.funcID;
+    this.formModel = dialog?.formModel;
     this.dialog = dialog;
     this.formType = dt?.data[1];
     if (this.formType == 'edit') {
@@ -36,6 +44,12 @@ export class AddUpdateStorageComponent implements OnInit {
       this.storage = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     }
+    this.cache.gridViewSetup('Storages', 'grvStorages').subscribe((res) => {
+      if(res) {
+        this.gridViewSetup.title = res?.Title?.headerText;
+        this.gridViewSetup.memo = res?.Memo?.headerText;
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -58,9 +72,9 @@ export class AddUpdateStorageComponent implements OnInit {
   addStorage() {
     this.storage.storageType = "WP_Comments";
 
-    this.storage.details = [{ recID: null, refID: 'ee558a9b-6428-4543-9029-2643966ed72f', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: 'a079e8d2-3d01-47a6-939e-106413fc5482', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
-    { recID: null, refID: '447e3040-a56e-40b4-8dfe-5c1a50808eb6', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
+    // this.storage.details = [{ recID: null, refID: 'ee558a9b-6428-4543-9029-2643966ed72f', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    // { recID: null, refID: 'a079e8d2-3d01-47a6-939e-106413fc5482', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },
+    // { recID: null, refID: '447e3040-a56e-40b4-8dfe-5c1a50808eb6', memo: null, createdOn: '2022-05-25T07:30:44.086+00:00', createdBy: 'ADMIN' },];
 
     this.api.exec<any>(
       'ERM.Business.WP',

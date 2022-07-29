@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UserModel, AuthService, TenantStore, NotificationsService, CodxService } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 
@@ -8,13 +8,16 @@ import { Observable, of, Subscription } from 'rxjs';
   styleUrls: ['./user-inner.component.scss'],
 })
 export class UserInnerComponent implements OnInit, OnDestroy {
-  @HostBinding('class') class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-325px`;
-  @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+  // @HostBinding('class') class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-325px`;
+  // @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+  @HostBinding('class') class = 'd-flex align-items-center';
   @Output() onAvatarChanged = new EventEmitter<any>();
+  @Input() user: any;
+
   tenant?: string;
   language: LanguageFlag = langDefault;
   theme: ThemeFlag = themeDefault;
-  user$: Observable<UserModel|null> = of(null);
+  user$: Observable<UserModel | null> = of(null);
   langs = languages;
   themes = themeDatas;
   private unsubscribe: Subscription[] = [];
@@ -124,7 +127,7 @@ interface ThemeFlag {
   active?: boolean;
 }
 
-const themeDatas:ThemeFlag[] = [
+const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',

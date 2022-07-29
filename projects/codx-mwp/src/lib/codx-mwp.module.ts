@@ -61,7 +61,7 @@ export const routes: Routes = [
         component: PersonalsComponent,
       },
       {
-        path: 'employeeinfo/:funcID',
+        path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
       },
       // {
@@ -81,16 +81,6 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'notedetails/:funcID',
-  //       component: DetailNoteBooksComponent,
-  //     },
-  //   ],
-  // },
 ];
 
 const Component: Type<any>[] = [

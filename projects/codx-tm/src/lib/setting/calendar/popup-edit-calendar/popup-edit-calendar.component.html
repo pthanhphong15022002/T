@@ -119,10 +119,9 @@
           <thead>
             <tr>
               <th scope="col" class="w-30 min-w-350px">Lễ/Tết/Sự kiện</th>
+              <th scope="col" class="w-10 text-center">Ngày/Tháng</th>
               <th scope="col" class="w-10 text-center">Dương lịch</th>
               <th scope="col" class="w-10 text-center">Âm lịch</th>
-              <th scope="col" class="w-10 text-center">Ngày/Tháng</th>
-              <th scope="col" class="w-10 text-center">Màu</th>
               <th scope="col" class="w-10 text-center">Icon</th>
               <th scope="col" class="w-10 text-center"></th>
             </tr>
@@ -132,6 +131,7 @@
               <td>
                 <div class="text-dark" [innerHTML]="item.note"></div>
               </td>
+              <td class="text-center">{{ item.day }}/{{ item.month }}</td>
               <td class="text-center">
                 <codx-input
                   class="text-check"
@@ -140,6 +140,7 @@
                   [disable]="true"
                   filed="dayOff"
                   [checked]="item.calendar == '1'"
+                  [disabled]="true"
                 >
                 </codx-input>
               </td>
@@ -150,17 +151,16 @@
                   name="checkbox"
                   [disable]="true"
                   filed="dayOff"
-                  [checked]="item.calendar == '2' ? true : false"
+                  [checked]="item.calendar == '2'"
+                  [disabled]="true"
                 >
                 </codx-input>
               </td>
-              <td class="text-center">{{ item.day }}/{{ item.month }}</td>
-
               <td class="text-center">
-                <div class="badge badge-square badge-md me-3" [style.background]="item.color"></div>
-              </td>
-              <td class="text-center">
-                <span class="{{ item.symbol }}"></span>
+                <span
+                  [ngStyle]="{ color: item.color }"
+                  class="{{ item.symbol }}"
+                ></span>
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
@@ -209,7 +209,6 @@
             <tr>
               <th scope="col" class="w-60 min-w-350px">Diễn giải</th>
               <th scope="col" class="w-10 text-center">Ngày</th>
-              <th scope="col" class="w-10 text-center">Màu</th>
               <th scope="col" class="w-10 text-center">Icon</th>
               <th scope="col" class="w-10 text-center"></th>
             </tr>
@@ -221,18 +220,17 @@
               </td>
               <td class="text-center">
                 <!-- <div class="text-dark">{{ item.calendarDate | fmDT: "dmy" }}</div> -->
-                <div class="text-dark">{{ item.calendarDate }}</div>
+                <div class="text-dark">
+                  {{ item.calendarDate | date: "dd/MM/yyyy" }}
+                </div>
               </td>
               <td class="text-center">
                 <span
-                  class="pic-color h-20 w-20"
-                  [style.background-color]="
-                    item.dayOffColor ? item.dayOffColor : '#0078FF'
-                  "
+                  [ngStyle]="{
+                    color: item.dayoffColor ? item.dayoffColor : '#0078FF'
+                  }"
+                  class="{{ item.symbol }}"
                 ></span>
-              </td>
-              <td class="text-center">
-                <span class="{{ item.symbol }}"></span>
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
@@ -244,10 +242,11 @@
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
+                      (click)="toggleMoreFunc(item.recID)"
                     >
                       <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div>
+                    <div *ngIf="dayOffId == item.recID">
                       <a class="dropdown-item" (click)="openCalendarDate(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>

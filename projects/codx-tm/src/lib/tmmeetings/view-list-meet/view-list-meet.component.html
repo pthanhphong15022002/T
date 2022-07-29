@@ -1,22 +1,50 @@
 <div class="d-flex flex-row align-items-center p-2 border-bottom">
   <td class="w-15">
-    <div >
-      aaaaa</div>
+    <div class="center">
+      <div>
+        Tháng {{month }}
+      </div>
+      <div>
+        {{day}}
+      </div>
+      <div>
+        {{startTime}}
+      </div>
+    </div>
+  </td>
+  <td class="w-30">
+    <div class="text-dark fw-bold fs-6">
+      {{data.meetingName}}
+    </div>
+    <div class=" justify-content-start">
+      <codx-temp-full cardCss="card-template"  [imageId]="data.userID" 
+        imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data" 
+        (clickMF)="clickMF($event, data)">
+      </codx-temp-full>
+    </div>
   </td>
   <td class="w-25">
-    <div>
-      aaaaa</div>
-  </td>
-  <td class="w-25">
-    <div>
-      aaaaa</div>
+    <div [innerHTML]="data.memo" >
+     </div>
   </td>
   <td class="w-15">
-    <div>
-      aaaaa</div>
+    <div *ngIf="data.tags">
+      <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data.tags">
+      </codx-tag></div>
   </td>
   <td class="w-10">
-    <div>
-      aaaaa</div>
+    <div >
+      <codx-imgs [objectId]="resourceID" objectType="AD_Users" [numberImages]="4">
+        
+      </codx-imgs></div>
+  </td>
+  <td class=" w-5">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data" type="hover">
+    </codx-mfunc>
   </td>
 </div>
+
+<ng-template #titleTmp>
+  <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.userName}}</div>
+
+</ng-template>

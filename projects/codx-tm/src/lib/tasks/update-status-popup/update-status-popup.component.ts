@@ -82,13 +82,13 @@ export class UpdateStatusPopupComponent implements OnInit {
   changeEstimated(data) {
     if (!data.data) return;
     var num = Number.parseFloat(data.data);
-    if (!num) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
-      this.completed = this.crrCompleted >0 ? this.crrCompleted : 0;
-       this.changeDetectorRef.detectChanges();
-      return;
-    }
+    // if (!num) {
+    //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
+    //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
+    //   this.completed = this.crrCompleted >0 ? this.crrCompleted : 0;
+    //    this.changeDetectorRef.detectChanges();
+    //   return;
+    // }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
       this.notiService.notify('Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !');

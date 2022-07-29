@@ -51,15 +51,15 @@
               </div>
               <div class="d-status">
                 <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.status | vll: 'L0614':'textColor' | async) +
+                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
-                    (itemSelected?.status | vll: 'L0614':'textColor' | async) +
+                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.color]="
-                    itemSelected?.status | vll: 'L0614':'textColor' | async
+                    itemSelected?.status | vll: vllStatus:'textColor' | async
                   " style="border: none">
-                  {{ itemSelected?.status | vll: "L0614":"text" | async }}
+                  {{ itemSelected?.status | vll: vllStatus:"text" | async }}
                 </div>
               </div>
             </div>
@@ -258,7 +258,7 @@
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
             <div>
               <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
-                [crrValue]="item.status == '9'" [disabled]="true"></codx-input>
+                [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
             </div>
           </ng-container>
         </div>

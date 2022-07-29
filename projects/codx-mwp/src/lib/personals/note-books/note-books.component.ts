@@ -1,19 +1,19 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input } from '@angular/core';
+import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService, CodxListviewComponent, CRUDService } from 'codx-core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
 import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
 import { A, I } from '@angular/cdk/keycodes';
-import { NoteServices } from '@pages/services/note.services';
 import { NoteBookServices } from '../../services/notebook.services';
 
 @Component({
   selector: 'app-note-books',
   templateUrl: './note-books.component.html',
-  styleUrls: ['./note-books.component.scss']
+  styleUrls: ['./note-books.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NoteBooksComponent extends UIComponent implements OnInit, AfterViewInit {
 
@@ -25,15 +25,13 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   recID: any;
   dataSort: any = [];
   views = [];
-  moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   urlDetailNoteBook = '';
-
-  @Input() formModel: FormModel;
 
   @ViewChild('lstCardNoteBooks') lstCardNoteBooks: CodxCardImgComponent;
   @ViewChild('lstNoteBook') lstNoteBook: AddUpdateNoteBookComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('listView') listView: CodxListviewComponent;
   @Output() loadData = new EventEmitter();
 
   constructor(inject: Injector,
@@ -51,41 +49,27 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   onInit(): void {
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
-
     this.noteBookService.data.subscribe((res) => {
       if (res) {
         var data = res[0]?.data;
         var type = res[0]?.type;
 
         if (type == 'edit') {
-          this.view.dataService.update(data).subscribe();
+          (this.listView.dataService as CRUDService).update(data).subscribe();
         }
       }
     })
   }
 
   ngAfterViewInit() {
-    this.formModel = this.view.formModel;
   }
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
       case 'MWP00941':
@@ -119,7 +103,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
       .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.remove(data).subscribe();
+          (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -127,14 +111,14 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
 
   edit(data: any) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.listView.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+    (this.listView.dataService as CRUDService).edit(this.listView.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.listView?.dataService;
+      option.FormModel = this.listView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.dataSelected, 'edit'], option);
+      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.listView.dataService.dataSelected, 'edit'], option);
     });
   }
 
@@ -157,17 +141,17 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   formAddNoteBook() {
-    this.view.dataService.addNew().subscribe((res: any) => {
+    (this.listView.dataService as CRUDService).addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.listView?.dataService;
+      option.FormModel = this.listView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.view.dataService.data, 'add'], option);
+      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.listView.dataService.data, 'add'], option);
     });
   }
 
   sortNoteBooks() {
-    this.view.dataService.data = this.view.dataService.data.sort(function (a, b) {
+    this.listView.dataService.data = this.listView.dataService.data.sort(function (a, b) {
       var dateA = new Date(a.createdOn).toLocaleDateString();
       var dateB = new Date(b.createdOn).toLocaleDateString();
       return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
@@ -176,9 +160,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   onSearch(e) {
-    // this.lstCardNoteBooks.onSearch(e);
-    this.view.onSearch(e);
-    debugger;
+    this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
 

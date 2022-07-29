@@ -109,15 +109,17 @@
                             </div>
                         </div>
                         <ng-container *ngIf="data.isEditComment;else comment">
-                            <div class="text-dark text-comment">
-                                <codx-input type="text" format="ed3" [crrValue]="data.content"
-                                    (valueChange)="valueChangeComment($event,data)"></codx-input>
-                            </div>
-                            <div class="feed-icon btn-send">
-                                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                                    (click)="editComment(data.content,data)">
-                                    <span class="icon-send icon-18"></span>
-                                </span>
+                            <div class="edit-comment position-relative w-100 mt-1">
+                                <div class="text-dark text-comment w-100">
+                                    <codx-input type="text" format="ed3" [crrValue]="data.content"
+                                        (valueChange)="valueChangeComment($event,data)"></codx-input>
+                                </div>
+                                <div class="feed-icon btn-send" style="position: absolute; top:3px; right:5px">
+                                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+                                        (click)="editComment(data.content,data)">
+                                        <span class="icon-send icon-18"></span>
+                                    </span>
+                                </div>
                             </div>
                         </ng-container>
                         <ng-template #comment>
@@ -194,8 +196,8 @@
                                 </div>
                                 <ng-template #dataMyVoted>
                                     <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <img src="/assets/themes/wp/default/img/{{(data.myVotedType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px">
+                                        <!-- <img src="/assets/themes/wp/default/img/{{(data.myVotedType | vll:'L1480':'icon' | async)}}"
+                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px"> -->
                                         <div>
                                             <span class="fw-bold ms-2"
                                                 [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
@@ -369,8 +371,8 @@
                             </div>
                             <ng-template #childMyVoted>
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <img src="/assets/themes/wp/default/img/{{(childData.myVotedType | vll:'L1480':'icon' | async)}}"
-                                        alt="Kiwi standing on oval" style="width: 18px; height: 18px">
+                                    <!-- <img src="/assets/themes/wp/default/img/{{(childData.myVotedType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18px"> -->
                                     <div>
                                         <span class="fw-bold ms-2"
                                             [style.color]="childData.myVotedType | vll:'L1480':'textColor' | async">

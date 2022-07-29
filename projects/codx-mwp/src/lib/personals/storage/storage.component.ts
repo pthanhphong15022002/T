@@ -14,6 +14,7 @@ import {
   UIComponent,
   CodxListviewComponent,
   CRUDService,
+  CacheService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +42,6 @@ export class StorageComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input() formModel: FormModel;
   user: any;
   dataValue = '';
   predicate = 'CreatedBy=@0';
@@ -72,7 +72,6 @@ export class StorageComponent
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private storageService: StorageServices
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -96,7 +95,6 @@ export class StorageComponent
   }
 
   ngAfterViewInit() {
-    this.formModel = this.view.formModel;
   }
 
   testdate(dr) {}
@@ -110,10 +108,10 @@ export class StorageComponent
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -191,14 +189,16 @@ export class StorageComponent
     this.detectorRef.detectChanges();
 
     var arr = [];
-    for (let i = 0; i < e?.details.length; i++) {
-      arr.push(e?.details[i].refID);
+    if (e?.details) {
+      for (let i = 0; i < e?.details?.length; i++) {
+        arr.push(e?.details[i].refID);
+      }
+      var a = this.detail.createComponent(ListPostComponent);
+      a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      a.instance.dataValue = `[${arr.join(';')}]`;
+      a.instance.isShowCreate = false;
+      this.detectorRef.detectChanges();
     }
-    var a = this.detail.createComponent(ListPostComponent);
-    a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-    a.instance.dataValue = `[${arr.join(';')}]`;
-    a.instance.isShowCreate = false;
-    this.detectorRef.detectChanges();
   }
 
   onUpdateBackground(e) {}

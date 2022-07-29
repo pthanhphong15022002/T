@@ -1,4 +1,4 @@
-import { CO_Meetings } from './../../models/CO_Meetings.model';
+import { CO_Meetings, Resources } from './../../models/CO_Meetings.model';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
 import moment from 'moment';
@@ -22,7 +22,7 @@ export class PopupAddMeetingComponent implements OnInit {
   title = ''
   showPlan = true;
   data: any;
-  isFullDay: false;
+  isFullDay: boolean;
   beginHour = 0;
   beginMinute = 0;
   endHour = 0;
@@ -31,6 +31,7 @@ export class PopupAddMeetingComponent implements OnInit {
   endDate: any;
   action: any;
   linkURL = '';
+  resources: Resources[] = [];
 
   selectedDate = new Date();
   constructor(
@@ -56,11 +57,13 @@ export class PopupAddMeetingComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.openFormMeeting()
-    if(this.action === 'add'){
-      this.title = 'Thêm họp định kì'
+    if (this.action == 'add') {
+      this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
+    }else if(this.action== 'edit'){
+      this.title = 'Chỉnh sửa họp định kì';
     }
-    this.isFullDay = false;
+    this.isFullDay =false;
   }
   getParam(callback = null) {
     this.api
@@ -81,12 +84,19 @@ export class PopupAddMeetingComponent implements OnInit {
 
   beforeSave(op) {
     var data = [];
-    if (this.action === 'add') {
+    if (this.action == 'add') {
+
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       data = [
         this.meeting,
         this.functionID,
+      ];
+    }else if(this.action == 'edit'){
+      op.method = 'UpdateMeetingsAsync';
+      op.className = 'MeetingsBusiness';
+      data = [
+        this.meeting,
       ];
     }
 
@@ -94,7 +104,7 @@ export class PopupAddMeetingComponent implements OnInit {
     return true;
   }
 
-  onSave() {
+  onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
@@ -107,6 +117,41 @@ export class PopupAddMeetingComponent implements OnInit {
     this.dialog.close();
   }
 
+  onUpdate(){
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.dialog.dataService.setDataSelected(res.update[0]);
+        }
+      });
+      this.dialog.close();
+
+  }
+
+  onSave(){
+    if(this.action==='add')
+      return this.onAdd();
+    return this.onUpdate();
+  }
+
+  tabInfo: any[] = [
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
+    { icon: 'icon-playlist_add_check', text: 'Người tham gia', name: 'Resources' },
+    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
+
+  ];
+
+  setTitle(e: any) {
+    if(this.action=='add'){
+      this.title = 'Thêm ' + e;
+
+    }else if(this.action == 'edit'){
+      this.title = 'Sửa ' + e;
+
+    }
+    this.changDetec.detectChanges();
+  }
 
 
   valueChange(event) {
@@ -120,7 +165,7 @@ export class PopupAddMeetingComponent implements OnInit {
         this.startTime = null;
       }
     } else if (event?.field) {
-      if (event?.field === 'resourceID') {
+      if (event?.field === 'resources') {
         this.meeting.resources = event.data[0];
       } else {
         if (event.data instanceof Object) {
@@ -147,13 +192,13 @@ export class PopupAddMeetingComponent implements OnInit {
   //     console.log(this.meeting.startDate);
   //     console.log(this.meeting.endDate);
 
-  //   } 
-    
+  //   }
+
   // }
 
   valueDateChange(event: any) {
     this.selectedDate = event.data.fromDate;
-    if(this.selectedDate)
+    if (this.selectedDate)
       this.meeting[event.field] = this.selectedDate;
     this.setDate();
   }
@@ -201,7 +246,7 @@ export class PopupAddMeetingComponent implements OnInit {
         console.log(this.endDate);
       }
       if (this.beginHour >= this.endHour) {
-        if(this.beginMinute >= this.endMinute)
+        if (this.beginMinute >= this.endMinute)
           this.notiService.notify('Thời gian không hợp lệ!', 'error');
       }
     }
@@ -213,7 +258,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   changeLink(event) {
     this.linkURL = event.data;
-    if(this.linkURL)
+    if (this.linkURL)
       this.meeting.link = this.linkURL;
   }
 
@@ -221,7 +266,54 @@ export class PopupAddMeetingComponent implements OnInit {
     this.meeting.tags = e.data
   }
 
-  eventApply(e){
+  eventApply(e) {
     console.log(e);
+    var resourceID = '';
+    e?.data?.forEach(element => {
+      resourceID += element.id + ';';
+    });
+    if (resourceID != '') {
+      resourceID = resourceID.substring(0, resourceID.length - 1);
+
+    }
+    this.getListUser(resourceID);
+    if (this.resources != null)
+        this.meeting.resources = this.resources;
   }
+
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    this.api
+      .execSv<any>(
+        'CO',
+        'ERM.Business.CO',
+        'MeetingsBusiness',
+        'GetListUserAsync',
+        resource
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource = new Resources();
+            tmpResource.resourceID = emp?.userID;
+            tmpResource.resourceName = emp?.userName;
+            tmpResource.positionName = emp?.positionName;
+            tmpResource.roleType = 'R';
+            this.meeting.resources.push(tmpResource);
+
+          }
+
+        }
+      });
+  }
+
+  onDeleteUser(item) {
+    this.meeting.resources.splice(item, 1);//remove element from array
+    this.changDetec.detectChanges();
+  }
+
+
 }

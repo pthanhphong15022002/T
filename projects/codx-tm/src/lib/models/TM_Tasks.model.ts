@@ -51,8 +51,8 @@ export class TM_Tasks {
   owner: string;
   bUID: string;
   attachment: string;
-  approvalRule: string;
-  approvalControl :string
+  approveControl :string
+  approveComments :string
   approveStatus: string;
   approvers: string;
   approvedOn: any;
@@ -91,7 +91,7 @@ export class TM_Tasks {
   departmentID: string
   companyID :string
   write: boolean;	
-	tempSprints: TM_Sprints
+	sprints: TM_Sprints
 }
 
 export class tmpTaskResource {

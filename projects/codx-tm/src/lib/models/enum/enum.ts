@@ -10,6 +10,6 @@ export enum ActionTypeOnTask {
     ChangeStatus = '1',
 }
 export enum StatusTaskGoal{
-    NotChecked = '0',
-    Checked = '9',
+    NotChecked = '00',
+    Checked = '90',
 }

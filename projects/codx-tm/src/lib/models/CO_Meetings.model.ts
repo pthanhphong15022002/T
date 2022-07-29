@@ -17,7 +17,7 @@ export class CO_Meetings{
     templateID: string;
     contents: string;
     permissions: string;
-    resources: string;
+    resources: Resources[];
     refType: string;
     refID: string;
     dateType: string;
@@ -32,4 +32,23 @@ export class CO_Meetings{
     createBy: string;
     modifiedBy: Date;
     online: boolean;
+    startTime: any = null;
+    endTime: any = null;
+    isFullDay = false;
+}
+
+export class Resources{
+    recID: string;
+    resourceID: string;
+    resourceName: string;
+    roleType: string;
+    note: string;
+    taskControl: boolean;
+    isRequire: boolean;
+    status: string;
+    createOn: Date;
+    createBy: string;
+    modifiedOn: Date;
+    modifiedBy: string;
+    positionName: string;
 }

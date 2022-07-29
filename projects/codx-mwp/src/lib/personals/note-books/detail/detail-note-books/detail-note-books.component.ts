@@ -9,7 +9,6 @@ import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
   styleUrls: ['./detail-note-books.component.scss'],
-  providers: [CodxShareService]
 })
 export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
 
@@ -137,10 +136,10 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }

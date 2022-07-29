@@ -49,6 +49,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
       this.funcID = params['funcID'];
     })
     this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
+      debugger;
       this.urlDetailRoles = res[0]?.url;
     })
     this.tenant = this.tenantStore.get()?.tenant;
@@ -107,10 +108,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     // if (roleType == '1' || roleType == '2') return;
     this.tempService.roleName = roleName;
     this.tempService.isSystem = isSystem;
-
-    this.urlDetailRoles
-    recID
-    debugger;
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID })
     //TEMP
     // this.router.navigate([`${this.tenant}/ad/roledetail/${recID}`]);

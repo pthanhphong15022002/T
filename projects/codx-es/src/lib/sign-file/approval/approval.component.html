@@ -92,7 +92,6 @@
           #pdfviewer
           id="pdfViewer"
           [serviceUrl]="service"
-          [documentPath]="recID"
           [enableToolbar]="false"
           [enableNavigationToolbar]="false"
           [enableAnnotationToolbar]="false"
@@ -147,6 +146,13 @@
                   [fields]="person"
                   (change)="changeSigner($event)"
                 ></ejs-dropdownlist>
+                <!-- <codx-input
+                  class="form-control mr-2"
+                  type="valuelist"
+                  field="vllOrganize"
+                  refValue="ES015"
+                  (valueChange)="changeSigner($event)"
+                ></codx-input> -->
               </div>
 
               <codx-label
@@ -155,14 +161,6 @@
                 default="Kéo thả"
                 class="ms-2 fw-bold"
               ></codx-label>
-              <!-- <div class="row d-flex">
-                <div *ngFor="let action of actionsButton; let index = index" class="col-5 action"
-                  [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
-                  <div class="icon {{ index + 1 | vll: 'ES015':'icon' | async }}"></div>
-                  <codx-label name="lbl + {{ index + 1 | vll: 'ES015':'text' | async }}" [formModel]=""
-                    default="{{ index + 1 | vll: 'ES015':'text' | async }}" class="ms-2 fw-bold"></codx-label>
-                </div>
-              </div> -->
               <div class="card-group">
                 <div
                   class="card-item me-3 mb-3"

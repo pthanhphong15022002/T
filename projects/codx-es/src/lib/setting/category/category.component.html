@@ -32,17 +32,17 @@
 
 <ng-template #icon let-data>
   <div class="">
-    <i [ngClass]="data.icon" class="icon-24 text-dark"></i>
+    <i [ngClass]="data.icon" [style.color]="data.color" class="icon-24"></i>
   </div>
 </ng-template>
 
 
-<ng-template #color let-data>
+<!-- <ng-template #color let-data>
   <div class="d-flex">
     <div class="badge badge-square badge-md me-3" [style.background]="data.color"></div>
     <div #color1 class="text-dark">{{ data.color | formatvalue: viewBase.formModel:"color": color1 | async}}</div>
   </div>
-</ng-template>
+</ng-template> -->
 
 
 <ng-template #parentID let-data>

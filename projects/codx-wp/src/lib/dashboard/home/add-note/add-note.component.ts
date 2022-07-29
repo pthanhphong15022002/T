@@ -26,10 +26,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TempNote, Notes, NoteFile, NoteType } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
-import { NoteServices } from '@pages/services/note.services';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
+import { NoteServices } from '../../../services/note.services';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -37,13 +37,10 @@ import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.compo
   encapsulation: ViewEncapsulation.None,
 })
 export class AddNoteComponent implements OnInit {
-  dataAdd = new Notes();
-  dataUpdate = new Notes();
+
   note: any = new Notes();
-  noteFile: NoteFile = new NoteFile();
   noteType: NoteType = new NoteType();
   tempNote: TempNote = new TempNote();
-  message: any;
   listNote: any = [];
   type = 'text';
   label = 'Hiển thị trên lịch';
@@ -71,6 +68,9 @@ export class AddNoteComponent implements OnInit {
   countNotePin = 0;
   component: any;
   typeEntity = '';
+  countValueChange = 0;
+  date1: any;
+  date2: any;
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -176,7 +176,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   saveNote() {
-    if (this.formType == 'add') this.onCreateNote();
+    if (this.formType == 'add') this.checkPinWithFormAdd();
     else this.onEditNote();
   }
 
@@ -197,17 +197,27 @@ export class AddNoteComponent implements OnInit {
   }
 
   valueChangeDate(e) {
-    if (e.data.fromDate == null || e.data.fromDate == undefined) {
-      this.currentDate = "";
-      var date = new Date(e.data);
-      var crr = date.toLocaleDateString();
-      this.currentDate = crr;
-    } else {
-      var date = new Date(e.data.fromDate);
-      var crr = date.toLocaleDateString();
-      this.currentDate = "";
-      this.currentDate = crr;
+    this.countValueChange++;
+    // if (e.data.fromDate == null || e.data.fromDate == undefined) {
+    //   this.currentDate = "";
+    //   var date = new Date(e.data);
+    //   var crr = date.toLocaleDateString();
+    //   this.currentDate = crr;
+    // } else {
+    var date = new Date(e.data.fromDate);
+    var crr = date.toLocaleDateString();
+    this.currentDate = "";
+    this.currentDate = crr;
+    if (this.countValueChange == 1) {
+      var date1 = new Date(e.data.fromDate);
+      var crr1 = date1.toLocaleDateString();
+      this.date1 = crr1;
+    } else if (this.countValueChange > 1) {
+      var date2 = new Date(e.data.fromDate);
+      var crr2 = date2.toLocaleDateString();
+      this.date2 = crr2;
     }
+    // }
   }
 
   valueChange(e, item = null) {
@@ -232,8 +242,6 @@ export class AddNoteComponent implements OnInit {
 
   onCreateNote() {
     this.note.createdOn = this.currentDate;
-    var dateNow = new Date(Date.now());
-
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
     if (this.type == 'check' || this.type == 'list') {
@@ -266,7 +274,7 @@ export class AddNoteComponent implements OnInit {
               this.attachment.saveFiles();
             }
             var object = [];
-            if (this.note.createdOn != dateNow.toLocaleDateString())
+            if (this.date2 != undefined)
               object = [{ data: res, type: 'add-otherDate' }]
             else
               object = [{ data: res, type: 'add-currentDate' }]
@@ -323,14 +331,24 @@ export class AddNoteComponent implements OnInit {
     } else this.onEdit();
   }
 
-  onEdit() {
-    var dateNow = new Date(this.note.createdOn);
-    this.note.createdOn = this.currentDate;
+  checkPinWithFormAdd() {
+    if (this.checkPin == true) {
+      if (this.countNotePin + 1 > this.maxPinNotes)
+        this.openFormUpdateIsPin(this.note);
+      else
+        this.onCreateNote();
+    } else this.onCreateNote();
+  }
 
+  onEdit() {
+    this.note.createdOn = this.currentDate;
     if (this.checkPin == true)
       this.note.isPin = this.pin;
-    this.note.checkList = this.listNote;
-    this.note.checkList.shift()
+    if (this.listNote.length != 0)
+      this.note.checkList = this.listNote;
+    if (this.note.checkList != null)
+      this.note.checkList.shift();
+
     this.api
       .exec<any>("ERM.Business.WP", "NotesBusiness", "UpdateNoteAsync", [this.note?.recID, this.note])
       .subscribe((res) => {
@@ -339,10 +357,10 @@ export class AddNoteComponent implements OnInit {
           if (this.checkFile == true)
             this.attachment.saveFiles();
           var object = [];
-          if (dateNow.toLocaleDateString() == this.currentDate)
-            object = [{ data: res, type: 'edit-currentDate' }]
-          else
+          if (this.date2 != undefined)
             object = [{ data: res, type: 'edit-otherDate' }]
+          else
+            object = [{ data: res, type: 'edit-currentDate' }]
           this.noteService.data.next(object);
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
@@ -391,9 +409,11 @@ export class AddNoteComponent implements OnInit {
 
     var dt = { status: this.tempNote.status, listNote: this.tempNote.listNote };
     this.listNote.push(Object.assign({}, dt));
+    // this.listNote.push(this.listNote.shift());
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');
     if (ele) {
+
       let htmlEle = ele[0] as HTMLElement;
       htmlEle.focus();
     }
@@ -404,7 +424,6 @@ export class AddNoteComponent implements OnInit {
     this.pin = !this.pin;
     this.changeDetectorRef.detectChanges();
   }
-
 
   openFormNoteBooks() {
     if (this.formType == 'edit') {
@@ -424,10 +443,6 @@ export class AddNoteComponent implements OnInit {
   popupFile() {
     this.attachment.uploadFile();
     this.checkFile = true;
-  }
-
-  fileAdded() {
-    this.attachment.saveFiles();
   }
 
   close() {

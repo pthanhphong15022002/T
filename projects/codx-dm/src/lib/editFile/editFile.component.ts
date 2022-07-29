@@ -242,7 +242,7 @@ export class EditFileComponent implements OnInit {
     ) {
       this.data = data.data;
       //this.fileEditing = this.data[1];   
-      this.fileEditing =  JSON.parse(JSON.stringify( this.data[1]));   
+      this.fileEditing =  JSON.parse(JSON.stringify(this.data[1]));   
       this.user = this.auth.get();
       this.dialog = dialog;     
       this.id = this.fileEditing.recID;

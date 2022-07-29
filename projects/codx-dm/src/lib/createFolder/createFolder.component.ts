@@ -195,6 +195,7 @@ export class CreateFolderComponent implements OnInit {
   titleStoreControl = 'Kiểm soát vị trí kho';
   titleVersionControl = 'Kiểm soát phiên bản';
   titleApprovar = 'Xét duyệt tài liệu';
+  titleFolderName = 'Tên thư mục';  
   titleFolderRequired = 'Tên thư mục bắt buộc..';  
   width = '720'; 
   height = window.innerHeight;

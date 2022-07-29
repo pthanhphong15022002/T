@@ -627,6 +627,25 @@ export class CodxEsService {
     );
   }
 
+  getSFByID(data) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetByIDAsync',
+      data
+    );
+  }
+
+  getSignFormat() {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetSignFormatAsync'
+    );
+  }
+
   addNewSignFile(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -647,13 +666,23 @@ export class CodxEsService {
     );
   }
 
+  deleteSignFile(data: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'DeleteSignFileAsync',
+      [data]
+    );
+  }
+
   //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
-      'SignAreasBusiness',
-      'AddOrEditAsync',
+      'SignFilesBusiness',
+      'AddOrEditAreaAsync',
       data
     );
   }
@@ -662,7 +691,7 @@ export class CodxEsService {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
-      'SignAreasBusiness',
+      'SignFilesBusiness',
       'DeleteAreaAsync',
       data
     );
@@ -672,8 +701,8 @@ export class CodxEsService {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
-      'SignAreasBusiness',
-      'GetSignAreasAsync',
+      'SignFilesBusiness',
+      'GetAllAreasAsync',
       data
     );
   }
@@ -693,6 +722,7 @@ export class CodxEsService {
       httpOptions
     );
   }
+  //#endregion
 }
 export class LayoutModel {
   isChange: boolean = false;
