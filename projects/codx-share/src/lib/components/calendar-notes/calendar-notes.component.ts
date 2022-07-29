@@ -407,8 +407,6 @@ export class CalendarNotesComponent
         this.checkUpdateNotePin = true;
       }
     }
-    var object = [{ data: data, type: 'edit' }];
-    this.noteService.data.next(object);
     this.openFormUpdateIsPin(data, this.checkUpdateNotePin);
   }
 
@@ -503,9 +501,13 @@ export class CalendarNotesComponent
         data,
       ])
       .subscribe((res) => {
-        for (let i = 0; i < this.WP_Notes.length; i++) {
-          if (this.WP_Notes[i].recID == data?.recID) {
-            this.WP_Notes[i].isPin = res.isPin;
+        if (res) {
+          var object = [{ data: data, type: 'edit' }];
+          this.noteService.data.next(object);
+          for (let i = 0; i < this.WP_Notes.length; i++) {
+            if (this.WP_Notes[i].recID == data?.recID) {
+              this.WP_Notes[i].isPin = res.isPin;
+            }
           }
         }
         this.changeDetectorRef.detectChanges();
