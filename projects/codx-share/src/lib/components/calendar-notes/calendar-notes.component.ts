@@ -108,6 +108,8 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
             }
           } else if (type == 'edit-currentDate') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
+          } else if (type == 'edit') {
+            (this.lstView.dataService as CRUDService).update(data).subscribe();
           }
           this.setEventWeek();
           var today: any = document.querySelector(
@@ -364,26 +366,11 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       '',
       option,
     )
-
-    // this.dialog.closed.subscribe(x => {
-    //   if (x.event) {
-    //     (this.lstView.dataService as CRUDService).update(x.event).subscribe();
-    //   }
-    // });
-
     this.itemUpdate = data;
     this.listNote = this.itemUpdate.checkList;
     this.type = data.noteType;
     this.recID = data?.recID;
   }
-
-  // getNumberNotePin(WP_Notes) {
-  //   WP_Notes.forEach((res) => {
-  //     if (res.isPin == true || res.isPin == '1') {
-  //       this.countNotePin++;
-  //     }
-  //   })
-  // }
 
   checkNumberNotePin(data) {
     if (data?.isPin == '1' || data?.isPin == true) {
@@ -421,16 +408,13 @@ export class CalendarNotesComponent extends UIComponent implements OnInit, After
       formType: 'add',
       currentDate: this.daySelected,
       component: 'calendar-notes',
+      maxPinNotes: this.maxPinNotes,
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
     this.callfc
       .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 500, '', obj, '', option)
-    // this.dialog.closed.subscribe(x => {
-    //   this.view.dataService.update(this.view.dataService.dataSelected).subscribe();
-    // });
-    // this.lstView.dataService.load().subscribe();
 
   }
 
