@@ -838,4 +838,5 @@ export class TasksComponent extends UIComponent {
       obj
     );
    }
+   //#endregion
 }

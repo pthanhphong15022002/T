@@ -439,8 +439,6 @@ export class CodxTMService {
   }
 
   convertParameterByTaskGroup( param : TM_Parameter ,taskGroup : TM_TaskGroups){
-    param.CheckListControl = taskGroup.checkListControl ;
-    param.AttachmentControl = taskGroup.attachmentControl;
     param.ApproveBy = taskGroup.approveBy ;
     param.ApproveControl = taskGroup.approveControl ;
     param.AutoCompleted = taskGroup.autoCompleted ;

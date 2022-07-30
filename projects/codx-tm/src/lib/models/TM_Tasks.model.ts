@@ -136,6 +136,4 @@ VerifyByType:string;
 VerifyControl: string;
 LocationCotrol: string ;
 DueDateControl : string;
-CheckListControl: string ;
-AttachmentControl : string ;
 }

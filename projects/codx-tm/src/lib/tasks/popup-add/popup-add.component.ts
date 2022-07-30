@@ -392,18 +392,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
-      this.notiService.notifyCode('TM012');
+       this.notiService.notify('Tên dự án không được để trống !');
+      // this.notiService.notifyCode('TM012');
       return;
     }
     if (
       this.param?.LocationCotrol == '2' &&
       (!this.task.location || this.task.location.trim() != '')
     ) {
-      this.notiService.notifyCode('TM012');
+      this.notiService.notify('Địa điểm không được để trống !');
+      // this.notiService.notifyCode('TM012');
       return;
     }
     if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
-      this.notiService.notifyCode('TM012');
+      this.notiService.notify('Thời gian thực hiện không được để trống không được để trống !');
+      // this.notiService.notifyCode('TM012');
       return;
     }
     if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
@@ -414,11 +417,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (this.param?.CheckListControl != '0' && this.listTodo.length == 0) {
+      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
         this.notiService.notify('Danh sách việc cần làm không được để trống');
         return;
       }
-      // if (this.param?.AttachmentControl == '1' && this.countFile == 0) {
+      // if (this.taskGroup?.cttachmentControl == '1' && this.countFile == 0) {
       //   this.notiService.notify('File tài liệu không được để trống');
       //   return;
       // }
@@ -752,7 +755,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-          this.tmSv.convertParameterByTaskGroup(this.param,this.taskCopy)
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
@@ -763,7 +765,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
-          
+          this.convertParameterByTaskGroup(this.taskGroup)         
         }
       });
   }
@@ -943,23 +945,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  // convertParameterByTaskGroup(taskGroup : TM_TaskGroups){
-  //   this.param.CheckListControl = taskGroup.checkListControl ;
-  //   this.param.AttachmentControl = taskGroup.attachmentControl;
-  //   this.param.ApproveBy = taskGroup.approveBy ;
-  //   this.param.ApproveControl = taskGroup.approveControl ;
-  //   this.param.AutoCompleted = taskGroup.autoCompleted ;
-  //   this.param.ConfirmControl = taskGroup.confirmControl ;
-  //   this.param.EditControl = taskGroup.editControl ;
-  //   this.param.LocationControl = taskGroup.locationControl ;
-  //   this.param.MaxHours = taskGroup.maxHours ;
-  //   this.param.MaxHoursControl = taskGroup.maxHoursControl ;
-  //   this.param.PlanControl = taskGroup.planControl ;
-  //   this.param.ProjectControl = taskGroup.projectControl ;
-  //   this.param.UpdateControl = taskGroup.updateControl ;
-  //   this.param.VerifyBy = taskGroup.verifyBy ;
-  //   this.param.VerifyByType = taskGroup.verifyByType ;
-  //   this.param.VerifyControl = taskGroup.verifyControl;
-  //   this.param.DueDateControl = taskGroup.dueDateControl ;
-  // }
+  convertParameterByTaskGroup(taskGroup : TM_TaskGroups){
+    this.param.ApproveBy = taskGroup.approveBy ;
+    this.param.ApproveControl = taskGroup.approveControl ;
+    this.param.AutoCompleted = taskGroup.autoCompleted ;
+    this.param.ConfirmControl = taskGroup.confirmControl ;
+    this.param.EditControl = taskGroup.editControl ;
+    this.param.LocationControl = taskGroup.locationControl ;
+    this.param.MaxHours = taskGroup.maxHours ;
+    this.param.MaxHoursControl = taskGroup.maxHoursControl ;
+    this.param.PlanControl = taskGroup.planControl ;
+    this.param.ProjectControl = taskGroup.projectControl ;
+    this.param.UpdateControl = taskGroup.updateControl ;
+    this.param.VerifyBy = taskGroup.verifyBy ;
+    this.param.VerifyByType = taskGroup.verifyByType ;
+    this.param.VerifyControl = taskGroup.verifyControl;
+    this.param.DueDateControl = taskGroup.dueDateControl ;
+  }
 }
