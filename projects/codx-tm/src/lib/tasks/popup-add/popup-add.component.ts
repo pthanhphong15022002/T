@@ -43,7 +43,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   grvSetup: any;
   param: TM_Parameter;
   taskGroup : TM_TaskGroups ;
-  paramModule: any;
+  paramModule: TM_Parameter;
   functionID: string;
   view = '';
   action = '';
@@ -233,8 +233,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          this.param ={...this.param,...param}
-          this.paramModule = this.param;         
+          this.param =param 
+          this.paramModule = param;         
         }
       });
   }
@@ -450,7 +450,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-   // this.task.taskType = this.param['TaskType']; 
+    this.task.taskType = this.dialog.formModel?.entityName ; 
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
@@ -621,7 +621,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.param?.MaxHoursControl != "0" && num > this.param?.MaxHours) {
       num = this.param?.MaxHours;
     }
-
+    this.task[data.field] = num;
     //xử lý nhập estimated thay đổi thời gian
     // if (data.data && num) {
     //   this.task[data.field] = data.data;
@@ -675,6 +675,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   cbxChange(data) {
+    
     if (data.data && data.data != "") {
       this.task[data.field] = data.data;
       if (data.field === 'taskGroupID' && this.action == 'add')
@@ -684,7 +685,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.task[data.field] = null
     }
     if (data.field == 'taskGroupID') {
-      this.param = this.paramModule;
+      const param = this.paramModule;
+      this.param = param ;
     }
   }
 

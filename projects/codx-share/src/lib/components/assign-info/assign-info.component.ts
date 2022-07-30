@@ -132,6 +132,8 @@ export class AssignInfoComponent implements OnInit {
       this.task.projectID = this.taskParent.projectID ;
       this.task.location = this.taskParent.location ;
       this.task.tags = this.taskParent.tags ;
+      this.task.refID = this.taskParent.refID ;
+      this.task.taskType = this.taskParent.taskType ;
     }
 
     // if (this.task.memo == null) this.task.memo = '';

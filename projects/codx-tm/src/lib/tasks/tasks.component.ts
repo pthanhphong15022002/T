@@ -596,10 +596,10 @@ export class TasksComponent extends UIComponent {
   changeView(evt: any) { }
 
   requestEnded(evt: any) {
-    if (evt.type == 'read') {
-      console.log(this.view.dataService.data);
-    }
-    this.view.currentView;
+    // if (evt.type == 'read') {
+    //   console.log(this.view.dataService.data);
+    // }
+   // this.view.currentView;
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
