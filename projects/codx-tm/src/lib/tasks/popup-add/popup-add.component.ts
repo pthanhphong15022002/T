@@ -234,7 +234,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param =param 
-          this.paramModule = param;         
+        //  this.paramModule = param;         
         }
       });
   }
@@ -685,8 +685,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.task[data.field] = null
     }
     if (data.field == 'taskGroupID') {
-      const param = this.paramModule;
-      this.param = param ;
+      this.getParam() ;
     }
   }
 
