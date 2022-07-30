@@ -22,9 +22,10 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { CodxTMService } from '../../codx-tm.service';
 import { StatusTaskGoal } from '../../models/enum/enum';
 import { TaskGoal } from '../../models/task.model';
-import { tmpTaskResource, TM_Tasks } from '../../models/TM_Tasks.model';
+import { tmpTaskResource, TM_Parameter, TM_Tasks } from '../../models/TM_Tasks.model';
 import * as moment from 'moment';
 import { AnyARecord } from 'dns';
+import { TM_TaskGroups } from '../../models/TM_TaskGroups.model';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -40,7 +41,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   grvSetup: any;
-  param: any;
+  param: TM_Parameter;
+  taskGroup : TM_TaskGroups ;
   paramModule: any;
   functionID: string;
   view = '';
@@ -225,13 +227,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetParameterByModuleWithCategoryAsync',
+        'GetByModuleWithCategoryAsync',
         ['TM_Parameters', '1']
       )
       .subscribe((res) => {
         if (res) {
-          this.param = JSON.parse(res.dataValue);
-          this.paramModule = this.param;
+          var param = JSON.parse(res.dataValue);
+          this.param ={...this.param,...param}
+          this.paramModule = this.param;         
         }
       });
   }
@@ -329,7 +332,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           });
         if (this.task.category == '2') {
           this.disableDueDate = true;
-          if (this.param?.EditControl == 0) this.readOnly = true;
+          if (this.param?.EditControl == "0") this.readOnly = true;
         }
         this.changeDetectorRef.detectChanges();
       }
@@ -411,11 +414,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (this.param?.checkListControl != '0' && this.listTodo.length == 0) {
+      if (this.param?.CheckListControl != '0' && this.listTodo.length == 0) {
         this.notiService.notify('Danh sách việc cần làm không được để trống');
         return;
       }
-      // if (this.param?.attachmentControl == '1' && this.countFile == 0) {
+      // if (this.param?.AttachmentControl == '1' && this.countFile == 0) {
       //   this.notiService.notify('File tài liệu không được để trống');
       //   return;
       // }
@@ -595,7 +598,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   valueChangeEstimated(data) {
     if (!data.data) return;
-    var num = Number.parseFloat(data.data);
+     var num = data.data;
     // if (!num) {
     //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
     //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
@@ -612,7 +615,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (this.param?.MaxHoursControl != 0 && num > this.param?.MaxHours) {
+    if (this.param?.MaxHoursControl != "0" && num > this.param?.MaxHours) {
       num = this.param?.MaxHours;
     }
 
@@ -674,6 +677,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       if (data.field === 'taskGroupID' && this.action == 'add')
         this.loadTodoByGroup(this.task.taskGroupID);
       return;
+    }else{
+      this.task[data.field] = null
     }
     if (data.field == 'taskGroupID') {
       this.param = this.paramModule;
@@ -746,7 +751,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.taskGroup = res;
+          this.tmSv.convertParameterByTaskGroup(this.param,this.taskCopy)
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
@@ -757,6 +763,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
+          
         }
       });
   }
@@ -935,4 +942,24 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.popover.close();
   }
   //#endregion
+
+  // convertParameterByTaskGroup(taskGroup : TM_TaskGroups){
+  //   this.param.CheckListControl = taskGroup.checkListControl ;
+  //   this.param.AttachmentControl = taskGroup.attachmentControl;
+  //   this.param.ApproveBy = taskGroup.approveBy ;
+  //   this.param.ApproveControl = taskGroup.approveControl ;
+  //   this.param.AutoCompleted = taskGroup.autoCompleted ;
+  //   this.param.ConfirmControl = taskGroup.confirmControl ;
+  //   this.param.EditControl = taskGroup.editControl ;
+  //   this.param.LocationControl = taskGroup.locationControl ;
+  //   this.param.MaxHours = taskGroup.maxHours ;
+  //   this.param.MaxHoursControl = taskGroup.maxHoursControl ;
+  //   this.param.PlanControl = taskGroup.planControl ;
+  //   this.param.ProjectControl = taskGroup.projectControl ;
+  //   this.param.UpdateControl = taskGroup.updateControl ;
+  //   this.param.VerifyBy = taskGroup.verifyBy ;
+  //   this.param.VerifyByType = taskGroup.verifyByType ;
+  //   this.param.VerifyControl = taskGroup.verifyControl;
+  //   this.param.DueDateControl = taskGroup.dueDateControl ;
+  // }
 }
