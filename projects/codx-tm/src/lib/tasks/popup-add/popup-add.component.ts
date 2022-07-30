@@ -444,7 +444,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    this.task.taskType = this.param['TaskType'];
+   // this.task.taskType = this.param['TaskType']; 
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
