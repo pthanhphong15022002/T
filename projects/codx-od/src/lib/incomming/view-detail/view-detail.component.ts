@@ -378,10 +378,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           this.dialog.closed.subscribe(x=>{
             if(x.event) 
             {
-              this.data.owner = x.event[0].owner
-              this.data.lstUserID = getListImg(x.event[0].relations);
-              this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
-              //this.view.dataService.update(x.event[0]).subscribe();
+              //this.data.owner = x.event[0].owner
+              //this.data.lstUserID = getListImg(x.event[0].relations);
+              //this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
+              this.view.dataService.update(x.event[0]).subscribe();
             }
           });
           break;
@@ -496,7 +496,13 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         {
           if(this.checkOpenForm(funcID))
           {
-            this.callfunc.openForm(this.tmpdeadline,null,600, 400);
+            this.callfunc.openForm(this.tmpdeadline,null,600, 400).closed.subscribe(x=>{
+              if(x.event) 
+              {
+                this.data.deadline = x.event?.deadline;
+                this.updateNotCallFuntion(x.event);
+              }
+            });
           }
           break;
         }
@@ -564,6 +570,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
               this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
                 if (item.status == 0) {
                   //this.data = item.data[0];
+                  debugger;
                   this.data.lstUserID = getListImg(item.data[0].relations);
                   this.data.listInformationRel = item.data[1]
                 }
@@ -663,5 +670,12 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     if(relationType == "1")
       return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
     return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
+  }
+  updateNotCallFuntion(data:any)
+  {
+    const index = this.view.dataService.data.findIndex(object => {
+      return object.recID == data?.recID;
+    });
+    this.view.dataService.data[index] = data
   }
 }
