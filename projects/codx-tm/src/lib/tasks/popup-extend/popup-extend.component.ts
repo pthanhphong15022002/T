@@ -46,6 +46,17 @@ export class PopupExtendComponent implements OnInit {
 
   }
 
-  saveData(){}
+  saveData(){
+    if(this.taskExtend.dueDate > this.taskExtend.extendDate){
+      this.notiService.notifyCode("TM022")
+      return ;
+    }
+    if(this.taskExtend.reason==null || this.taskExtend.reason.trim()==""){
+      this.notiService.notifyCode("TM019")
+      return ;
+    }
+
+    //goi hàm luu data 
+  }
 
 }

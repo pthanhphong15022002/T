@@ -7,9 +7,9 @@
             <codx-input class="form-control" type="text"  [crrValue]="taskExtend?.extendApprover" [disabled]="true"></codx-input>
         </div>
         <div class="col-6" >
-            <codx-label fiedName ="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends"  default="Ngày cập nhật"></codx-label>
+            <codx-label fiedName ="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends"  default="Ngày hết hạn"></codx-label>
             <codx-input type="datetime" class="test-datetime" field="dueDate"
-                [crrValue]="taskExtend.dueDate" format="F" (valueChange)="changeTime($event)">
+                [crrValue]="taskExtend.dueDate" format="F" [disabled]="true">
             </codx-input>
         </div>
         <div class="col-6" >
@@ -20,8 +20,8 @@
           
         </div>
         <div class="col-12">
-             <codx-label fiedName="ExtendComment" formName="TaskExtends" gridViewName="grvTaskExtends" default="Lý do"></codx-label>
-             <codx-input type="textarea" (valueChange)="valueChange($event)" field="extendComment" [crrValue]="taskExtend?.extendComment" format="ed2"></codx-input>
+             <codx-label fiedName="Reason" formName="TaskExtends" gridViewName="grvTaskExtends" default="Lý do"></codx-label>
+             <codx-input type="textarea" (valueChange)="valueChange($event)" field="reason" [crrValue]="taskExtend?.reason" format="ed2"></codx-input>
         </div>
     </div>
   </ng-template>
