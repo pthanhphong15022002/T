@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupEditComponent } from './popup-edit/popup-edit/popup-edit.component';
 
@@ -9,13 +10,13 @@ import { PopupEditComponent } from './popup-edit/popup-edit/popup-edit.component
 })
 export class CompanyInforComponent implements OnInit, AfterViewInit {
 
-  functionID = 'WPT02';
+  funcID = 'WPT01P';
   entityName = 'WP_News';
   gridViewName = 'grvNews';
   predicate = "NewsType =@0 Category = @1 and (ApproveStatus = @2 or ApproveStatus = @3) and Status = @4";
   dataValue = "1;0;5;null;2";
   fromName = "News";
-  dataEdit :any;
+  data :any;
   views: Array<ViewModel> = [];
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   @ViewChild('codxViews') codxView: ViewsComponent;
@@ -23,6 +24,7 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     private api:ApiHttpService,
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
+    private route : ActivatedRoute,
     private changedt:ChangeDetectorRef) { }
   ngAfterViewInit(): void {
     this.views= [{
@@ -38,7 +40,10 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.route.params.subscribe((param:any) => {
+       this.funcID = param['funcID'];
+        this.loadData();
+      });
   }
 
   loadData(){
@@ -50,8 +55,7 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
           'GetConpanyInforAsync'
         )
         .subscribe((res:any) => {
-          console.log(res);
-          this.dataEdit = res;
+          this.data = res;
           this.changedt.detectChanges();
         });
   }
@@ -60,21 +64,14 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     let option = new DialogModel();
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
-    let modal = this.callc.openForm(PopupEditComponent,"",600,600,"",this.dataEdit,"",option); 
-    modal.closed.subscribe(dt => {
-      if(this.codxView.dataService.dataSelected)
-      this.dataEdit = this.codxView.dataService.dataSelected;
-      this.changedt.detectChanges();
+    option.IsFull = true;
+    let popup = this.callc.openForm(PopupEditComponent,"",0,0,"",this.data,"",option);
+    popup.closed.subscribe((res:any)=>{
+      if(res){
+        this.data = res.event;
+        this.changedt.detectChanges();
+      }
     })
-  }
-  close(e:any,t:CompanyInforComponent){
-    var result = e.event?.result;
-    if(result){
-      t.dataEdit = result;
-      t.dataEdit.contents = result.contents;
-      t.notifySvr.notifyCode('E0026');
-      t.changedt.detectChanges();
-    } 
   }
 }
 

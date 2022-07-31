@@ -13,6 +13,7 @@ export class EditExperenceComponent implements OnInit {
   dialog: any;
   data: any;
   action = '';
+  isSaving : boolean = false;
 
   constructor(
     private notiService: NotificationsService,
@@ -22,8 +23,8 @@ export class EditExperenceComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) { 
-    this.data = dialog.dataService!.dataSelected;
-    this.dataBind = this.data;
+    // this.data = dialog.dataService!.dataSelected;
+    this.dataBind = dt.data;
     this.dialog = dialog;
   }
 
@@ -51,42 +52,43 @@ export class EditExperenceComponent implements OnInit {
     }
   }
 
-  beforeSave(op: any) {
-    var data = [];
-    op.method = 'UpdateEmployeeExperiencesAsync';
-    op.service = 'HR';
-    data = [
-      this.dataBind,
+  // beforeSave(op: any) {
+  //   var data = [];
+  //   op.method = 'UpdateEmployeeExperiencesAsync';
+  //   op.service = 'HR';
+  //   data = [
+  //     this.dataBind,
    
-    ];
-    op.data = data;
-    return true;
-  }
+  //   ];
+  //   op.data = data;
+  //   return true;
+  // }
 
   OnSaveForm(){
-    this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notifyCode('MWP00201'); 
-      }
-    });
-
-    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
-    // .subscribe((res: any) => {
-    //   console.log(res);    
-    //   if (res) {
-    //     res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
-    //     res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
-
-    //     this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
-    //     this.dialog.close(this.dataBind);
-    //   }
-    //   else {
-    //     this.notiService.notify("Error");
+    // this.dialog.dataService
+    // .save((option: any) => this.beforeSave(option))
+    // .subscribe((res) => {
+    //   if (res.save) {
+    //     this.dialog.close();
+    //     this.notiService.notifyCode('MWP00201'); 
     //   }
     // });
-    // this.dialog.close(this.dataBind);
+    this.isSaving = true;
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
+    .subscribe((res: any) => {
+      this.isSaving = false;
+      // console.log(res);    
+      if (res) {
+        res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
+        res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
+
+        this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
+        this.dialog.close(this.dataBind);
+      }
+      else {
+        this.notiService.notify("Error");
+      }
+    });
+    this.dialog.close(this.dataBind);
   }
 }

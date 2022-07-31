@@ -1,0 +1,30 @@
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+</codx-form>
+  <ng-template  #body>
+    <div class="form-group row">
+        <div class="col-12">
+            <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
+            <!-- <codx-valuelist
+            [name]="vllConfirm"
+            [iconOnly]="true"
+            (valueChange)="valueSelected($event)"></codx-valuelist> -->
+            <codx-input type="valuelist" ngDefaultControl field="confirmStatus" [crrValue]="task?.confirmStatus" [refValue]="vllConfirm"
+            placeholder="Độ ưu tiên" (valueChange)="valueSelected($event)">
+          </codx-input>
+
+        </div>
+        <div class="col-12">
+             <codx-label fiedName="ConfirmComment" formName="Tasks"  default="Comment"></codx-label>
+            <!-- <textarea  [(ngModel)]="comment" class="form-control" rows="2"></textarea> -->
+            <codx-input type="textarea" (valueChange)="valueChange($event)" field="confirmComment" [crrValue]="task?.confirmComment" format="ed2"></codx-input>
+        </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="saveData()">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
+ </ng-template>
+    

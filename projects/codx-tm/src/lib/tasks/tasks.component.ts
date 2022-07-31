@@ -27,6 +27,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
@@ -54,6 +55,7 @@ export class TasksComponent extends UIComponent {
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
   dialog!: DialogRef;
+  dialogConFirmTask!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
@@ -112,17 +114,17 @@ export class TasksComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
-        break;
-      case 'delete':
-        this.delete(data);
         break;
       case 'sendemail':
         this.sendemail(data);
@@ -140,7 +142,7 @@ export class TasksComponent extends UIComponent {
         //???? chắc làm sau ??
         break;
       default:
-        this.changeStatusTask(e, data);
+        this.changeStatusTask(e.data, data);
         break;
     }
   }
@@ -594,10 +596,10 @@ export class TasksComponent extends UIComponent {
   changeView(evt: any) { }
 
   requestEnded(evt: any) {
-    if (evt.type == 'read') {
-      console.log(this.view.dataService.data);
-    }
-    this.view.currentView;
+    // if (evt.type == 'read') {
+    //   console.log(this.view.dataService.data);
+    // }
+   // this.view.currentView;
   }
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -741,8 +743,8 @@ export class TasksComponent extends UIComponent {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'TM_Parameters'
+        'GetByModuleWithCategoryAsync',
+        ['TM_Parameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -813,4 +815,28 @@ export class TasksComponent extends UIComponent {
   hoverPopover(p: any) {
     this.popoverDataSelected = p;
   }
+
+  //#region ConfirmControl 
+   openConfirmControl(moreFunc,data){
+    if (data.owner != this.user.userID) {
+      this.notiService.notify(
+        'Bạn không thể xác nhận công việc của người khác !'
+      );
+      return;
+    }
+    var obj ={
+      moreFunc : moreFunc ,
+      data : data,
+      funcID : this.funcID
+    }
+    this.dialogConFirmTask = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+   }
+   //#endregion
 }

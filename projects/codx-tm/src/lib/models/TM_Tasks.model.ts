@@ -113,3 +113,27 @@ export class tmpTaskResource {
   positionName : string;
   departmentName : string ;
 }
+
+export class TM_Parameter{
+AdjustHours: string;
+ApproveBy: string;
+ApproveControl: string;
+Approver: string;
+AutoCompleted:string;
+CalendarID: string;
+ConfirmControl:string;
+EditControl: string;
+LocationControl:string;
+MaxHours:string;
+MaxHoursControl: string;
+PlanControl:string;
+ProjectControl: string;
+SetPermissionAttachments:string;
+TaskDefault: string;
+UpdateControl: string;
+VerifyBy: string;
+VerifyByType:string;
+VerifyControl: string;
+LocationCotrol: string ;
+DueDateControl : string;
+}

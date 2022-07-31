@@ -6,7 +6,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
   CacheService,
@@ -72,17 +71,16 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
 
+    this.button = {
+      id: 'btnAdd',
+    };
     this.esService.getFormModel(this.funcID).then((formModel) => {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -114,12 +112,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.icon,
               width: 80,
             },
-            // {
-            //   field: 'color',
-            //   headerText: gv['Color'].headerText,
-            //   template: this.color,
-            //   width: 120,
-            // },
             {
               field: 'memo',
               headerText: gv['Memo'].headerText,
@@ -210,19 +202,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     if (evt) {
       deleteItem = evt;
     }
-    this.viewBase.dataService
-      .delete([deleteItem], true, (opt) => this.beforeDel(opt))
-      .subscribe((res) => {
-        console.log(res);
-      });
-  }
-
-  beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteCategoryAsync';
-
-    opt.data = itemSelected;
-    return true;
+    this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   closeEditForm(event) {
@@ -231,10 +213,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   clickMF(event, data) {
     switch (event?.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }

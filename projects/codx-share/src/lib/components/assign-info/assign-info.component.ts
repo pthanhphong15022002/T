@@ -55,6 +55,7 @@ export class AssignInfoComponent implements OnInit {
   vllRole = 'TM001';
   listRoles = [];
   isHaveFile = false;
+  taskParent : any
 
   constructor(
     private authStore: AuthStore,
@@ -70,6 +71,7 @@ export class AssignInfoComponent implements OnInit {
       ...this.task,
       ...dt?.data[0],
     };
+    if(this.task?.taskID) this.taskParent = this.task ;
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.dialog = dialog;
@@ -83,8 +85,9 @@ export class AssignInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.task.taskID) this.setDefault();
-    else this.openInfo();
+    // if (this.task.taskID) this.taskParent = this.task ;
+    this.setDefault();
+    // else this.openInfo();
   }
 
   setDefault() {
@@ -108,7 +111,6 @@ export class AssignInfoComponent implements OnInit {
       });
   }
 
-  showPanel() { }
   closePanel() {
     this.dialog.close();
   }
@@ -119,22 +121,38 @@ export class AssignInfoComponent implements OnInit {
       .toDate();
     this.listUser = [];
     this.listTaskResources = [];
-    if (this.task.memo == null) this.task.memo = '';
-    if (this.task.assignTo != null && this.task.assignTo != '') {
-      this.listUser = this.task.assignTo.split(';');
-      this.api
-        .execSv<any>(
-          'TM',
-          'ERM.Business.TM',
-          'TaskResourcesBusiness',
-          'GetListTaskResourcesByTaskIDAsync',
-          this.task.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.listTaskResources = res;
-          }
-        });
+    this.task.category = "3"
+    this.task.status = "10"
+    if(this.taskParent){
+      this.task.taskName = this.taskParent.taskName ;
+      this.task.refID = this.taskParent.recID;
+      this.task.memo = this.taskParent.memo ;
+      this.task.memo2 = this.taskParent.memo2 ;
+      this.task.taskGroupID = this.taskParent.taskGroupID ;
+      this.task.projectID = this.taskParent.projectID ;
+      this.task.location = this.taskParent.location ;
+      this.task.tags = this.taskParent.tags ;
+      this.task.refID = this.taskParent.refID ;
+      this.task.taskType = this.taskParent.taskType ;
+    }
+
+    // if (this.task.memo == null) this.task.memo = '';
+    // if (this.task.assignTo != null && this.task.assignTo != '') {
+    //   this.listUser = this.task.assignTo.split(';');
+    //   this.api
+    //     .execSv<any>(
+    //       'TM',
+    //       'ERM.Business.TM',
+    //       'TaskResourcesBusiness',
+    //       'GetListTaskResourcesByTaskIDAsync',
+    //       this.task.taskID
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.listTaskResources = res;
+    //       }
+    //     });
+    
       // this.api
       //   .execSv<any>(
       //     'TM',
@@ -146,11 +164,11 @@ export class AssignInfoComponent implements OnInit {
       //   .subscribe((res) => {
       //     this.listUserDetail = this.listUserDetail.concat(res);
       //   });
-    }
+   // }
 
     this.changeDetectorRef.detectChanges();
   }
-  openTask() { }
+ 
 
   changText(e) {
     this.task.taskName = e.data;
@@ -177,7 +195,7 @@ export class AssignInfoComponent implements OnInit {
       this.attachment.saveFiles();
 
     this.tmSv
-      .saveAssign([this.task, this.functionID, this.listTaskResources, null])
+      .saveAssign([this.task, this.functionID, this.listTaskResources, null,this.taskParent.taskID])
       .subscribe((res) => {
         if (res && res.length) {
           // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);

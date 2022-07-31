@@ -1,4 +1,10 @@
-<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home">
+<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home hover-scroll-overlay-y" style="overflow: auto !important"
+  data-kt-scroll="true" 
+  data-kt-scroll-activate="{default: true}"
+  data-kt-scroll-max-height="auto"
+  attr.data-kt-scroll-dependencies=''
+  attr.data-kt-scroll-wrappers='.dms-viewcard'
+  attr.data-kt-scroll-offset="'0px'">
     <div class="dms dms-viewcard">
         <div class="card-group">                
             <div
@@ -23,9 +29,9 @@
                             <some-element *ngSwitchCase="'card'">   
                                 <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder" [typeMF]="'hover'"
                                     [bookmark]="showBookmark(folder)"  [formModel]="formModel"   (clickMF)="dmSV.clickMF($event, folder, 'folder')" [content]="folder.folderName"
-                                    [footer]="cardImgFooter">
+                                    [footer]="cardImgFooterFolder">
                                 </codx-card-img>
-                                <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
+                                <ng-template #cardImgFooterFolder let-data let-setting="setting">                                                                       
                                     <div title="{{folder.folderName}}" class="d-flex align-items-start">
                                         <div
                                             *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
@@ -45,7 +51,7 @@
                                         </ng-template>
     
                                         <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            <div class="text-dark-75 font-weight-bold file-name text-box-140">{{folder.folderName}}
                                             </div>
                                             <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>
@@ -79,16 +85,16 @@
                     <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
                         <container-element [ngSwitch]="this.type">
                             <some-element *ngSwitchCase="'card'">   
-                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file" [typeMF]="'hover'"
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file" [typeMF]="'hover'" [footer]="cardImgFooterFile"
                                     [bookmark]="showBookmark(file)"  [formModel]="formModel"   (clickMF)="dmSV.clickMF($event, file, 'file')" [content]="file.fileName">
                                 </codx-card-img>
-                                <ng-template #cardImgFooter let-data let-setting="setting">
+                                <ng-template #cardImgFooterFile let-data let-setting="setting">
                                     <div title="{{file.fileName}}" class="dms-card-footer d-flex">
                                         <div class="d-flex flex-column flex-grow-1">
                                             <div class="d-flex align-items-center">
                                                 <img alt="" class="mh-20px me-2"
-                                                    src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
-                                                <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
+                                                    src="{{dmSV.getThumbnail('', file.extension)}}">
+                                                <div class="text-dark-75 font-weight-bold file-name text-box-140">{{file.fileName}}</div>
                                             </div>
                                             <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>
@@ -112,7 +118,9 @@
                                                     </div>
                                                 </div>
                                                 <span *ngIf="checkView(file.read) == false"
-                                                    class="icon-security text-primary icon-18"></span>
+                                                class="icon-security text-primary icon-18"></span>
+                                                <!-- <span *ngIf="checkView(file.read) == false"
+                                                    class="icon-security text-primary icon-18"></span> -->
                                             </div>
                                         </div>
                                     </div>  
@@ -132,16 +140,16 @@
                     <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
                         <container-element [ngSwitch]="this.type">
                             <some-element *ngSwitchCase="'card'">   
-                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file" [typeMF]="'hover'"
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px" [rootData]="file" [typeMF]="'hover'" [footer]="cardImgFooterFile"
                                     [bookmark]="showBookmark(file)"  [formModel]="formModel"   (clickMF)="dmSV.clickMF($event, file, 'file')" [content]="file.fileName">
                                 </codx-card-img>
-                                <ng-template #cardImgFooter let-data let-setting="setting">
+                                <ng-template #cardImgFooterFile let-data let-setting="setting">
                                     <div title="{{file.fileName}}" class="dms-card-footer d-flex">
                                         <div class="d-flex flex-column flex-grow-1">
                                             <div class="d-flex align-items-center">
                                                 <img alt="" class="mh-20px me-2"
                                                     src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
-                                                <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
+                                                <div class="text-dark-75 font-weight-bold file-name text-box-140">{{file.fileName}}</div>
                                             </div>
                                             <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>
@@ -183,11 +191,11 @@
                     <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
                         <container-element [ngSwitch]="this.type">
                             <some-element *ngSwitchCase="'card'">   
-                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
+                                <codx-card-img class="float-start" cardCss="border m-5 h-100 w-125px float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder" 
                                     [bookmark]="showBookmark(folder)"  [formModel]="formModel"   (clickMF)="dmSV.clickMF($event, folder, 'folder')" [content]="folder.folderName"
-                                    [footer]="cardImgFooter">
+                                    [footer]="cardImgFooterFolder">
                                 </codx-card-img>
-                                <ng-template #cardImgFooter let-data let-setting="setting">                                                                       
+                                <ng-template #cardImgFooterFolder let-data let-setting="setting">                                                                       
                                     <div title="{{folder.folderName}}" class="d-flex align-items-start">
                                         <div
                                             *ngIf="(folder.icon != null && folder.icon != '') then showicon2 else noshowicon2">
@@ -207,7 +215,7 @@
                                         </ng-template>
     
                                         <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            <div class="text-dark-75 font-weight-bold file-name text-box-140">{{folder.folderName}}
                                             </div>
                                             <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>

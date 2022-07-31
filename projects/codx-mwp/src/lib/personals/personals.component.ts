@@ -1,12 +1,13 @@
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, AuthService, CodxService, ViewsComponent, ViewType } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 
 
 @Component({
   selector: 'app-personals',
   templateUrl: './personals.component.html',
-  styleUrls: ['./personals.component.scss']
+  styleUrls: ['./personals.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PersonalsComponent implements OnInit {
   formName: any;
@@ -60,7 +61,7 @@ export class PersonalsComponent implements OnInit {
     //     },
     //   },
     // ]
-    this.changedt.detectChanges(); 
+    this.changedt.detectChanges();
   }
 
   getFunctionList() {

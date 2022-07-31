@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -111,6 +111,7 @@ const routes: Routes = [
     SignFileComponent,
     PopupSignatureComponent,
     ApprovalComponent,
+    SignatureComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -160,6 +161,7 @@ export class CodxEsModule {
       providers: [
         HttpClientModule,
         { provide: EnvironmentConfig, useValue: config },
+        DatePipe,
       ],
     };
   }
