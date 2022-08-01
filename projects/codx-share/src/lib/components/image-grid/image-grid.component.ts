@@ -97,7 +97,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         this.objectID)
       .subscribe((files:any[]) => {
         if(files.length > 0){
-          console.log('GetFilesByIbjectIDAsync: ',files)
           files.forEach((f:any) => {
             if(f.referType == this.FILE_REFERTYPE.IMAGE){
               this.file_img_video.push(f);
