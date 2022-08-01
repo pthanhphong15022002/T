@@ -535,7 +535,7 @@ export class CalendarNotesComponent
     };
     this.callfc.openForm(
       SaveNoteComponent,
-      'Cập nhật ghi chú',
+      '',
       900,
       650,
       '',
