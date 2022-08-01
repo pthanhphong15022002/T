@@ -1,5 +1,5 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full (clickMF)="openFormFuncID($event,data)" (click)="click(data)" [typeMF]="'hover'"
+  <codx-temp-full (clickMF)="openFormFuncID($event,data)" (changeDataMF)="aaaa($event)" (click)="click(data)" [typeMF]="'hover'"
     [content]="extractContent(data.title)"
     [desc]="convertHtmlAgency(data.agencyName , this.gridViewSetup?.AgencyName?.headerText)" [status]="data.status"
     [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
@@ -30,6 +30,11 @@
           <i class="icon-check icon-16 text-success"></i>
           <codx-label default="Chờ duyệt" class="ms-2 fs-7"></codx-label>
         </div>
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="activeDiv==''"
+        [class.text-primary]="activeDiv==''" (click)="clickChangeStatus('')">
+        <i class="icon-list_check icon-16 text-danger"></i>
+        <codx-label default="Tất cả" class="ms-2 fs-7"></codx-label>
+      </div>
       </div>
     </div>
   </div>
@@ -42,5 +47,5 @@
 <codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
   [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
   (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)"
-  (viewChanged)="viewChange($event)">
+  >
 </codx-views>

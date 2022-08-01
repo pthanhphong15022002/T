@@ -75,8 +75,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
   }
+  
   convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
+    if(!agencyName && !txtLstAgency)
+      return '<div><span class="tex-gray-300">Tên công ty</span></div>';
     var desc = '<div class="d-flex">';
     if(agencyName)
       desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
@@ -265,8 +268,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     })
   }
   openFormFuncID(val: any , datas:any = null) {
-   
-    debugger;
     var funcID = val?.functionID;
     if(!datas)
       datas = this.data;
@@ -306,6 +307,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 
                   //this.view.dataService.update(x.event).subscribe();
                   this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
+                    debugger;
                     this.data = item;
                     this.data.lstUserID = getListImg(item.relations);
                   });
@@ -420,10 +422,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           option.FormModel = this.formModel;
           this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
             if(x.event) 
-            {
-              this.data.updates = x.event.updates;
-              this.data.percentage = x.event.percentage;
-            }
+              this.view.dataService.remove(x.event).subscribe();
           });
           break;
         }
@@ -534,10 +533,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
             {
-              this.view.dataService.update(item.data).subscribe();
-              //this.view.dataService.update(item.data).subscribe();
+              this.view.dataService.update(item.data).subscribe(); 
             } 
-              
             this.notifySvr.notify(item.message);
           });
           break;
