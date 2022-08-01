@@ -3,14 +3,15 @@
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
                 <div class="w-100 vh-100">
-                    <img [src]="file.thumbnail" alt="" class="w-100 image">
-                    <!-- <codx-img  
+                    <!-- <img [src]="file.thumbnail" alt="" class="w-100 image"> -->
+                    <codx-img  
                     [recId]="file.recID" 
                     [objectId]="file.objectID" 
                     objectType="WP_Comments"
                     imageType="square"
+                    [width]="600"
                     cssClass="w-100 vh-100 image"
-                    ></codx-img> -->
+                    ></codx-img>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
