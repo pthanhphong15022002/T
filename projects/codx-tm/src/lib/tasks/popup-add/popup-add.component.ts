@@ -42,7 +42,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   todoAddText: any;
   grvSetup: any;
   param: TM_Parameter;
-  taskGroup : TM_TaskGroups ;
+  taskGroup: TM_TaskGroups;
   paramModule: TM_Parameter;
   functionID: string;
   view = '';
@@ -79,6 +79,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listEmpInfo = [];
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
+  countReload = 0;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -233,8 +234,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          this.param =param 
-        //  this.paramModule = param;         
+          this.param = param
+          //  this.paramModule = param;
         }
       });
   }
@@ -392,7 +393,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
-       this.notiService.notify('Tên dự án không được để trống !');
+      this.notiService.notify('Tên dự án không được để trống !');
       // this.notiService.notifyCode('TM012');
       return;
     }
@@ -450,7 +451,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    this.task.taskType = this.dialog.formModel?.entityName ; 
+    this.task.taskType = this.dialog.formModel?.entityName;
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
@@ -601,7 +602,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   valueChangeEstimated(data) {
     if (!data.data) return;
-     var num = data.data;
+    var num = data.data;
     // if (!num) {
     //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
     //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
@@ -675,17 +676,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   cbxChange(data) {
-    
     if (data.data && data.data != "") {
       this.task[data.field] = data.data;
-      if (data.field === 'taskGroupID' && this.action == 'add')
+      if (data.field === 'taskGroupID')
         this.loadTodoByGroup(this.task.taskGroupID);
       return;
-    }else{
+    } else {
       this.task[data.field] = null
     }
     if (data.field == 'taskGroupID') {
-      this.getParam() ;
+      this.getParam();
     }
   }
 
@@ -737,7 +737,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.convertParameterByTaskGroup(res);
         }
       });
   }
@@ -766,7 +766,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
-          this.convertParameterByTaskGroup(this.taskGroup)         
+          this.convertParameterByTaskGroup(this.taskGroup)
         }
       });
   }
@@ -946,21 +946,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  convertParameterByTaskGroup(taskGroup : TM_TaskGroups){
-    this.param.ApproveBy = taskGroup.approveBy ;
-    this.param.ApproveControl = taskGroup.approveControl ;
-    this.param.AutoCompleted = taskGroup.autoCompleted ;
-    this.param.ConfirmControl = taskGroup.confirmControl ;
-    this.param.EditControl = taskGroup.editControl ;
-    this.param.LocationControl = taskGroup.locationControl ;
-    this.param.MaxHours = taskGroup.maxHours ;
-    this.param.MaxHoursControl = taskGroup.maxHoursControl ;
-    this.param.PlanControl = taskGroup.planControl ;
-    this.param.ProjectControl = taskGroup.projectControl ;
-    this.param.UpdateControl = taskGroup.updateControl ;
-    this.param.VerifyBy = taskGroup.verifyBy ;
-    this.param.VerifyByType = taskGroup.verifyByType ;
+  convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
+    this.param.ApproveBy = taskGroup.approveBy;
+    this.param.ApproveControl = taskGroup.approveControl;
+    this.param.AutoCompleted = taskGroup.autoCompleted;
+    this.param.ConfirmControl = taskGroup.confirmControl;
+    this.param.EditControl = taskGroup.editControl;
+    this.param.LocationControl = taskGroup.locationControl;
+    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHoursControl = taskGroup.maxHoursControl;
+    this.param.PlanControl = taskGroup.planControl;
+    this.param.ProjectControl = taskGroup.projectControl;
+    this.param.UpdateControl = taskGroup.updateControl;
+    this.param.VerifyBy = taskGroup.verifyBy;
+    this.param.VerifyByType = taskGroup.verifyByType;
     this.param.VerifyControl = taskGroup.verifyControl;
-    this.param.DueDateControl = taskGroup.dueDateControl ;
+    this.param.DueDateControl = taskGroup.dueDateControl;
   }
 }
