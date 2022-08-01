@@ -186,13 +186,13 @@ export class HomeComponent extends UIComponent {
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
       item1 =
-        '<img class="max-h-18px me-2" src="../../../assets/codx/dms/folder.svg">';
+        '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px me-2" src="${path}">`;
+        item1 = `<img class="max-h-18px " src="${path}">`;
       }
     }
 
@@ -200,7 +200,7 @@ export class HomeComponent extends UIComponent {
       item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
     var fullText = `${item1}
                     ${item2}
-                    <span class="mytree_node me-2"></span>
+                    <span class="mytree_node  me-2"></span>
                     ${text}`;
 
     return fullText;
