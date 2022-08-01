@@ -45,7 +45,7 @@ export class UpdateNotePinComponent implements OnInit {
     this.typeUpdate = data.data?.typeUpdate;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   valueChange(e, item = null) {
     if (e) {
@@ -101,11 +101,7 @@ export class UpdateNotePinComponent implements OnInit {
           var object = [{ data: res, type: 'edit' }];
           this.noteService.data.next(object);
           this.dialog.close();
-          this.notificationsService.notify(
-            'Thực thi thành công',
-            'error',
-            2000
-          );
+          this.notificationsService.notifyCode('SYS007');
           this.changeDetectorRef.detectChanges();
         });
     } else {

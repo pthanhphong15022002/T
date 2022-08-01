@@ -132,14 +132,14 @@ export class AssignInfoComponent implements OnInit {
     if(this.taskParent){
       this.task.taskName = this.taskParent.taskName ;
       this.task.refID = this.taskParent.recID;
-      this.task.memo = this.taskParent.memo ;
-      this.task.memo2 = this.taskParent.memo2 ;
-      this.task.taskGroupID = this.taskParent.taskGroupID ;
-      this.task.projectID = this.taskParent.projectID ;
-      this.task.location = this.taskParent.location ;
-      this.task.tags = this.taskParent.tags ;
-      this.task.refID = this.taskParent.refID ;
-      this.task.taskType = this.taskParent.taskType ;
+      this.task.memo = this.taskParent.memo;
+      this.task.memo2 = this.taskParent.memo2;
+      this.task.taskGroupID = this.taskParent.taskGroupID;
+      this.task.projectID = this.taskParent.projectID;
+      this.task.location = this.taskParent.location;
+      this.task.tags = this.taskParent.tags;
+      this.task.refID = this.taskParent.refID;
+      this.task.taskType = this.taskParent.taskType;
     }
 
     // if (this.task.memo == null) this.task.memo = '';
@@ -158,23 +158,23 @@ export class AssignInfoComponent implements OnInit {
     //         this.listTaskResources = res;
     //       }
     //     });
-    
-      // this.api
-      //   .execSv<any>(
-      //     'TM',
-      //     'ERM.Business.TM',
-      //     'TaskBusiness',
-      //     'GetListUserDetailAsync',
-      //     this.task.assignTo
-      //   )
-      //   .subscribe((res) => {
-      //     this.listUserDetail = this.listUserDetail.concat(res);
-      //   });
-   // }
+
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListUserDetailAsync',
+    //     this.task.assignTo
+    //   )
+    //   .subscribe((res) => {
+    //     this.listUserDetail = this.listUserDetail.concat(res);
+    //   });
+    // }
 
     this.changeDetectorRef.detectChanges();
   }
- 
+
 
   changText(e) {
     this.task.taskName = e.data;
@@ -220,7 +220,7 @@ export class AssignInfoComponent implements OnInit {
           }
           this.resetForm();
         } else {
-          this.notiService.notify('Giao việc không thành công ! Hãy thử lại'); /// call sau
+          this.notiService.notifyCode('TM038'); /// call sau
           return;
         }
       });
@@ -352,9 +352,9 @@ export class AssignInfoComponent implements OnInit {
         listUser
       )
       .subscribe((res) => {
-        if(res&&res.length>0){
-         for(var i=0; i<res.length;i++){
-           let emp = res[i] ;
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
             var taskResource = new tmpTaskResource();
             taskResource.resourceID = emp.userID;
             taskResource.resourceName = emp.userName;
@@ -367,25 +367,25 @@ export class AssignInfoComponent implements OnInit {
       });
   }
   showPopover(p, userID) {
-    if(this.popover)
-    this.popover.close() ;
-    if(userID)
-    this.idUserSelected = userID;
+    if (this.popover)
+      this.popover.close();
+    if (userID)
+      this.idUserSelected = userID;
     p.open();
-    this.popover = p ;
+    this.popover = p;
   }
   hidePopover(p) {
     p.close();
   }
 
-  selectRoseType(idUserSelected,value) {
- 
-     this.listTaskResources.forEach(res=>{
-        if(res.resourceID ==idUserSelected)res.roleType=value;
-      })
-      this.changeDetectorRef.detectChanges()
+  selectRoseType(idUserSelected, value) {
 
-    this.popover.close() ;
-    }
-   
+    this.listTaskResources.forEach(res => {
+      if (res.resourceID == idUserSelected) res.roleType = value;
+    })
+    this.changeDetectorRef.detectChanges()
+
+    this.popover.close();
+  }
+
 }

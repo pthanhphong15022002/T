@@ -238,15 +238,15 @@ export class BookingStationeryComponent implements OnInit {
     if (this.listData.length == 0) {
       this.count = 1;
       this.listData.push(dataItem);
-      this.notification.notify('Thêm vỏ hàng thành công', 'success');
+      this.notification.notifyCode('EP001');
     } else {
       let check = this.listData.indexOf(dataItem);
       if (check > -1) {
-        this.notification.notify('Bạn đã nhập vào giỏ hàng', 'error');
+        this.notification.notifyCode('EP002');
       } else {
         this.listData.push(dataItem);
         this.count += 1;
-        this.notification.notify('Thêm giỏ hàng thành công', 'success');
+        this.notification.notifyCode('EP001');
       }
     }
     console.log('ListData:', this.listData);
