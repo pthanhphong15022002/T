@@ -4,7 +4,7 @@
             <div class="btn-extand mt-2 d-flex justify-content-end">
                 <a class="text-dark-75 text-hover-primary d-flex align-items-center me-15px" (click)="extendShow()">
                     <span *ngIf="hideExtend" class="me-2 text-dark">{{titleExpand}}</span>
-                    <span class="icon-login icon-20 ml-1 ext_button"></span>
+                    <span class="icon-login icon-20 ms-1 ext_button"></span>
                 </a>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                 class="d-flex mb-2">
                                 <span class="text-dark-75 me-2">{{titleCreator}}:</span>
                                 <span class="text-dark font-weight-bold">{{fileEditing.userName}}</span>
-                                <span class="icon-access_time icon-16 ml-5 me-1"></span>
+                                <span class="icon-access_time icon-16 ms-5 me-1"></span>
                                 <span class="text-dark font-weight-bold">{{fileEditing.createdOn | date:
                                     'dd/MM/yyyy'}}</span>
                             </div>
@@ -78,7 +78,7 @@
                                 class="d-flex mb-2">
                                 <span class="text-dark-75 me-2">{{titleVersion}}:</span>
                                 <span class="text-dark font-weight-bold">{{fileEditing.version}}</span>
-                                <span *ngIf="fileEditing.comment != ''" class="icon-comment icon-18 text-warning ml-2"
+                                <span *ngIf="fileEditing.comment != ''" class="icon-comment icon-18 text-warning ms-2"
                                     title="{{fileEditing.comment}}"></span>
                             </div>
                             <div *ngIf="fileEditing != null" class="d-flex mb-2">
@@ -209,7 +209,7 @@
                                             placeholder="Nhận xét của bạn..."></textarea> -->
                                     </div>
                                     <span (click)="setComment()"
-                                        class="btn btn-sm btn-primary ml-2">{{titleSend}}</span>
+                                        class="btn btn-sm btn-primary ms-2">{{titleSend}}</span>
                                 </div>
                             </div>
                             <ng-container *ngIf="fileEditing.views != null">
@@ -282,7 +282,7 @@
                                                 <div class="d-flex flex-column flex-grow-1">
                                                     <div class="d-flex">
                                                         <div class="text-dark font-weight-bold">{{his.fileName}}</div>
-                                                        <div class="text-dark-75 ml-3">{{his.createdOn | timefrom}</div>
+                                                        <div class="text-dark-75 ms-3">{{his.createdOn | timefrom}</div>
                                                     </div>
                                                     <div class="text-primary font-size-md">{{his.userName}}</div>
                                                     <!-- <div class="text-dark-75">{{his.note}}</div> -->

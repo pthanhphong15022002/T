@@ -1,13 +1,13 @@
-<codx-form [dialog]="dialog" [body]="body" [footer]="footer">
+<codx-form [dialog]="dialog" [body]="body" [footer]="footer" [headerText]="headerText">
   <ng-template popup add #body>
     <div class="card-body card-scroll mx-5 mx-xl-18 pb-15">
       <div class="text-center mb-6">
-        <h1 class="">
+        <!-- <h1 class="">
           <codx-label name="lblChooseSignature" default="Chọn chữ ký" [formModel]="dialog.formModel"></codx-label>
-        </h1>
+        </h1> -->
       </div>
       <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
-        <li class="nav-item m-0">
+        <!-- <li class="nav-item m-0">
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==1?'active':''" data-bs-toggle="tab" id="#pane_1" (click)="changeTab(1)">
             <span class="d-flex flex-column ">
@@ -28,7 +28,7 @@
               </span>
             </span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item m-0">
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==3?'active':''" data-bs-toggle="tab" id="#pane_3" (click)="changeTab(3)">

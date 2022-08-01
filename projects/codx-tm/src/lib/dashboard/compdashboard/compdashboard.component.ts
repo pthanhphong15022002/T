@@ -121,12 +121,10 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
   };
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
   closeTooltip() {
-    console.log('mouse leave');
   }
 
   //#region chartcolumn
@@ -204,7 +202,6 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res) => {
-      console.log(res);
     });
   }
 
