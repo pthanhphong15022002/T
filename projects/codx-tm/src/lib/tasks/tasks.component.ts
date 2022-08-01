@@ -581,9 +581,7 @@ export class TasksComponent extends UIComponent {
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
     if (taskAction.owner != this.user.userID) {
-      this.notiService.notify(
-        'Bạn không thể cập nhật công việc của người khác !'
-      );
+      this.notiService.notifyCode('TM026');
       return;
     }
     if ((taskAction.status == '05')) {
@@ -797,9 +795,7 @@ export class TasksComponent extends UIComponent {
   //#region Confirm
   openConfirmPopup(moreFunc, data) {
     if (data.owner != this.user.userID) {
-      this.notiService.notify(
-        'Bạn không thể xác nhận công việc của người khác !'
-      );
+      this.notiService.notifyCode('TM026')
       return;
     }
     var obj = {

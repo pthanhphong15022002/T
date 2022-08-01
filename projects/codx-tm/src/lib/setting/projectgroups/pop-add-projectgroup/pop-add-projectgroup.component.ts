@@ -165,8 +165,6 @@ export class PopAddProjectgroupComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.dialog.dataService.setDataSelected(res);
-
-          this.notiService.notify('Thêm nhóm dự án thành công'); ///sau này có mess thì gán vào giờ chưa có
         }
       });
     this.dialog.close();

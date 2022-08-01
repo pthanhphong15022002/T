@@ -82,7 +82,7 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
     }])
       .subscribe((res) => {
         if (res) {
-          this.notiService.notify('Thêm thành công');
+          this.notiService.notifyCode('SYS006');
           this.dialog.close();
         }
       });
