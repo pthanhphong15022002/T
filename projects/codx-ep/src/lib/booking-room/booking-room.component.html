@@ -4,11 +4,15 @@
   (requestEnded)="closeEditForm($event)" (onDragDrop)="onDragDrop($event)">
 </codx-views>
 <ng-template #cardTemplate let-data let-setting="setting">
-  <div>
-    <div>{{ data.title }}</div>
+  <div class="w-100">
+    <div class="containter">
+      <div class="row">
+        <div class="col-9">{{ data.title }}</div>
+        <div class="col-3"></div>
+      </div>
+    </div>
   </div>
-  <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-  <button class="btn btn-light-primary" (click)="delete(data)">Xóa</button>
+
 </ng-template>
 <ng-template #chart>
   <room-dashboard></room-dashboard>
@@ -101,22 +105,19 @@
 <ng-template #eventTemplate let-data>
   <div></div>
 </ng-template>
-<ng-template #resourceTootip let-data>
-  <div class="template-wrap">
-    <div class="res-text">
-      <codx-label name="lblName" default="Tên: " [formModel]="dialog.formModel"></codx-label>{{
-      data.resourceData.resourceName }}
-    </div>
-    <div class="res-text">
-      <codx-label name="lblLocation" default="Vị trí: " [formModel]="dialog.formModel"></codx-label>{{
-      data.resourceData.location }}
-    </div>
-  </div>
-</ng-template>
+
 <ng-template #resourceHeader let-data>
-  <div class="">
-    <div class="type">{{ data.resourceData.resourceName }}</div>
-    <div class="type">{{ data.resourceData.location }}</div>
+  <div class="container">
+    <div class="row">
+      <div style="width: 35px">
+        <codx-img objectId="ADMIN" [width]="25"></codx-img>
+      </div>
+      <div class="col-9">
+        {{ data.resourceData.resourceName }} ( {{ data.resourceData.events }} )
+      </div>
+    </div>
+    <!-- <div class="type">{{ data.resourceData.resourceName }}</div>
+    <div class="capacity">( {{ data.resourceData.events }} )</div> -->
   </div>
 </ng-template>
 <ng-template #cellFooter let-data>
@@ -127,5 +128,48 @@
     <button ejs-button id="delete" cssClass="e-flat" (click)="deleteTask(data)">
       <codx-label name="lblDelete" default="Xóa" [formModel]="dialog.formModel"></codx-label>
     </button>
+  </div>
+</ng-template>
+<ng-template #footerButton let-data>
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-light-primary" (click)="edit(data)">
+      Sửa
+    </button>
+    <button class="btn btn-light-danger" (click)="delete(data)">
+      Xóa
+    </button>
+  </div>
+</ng-template>
+<ng-template #footer let-data>
+  <div class="container my-3 p-3">
+    <div class="row">
+      <div style="width:90%">
+        <span
+          style="font-weight: 600; text-transform: uppercase"
+          >{{ data.title }}</span>
+      </div>
+      <div style="width:10%">
+        <codx-temp-full
+
+          [formModel]="viewBase.formModel"
+        >
+        </codx-temp-full>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-3 d-flex justify-content-center">
+        <codx-img [objectId]="data.requester" [width]="35"></codx-img>
+      </div>
+      <div class="col-9 ">
+        <span class="text-muted mt-3" style="font-weight:500;float: left;">{{data.requester}}</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #resourceTootip let-data>
+  <div class="template-wrap">
+    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
+    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
+    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
   </div>
 </ng-template>
