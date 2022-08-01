@@ -319,9 +319,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   applyShare(event) {
     if (event) {
       event.forEach((element) => {
-        if (element.objectType == 'U') {
+        if (element.objectType.length == 1) {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
+          let dataSelected = element?.dataSelected;
 
           for (let i = 0; i < lstID?.length; i++) {
             let index = this.lstApprover.findIndex(
@@ -332,6 +333,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
               appr.roleType = element.objectType;
               appr.approverName = lstUserName[i];
               appr.approver = lstID[i];
+              appr.position = dataSelected[i]?.PositionID;
+              appr.positionName = dataSelected[i]?.PositionName;
               this.lstApprover.push(appr);
             }
           }

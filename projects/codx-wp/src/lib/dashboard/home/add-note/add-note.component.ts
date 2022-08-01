@@ -114,7 +114,7 @@ export class AddNoteComponent implements OnInit {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
       };
-      if(this.note.noteType != 'text' || this.note.noteType != '')
+      if(this.note.noteType != 'text')
         this.note.checkList.push(dtt);
       this.listFileUploadEdit = this.note.images;
       // if (this.note.noteType != 'text') this.addFirstObjectInArray();

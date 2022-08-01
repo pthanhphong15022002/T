@@ -580,10 +580,10 @@ export class TasksComponent extends UIComponent {
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
-    if (taskAction.owner != this.user.userID) {
-      this.notiService.notifyCode('TM026');
-      return;
-    }
+    // if (taskAction.owner != this.user.userID) {
+    //   this.notiService.notifyCode('TM026');
+    //   return;
+    // }
     if ((taskAction.status == '05')) {
       this.notiService.notifyCode('TM020');
       return;

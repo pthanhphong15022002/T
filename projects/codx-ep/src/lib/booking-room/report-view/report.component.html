@@ -1,0 +1,333 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3 border border-2 overflow-auto " #paramEle>
+      <div class="d-flex">
+        <div class="float-start w-100">
+          <h3 class="mt-5">Tham số báo cáo</h3>
+        </div>
+        <div class="float-end mt-5">
+          <i class="icon-save"></i>
+        </div>
+      </div>
+
+      <div class="row p-3">
+        <a
+          #param1
+          id="param1"
+          (click)="collapseChange($event, 'param1')"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseParam1"
+          class="text-primary font-weight-500"
+        >
+          <div class="d-flex">
+            <div class="w-100">Nhóm tham số 1</div>
+            <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
+          </div>
+        </a>
+        <div id="collapseParam1" [ngbCollapse]="isCollapsed">
+          <div class="w-100">
+            <ng-container>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label name="lblTime" default="Thời gian"></codx-label
+                ></span>
+                <div>
+                  <codx-dropdown-calendar
+                    cssClass="w-100 button-radius"
+                    cssPopup="h-600px w-800px"
+                    (change)="dateChange($event)"
+                  ></codx-dropdown-calendar>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label
+                    name="lblValuelist"
+                    default="Giá trị Valuelist"
+                  ></codx-label
+                ></span>
+                <div class="w-100 ms-5 mt-3">
+                  <codx-input
+                    type="checkBox"
+                    labelPosition="right"
+                    field="Done"
+                    [crrValue]="isDone"
+                    (valueChange)="valueChange($event)"
+                  ></codx-input>
+                  <codx-label
+                    class="ms-3"
+                    name="lblDone"
+                    default="Hoàn thành"
+                  ></codx-label>
+                </div>
+                <div class="w-100 ms-5 mt-3">
+                  <codx-input
+                    type="checkBox"
+                    field="Assigned"
+                    [crrValue]="isAssigned"
+                    (valueChange)="valueChange($event)"
+                  ></codx-input>
+                  <codx-label
+                    class="ms-3"
+                    name="lblAssigned"
+                    default="Chưa thực hiện"
+                  ></codx-label>
+                </div>
+                <div class="w-100 ms-5 mt-3">
+                  <codx-input
+                    type="checkBox"
+                    field="Inprocess"
+                    [crrValue]="isInprocess"
+                    (valueChange)="valueChange($event)"
+                  ></codx-input>
+                  <codx-label
+                    class="ms-3"
+                    name="lblInprocess"
+                    default="Đang thực hiện"
+                  ></codx-label>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label
+                    name="lblCombobox"
+                    default="Giá trị Combobox"
+                  ></codx-label
+                ></span>
+                <div class="w-100 mt-3">
+                  <codx-input type="combobox"></codx-input>
+                </div>
+              </div>
+              <div class="mt-3">
+                <div class="d-flex">
+                  <div class="w-100 float-start">
+                    <span class="text-muted"
+                      ><codx-label
+                        name="lblCheckboxCbx"
+                        default="Giá trị Checkbox + cbx"
+                      ></codx-label
+                    ></span>
+                  </div>
+                  <div class="float-end">
+                    <codx-input class="float-right" type="switch"></codx-input>
+                  </div>
+                </div>
+                <div class="w-100 mt-3">
+                  <codx-input type="combobox"></codx-input>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label
+                    name="lblVllCbx"
+                    default="Giá trị vll + combobox"
+                  ></codx-label
+                ></span>
+                <div class="w-100 mt-3">
+                  <codx-input type="valuelist"></codx-input>
+                </div>
+                <div class="w-100 mt-1">
+                  <codx-input type="combobox"></codx-input>
+                </div>
+              </div>
+              <div class="mt-3">
+                <div class="d-flex">
+                  <div class="w-100 float-start">
+                    <span class="text-muted"
+                      ><codx-label
+                        name="lblCheckbox"
+                        default="Giá trị Checkbox"
+                      ></codx-label
+                    ></span>
+                  </div>
+                  <div class="float-end">
+                    <codx-input class="float-right" type="switch"></codx-input>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label name="lblTextbox" default="Textbox"></codx-label
+                ></span>
+                <div class="w-100 mt-3">
+                  <codx-input
+                    type="textarea"
+                    field="memo"
+                    placeholder="Có chứa giá trị..."
+                    format="ed2"
+                    [crrValue]="textValue"
+                    (valueChange)="valueChange($event)"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="mt-3">
+                <span class="text-muted"
+                  ><codx-label
+                    name="lblNumberValue"
+                    default="Giá trị kiểu số"
+                  ></codx-label
+                ></span>
+                <div class="w-100 mt-3">
+                  <div class="d-flex">
+                    <div class="float-start me-1">
+                      <codx-input type="number" placeholder="Từ"></codx-input>
+                    </div>
+                    <div class="float-end ms-1">
+                      <codx-input type="number" placeholder="Đến"></codx-input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngFor="let item of parameters" class="my-2">
+                <codx-label
+                  [default]="item.headerText"
+                  class="fw-bold"
+                ></codx-label>
+                <ng-container [ngSwitch]="item?.dataType">
+                  <ng-container *ngSwitchCase="'String'">
+                    <div class="my-2">
+                      <codx-input
+                        type="text"
+                        (keyUpEnter)="changeValueText($event)"
+                      ></codx-input>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Bool'">
+                    <div class="my-2">
+                      <codx-input
+                        type="switch"
+                        (valueChange)="changeValueText($event)"
+                      ></codx-input>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'DateTime'">
+                    <div class="my-2">
+                      <codx-dropdown-calendar
+                        cssPopup="h-500px w-800px"
+                        cssClass="w-100"
+                        (change)="changeValueDate($event)"
+                      ></codx-dropdown-calendar>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Int'">
+                    <div class="my-2">
+                      <codx-input
+                        type="number"
+                        (valueChange)="changeValueText($event)"
+                      ></codx-input>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="item?.data">
+                  <ng-container *ngFor="let item2 of item?.data">
+                    <div class="my-2">
+                      <codx-input
+                        type="checkbox"
+                        [label]="item2?.name"
+                        (valueChange)="changeValueCbb($event)"
+                      ></codx-input>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="row p-3 ">
+        <a
+          #param2
+          id="param2"
+          (click)="collapseChange($event, 'param2')"
+          [attr.aria-expanded]="!isCollapsed2"
+          aria-controls="collapseParam2"
+          class="text-primary font-weight-500"
+        >
+          <div class="d-flex">
+            <div class="w-100">Nhóm tham số 2</div>
+            <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
+          </div>
+        </a>
+
+        <div id="collapseParam2" [ngbCollapse]="isCollapsed2">
+         <div class="mt-3 overflow-scroll">
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+          <h3>PARAMETERS 2 Here</h3>
+         </div>
+        </div>
+      </div>
+      <div class="row p-3 ">
+        <a
+          #param3
+          id="param3"
+          (click)="collapseChange($event, 'param3')"
+          [attr.aria-expanded]="!isCollapsed3"
+          aria-controls="collapseParam3"
+          class="text-primary font-weight-500"
+        >
+          <div class="d-flex">
+            <div class="w-100">Nhóm tham số 3</div>
+            <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
+          </div>
+        </a>
+
+        <div id="collapseParam3" [ngbCollapse]="isCollapsed3">
+         <div class="mt-3 overflow-scroll">
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+          <h3>PARAMETERS 3 Here</h3>
+         </div>
+        </div>
+      </div>
+      <div class="fixed-bottom col-3 background-white pt-2 mb-0 mx-2">
+        <div class="float-start">
+          <button class="btn btn-light-primary ms-5 mb-5" >
+            <div class="d-flex">
+              <div class="float-start">
+                <i class="icon-replay"></i>
+              </div>
+              <div class="float-end w-100"><codx-label
+                name="lblRestore"
+                default="Khôi phục"
+              ></codx-label></div>
+            </div>
+
+          </button>
+        </div>
+        <div class="float-end">
+          <button class="btn btn-primary me-5 mb-5" >
+            <div class="d-flex">
+              <div class="float-start">
+                <i class=" icon-check"></i>
+              </div>
+              <div class="float-end w-100"><codx-label
+                name="lblApply"
+                default="Áp dụng"
+              ></codx-label></div>
+            </div>
+
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-9" #reportEle>
+      <codx-report [showToolbar]="true"></codx-report>
+    </div>
+  </div>
+</div>

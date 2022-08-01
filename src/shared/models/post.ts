@@ -60,6 +60,7 @@ export class Post {
     this.permissions = [];
     this.isUpload = false;
     this.files = [];
+    this.listComment = [];
 
 }
 

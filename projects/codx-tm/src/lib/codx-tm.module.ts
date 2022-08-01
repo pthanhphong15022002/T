@@ -63,6 +63,7 @@ import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-mee
 import { PopupViewTaskResourceComponent } from './tasks/popup-view-task-resource/popup-view-task-resource.component';
 import { PopupConfirmComponent } from './tasks/popup-confirm/popup-confirm.component';
 import { PopupExtendComponent } from './tasks/popup-extend/popup-extend.component';
+import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +97,11 @@ export const routes: Routes = [
       {
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
+
+      },
+      {
+        path: 'meetingdetails/:funcID',
+        component: MeetingDetailComponent,
       },
       {
         path: 'mydashboard/:funcID',
@@ -211,7 +217,8 @@ const T_Component: Type<any>[] = [
   ViewListMeetComponent,
   PopupViewTaskResourceComponent,
   PopupConfirmComponent,
-  PopupExtendComponent
+  PopupExtendComponent,
+  MeetingDetailComponent,
 ];
 @NgModule({
   imports: [

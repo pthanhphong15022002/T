@@ -223,12 +223,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   updateStatus(data) {
-    // let obj = {
-    //   fieldValue: fieldValue,
-    //   moreFunc: moreFunc,
-    //   taskAction: taskAction,
-    //   funcID: this.funcID
-    // };
     this.dialog = this.callfunc.openForm(
       UpdateStatusComponent,
       'Cập nhật tình trạng',

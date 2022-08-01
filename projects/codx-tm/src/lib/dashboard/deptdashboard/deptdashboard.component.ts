@@ -206,7 +206,6 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
-      console.log(res);
       const {
         efficiency,
         tasksByGroup,
@@ -263,18 +262,15 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
         });
       });
       this.hrWork = hoursByOrgUnit;
-      console.log(this.vlWork)
       this.detectorRef.detectChanges();
     });
   }
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
   closeTooltip() {
-    console.log('mouse leave');
   }
 
   sort() {

@@ -79,14 +79,14 @@ export const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'portal/wp',
+        redirectTo: 'portal/WP',
         pathMatch: 'full'
       }
     ],
   },
   {
     path: '',
-    redirectTo: 'portal/wp',
+    redirectTo: 'portal/WP',
     pathMatch: 'full'
   }
 ];
