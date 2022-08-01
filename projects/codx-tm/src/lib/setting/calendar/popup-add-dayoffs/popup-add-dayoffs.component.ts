@@ -104,7 +104,6 @@ export class PopupAddDayoffsComponent extends UIComponent implements OnInit {
   }
 
   saveCalendarDate() {
-    console.log(this.dialogAddDayoffs.value);
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,

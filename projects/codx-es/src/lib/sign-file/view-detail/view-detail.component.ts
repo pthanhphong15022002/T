@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   OnInit,
-  OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
   ViewChild,
@@ -43,13 +42,13 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail && this.itemDetail !== null) {
       console.log('detail', this.itemDetail);
 
-      this.esService
-        .getApprovalTrans(this.itemDetail?.recID)
-        .subscribe((res) => {
-          this.process = res;
+      // this.esService
+      //   .getApprovalTrans(this.itemDetail?.recID)
+      //   .subscribe((res) => {
+      //     this.process = res;
 
-          this.df.detectChanges();
-        });
+      //     this.df.detectChanges();
+      //   });
     }
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;

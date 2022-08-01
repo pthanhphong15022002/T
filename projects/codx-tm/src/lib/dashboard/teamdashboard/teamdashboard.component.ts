@@ -9,6 +9,7 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
+import { StatusTask } from '../../models/enum/enum';
 
 @Component({
   selector: 'teamdashboard',
@@ -127,12 +128,10 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   };
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
   closeTooltip() {
-    console.log('mouse leave');
   }
 
   //#region chartcolumn
@@ -246,19 +245,19 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
           let cancelTasks = 0;
           task.tasks.map((task) => {
             switch (task.status) {
-              case '1':
+              case StatusTask.New:
                 newTasks = newTasks + 1;
                 break;
-              case '2':
+              case StatusTask.Processing:
                 processingTasks = processingTasks + 1;
                 break;
-              case '9':
+              case StatusTask.Done:
                 doneTasks = doneTasks + 1;
                 break;
-              case '5':
+              case StatusTask.Postpone:
                 postponeTasks = postponeTasks + 1;
                 break;
-              case '8':
+              case StatusTask.Cancelled:
                 cancelTasks = cancelTasks + 1;
                 break;
             }
