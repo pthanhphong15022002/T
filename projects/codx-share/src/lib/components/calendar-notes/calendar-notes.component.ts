@@ -40,8 +40,7 @@ import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 })
 export class CalendarNotesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   message: any;
   messageParam: any;
   listNote: any[] = [];
@@ -143,7 +142,7 @@ export class CalendarNotesComponent
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   requestEnded(evt: any) {
     this.view.currentView;

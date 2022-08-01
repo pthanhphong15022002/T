@@ -1,4 +1,10 @@
-<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home">
+<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="d-flex flex-column-fluid home hover-scroll-overlay-y" style="overflow: auto !important"
+  data-kt-scroll="true" 
+  data-kt-scroll-activate="{default: true}"
+  data-kt-scroll-max-height="auto"
+  attr.data-kt-scroll-dependencies=''
+  attr.data-kt-scroll-wrappers='.dms-viewcard'
+  attr.data-kt-scroll-offset="'0px'">
     <div class="dms dms-viewcard">
         <div class="card-group">                
             <div
@@ -45,7 +51,7 @@
                                         </ng-template>
     
                                         <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            <div class="text-dark-75 font-weight-bold file-name text-box-140">{{folder.folderName}}
                                             </div>
                                             <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>
@@ -143,7 +149,7 @@
                                             <div class="d-flex align-items-center">
                                                 <img alt="" class="mh-20px me-2"
                                                     src="{{dmSV.getThumbnail(file.thumbnail, file.extension)}}">
-                                                <div class="text-dark-75 font-weight-bold file-name">{{file.fileName}}</div>
+                                                <div class="text-dark-75 font-weight-bold file-name text-box-140">{{file.fileName}}</div>
                                             </div>
                                             <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>
@@ -209,7 +215,7 @@
                                         </ng-template>
     
                                         <div class="d-flex flex-column flex-grow-1 dms-footer-r">
-                                            <div class="text-dark-75 font-weight-bold file-name">{{folder.folderName}}
+                                            <div class="text-dark-75 font-weight-bold file-name text-box-140">{{folder.folderName}}
                                             </div>
                                             <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
                                                 <span class="icon-bookmark icon-24"></span>

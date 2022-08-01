@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
@@ -14,7 +14,8 @@ export class UpdateStatusComponent implements OnInit {
   funcID: any;
   title: string = 'Cập nhật tình trạng';
   employee: HR_Employees = new HR_Employees();
-  
+  @Input() view: any;
+
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -40,18 +41,17 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   updateStatus() {
-
     this.api
       .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
         employeeID: this.employStatus.employeeID,
         status: this.employStatus.status,
       })
       .subscribe((res) => { });
-    // if (this.employStatus.status == "90") {
-    //   this.form.removeHandler(this.employStatus, "employeeID");
-    // } else {
-    //   this.view.addHandler(this.employStatus, false, "employeeID");
-    // }
+    if (this.employStatus.status == "90") {
+      this.view.removeHandler(this.employStatus, "employeeID");
+    } else {
+      this.view.addHandler(this.employStatus, false, "employeeID");
+    }
     this.dialog.close();
   }
 
