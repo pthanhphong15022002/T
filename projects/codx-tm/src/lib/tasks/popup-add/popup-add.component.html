@@ -2,7 +2,7 @@
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="tabContent" (setTitle)="setTitle($event)"
   (buttonClick)="buttonClick($event)" #form></codx-layout-add>
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="readOnly" [value]="task?.tags || ''"
+  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="!readOnly" [disabled]="readOnly" [value]="task?.tags || ''"
     (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
@@ -12,8 +12,8 @@
       <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
       </codx-label>
     </div>
-    <codx-input field="taskName" type="text" [crrValue]="task?.taskName" placeholder="Tên công việc" [disabled]="readOnly"
-      (valueChange)="valueChange($event)">
+    <codx-input field="taskName" type="text" [crrValue]="task?.taskName" placeholder="Tên công việc"
+      [disabled]="readOnly" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div class="form-group mt-3">
@@ -32,8 +32,8 @@
         <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
         </codx-label>
       </div>
-      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" 
-        [crrValue]="task?.dueDate" (valueChange)="changeTime($event)" [disabled]="disableDueDate">
+      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
+        (valueChange)="changeTime($event)" [disabled]="disableDueDate">
       </codx-input>
     </div>
     <div class="col-6">
@@ -65,8 +65,8 @@
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="startDate" 
-          [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
+        <codx-input type="datetime" class="test-datetime" field="startDate" [crrValue]="task?.startDate" format="F"
+          (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
       <div class="col-4">
@@ -74,8 +74,8 @@
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="endDate" 
-          [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
+        <codx-input type="datetime" class="test-datetime" field="endDate" [crrValue]="task?.endDate" format="F"
+          (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
       <div class="col-4">
@@ -83,8 +83,8 @@
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
         </div>
-        <codx-input type="number" field="estimated" placeholder="Số giờ "
-          [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)" [disabled]="readOnly">
+        <codx-input type="number" field="estimated" placeholder="Số giờ " [crrValue]="task?.estimated"
+          (valueChange)="valueChangeEstimated($event)" [disabled]="readOnly">
         </codx-input>
 
       </div>
@@ -96,7 +96,8 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
         </codx-label>
       </div>
-      <codx-input type="textarea" headerposition="none"  field="memo" [crrValue]="task?.memo" format="ed" height="150" (valueChange)="changeMemo($event)" [disabled]="readOnly">
+      <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="150"
+        (valueChange)="changeMemo($event)" [disabled]="readOnly">
       </codx-input>
     </div>
   </ng-container>
@@ -147,7 +148,7 @@
   </ng-container>
   <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
     <div class="d-flex align-items-center mb-3">
-      <span class="icon-attach icon-24 me-2 text-primary"></span>
+      <span class="icon-attach_file icon-24 me-2 text-primary"></span>
       <div class="fw-bold fs-6 text-primary">
         <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
         </codx-label>
@@ -203,8 +204,8 @@
         <div class="d-flex align-items-top">
           <!-- <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img> -->
-          <div style=" position: relative"  popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
-          (mouseenter)="showPopover(p,item.resourceID)"  autoClose="outside">
+          <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
+            placement="bottom" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
             <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
             </codx-img>
             <div style="position: absolute; right: 0px;bottom: 0px">
@@ -212,7 +213,7 @@
                 <ng-container *ngIf="role.value== item.roleType">
                   <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
                 </ng-container>
-                </ng-container>   
+              </ng-container>
             </div>
           </div>
 
@@ -224,7 +225,7 @@
                 {{item?.departmentName}}</span></div>
 
             <div class="text-dark" *ngIf="item?.memo == null">
-              <codx-input class="" type="text"  (valueChange)="changeMemo2($event,item?.resourceID)"
+              <codx-input class="" type="text" (valueChange)="changeMemo2($event,item?.resourceID)"
                 placeholder="Ghi chú phân công..." [disabled]="readOnly"></codx-input>
             </div>
             <div class="text-dark" *ngIf="item?.memo != null">
@@ -272,14 +273,13 @@
             <div class="flex" *ngIf="i != indexEditTodo">
               <div class="">
                 <span>
-                  <input #checkShareRight1 type="checkbox"
-                    [checked]="item.status == STATUS_TASK_GOAL.Checked" id="checkShareRight1"
-                    (change)="updateStatusTodoList(i)">
+                  <input #checkShareRight1 type="checkbox" [checked]="item.status == STATUS_TASK_GOAL.Checked"
+                    id="checkShareRight1" (change)="updateStatusTodoList(i)" [disabled]="viewTask">
                 </span>
-                <span class="text-hover-primary" (click)="editTodo(i, item.text)" style="
-            margin-top: 4px; margin-left: 12px;" popoverClass="userPopoverClass" [ngbPopover]="deleteToDo"
-                  placement="left" #p="ngbPopover" (mouseenter)="showPoppoverDelete(p,i)" autoClose="outside"
-                  placement="right">
+                <span class="text-hover-primary" (click)="!viewTask ?editTodo(i, item.text) :''"  style="
+            margin-top: 4px; margin-left: 12px;" popoverClass="userPopoverClass" [ngbPopover]="!viewTask ?deleteToDo:''"
+                  placement="left" #p="ngbPopover" (mouseenter)="!viewTask ?showPoppoverDelete(p,i):showPoppoverDelete(p,null)"
+                  autoClose="outside" placement="right">
                   {{ item.text }}
                 </span>
               </div>
@@ -288,12 +288,13 @@
               <div class="flex">
                 <div class="">
                   <span>
-                    <input #checkShareRight1 type="checkbox"  id="checkShareRight1">
+                    <input #checkShareRight1 type="checkbox" id="checkShareRight1">
                   </span>
                   <span class="">
                     <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus [value]="contentTodoEdit"
-                      (blur)="updateTodoList(txtTodoEdit.value)" (keydown.enter)="updateTodoList(txtTodoEdit.value)"
-                      class="form-control" placeholder={{planholderTaskGoal}} />
+                      [disabled]='viewTask' (blur)="updateTodoList(txtTodoEdit.value)"
+                      (keydown.enter)="updateTodoList(txtTodoEdit.value)" class="form-control"
+                      placeholder={{planholderTaskGoal}} />
                   </span>
                 </div>
               </div>
@@ -302,11 +303,11 @@
         </div>
       </div>
     </ng-container>
-    <div class="d-flex justify-content-between align-items-center checkbox-item " >
+    <div class="d-flex justify-content-between align-items-center checkbox-item "  *ngIf="!viewTask">
       <div class="checkbox-list">
         <div class="d-flex flex-column flex-grow-1 w-100">
           <div class="row">
-            <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
+            <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1 
               (blur)="onAddToDo(txtTodoAdd)" placeholder={{planholderTaskGoal}} (keydown.enter)="onAddToDo(txtTodoAdd)"
               type="text" style="
               border-width: thin;
@@ -327,7 +328,7 @@
       </codx-label>
     </div>
     <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án" ngDefaultControl
-      refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)" 
+      refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
       [crrValue]="task?.projectID" [disabled]="readOnly">
     </codx-input>
   </div>
@@ -340,13 +341,13 @@
       (valueChange)="valueChange($event)" [disabled]="readOnly">
     </codx-input>
   </div>
-  <div class="form-group mt-3" >
+  <div class="form-group mt-3">
     <div>
       <codx-label fiedName="RefNo" [formModel]="form.formModel" default="Tham chiếu">
       </codx-label>
     </div>
     <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0" style="border: none"
-      placeholder="Tham chiếu" ngDefaultControl refValue=""  loadFull="true" field="refNo"
+      placeholder="Tham chiếu" ngDefaultControl refValue="" loadFull="true" field="refNo"
       (valueChange)="cbxChange($event)" [disabled]="readOnly"></codx-input>
   </div>
   <!-- <div class="form-group mt-3" >
@@ -364,9 +365,11 @@
 <ng-template #footer>
   <div class="d-flex justify-content-between ">
     <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
-     <i  class="icon-cloud_upload fs-5"></i><span><codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label></span>
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
+      </span>
     </button>
-    <button type="button" class="btn btn-primary ms-1" (click)="saveData(task?.taskID)" >
+    <button type="button" class="btn btn-primary ms-1" [disabled]="viewTask" (click)="saveData(task?.taskID)">
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
@@ -383,15 +386,16 @@
   </ng-container>
 </ng-template>
 
-<ng-template #popoverSelectRoles >
+<ng-template #popoverSelectRoles>
   <div class="d-flex" *ngIf="!readOnly">
-  <ng-container *ngFor="let item of listRoles">
-    <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4" (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
-      <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
-      <div class="fs-8 text-gray-500">{{item.text}}</div>
-    </div>
-  </ng-container>
-</div>
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
+        (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
+        <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+        <div class="fs-8 text-gray-500">{{item.text}}</div>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>
 
 <!-- <ng-template #popEmpTitle>

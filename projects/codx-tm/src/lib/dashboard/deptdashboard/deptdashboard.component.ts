@@ -10,6 +10,7 @@ import {
   ProgressTheme,
   RangeColorModel,
 } from '@syncfusion/ej2-angular-progressbar';
+import { StatusTask } from '../../models/enum/enum';
 
 @Component({
   selector: 'deptdashboard',
@@ -194,7 +195,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.top3 = [
       { id: 'ADMIN', name: 'Lê Phạm Hoài Thương', role: 'BA', kpi: 123 },
       { id: 'NHBUU', name: 'Nguyễn Hoàng Bửu', role: 'Dev', kpi: 120 },
-      { id: 'NNPSY',name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
+      { id: 'NNPSY', name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
     ];
     this.groups = [
       { id: 'QC', name: 'Nhóm kiểm tra chất lượng', rate: 70 },
@@ -205,7 +206,6 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
 
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
-      console.log(res);
       const {
         efficiency,
         tasksByGroup,
@@ -232,19 +232,19 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
         let cancelTasks = 0;
         data.tasks.map((task) => {
           switch (task.status) {
-            case '1':
+            case StatusTask.New:
               newTasks = newTasks + 1;
               break;
-            case '2':
+            case StatusTask.Processing:
               processingTasks = processingTasks + 1;
               break;
-            case '9':
+            case StatusTask.Done:
               doneTasks = doneTasks + 1;
               break;
-            case '5':
+            case StatusTask.Postpone:
               postponeTasks = postponeTasks + 1;
               break;
-            case '8':
+            case StatusTask.Cancelled:
               cancelTasks = cancelTasks + 1;
               break;
           }
@@ -267,12 +267,10 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   }
 
   openTooltip() {
-    console.log('mouse enter');
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
   closeTooltip() {
-    console.log('mouse leave');
   }
 
   sort() {

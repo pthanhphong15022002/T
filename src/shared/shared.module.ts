@@ -1,4 +1,3 @@
-import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { FormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxCoreModule } from 'codx-core';
@@ -26,7 +25,6 @@ const T_Component: Type<any>[] = [
   ChatListComponent,
   ListChatBoxComponent,
   ChatBoxComponent,
-  NoteDrawerComponent
 ];
 
 const T_Moudule: Type<any>[] = [

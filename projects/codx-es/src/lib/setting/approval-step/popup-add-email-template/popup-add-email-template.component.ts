@@ -318,7 +318,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     if (event) {
       let lst = [];
       event.forEach((element) => {
-        if (element.objectType == 'U') {
+        if (element.objectType.length == 1) {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
 

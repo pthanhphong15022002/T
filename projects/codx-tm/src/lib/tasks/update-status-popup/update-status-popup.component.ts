@@ -30,8 +30,8 @@ export class UpdateStatusPopupComponent implements OnInit {
   url: string;
   status: string;
   title: string = 'Cập nhật tình trạng công việc ';
-  funcID:any
-  crrCompleted : any
+  funcID: any
+  crrCompleted: any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -51,10 +51,10 @@ export class UpdateStatusPopupComponent implements OnInit {
     this.url = this.moreFunc.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
-    if(this.task.estimated > 0){
-      this.completed=this.task.estimated
-    }else{
-       this.timeStart = moment(
+    if (this.task.estimated > 0) {
+      this.completed = this.task.estimated
+    } else {
+      this.timeStart = moment(
         new Date(
           this.task.startOn
             ? this.task.startOn
@@ -71,10 +71,10 @@ export class UpdateStatusPopupComponent implements OnInit {
     this.crrCompleted = this.completed;
   }
   changeTime(data) {
-    if(!data.data)return ; 
+    if (!data.data) return;
     this.completedOn = data.data.fromDate;
-    if(this.completed<=0){
-      var time = (((this.completedOn?.getTime() -this.timeStart.getTime())/3600000).toFixed(2));
+    if (this.completed <= 0) {
+      var time = (((this.completedOn?.getTime() - this.timeStart.getTime()) / 3600000).toFixed(2));
       this.completed = Number.parseFloat(time);
     }
     this.changeDetectorRef.detectChanges();
@@ -91,13 +91,13 @@ export class UpdateStatusPopupComponent implements OnInit {
     // }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify('Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !');
-      this.completed= this.crrCompleted > 0 ? this.crrCompleted : 0;
-     this.changeDetectorRef.detectChanges();
+      this.notiService.notifyCode('TM033');
+      this.completed = this.crrCompleted > 0 ? this.crrCompleted : 0;
+      this.changeDetectorRef.detectChanges();
       return;
     }
     this.completed = num
-    this.crrCompleted =  this.completed;
+    this.crrCompleted = this.completed;
   }
 
   beforeSave(op: any) {
@@ -114,7 +114,11 @@ export class UpdateStatusPopupComponent implements OnInit {
   saveData() {
     this.comment = this.comment.trim();
     if (this.data.fieldValue == '2') {
-      if (this.comment == '') return;
+      if (this.comment == ''){
+        // this.notiService.notifyCode("????")
+        this.notiService.notify("Phải nhập nội dung comment đầy đủ !")
+        return;
+      } 
     }
     this.tmSv
       .setStatusTask(
@@ -126,20 +130,19 @@ export class UpdateStatusPopupComponent implements OnInit {
         this.comment
       )
       .subscribe((res) => {
-        if (res &&res.length >0) {
+        if (res && res.length > 0) {
           // this.task.status = this.status;
           // this.task.completedOn = this.completedOn;
           // this.task.comment = this.comment;
           // this.task.completed = this.completed;
           // res.forEach(obj=>{
           //   this.dialog.dataService.update(obj).subscribe();
-          // }) 
+          // })
           this.dialog.close(res)
-          this.notiService.notify('Cập nhật trạng thái thành công !');
+          this.notiService.notifyCode('TM009');
         } else {
-          this.notiService.notify(
-            'Vui lòng thực hiện hết các công việc được phân công để thực hiện cập nhật tình trạng !'
-          );
+          this.dialog.close()
+          this.notiService.notifyCode('TM008');
         }
       });
   }

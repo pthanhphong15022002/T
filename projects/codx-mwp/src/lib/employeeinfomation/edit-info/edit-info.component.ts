@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
 
@@ -8,7 +8,30 @@ import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model'
   styleUrls: ['./edit-info.component.css']
 })
 export class EditInfoComponent implements OnInit {
-  title = 'Chỉnh sửa';
+  title = '';
+  tabInfo: any[] = [
+    { 
+      icon: 'icon-info', 
+      text: 'Thông tin chung', 
+      name: 'tabInfoPersonal' 
+    },
+    { 
+      icon: 'icon-article', 
+      text: 'Nhân viên', 
+      name: 'tabInfoEmploy' 
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Thông tin cá nhân',
+      name: 'tabInfoPrivate',
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Pháp lý',
+      name: 'tabInfoLaw',
+    },
+  ];
+  titleAction = 'Thêm';
   currentSection = "InfoPersonal";
   dialog: any;
   data: any;
@@ -17,13 +40,14 @@ export class EditInfoComponent implements OnInit {
   employee: HR_Employees = new HR_Employees();
   isDisable = false;
   isNew: false;
-  
+
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
-  ) { 
+  ) {
     this.data = dialog.dataService!.dataSelected;
     this.employee = this.data;
     this.dialog = dialog;
@@ -31,12 +55,22 @@ export class EditInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
-  changeTime(data){
+  changeTime(data) {
     if (!data.field || !data.data) return;
     this.employee[data.field] = data.data?.fromDate;
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' + e;
+    this.detectorRef.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
   }
 
   dataChange(e: any, field: string) {
@@ -60,15 +94,14 @@ export class EditInfoComponent implements OnInit {
     return true;
   }
 
-  OnSaveForm(){
+  OnSaveForm() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   scrollTo(session) {

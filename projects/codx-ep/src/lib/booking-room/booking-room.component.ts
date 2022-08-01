@@ -60,7 +60,10 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('sidebarLeft') sidebarLeft: TemplateRef<any>;
   @ViewChild('cardTemplate') eventTemplate?: TemplateRef<any>;
   @ViewChild('Devices') Devices: TemplateRef<any>;
-
+  @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('editRoomBookingForm')
   editRoomBookingForm: PopupAddBookingRoomComponent;
   devices: any;
@@ -86,6 +89,8 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   editform: FormGroup;
   isAdd = true;
+  isCollapsed =true;
+  parameters: any = [];
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -185,6 +190,10 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
           eventModel: this.fields,
           resourceModel: this.resourceField,
           template: this.eventTemplate,
+          template4: this.resourceHeader,
+          template5: this.resourceTootip,
+          template6: this.footerTemplate,
+          template7: this.footerButton
         },
       },
       {
@@ -192,7 +201,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
         id: '3',
         type: ViewType.content,
         active: false,
-        text: 'Chart nè',
+        text: 'Chart',
         icon: 'icon-bar_chart',
         model: {
           panelLeftRef: this.chart,
@@ -203,7 +212,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
         id: '4',
         type: ViewType.content,
         active: false,
-        text: 'report nè',
+        text: 'Report',
         icon: 'icon-assignment',
         model: {
           panelLeftRef: this.report,
@@ -277,7 +286,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     if (this.editform.status == 'INVALID') {
       console.log('result', this.editform.value);
-      this.notificationsService.notify('"area" and "capacity" is not null!');
+      this.notificationsService.notifyCode('EP004');
       return;
     }
 
@@ -316,6 +325,18 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
     console.log(event);
   }
 
+  changeValueText(evt:any){
+    console.log(evt);
+
+  }
+  changeValueDate(evt:any){
+    console.log(evt);
+
+  }
+  changeValueCbb(evt:any){
+    console.log(evt);
+
+  }
   icon: any;
   valueChangeIcon(icon: any) {
     this.icon = icon;

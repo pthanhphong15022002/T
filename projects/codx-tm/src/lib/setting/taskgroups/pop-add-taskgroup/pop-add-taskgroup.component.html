@@ -20,10 +20,10 @@
       </codx-input>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+      <codx-label fiedName="Note"  formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
       </codx-label>
 
-      <codx-input type="textarea" field="note" [crrValue]="taskGroups.note" class="form-control"
+      <codx-input type="textarea" field="note" headerposition="none" format="ed" height="150" [crrValue]="taskGroups.note" class="form-control"
         (valueChange)="changeMemo($event)"></codx-input>
     </div>
   </div>

@@ -15,7 +15,7 @@ import {
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
-import { Observable , finalize, map, of } from 'rxjs';
+import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../attachment/attachment.component';
 
 @Component({
@@ -23,17 +23,16 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   templateUrl: './codx-import.component.html',
   styleUrls: ['./codx-import.component.scss'],
 })
-export class CodxImportComponent implements OnInit, OnChanges
-{
+export class CodxImportComponent implements OnInit, OnChanges {
   submitted = false;
-  gridModel : any;
-  recID :any
+  gridModel: any;
+  recID: any
   data = {}
   dataEx: any;
   dataWord: any;
   dialog: any;
-  formModel : any;
-  exportGroup : FormGroup;
+  formModel: any;
+  exportGroup: FormGroup;
   lblExtend: string = '';
   request = new DataRequest();
   optionEx = new DataRequest();
@@ -42,7 +41,7 @@ export class CodxImportComponent implements OnInit, OnChanges
   assemblyName: string = "AD";
   className: string = "ExcelTemplatesBusiness";
   method: string = "GetByEntityAsync";
-  headerText : string = "Import File"
+  headerText: string = "Import File"
   @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     private callfunc: CallFuncService,
@@ -51,8 +50,7 @@ export class CodxImportComponent implements OnInit, OnChanges
     private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  {
+  ) {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
@@ -60,11 +58,11 @@ export class CodxImportComponent implements OnInit, OnChanges
   ngOnInit(): void {
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
-      dataExport : ['' ,  Validators.required],
-      format : ['' ,  Validators.required]
+      dataExport: ['', Validators.required],
+      format: ['', Validators.required]
     });
     //Tạo formModel
-    this.formModel = 
+    this.formModel =
     {
       entityName: this.gridModel?.entityName,
       entityPer: this.gridModel?.entityPermission,
@@ -74,8 +72,8 @@ export class CodxImportComponent implements OnInit, OnChanges
     }
 
     //////////////////////////
-    this.request.page=0;
-    this.request.pageSize=10;
+    this.request.page = 0;
+    this.request.pageSize = 10;
     this.request.entityName = 'AD_ExcelTemplates';
     this.request.funcID = this.formModel?.funcID;
     //////////////////////////
@@ -86,87 +84,81 @@ export class CodxImportComponent implements OnInit, OnChanges
   get f(): { [key: string]: AbstractControl } {
     return this.exportGroup.controls;
   }
-  ngOnChanges(changes: SimpleChanges) {}
-  load()
-  {
+  ngOnChanges(changes: SimpleChanges) { }
+  load() {
 
-   this.loadEx();
-   this.loadWord();
-    
+    this.loadEx();
+    this.loadWord();
+
   }
-  loadEx()
-  {
+  loadEx() {
 
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = "ExcelTemplatesBusiness";
-    this.fetch().subscribe((item)=>{
+    this.fetch().subscribe((item) => {
       this.dataEx = item
     });
   }
-  loadWord()
-  {
+  loadWord() {
     this.request.entityName = 'AD_WordTemplates';
     this.className = "WordTemplatesBusiness";
-    this.fetch().subscribe((item)=>{
+    this.fetch().subscribe((item) => {
       this.dataWord = item
     });
   }
-  private fetch () : Observable<any[]> 
-  {
+  private fetch(): Observable<any[]> {
     return this.api
-    .execSv<Array<any>>(
-      this.service,
-      this.assemblyName,
-      this.className,
-      this.method,
-      this.request
-    )
-    .pipe(
-      finalize(() => {
-        /*  this.onScrolling = this.loading = false;
-        this.loaded = true; */
-      }),
-      map((response: any) => {
-        return response[0]
-      })
-    );
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.method,
+        this.request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0]
+        })
+      );
   }
- 
-  openForm(val:any,data:any,type:any)
-  {
-    switch(val)
-    {
-      case 'add' : case 'edit' :
+
+  openForm(val: any, data: any, type: any) {
+    switch (val) {
+      case 'add': case 'edit':
         {
           var option = new DialogModel();
           option.FormModel = this.formModel;
           option.DataService = data;
-         /*  this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
-          .closed.subscribe(item=>
-          {
-            if(item.event && item.event.length>0) 
-            {
-              var typeR = item.event[1];
-              if(typeR == "excel")
-              {
-                if(val == "add") this.loadEx();
-                else if(val == "edit") 
-                {
-                  var index = this.dataEx.findIndex((x => x.recID == item.event[0]?.recID));
-                  if(index>=0) {this.dataEx[index] = item.event[0]}
-                }
-              }
-              else if(typeR == "word")
-              {
-                if(val == "add") this.loadWord();
-                else if(val == "edit")
-                {
-                  var index = this.dataWord.findIndex((x => x.recID == item.event[0]?.recID));
-                  if(index>=0) {this.dataWord[index] = item.event[0]}
-                }
-              }
-            }
-          }) */
+          /*  this.callfunc.openForm(CodxExportAddComponent,null,null,800,null, {action:val,type:type}, "", option)
+           .closed.subscribe(item=>
+           {
+             if(item.event && item.event.length>0)
+             {
+               var typeR = item.event[1];
+               if(typeR == "excel")
+               {
+                 if(val == "add") this.loadEx();
+                 else if(val == "edit")
+                 {
+                   var index = this.dataEx.findIndex((x => x.recID == item.event[0]?.recID));
+                   if(index>=0) {this.dataEx[index] = item.event[0]}
+                 }
+               }
+               else if(typeR == "word")
+               {
+                 if(val == "add") this.loadWord();
+                 else if(val == "edit")
+                 {
+                   var index = this.dataWord.findIndex((x => x.recID == item.event[0]?.recID));
+                   if(index>=0) {this.dataWord[index] = item.event[0]}
+                 }
+               }
+             }
+           }) */
           break;
         }
       case "delete":
@@ -174,25 +166,23 @@ export class CodxImportComponent implements OnInit, OnChanges
           var config = new AlertConfirmInputConfig();
           config.type = "YesNo";
           //SYS003
-          this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa ?", config).closed.subscribe(x=>{
-            if(x.event.status == "Y")
-            {
+          this.notifySvr.alert("Thông báo", "Bạn có chắc chắn muốn xóa ?", config).closed.subscribe(x => {
+            if (x.event.status == "Y") {
               var method = type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates"
               this.api
                 .execActionData<any>(
                   method,
                   [data],
                   'DeleteAsync'
-                ).subscribe(item=>{
-                  if(item[0] == true)
-                  {
+                ).subscribe(item => {
+                  if (item[0] == true) {
                     this.notifySvr.notifyCode("RS002");
-                    if(type=="excel")
-                      this.dataEx = this.dataEx.filter(x=>x.recID != item[1][0].recID);
-                    else if(type=="word")
-                      this.dataWord = this.dataWord.filter(x=>x.recID != item[1][0].recID);
+                    if (type == "excel")
+                      this.dataEx = this.dataEx.filter(x => x.recID != item[1][0].recID);
+                    else if (type == "word")
+                      this.dataWord = this.dataWord.filter(x => x.recID != item[1][0].recID);
                   }
-                  else this.notifySvr.notify("Xóa không thành công");
+                  else this.notifySvr.notifyCode("SYS022");
                 })
             }
           })
@@ -200,64 +190,60 @@ export class CodxImportComponent implements OnInit, OnChanges
         }
     }
   }
-  onSave()
-  {
+  onSave() {
     this.submitted = true;
-    if(this.exportGroup.invalid) return;
-   /*  var idTemp = null;
-    var value  = this.exportGroup.value;
-    var splitFormat = value.format.split("_");
-    switch(splitFormat[0])
-    {
-      case "excel":
-      case 'excelTemp':
-        {
-          if(value.dataExport == "all")
-          {
-            this.gridModel.page=1;
-            this.gridModel.pageSize=-1;
-          }
-          else if(value.dataExport == "selected")
-          {
-            this.gridModel.predicates = this.gridModel.predicate+"&&RecID=@1"
-            this.gridModel.dataValues = [this.gridModel.dataValue,this.recID].join(";");
-          }
-          if(splitFormat[1]) idTemp = splitFormat[1];
-          this.api.execSv<any>(
-            "OD",
-            'CM', 
-            'CMBusiness', 
-            'ExportExcelAsync', 
-            [this.gridModel,idTemp]
-          ).subscribe(item=>
-            {
-              if(item)
-              {
-                this.downloadFile(item);
-              }
-            }
-          );
-          break;
-        }
-    } */
+    if (this.exportGroup.invalid) return;
+    /*  var idTemp = null;
+     var value  = this.exportGroup.value;
+     var splitFormat = value.format.split("_");
+     switch(splitFormat[0])
+     {
+       case "excel":
+       case 'excelTemp':
+         {
+           if(value.dataExport == "all")
+           {
+             this.gridModel.page=1;
+             this.gridModel.pageSize=-1;
+           }
+           else if(value.dataExport == "selected")
+           {
+             this.gridModel.predicates = this.gridModel.predicate+"&&RecID=@1"
+             this.gridModel.dataValues = [this.gridModel.dataValue,this.recID].join(";");
+           }
+           if(splitFormat[1]) idTemp = splitFormat[1];
+           this.api.execSv<any>(
+             "OD",
+             'CM',
+             'CMBusiness',
+             'ExportExcelAsync',
+             [this.gridModel,idTemp]
+           ).subscribe(item=>
+             {
+               if(item)
+               {
+                 this.downloadFile(item);
+               }
+             }
+           );
+           break;
+         }
+     } */
   }
   downloadFile(data: any) {
     const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url= window.URL.createObjectURL(blob);
+    const url = window.URL.createObjectURL(blob);
     window.open(url);
   }
-  openFormUploadFile()
-  {
+  openFormUploadFile() {
     this.attachment.uploadFile();
   }
-  onScroll(e:any)
-  {
+  onScroll(e: any) {
     const dcScroll = e.srcElement;
-    if (dcScroll.scrollTop + dcScroll.clientHeight == dcScroll.scrollHeight) 
-    {
+    if (dcScroll.scrollTop + dcScroll.clientHeight == dcScroll.scrollHeight) {
       var data = this.optionEx
       //alert("a");
     }
-     
+
   }
 }

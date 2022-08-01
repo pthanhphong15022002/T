@@ -1,13 +1,13 @@
-<codx-form [dialog]="dialog" [body]="body" [footer]="footer">
+<codx-form [dialog]="dialog" [body]="body" [footer]="footer" [headerText]="headerText">
   <ng-template popup add #body>
     <div class="card-body card-scroll mx-5 mx-xl-18 pb-15">
       <div class="text-center mb-6">
-        <h1 class="">
+        <!-- <h1 class="">
           <codx-label name="lblChooseSignature" default="Chọn chữ ký" [formModel]="dialog.formModel"></codx-label>
-        </h1>
+        </h1> -->
       </div>
       <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
-        <li class="nav-item m-0">
+        <!-- <li class="nav-item m-0">
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==1?'active':''" data-bs-toggle="tab" id="#pane_1" (click)="changeTab(1)">
             <span class="d-flex flex-column ">
@@ -28,7 +28,7 @@
               </span>
             </span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item m-0">
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==3?'active':''" data-bs-toggle="tab" id="#pane_3" (click)="changeTab(3)">
@@ -142,21 +142,24 @@
           </div>
         </div>
         <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab==3?'active show':''">
-          <codx-attachment #attSignature1 [objectType]="dialog.formModel.entityName" [objectId]="Signature1"
-            hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID"
-            (fileAdded)="fileAdded($event,3)" type="inline" hideImageUpload="0" (fileCount)="fileCount($event,3)">
+          <codx-attachment #attSignature1 idBrowse="attSignature1" [objectType]="dialog.formModel.entityName"
+            [objectId]="Signature1" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
+            [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event,3)" type="inline" hideImageUpload="0"
+            (fileCount)="fileCount($event,3)" allowMultiFile="0">
           </codx-attachment>
         </div>
         <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab==4?'active show':''">
-          <codx-attachment #attSignature2 [objectType]="dialog.formModel.entityName" [objectId]="Signature2"
-            hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID"
-            (fileAdded)="fileAdded($event,4)" type="inline" hideImageUpload="0" (fileCount)="fileCount($event,4)">
+          <codx-attachment #attSignature2 idBrowse="attSignature2" [objectType]="dialog.formModel.entityName"
+            [objectId]="Signature2" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
+            [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event,4)" type="inline" hideImageUpload="0"
+            (fileCount)="fileCount($event,4)" allowMultiFile="0">
           </codx-attachment>
         </div>
         <div class="tab-pane fade" id="pane_5" [ngClass]="currentTab==5?'active show':''">
-          <codx-attachment #attStamp [objectType]="dialog.formModel.entityName" [objectId]="Stamp" hideBtnSave="1"
-            hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event,5)"
-            type="inline" hideImageUpload="0" (fileCount)="fileCount($event,5)">
+          <codx-attachment #attStamp idBrowse="attStamp" [objectType]="dialog.formModel.entityName" [objectId]="Stamp"
+            hideBtnSave="1" hideFolder="1" hideUploadBtn="0" [functionID]="dialog.formModel.funcID"
+            (fileAdded)="fileAdded($event,5)" type="inline" hideImageUpload="0" (fileCount)="fileCount($event,5)"
+            allowMultiFile="0">
           </codx-attachment>
         </div>
 

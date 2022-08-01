@@ -13,23 +13,23 @@ export class EditExperenceComponent implements OnInit {
   dialog: any;
   data: any;
   action = '';
-  isSaving : boolean = false;
+  isSaving: boolean = false;
 
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private api: ApiHttpService,
-    private codxMwp: CodxMwpService,  
+    private codxMwp: CodxMwpService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
-  ) { 
+  ) {
     // this.data = dialog.dataService!.dataSelected;
     this.dataBind = dt.data;
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
-    if(this.action==='edit'){
+    if (this.action === 'edit') {
       this.title = 'Cập nhật thông tin';
     }
     // if(this.action==='copy'){
@@ -37,7 +37,7 @@ export class EditExperenceComponent implements OnInit {
     // }
   }
 
-  changeTime(data){
+  changeTime(data) {
     if (!data.field || !data.data) return;
     this.dataBind[data.field] = data.data?.fromDate;
   }
@@ -58,37 +58,37 @@ export class EditExperenceComponent implements OnInit {
   //   op.service = 'HR';
   //   data = [
   //     this.dataBind,
-   
+
   //   ];
   //   op.data = data;
   //   return true;
   // }
 
-  OnSaveForm(){
+  OnSaveForm() {
     // this.dialog.dataService
     // .save((option: any) => this.beforeSave(option))
     // .subscribe((res) => {
     //   if (res.save) {
     //     this.dialog.close();
-    //     this.notiService.notifyCode('MWP00201'); 
+    //     this.notiService.notifyCode('MWP00201');
     //   }
     // });
     this.isSaving = true;
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
-    .subscribe((res: any) => {
-      this.isSaving = false;
-      // console.log(res);    
-      if (res) {
-        res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
-        res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
+      .subscribe((res: any) => {
+        this.isSaving = false;
+        // console.log(res);
+        if (res) {
+          res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
+          res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
 
-        this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
-        this.dialog.close(this.dataBind);
-      }
-      else {
-        this.notiService.notify("Error");
-      }
-    });
+          this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
+          this.dialog.close(this.dataBind);
+        }
+        else {
+          this.notiService.notifyCode("SYS021");
+        }
+      });
     this.dialog.close(this.dataBind);
   }
 }

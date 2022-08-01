@@ -184,15 +184,15 @@ export class TasksComponent extends UIComponent {
           template3: this.cellTemplate,
         },
       },
-      {
-        type: ViewType.treedetail,
-        active: false,
-        sameData: true,
-        // request2: this.resourceTree,
-        model: {
-          template: this.treeView,
-        },
-      },
+      // {
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: true,
+      //   // request2: this.resourceTree,
+      //   model: {
+      //     template: this.treeView,
+      //   },
+      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -580,12 +580,10 @@ export class TasksComponent extends UIComponent {
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
-    if (taskAction.owner != this.user.userID) {
-      this.notiService.notify(
-        'Bạn không thể cập nhật công việc của người khác !'
-      );
-      return;
-    }
+    // if (taskAction.owner != this.user.userID) {
+    //   this.notiService.notifyCode('TM026');
+    //   return;
+    // }
     if ((taskAction.status == '05')) {
       this.notiService.notifyCode('TM020');
       return;
@@ -797,9 +795,7 @@ export class TasksComponent extends UIComponent {
   //#region Confirm
   openConfirmPopup(moreFunc, data) {
     if (data.owner != this.user.userID) {
-      this.notiService.notify(
-        'Bạn không thể xác nhận công việc của người khác !'
-      );
+      this.notiService.notifyCode('TM026')
       return;
     }
     var obj = {
@@ -850,7 +846,7 @@ export class TasksComponent extends UIComponent {
         //???? chắc làm sau ??
         break;
       default:
-        this.changeStatusTask(e, data);
+        this.changeStatusTask(e.data, data);
         break;
     }
   }
@@ -868,10 +864,10 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, e.data],
+        [this.view.dataService.dataSelected, 'view', this.isAssignTask],
         option
       );
     }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -12,7 +12,29 @@ import { HR_Employees } from '../../model/HR_Employees.model';
   styleUrls: ['./popup-add-employees.component.css']
 })
 export class PopupAddEmployeesComponent implements OnInit {
-  title = 'Thêm mới';
+  title = '';
+  tabInfo: any[] = [
+    { 
+      icon: 'icon-info', 
+      text: 'Thông tin chung', 
+      name: 'tabInfoPersonal' 
+    },
+    { 
+      icon: 'icon-article', 
+      text: 'Nhân viên', 
+      name: 'tabInfoEmploy' 
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Thông tin cá nhân',
+      name: 'tabInfoPrivate',
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Pháp lý',
+      name: 'tabInfoLaw',
+    },
+  ];
   dialog: any;
   employee: HR_Employees = new HR_Employees();
   readOnly = false;
@@ -30,6 +52,37 @@ export class PopupAddEmployeesComponent implements OnInit {
   gridViewSetup: any;
   action = '';
   data: any;
+  titleAction = 'Thêm';
+
+  // @ViewChild('tabInfoPersonal') tabInfoPersonal: TemplateRef<any>;
+  // @ViewChild('tabInfoEmploy') tabInfoEmploy: TemplateRef<any>;
+  // @ViewChild('tabInfoPrivate') tabInfoPrivate: TemplateRef<any>;
+  // @ViewChild('tabInfoLaw') tabInfoLaw: TemplateRef<any>;
+
+
+  // menuInfoPersonal = {
+  //   icon: 'icon-person',
+  //   text: 'Thông tin chung',
+  //   name: 'tabInfoPersonal',
+  // };
+
+  // menuInfoEmploy = {
+  //   icon: 'icon-receipt_long',
+  //   text: 'Nhân viên',
+  //   name: 'tabInfoEmploy',
+  // };
+
+  // menuInfoPrivate = {
+  //   icon: 'icon-info',
+  //   text: 'Thông tin cá nhân',
+  //   name: 'tabInfoPrivate',
+  // };
+
+  // menuInfoLaw = {
+  //   icon: 'icon-info',
+  //   text: 'Pháp lý',
+  //   name: 'tabInfoLaw',
+  // };
 
   constructor(
     private authStore: AuthStore,
@@ -45,13 +98,13 @@ export class PopupAddEmployeesComponent implements OnInit {
       ...this.employee,
       ...dt?.data,
     };
-     this.action = dt.data;
+    this.action = dt.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
     this.data = dialog.dataService!.dataSelected;
     this.employee = this.data;
-   }
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -59,13 +112,30 @@ export class PopupAddEmployeesComponent implements OnInit {
       if (res)
         this.gridViewSetup = res
     });
-    if(this.action==='edit'){
+    if (this.action === 'edit') {
       this.title = 'Chỉnh sửa';
     }
-    if(this.action==='copy'){
+    if (this.action === 'copy') {
       this.title = 'Sao chép';
     }
   }
+
+  // ngAfterViewInit(): void {
+  //   if (this.showAssignTo) {
+  //     this.tabInfo = [
+  //       this.menuInfoPersonal,
+  //       this.menuInfoEmploy,
+  //       this.menuInfoPrivate,
+  //       this.menuInfoLaw,
+  //     ];
+  //     this.tabContent = [
+  //       this.tabInfoPersonal,
+  //       this.tabInfoEmploy,
+  //       this.tabInfoPrivate,
+  //       this.tabInfoLaw,
+  //     ];
+  //   }
+  // }
 
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
@@ -132,6 +202,12 @@ export class PopupAddEmployeesComponent implements OnInit {
     return subject.asObservable();
   }
 
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' + e;
+    this.detectorRef.detectChanges();
+    console.log(e);
+  }
+
   beforeSave(op: any) {
     var data = [];
     op.method = 'UpdateAsync';
@@ -142,34 +218,32 @@ export class PopupAddEmployeesComponent implements OnInit {
     op.data = data;
     return true;
   }
-  
-  OnSaveForm(){
-    for (var key in this.data) {  
-      if(Array.isArray(this.data[key]))
-      this.data[key] = this.data[key].join(';');
+
+  OnSaveForm() {
+    for (var key in this.data) {
+      if (Array.isArray(this.data[key]))
+        this.data[key] = this.data[key].join(';');
     }
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   addEmployee() {
     var t = this;
-    this.dialog.dataService.save((opt:any)=>{
+    this.dialog.dataService.save((opt: any) => {
       opt.data = [this.employee];
       return true;
     })
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm mới thành công');
-      }
-    });
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   closePanel() {
@@ -189,8 +263,12 @@ export class PopupAddEmployeesComponent implements OnInit {
       }
     }
   }
-  changeTime(data){
+  changeTime(data) {
     if (!data.field || !data.data) return;
     this.employee[data.field] = data.data?.fromDate;
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
   }
 }

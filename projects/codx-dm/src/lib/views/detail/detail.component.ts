@@ -23,11 +23,11 @@ export class DetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() type: any;
   //listFolders: FolderInfo[];
- // listFiles: FileInfo[];
- titleFileName = 'Tên tài liệu';
- titleCreatedBy = 'Người tạo';
- titleCreatedOn = 'Ngày tạo';
- titleLength = 'Dung lượng';
+  // listFiles: FileInfo[];
+  titleFileName = 'Tên tài liệu';
+  titleCreatedBy = 'Người tạo';
+  titleCreatedOn = 'Ngày tạo';
+  titleLength = 'Dung lượng';
 
   html: string;
   count: number;
@@ -48,11 +48,11 @@ export class DetailComponent implements OnInit {
   loadedFile: boolean;
   loadedFolder: boolean;
   setting: any;
-//   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  @ViewChild('view') view!: ViewsComponent; 
-  
+  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('view') view!: ViewsComponent;
+
   @Output() eventShow = new EventEmitter<boolean>();
-  constructor(  
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
     private folderService: FolderService,
@@ -63,21 +63,21 @@ export class DetailComponent implements OnInit {
     private auth: AuthStore,
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
-    ) {
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
+  ) {
+    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.user = this.auth.get();
     //this.loaded = false;
-   // this.loadedFile = false;
-   // this.loadedFolder = true;
+    // this.loadedFile = false;
+    // this.loadedFolder = true;
     //this.listFolders = this.dataFolders;
-   // this.listFiles = this.dataFolders;
+    // this.listFiles = this.dataFolders;
     // this.changeDetectorRef.detectChanges();
     // this.dmSV.isSortDirecttion.subscribe(res => {
     //   if (res == null || res != "1") {
@@ -92,18 +92,21 @@ export class DetailComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    // this.dmSV.isListFolder.subscribe(res => {     
-    //   this.refresh();
-    //   this.loadedFolder = true;
-    // });
+    this.dmSV.isListFolder.subscribe(res => {     
+      //this.refresh();
+      this.listFolders = res;
+      this.loadedFolder = true;
+      this.changeDetectorRef.detectChanges();
+    });
 
-    // this.dmSV.islistFiles.subscribe(res => {    
-    //   this.refresh();      
-    //   this.loadedFile = true;
-    // });
-
+    this.dmSV.islistFiles.subscribe(res => {    
+     // this.refresh();    
+      this.listFiles = res;  
+      this.loadedFile = true;
+      this.changeDetectorRef.detectChanges();
+    });
     // this.dmSV.isAdd.subscribe(res => {
-    //   if (res) {        
+    //   if (res) {
     //     this.refresh();
     //   }
     // });
@@ -115,7 +118,7 @@ export class DetailComponent implements OnInit {
     else
       return "text-warning icon-20";
   }
- 
+
 
   getSvg(icon) {
     var path = window.location.origin;
@@ -161,8 +164,8 @@ export class DetailComponent implements OnInit {
 
   onRightClick(event, data, type) {
     console.log(event);
-   // this.data = data;
-   // this.type = type;    
+    // this.data = data;
+    // this.type = type;
     event.preventDefault();
   }
 
@@ -187,7 +190,7 @@ export class DetailComponent implements OnInit {
   }
 
   identifyFile(index, file) {
-    return file;//file.fileName; 
+    return file;//file.fileName;
   }
 
   // refresh(): void {
@@ -287,7 +290,7 @@ export class DetailComponent implements OnInit {
   onDbclick(item, permissions, id, level, parentid, fullName) {
     //if (!this.checkView(permissions)) {
     if (!item.read) {
-      this.notificationsService.notify("Bạn không có quyền truy cập thư mục này");
+      this.notificationsService.notifyCode("DM059");
       return;
     }
 
@@ -324,7 +327,7 @@ export class DetailComponent implements OnInit {
     // this.changeDetectorRef.detectChanges();
 
     this.folderService.getFolders(id).subscribe(async res => {
-      //  this.dmSV.changeData(res, null, id); 
+      //  this.dmSV.changeData(res, null, id);
       this.dmSV.isTree = true;
       //  console.log(res);
       this.dmSV.listFolder.next(res);
@@ -334,7 +337,7 @@ export class DetailComponent implements OnInit {
     });
 
     this.fileService.getListActiveFiles(id, "").subscribe(async res => {
-      //  this.dmSV.changeData(null, res, id);  
+      //  this.dmSV.changeData(null, res, id);
       // console.log(res);
       this.dmSV.listFiles.next(res);
       this.loadedFile = true;
@@ -413,15 +416,15 @@ export class DetailComponent implements OnInit {
     return read;
     // let ret = false;
     // permissions.forEach(item => {
-    //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
-    //     if (item.read) ret = true;        
+    //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {
+    //     if (item.read) ret = true;
     //   }
 
-    //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
+    //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {
     //     if (item.approvalStatus == "1")
     //       ret = false;
-    //     else 
-    //       ret = true;       
+    //     else
+    //       ret = true;
     //   }
     // });
     // return ret;
@@ -430,14 +433,14 @@ export class DetailComponent implements OnInit {
   checkDownload(download) {
     // let ret = false;
     // permissions.forEach(item => {
-    //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
-    //     if (item.download) ret = true;        
+    //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {
+    //     if (item.download) ret = true;
     //   }
-    //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
+    //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {
     //     if (item.approvalStatus == "1")
     //       ret = false;
-    //     else 
-    //       ret = true;       
+    //     else
+    //       ret = true;
     //   }
     // });
     return download;
@@ -480,7 +483,7 @@ export class DetailComponent implements OnInit {
     //     this.changeDetectorRef.detectChanges();
     //     this.systemDialogService.onOpenViewFileDialog.next(obj);
     //   }
-    // })   
+    // })
   }
 
   print() {
