@@ -1,4 +1,4 @@
-<codx-views #codxViews funcID="WP" [views]="views" entityName="WP_Comments" idField="recID">
+<codx-views #codxViews [views]="views" entityName="WP_Comments" idField="recID">
 </codx-views>
 <ng-template #panelLeftRef>
     <ng-container *ngIf="isShowCreate">
@@ -104,7 +104,7 @@
         <ng-container *ngIf="item.category == '4'; else shareTemplate">
             <div [innerHTML]="item.content"></div>
             <div>
-                <codx-file [objectID]="item.recID" objectType="WP_Comments"></codx-file>
+                <codx-file [objectID]="item.recID" objectType="WP_Comments" (viewDetail)="clickViewDetail($event)"></codx-file>
             </div>
             <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
                 <div class="post mt-3" (click)="naviagte(item.shares)">
@@ -174,12 +174,12 @@
         <div class="pic-feed">
             <ng-container *ngIf="item.files;else get">
                 <div>
-                    <codx-file  [lstFile]="item.files" (evtGetFiles)="getFiles($event,item)"></codx-file>
+                    <codx-file  [lstFile]="item.files" (evtGetFiles)="getFiles($event,item)" (viewDetail)="clickViewDetail($event)"></codx-file>
                 </div>
             </ng-container>
             <ng-template #get>
                 <div class="pic-feed-img">
-                    <codx-file  [objectID]="item.recID" (evtGetFiles)="getFiles($event,item)"></codx-file>
+                    <codx-file  [objectID]="item.recID" (evtGetFiles)="getFiles($event,item)" (viewDetail)="clickViewDetail($event)"></codx-file>
                 </div>
             </ng-template>
         </div>

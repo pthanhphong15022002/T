@@ -2,7 +2,7 @@
   <ng-container *ngIf="file_img_video.length > 0">
     <div [ngSwitch]="file_img_video.length" class="position-relative1">
       <ng-container *ngSwitchCase="1">
-        <div class="feed-1pic position-relative">
+        <div class="feed-1pic position-relative" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
             <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
           </ng-container>

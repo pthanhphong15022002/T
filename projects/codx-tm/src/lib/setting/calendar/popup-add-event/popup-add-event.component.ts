@@ -101,7 +101,6 @@ export class PopupAddEventComponent extends UIComponent implements OnInit {
   }
 
   saveDayOff() {
-    console.log(this.dialogAddEvent.value)
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,
