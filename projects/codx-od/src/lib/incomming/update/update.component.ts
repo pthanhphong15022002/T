@@ -17,14 +17,16 @@ export class UpdateExtendComponent implements OnInit {
   submitted = false
   dialog      : any
   data : any
-  formModel: any 
+  formModel: any ;
+  preValue: any;
   @ViewChild('attachment') attachment: AttachmentComponent
   @Input() view : any
   @Output() save = new EventEmitter<any>();
   dtDisUpdate = new updateDis();
   currentDate = new Date();
   updateForm :FormGroup;
-  fileCount: 0
+  fileCount: 0 
+  percentage100 = false;
   constructor(
     private odService: DispatchService,
     private notifySvr : NotificationsService,
@@ -42,12 +44,12 @@ export class UpdateExtendComponent implements OnInit {
       {
         updateOn: [new Date() , Validators.required],
         percentage: [this.data?.percentage  , Validators.min(1)],
-        percentage100 : false,
         comment: '',
         reporting: false
       }
     )
- 
+    if(this.data?.percentage == 100) this.percentage100 = true;
+    this.onChanges();
     /* updateOn: new FormControl(),
     percentage : new FormControl(),
     percentage100 : new FormControl(),
@@ -58,8 +60,17 @@ export class UpdateExtendComponent implements OnInit {
     this.updateForm.get("percentage").setValue(this.data?.percentage);
     if(this.data?.percentage == 100) this.updateForm.get("percentage100").setValue(true); */
   }
+  onChanges(): void {
+    this.updateForm.get('percentage').valueChanges.subscribe(val => {
+      if(val == 100) return;
+      this.preValue = val;
+    });
+  }
   valueChangePercentage100(e:any)
   {
+    if(e?.data)
+      this.updateForm.controls['percentage'].setValue(100);
+    else this.updateForm.controls['percentage'].setValue(this.preValue);
     /* if()
     this.updateForm.value.percentage */
   }
@@ -70,8 +81,6 @@ export class UpdateExtendComponent implements OnInit {
   {
     this.submitted = true;
     if(this.updateForm.invalid) return;
-    if(this.updateForm.get('percentage100').value) this.updateForm.value.percentage = 100;
-    delete this.updateForm.value.percentage100;
     this.updateForm.value.recID = this.data.recID;
     this.odService.updateResultDispatch(this.updateForm.value).subscribe((item)=>{
       if(item.status == 0) this.dialog.close(item.data);

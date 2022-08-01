@@ -5,17 +5,18 @@
     [footer]="footer" 
     [dialog]="dialog"
     [data]="data"
-    [formModel] ="dialog?.formModel"
+    [formModel]="dialog?.formModel"
 >
     <ng-template popup adde #body>
         <div class="row">
             <div class="col-5">
-                <codx-label default='Ngày cập nhật'></codx-label>
+                <codx-label [formModel]="dialog?.formModel" default='Ngày cập nhật'></codx-label>
                 <codx-input 
                     type="dateTime" 
                     format="d" 
                     ControlName="updateOn"
                     [Group]="updateForm"
+                    [disabled]="percentage100"
                     [ngClass]="{'is-invalid': submitted && f.updateOn.errors }"
                 >
                 </codx-input>
@@ -30,15 +31,16 @@
                         cssClass="form-control" 
                         ControlName="percentage"
                         [Group]="updateForm"
+                        [disabled]="percentage100"
                         [ngClass]="{ 'is-invalid-a': submitted && f.percentage.errors }"
                         >
                     </codx-input>
                     <div class="d-flex align-items-center ms-3">
                         <codx-input  
                             type="switch"   
-                            class="test-check"   
-                            ControlName="percentage100"
-                            [Group]="updateForm" 
+                            class="test-check"
+                            [crrValue]="percentage100"
+                            [disabled]="percentage100"   
                             (valueChange)="valueChangePercentage100($event)"
                         >
                         </codx-input>
