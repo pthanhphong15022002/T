@@ -136,19 +136,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   copy(data) {
-    // this.view.dataService.copy().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '800px';
-    //   this.view.dataService.dataSelected = data;
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddEmployeesComponent,
-    //     [this.view.dataService.dataSelected, 'copy'],
-    //     option
-    //   );
-    // });
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
